@@ -21,6 +21,10 @@ body.game-home [data-leaderboard-mode="lift"],body.game-home [data-activity-mode
 .avatar{position:relative;width:44px;height:44px;background:var(--surface2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.45rem;flex:none;overflow:hidden;border:1px solid rgba(239,196,90,.22)}.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}.info{flex:1;min-width:0}.name{font-size:.87rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{font-size:.63rem;color:var(--muted);margin-top:3px}.arrow{color:var(--muted);font-size:1.1rem}
 .rank{padding:12px 14px;gap:11px}.rank.top1{border:1px solid rgba(245,197,24,.35)}.rank.top2{border:1px solid rgba(192,200,216,.25)}.rank.top3{border:1px solid rgba(208,136,64,.3)}.place{width:29px;height:29px;border-radius:8px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex:none}.top1 .place{background:var(--gold);color:var(--bg)}.top2 .place{background:var(--silver);color:var(--bg)}.top3 .place{background:var(--bronze)}.score{text-align:right;flex:none}.gl{font-weight:900;color:var(--accent);font-size:.95rem}.total{font-size:.58rem;color:var(--dim);margin-top:2px}.missing{opacity:.58}.empty{padding:30px 18px;text-align:center;color:var(--dim);font-size:.75rem;line-height:1.55}
 .inner-tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin:0 16px 12px;padding:4px;border-radius:12px;background:var(--surface);border:1px solid rgba(255,255,255,.04)}.inner-tab{border:0;border-radius:9px;padding:9px 6px;background:transparent;color:var(--dim);font-weight:850;font-size:.68rem;cursor:pointer}.inner-tab.active{background:var(--surface3);color:var(--accent)}.subview.hidden{display:none}.adventure-summary{padding:0 16px 10px;color:var(--muted);font-size:.64rem;text-align:center;line-height:1.45}.game-rank-list{padding:0 16px;display:flex;flex-direction:column;gap:9px}.game-rank{background:var(--surface);border-radius:var(--radius);padding:12px;border:1px solid rgba(255,255,255,.045)}.game-rank.top1{border-color:rgba(245,197,24,.42);box-shadow:0 0 24px rgba(245,197,24,.06)}.game-rank.top2{border-color:rgba(192,200,216,.28)}.game-rank.top3{border-color:rgba(208,136,64,.32)}.game-rank-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}.game-rank-head .avatar{width:40px;height:40px;font-size:1.25rem}.game-rank-head .place{width:28px;height:28px}.game-rank-head .info{min-width:0}.game-rank-head .sub{color:var(--dim)}.game-rank-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.game-rank-stat{min-width:0;padding:8px 7px;border-radius:10px;background:var(--surface2);text-align:center}.game-rank-stat span{display:block;font-size:.55rem;color:var(--dim);font-weight:800;text-transform:uppercase;letter-spacing:.02em;white-space:nowrap}.game-rank-stat strong{display:block;margin-top:4px;color:var(--text);font-size:.78rem;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.game-rank-stat.world strong{color:var(--accent)}@media(min-width:390px){.game-rank-stats{grid-template-columns:repeat(4,minmax(0,1fr))}.game-rank-stat{padding:8px 4px}.game-rank-stat strong{font-size:.69rem}}
+
+.game-metric-tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.game-rank-main-score{margin-left:auto;text-align:right;flex:none}.game-rank-main-score strong{display:block;color:var(--accent);font-size:.88rem;font-weight:950}.game-rank-main-score span{display:block;margin-top:2px;color:var(--dim);font-size:.49rem;font-weight:850;text-transform:uppercase}.game-rank-head .place.medal{font-size:1.18rem;background:rgba(255,255,255,.035)}.game-rank-stat.power strong{color:#ffb34f}.game-rank-stat.mastery strong{color:#8fb8ff}.game-rank-stat.fortune strong{color:#76df9b}.game-rank-stat.abyssal strong{color:#20e3ff}.game-rank-stat.ultra strong{color:#f2a7ff}.game-rank-stat.mythic strong{color:#ff5368}@media(min-width:390px){.game-metric-tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+
 </style>
 <link rel="stylesheet" href="index-theme.css">
 </head>
@@ -34,7 +38,13 @@ body.game-home [data-leaderboard-mode="lift"],body.game-home [data-activity-mode
   <div class="inner-tabs"><button type="button" class="inner-tab" data-leaderboard-mode="lift" onclick="showLeaderboardMode('lift')">🏋️ Lift</button><button type="button" class="inner-tab active" data-leaderboard-mode="adventure" onclick="showLeaderboardMode('adventure')">⚔️ Aventure</button></div>
   <div class="subview hidden" id="leaderboardLift"><div class="list" id="rankList"></div></div>
   <div class="subview" id="leaderboardAdventure">
-    <div class="adventure-summary" id="adventureSummary">Classement général du jeu · trié par monde, puis par dégâts infligés.</div>
+    <div class="inner-tabs game-metric-tabs">
+      <button type="button" class="inner-tab active" data-adventure-metric="stats" onclick="showAdventureMetric('stats')">📊 Statistiques</button>
+      <button type="button" class="inner-tab" data-adventure-metric="damage" onclick="showAdventureMetric('damage')">💥 Dégâts</button>
+      <button type="button" class="inner-tab" data-adventure-metric="kills" onclick="showAdventureMetric('kills')">👾 Monstres</button>
+      <button type="button" class="inner-tab" data-adventure-metric="cases" onclick="showAdventureMetric('cases')">🎁 Caisses</button>
+    </div>
+    <div class="adventure-summary" id="adventureSummary">Classement selon la somme Puissance + Chance + Fortune.</div>
     <div class="game-rank-list" id="adventureRankList"><div class="empty">Connexion à Supabase…</div></div>
   </div>
 </section>
@@ -160,6 +170,7 @@ function currentWeek(storageKey){
 function weekLabel(a){return `Semaine ${currentWeek(a.storageKey)}`}
 let APP_LIST=[];
 let ADVENTURE_ROWS=[];
+let ADVENTURE_METRIC='stats';
 let ADVENTURE_CHANNEL=null;
 function refreshHomeWeeks(){
  if(!APP_LIST.length)return;
@@ -210,33 +221,60 @@ function leaderboardNumericCompare(a,b){
  return (Number(a)||0)-(Number(b)||0);
 }
 function completedCombats(row){return Math.max(0,(Number(row.combat_wins)||0)+(Number(row.combat_losses)||0))}
+function leaderboardDecimalText(value){return (Number(value)||0).toLocaleString('fr-FR',{maximumFractionDigits:2})}
+function gameClassLabel(value){return {warrior:'Guerrier',archer:'Archer',mage:'Magicienne'}[value]||'Aventurier'}
+function adventureMedal(index){return ['🥇','🥈','🥉'][index]||String(index+1)}
+function showAdventureMetric(metric){
+ ADVENTURE_METRIC=['stats','damage','kills','cases'].includes(metric)?metric:'stats';
+ document.querySelectorAll('[data-adventure-metric]').forEach(btn=>btn.classList.toggle('active',btn.dataset.adventureMetric===ADVENTURE_METRIC));
+ renderAdventureLeaderboard();
+}
+function adventureMetricSort(rows){
+ return [...rows].sort((a,b)=>{
+  if(ADVENTURE_METRIC==='damage')return leaderboardNumericCompare(b.total_combat_damage,a.total_combat_damage)||leaderboardNumericCompare(b.best_combat_damage,a.best_combat_damage)||(Number(b.combat_wins)||0)-(Number(a.combat_wins)||0);
+  if(ADVENTURE_METRIC==='kills')return (Number(b.combat_wins)||0)-(Number(a.combat_wins)||0)||(Number(b.boss_wins)||0)-(Number(a.boss_wins)||0)||leaderboardNumericCompare(b.total_combat_damage,a.total_combat_damage);
+  if(ADVENTURE_METRIC==='cases')return (Number(b.cases_opened)||0)-(Number(a.cases_opened)||0)||(Number(b.abyssal_from_cases)||0)-(Number(a.abyssal_from_cases)||0)||(Number(b.ultra_mythic_from_cases)||0)-(Number(a.ultra_mythic_from_cases)||0)||(Number(b.mythic_from_cases)||0)-(Number(a.mythic_from_cases)||0);
+  return (Number(b.stat_total)||0)-(Number(a.stat_total)||0)||(Number(b.stat_power)||0)-(Number(a.stat_power)||0)||(Number(b.stat_fortune)||0)-(Number(a.stat_fortune)||0);
+ });
+}
+function adventureSummaryText(){return {stats:'Classement selon la somme des statistiques effectives : Puissance + Chance + Fortune.',damage:'Classement selon tous les dégâts infligés au cours des combats.',kills:'Classement selon le nombre total de monstres vaincus.',cases:'Classement selon le nombre de caisses ouvertes. Les drops Mythiques, Ultra mythiques et Abyssaux restent comptés même après une vente.'}[ADVENTURE_METRIC]}
+function adventureMainScore(row){
+ if(ADVENTURE_METRIC==='damage')return [leaderboardIntegerText(row.total_combat_damage),'dégâts infligés'];
+ if(ADVENTURE_METRIC==='kills')return [leaderboardIntegerText(row.combat_wins),'monstres vaincus'];
+ if(ADVENTURE_METRIC==='cases')return [leaderboardIntegerText(row.cases_opened),'caisses ouvertes'];
+ return [leaderboardDecimalText(row.stat_total),'total statistiques'];
+}
+function adventureStats(row){
+ const wins=Math.max(0,Number(row.combat_wins)||0),losses=Math.max(0,Number(row.combat_losses)||0),attempts=wins+losses,ratio=attempts?Math.round(wins/attempts*100):0;
+ if(ADVENTURE_METRIC==='damage')return [['💥 Dégâts',leaderboardIntegerText(row.total_combat_damage),''],['🎯 Record',leaderboardIntegerText(row.best_combat_damage),''],['👾 Victoires',leaderboardIntegerText(wins),''],['🌍 Monde',leaderboardIntegerText(row.adventure_difficulty),'']];
+ if(ADVENTURE_METRIC==='kills')return [['👾 Monstres',leaderboardIntegerText(wins),''],['👑 Boss',leaderboardIntegerText(row.boss_wins),''],['💀 Défaites',leaderboardIntegerText(losses),''],['📈 Victoires',ratio+' %','']];
+ if(ADVENTURE_METRIC==='cases')return [['🎁 Caisses',leaderboardIntegerText(row.cases_opened),''],['🫧 Abyssal',leaderboardIntegerText(row.abyssal_from_cases),'abyssal'],['🌟 Ultra',leaderboardIntegerText(row.ultra_mythic_from_cases),'ultra'],['🔴 Mythique',leaderboardIntegerText(row.mythic_from_cases),'mythic']];
+ return [['⚔️ Puissance',leaderboardDecimalText(row.stat_power),'power'],['✨ Chance',leaderboardDecimalText(row.stat_mastery),'mastery'],['🍀 Fortune',leaderboardDecimalText(row.stat_fortune),'fortune'],['Σ Total',leaderboardDecimalText(row.stat_total),'']];
+}
 function renderAdventureLeaderboard(){
  const list=document.getElementById('adventureRankList');if(!list)return;
- const rows=[...ADVENTURE_ROWS].sort((a,b)=>{
-  const world=(Number(b.adventure_difficulty)||1)-(Number(a.adventure_difficulty)||1);if(world)return world;
-  const damage=leaderboardNumericCompare(b.total_combat_damage,a.total_combat_damage);if(damage)return damage;
-  const fights=completedCombats(b)-completedCombats(a);if(fights)return fights;
-  return (Number(b.cases_opened)||0)-(Number(a.cases_opened)||0);
- });
+ document.getElementById('adventureSummary').textContent=adventureSummaryText();
+ const rows=adventureMetricSort(ADVENTURE_ROWS);
  if(!rows.length){list.innerHTML='<div class="empty">Aucune progression de jeu disponible.</div>';return}
  list.innerHTML=rows.map((row,i)=>{
-  const athlete=athleteForProgressSlug(row.athlete_slug);const name=athlete?.name||row.athlete_slug;const emoji=athlete?.emoji||'⚔️';
-  const world=Math.max(1,Number(row.adventure_difficulty)||1);const fights=completedCombats(row);const wins=Math.max(0,Number(row.combat_wins)||0);const cases=Math.max(0,Number(row.cases_opened)||0);
-  const classLabel={warrior:'Guerrier',archer:'Archer',mage:'Magicienne'}[row.rpg_class]||'Aventurier';
-  return `<div class="game-rank ${i===0?'top1':i===1?'top2':i===2?'top3':''}"><div class="game-rank-head"><div class="place">${i+1}</div><div class="avatar">${esc(emoji)}</div><div class="info"><div class="name">${esc(name)}</div><div class="sub">${esc(classLabel)} · ${wins.toLocaleString('fr-FR')} victoire${wins===1?'':'s'}</div></div></div><div class="game-rank-stats"><div class="game-rank-stat world"><span>🌍 Monde</span><strong>${world.toLocaleString('fr-FR')}</strong></div><div class="game-rank-stat"><span>💥 Dégâts</span><strong title="${esc(String(row.total_combat_damage??0))}">${leaderboardIntegerText(row.total_combat_damage)}</strong></div><div class="game-rank-stat"><span>⚔️ Combats</span><strong>${fights.toLocaleString('fr-FR')}</strong></div><div class="game-rank-stat"><span>🎁 Caisses</span><strong>${cases.toLocaleString('fr-FR')}</strong></div></div></div>`;
+  const athlete=athleteForProgressSlug(row.athlete_slug),name=athlete?.name||row.athlete_slug,emoji=athlete?.emoji||'⚔️';
+  const [score,scoreLabel]=adventureMainScore(row);
+  const stats=adventureStats(row).map(([label,value,extra])=>`<div class="game-rank-stat ${extra||''}"><span>${label}</span><strong title="${esc(String(value))}">${value}</strong></div>`).join('');
+  return `<article class="game-rank ${i===0?'top1':i===1?'top2':i===2?'top3':''}"><div class="game-rank-head"><div class="place ${i<3?'medal':''}">${adventureMedal(i)}</div><div class="avatar">${esc(emoji)}${athlete?.profileImage?`<img src="${encodeURIComponent(athlete.profileImage)}?v=20260805-v131" alt="Avatar ${esc(name)}" decoding="async" onerror="this.remove()">`:''}</div><div class="info"><div class="name">${esc(name)}</div><div class="sub">Niveau ${leaderboardIntegerText(row.level||1)} · Monde ${leaderboardIntegerText(row.adventure_difficulty||1)} · ${esc(gameClassLabel(row.rpg_class))}</div></div><div class="game-rank-main-score"><strong>${score}</strong><span>${scoreLabel}</span></div></div><div class="game-rank-stats">${stats}</div></article>`;
  }).join('');
 }
+
 async function loadAdventureLeaderboard(){
  if(!window.CoachingCloud?.client||!CoachingCloud.session?.user)return;
- let result=await CoachingCloud.client.rpc('rpg_game_leaderboard_v130');
+ let result=await CoachingCloud.client.rpc('rpg_game_leaderboard_v131');
  if(result.error&&/function|schema cache|could not find/i.test(result.error.message||'')){
-  const fallback=await CoachingCloud.client.from('athlete_progress').select('athlete_slug,level,combat_wins,combat_losses,total_combat_damage,adventure_difficulty,rpg_class');
-  result={data:(fallback.data||[]).map(row=>({...row,cases_opened:0})),error:fallback.error};
+  const fallback=await CoachingCloud.client.from('athlete_progress').select('athlete_slug,level,combat_wins,combat_losses,boss_wins,best_combat_damage,total_combat_damage,adventure_difficulty,rpg_class,stat_power,stat_mastery,stat_fortune');
+  result={data:(fallback.data||[]).map(row=>({...row,stat_total:(Number(row.stat_power)||0)+(Number(row.stat_mastery)||0)+(Number(row.stat_fortune)||0),cases_opened:0,mythic_from_cases:0,ultra_mythic_from_cases:0,abyssal_from_cases:0})),error:fallback.error};
  }
  const {data,error}=result;
  if(error){console.warn('Leaderboard du jeu indisponible :',error.message);document.getElementById('adventureRankList').innerHTML=`<div class="empty">Leaderboard du jeu indisponible.<br>${esc(error.message)}</div>`;return}
  ADVENTURE_ROWS=data||[];renderAdventureLeaderboard();if(APP_LIST.length)render(APP_LIST);
- if(!ADVENTURE_CHANNEL){ADVENTURE_CHANNEL=CoachingCloud.client.channel('ga-game-leaderboard-v130').on('postgres_changes',{event:'*',schema:'public',table:'athlete_progress'},()=>setTimeout(loadAdventureLeaderboard,100)).on('postgres_changes',{event:'INSERT',schema:'public',table:'rpg_case_openings'},()=>setTimeout(loadAdventureLeaderboard,100)).subscribe()}
+ if(!ADVENTURE_CHANNEL){ADVENTURE_CHANNEL=CoachingCloud.client.channel('ga-game-leaderboard-v131').on('postgres_changes',{event:'*',schema:'public',table:'athlete_progress'},()=>setTimeout(loadAdventureLeaderboard,100)).on('postgres_changes',{event:'INSERT',schema:'public',table:'rpg_case_openings'},()=>setTimeout(loadAdventureLeaderboard,100)).subscribe()}
 }
 function show(v){const order=['athletes','leaderboard','activity'];document.querySelectorAll('.view').forEach(x=>x.classList.remove('visible'));document.getElementById(v).classList.add('visible');document.querySelectorAll('.tab').forEach((x,i)=>x.classList.toggle('active',order[i]===v))}
 (async()=>{const status=document.getElementById('status');const fs=await files();const out=await Promise.allSettled(fs.map(read));const loaded=out.filter(x=>x.status==='fulfilled').map(x=>x.value);const loadedIds=new Set(loaded.map(a=>a.id));const pinnedFallbacks=PINNED_GAME_ATHLETES.filter(a=>!loadedIds.has(a.id));const raw=[...loaded,...pinnedFallbacks,...EXTRA_ATHLETES];const list=dedupe(raw).sort((a,b)=>a.name.localeCompare(b.name,'fr'));APP_LIST=list;render(APP_LIST);renderAdventureLeaderboard();const missing=list.filter(a=>!a.bw).map(a=>a.name);status.textContent=missing.length?`${list.length} athlètes chargés · poids manquants : ${missing.join(', ')}`:`${list.length} athlètes HTML synchronisés.`;status.classList.toggle('error',missing.length>0)})().catch(e=>{document.getElementById('status').textContent='Erreur de lecture des fichiers HTML.';document.getElementById('status').classList.add('error')});
