@@ -142,7 +142,7 @@ window.GA_APP_BUILD = '2026-08-04-v118-xp-difficulte-vs-difficulte';
 
 (function () {
   'use strict';
-window.GA_APP_BUILD = 'V125-validation-tous-mouvements';
+window.GA_APP_BUILD = 'V129-direct-load';
 
   const config = window.COACHING_SUPABASE || {};
   const configured = /^https:\/\/.+\.supabase\.co\/?$/i.test(String(config.url || ''))
@@ -6991,6 +6991,7 @@ function collectionHtml() {
     .cloud-athlete-nav.active{color:var(--accent-light,var(--accent,#55b9e6))!important}
     .cloud-status.cloud-injected-status{margin-left:auto}
     .set-row .cloud-athlete-rpe,.set-row .cloud-athlete-load{flex:0 0 58px}
+    .ga-direct-load-v129{display:block!important;width:78px!important;min-width:72px!important;padding:5px 6px!important;border-radius:7px!important;border:1px solid rgba(255,255,255,.13)!important;background:rgba(255,255,255,.065)!important;color:inherit!important;font:800 12px Inter,system-ui,sans-serif!important;text-align:center!important;outline:none!important}.ga-direct-load-v129:focus{border-color:var(--accent,#55b9e6)!important}.ga-direct-load-v129.ga-load-missing-v129{border-color:rgba(240,196,77,.62)!important;box-shadow:0 0 0 2px rgba(240,196,77,.10)!important}.load-preset-v22,.pencil-btn{display:none!important}
     .load-select.ga-load-choice-v125{appearance:menulist!important;-webkit-appearance:menulist!important;width:96px!important;min-width:96px!important;padding:5px 4px!important;border-color:rgba(255,255,255,.16)!important;background-color:rgba(255,255,255,.08)!important;color:inherit!important;cursor:pointer!important}.load-select.ga-load-choice-v125:focus{border-color:var(--accent,#55b9e6)!important}.load-select.ga-load-choice-v125.ga-load-missing-v125{border-color:rgba(240,196,77,.48)!important;color:var(--gold,#efc45a)!important}
     .set-row.ga-accessory-no-rpe-v114 .cloud-athlete-rpe,.set-row.ga-accessory-no-rpe-v114 .rpe-select,.set-row.ga-accessory-no-rpe-v114 .rpe-input,.set-row.ga-accessory-no-rpe-v114 .set-rpe,.set-row.ga-accessory-no-rpe-v114 [data-rpe],.set-row.ga-accessory-no-rpe-v114 [data-rpe-value],.set-row.ga-accessory-no-rpe-v114 [aria-label*="rpe" i],.set-row.ga-accessory-no-rpe-v114 [title*="rpe" i]{display:none!important}
     .set-row{flex-wrap:wrap}.cloud-load-interval{display:none!important}.set-row.ga-sbd-clean-v28>.cloud-athlete-load,.set-row.ga-sbd-clean-v28>.cloud-athlete-rpe,.set-row.ga-sbd-clean-v28>.load-preset-v22{display:none!important}
@@ -7671,45 +7672,45 @@ function collectionHtml() {
   }
 
   function improveLoadChoiceV125(row, idx, w, d) {
-    const select = row?.querySelector('.load-select');
-    if (!select) return;
+    if (!row) return;
 
-    select.classList.add('ga-load-choice-v125');
-    select.setAttribute('aria-label', 'Choisir la charge réalisée');
-    select.title = 'Clique ici pour choisir la charge. Le crayon sert uniquement à saisir une charge libre.';
+    let direct = row.querySelector('.ga-direct-load-v129,.load-input,.cloud-athlete-load,.set-load');
+    const legacySelect = row.querySelector('.load-select');
+
+    // Filet de compatibilité : une ancienne page encore en cache est convertie
+    // automatiquement en champ de saisie libre, sans menu et sans crayon.
+    if (!direct && legacySelect) {
+      const loadKey = extractBooleanLoadKey(row);
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.inputMode = 'decimal';
+      input.autocomplete = 'off';
+      input.className = 'load-input visible ga-direct-load-v129';
+      input.value = String(legacySelect.value || '');
+      input.setAttribute('aria-label', 'Charge réalisée en kilogrammes');
+      const originalChange = legacySelect.getAttribute('onchange');
+      if (originalChange) input.setAttribute('onchange', originalChange);
+      if (loadKey && typeof window.sLDirect === 'function') {
+        input.addEventListener('input', () => window.sLDirect(loadKey, input.value));
+      }
+      legacySelect.replaceWith(input);
+      direct = input;
+    }
+
+    row.querySelectorAll('.pencil-btn,.load-preset-v22').forEach(node => node.remove());
+    if (!direct) return;
+
+    direct.classList.add('ga-direct-load-v129');
+    direct.setAttribute('aria-label', 'Charge réalisée en kilogrammes');
+    direct.setAttribute('inputmode', 'decimal');
+    direct.setAttribute('autocomplete', 'off');
 
     const rangeText = String(row.querySelector('.load-range')?.textContent || '').replace(/\s+/g, ' ').trim();
-    const range = rangeText.match(/(\d+(?:[.,]\d+)?)\s*(?:-|–|—|à)\s*(\d+(?:[.,]\d+)?)/i);
-    const fixed = !range ? rangeText.match(/(\d+(?:[.,]\d+)?)\s*kg/i) : null;
-    const min = range ? normalizeLoadValue(range[1]) : normalizeLoadValue(fixed?.[1]);
-    const max = range ? normalizeLoadValue(range[2]) : min;
-
-    const emptyOption = [...select.options].find(option => option.value === '');
-    if (emptyOption) {
-      if (min !== null && max !== null) {
-        emptyOption.textContent = min === max
-          ? `${String(min).replace('.', ',')} kg ▾`
-          : `${String(min).replace('.', ',')}–${String(max).replace('.', ',')} kg ▾`;
-      } else {
-        emptyOption.textContent = 'Charge kg ▾';
-      }
+    if (!direct.getAttribute('placeholder') || /^(?:kg|charge)$/i.test(direct.getAttribute('placeholder') || '')) {
+      direct.setAttribute('placeholder', rangeText || 'kg');
     }
 
-    // Une charge fixe peut être présélectionnée sans inventer une performance.
-    // Pour une plage, l'athlète choisit lui-même la charge réellement utilisée.
-    if (!String(select.value || '').trim() && min !== null && max !== null && min === max) {
-      const exactOption = [...select.options].find(option => normalizeLoadValue(option.value) === min);
-      if (exactOption) {
-        select.value = exactOption.value;
-        setOriginalLoad(w, d, idx, min, row);
-        const key = valueKey(w, d, idx);
-        inputCache[key] = { ...(inputCache[key] || {}), load: min, dirty: true, updatedAt: Date.now() };
-        writeCache();
-        persistOriginal();
-      }
-    }
-
-    select.classList.toggle('ga-load-missing-v125', !String(select.value || '').trim());
+    direct.classList.toggle('ga-load-missing-v129', !String(direct.value || '').trim());
   }
 
   function ensureInputs(row, idx, w, d) {
@@ -7739,11 +7740,10 @@ function collectionHtml() {
     // Sur squat / bench / deadlift, on garde exclusivement les contrôles natifs.
     if (isAccessoryRow && !loadInput) {
       loadInput = document.createElement('input');
-      loadInput.type = 'number';
+      loadInput.type = 'text';
       loadInput.inputMode = 'decimal';
-      loadInput.step = '0.5';
-      loadInput.min = '0';
-      loadInput.className = 'cloud-athlete-load';
+      loadInput.autocomplete = 'off';
+      loadInput.className = 'cloud-athlete-load ga-direct-load-v129';
       loadInput.dataset.gaInjectedControl = '1';
       loadInput.placeholder = inferPrescribedLoad(row) || 'kg';
       loadInput.setAttribute('aria-label', 'Charge réalisée en kilogrammes');
@@ -8383,13 +8383,13 @@ function collectionHtml() {
       const nextCompleted = !wasCompleted;
 
       if (nextCompleted && ['sq', 'bn', 'dl'].includes(preClickMeta.code) && preClickMeta.load === null) {
-        const loadSelect = row.querySelector('.load-select');
-        if (loadSelect) {
-          loadSelect.classList.add('ga-load-missing-v125');
-          loadSelect.focus();
-          CoachingCloud.toast('Choisis directement la charge dans le champ gris. Le crayon sert seulement à saisir une charge libre.', true);
-          return;
+        const loadField = row.querySelector('.ga-direct-load-v129,.load-input,.cloud-athlete-load,.set-load,.load-select');
+        if (loadField) {
+          loadField.classList.add('ga-load-missing-v129');
+          loadField.focus();
         }
+        CoachingCloud.toast('Écris la charge réellement utilisée avant de valider la série.', true);
+        return;
       }
       const booleanKey = extractBooleanSetKey(row);
       const visibleSetNumber = Math.max(1, Number(row.querySelector('.set-num')?.textContent) || (idx + 1));
@@ -8509,7 +8509,7 @@ function collectionHtml() {
       if (!Number.isInteger(idx)) return;
       const { w, d } = currentIndices();
       const meta = rowMeta(row, idx, w, d);
-      input.classList?.toggle('ga-load-missing-v125', input.classList?.contains('load-select') && !String(input.value || '').trim());
+      if (input.matches?.('.ga-direct-load-v129,.load-input,.cloud-athlete-load,.set-load,.load-select')) input.classList?.toggle('ga-load-missing-v129', !String(input.value || '').trim());
       persistSetValues(meta, row);
       scheduleSetValueSync(meta, originalCompleted(w, d, idx, row), 0);
     }, true);
@@ -8775,12 +8775,8 @@ function collectionHtml() {
   const timeOptions = [10,15,20,30,40,45,60,75,90,120,150,180,240,300,600].map(value => `<option value="${value}">${durationLabel(value)}</option>`).join('');
 
   function ensureLoadPreset(row, loadInput) {
-    if (!loadInput || row.querySelector('.load-preset-v22')) return;
-    const preset = document.createElement('select');
-    preset.className = 'load-preset-v22';
-    preset.setAttribute('aria-label', 'Choisir une charge prédéfinie');
-    preset.innerHTML = `<option value="">⌄</option>${loadOptions}`;
-    loadInput.after(preset);
+    row?.querySelectorAll('.load-preset-v22').forEach(node => node.remove());
+    if (loadInput) loadInput.classList.add('ga-direct-load-v129');
   }
 
   function addProfileLink(block, name) {
@@ -8878,7 +8874,7 @@ function collectionHtml() {
       if (looksLikeDuplicate) node.remove();
     });
 
-    const keepers = new Set([loadInput, tracker?.querySelector('.load-preset-v22')]);
+    const keepers = new Set([loadInput]);
     row.querySelectorAll('.cloud-athlete-load,.load-preset-v22').forEach(node => {
       if (!keepers.has(node) && !tracker?.contains(node)) node.remove();
     });
@@ -8920,11 +8916,8 @@ function collectionHtml() {
     }
 
     const loadSlot = tracker.querySelector('.accessory-load-slot-v22');
-    const preset = row.querySelector('.load-preset-v22');
-
     if (loadSlot && loadInput.parentElement !== loadSlot) {
       loadSlot.append(loadInput);
-      if (preset) loadSlot.append(preset);
     }
 
     cleanupAccessoryInlineDuplicates(row, tracker, loadInput);
