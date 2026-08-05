@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V118';
+window.GA_APP_VERSION = 'V119';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-04-v118-xp-difficulte-vs-difficulte';
+window.GA_APP_BUILD = '2026-08-05-v119-audio-spotify';
 
 
 /* --------------------------------------------------------------------------
@@ -1456,18 +1456,20 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
     if (assumptioSound) return assumptioSound;
     const audio = document.createElement('audio');
     audio.id = 'rpgAssumptioSound';
-    audio.preload = 'auto';
+    audio.preload = 'none';
     audio.playsInline = true;
-    audio.volume = 0.9;
+    audio.setAttribute('playsinline', '');
+    audio.setAttribute('webkit-playsinline', '');
+    audio.volume = effectiveSfxVolume(0.9);
     audio.src = ASSUMPTIO_SOUND_SRC;
     audio.style.display = 'none';
     document.body.appendChild(audio);
-    audio.load();
     assumptioSound = audio;
     return audio;
   }
 
   function playAssumptioFallback() {
+    if (!sfxAllowed()) return false;
     try {
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
       if (!AudioContextClass) return;
@@ -1480,7 +1482,7 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
         oscillator.type = 'sine';
         oscillator.frequency.value = frequency;
         gain.gain.setValueAtTime(0.0001, now + index * 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.20, now + index * 0.08 + 0.015);
+        gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, effectiveSfxVolume(0.20)), now + index * 0.08 + 0.015);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.08 + 0.36);
         oscillator.connect(gain).connect(context.destination);
         oscillator.start(now + index * 0.08);
@@ -1490,12 +1492,13 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
   }
 
   function playAssumptioSound() {
+    if (!sfxAllowed()) return false;
     try {
       const audio = ensureAssumptioSound();
       audio.pause();
       audio.currentTime = 0;
       audio.muted = false;
-      audio.volume = 0.9;
+      audio.volume = effectiveSfxVolume(0.9);
       const promise = audio.play();
       if (promise?.catch) {
         promise.catch(error => {
@@ -1512,7 +1515,7 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
   const RARITY_COLORS = { normal:'#c4cad4', common:'#61d38b', uncommon:'#5ca9ff', rare:'#aa73ff', epic:'#ff8b49', legendary:'#ffd04f', mythic:'#ff5368', ultra_mythic:'#f2a7ff', abyssal:'#20e3ff' };
 
   
-const RPG_AUDIO_BUILD = '2026-08-04-equipment-audio-v57';
+const RPG_AUDIO_BUILD = '2026-08-05-audio-settings-v60';
 window.RPG_AUDIO_BUILD = RPG_AUDIO_BUILD;
 
 // Les MP3 sont déposés directement à la racine du dépôt (branche main),
@@ -1527,6 +1530,64 @@ const MENU_MUSIC_VOLUME = 0.42;
 let menuMusic = null;
 let menuMusicSourceIndex = 0;
 let menuMusicWantedPlaying = false;
+
+// V60 — réglages audio persistants et compatibles avec l'écoute de Spotify.
+// Les réglages sont partagés entre toutes les pages athlètes du même domaine.
+const RPG_AUDIO_SETTINGS_KEY = 'ga_rpg_audio_settings_v2';
+const RPG_AUDIO_DEFAULTS = Object.freeze({
+  musicEnabled: true,
+  sfxEnabled: true,
+  musicVolume: 1,
+  sfxVolume: 1
+});
+
+function clampAudioSetting(value, fallback = 1) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Math.max(0, Math.min(1, parsed)) : fallback;
+}
+
+function loadRpgAudioSettings() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(RPG_AUDIO_SETTINGS_KEY) || '{}');
+    return {
+      musicEnabled: stored.musicEnabled !== false,
+      sfxEnabled: stored.sfxEnabled !== false,
+      musicVolume: clampAudioSetting(stored.musicVolume, 1),
+      sfxVolume: clampAudioSetting(stored.sfxVolume, 1)
+    };
+  } catch (_) {
+    return { ...RPG_AUDIO_DEFAULTS };
+  }
+}
+
+let rpgAudioSettings = loadRpgAudioSettings();
+
+function saveRpgAudioSettings() {
+  try { localStorage.setItem(RPG_AUDIO_SETTINGS_KEY, JSON.stringify(rpgAudioSettings)); } catch (_) {}
+}
+
+function musicAllowed() {
+  return rpgAudioSettings.musicEnabled === true && rpgAudioSettings.musicVolume > 0;
+}
+
+function sfxAllowed() {
+  return rpgAudioSettings.sfxEnabled === true && rpgAudioSettings.sfxVolume > 0;
+}
+
+function effectiveMusicVolume(baseVolume) {
+  return clampAudioSetting(baseVolume, MENU_MUSIC_VOLUME) * rpgAudioSettings.musicVolume;
+}
+
+function effectiveSfxVolume(baseVolume) {
+  return clampAudioSetting(baseVolume, 1) * rpgAudioSettings.sfxVolume;
+}
+
+function duckedMusicVolume(baseVolume = MENU_MUSIC_VOLUME) {
+  return Math.min(
+    effectiveMusicVolume(baseVolume),
+    effectiveMusicVolume(ABYSSAL_MUSIC_DUCK_VOLUME)
+  );
+}
 
 // V42 : noms ASCII stables. Les 26 MP3 correspondants sont fournis à la
 // racine de main, au même niveau que app.js. On ne dépend plus des accents,
@@ -1543,12 +1604,12 @@ const AUDIO_TRACKS = {
   battle_boss_40_49: ['boss-40-49.mp3'],
   battle_boss_50_59: ['boss-50-59.mp3'],
   battle_boss_60_69: ['boss-60-69.mp3'],
-  battle_boss_70_79: ['boss-70-79.mp3'],
-  battle_boss_80_89: ['boss-80-89.mp3'],
-  battle_boss_90_99: ['boss-90-99.mp3'],
+  battle_boss_70_79: ['boss-70-79.mp3', 'boss-60-69.mp3'],
+  battle_boss_80_89: ['boss-80-89.mp3', 'boss-100.mp3'],
+  battle_boss_90_99: ['boss-90-99.mp3', 'boss-100.mp3'],
   battle_boss_100: ['boss-100.mp3'],
   damage_trial: ['test-degats.mp3'],
-  raid: ['raid.mp3'],
+  raid: ['raid.mp3', 'sweatiershop-boss-theme.mp3'],
   case_opening: ['casino.mp3'],
   jackpot: ['jackpot.mp3'],
   theme_noah: ['theme-noah.mp3'],
@@ -1615,7 +1676,7 @@ function restoreMusicAfterAbyssalVoice() {
   if (abyssalVoiceRestoreTimer) clearTimeout(abyssalVoiceRestoreTimer);
   abyssalVoiceRestoreTimer = null;
   if (menuMusic && !menuMusic.paused) {
-    menuMusic.volume = Math.max(0, Math.min(1, Number(sharedMusicVolume) || MENU_MUSIC_VOLUME));
+    menuMusic.volume = effectiveMusicVolume(Number(sharedMusicVolume) || MENU_MUSIC_VOLUME);
   }
 }
 
@@ -1623,9 +1684,9 @@ function ensureAbyssalVoice() {
   if (abyssalVoice) return abyssalVoice;
   const audio = document.createElement('audio');
   audio.id = 'rpgAbyssalVoice';
-  configureAudioElement(audio);
+  configureAudioElement(audio, { preload:'none' });
   audio.loop = false;
-  audio.volume = ABYSSAL_VOICE_VOLUME;
+  audio.volume = effectiveSfxVolume(ABYSSAL_VOICE_VOLUME);
   audio.style.display = 'none';
 
   audio.addEventListener('ended', restoreMusicAfterAbyssalVoice);
@@ -1656,9 +1717,9 @@ function ensurePereDeNoeVoice() {
   if (pereDeNoeVoice) return pereDeNoeVoice;
   const audio = document.createElement('audio');
   audio.id = 'rpgPereDeNoeVoice';
-  configureAudioElement(audio);
+  configureAudioElement(audio, { preload:'none' });
   audio.loop = false;
-  audio.volume = PERE_DE_NOE_VOICE_VOLUME;
+  audio.volume = effectiveSfxVolume(PERE_DE_NOE_VOICE_VOLUME);
   audio.style.display = 'none';
 
   audio.addEventListener('ended', restoreMusicAfterAbyssalVoice);
@@ -1686,6 +1747,7 @@ function ensurePereDeNoeVoice() {
 }
 
 function primePereDeNoeVoice() {
+  if (!sfxAllowed()) return false;
   try {
     const audio = ensurePereDeNoeVoice();
     if (pereDeNoeVoiceUnlocked || !audio.src) return;
@@ -1700,11 +1762,11 @@ function primePereDeNoeVoice() {
         audio.pause();
         audio.currentTime = 0;
         audio.muted = previousMuted;
-        audio.volume = previousVolume || PERE_DE_NOE_VOICE_VOLUME;
+        audio.volume = previousVolume || effectiveSfxVolume(PERE_DE_NOE_VOICE_VOLUME);
         pereDeNoeVoiceUnlocked = true;
       }).catch(() => {
         audio.muted = previousMuted;
-        audio.volume = previousVolume || PERE_DE_NOE_VOICE_VOLUME;
+        audio.volume = previousVolume || effectiveSfxVolume(PERE_DE_NOE_VOICE_VOLUME);
       });
     }
   } catch (error) {
@@ -1713,6 +1775,7 @@ function primePereDeNoeVoice() {
 }
 
 function playPereDeNoeVoice() {
+  if (!sfxAllowed()) return false;
   try {
     const audio = ensurePereDeNoeVoice();
     if (!audio.src) return false;
@@ -1721,10 +1784,7 @@ function playPereDeNoeVoice() {
       try { abyssalVoice.pause(); abyssalVoice.currentTime = 0; } catch (_) {}
     }
     if (menuMusic && !menuMusic.paused) {
-      menuMusic.volume = Math.min(
-        Math.max(0, Number(menuMusic.volume) || sharedMusicVolume || MENU_MUSIC_VOLUME),
-        ABYSSAL_MUSIC_DUCK_VOLUME
-      );
+      menuMusic.volume = duckedMusicVolume(sharedMusicVolume || MENU_MUSIC_VOLUME);
     }
 
     if (abyssalVoiceRestoreTimer) clearTimeout(abyssalVoiceRestoreTimer);
@@ -1737,7 +1797,7 @@ function playPereDeNoeVoice() {
     audio.currentTime = 0;
     audio.loop = false;
     audio.muted = false;
-    audio.volume = PERE_DE_NOE_VOICE_VOLUME;
+    audio.volume = effectiveSfxVolume(PERE_DE_NOE_VOICE_VOLUME);
     const playback = audio.play();
     if (playback?.catch) {
       playback.catch(error => {
@@ -1756,6 +1816,7 @@ function playPereDeNoeVoice() {
 // Appelée directement dans le clic Combat/Coffre pour autoriser le lecteur
 // sur iPhone et sur les navigateurs qui bloquent les sons lancés après Supabase.
 function primeAbyssalVoice() {
+  if (!sfxAllowed()) return false;
   try {
     const audio = ensureAbyssalVoice();
     if (abyssalVoiceUnlocked || !audio.src) return;
@@ -1770,11 +1831,11 @@ function primeAbyssalVoice() {
         audio.pause();
         audio.currentTime = 0;
         audio.muted = previousMuted;
-        audio.volume = previousVolume || ABYSSAL_VOICE_VOLUME;
+        audio.volume = previousVolume || effectiveSfxVolume(ABYSSAL_VOICE_VOLUME);
         abyssalVoiceUnlocked = true;
       }).catch(() => {
         audio.muted = previousMuted;
-        audio.volume = previousVolume || ABYSSAL_VOICE_VOLUME;
+        audio.volume = previousVolume || effectiveSfxVolume(ABYSSAL_VOICE_VOLUME);
       });
     }
   } catch (error) {
@@ -1784,6 +1845,7 @@ function primeAbyssalVoice() {
 }
 
 function playAbyssalVoice() {
+  if (!sfxAllowed()) return false;
   try {
     const audio = ensureAbyssalVoice();
     if (!audio.src) return false;
@@ -1792,10 +1854,7 @@ function playAbyssalVoice() {
       try { pereDeNoeVoice.pause(); pereDeNoeVoice.currentTime = 0; } catch (_) {}
     }
     if (menuMusic && !menuMusic.paused) {
-      menuMusic.volume = Math.min(
-        Math.max(0, Number(menuMusic.volume) || sharedMusicVolume || MENU_MUSIC_VOLUME),
-        ABYSSAL_MUSIC_DUCK_VOLUME
-      );
+      menuMusic.volume = duckedMusicVolume(sharedMusicVolume || MENU_MUSIC_VOLUME);
     }
 
     if (abyssalVoiceRestoreTimer) clearTimeout(abyssalVoiceRestoreTimer);
@@ -1808,7 +1867,7 @@ function playAbyssalVoice() {
     audio.currentTime = 0;
     audio.loop = false;
     audio.muted = false;
-    audio.volume = ABYSSAL_VOICE_VOLUME;
+    audio.volume = effectiveSfxVolume(ABYSSAL_VOICE_VOLUME);
     const playback = audio.play();
     if (playback?.catch) {
       playback.catch(error => {
@@ -1832,16 +1891,67 @@ function trackUrls(key) {
   return [...new Set((AUDIO_TRACKS[key] || []).map(audioVersionedUrl))];
 }
 
-function updateRpgAudioToggle(text, state = '') {
-  const toggle = document.getElementById('rpgAudioToggle');
-  if (!toggle) return;
-  toggle.textContent = text;
-  toggle.dataset.audioState = state;
+function rpgAudioButtonLabel() {
+  const musicActive = musicAllowed();
+  const sfxActive = sfxAllowed();
+  if (!musicActive && !sfxActive) return '🎧 Spotify';
+  if (!musicActive) return '🔔 Effets';
+  if (menuMusic && !menuMusic.paused && !menuMusic.ended) return '🔊 Audio';
+  return '🎵 Audio';
 }
 
-function configureAudioElement(audio) {
-  audio.preload = 'auto';
-  audio.loop = true;
+function rpgAudioStatusText() {
+  const musicActive = musicAllowed();
+  const sfxActive = sfxAllowed();
+  if (!musicActive && !sfxActive) {
+    return 'Mode Spotify : le jeu reste totalement silencieux.';
+  }
+  if (!musicActive && sfxActive) {
+    return 'Musique coupée, effets actifs. Sur certains téléphones, un effet peut brièvement baisser Spotify.';
+  }
+  if (musicActive && !sfxActive) {
+    return 'Musique active, effets coupés.';
+  }
+  return 'Musique et effets actifs.';
+}
+
+function updateRpgAudioToggle(_text = '', state = '') {
+  const toggle = document.getElementById('rpgAudioToggle');
+  if (toggle) {
+    toggle.textContent = rpgAudioButtonLabel();
+    toggle.dataset.audioState = state;
+    toggle.setAttribute('aria-label', rpgAudioStatusText());
+    toggle.title = rpgAudioStatusText();
+  }
+  renderRpgAudioSettings();
+}
+
+function renderRpgAudioSettings() {
+  const musicToggle = document.getElementById('rpgMusicEnabled');
+  const sfxToggle = document.getElementById('rpgSfxEnabled');
+  const musicRange = document.getElementById('rpgMusicVolume');
+  const sfxRange = document.getElementById('rpgSfxVolume');
+  const musicValue = document.getElementById('rpgMusicVolumeValue');
+  const sfxValue = document.getElementById('rpgSfxVolumeValue');
+  const status = document.getElementById('rpgAudioStatus');
+  if (musicToggle) musicToggle.checked = rpgAudioSettings.musicEnabled;
+  if (sfxToggle) sfxToggle.checked = rpgAudioSettings.sfxEnabled;
+  if (musicRange) {
+    musicRange.value = String(Math.round(rpgAudioSettings.musicVolume * 100));
+    musicRange.disabled = !rpgAudioSettings.musicEnabled;
+  }
+  if (sfxRange) {
+    sfxRange.value = String(Math.round(rpgAudioSettings.sfxVolume * 100));
+    sfxRange.disabled = !rpgAudioSettings.sfxEnabled;
+  }
+  if (musicValue) musicValue.textContent = `${Math.round(rpgAudioSettings.musicVolume * 100)} %`;
+  if (sfxValue) sfxValue.textContent = `${Math.round(rpgAudioSettings.sfxVolume * 100)} %`;
+  if (status) status.textContent = rpgAudioStatusText();
+}
+
+function configureAudioElement(audio, { preload = 'metadata', loop = true } = {}) {
+  audio.preload = preload;
+  audio.loop = loop;
   audio.playsInline = true;
   audio.setAttribute('playsinline', '');
   audio.setAttribute('webkit-playsinline', '');
@@ -1886,6 +1996,7 @@ function cancelPostCombatMusicReturn() {
 }
 
 async function returnToTavernAfterCombat() {
+  if (!musicAllowed()) return false;
   postCombatMusicReturnTimer = null;
 
   // Ne coupe jamais une nouvelle activité lancée pendant les 25 secondes.
@@ -1909,6 +2020,7 @@ async function returnToTavernAfterCombat() {
 }
 
 function schedulePostCombatMusicReturn() {
+  if (!musicAllowed()) return;
   if (postCombatMusicReturnTimer) clearTimeout(postCombatMusicReturnTimer);
   postCombatMenuReturnPending = false;
   postCombatMusicReturnTimer = setTimeout(() => {
@@ -1924,6 +2036,7 @@ function rememberBattleMusicPosition() {
 }
 
 async function resumeBattleMusicContinuity({ volume = BATTLE_MUSIC_VOLUME } = {}) {
+  if (!musicAllowed()) return false;
   if (!battleContinuityKey || !trackUrls(battleContinuityKey).length) return false;
   const audio = ensureMenuMusic();
   const key = battleContinuityKey;
@@ -1936,8 +2049,8 @@ async function resumeBattleMusicContinuity({ volume = BATTLE_MUSIC_VOLUME } = {}
     audio.defaultMuted = false;
     const requestedVolume = Math.max(0, Math.min(1, Number(volume) || BATTLE_MUSIC_VOLUME));
     audio.volume = specialAnnouncementPlaying()
-      ? Math.min(requestedVolume, ABYSSAL_MUSIC_DUCK_VOLUME)
-      : requestedVolume;
+      ? duckedMusicVolume(requestedVolume)
+      : effectiveMusicVolume(requestedVolume);
     if (restoreTime > 0 && Number.isFinite(audio.duration) && audio.duration > 0) {
       audio.currentTime = restoreTime % audio.duration;
     } else if (restoreTime > 0) {
@@ -1979,11 +2092,11 @@ function ensureMenuMusic() {
   const audio = new Audio();
   audio.id = 'rpgMusicPlayer';
   configureAudioElement(audio);
-  audio.volume = MENU_MUSIC_VOLUME;
+  audio.volume = effectiveMusicVolume(MENU_MUSIC_VOLUME);
   audio.style.display = 'none';
 
   audio.addEventListener('playing', () => {
-    if (sharedMusicMode === 'menu') updateRpgAudioToggle('🔊 Musique active · V59', 'playing');
+    if (sharedMusicMode === 'menu') updateRpgAudioToggle('🔊 Musique active · V60', 'playing');
   });
   audio.addEventListener('pause', () => {
     if (sharedMusicMode === 'menu' && !audio.ended) updateRpgAudioToggle('🔇 Musique coupée', 'paused');
@@ -2001,8 +2114,8 @@ function ensureMenuMusic() {
         try {
           audio.muted = false;
           audio.volume = specialAnnouncementPlaying()
-            ? Math.min(sharedMusicVolume, ABYSSAL_MUSIC_DUCK_VOLUME)
-            : sharedMusicVolume;
+            ? duckedMusicVolume(sharedMusicVolume)
+            : effectiveMusicVolume(sharedMusicVolume);
           await audio.play();
         } catch (error) {
           console.warn('Nouvel essai audio bloqué :', error?.name, error?.message);
@@ -2011,8 +2124,8 @@ function ensureMenuMusic() {
       }
     } else {
       console.warn('Aucun fichier compatible trouvé pour :', sharedMusicKey);
-      if (sharedMusicMode === 'menu') updateRpgAudioToggle('⚠️ MP3 introuvable dans main · V59', 'error');
-      try { CoachingCloud.toast(`Musique introuvable : ${sharedMusicKey}. Version audio V59 chargée.`, true); } catch (_) {}
+      if (sharedMusicMode === 'menu') updateRpgAudioToggle('⚠️ MP3 introuvable dans main · V60', 'error');
+      try { CoachingCloud.toast(`Musique introuvable : ${sharedMusicKey}. Version audio V60 chargée.`, true); } catch (_) {}
     }
   });
   audio.addEventListener('ended', () => {
@@ -2053,7 +2166,7 @@ function setSharedMusicSource(mode, key, index = 0) {
   if (audio.src !== nextSrc) {
     try { audio.pause(); } catch (_) {}
     audio.src = nextSrc;
-    audio.preload = 'auto';
+    audio.preload = 'metadata';
     audio.load();
   }
   return true;
@@ -2064,6 +2177,11 @@ async function playSharedMusic(mode, key, {
   loop = true,
   volume = MENU_MUSIC_VOLUME
 } = {}) {
+  if (!musicAllowed()) {
+    sharedMusicWantedPlaying = false;
+    updateRpgAudioToggle('', 'disabled');
+    return false;
+  }
   const audio = ensureMenuMusic();
   const changed = sharedMusicMode !== mode || sharedMusicKey !== key || !audio.src;
   if (changed && !setSharedMusicSource(mode, key, 0)) return false;
@@ -2077,12 +2195,12 @@ async function playSharedMusic(mode, key, {
     audio.muted = false;
     audio.defaultMuted = false;
     audio.volume = specialAnnouncementPlaying()
-      ? Math.min(sharedMusicVolume, ABYSSAL_MUSIC_DUCK_VOLUME)
-      : sharedMusicVolume;
+      ? duckedMusicVolume(sharedMusicVolume)
+      : effectiveMusicVolume(sharedMusicVolume);
     if (restart || changed) audio.currentTime = 0;
     const playback = audio.play();
     if (playback && typeof playback.then === 'function') await playback;
-    if (mode === 'menu') updateRpgAudioToggle('🔊 Musique active · V59', 'playing');
+    if (mode === 'menu') updateRpgAudioToggle('🔊 Musique active · V60', 'playing');
     return true;
   } catch (error) {
     console.warn('Lecture musique RPG impossible :', mode, key, error?.name, error?.message, audio.src);
@@ -2095,15 +2213,19 @@ async function playSharedMusic(mode, key, {
 }
 
 async function playMenuMusic({ restart = false, userGesture = false } = {}) {
+  if (!musicAllowed()) return false;
   menuMusicWantedPlaying = true;
   if (!panel?.classList.contains('show') || combat || raidBattle || damageTrial || openingCase) return false;
   return playSharedMusic('menu', 'menu', { restart, loop:true, volume:MENU_MUSIC_VOLUME });
 }
 
 function unlockRpgAudio() {
-  try { ensureMenuMusic(); } catch (_) {}
-  try { ensureAssumptioSound(); } catch (_) {}
-  try { preloadFirstSpellSounds(); } catch (_) {}
+  if (musicAllowed()) {
+    try { ensureMenuMusic(); } catch (_) {}
+  }
+  if (sfxAllowed()) {
+    try { ensureAssumptioSound(); } catch (_) {}
+  }
 }
 
 function pauseMenuMusic({ userChoice = false } = {}) {
@@ -2124,6 +2246,116 @@ function stopMenuMusic() {
     menuMusic.volume = MENU_MUSIC_VOLUME;
   } catch (_) {}
   updateRpgAudioToggle('🔊 Musique', 'stopped');
+}
+
+function pauseAllRpgSfx({ reset = true } = {}) {
+  [assumptioSound, abyssalVoice, pereDeNoeVoice, ...firstSpellAudioCache.values()].forEach(audio => {
+    if (!audio) return;
+    try {
+      audio.pause();
+      if (reset) audio.currentTime = 0;
+    } catch (_) {}
+  });
+  restoreMusicAfterAbyssalVoice();
+}
+
+function pauseSharedMusicForUserChoice() {
+  if (!menuMusic) return;
+  if (sharedMusicMode === 'battle') rememberBattleMusicPosition();
+  sharedMusicWantedPlaying = false;
+  menuMusicWantedPlaying = false;
+  try { menuMusic.pause(); } catch (_) {}
+}
+
+async function resumeMusicForCurrentContext() {
+  if (!musicAllowed()) return false;
+  if (menuMusic && menuMusic.src && !menuMusic.paused) {
+    menuMusic.volume = specialAnnouncementPlaying()
+      ? duckedMusicVolume(sharedMusicVolume)
+      : effectiveMusicVolume(sharedMusicVolume);
+    return true;
+  }
+  if (combat) return playBattleMusic({ mode:'combat', ...combat }, false);
+  if (raidBattle) return playBattleMusic({ mode:'raid', bossName:raid?.boss_name, raidLevel:raid?.raid_level, isBoss:true, isEliteSpecial:true }, false);
+  if (damageTrial) return playBattleMusic({ mode:'trial' }, false);
+  if (openingCase && sharedMusicKey && sharedMusicMode === 'event') {
+    return playSharedMusic('event', sharedMusicKey, { restart:false, loop:sharedMusicLoop, volume:sharedMusicVolume });
+  }
+  if (panel?.classList.contains('show')) return playMenuMusic({ restart:false, userGesture:true });
+  return false;
+}
+
+function applyRpgAudioSettings(next = {}, { resumeMusic = false } = {}) {
+  const previousMusicAllowed = musicAllowed();
+  rpgAudioSettings = {
+    musicEnabled: next.musicEnabled === undefined ? rpgAudioSettings.musicEnabled : !!next.musicEnabled,
+    sfxEnabled: next.sfxEnabled === undefined ? rpgAudioSettings.sfxEnabled : !!next.sfxEnabled,
+    musicVolume: next.musicVolume === undefined ? rpgAudioSettings.musicVolume : clampAudioSetting(next.musicVolume, rpgAudioSettings.musicVolume),
+    sfxVolume: next.sfxVolume === undefined ? rpgAudioSettings.sfxVolume : clampAudioSetting(next.sfxVolume, rpgAudioSettings.sfxVolume)
+  };
+  saveRpgAudioSettings();
+
+  if (!musicAllowed()) {
+    pauseSharedMusicForUserChoice();
+  } else if (menuMusic && !menuMusic.paused) {
+    menuMusic.volume = specialAnnouncementPlaying()
+      ? duckedMusicVolume(sharedMusicVolume)
+      : effectiveMusicVolume(sharedMusicVolume);
+  }
+
+  if (!sfxAllowed()) pauseAllRpgSfx();
+  else {
+    if (assumptioSound) assumptioSound.volume = effectiveSfxVolume(0.9);
+    if (abyssalVoice) abyssalVoice.volume = effectiveSfxVolume(ABYSSAL_VOICE_VOLUME);
+    if (pereDeNoeVoice) pereDeNoeVoice.volume = effectiveSfxVolume(PERE_DE_NOE_VOICE_VOLUME);
+    firstSpellAudioCache.forEach(audio => { audio.volume = effectiveSfxVolume(1); });
+  }
+
+  updateRpgAudioToggle('', musicAllowed() ? 'enabled' : 'disabled');
+  if (resumeMusic && !previousMusicAllowed && musicAllowed()) void resumeMusicForCurrentContext();
+}
+
+function bindRpgAudioSettings() {
+  const menu = document.getElementById('rpgAudioSettings');
+  const openButton = document.getElementById('rpgAudioToggle');
+  const closeButton = document.getElementById('rpgAudioSettingsClose');
+  if (!menu || !openButton || openButton.dataset.bound === '1') return;
+  openButton.dataset.bound = '1';
+
+  const setOpen = open => {
+    menu.hidden = !open;
+    openButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) renderRpgAudioSettings();
+  };
+
+  openButton.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    setOpen(menu.hidden);
+  });
+  closeButton?.addEventListener('click', () => setOpen(false));
+
+  document.getElementById('rpgMusicEnabled')?.addEventListener('change', event => {
+    applyRpgAudioSettings({ musicEnabled:event.target.checked }, { resumeMusic:event.target.checked });
+  });
+  document.getElementById('rpgSfxEnabled')?.addEventListener('change', event => {
+    applyRpgAudioSettings({ sfxEnabled:event.target.checked });
+  });
+  document.getElementById('rpgMusicVolume')?.addEventListener('input', event => {
+    const volume = Number(event.target.value) / 100;
+    applyRpgAudioSettings({ musicVolume:volume }, { resumeMusic:volume > 0 });
+  });
+  document.getElementById('rpgSfxVolume')?.addEventListener('input', event => {
+    applyRpgAudioSettings({ sfxVolume:Number(event.target.value) / 100 });
+  });
+  document.getElementById('rpgSpotifyMode')?.addEventListener('click', () => {
+    applyRpgAudioSettings({ musicEnabled:false, sfxEnabled:false });
+  });
+  document.getElementById('rpgAudioEnableAll')?.addEventListener('click', () => {
+    applyRpgAudioSettings({ musicEnabled:true, sfxEnabled:true }, { resumeMusic:true });
+  });
+
+  renderRpgAudioSettings();
 }
 
 function normalizeAudioMatch(value) {
@@ -2181,6 +2413,7 @@ function ensureBattleMusic(key = 'battle_normal') {
 }
 
 function primeBattleMusic(context = {}) {
+  if (!musicAllowed()) return false;
   const key = resolveBattleMusicKey(context);
   if (!key) return;
   cancelPostCombatMusicReturn();
@@ -2208,6 +2441,7 @@ function primeBattleMusic(context = {}) {
 }
 
 function playBattleMusic(context = {}, restart = false) {
+  if (!musicAllowed()) return false;
   const key = resolveBattleMusicKey(context);
   if (!key) return false;
   cancelPostCombatMusicReturn();
@@ -2262,11 +2496,13 @@ function ensureEventMusic(key, { loop = false } = {}) {
 }
 
 function primeEventMusic(key) {
+  if (!musicAllowed()) return false;
   if (!trackUrls(key).length) return;
   void playSharedMusic('event', key, { restart:true, loop:true, volume:0.02 });
 }
 
 function playEventMusic(key, { restart = true, loop = false, volume = EVENT_MUSIC_VOLUME } = {}) {
+  if (!musicAllowed()) return false;
   if (!trackUrls(key).length) return false;
   if (sharedMusicMode === 'battle') rememberBattleMusicPosition();
   void playSharedMusic('event', key, { restart, loop, volume });
@@ -2480,7 +2716,7 @@ function stopEventMusic({ resumeMenu = false, resumeBattle = true } = {}) {
   const css = `
     .xp-chip{flex:0 0 auto;border:1px solid rgba(240,196,77,.18);border-radius:11px;padding:6px 9px;background:rgba(240,196,77,.07);color:var(--accent,#f0c44d);font:900 10px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
     .xp-panel{display:none;position:fixed;z-index:430;left:50%;transform:translateX(-50%);top:56px;bottom:62px;width:100%;max-width:430px;padding:13px 16px 22px;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;background:var(--bg,#05070d);color:var(--text,#eef2f7)}.xp-panel *{box-sizing:border-box;min-width:0}
-    .xp-panel.show{display:block}.xp-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 10px}.xp-panel-head h2{margin:0;font-size:17px}.xp-panel-head button{border:1px solid rgba(255,255,255,.07);border-radius:10px;background:var(--surface-2,#141c2d);color:inherit;padding:8px 11px;font-weight:800;cursor:pointer}
+    .xp-panel.show{display:block}.xp-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 10px}.xp-panel-head h2{margin:0;font-size:17px}.xp-panel-head>div{display:flex;gap:6px;align-items:center}.xp-panel-head button{border:1px solid rgba(255,255,255,.07);border-radius:10px;background:var(--surface-2,#141c2d);color:inherit;padding:8px 10px;font-weight:800;cursor:pointer;white-space:nowrap}.rpg-audio-settings[hidden]{display:none}.rpg-audio-settings{margin:0 0 12px;padding:13px;border:1px solid rgba(112,178,255,.18);border-radius:16px;background:linear-gradient(145deg,rgba(57,102,177,.13),rgba(255,255,255,.02))}.rpg-audio-settings-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.rpg-audio-settings-head b{font-size:13px}.rpg-audio-settings-head button{border:0;background:transparent;color:#9ba8bd;font-weight:900;cursor:pointer}.rpg-audio-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:11px;padding:10px 11px;border-radius:12px;background:rgba(255,255,255,.035)}.rpg-audio-row strong{display:block;font-size:11px}.rpg-audio-row small{display:block;margin-top:3px;font-size:8px;line-height:1.4;color:#8995aa}.rpg-audio-switch{width:42px;height:24px;appearance:none;border-radius:999px;background:#30394a;position:relative;cursor:pointer;transition:.2s}.rpg-audio-switch:after{content:'';position:absolute;width:18px;height:18px;top:3px;left:3px;border-radius:50%;background:#fff;transition:.2s}.rpg-audio-switch:checked{background:#5aa8ff}.rpg-audio-switch:checked:after{transform:translateX(18px)}.rpg-audio-slider{margin-top:8px;display:grid;grid-template-columns:1fr 42px;gap:8px;align-items:center}.rpg-audio-slider input{width:100%;accent-color:#6db4ff}.rpg-audio-slider span{text-align:right;font-size:9px;font-weight:900;color:#9fcaff}.rpg-audio-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}.rpg-audio-actions button{border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:10px 8px;background:#121a29;color:#eef4ff;font-weight:900;font-size:10px;cursor:pointer}.rpg-audio-actions button:first-child{border-color:rgba(76,190,130,.25);background:rgba(76,190,130,.09)}.rpg-audio-actions button:last-child{border-color:rgba(90,168,255,.25);background:rgba(90,168,255,.09)}.rpg-audio-status{margin-top:9px;font-size:8px;line-height:1.5;color:#8e9bb1}
     .xp-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px;padding:4px;border-radius:13px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.045)}.xp-tab{border:0;border-radius:10px;padding:9px 4px;background:transparent;color:var(--text-muted,#5d6780);font:850 10px Inter,system-ui,sans-serif;cursor:pointer}.xp-tab.active{background:var(--surface-2,#141c2d);color:var(--accent,#f0c44d);box-shadow:0 7px 16px rgba(0,0,0,.18)}
     .xp-hero{padding:17px;border:1px solid rgba(240,196,77,.16);border-radius:18px;background:radial-gradient(circle at 50% 0,rgba(179,27,42,.19),transparent 55%),linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012));box-shadow:0 18px 38px rgba(0,0,0,.2)}
     .xp-level{font-size:11px;color:var(--text-muted,#5d6780);font-weight:900;letter-spacing:.08em;text-transform:uppercase}.xp-total{margin-top:4px;font-size:30px;font-weight:950;color:var(--accent,#f0c44d)}.xp-total small{font-size:12px;color:var(--text-dim,#a0abc0)}
@@ -3384,16 +3620,29 @@ async function armCombatServerTimer(session) {
       panel.className = 'xp-panel';
       panel.id = 'xpPanel';
       panel.innerHTML = `
-        <div class="xp-panel-head"><h2>⚡ Progression RPG</h2><div><button type="button" id="rpgAudioToggle">🔊 Musique</button><button type="button" id="xpPanelClose">Fermer</button></div></div>
+        <div class="xp-panel-head"><h2>⚡ Progression RPG</h2><div><button type="button" id="rpgAudioToggle" aria-expanded="false" aria-controls="rpgAudioSettings">🎵 Audio</button><button type="button" id="xpPanelClose">Fermer</button></div></div>
+        <div class="rpg-audio-settings" id="rpgAudioSettings" hidden>
+          <div class="rpg-audio-settings-head"><b>Réglages audio</b><button type="button" id="rpgAudioSettingsClose">Fermer</button></div>
+          <label class="rpg-audio-row"><span><strong>Musique du jeu</strong><small>Taverne, combats, boss et ouvertures de coffres.</small></span><input class="rpg-audio-switch" type="checkbox" id="rpgMusicEnabled"></label>
+          <div class="rpg-audio-slider"><input type="range" id="rpgMusicVolume" min="0" max="100" step="5"><span id="rpgMusicVolumeValue">100 %</span></div>
+          <label class="rpg-audio-row"><span><strong>Effets sonores</strong><small>Sorts, annonces et sons ponctuels.</small></span><input class="rpg-audio-switch" type="checkbox" id="rpgSfxEnabled"></label>
+          <div class="rpg-audio-slider"><input type="range" id="rpgSfxVolume" min="0" max="100" step="5"><span id="rpgSfxVolumeValue">100 %</span></div>
+          <div class="rpg-audio-actions"><button type="button" id="rpgAudioEnableAll">Tout activer</button><button type="button" id="rpgSpotifyMode">🎧 Mode Spotify</button></div>
+          <div class="rpg-audio-status" id="rpgAudioStatus"></div>
+        </div>
         <div id="xpPanelBody"></div>`;
       document.body.appendChild(panel);
       chip?.addEventListener('click', () => {
         panel.classList.toggle('show');
         if (panel.classList.contains('show')) {
           unlockRpgAudio();
-          // Le clic d'ouverture du RPG est le geste utilisateur qui autorise le son sur iPhone.
-          void playMenuMusic({ userGesture:true });
+          // Le clic d'ouverture du RPG autorise le son, mais respecte toujours le choix mémorisé.
+          if (musicAllowed()) void playMenuMusic({ userGesture:true });
         } else {
+          const audioSettings = document.getElementById('rpgAudioSettings');
+          const audioToggle = document.getElementById('rpgAudioToggle');
+          if (audioSettings) audioSettings.hidden = true;
+          audioToggle?.setAttribute('aria-expanded', 'false');
           cancelPostCombatMusicReturn();
           if (sharedMusicMode === 'battle') stopBattleMusic({ reset:false, resumeMenu:false, clearContinuity:true });
           else stopMenuMusic();
@@ -3402,30 +3651,14 @@ async function armCombatServerTimer(session) {
       });
       document.getElementById('xpPanelClose')?.addEventListener('click', () => {
         panel.classList.remove('show');
+        const audioSettings = document.getElementById('rpgAudioSettings');
+        if (audioSettings) audioSettings.hidden = true;
+        document.getElementById('rpgAudioToggle')?.setAttribute('aria-expanded', 'false');
         cancelPostCombatMusicReturn();
         if (sharedMusicMode === 'battle') stopBattleMusic({ reset:false, resumeMenu:false, clearContinuity:true });
         else stopMenuMusic();
       });
-      document.getElementById('rpgAudioToggle')?.addEventListener('click', event => {
-        event.preventDefault();
-        event.stopPropagation();
-        unlockRpgAudio();
-        if (menuMusic && !menuMusic.paused && !menuMusic.ended) {
-          sharedMusicWantedPlaying = false;
-          try { menuMusic.pause(); } catch (_) {}
-          if (sharedMusicMode === 'battle') {
-            rememberBattleMusicPosition();
-            battleContinuityWasPlaying = false;
-          }
-          updateRpgAudioToggle('🔇 Musique coupée', 'paused');
-        } else if (sharedMusicMode === 'battle' && battleContinuityKey) {
-          battleContinuityWasPlaying = true;
-          void resumeBattleMusicContinuity();
-        } else {
-          // Ne change le texte en « active » qu'après confirmation réelle de audio.play().
-          void playMenuMusic({ userGesture:true });
-        }
-      });
+      bindRpgAudioSettings();
       panel.addEventListener('click', event => {
         const tabButton = event.target.closest('[data-xp-tab]');
         if (tabButton) {
@@ -5026,7 +5259,7 @@ function collectionHtml() {
       <div class="rpg-result" id="rpgResult"><h2 id="rpgResultTitle"></h2><p id="rpgResultText"></p><button type="button" class="rpg-result-close" id="rpgResultClose">Revenir à la progression</button></div>
     </div>`;
     document.body.appendChild(overlay);
-    ensureAssumptioSound();
+    if (sfxAllowed()) ensureAssumptioSound();
     document.getElementById('rpgEnemyStage').addEventListener('pointerdown', event => reactionStageMiss(combat, event));
     document.getElementById('rpgAbility').addEventListener('click', activateCombatAbility);
     document.getElementById('rpgRushAbility').addEventListener('click', activateRushAbility);
@@ -6101,12 +6334,12 @@ function collectionHtml() {
     const def = FIRST_SPELLS[key];
     const sources = def.audioPaths.map(audioVersionedUrl);
     const audio = document.createElement('audio');
-    audio.preload = 'auto';
+    audio.preload = 'none';
     audio.playsInline = true;
     audio.setAttribute('playsinline', '');
     audio.setAttribute('webkit-playsinline', '');
     audio.setAttribute('aria-hidden', 'true');
-    audio.volume = 1;
+    audio.volume = effectiveSfxVolume(1);
     audio.dataset.sourceIndex = '0';
     audio.src = sources[0];
     audio.style.display = 'none';
@@ -6121,16 +6354,18 @@ function collectionHtml() {
       console.warn(`Voix du Sort 1 introuvable pour ${key} :`, audio.src, audio.error);
     });
     document.body.appendChild(audio);
-    audio.load();
     firstSpellAudioCache.set(key, audio);
     return audio;
   }
 
   function preloadFirstSpellSounds() {
-    Object.keys(FIRST_SPELLS).forEach(ensureFirstSpellAudio);
+    // V60 : chargement à la demande. Les trois voix ne sont plus téléchargées
+    // à l'ouverture de chaque page, ce qui réduit la mémoire et les données.
+    return sfxAllowed();
   }
 
   function playFirstSpellSound(session) {
+    if (!sfxAllowed()) return false;
     const key = FIRST_SPELLS[session?.classKey] ? session.classKey : 'warrior';
     const audio = ensureFirstSpellAudio(key);
     const previousBattleVolume = battleMusic && !battleMusic.paused ? battleMusic.volume : null;
@@ -6140,7 +6375,7 @@ function collectionHtml() {
       audio.currentTime = 0;
       audio.muted = false;
       audio.defaultMuted = false;
-      audio.volume = 1;
+      audio.volume = effectiveSfxVolume(1);
 
       if (previousBattleVolume !== null) battleMusic.volume = Math.min(previousBattleVolume, 0.16);
 
