@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V131';
+window.GA_APP_VERSION = 'V132';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-05-v131-patterns-sprites';
+window.GA_APP_BUILD = '2026-08-05-v132-sprites-boss-fix';
 
 
 /* --------------------------------------------------------------------------
@@ -142,7 +142,7 @@ window.GA_APP_BUILD = '2026-08-05-v131-patterns-sprites';
 
 (function () {
   'use strict';
-window.GA_APP_BUILD = 'V131-patterns-sprites';
+window.GA_APP_BUILD = 'V132-sprites-boss-fix';
 
   const config = window.COACHING_SUPABASE || {};
   const configured = /^https:\/\/.+\.supabase\.co\/?$/i.test(String(config.url || ''))
@@ -3304,74 +3304,73 @@ function caseLuckBoostPct() {
 
 
   const MONSTER_SPRITE_FILES = {
-    "arnold schwarzeneggerie le chene en plastique": "sprites/monsters/epique/Arnold Schwarzeneggerie, le Chêne en Plastique.webp",
-    "avatar du rpe 10 permanent": "sprites/monsters/epique/Avatar du RPE 10 permanent.webp",
-    "barre proteinee gout beton": "sprites/monsters/commun/Barre protéinée goût béton.webp",
-    "bouteille d eau tiede consciente": "sprites/monsters/commun/Bouteille d’eau tiède consciente.webp",
-    "celia celeste reine du challenge abdo": "sprites/monsters/epique/Célia Céleste, Reine du Challenge Abdo.webp",
-    "chaussette de gym sauvage": "sprites/monsters/commun/Chaussette de gym sauvage.webp",
-    "chicken broccoli rice final form": "sprites/monsters/epique/Chicken Broccoli Rice final form.webp",
-    "clara metaknight lame de la tempo": "sprites/monsters/epique/Clara Métaknight, Lame de la Tempo.webp",
-    "controleur urssaf dimensionnel": "sprites/monsters/epique/Contrôleur URSSAF dimensionnel.webp",
-    "donut malicieux": "sprites/monsters/commun/Donut malicieux.webp",
-    "fantome du mock meet annule": "sprites/monsters/epique/Fantôme du mock meet annulé.webp",
-    "greg doucette de porc le crieur hypocalorique": "sprites/monsters/mythique/Greg Doucette de Porc, le Crieur Hypocalorique.webp",
-    "guillaume glorieux seigneur du gl": "sprites/monsters/epique/Guillaume Glorieux, Seigneur du GL.webp",
-    "hanzalone la version malefique": "sprites/monsters/ultra-mythique/Hanzalone, la version maléfique.webp",
-    "hydre du deload refuse": "sprites/monsters/epique/Hydre du deload refusé.webp",
-    "janel janvier reine du cycle": "sprites/monsters/epique/Janel Janvier, Reine du Cycle.webp",
-    "jo lindnergarten le jardinier veineux": "sprites/monsters/legendaire/Jo Lindnergarten, le Jardinier Veineux.webp",
-    "jolan joliment faux": "sprites/monsters/epique/Jolan Joliment Faux.webp",
-    "kali muscleton le prisonnier proteine": "sprites/monsters/mythique/Kali Muscleton, le Prisonnier Protéiné.webp",
-    "kaoutar counter paradeuse de bench": "sprites/monsters/epique/Kaoutar Counter, Paradeuse de Bench.webp",
-    "killian kill ton pr": "sprites/monsters/epique/Killian Kill-Ton-PR.webp",
-    "l abonne fantome de fevrier": "sprites/monsters/commun/L’Abonné Fantôme de Février.webp",
-    "l influenceur du miroir": "sprites/monsters/commun/L’Influenceur du Miroir.webp",
-    "l orteil de noe": "sprites/monsters/epique/L'Orteil de Noé.webp",
-    "la manager basic fit reine du bip rouge": "sprites/monsters/epique/La Manager Basic-Fit, Reine du Bip Rouge.webp",
-    "le banc toujours pris": "sprites/monsters/commun/Le Banc Toujours Pris.webp",
-    "le bro aux trois serviettes": "sprites/monsters/commun/Le Bro aux Trois Serviettes.webp",
-    "le cadenas sans code": "sprites/monsters/commun/Le Cadenas Sans Code.webp",
-    "le dj bluetooth interdit": "sprites/monsters/commun/Le DJ Bluetooth Interdit.webp",
-    "le donut malicieux": "sprites/monsters/commun/Donut malicieux.webp",
-    "le donut malicieux supreme": "sprites/monsters/epique/Le Donut Malicieux Suprême.webp",
-    "le gerant du vestiaire oublie": "sprites/monsters/commun/Le Gérant du Vestiaire Oublié.webp",
-    "le grand deltoide masque": "sprites/monsters/abyssal/Le père de Noé.webp",
-    "le manager esn ultime": "sprites/monsters/epique/Le Manager ESN Ultime.webp",
-    "le mec en jeans": "sprites/monsters/epique/Roi de la Phonk.webp",
-    "le nettoyeur de banc sec": "sprites/monsters/commun/Le Nettoyeur de Banc Sec.webp",
-    "le pere de noe": "sprites/monsters/abyssal/Le père de Noé.webp",
-    "le roi de la funk": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
-    "le roi de la phonk synthetique": "sprites/monsters/epique/Roi de la Phonk.webp",
-    "le squatteur de poulie": "sprites/monsters/commun/Le Squatteur de Poulie.webp",
-    "le tapis de course possede": "sprites/monsters/commun/Le Tapis de Course Possédé.webp",
-    "lou dragonne souffle de magnesie": "sprites/monsters/epique/Lou Dragonne, Souffle de Magnésie.webp",
-    "lucine lumiere camera critique": "sprites/monsters/epique/Lucine Lumière, Caméra Critique.webp",
-    "machine a adducteurs cosmique": "sprites/monsters/epique/Machine à adducteurs cosmique.webp",
-    "malo malosse petit boss du rack": "sprites/monsters/epique/Malo Malosse, Petit Boss du Rack.webp",
-    "matthieu pecheur maitre de la canne a tirage": "sprites/monsters/epique/Matthieu Pêcheur, Maître de la Canne à Tirage.webp",
-    "mike o hearnia l eternel naturellement mysterieux": "sprites/monsters/epique/Mike O’Hearnia, l’Éternel Naturellement Mystérieux.webp",
-    "noah le nain furtif": "sprites/monsters/mythique/Noah le nain furtif.webp",
-    "noe faux noe copie conforme": "sprites/monsters/epique/Noé Faux-Noé, Copie Conforme.webp",
-    "noel deyzel diesel le pere noel du bulk": "sprites/monsters/epique/Noel Deyzel Diesel, le Père Noël du Bulk.webp",
-    "omelette fantome": "sprites/monsters/commun/Omelette fantôme.webp",
-    "phil heath ledger le cadeau maudit": "sprites/monsters/epique/Phil Heath Ledger, le Cadeau Maudit.webp",
-    "rich piano bar le musicien a huit repas": "sprites/monsters/mythique/Rich Piano-Bar, le Musicien à Huit Repas.webp",
+    "arnold schwarzeneggerie le chene en plastique": "sprites/monsters/arnold-schwarzeneggerie-le-chene-en-plastique.webp",
+    "avatar du rpe 10 permanent": "sprites/monsters/avatar-du-rpe-10-permanent.webp",
+    "barre proteinee gout beton": "sprites/monsters/barre-proteinee-gout-beton.webp",
+    "bouteille d eau tiede consciente": "sprites/monsters/bouteille-d-eau-tiede-consciente.webp",
+    "celia celeste reine du challenge abdo": "sprites/monsters/celia-celeste-reine-du-challenge-abdo.webp",
+    "chaussette de gym sauvage": "sprites/monsters/chaussette-de-gym-sauvage.webp",
+    "chicken broccoli rice final form": "sprites/monsters/chicken-broccoli-rice-final-form.webp",
+    "clara metaknight lame de la tempo": "sprites/monsters/clara-metaknight-lame-de-la-tempo.webp",
+    "controleur urssaf dimensionnel": "sprites/monsters/controleur-urssaf-dimensionnel.webp",
+    "donut malicieux": "sprites/monsters/donut-malicieux.webp",
+    "fantome du mock meet annule": "sprites/monsters/fantome-du-mock-meet-annule.webp",
+    "greg doucette de porc le crieur hypocalorique": "sprites/monsters/greg-doucette-de-porc-le-crieur-hypocalorique.webp",
+    "guillaume glorieux seigneur du gl": "sprites/monsters/guillaume-glorieux-seigneur-du-gl.webp",
+    "hanzalone la version malefique": "sprites/monsters/hanzalone-la-version-malefique.webp",
+    "hydre du deload refuse": "sprites/monsters/hydre-du-deload-refuse.webp",
+    "janel janvier reine du cycle": "sprites/monsters/janel-janvier-reine-du-cycle.webp",
+    "jo lindnergarten le jardinier veineux": "sprites/monsters/jo-lindnergarten-le-jardinier-veineux.webp",
+    "jolan joliment faux": "sprites/monsters/jolan-joliment-faux.webp",
+    "kali muscleton le prisonnier proteine": "sprites/monsters/kali-muscleton-le-prisonnier-proteine.webp",
+    "kaoutar counter paradeuse de bench": "sprites/monsters/kaoutar-counter-paradeuse-de-bench.webp",
+    "killian kill ton pr": "sprites/monsters/killian-kill-ton-pr.webp",
+    "l abonne fantome de fevrier": "sprites/monsters/l-abonne-fantome-de-fevrier.webp",
+    "l influenceur du miroir": "sprites/monsters/l-influenceur-du-miroir.webp",
+    "l orteil de noe": "sprites/monsters/l-orteil-de-noe.webp",
+    "la manager basic fit reine du bip rouge": "sprites/monsters/la-manager-basic-fit-reine-du-bip-rouge.webp",
+    "le banc toujours pris": "sprites/monsters/le-banc-toujours-pris.webp",
+    "le bro aux trois serviettes": "sprites/monsters/le-bro-aux-trois-serviettes.webp",
+    "le cadenas sans code": "sprites/monsters/le-cadenas-sans-code.webp",
+    "le dj bluetooth interdit": "sprites/monsters/le-dj-bluetooth-interdit.webp",
+    "le donut malicieux": "sprites/monsters/donut-malicieux.webp",
+    "le donut malicieux supreme": "sprites/monsters/le-donut-malicieux-supreme.webp",
+    "le gerant du vestiaire oublie": "sprites/monsters/le-gerant-du-vestiaire-oublie.webp",
+    "le grand deltoide masque": "sprites/monsters/le-pere-de-noe.webp",
+    "le manager esn ultime": "sprites/monsters/le-manager-esn-ultime.webp",
+    "le mec en jeans": "sprites/monsters/roi-de-la-phonk.webp",
+    "le nettoyeur de banc sec": "sprites/monsters/le-nettoyeur-de-banc-sec.webp",
+    "le pere de noe": "sprites/monsters/le-pere-de-noe.webp",
+    "le roi de la funk": "sprites/monsters/roi-de-la-funk-synthetique.webp",
+    "le roi de la phonk synthetique": "sprites/monsters/roi-de-la-phonk.webp",
+    "le roi du funk synthetique": "sprites/monsters/roi-de-la-funk-synthetique.webp",
+    "le squatteur de poulie": "sprites/monsters/le-squatteur-de-poulie.webp",
+    "le tapis de course possede": "sprites/monsters/le-tapis-de-course-possede.webp",
+    "lou dragonne souffle de magnesie": "sprites/monsters/lou-dragonne-souffle-de-magnesie.webp",
+    "lucine lumiere camera critique": "sprites/monsters/lucine-lumiere-camera-critique.webp",
+    "machine a adducteurs cosmique": "sprites/monsters/machine-a-adducteurs-cosmique.webp",
+    "malo malosse petit boss du rack": "sprites/monsters/malo-malosse-petit-boss-du-rack.webp",
+    "matthieu pecheur maitre de la canne a tirage": "sprites/monsters/matthieu-pecheur-maitre-de-la-canne-a-tirage.webp",
+    "mike o hearnia l eternel naturellement mysterieux": "sprites/monsters/mike-o-hearnia-l-eternel-naturellement-mysterieux.webp",
+    "noah le nain furtif": "sprites/monsters/noah-le-nain-furtif.webp",
+    "noe faux noe copie conforme": "sprites/monsters/noe-faux-noe-copie-conforme.webp",
+    "noel deyzel diesel le pere noel du bulk": "sprites/monsters/noel-deyzel-diesel-le-pere-noel-du-bulk.webp",
+    "omelette fantome": "sprites/monsters/omelette-fantome.webp",
+    "phil heath ledger le cadeau maudit": "sprites/monsters/phil-heath-ledger-le-cadeau-maudit.webp",
+    "rich piano bar le musicien a huit repas": "sprites/monsters/rich-piano-bar-le-musicien-a-huit-repas.webp",
     "riz sec vengeur": "Riz sec vengeur.png",
-    "roi de la funk synthetique": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
-    "roi du funk synthetique": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
-    "le roi du funk synthetique": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
-    "roi de la phonk": "sprites/monsters/epique/Roi de la Phonk.webp",
-    "roi de la phonk synthetique": "sprites/monsters/epique/Roi de la Phonk.webp",
-    "roi du rest timer infini": "sprites/monsters/epique/Roi du rest timer infini.webp",
-    "saya reunion foudre creole": "sprites/monsters/epique/Saya Réunion, Foudre Créole.webp",
-    "seigneur du superset infini": "sprites/monsters/epique/Seigneur du superset infini.webp",
-    "serena serenite calme avant le top set": "sprites/monsters/epique/Serena Sérénité, Calme Avant le Top Set.webp",
-    "slime des tenebres": "sprites/monsters/commun/Slime des ténèbres.webp",
-    "titan du total": "sprites/monsters/epique/Titan du total.webp",
-    "val aka kazuto aka the shadow aka the lonely shadow cowboy": "sprites/monsters/legendaire/Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy.webp",
-    "val aka kazuto aka the shadow the lonely shadow cowboy": "sprites/monsters/legendaire/Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy.webp",
-    "val kazuto the shadow the lonely shadow cowboy": "sprites/monsters/legendaire/Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy.webp"
+    "roi de la funk synthetique": "sprites/monsters/roi-de-la-funk-synthetique.webp",
+    "roi de la phonk": "sprites/monsters/roi-de-la-phonk.webp",
+    "roi de la phonk synthetique": "sprites/monsters/roi-de-la-phonk.webp",
+    "roi du funk synthetique": "sprites/monsters/roi-de-la-funk-synthetique.webp",
+    "roi du rest timer infini": "sprites/monsters/roi-du-rest-timer-infini.webp",
+    "saya reunion foudre creole": "sprites/monsters/saya-reunion-foudre-creole.webp",
+    "seigneur du superset infini": "sprites/monsters/seigneur-du-superset-infini.webp",
+    "serena serenite calme avant le top set": "sprites/monsters/serena-serenite-calme-avant-le-top-set.webp",
+    "slime des tenebres": "sprites/monsters/slime-des-tenebres.webp",
+    "titan du total": "sprites/monsters/titan-du-total.webp",
+    "val aka kazuto aka the shadow the lonely shadow cowboy": "sprites/monsters/val-aka-kazuto-aka-the-shadow-the-lonely-shadow-cowboy.webp",
+    "val kazuto the shadow the lonely shadow cowboy": "sprites/monsters/val-aka-kazuto-aka-the-shadow-the-lonely-shadow-cowboy.webp"
   };
 
   function normalizeSpriteKey(value) {
@@ -3390,33 +3389,38 @@ function caseLuckBoostPct() {
     return String(path || '').split('/').map(part => encodeURIComponent(part)).join('/');
   }
 
-  function monsterSpriteFile(name) {
+  function monsterSpriteFile(name, explicitSkinPath = '') {
+    const explicit = String(explicitSkinPath || '').trim();
+    if (explicit) return explicit.replace(/^\.?\//, '');
     const key = normalizeSpriteKey(name);
     return MONSTER_SPRITE_FILES[key] || null;
   }
 
-  function monsterSpriteCandidates(name) {
-    const file = monsterSpriteFile(name);
+  function monsterSpriteCandidates(name, explicitSkinPath = '') {
+    const file = monsterSpriteFile(name, explicitSkinPath);
     if (!file) return [];
-    const version = encodeURIComponent(window.GA_APP_VERSION || 'V131');
-    const encoded = encodeAssetPath(file);
-    const candidates = [`${encoded}?v=${version}`];
-    const basename = String(file).split('/').pop();
-    if (basename && basename !== file) candidates.push(`${encodeAssetPath(basename)}?v=${version}`);
-    return [...new Set(candidates)];
+    const version = encodeURIComponent(window.GA_APP_VERSION || 'V132');
+    let absolute = file;
+    try {
+      absolute = rpgAssetUrl(file);
+    } catch (_) {
+      absolute = encodeAssetPath(file);
+    }
+    const separator = String(absolute).includes('?') ? '&' : '?';
+    return [`${absolute}${separator}v=${version}`];
   }
 
-  function monsterHasSprite(name) {
-    return !!monsterSpriteFile(name);
+  function monsterHasSprite(name, explicitSkinPath = '') {
+    return !!monsterSpriteFile(name, explicitSkinPath);
   }
 
-  function monsterSpriteImgHtml(name, alt, className = 'monster-sprite-img') {
-    const candidates = monsterSpriteCandidates(name);
+  function monsterSpriteImgHtml(name, alt, className = 'monster-sprite-img', explicitSkinPath = '') {
+    const candidates = monsterSpriteCandidates(name, explicitSkinPath);
     if (!candidates.length) return '';
     const safeAlt = esc(alt || name || 'Monstre');
     const safeClass = esc(className);
-    const serialized = esc(JSON.stringify(candidates));
-    return `<img class="${safeClass}" src="${candidates[0]}" alt="${safeAlt}" loading="eager" decoding="async" data-sprite-candidates='${serialized}' onerror="(function(img){try{var list=JSON.parse(img.dataset.spriteCandidates||'[]');var idx=Number(img.dataset.spriteIndex||0)+1;if(idx<list.length){img.dataset.spriteIndex=String(idx);img.src=list[idx];return;}img.style.display='none';var host=img.closest('.monster-sprite-host');if(host)host.classList.add('sprite-missing');}catch(e){img.style.display='none';var host=img.closest('.monster-sprite-host');if(host)host.classList.add('sprite-missing');}})(this)">`;
+    const safeSrc = esc(candidates[0]);
+    return `<img class="${safeClass}" src="${safeSrc}" alt="${safeAlt}" loading="eager" decoding="async" onerror="this.style.display='none';this.closest('.monster-sprite-host')?.classList.add('sprite-missing')">`;
   }
 
   function monsterEmoji(name) {
@@ -3438,12 +3442,12 @@ function caseLuckBoostPct() {
   return '☠️';
 }
 
-function monsterVisual(name, rarity = 'common') {
+function monsterVisual(name, rarity = 'common', skinPath = '') {
   name = monsterDisplayName(name);
   const value = String(name || '').toLowerCase();
   const rarityKey = normalizedMonsterRarity(rarity);
   const emoji = monsterEmoji(name);
-  const spriteHtml = monsterSpriteImgHtml(name, name, 'monster-sprite-img');
+  const spriteHtml = monsterSpriteImgHtml(name, name, 'monster-sprite-img', skinPath);
   if (!spriteHtml && (value.includes('kazuto') || value.includes('lonely shadow cowboy') || value.includes('val,'))) {
     return `<div class="rpg-boss-skin rarity-${rarityKey}"><div class="rpg-boss-face">🧔‍♂️</div><div class="rpg-boss-note">yeux bleus · tatouages<small>The Shadow · Lonely Shadow Cowboy</small></div></div>`;
   }
@@ -4402,7 +4406,7 @@ function bestiaryCollectionHtml() {
       const def = MONSTER_RARITY_DEFS[monster.rarity] || MONSTER_RARITY_DEFS.common;
       const name = hidden ? '???' : monsterDisplayName(monster.monster_name);
       const icon = hidden ? (monster.rarity === 'secret' ? '🌈❓' : '❓') : monster.icon;
-      const spriteHtml = !hidden ? monsterSpriteImgHtml(monster.monster_name, monsterDisplayName(monster.monster_name), 'monster-card-sprite') : '';
+      const spriteHtml = !hidden ? monsterSpriteImgHtml(monster.monster_name, monsterDisplayName(monster.monster_name), 'monster-card-sprite', monster.skin_path || '') : '';
       const visualHtml = spriteHtml
         ? `<div class="monster-sprite-host"><span class="monster-emoji-fallback with-image">${esc(icon)}</span>${spriteHtml}</div>`
         : `<span class="monster-emoji-fallback">${esc(icon)}</span>`;
@@ -6413,7 +6417,7 @@ function collectionHtml() {
       }
       const isChainSecond = spec.type === 'chain' && session.reactionChainFirst?.round === spec.round;
       const patternVariant = spec.rushBlue || isChainSecond ? '' : ` pattern-${spec.round % 6}`;
-      const attackPatternClass = spec.patternKey ? ` attack-pattern-${String(spec.patternKey).replaceAll('_','-')}` : '';
+      const attackPatternClass = spec.patternKey ? ` attack-pattern-${String(spec.patternKey).replace(/_/g,'-')}` : '';
       const comboTierClass = ` combo-tier-${Math.max(0, Math.floor(n(spec.comboTier)))}`;
       target.className = `reaction-target dynamic-target type-${spec.type}${isChainSecond ? ' chain-second' : ''}${patternVariant}${attackPatternClass}${comboTierClass}${session.classKey === 'archer' && abilityActiveAt(session) ? ' ability-focus' : ''}`;
       target.style.left = `${isChainSecond ? spec.x2 : spec.x}%`;
@@ -6767,9 +6771,7 @@ function collectionHtml() {
       row.duration_seconds
     );
     if (durationSetup.error) {
-      stopBattleMusic();
-      CoachingCloud.toast(`Durée du monstre impossible à charger : ${durationSetup.error.message}. Exécute le SQL V63.`, true);
-      return;
+      console.warn('Durée avancée indisponible, utilisation de la durée du combat :', durationSetup.error);
     }
     const returnedDuration = durationSetup.plannedDuration;
 
@@ -6803,6 +6805,7 @@ function collectionHtml() {
       finishing: false,
       monsterRarity: resolvedMonsterRarity,
       monsterWorld: row.monster_world || catalogMonster?.category || 'Bestiaire aléatoire',
+      monsterSkinPath: row.skin_path || catalogMonster?.skin_path || monsterSpriteFile(returnedMonsterName) || '',
       isEliteSpecial: eliteSpecial,
       noVisibleTimeLimit: false
     };
@@ -6821,7 +6824,7 @@ function collectionHtml() {
     setMonsterNameDisplay(document.getElementById('rpgMonsterName'), combat);
     const enemyEl = document.getElementById('rpgEnemy');
     if (enemyEl) {
-      enemyEl.innerHTML = monsterVisual(combat.monsterName, combat.monsterRarity || (combat.isBoss ? 'legendary' : 'common'));
+      enemyEl.innerHTML = monsterVisual(combat.monsterName, combat.monsterRarity || (combat.isBoss ? 'legendary' : 'common'), combat.monsterSkinPath || '');
       applyMonsterVisualState(enemyEl, combat);
     }
     updateDropComboBadge(progress?.combat_drop_combo, true);
@@ -6844,86 +6847,120 @@ function collectionHtml() {
 
   async function startBossCombat() {
     primeAbyssalVoice();
-    if (!progress?.rpg_class || combat || n(progress?.kills_toward_boss) < 50) return;
-    primeBattleMusic({ mode:'combat', isBoss:true, difficulty:currentAdventureDifficulty() });
+    if (!progress?.rpg_class || combat) return;
+
     const button = document.getElementById('rpgBossLaunch');
     if (button) button.disabled = true;
-    const { data, error } = await CoachingCloud.client.rpc('start_rpg_boss', { p_athlete_slug: cfg.slug });
-    if (button) button.disabled = false;
-    if (error) {
+    primeBattleMusic({ mode:'combat', isBoss:true, difficulty:currentAdventureDifficulty() });
+
+    try {
+      const { data, error } = await CoachingCloud.client.rpc('start_rpg_boss', {
+        p_athlete_slug: cfg.slug
+      });
+      if (error) throw new Error(error.message || 'Le serveur a refusé le boss.');
+
+      const row = Array.isArray(data) ? data[0] : data;
+      if (!row) throw new Error('Supabase n’a renvoyé aucune donnée pour le boss.');
+
+      const returnedBossCombatId = String(row.combat_id || row.id || '').trim();
+      const returnedBossName = monsterDisplayName(row.monster_name || row.boss_name || 'Boss');
+      const returnedHp = n(row.monster_hp, NaN);
+      const returnedDamage = n(row.base_damage, NaN);
+      if (!returnedBossCombatId || !returnedBossName || !Number.isFinite(returnedHp) || returnedHp <= 0 || !Number.isFinite(returnedDamage) || returnedDamage <= 0) {
+        console.error('Réponse boss invalide :', row);
+        throw new Error('La réponse du boss contient des PV, dégâts ou identifiant invalides.');
+      }
+
+      const durationSetup = await prepareUnlimitedCombatV63(
+        returnedBossCombatId,
+        row.duration_seconds
+      );
+      if (durationSetup.error) {
+        // V132 : ce RPC est une amélioration de chrono, pas une condition pour combattre.
+        console.warn('Durée avancée du boss indisponible, durée SQL utilisée :', durationSetup.error);
+      }
+
+      const catalogBoss = monsterCatalogMatch({
+        monster_key: row.monster_key,
+        monster_name: returnedBossName
+      });
+      const bossRarity = canonicalMonsterRarity(
+        returnedBossName,
+        row.monster_rarity || catalogBoss?.rarity || 'legendary',
+        row.monster_key || catalogBoss?.monster_key || ''
+      );
+
+      combat = {
+        id: returnedBossCombatId,
+        classKey: row.rpg_class,
+        level: n(row.level, 1),
+        xp: n(row.xp_total),
+        monsterName: returnedBossName,
+        maxHp: returnedHp,
+        hp: returnedHp,
+        baseDamage: returnedDamage,
+        critSeed: n(row.crit_seed, 1),
+        critChance: n(row.crit_chance_pct, critChancePct()),
+        duration: durationSetup.plannedDuration,
+        hardDuration: durationSetup.hardDuration,
+        difficulty: n(row.difficulty, currentAdventureDifficulty()),
+        hpMultiplier: n(row.hp_multiplier, difficultyHpMultiplier()),
+        xpMultiplier: 1,
+        startedAt: 0,
+        serverStartedAt: row.started_at || null,
+        clicks: 0,
+        damage: 0,
+        finishing: false,
+        isBoss: true,
+        isEliteSpecial: true,
+        noVisibleTimeLimit: false,
+        monsterRarity: bossRarity,
+        monsterWorld: row.monster_world || catalogBoss?.category || 'Boss de palier',
+        monsterSkinPath: row.skin_path || catalogBoss?.skin_path || monsterSpriteFile(returnedBossName) || ''
+      };
+
+      playBattleMusic({ mode:'combat', ...combat, isBoss:true }, false);
+      const overlay = ensureCombatOverlay();
+      panel?.classList.remove('show');
+      overlay.classList.add('show');
+      document.getElementById('rpgFightView').style.display = '';
+      document.getElementById('rpgResult').classList.remove('show');
+      const targetCount = document.getElementById('rpgTargetCount');
+      if (targetCount) targetCount.textContent = '∞';
+      setMonsterNameDisplay(document.getElementById('rpgMonsterName'), combat);
+      const enemyEl = document.getElementById('rpgEnemy');
+      if (enemyEl) {
+        enemyEl.innerHTML = monsterVisual(combat.monsterName || 'Boss', combat.monsterRarity || 'legendary', combat.monsterSkinPath || '');
+        applyMonsterVisualState(enemyEl, combat);
+        enemyEl.classList.add('boss-val');
+      }
+      updateDropComboBadge(progress?.combat_drop_combo, true);
+      const def = CLASS_DEFS[combat.classKey];
+      document.getElementById('rpgClassLabel').textContent = `${def?.icon || ''} ${def?.title || 'Combattant'} · BOSS DU PALIER ${combat.difficulty} · temps limite ${formatCombatDurationLabel(combat.duration)} · critique ${fr(combat.critChance,1)} % · combo loot ×${Math.max(1,n(progress?.combat_drop_combo,1))}`;
+      document.getElementById('rpgPerHit').textContent = fr(combat.baseDamage, 0);
+      updateCombatAbilityButton();
+      updateCombatUi();
+
+      await showMonsterIntro(combat);
+      try {
+        await armCombatServerTimer(combat);
+      } catch (timerError) {
+        console.warn('Chrono serveur du boss non synchronisé :', timerError);
+        combat.startedAt = Date.now();
+      }
+
+      initReactionSession(combat, 'combat');
+      clearInterval(combatTimer);
+      combatTimer = setInterval(updateCombatClock, 50);
+      updateCombatClock();
+    } catch (bossError) {
       stopBattleMusic();
-      CoachingCloud.toast(`Boss inaccessible : ${error.message}`, true);
-      return;
+      combat = null;
+      console.error('Boss impossible :', bossError);
+      CoachingCloud.toast(`Boss inaccessible : ${bossError?.message || bossError}`, true);
+    } finally {
+      if (button && !combat) button.disabled = false;
     }
-    const row = Array.isArray(data) ? data[0] : data;
-    if (!row) { stopBattleMusic(); return; }
-
-    const returnedBossCombatId = String(row.combat_id || '').trim();
-    const durationSetup = await prepareUnlimitedCombatV63(
-      returnedBossCombatId,
-      row.duration_seconds
-    );
-    if (durationSetup.error) {
-      stopBattleMusic();
-      CoachingCloud.toast(`Durée du boss impossible à charger : ${durationSetup.error.message}. Exécute le SQL V63.`, true);
-      return;
-    }
-
-    combat = {
-      id: returnedBossCombatId,
-      classKey: row.rpg_class,
-      level: n(row.level, 1),
-      xp: n(row.xp_total),
-      monsterName: monsterDisplayName(row.monster_name),
-      maxHp: n(row.monster_hp, 1),
-      hp: n(row.monster_hp, 1),
-      baseDamage: n(row.base_damage, 1),
-      critSeed: n(row.crit_seed, 1),
-      critChance: n(row.crit_chance_pct, critChancePct()),
-      duration: durationSetup.plannedDuration,
-      hardDuration: durationSetup.hardDuration,
-      difficulty: n(row.difficulty, currentAdventureDifficulty()),
-      hpMultiplier: n(row.hp_multiplier, difficultyHpMultiplier()),
-      xpMultiplier: 1,
-      startedAt: 0,
-      serverStartedAt: row.started_at || null,
-      clicks: 0,
-      damage: 0,
-      finishing: false,
-      isBoss: true,
-      isEliteSpecial: true,
-      noVisibleTimeLimit: false
-    };
-    // Recalcule la musique avec le palier réellement renvoyé par le serveur.
-    playBattleMusic({ mode:'combat', ...combat, isBoss:true }, false);
-    const overlay = ensureCombatOverlay();
-    panel?.classList.remove('show');
-    overlay.classList.add('show');
-    document.getElementById('rpgFightView').style.display = '';
-    document.getElementById('rpgResult').classList.remove('show');
-    const targetCount = document.getElementById('rpgTargetCount');
-    if (targetCount) targetCount.textContent = '∞';
-    setMonsterNameDisplay(document.getElementById('rpgMonsterName'), combat);
-    const enemyEl = document.getElementById('rpgEnemy');
-    if (enemyEl) {
-      enemyEl.innerHTML = monsterVisual(combat.monsterName || 'Boss', 'legendary');
-      applyMonsterVisualState(enemyEl, { ...combat, monsterRarity:'legendary' });
-      enemyEl.classList.add('boss-val');
-    }
-    updateDropComboBadge(progress?.combat_drop_combo, true);
-    const def = CLASS_DEFS[combat.classKey];
-    document.getElementById('rpgClassLabel').textContent = `${def?.icon || ''} ${def?.title || 'Combattant'} · BOSS DU PALIER ${combat.difficulty} · temps limite ${formatCombatDurationLabel(combat.duration)} · critique ${fr(combat.critChance,1)} % · combo loot ×${Math.max(1,n(progress?.combat_drop_combo,1))}`;
-    document.getElementById('rpgPerHit').textContent = fr(combat.baseDamage, 0);
-    updateCombatAbilityButton();
-    updateCombatUi();
-
-    await showMonsterIntro({ ...combat, monsterRarity:'legendary' });
-    await armCombatServerTimer(combat);
-
-    initReactionSession(combat, 'combat');
-    clearInterval(combatTimer);
-    combatTimer = setInterval(updateCombatClock, 50);
-    updateCombatClock();
   }
 
   function formatCombatElapsedTime(ms) {
