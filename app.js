@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V119';
+window.GA_APP_VERSION = 'V131';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-05-v119-audio-spotify';
+window.GA_APP_BUILD = '2026-08-05-v131-patterns-sprites';
 
 
 /* --------------------------------------------------------------------------
@@ -142,7 +142,7 @@ window.GA_APP_BUILD = '2026-08-05-v119-audio-spotify';
 
 (function () {
   'use strict';
-window.GA_APP_BUILD = 'V125-validation-tous-mouvements';
+window.GA_APP_BUILD = 'V131-patterns-sprites';
 
   const config = window.COACHING_SUPABASE || {};
   const configured = /^https:\/\/.+\.supabase\.co\/?$/i.test(String(config.url || ''))
@@ -2548,13 +2548,13 @@ function stopEventMusic({ resumeMenu = false, resumeBattle = true } = {}) {
       return 'Le père de Noé';
     }
     if (normalized === 'roi du funk synthetique' || normalized === 'le roi du funk synthetique') {
-      return 'Roi de la Phonk synthétique';
+      return 'Roi de la Funk Synthétique';
     }
     if (normalized === 'le mec en jeans') {
-      return 'Le Roi de la Funk';
+      return 'Roi de la Phonk';
     }
     if (normalized === 'le manager esn ultime') {
-      return 'L’Orteil de Noé';
+      return 'Le Manager ESN Ultime';
     }
 
     return original;
@@ -2740,7 +2740,7 @@ function stopEventMusic({ resumeMenu = false, resumeBattle = true } = {}) {
     .odds-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.odds-row{display:flex;justify-content:space-between;gap:8px;padding:8px 9px;border-radius:10px;background:rgba(255,255,255,.025);font-size:9px}.odds-row b{color:var(--rarity,#eef2f7)}.case-note{font-size:9px;line-height:1.5;color:var(--text-muted,#5d6780);margin-top:9px}.case-list{display:grid;gap:9px}.case-card{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:13px;border-radius:15px;border:1px solid rgba(255,255,255,.055);background:rgba(255,255,255,.025)}.case-card.locked{opacity:.48}.case-crate{font-size:30px}.case-card b{display:block;font-size:12px}.case-card small{display:block;margin-top:3px;font-size:9px;color:var(--text-dim,#a0abc0)}.case-level-picker{padding:13px;border-radius:15px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);margin-bottom:10px}.case-level-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.case-level-head b{font-size:12px}.case-level-head strong{color:var(--accent,#f0c44d);font-size:18px}.case-level-picker input{width:100%;margin-top:10px;accent-color:var(--accent,#f0c44d)}.case-level-note{margin-top:7px;font-size:9px;line-height:1.45;color:var(--text-dim,#a0abc0)}.case-type-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.case-type-card{padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025)}.case-type-card .case-icon{font-size:26px}.case-type-card b{display:block;margin-top:5px;font-size:11px}.case-type-card small{display:block;min-height:38px;margin:4px 0 8px;font-size:8px;line-height:1.4;color:var(--text-dim,#a0abc0)}.case-type-card .case-price{font-size:10px;font-weight:900;color:var(--accent,#f0c44d);margin-bottom:7px}.case-buy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.case-buy-button{border:0;border-radius:9px;padding:8px 4px;background:var(--accent,#f0c44d);color:#11151d;font-weight:900;font-size:8px}.case-buy-button:disabled{opacity:.35}
     .empty-state{padding:18px 10px;text-align:center;color:var(--text-muted,#5d6780);font-size:10px;line-height:1.5}
     .xp-levelup{display:none;position:fixed;inset:0;z-index:7200;align-items:center;justify-content:center;padding:20px;background:rgba(2,4,8,.9);backdrop-filter:blur(12px)}.xp-levelup.show{display:flex}.xp-levelup-card{width:min(100%,380px);padding:25px 20px;border:1px solid rgba(240,196,77,.35);border-radius:22px;background:radial-gradient(circle at 50% 0,rgba(183,26,40,.25),transparent 55%),#0e1421;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,.55)}.xp-levelup h2{margin:0;color:var(--accent,#f0c44d);font-size:25px}.xp-levelup p{margin:12px 0 0;line-height:1.55}.xp-levelup button{margin-top:18px;border:0;border-radius:12px;padding:11px 18px;background:var(--accent,#f0c44d);color:#11151d;font-weight:900;cursor:pointer}
-    .rpg-overlay{display:none;position:fixed;inset:0;z-index:7600;background:radial-gradient(circle at 50% 25%,rgba(150,22,36,.21),transparent 38%),rgba(2,4,8,.97);backdrop-filter:blur(13px);color:#eef2f7;padding:18px}.rpg-overlay.show{display:flex;align-items:center;justify-content:center}.rpg-arena{width:min(100%,410px);text-align:center}.rpg-arena-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:11px;color:#a0abc0}.rpg-clock{font-size:27px;font-weight:950;color:#f0c44d;font-variant-numeric:tabular-nums}.rpg-monster-name{font-size:17px;font-weight:950}.rpg-hp{height:13px;margin:9px 0 4px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid rgba(255,255,255,.05)}.rpg-hp span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#b91f35,#f04f5f);transition:width .1s}.rpg-hp-label{font-size:10px;color:#a0abc0}.rpg-enemy-stage{position:relative;min-height:250px;display:grid;place-items:center;margin:6px 0}.rpg-enemy{width:190px;height:190px;border:0;border-radius:50%;background:radial-gradient(circle at 50% 42%,rgba(240,196,77,.16),rgba(180,25,41,.17) 45%,rgba(255,255,255,.02) 70%);font-size:105px;cursor:pointer;touch-action:manipulation;user-select:none;filter:drop-shadow(0 24px 30px rgba(0,0,0,.5));transition:transform .06s}.rpg-enemy:active,.rpg-enemy.hit{transform:scale(.91) rotate(-2deg)}.rpg-damage-pop{position:absolute;left:50%;top:35%;font-size:22px;font-weight:950;color:#ffd35a;pointer-events:none;animation:rpgPop .55s ease-out forwards;text-shadow:0 3px 12px #000}.rpg-damage-pop.crit{color:#ff6f7d;font-size:28px}.ro-hit-burst{position:absolute;z-index:55;left:50%;top:48%;width:190px;height:150px;transform:translate(-50%,-50%);pointer-events:none;display:grid;place-items:center;animation:roBurstLife .78s ease-out forwards}.ro-hit-star{position:absolute;width:118px;height:118px;background:radial-gradient(circle,#ffea6b 0 10%,#ff9b24 24%,#c91f32 52%,rgba(130,12,28,.2) 70%,transparent 72%);clip-path:polygon(50% 0,60% 28%,82% 8%,73% 37%,100% 33%,77% 52%,98% 69%,69% 67%,79% 96%,57% 75%,48% 100%,42% 74%,16% 94%,29% 65%,0 65%,25% 49%,3% 31%,31% 35%,23% 5%,45% 28%);filter:drop-shadow(0 0 14px rgba(255,73,36,.85));animation:roStar .55s cubic-bezier(.2,.9,.25,1.25)}.ro-hit-number{position:relative;z-index:3;font-size:34px;font-weight:1000;letter-spacing:-.06em;color:#ffe34f;-webkit-text-stroke:2px #492000;text-shadow:0 3px 0 #9d280d,0 0 8px #fff6b5,0 8px 14px rgba(0,0,0,.8);animation:roNumber .68s cubic-bezier(.15,.9,.2,1.2)}.ro-hit-critical .ro-hit-number{font-size:45px;color:#fff36a;-webkit-text-stroke:3px #4d1200}.ro-hit-label{position:absolute;z-index:4;top:3px;font-size:15px;font-weight:1000;letter-spacing:.08em;color:#fff;text-shadow:0 2px 0 #8b1424,0 0 10px #ff4b59;animation:roLabel .7s ease-out}.ro-hit-slash{position:absolute;z-index:2;width:145px;height:7px;border-radius:999px;background:linear-gradient(90deg,transparent,#fff 18%,#fff7a8 48%,#d8c9ff 72%,transparent);box-shadow:0 0 8px #fff,0 0 17px rgba(255,238,132,.95);transform-origin:center;animation:roSlash .48s ease-out forwards}.ro-hit-slash.s1{transform:rotate(38deg)}.ro-hit-slash.s2{transform:rotate(-42deg);animation-delay:.04s}.ro-hit-slash.s3{transform:rotate(7deg);animation-delay:.08s}.ro-hit-burst:not(.ro-hit-critical) .ro-hit-label,.ro-hit-burst:not(.ro-hit-critical) .ro-hit-star{display:none}@keyframes roBurstLife{0%{opacity:0}10%{opacity:1}72%{opacity:1}100%{opacity:0;transform:translate(-50%,-72%) scale(.92)}}@keyframes roStar{0%{transform:scale(.25) rotate(-18deg);opacity:0}45%{transform:scale(1.18) rotate(5deg);opacity:1}100%{transform:scale(.92);opacity:.45}}@keyframes roNumber{0%{transform:scale(.35) translateY(20px);opacity:0}35%{transform:scale(1.28) translateY(-5px);opacity:1}100%{transform:scale(1) translateY(-18px);opacity:1}}@keyframes roLabel{0%{transform:scale(.3) translateY(18px);opacity:0}40%{transform:scale(1.22) translateY(0);opacity:1}100%{transform:scale(1) translateY(-14px);opacity:0}}@keyframes roSlash{0%{opacity:0;scale:.15 1}35%{opacity:1;scale:1.2 1}100%{opacity:0;scale:1.55 .25}}.rpg-combat-info{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.rpg-combat-info div{padding:9px;border-radius:11px;background:rgba(255,255,255,.035);font-size:9px;color:#818da6}.rpg-combat-info b{display:block;color:#eef2f7;font-size:14px;margin-bottom:2px}.rpg-ability{width:100%;margin:9px 0 2px;padding:11px 12px;border:1px solid rgba(240,196,77,.32);border-radius:13px;background:linear-gradient(135deg,rgba(240,196,77,.15),rgba(110,168,255,.09));color:#fff;font:900 12px Inter,system-ui,sans-serif;cursor:pointer}.rpg-ability small{display:block;margin-top:3px;color:#aeb9ce;font-size:9px;font-weight:700}.rpg-ability:disabled{opacity:.45;cursor:not-allowed}.rpg-ability.active{border-color:#78d7ff;box-shadow:0 0 0 3px rgba(80,190,255,.12),0 0 25px rgba(80,190,255,.18)}.rpg-ability.used{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.08)}.reaction-target.ability-focus{width:108px!important;height:108px!important;border-width:3px!important;box-shadow:0 0 0 13px rgba(90,160,255,.18),0 0 48px rgba(90,160,255,.72)!important}.rpg-overlay.time-stopped{background:radial-gradient(circle at 50% 25%,rgba(38,139,190,.22),transparent 42%),rgba(2,4,8,.97)}.rpg-overlay.time-stopped .rpg-clock{color:#7de2ff;text-shadow:0 0 18px rgba(90,210,255,.7)}.reaction-hint{min-height:32px;margin:7px 0 3px;font-size:11px;font-weight:900;color:#dbe4f5}.reaction-live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:6px 0}.reaction-live div{padding:7px 5px;border-radius:10px;background:rgba(255,255,255,.035);font-size:8px;color:#7f8ba2}.reaction-live b{display:block;font-size:13px;color:#fff;margin-bottom:2px}.reaction-target{position:absolute;z-index:20;width:84px;height:84px;transform:translate(-50%,-50%);border:2px solid rgba(255,255,255,.78);border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,rgba(255,255,255,.96),rgba(110,168,255,.86) 48%,rgba(26,52,100,.96));color:#07101d;font-size:31px;font-weight:950;box-shadow:0 0 0 9px rgba(90,160,255,.12),0 0 36px rgba(90,160,255,.56);touch-action:none;user-select:none;cursor:pointer;animation:reactionPulse .8s ease-in-out infinite alternate}.reaction-target.hidden{display:none}.reaction-target.pattern-0{border-radius:50%}.reaction-target.pattern-1{border-radius:18px;transform:translate(-50%,-50%) rotate(8deg)}.reaction-target.pattern-2{border-radius:50% 18% 50% 18%;transform:translate(-50%,-50%) rotate(-10deg)}.reaction-target.pattern-3{width:72px;height:96px}.reaction-target.pattern-4{width:102px;height:68px;border-radius:22px}.reaction-target.pattern-5{border-style:dashed;box-shadow:0 0 0 13px rgba(90,160,255,.08),0 0 42px rgba(90,160,255,.66)}.reaction-target.type-double{background:radial-gradient(circle,#fff,#b49cff 52%,#5b37b5);box-shadow:0 0 0 7px rgba(160,110,255,.12),0 0 34px rgba(160,110,255,.55)}.reaction-target.type-chain{width:92px;height:92px;background:radial-gradient(circle,#fff,#62d6b0 52%,#157a5d);box-shadow:0 0 0 10px rgba(70,220,160,.14),0 0 40px rgba(70,220,160,.62)}.reaction-target.type-chain.chain-second{width:98px;height:98px;background:radial-gradient(circle,#fff,#78f0c7 44%,#0f8b66 72%);box-shadow:0 0 0 12px rgba(70,230,170,.18),0 0 50px rgba(70,230,170,.78);animation:reactionChainSecond .48s ease-in-out infinite alternate}.reaction-target.type-danger{background:radial-gradient(circle,#fff,#ff6e79 48%,#9f1728);box-shadow:0 0 0 9px rgba(255,55,75,.15),0 0 42px rgba(255,55,75,.68);animation:dangerPulse .28s ease-in-out infinite alternate}.reaction-target.type-golden{width:170px;height:52px;border:0;border-radius:14px;background:transparent;color:#fff;box-shadow:none;font-size:0;animation:reactionLinePulse .8s ease-in-out infinite alternate}.reaction-target.type-golden::before{content:'';display:block;width:148px;height:9px;border-radius:999px;background:linear-gradient(90deg,rgba(255,255,255,.25),#fff 18%,#8edcff 50%,#fff 82%,rgba(255,255,255,.25));box-shadow:0 0 0 8px rgba(120,210,255,.1),0 0 30px rgba(120,210,255,.82)}.reaction-target.type-golden .reaction-small{bottom:-9px;font-size:9px;color:#dff6ff}.reaction-target .reaction-small{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:8px;color:#fff;text-shadow:0 2px 8px #000}.reaction-feedback{position:absolute;z-index:30;left:50%;top:24%;transform:translateX(-50%);max-width:94%;white-space:nowrap;font-size:20px;font-weight:950;pointer-events:none;animation:rpgPop .7s ease-out forwards}.reaction-feedback.perfect{color:#ffd454}.reaction-feedback.good{color:#78d7ff}.reaction-feedback.miss{color:#ff6978}.reaction-perfect-burst{position:absolute;z-index:35;left:50%;top:50%;width:70px;height:70px;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);border:3px solid #ffe36b;box-shadow:0 0 24px #ffd34f,0 0 70px rgba(255,207,58,.8);animation:perfectBurst .72s ease-out forwards}.reaction-perfect-flash{position:absolute;z-index:34;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 50%,rgba(255,239,137,.42),rgba(255,190,38,.1) 42%,transparent 72%);animation:perfectFlash .55s ease-out forwards}.reaction-perfect-streak{color:#ffd454!important;text-shadow:0 0 12px rgba(255,212,84,.55)}.perfect-combat-overlay{position:fixed;z-index:9100;inset:0;display:none;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 42%,rgba(255,205,52,.26),rgba(116,27,18,.42) 38%,rgba(2,4,9,.96) 75%);padding:20px}.perfect-combat-overlay.show{display:grid;animation:perfectOverlayIn .28s ease-out}.perfect-combat-rays{position:absolute;width:160vmax;height:160vmax;background:repeating-conic-gradient(from 0deg,rgba(255,230,115,.20) 0 7deg,transparent 7deg 17deg);animation:perfectRays 9s linear infinite}.perfect-combat-card{position:relative;z-index:2;width:min(92vw,430px);padding:32px 22px 26px;text-align:center;border-radius:28px;border:2px solid rgba(255,223,102,.75);background:linear-gradient(145deg,rgba(85,25,17,.96),rgba(14,12,18,.98));box-shadow:0 0 28px rgba(255,208,57,.55),0 30px 90px rgba(0,0,0,.7);animation:perfectCardPop .7s cubic-bezier(.17,.89,.32,1.35)}.perfect-combat-crown{font-size:66px;filter:drop-shadow(0 0 18px rgba(255,218,77,.7));animation:perfectCrown 1s ease-in-out infinite alternate}.perfect-combat-title{margin-top:8px;font-size:34px;line-height:1;font-weight:1000;letter-spacing:.07em;color:#ffe66f;text-shadow:0 4px 0 #8d3f13,0 0 28px rgba(255,222,85,.72)}.perfect-combat-sub{margin-top:12px;font-size:12px;line-height:1.55;color:#f2e7c5}.perfect-combat-mult{display:inline-flex;margin-top:15px;padding:10px 18px;border-radius:999px;background:linear-gradient(135deg,#ffcf3d,#fff18a);color:#32190b;font-size:18px;font-weight:1000;box-shadow:0 8px 28px rgba(255,201,42,.32)}.perfect-combat-streak-label{margin-top:10px;font-size:11px;font-weight:900;color:#ffd95b}.perfect-combat-close{width:100%;margin-top:20px;border:0;border-radius:13px;padding:13px;background:#f2c544;color:#211407;font-weight:1000;cursor:pointer}.rpg-enemy,.trial-dummy,.raid-boss-button{pointer-events:none}.rpg-enemy-stage,.trial-stage,.raid-stage{touch-action:manipulation;user-select:none}@keyframes reactionPulse{from{transform:translate(-50%,-50%) scale(.94)}to{transform:translate(-50%,-50%) scale(1.05)}}@keyframes reactionLinePulse{from{transform:translate(-50%,-50%) scaleX(.92);opacity:.78}to{transform:translate(-50%,-50%) scaleX(1.06);opacity:1}}@keyframes dangerPulse{from{transform:translate(-50%,-50%) scale(.9) rotate(-2deg)}to{transform:translate(-50%,-50%) scale(1.08) rotate(2deg)}}@keyframes reactionChainSecond{from{transform:translate(-50%,-50%) scale(.9)}to{transform:translate(-50%,-50%) scale(1.08)}}@keyframes perfectBurst{0%{opacity:1;transform:translate(-50%,-50%) scale(.25)}100%{opacity:0;transform:translate(-50%,-50%) scale(4.3)}}@keyframes perfectFlash{0%{opacity:1}100%{opacity:0}}@keyframes perfectOverlayIn{from{opacity:0}to{opacity:1}}@keyframes perfectRays{to{transform:rotate(360deg)}}@keyframes perfectCardPop{0%{opacity:0;transform:scale(.45) rotate(-4deg)}70%{opacity:1;transform:scale(1.06) rotate(1deg)}100%{transform:scale(1) rotate(0)}}@keyframes perfectCrown{from{transform:translateY(-4px) scale(1)}to{transform:translateY(4px) scale(1.08)}}.rpg-abandon,.rpg-result-close{margin-top:13px;border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:10px 15px;background:#141c2d;color:#eef2f7;font-weight:850;cursor:pointer}.rpg-result{display:none;padding:21px;border:1px solid rgba(240,196,77,.22);border-radius:18px;background:#0e1421}.rpg-result.show{display:block}.rpg-result h2{margin:0;font-size:25px;color:#f0c44d}.rpg-result p{line-height:1.55;color:#a0abc0}.rpg-result strong{color:#eef2f7}
+    .rpg-overlay{display:none;position:fixed;inset:0;z-index:7600;background:radial-gradient(circle at 50% 25%,rgba(150,22,36,.21),transparent 38%),rgba(2,4,8,.97);backdrop-filter:blur(13px);color:#eef2f7;padding:18px}.rpg-overlay.show{display:flex;align-items:center;justify-content:center}.rpg-arena{width:min(100%,410px);text-align:center}.rpg-arena-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:11px;color:#a0abc0}.rpg-clock{font-size:27px;font-weight:950;color:#f0c44d;font-variant-numeric:tabular-nums}.rpg-monster-name{font-size:17px;font-weight:950}.rpg-hp{height:13px;margin:9px 0 4px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid rgba(255,255,255,.05)}.rpg-hp span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#b91f35,#f04f5f);transition:width .1s}.rpg-hp-label{font-size:10px;color:#a0abc0}.rpg-enemy-stage{position:relative;min-height:250px;display:grid;place-items:center;margin:6px 0}.rpg-enemy{width:190px;height:190px;border:0;border-radius:50%;background:radial-gradient(circle at 50% 42%,rgba(240,196,77,.16),rgba(180,25,41,.17) 45%,rgba(255,255,255,.02) 70%);font-size:105px;cursor:pointer;touch-action:manipulation;user-select:none;filter:drop-shadow(0 24px 30px rgba(0,0,0,.5));transition:transform .06s}.rpg-enemy:active,.rpg-enemy.hit{transform:scale(.91) rotate(-2deg)}.rpg-damage-pop{position:absolute;left:50%;top:35%;font-size:22px;font-weight:950;color:#ffd35a;pointer-events:none;animation:rpgPop .55s ease-out forwards;text-shadow:0 3px 12px #000}.rpg-damage-pop.crit{color:#ff6f7d;font-size:28px}.ro-hit-burst{position:absolute;z-index:55;left:50%;top:48%;width:190px;height:150px;transform:translate(-50%,-50%);pointer-events:none;display:grid;place-items:center;animation:roBurstLife .78s ease-out forwards}.ro-hit-star{position:absolute;width:118px;height:118px;background:radial-gradient(circle,#ffea6b 0 10%,#ff9b24 24%,#c91f32 52%,rgba(130,12,28,.2) 70%,transparent 72%);clip-path:polygon(50% 0,60% 28%,82% 8%,73% 37%,100% 33%,77% 52%,98% 69%,69% 67%,79% 96%,57% 75%,48% 100%,42% 74%,16% 94%,29% 65%,0 65%,25% 49%,3% 31%,31% 35%,23% 5%,45% 28%);filter:drop-shadow(0 0 14px rgba(255,73,36,.85));animation:roStar .55s cubic-bezier(.2,.9,.25,1.25)}.ro-hit-number{position:relative;z-index:3;font-size:34px;font-weight:1000;letter-spacing:-.06em;color:#ffe34f;-webkit-text-stroke:2px #492000;text-shadow:0 3px 0 #9d280d,0 0 8px #fff6b5,0 8px 14px rgba(0,0,0,.8);animation:roNumber .68s cubic-bezier(.15,.9,.2,1.2)}.ro-hit-critical .ro-hit-number{font-size:45px;color:#fff36a;-webkit-text-stroke:3px #4d1200}.ro-hit-label{position:absolute;z-index:4;top:3px;font-size:15px;font-weight:1000;letter-spacing:.08em;color:#fff;text-shadow:0 2px 0 #8b1424,0 0 10px #ff4b59;animation:roLabel .7s ease-out}.ro-hit-slash{position:absolute;z-index:2;width:145px;height:7px;border-radius:999px;background:linear-gradient(90deg,transparent,#fff 18%,#fff7a8 48%,#d8c9ff 72%,transparent);box-shadow:0 0 8px #fff,0 0 17px rgba(255,238,132,.95);transform-origin:center;animation:roSlash .48s ease-out forwards}.ro-hit-slash.s1{transform:rotate(38deg)}.ro-hit-slash.s2{transform:rotate(-42deg);animation-delay:.04s}.ro-hit-slash.s3{transform:rotate(7deg);animation-delay:.08s}.ro-hit-burst:not(.ro-hit-critical) .ro-hit-label,.ro-hit-burst:not(.ro-hit-critical) .ro-hit-star{display:none}@keyframes roBurstLife{0%{opacity:0}10%{opacity:1}72%{opacity:1}100%{opacity:0;transform:translate(-50%,-72%) scale(.92)}}@keyframes roStar{0%{transform:scale(.25) rotate(-18deg);opacity:0}45%{transform:scale(1.18) rotate(5deg);opacity:1}100%{transform:scale(.92);opacity:.45}}@keyframes roNumber{0%{transform:scale(.35) translateY(20px);opacity:0}35%{transform:scale(1.28) translateY(-5px);opacity:1}100%{transform:scale(1) translateY(-18px);opacity:1}}@keyframes roLabel{0%{transform:scale(.3) translateY(18px);opacity:0}40%{transform:scale(1.22) translateY(0);opacity:1}100%{transform:scale(1) translateY(-14px);opacity:0}}@keyframes roSlash{0%{opacity:0;scale:.15 1}35%{opacity:1;scale:1.2 1}100%{opacity:0;scale:1.55 .25}}.rpg-combat-info{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.rpg-combat-info div{padding:9px;border-radius:11px;background:rgba(255,255,255,.035);font-size:9px;color:#818da6}.rpg-combat-info b{display:block;color:#eef2f7;font-size:14px;margin-bottom:2px}.rpg-ability{width:100%;margin:9px 0 2px;padding:11px 12px;border:1px solid rgba(240,196,77,.32);border-radius:13px;background:linear-gradient(135deg,rgba(240,196,77,.15),rgba(110,168,255,.09));color:#fff;font:900 12px Inter,system-ui,sans-serif;cursor:pointer}.rpg-ability small{display:block;margin-top:3px;color:#aeb9ce;font-size:9px;font-weight:700}.rpg-ability:disabled{opacity:.45;cursor:not-allowed}.rpg-ability.active{border-color:#78d7ff;box-shadow:0 0 0 3px rgba(80,190,255,.12),0 0 25px rgba(80,190,255,.18)}.rpg-ability.used{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.08)}.reaction-target.ability-focus{width:108px!important;height:108px!important;border-width:3px!important;box-shadow:0 0 0 13px rgba(90,160,255,.18),0 0 48px rgba(90,160,255,.72)!important}.rpg-overlay.time-stopped{background:radial-gradient(circle at 50% 25%,rgba(38,139,190,.22),transparent 42%),rgba(2,4,8,.97)}.rpg-overlay.time-stopped .rpg-clock{color:#7de2ff;text-shadow:0 0 18px rgba(90,210,255,.7)}.reaction-hint{min-height:32px;margin:7px 0 3px;font-size:11px;font-weight:900;color:#dbe4f5}.reaction-live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:6px 0}.reaction-live div{padding:7px 5px;border-radius:10px;background:rgba(255,255,255,.035);font-size:8px;color:#7f8ba2}.reaction-live b{display:block;font-size:13px;color:#fff;margin-bottom:2px}.reaction-target{position:absolute;z-index:20;width:84px;height:84px;transform:translate(-50%,-50%);border:2px solid rgba(255,255,255,.78);border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,rgba(255,255,255,.96),rgba(110,168,255,.86) 48%,rgba(26,52,100,.96));color:#07101d;font-size:31px;font-weight:950;box-shadow:0 0 0 9px rgba(90,160,255,.12),0 0 36px rgba(90,160,255,.56);touch-action:none;user-select:none;cursor:pointer;animation:reactionPulse .8s ease-in-out infinite alternate}.reaction-target.hidden{display:none}.reaction-target.combo-tier-1{animation-duration:.72s}.reaction-target.combo-tier-2{animation-duration:.62s}.reaction-target.combo-tier-3{animation-duration:.52s;box-shadow:0 0 0 8px rgba(255,178,70,.12),0 0 38px rgba(255,112,52,.5)}.reaction-target.combo-tier-4{animation-duration:.42s;box-shadow:0 0 0 7px rgba(89,228,255,.14),0 0 42px rgba(97,118,255,.62)}.reaction-target.attack-pattern-storm,.reaction-target.attack-pattern-spiral{border-width:3px}.reaction-target.pattern-0{border-radius:50%}.reaction-target.pattern-1{border-radius:18px;transform:translate(-50%,-50%) rotate(8deg)}.reaction-target.pattern-2{border-radius:50% 18% 50% 18%;transform:translate(-50%,-50%) rotate(-10deg)}.reaction-target.pattern-3{width:72px;height:96px}.reaction-target.pattern-4{width:102px;height:68px;border-radius:22px}.reaction-target.pattern-5{border-style:dashed;box-shadow:0 0 0 13px rgba(90,160,255,.08),0 0 42px rgba(90,160,255,.66)}.reaction-target.type-double{background:radial-gradient(circle,#fff,#b49cff 52%,#5b37b5);box-shadow:0 0 0 7px rgba(160,110,255,.12),0 0 34px rgba(160,110,255,.55)}.reaction-target.type-chain{width:92px;height:92px;background:radial-gradient(circle,#fff,#62d6b0 52%,#157a5d);box-shadow:0 0 0 10px rgba(70,220,160,.14),0 0 40px rgba(70,220,160,.62)}.reaction-target.type-chain.chain-second{width:98px;height:98px;background:radial-gradient(circle,#fff,#78f0c7 44%,#0f8b66 72%);box-shadow:0 0 0 12px rgba(70,230,170,.18),0 0 50px rgba(70,230,170,.78);animation:reactionChainSecond .48s ease-in-out infinite alternate}.reaction-target.type-danger{background:radial-gradient(circle,#fff,#ff6e79 48%,#9f1728);box-shadow:0 0 0 9px rgba(255,55,75,.15),0 0 42px rgba(255,55,75,.68);animation:dangerPulse .28s ease-in-out infinite alternate}.reaction-target.type-golden{width:170px;height:52px;border:0;border-radius:14px;background:transparent;color:#fff;box-shadow:none;font-size:0;animation:reactionLinePulse .8s ease-in-out infinite alternate}.reaction-target.type-golden::before{content:'';display:block;width:148px;height:9px;border-radius:999px;background:linear-gradient(90deg,rgba(255,255,255,.25),#fff 18%,#8edcff 50%,#fff 82%,rgba(255,255,255,.25));box-shadow:0 0 0 8px rgba(120,210,255,.1),0 0 30px rgba(120,210,255,.82)}.reaction-target.type-golden .reaction-small{bottom:-9px;font-size:9px;color:#dff6ff}.reaction-target .reaction-small{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:8px;color:#fff;text-shadow:0 2px 8px #000}.reaction-feedback{position:absolute;z-index:30;left:50%;top:24%;transform:translateX(-50%);max-width:94%;white-space:nowrap;font-size:20px;font-weight:950;pointer-events:none;animation:rpgPop .7s ease-out forwards}.reaction-feedback.perfect{color:#ffd454}.reaction-feedback.good{color:#78d7ff}.reaction-feedback.miss{color:#ff6978}.reaction-perfect-burst{position:absolute;z-index:35;left:50%;top:50%;width:70px;height:70px;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);border:3px solid #ffe36b;box-shadow:0 0 24px #ffd34f,0 0 70px rgba(255,207,58,.8);animation:perfectBurst .72s ease-out forwards}.reaction-perfect-flash{position:absolute;z-index:34;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 50%,rgba(255,239,137,.42),rgba(255,190,38,.1) 42%,transparent 72%);animation:perfectFlash .55s ease-out forwards}.reaction-perfect-streak{color:#ffd454!important;text-shadow:0 0 12px rgba(255,212,84,.55)}.perfect-combat-overlay{position:fixed;z-index:9100;inset:0;display:none;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 42%,rgba(255,205,52,.26),rgba(116,27,18,.42) 38%,rgba(2,4,9,.96) 75%);padding:20px}.perfect-combat-overlay.show{display:grid;animation:perfectOverlayIn .28s ease-out}.perfect-combat-rays{position:absolute;width:160vmax;height:160vmax;background:repeating-conic-gradient(from 0deg,rgba(255,230,115,.20) 0 7deg,transparent 7deg 17deg);animation:perfectRays 9s linear infinite}.perfect-combat-card{position:relative;z-index:2;width:min(92vw,430px);padding:32px 22px 26px;text-align:center;border-radius:28px;border:2px solid rgba(255,223,102,.75);background:linear-gradient(145deg,rgba(85,25,17,.96),rgba(14,12,18,.98));box-shadow:0 0 28px rgba(255,208,57,.55),0 30px 90px rgba(0,0,0,.7);animation:perfectCardPop .7s cubic-bezier(.17,.89,.32,1.35)}.perfect-combat-crown{font-size:66px;filter:drop-shadow(0 0 18px rgba(255,218,77,.7));animation:perfectCrown 1s ease-in-out infinite alternate}.perfect-combat-title{margin-top:8px;font-size:34px;line-height:1;font-weight:1000;letter-spacing:.07em;color:#ffe66f;text-shadow:0 4px 0 #8d3f13,0 0 28px rgba(255,222,85,.72)}.perfect-combat-sub{margin-top:12px;font-size:12px;line-height:1.55;color:#f2e7c5}.perfect-combat-mult{display:inline-flex;margin-top:15px;padding:10px 18px;border-radius:999px;background:linear-gradient(135deg,#ffcf3d,#fff18a);color:#32190b;font-size:18px;font-weight:1000;box-shadow:0 8px 28px rgba(255,201,42,.32)}.perfect-combat-streak-label{margin-top:10px;font-size:11px;font-weight:900;color:#ffd95b}.perfect-combat-close{width:100%;margin-top:20px;border:0;border-radius:13px;padding:13px;background:#f2c544;color:#211407;font-weight:1000;cursor:pointer}.rpg-enemy,.trial-dummy,.raid-boss-button{pointer-events:none}.rpg-enemy-stage,.trial-stage,.raid-stage{touch-action:manipulation;user-select:none}@keyframes reactionPulse{from{transform:translate(-50%,-50%) scale(.94)}to{transform:translate(-50%,-50%) scale(1.05)}}@keyframes reactionLinePulse{from{transform:translate(-50%,-50%) scaleX(.92);opacity:.78}to{transform:translate(-50%,-50%) scaleX(1.06);opacity:1}}@keyframes dangerPulse{from{transform:translate(-50%,-50%) scale(.9) rotate(-2deg)}to{transform:translate(-50%,-50%) scale(1.08) rotate(2deg)}}@keyframes reactionChainSecond{from{transform:translate(-50%,-50%) scale(.9)}to{transform:translate(-50%,-50%) scale(1.08)}}@keyframes perfectBurst{0%{opacity:1;transform:translate(-50%,-50%) scale(.25)}100%{opacity:0;transform:translate(-50%,-50%) scale(4.3)}}@keyframes perfectFlash{0%{opacity:1}100%{opacity:0}}@keyframes perfectOverlayIn{from{opacity:0}to{opacity:1}}@keyframes perfectRays{to{transform:rotate(360deg)}}@keyframes perfectCardPop{0%{opacity:0;transform:scale(.45) rotate(-4deg)}70%{opacity:1;transform:scale(1.06) rotate(1deg)}100%{transform:scale(1) rotate(0)}}@keyframes perfectCrown{from{transform:translateY(-4px) scale(1)}to{transform:translateY(4px) scale(1.08)}}.rpg-abandon,.rpg-result-close{margin-top:13px;border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:10px 15px;background:#141c2d;color:#eef2f7;font-weight:850;cursor:pointer}.rpg-result{display:none;padding:21px;border:1px solid rgba(240,196,77,.22);border-radius:18px;background:#0e1421}.rpg-result.show{display:block}.rpg-result h2{margin:0;font-size:25px;color:#f0c44d}.rpg-result p{line-height:1.55;color:#a0abc0}.rpg-result strong{color:#eef2f7}
 .rpg-boss-skin{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}.rpg-boss-face{font-size:82px;line-height:1;filter:drop-shadow(0 0 12px rgba(96,170,255,.35))}.rpg-boss-note{font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#8fb8ff}.rpg-boss-note small{display:block;color:#9ea8be;font-size:8px;letter-spacing:.03em;text-transform:none;margin-top:2px}.rpg-enemy.boss-val{background:radial-gradient(circle at 50% 35%,rgba(95,165,255,.28),rgba(180,25,41,.14) 42%,rgba(255,255,255,.02) 72%);border:1px solid rgba(95,165,255,.18)}
     .damage-trial-launch{display:block;width:100%;margin-top:9px;border:1px solid rgba(100,190,255,.22);border-radius:13px;padding:12px 14px;background:linear-gradient(135deg,rgba(32,76,145,.95),rgba(103,40,155,.95));color:#f2f7ff;font-weight:950;font-size:12px;cursor:pointer;box-shadow:0 12px 28px rgba(60,105,210,.18)}.damage-trial-launch:disabled{opacity:.45;cursor:not-allowed}.damage-trial-note{margin-top:7px;font-size:9px;color:#7e8aa4;text-align:center}.damage-trial-note b{color:#8fc9ff}
     .trial-overlay{display:none;position:fixed;inset:0;z-index:7750;padding:18px;color:#eef5ff;background:radial-gradient(circle at 50% 20%,rgba(66,119,255,.22),transparent 34%),radial-gradient(circle at 14% 75%,rgba(181,54,255,.18),transparent 30%),linear-gradient(180deg,#050715,#090d22 56%,#02040b);overflow:hidden}.trial-overlay.show{display:flex;align-items:center;justify-content:center}.trial-overlay:before,.trial-overlay:after{content:'';position:absolute;inset:-20%;pointer-events:none;background-image:radial-gradient(circle,#8ec8ff 0 1px,transparent 1.6px);background-size:34px 34px;opacity:.22;animation:trialStars 12s linear infinite}.trial-overlay:after{background-size:57px 57px;opacity:.12;animation-duration:20s;animation-direction:reverse}.trial-arena{position:relative;z-index:1;width:min(100%,410px);text-align:center}.trial-map-title{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8fc9ff;font-weight:950}.trial-map-subtitle{margin-top:3px;font-size:22px;font-weight:950}.trial-clock{margin:8px 0 5px;font-size:37px;font-weight:950;color:#f4ce58;font-variant-numeric:tabular-nums}.trial-stage{position:relative;min-height:270px;display:grid;place-items:center;margin:5px 0}.trial-portal{position:absolute;width:250px;height:250px;border-radius:50%;background:conic-gradient(from 0deg,#4e8fff,#9d4dff,#48d7ff,#4e8fff);filter:blur(.2px) drop-shadow(0 0 34px rgba(78,143,255,.35));animation:trialPortal 4s linear infinite}.trial-portal:after{content:'';position:absolute;inset:15px;border-radius:50%;background:radial-gradient(circle,#121934 0 38%,#050817 68%);box-shadow:inset 0 0 45px rgba(100,170,255,.25)}.trial-dummy{position:relative;z-index:2;width:176px;height:176px;border:0;border-radius:50%;background:radial-gradient(circle at 50% 36%,rgba(255,225,100,.24),rgba(37,50,95,.88) 48%,rgba(4,8,20,.95) 72%);font-size:91px;cursor:pointer;touch-action:manipulation;user-select:none;filter:drop-shadow(0 24px 30px rgba(0,0,0,.55));transition:transform .055s}.trial-dummy:active,.trial-dummy.hit{transform:scale(.91) rotate(-2deg)}.trial-map-floor{position:absolute;z-index:1;bottom:8px;width:300px;height:64px;border-radius:50%;background:radial-gradient(ellipse,rgba(91,159,255,.34),rgba(30,38,83,.13) 55%,transparent 72%);transform:perspective(120px) rotateX(55deg)}.trial-info{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.trial-info div{padding:10px 7px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.04);font-size:9px;color:#8492ae}.trial-info b{display:block;font-size:15px;color:#eef5ff;margin-bottom:2px}.trial-result{display:none;padding:22px;border-radius:20px;border:1px solid rgba(103,170,255,.28);background:rgba(10,16,36,.95);box-shadow:0 30px 90px rgba(0,0,0,.55)}.trial-result.show{display:block}.trial-result h2{margin:0;color:#8fc9ff;font-size:25px}.trial-result p{line-height:1.6;color:#a4afc4}.trial-result strong{color:#fff}.trial-close{margin-top:14px;border:0;border-radius:11px;padding:11px 16px;background:#8fc9ff;color:#07101e;font-weight:950;cursor:pointer}
@@ -3304,25 +3304,74 @@ function caseLuckBoostPct() {
 
 
   const MONSTER_SPRITE_FILES = {
-    // Fichiers PNG placés directement à la racine de main.
-    "barre proteinee gout beton": "Barre protéinée goût béton.png",
-    "bouteille d eau tiede consciente": "Bouteille d’eau tiède consciente.png",
-    "chaussette de gym sauvage": "Chaussette de gym sauvage.png",
-    "donut malicieux": "Donut malicieux.png",
-    "le donut malicieux": "Donut malicieux.png",
-    "le banc toujours pris": "Le Banc Toujours Pris.png",
-    "le bro aux trois serviettes": "Le Bro aux Trois Serviettes.png",
-    "le cadenas sans code": "Le Cadenas Sans Code.png",
-    "le dj bluetooth interdit": "Le DJ Bluetooth Interdit.png",
-    "le gerant du vestiaire oublie": "Le Gérant du Vestiaire Oublié.png",
-    "le nettoyeur de banc sec": "Le Nettoyeur de Banc Sec.png",
-    "le squatteur de poulie": "Le Squatteur de Poulie.png",
-    "le tapis de course possede": "Le Tapis de Course Possédé.png",
-    "l abonne fantome de fevrier": "L’Abonné Fantôme de Février.png",
-    "l influenceur du miroir": "L’Influenceur du Miroir.png",
-    "omelette fantome": "Omelette fantôme.png",
+    "arnold schwarzeneggerie le chene en plastique": "sprites/monsters/epique/Arnold Schwarzeneggerie, le Chêne en Plastique.webp",
+    "avatar du rpe 10 permanent": "sprites/monsters/epique/Avatar du RPE 10 permanent.webp",
+    "barre proteinee gout beton": "sprites/monsters/commun/Barre protéinée goût béton.webp",
+    "bouteille d eau tiede consciente": "sprites/monsters/commun/Bouteille d’eau tiède consciente.webp",
+    "celia celeste reine du challenge abdo": "sprites/monsters/epique/Célia Céleste, Reine du Challenge Abdo.webp",
+    "chaussette de gym sauvage": "sprites/monsters/commun/Chaussette de gym sauvage.webp",
+    "chicken broccoli rice final form": "sprites/monsters/epique/Chicken Broccoli Rice final form.webp",
+    "clara metaknight lame de la tempo": "sprites/monsters/epique/Clara Métaknight, Lame de la Tempo.webp",
+    "controleur urssaf dimensionnel": "sprites/monsters/epique/Contrôleur URSSAF dimensionnel.webp",
+    "donut malicieux": "sprites/monsters/commun/Donut malicieux.webp",
+    "fantome du mock meet annule": "sprites/monsters/epique/Fantôme du mock meet annulé.webp",
+    "greg doucette de porc le crieur hypocalorique": "sprites/monsters/mythique/Greg Doucette de Porc, le Crieur Hypocalorique.webp",
+    "guillaume glorieux seigneur du gl": "sprites/monsters/epique/Guillaume Glorieux, Seigneur du GL.webp",
+    "hanzalone la version malefique": "sprites/monsters/ultra-mythique/Hanzalone, la version maléfique.webp",
+    "hydre du deload refuse": "sprites/monsters/epique/Hydre du deload refusé.webp",
+    "janel janvier reine du cycle": "sprites/monsters/epique/Janel Janvier, Reine du Cycle.webp",
+    "jo lindnergarten le jardinier veineux": "sprites/monsters/legendaire/Jo Lindnergarten, le Jardinier Veineux.webp",
+    "jolan joliment faux": "sprites/monsters/epique/Jolan Joliment Faux.webp",
+    "kali muscleton le prisonnier proteine": "sprites/monsters/mythique/Kali Muscleton, le Prisonnier Protéiné.webp",
+    "kaoutar counter paradeuse de bench": "sprites/monsters/epique/Kaoutar Counter, Paradeuse de Bench.webp",
+    "killian kill ton pr": "sprites/monsters/epique/Killian Kill-Ton-PR.webp",
+    "l abonne fantome de fevrier": "sprites/monsters/commun/L’Abonné Fantôme de Février.webp",
+    "l influenceur du miroir": "sprites/monsters/commun/L’Influenceur du Miroir.webp",
+    "l orteil de noe": "sprites/monsters/epique/L'Orteil de Noé.webp",
+    "la manager basic fit reine du bip rouge": "sprites/monsters/epique/La Manager Basic-Fit, Reine du Bip Rouge.webp",
+    "le banc toujours pris": "sprites/monsters/commun/Le Banc Toujours Pris.webp",
+    "le bro aux trois serviettes": "sprites/monsters/commun/Le Bro aux Trois Serviettes.webp",
+    "le cadenas sans code": "sprites/monsters/commun/Le Cadenas Sans Code.webp",
+    "le dj bluetooth interdit": "sprites/monsters/commun/Le DJ Bluetooth Interdit.webp",
+    "le donut malicieux": "sprites/monsters/commun/Donut malicieux.webp",
+    "le donut malicieux supreme": "sprites/monsters/epique/Le Donut Malicieux Suprême.webp",
+    "le gerant du vestiaire oublie": "sprites/monsters/commun/Le Gérant du Vestiaire Oublié.webp",
+    "le grand deltoide masque": "sprites/monsters/abyssal/Le père de Noé.webp",
+    "le manager esn ultime": "sprites/monsters/epique/Le Manager ESN Ultime.webp",
+    "le mec en jeans": "sprites/monsters/epique/Roi de la Phonk.webp",
+    "le nettoyeur de banc sec": "sprites/monsters/commun/Le Nettoyeur de Banc Sec.webp",
+    "le pere de noe": "sprites/monsters/abyssal/Le père de Noé.webp",
+    "le roi de la funk": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
+    "le roi de la phonk synthetique": "sprites/monsters/epique/Roi de la Phonk.webp",
+    "le squatteur de poulie": "sprites/monsters/commun/Le Squatteur de Poulie.webp",
+    "le tapis de course possede": "sprites/monsters/commun/Le Tapis de Course Possédé.webp",
+    "lou dragonne souffle de magnesie": "sprites/monsters/epique/Lou Dragonne, Souffle de Magnésie.webp",
+    "lucine lumiere camera critique": "sprites/monsters/epique/Lucine Lumière, Caméra Critique.webp",
+    "machine a adducteurs cosmique": "sprites/monsters/epique/Machine à adducteurs cosmique.webp",
+    "malo malosse petit boss du rack": "sprites/monsters/epique/Malo Malosse, Petit Boss du Rack.webp",
+    "matthieu pecheur maitre de la canne a tirage": "sprites/monsters/epique/Matthieu Pêcheur, Maître de la Canne à Tirage.webp",
+    "mike o hearnia l eternel naturellement mysterieux": "sprites/monsters/epique/Mike O’Hearnia, l’Éternel Naturellement Mystérieux.webp",
+    "noah le nain furtif": "sprites/monsters/mythique/Noah le nain furtif.webp",
+    "noe faux noe copie conforme": "sprites/monsters/epique/Noé Faux-Noé, Copie Conforme.webp",
+    "noel deyzel diesel le pere noel du bulk": "sprites/monsters/epique/Noel Deyzel Diesel, le Père Noël du Bulk.webp",
+    "omelette fantome": "sprites/monsters/commun/Omelette fantôme.webp",
+    "phil heath ledger le cadeau maudit": "sprites/monsters/epique/Phil Heath Ledger, le Cadeau Maudit.webp",
+    "rich piano bar le musicien a huit repas": "sprites/monsters/mythique/Rich Piano-Bar, le Musicien à Huit Repas.webp",
     "riz sec vengeur": "Riz sec vengeur.png",
-    "slime des tenebres": "Slime des ténèbres.png"
+    "roi de la funk synthetique": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
+    "roi du funk synthetique": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
+    "le roi du funk synthetique": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
+    "roi de la phonk": "sprites/monsters/epique/Roi de la Phonk.webp",
+    "roi de la phonk synthetique": "sprites/monsters/epique/Roi de la Phonk.webp",
+    "roi du rest timer infini": "sprites/monsters/epique/Roi du rest timer infini.webp",
+    "saya reunion foudre creole": "sprites/monsters/epique/Saya Réunion, Foudre Créole.webp",
+    "seigneur du superset infini": "sprites/monsters/epique/Seigneur du superset infini.webp",
+    "serena serenite calme avant le top set": "sprites/monsters/epique/Serena Sérénité, Calme Avant le Top Set.webp",
+    "slime des tenebres": "sprites/monsters/commun/Slime des ténèbres.webp",
+    "titan du total": "sprites/monsters/epique/Titan du total.webp",
+    "val aka kazuto aka the shadow aka the lonely shadow cowboy": "sprites/monsters/legendaire/Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy.webp",
+    "val aka kazuto aka the shadow the lonely shadow cowboy": "sprites/monsters/legendaire/Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy.webp",
+    "val kazuto the shadow the lonely shadow cowboy": "sprites/monsters/legendaire/Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy.webp"
   };
 
   function normalizeSpriteKey(value) {
@@ -3349,13 +3398,12 @@ function caseLuckBoostPct() {
   function monsterSpriteCandidates(name) {
     const file = monsterSpriteFile(name);
     if (!file) return [];
-    const version = encodeURIComponent(window.GA_APP_VERSION || 'V75');
+    const version = encodeURIComponent(window.GA_APP_VERSION || 'V131');
     const encoded = encodeAssetPath(file);
-    return [
-      `${encoded}?v=${version}`,
-      `Sprites%20-%20Copie/${encoded}?v=${version}`,
-      `sprites/${encoded}?v=${version}`
-    ];
+    const candidates = [`${encoded}?v=${version}`];
+    const basename = String(file).split('/').pop();
+    if (basename && basename !== file) candidates.push(`${encodeAssetPath(basename)}?v=${version}`);
+    return [...new Set(candidates)];
   }
 
   function monsterHasSprite(name) {
@@ -3396,7 +3444,7 @@ function monsterVisual(name, rarity = 'common') {
   const rarityKey = normalizedMonsterRarity(rarity);
   const emoji = monsterEmoji(name);
   const spriteHtml = monsterSpriteImgHtml(name, name, 'monster-sprite-img');
-  if (value.includes('kazuto') || value.includes('lonely shadow cowboy') || value.includes('val,')) {
+  if (!spriteHtml && (value.includes('kazuto') || value.includes('lonely shadow cowboy') || value.includes('val,'))) {
     return `<div class="rpg-boss-skin rarity-${rarityKey}"><div class="rpg-boss-face">🧔‍♂️</div><div class="rpg-boss-note">yeux bleus · tatouages<small>The Shadow · Lonely Shadow Cowboy</small></div></div>`;
   }
   const ornament = rarityKey === 'epic' ? '🜂' : rarityKey === 'legendary' ? '👑' : rarityKey === 'mythic' ? '☠️' : rarityKey === 'abyssal' ? '🫧' : rarityKey === 'ultra_mythic' ? '🌟' : rarityKey === 'uncommon' ? '✦' : '·';
@@ -5768,19 +5816,168 @@ function collectionHtml() {
     return ((base * 48271) % modulus) / modulus;
   }
 
-  function reactionSpec(seed, roundNo, startMs = 0, forceBlue = false) {
+  function reactionTypeForComboTier(seed, roundNo, tier = 0) {
     const roll = reactionRand(seed, roundNo, 1);
-    const type = forceBlue ? 'normal' : (roll < 0.50 ? 'normal' : roll < 0.65 ? 'double' : roll < 0.80 ? 'chain' : roll < 0.93 ? 'danger' : 'golden');
-    const duration = type === 'chain' ? 1200 : type === 'double' ? 1250 : type === 'golden' ? 1200 : 1050;
-    const x = 15 + reactionRand(seed, roundNo, 2) * 70;
-    const y = 18 + reactionRand(seed, roundNo, 3) * 58;
-    let x2 = 15 + reactionRand(seed, roundNo, 4) * 70;
-    let y2 = 18 + reactionRand(seed, roundNo, 5) * 58;
+    const tables = [
+      [0.52, 0.68, 0.82, 0.94],
+      [0.45, 0.65, 0.80, 0.92],
+      [0.38, 0.61, 0.79, 0.91],
+      [0.32, 0.57, 0.77, 0.90],
+      [0.27, 0.53, 0.75, 0.89]
+    ];
+    const thresholds = tables[Math.max(0, Math.min(4, Math.floor(n(tier))))] || tables[0];
+    return roll < thresholds[0] ? 'normal'
+      : roll < thresholds[1] ? 'double'
+      : roll < thresholds[2] ? 'chain'
+      : roll < thresholds[3] ? 'danger'
+      : 'golden';
+  }
+
+  function reactionComboDifficulty(session) {
+    const combo = Math.max(0, Math.floor(n(session?.reactionCombo)));
+    if (combo >= 35) return { tier:4, key:'abyssal', label:'ABYSSAL', intervalMultiplier:0.62, maxActive:5, durationMultiplier:0.80 };
+    if (combo >= 20) return { tier:3, key:'expert', label:'EXPERT', intervalMultiplier:0.72, maxActive:4, durationMultiplier:0.86 };
+    if (combo >= 10) return { tier:2, key:'avance', label:'AVANCÉ', intervalMultiplier:0.82, maxActive:3, durationMultiplier:0.93 };
+    if (combo >= 5) return { tier:1, key:'enchaînement', label:'ENCHAÎNEMENT', intervalMultiplier:0.92, maxActive:2, durationMultiplier:1 };
+    return { tier:0, key:'initiation', label:'', intervalMultiplier:1.05, maxActive:1, durationMultiplier:1.08 };
+  }
+
+  function reactionSpec(seed, roundNo, startMs = 0, forceBlue = false, options = {}) {
+    const tier = Math.max(0, Math.min(4, Math.floor(n(options.tier))));
+    const type = forceBlue ? 'normal' : (options.type || reactionTypeForComboTier(seed, roundNo, tier));
+    const baseDuration = type === 'chain' ? 1200 : type === 'double' ? 1250 : type === 'golden' ? 1200 : type === 'danger' ? 980 : 1050;
+    const durationMultiplier = Math.max(0.55, n(options.durationMultiplier, 1));
+    const duration = Math.max(650, Math.round(n(options.duration, baseDuration * durationMultiplier)));
+    const x = Number.isFinite(Number(options.x)) ? Number(options.x) : 15 + reactionRand(seed, roundNo, 2) * 70;
+    const y = Number.isFinite(Number(options.y)) ? Number(options.y) : 18 + reactionRand(seed, roundNo, 3) * 58;
+    let x2 = Number.isFinite(Number(options.x2)) ? Number(options.x2) : 15 + reactionRand(seed, roundNo, 4) * 70;
+    let y2 = Number.isFinite(Number(options.y2)) ? Number(options.y2) : 18 + reactionRand(seed, roundNo, 5) * 58;
     if ((x2 - x) ** 2 + (y2 - y) ** 2 < 30 ** 2) {
       x2 = x < 50 ? Math.min(85, x + 35) : Math.max(15, x - 35);
       y2 = y < 47 ? Math.min(76, y + 22) : Math.max(18, y - 22);
     }
-    return { round:roundNo, type, start:startMs, duration, x, y, x2, y2, rushBlue:forceBlue };
+    return {
+      round:roundNo,
+      type,
+      start:startMs,
+      duration,
+      x,
+      y,
+      x2,
+      y2,
+      rushBlue:forceBlue,
+      comboTier:tier,
+      patternKey:options.patternKey || 'single',
+      patternLabel:options.patternLabel || ''
+    };
+  }
+
+  function reactionPatternPool(tier) {
+    if (tier >= 4) return ['spiral','storm','cross','zigzag','bait_hard','sweep_vertical'];
+    if (tier >= 3) return ['zigzag','cross','triangle','sweep_horizontal','bait','alternating'];
+    if (tier >= 2) return ['sweep_horizontal','sweep_vertical','triangle','pair','bait','single'];
+    if (tier >= 1) return ['pair','alternating','single','double','chain','bait'];
+    return ['single','single','single','double','chain','danger','golden'];
+  }
+
+  function reactionBuildPattern(session, elapsedMs, budget = 1) {
+    const state = reactionComboDifficulty(session);
+    const seed = session.reactionSeed;
+    session.reactionPatternCounter = Math.max(0, Math.floor(n(session.reactionPatternCounter))) + 1;
+    const patternNo = session.reactionPatternCounter;
+    const pool = reactionPatternPool(state.tier);
+    const patternKey = pool[Math.min(pool.length - 1, Math.floor(reactionRand(seed, patternNo, 71) * pool.length))] || 'single';
+    const labels = {
+      single:'CIBLE LIBRE', double:'DOUBLE IMPACT', chain:'CHAÎNE', danger:'PIÈGE ROUGE', golden:'TRAIT LUMINEUX',
+      pair:'DUO CROISÉ', alternating:'ALTERNANCE', sweep_horizontal:'BALAYAGE HORIZONTAL', sweep_vertical:'BALAYAGE VERTICAL',
+      triangle:'TRIANGLE', zigzag:'ZIGZAG', cross:'CROIX', spiral:'SPIRALE', storm:'TEMPÊTE', bait:'FEINTE', bait_hard:'DOUBLE FEINTE'
+    };
+    const patternLabel = labels[patternKey] || 'PATTERN';
+    const specs = [];
+    const limit = Math.max(1, Math.floor(n(budget, 1)));
+    const add = (offset, x, y, type = 'normal', durationScale = 1, extra = {}) => {
+      if (specs.length >= limit) return;
+      session.reactionRoundCounter += 1;
+      specs.push(reactionSpec(seed, session.reactionRoundCounter, elapsedMs + Math.max(0, offset), false, {
+        tier:state.tier,
+        type,
+        x,
+        y,
+        x2:extra.x2,
+        y2:extra.y2,
+        durationMultiplier:state.durationMultiplier * durationScale,
+        duration:extra.duration,
+        patternKey,
+        patternLabel
+      }));
+    };
+    const randomX = salt => 18 + reactionRand(seed, patternNo, salt) * 64;
+    const randomY = salt => 20 + reactionRand(seed, patternNo, salt) * 54;
+    const normalOrGolden = salt => reactionRand(seed, patternNo, salt) > (state.tier >= 3 ? 0.82 : 0.92) ? 'golden' : 'normal';
+
+    if (patternKey === 'single') {
+      session.reactionRoundCounter += 1;
+      specs.push(reactionSpec(seed, session.reactionRoundCounter, elapsedMs, false, {
+        tier:state.tier,
+        durationMultiplier:state.durationMultiplier,
+        patternKey,
+        patternLabel
+      }));
+    } else if (['double','chain','danger','golden'].includes(patternKey)) {
+      add(0, randomX(81), randomY(82), patternKey, patternKey === 'danger' ? 0.90 : 1);
+    } else if (patternKey === 'pair') {
+      const flip = reactionRand(seed, patternNo, 83) > 0.5;
+      add(0, flip ? 24 : 76, 28, 'normal');
+      add(state.tier >= 2 ? 150 : 260, flip ? 76 : 24, 68, normalOrGolden(84));
+    } else if (patternKey === 'alternating') {
+      const count = Math.min(limit, state.tier >= 3 ? 4 : 3);
+      for (let i = 0; i < count; i += 1) add(i * (state.tier >= 3 ? 135 : 220), i % 2 ? 78 : 22, 25 + (i % 3) * 22, normalOrGolden(90 + i));
+    } else if (patternKey === 'sweep_horizontal') {
+      const positions = [18, 39, 61, 82];
+      const count = Math.min(limit, state.tier >= 3 ? 4 : 3);
+      const reverse = reactionRand(seed, patternNo, 100) > 0.5;
+      const y = randomY(101);
+      for (let i = 0; i < count; i += 1) add(i * (state.tier >= 3 ? 115 : 180), positions[reverse ? positions.length - 1 - i : i], y, normalOrGolden(102 + i), 0.96);
+    } else if (patternKey === 'sweep_vertical') {
+      const positions = [20, 38, 57, 75];
+      const count = Math.min(limit, state.tier >= 3 ? 4 : 3);
+      const reverse = reactionRand(seed, patternNo, 110) > 0.5;
+      const x = randomX(111);
+      for (let i = 0; i < count; i += 1) add(i * (state.tier >= 3 ? 115 : 180), x, positions[reverse ? positions.length - 1 - i : i], normalOrGolden(112 + i), 0.96);
+    } else if (patternKey === 'triangle') {
+      const points = [[50,20],[22,70],[78,70]];
+      points.slice(0, limit).forEach((point, i) => add(i * (state.tier >= 3 ? 110 : 180), point[0], point[1], normalOrGolden(120 + i), 0.94));
+    } else if (patternKey === 'zigzag') {
+      const points = [[20,22],[78,38],[22,57],[80,74]];
+      points.slice(0, limit).forEach((point, i) => add(i * 125, point[0], point[1], normalOrGolden(130 + i), 0.90));
+    } else if (patternKey === 'cross') {
+      const points = [[50,18],[18,48],[82,48],[50,77],[50,48]];
+      points.slice(0, limit).forEach((point, i) => add(i * 105, point[0], point[1], i === 4 ? 'golden' : normalOrGolden(140 + i), 0.88));
+    } else if (patternKey === 'spiral') {
+      const points = [[20,25],[72,18],[82,62],[42,77],[18,55]];
+      points.slice(0, limit).forEach((point, i) => add(i * 95, point[0], point[1], i === 4 ? 'golden' : 'normal', 0.86));
+    } else if (patternKey === 'storm') {
+      const count = Math.min(limit, 5);
+      for (let i = 0; i < count; i += 1) {
+        const type = i === 1 && state.tier >= 4 ? 'danger' : normalOrGolden(150 + i);
+        add(i * 80, randomX(160 + i * 2), randomY(161 + i * 2), type, type === 'danger' ? 0.78 : 0.84);
+      }
+    } else if (patternKey === 'bait' || patternKey === 'bait_hard') {
+      add(0, 50, 48, 'danger', 0.76);
+      add(patternKey === 'bait_hard' ? 280 : 390, 22, 67, 'normal', 0.88);
+      add(patternKey === 'bait_hard' ? 430 : 650, 78, 30, patternKey === 'bait_hard' ? 'golden' : 'normal', 0.86);
+      if (patternKey === 'bait_hard') add(560, 50, 72, 'normal', 0.82);
+    }
+
+    return specs;
+  }
+
+  function reactionOutstandingCount(session, elapsed = reactionElapsed(session)) {
+    return (session?.reactionSequence || []).filter(spec => {
+      if (session.reactionResolved.has(spec.round)) return false;
+      const chainExtra = spec.type === 'chain' && session.reactionChainFirst?.round === spec.round ? 1200 : 0;
+      return elapsed <= spec.start + spec.duration + chainExtra;
+    }).length;
   }
 
   function reactionIcon(type) {
@@ -5797,6 +5994,8 @@ function collectionHtml() {
     session.reactionTargetCount = 0;
     session.reactionSequence = [];
     session.reactionRoundCounter = 0;
+    session.reactionPatternCounter = 0;
+    session.reactionLastPattern = '';
     session.reactionNextSpawnAt = performance.now() + 800;
     session.reactionStartedAt = performance.now();
     session.reactionActions = [];
@@ -6214,7 +6413,9 @@ function collectionHtml() {
       }
       const isChainSecond = spec.type === 'chain' && session.reactionChainFirst?.round === spec.round;
       const patternVariant = spec.rushBlue || isChainSecond ? '' : ` pattern-${spec.round % 6}`;
-      target.className = `reaction-target dynamic-target type-${spec.type}${isChainSecond ? ' chain-second' : ''}${patternVariant}${session.classKey === 'archer' && abilityActiveAt(session) ? ' ability-focus' : ''}`;
+      const attackPatternClass = spec.patternKey ? ` attack-pattern-${String(spec.patternKey).replaceAll('_','-')}` : '';
+      const comboTierClass = ` combo-tier-${Math.max(0, Math.floor(n(spec.comboTier)))}`;
+      target.className = `reaction-target dynamic-target type-${spec.type}${isChainSecond ? ' chain-second' : ''}${patternVariant}${attackPatternClass}${comboTierClass}${session.classKey === 'archer' && abilityActiveAt(session) ? ' ability-focus' : ''}`;
       target.style.left = `${isChainSecond ? spec.x2 : spec.x}%`;
       target.style.top = `${isChainSecond ? spec.y2 : spec.y}%`;
       target.innerHTML = isChainSecond ? `🔗<span class="reaction-small">2 / 2</span>` : `${reactionIcon(spec.type)}<span class="reaction-small">${reactionInstruction(spec.type)}</span>`;
@@ -6234,7 +6435,11 @@ function collectionHtml() {
       }
       const phaseState = combatPhaseState(session);
       const phasePrefix = phaseState.label ? `${phaseState.label} · ` : '';
-      hint.textContent = `${phasePrefix}${dodgePrefix}${hintText}`;
+      const comboState = reactionComboDifficulty(session);
+      const escalationPrefix = comboState.label ? `COMBO ${comboState.label} · ` : '';
+      const patternLabel = activeSpecs.find(spec => spec.patternLabel)?.patternLabel || '';
+      const patternPrefix = patternLabel && activeSpecs.length > 1 ? `${patternLabel} · ` : '';
+      hint.textContent = `${phasePrefix}${escalationPrefix}${patternPrefix}${dodgePrefix}${hintText}`;
     }
   }
 
@@ -6264,23 +6469,34 @@ function collectionHtml() {
       session.reactionMode === 'combat' ? session.duration : (session.hardDuration ?? session.duration),
       session.reactionMode === 'combat' ? 30 : RPG_COMBAT_MAX_DURATION_SECONDS
     ) * 1000;
-    const rushActive = false;
     const phaseState = combatPhaseState(session);
-    const interval = Math.max(650, Math.round(
-      REACTION_BASE_INTERVAL_MS * phaseState.intervalMultiplier
-    ));
+    let spawnSafety = 0;
 
-    // Génération liée au vrai temps limite du combat.
-    // Aucune nouvelle cible n'est créée après 0:00.
-    while (elapsed < combatDurationMs && now >= session.reactionNextSpawnAt) {
-      const unresolvedActive = reactionActiveSpecs(session).length;
-      if (unresolvedActive < RUSH_MAX_SIMULTANEOUS_TARGETS) {
-        session.reactionRoundCounter += 1;
-        const spec = reactionSpec(session.reactionSeed, session.reactionRoundCounter, elapsed, false);
-        session.reactionSequence.push(spec);
-        session.reactionTargetCount += 1;
+    // Le combo change réellement le rythme et la géométrie des attaques :
+    // simples au départ, puis duos, balayages, triangles, zigzags et tempêtes.
+    while (elapsed < combatDurationMs && now >= session.reactionNextSpawnAt && spawnSafety < 8) {
+      const comboState = reactionComboDifficulty(session);
+      const interval = Math.max(560, Math.round(
+        REACTION_BASE_INTERVAL_MS * phaseState.intervalMultiplier * comboState.intervalMultiplier
+      ));
+      const outstanding = reactionOutstandingCount(session, elapsed);
+      const budget = Math.max(0, comboState.maxActive - outstanding);
+      if (budget > 0) {
+        const specs = reactionBuildPattern(session, elapsed, budget);
+        if (specs.length) {
+          session.reactionSequence.push(...specs);
+          session.reactionTargetCount += specs.length;
+          session.reactionLastPattern = specs[0].patternKey || 'single';
+        }
       }
       session.reactionNextSpawnAt += interval;
+      spawnSafety += 1;
+    }
+    if (spawnSafety >= 8) {
+      const comboState = reactionComboDifficulty(session);
+      session.reactionNextSpawnAt = now + Math.max(560, Math.round(
+        REACTION_BASE_INTERVAL_MS * phaseState.intervalMultiplier * comboState.intervalMultiplier
+      ));
     }
 
     for (const spec of session.reactionSequence) {
