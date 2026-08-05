@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0e1a">
+<title>Yann ⚽🇹🇬</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0e1a;--surface:#141a2a;--surface-2:#1c2438;--surface-3:#243048;--text:#e8ecf5;--text-dim:#8898b8;--text-muted:#4a5878;--accent:#e03030;--accent-light:#f05050;--accent-bg:rgba(224,48,48,0.1);--green:#4ae06a;--green-bg:rgba(74,224,106,0.1);--red:#f04848;--squat:#e03030;--squat-bg:rgba(224,48,48,0.1);--bench:#40c8f8;--bench-bg:rgba(64,200,248,0.1);--dead:#48d860;--dead-bg:rgba(72,216,96,0.1);--radius:14px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.app{max-width:430px;margin:0 auto;padding:env(safe-area-inset-top) 0 calc(72px + env(safe-area-inset-bottom)) 0;min-height:100dvh}
+.header{padding:16px 20px 12px;position:sticky;top:0;background:var(--bg);z-index:100;border-bottom:1px solid rgba(255,255,255,0.04)}.header-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}.back-btn{width:36px;height:36px;border-radius:10px;background:var(--surface);border:none;color:var(--accent);font-size:1.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;flex-shrink:0}.header h1{font-size:1.2rem;font-weight:800;letter-spacing:-0.03em;flex:1}.header h1 span{color:var(--accent)}.week-selector{display:flex;gap:6px}.week-btn{width:36px;height:36px;border-radius:10px;border:none;background:var(--surface);color:var(--text-dim);font-weight:700;font-size:0.8rem;cursor:pointer;transition:all 0.15s}.week-btn.active{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(224,48,48,0.3)}
+.day-tabs{display:flex;gap:4px;padding:0 16px;overflow-x:auto;scrollbar-width:none;margin-bottom:12px}.day-tabs::-webkit-scrollbar{display:none}.day-tab{flex-shrink:0;padding:10px 12px;border-radius:var(--radius-sm);border:none;background:var(--surface);color:var(--text-dim);font-weight:600;font-size:0.68rem;text-align:center;cursor:pointer;transition:all 0.15s;line-height:1.3}.day-tab.active{background:var(--surface-3);color:var(--text);border:1px solid rgba(224,48,48,0.3)}.day-tab .day-num{display:block;font-size:0.9rem;font-weight:800;margin-bottom:2px}
+.session-bar{display:flex;align-items:center;gap:10px;margin:0 16px 12px;padding:10px 14px;background:var(--surface);border-radius:var(--radius-sm)}.session-bar .chrono{font-size:0.75rem;font-weight:800;font-variant-numeric:tabular-nums;min-width:44px}.session-bar .bar{flex:1;height:5px;border-radius:3px;background:var(--surface-3);overflow:hidden}.session-bar .bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.3s}.session-bar .pct{font-size:0.7rem;font-weight:800;color:var(--accent);min-width:30px;text-align:right}
+.content{padding:0 16px}.exercise-block{background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:12px}.exercise-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.exercise-name{font-size:0.92rem;font-weight:800;letter-spacing:-0.02em}.exercise-badge{font-size:0.6rem;font-weight:700;padding:3px 8px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em}.badge-sq{background:var(--squat-bg);color:var(--squat)}.badge-bn{background:var(--bench-bg);color:var(--bench)}.badge-dl{background:var(--dead-bg);color:var(--dead)}.badge-ac{background:var(--accent-bg);color:var(--accent)}
+.exercise-meta{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}.meta-chip{padding:3px 8px;background:var(--surface-2);border-radius:6px;font-size:0.68rem;font-weight:600;color:var(--text-dim)}.meta-chip strong{color:var(--text)}
+.set-row{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--surface-2);border-radius:var(--radius-sm);margin-bottom:5px;transition:all 0.2s}.set-row.completed{background:var(--green-bg);border:1px solid rgba(74,224,106,0.15)}.set-num{width:22px;height:22px;border-radius:6px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:var(--text-dim);flex-shrink:0}.set-row.completed .set-num{background:var(--green);color:var(--bg)}.set-info{flex:1;font-size:0.75rem;color:var(--text-dim)}.set-info strong{color:var(--text)}
+.load-input{width:56px;padding:4px 5px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:var(--surface-3);color:var(--text);font-size:0.75rem;font-weight:700;text-align:center;font-family:inherit;outline:none}.load-input:focus{border-color:var(--accent)}
+.set-check{width:30px;height:30px;border-radius:8px;border:2px solid rgba(255,255,255,0.08);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}.set-check.checked{background:var(--green);border-color:var(--green)}.set-check.checked::after{content:'';width:7px;height:4px;border-left:2px solid var(--bg);border-bottom:2px solid var(--bg);transform:rotate(-45deg) translateY(-1px)}
+.timer-overlay{display:none;position:fixed;inset:0;background:rgba(10,14,26,0.97);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:16px;backdrop-filter:blur(10px)}.timer-overlay.visible{display:flex}.timer-next{background:var(--surface);border-radius:12px;padding:12px 20px;text-align:center;margin-bottom:8px}.timer-next .lbl{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:4px}.timer-next .val{font-size:0.9rem;font-weight:800}
+.timer-ring-big{width:180px;height:180px;position:relative}.timer-ring-big svg{width:100%;height:100%;transform:rotate(-90deg)}.timer-ring-big .track{fill:none;stroke:var(--surface-3);stroke-width:8}.timer-ring-big .progress{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s linear}.timer-display{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.timer-time{font-size:2.8rem;font-weight:900;font-variant-numeric:tabular-nums}.timer-sub{font-size:0.7rem;color:var(--text-dim);margin-top:4px}
+.timer-presets{display:flex;gap:8px;margin-top:8px}.timer-presets button{padding:8px 14px;border-radius:8px;border:none;background:var(--surface);color:var(--text-dim);font-size:0.72rem;font-weight:700;cursor:pointer}.timer-presets button.active-preset{background:var(--accent);color:#fff}
+.timer-actions{display:flex;gap:10px;margin-top:12px}.timer-actions button{padding:10px 20px;border-radius:10px;border:none;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:inherit}.timer-actions button:active{transform:scale(0.95)}.btn-add{background:var(--surface-2);color:var(--accent)}.btn-skip{background:var(--surface-2);color:var(--text-dim)}.btn-stop{background:rgba(240,72,72,0.12);color:var(--red)}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--surface);border-top:1px solid rgba(255,255,255,0.04);padding:10px 20px calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:space-around;z-index:200}.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 12px;border:none;background:none;color:var(--text-muted);font-family:inherit}.nav-item.active{color:var(--accent)}.nav-item span{font-size:0.6rem;font-weight:600}
+.notes-view{display:none;padding:0 16px}.notes-view.visible{display:block}.workout-view{display:block}.workout-view.hidden{display:none}.note-card{background:var(--surface);border-radius:var(--radius);padding:14px 18px;margin-bottom:10px}.note-card h3{font-size:0.78rem;font-weight:700;color:var(--accent);margin-bottom:5px}.note-card p{font-size:0.72rem;color:var(--text-dim);line-height:1.5}.note-card strong{color:var(--text)}
+</style>
+<link rel="stylesheet" href="program-theme.css">
+</head>
+<body>
+<div class="app">
+  <div class="timer-overlay" id="timerOverlay">
+    <div class="timer-next"><div class="lbl">Prochaine série</div><div class="val" id="timerNextSet">—</div></div>
+    <div class="timer-ring-big"><svg viewBox="0 0 200 200"><circle class="track" cx="100" cy="100" r="85"/><circle class="progress" cx="100" cy="100" r="85" stroke-dasharray="534" stroke-dashoffset="0" id="timerProgress"/></svg><div class="timer-display"><div class="timer-time" id="timerTime">3:00</div><div class="timer-sub">⚽ Mi-temps tactique 🇹🇬</div></div></div>
+    <div class="timer-presets"><button onclick="setRest(150)">2:30</button><button class="active-preset" onclick="setRest(180)">3:00</button><button onclick="setRest(240)">4:00</button><button onclick="setRest(300)">5:00</button></div>
+    <div class="timer-actions"><button class="btn-add" onclick="addTime(30)">+30s</button><button class="btn-skip" onclick="skipTimer()">Skip ⚽</button></div>
+  </div>
+  <div class="header"><div class="header-top"><a href="index.html" class="back-btn">‹</a><div class="header-logo-wrap"><img class="header-logo" src="logo-araignee.png" alt="Logo araignée"></div><h1>⚽ Yann <span>🇹🇬</span></h1><div class="week-selector" id="weekSelector"></div></div></div>
+  <div class="day-tabs" id="dayTabs"></div>
+  <div class="session-bar"><span class="chrono" id="chrono">00:00</span><div class="bar"><div class="bar-fill" id="barFill" style="width:0%"></div></div><span class="pct" id="pctLabel">0%</span></div>
+  <div class="workout-view" id="workoutView"><div class="content" id="exerciseList"></div></div>
+  <div class="notes-view" id="notesView">
+    <div class="note-card"><h3>⚽🇹🇬 Yann (Macro)</h3><p><strong>Squat:</strong> 322 | <strong>Bench:</strong> 223 | <strong>Deadlift:</strong> 352.5 | <strong>Total:</strong> 897.5<br>"Celui qui maîtrise les sept péchés capitaux ne craint aucune barre." Allez Rennes.</p></div>
+    <div class="note-card"><h3>📚 Structure</h3><p><strong>Lundi:</strong> Squat Primaire (top + 2×4) + Bench Primaire (top + 3×5) + DL Secondaire<br><strong>Mardi:</strong> Squat Secondaire (1×6 + 3×4) + Bench Secondaire 4×4 + DL Primaire (top + 3×5)<br><strong>Jeudi:</strong> Squat RPE + Bench RPE + DL Secondaire RPE<br><strong>Vendredi:</strong> Squat Pause (top + 2×3) + Bench Larsen @6 + DL Pause (top + back off)<br><strong>Samedi:</strong> Squat Primaire Intense (top + 4×4) + Bench Primaire (1×3 + 5×3) + DL Primaire (4 paliers)<br><strong>Dimanche:</strong> Squat Singles + Bench Larsen + Accessoires (optionnel)</p></div>
+    <div class="note-card"><h3>⚔️ Hell's Paradise x Seven Deadly Sins</h3><p><strong>Squat:</strong> Comme Gabimaru: tu survis à tout, même au trou le plus profond.<br><strong>Bench:</strong> La force d'Escanor au zénith. "Who decided that?"<br><strong>Deadlift:</strong> Meliodas Full Counter: tout ce qui descend, remonte plus fort.</p></div>
+    <div class="note-card" style="border:1px solid rgba(224,48,48,0.3)"><h3>⚽🇹🇬 Motivation</h3><p>"Gabimaru ne meurt jamais. Toi non plus sous la barre."<br><br>"Escanor à midi: 'My power is at its peak.' Ton squat aussi."<br><br>"FC Rennes: on se bat jusqu'au bout, même à 0-2. Chaque série est un but."<br><br>"Le Togo ne recule pas. Toi non plus."<br><br>"Ban est immortel. Ton total aussi: il ne peut que monter."<br><br>"Comme Gabimaru dans l'île: pas de retour possible. La seule sortie c'est vers le haut."</p></div>
+  </div>
+  <div class="bottom-nav"><button class="nav-item active" data-view="workout" onclick="switchView('workout')"><span>⚽ Séance</span></button><button class="nav-item" data-view="notes" onclick="switchView('notes')"><span>📋 Strats</span></button></div>
+</div>
+<script>
+const P={weeks:[
+{label:"S1",days:[
+{name:"Lundi",emoji:"⚽",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"Top",blocks:[{s:1,r:4,pct:79,ld:"247-262"}]},
+{l:"sq",n:"Comp Squat primaire",v:"Volume",blocks:[{s:2,r:4,pct:77,ld:"240-255"}]},
+{l:"bn",n:"Bench Primaire",v:"Top",blocks:[{s:1,r:5,pct:80,ld:"172-182"}]},
+{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:3,r:5,pct:78,ld:"170-180"}]},
+{l:"dl",n:"Comp Deadlift secondaire",v:"Secondaire",blocks:[{s:1,r:4,pct:79,ld:"270-285"},{s:2,r:4,pct:76,ld:"260-275"}]}
+]},
+{name:"Mardi",emoji:"🇹🇬",exercises:[
+{l:"sq",n:"Comp Squat secondaire",v:"Top",blocks:[{s:1,r:6,pct:70,ld:"217-232"}]},
+{l:"sq",n:"Comp Squat secondaire",v:"Volume",blocks:[{s:3,r:4,pct:67,ld:"207-222"}]},
+{l:"bn",n:"Bench Secondaire",v:"4×4",blocks:[{s:4,r:4,pct:71,ld:"152-162"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"Top",blocks:[{s:1,r:2,pct:77,ld:"265-280"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"Volume",blocks:[{s:3,r:5,pct:73,ld:"250-265"}]}
+]},
+{name:"Jeudi",emoji:"🔥",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"RPE",blocks:[{s:1,r:4,ld:"~245"},{s:2,r:4,ld:"~235"}]},
+{l:"bn",n:"Bench Primaire",v:"RPE",blocks:[{s:1,r:5,ld:"~170"},{s:3,r:5,ld:"~152"}]},
+{l:"dl",n:"Comp Deadlift secondaire",v:"RPE",blocks:[{s:1,r:4,ld:"~265"},{s:2,r:4,ld:"~255"}]}
+]},
+{name:"Vendredi",emoji:"⚔️",exercises:[
+{l:"sq",n:"Comp Squat Pause",v:"Top",blocks:[{s:1,r:2,pct:68,ld:"212-227"}]},
+{l:"sq",n:"Comp Squat Pause",v:"Volume",blocks:[{s:2,r:3,pct:65,ld:"202-217"}]},
+{l:"bn",n:"Bench Larsen",v:"@6",blocks:[{s:4,r:5,ld:"@6 ~150"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Top",blocks:[{s:1,r:2,pct:78,ld:"267-282"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Back off",blocks:[{s:1,r:2,pct:75,ld:"257-272"}]}
+]},
+{name:"Samedi",emoji:"🏆",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"Top",blocks:[{s:1,r:4,pct:79,ld:"247-262"}]},
+{l:"sq",n:"Comp Squat primaire",v:"Intense",blocks:[{s:4,r:4,pct:77,ld:"240-255"}]},
+{l:"bn",n:"Bench Primaire",v:"Top",blocks:[{s:1,r:3,pct:82,ld:"180-190"}]},
+{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:5,r:3,pct:80,ld:"172-182"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"4 paliers",blocks:[{s:1,r:4,pct:75,ld:"257-272"},{s:1,r:4,pct:75,ld:"257-272"},{s:1,r:4,pct:78,ld:"267-282"},{s:1,r:4,pct:78,ld:"267-282"}]}
+]},
+{name:"Dimanche",emoji:"🌟",exercises:[
+{l:"sq",n:"Comp Squat Pause",v:"Singles",blocks:[{s:1,r:2,pct:68,ld:"212-227"},{s:1,r:2,pct:68,ld:"212-227"}]},
+{l:"bn",n:"Bench Larsen",v:"Technique",blocks:[{s:4,r:5,ld:"@6 ~150"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Optionnel",blocks:[{s:1,r:2,pct:78,ld:"267-282"},{s:1,r:2,pct:75,ld:"257-272"}]}
+]}
+]},
+{label:"S2",days:[
+{name:"Lundi",emoji:"⚽",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"Top",blocks:[{s:1,r:4,pct:81,ld:"255-270"}]},
+{l:"sq",n:"Comp Squat primaire",v:"Volume",blocks:[{s:2,r:4,pct:79,ld:"247-262"}]},
+{l:"bn",n:"Bench Primaire",v:"Top",blocks:[{s:1,r:5,pct:82,ld:"180-190"}]},
+{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:3,r:5,pct:80,ld:"175-185"}]},
+{l:"dl",n:"Comp Deadlift secondaire",v:"Secondaire",blocks:[{s:1,r:4,pct:79,ld:"270-285"},{s:2,r:4,pct:76,ld:"260-275"}]}
+]},
+{name:"Mardi",emoji:"🇹🇬",exercises:[
+{l:"sq",n:"Comp Squat secondaire",v:"Top",blocks:[{s:1,r:6,pct:72,ld:"225-240"}]},
+{l:"sq",n:"Comp Squat secondaire",v:"Volume",blocks:[{s:3,r:4,pct:69,ld:"215-230"}]},
+{l:"bn",n:"Bench Secondaire",v:"4×4",blocks:[{s:4,r:4,pct:73,ld:"157-167"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"Top",blocks:[{s:1,r:2,pct:80,ld:"272-287"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"Volume",blocks:[{s:3,r:5,pct:76,ld:"257-272"}]}
+]},
+{name:"Jeudi",emoji:"🔥",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"RPE",blocks:[{s:1,r:4,ld:"~255"},{s:2,r:4,ld:"~245"}]},
+{l:"bn",n:"Bench Primaire",v:"RPE",blocks:[{s:1,r:5,ld:"~177"},{s:3,r:5,ld:"~167"}]},
+{l:"dl",n:"Comp Deadlift secondaire",v:"RPE",blocks:[{s:1,r:4,ld:"~270"},{s:2,r:4,ld:"~260"}]}
+]},
+{name:"Vendredi",emoji:"⚔️",exercises:[
+{l:"sq",n:"Comp Squat Pause",v:"Top",blocks:[{s:1,r:2,pct:70,ld:"220-235"}]},
+{l:"sq",n:"Comp Squat Pause",v:"Volume",blocks:[{s:2,r:3,pct:67,ld:"210-225"}]},
+{l:"bn",n:"Bench Larsen",v:"@6",blocks:[{s:4,r:5,ld:"@6 ~140"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Top",blocks:[{s:1,r:2,pct:80,ld:"272-287"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Back off",blocks:[{s:1,r:2,pct:77,ld:"265-280"}]}
+]},
+{name:"Samedi",emoji:"🏆",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"Top",blocks:[{s:1,r:4,pct:81,ld:"255-270"}]},
+{l:"sq",n:"Comp Squat primaire",v:"Intense",blocks:[{s:4,r:4,pct:79,ld:"247-262"}]},
+{l:"bn",n:"Bench Primaire",v:"Top",blocks:[{s:1,r:3,pct:82,ld:"180-190"}]},
+{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:5,r:3,pct:80,ld:"172-182"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"4 paliers",blocks:[{s:1,r:4,pct:77,ld:"265-280"},{s:1,r:4,pct:78,ld:"267-282"},{s:1,r:4,pct:80,ld:"275-290"},{s:1,r:4,pct:81,ld:"277-292"}]}
+]},
+{name:"Dimanche",emoji:"🌟",exercises:[
+{l:"sq",n:"Comp Squat Pause",v:"Singles",blocks:[{s:1,r:2,pct:70,ld:"220-235"},{s:1,r:2,pct:70,ld:"220-235"}]},
+{l:"bn",n:"Bench Larsen",v:"Technique",blocks:[{s:4,r:5,ld:"@6 ~140"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Optionnel",blocks:[{s:1,r:2,pct:80,ld:"275-290"},{s:1,r:2,pct:77,ld:"265-280"}]}
+]}
+]},
+{label:"S3",days:[
+{name:"Lundi",emoji:"⚽",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"Top",blocks:[{s:1,r:4,pct:84,ld:"262-277"}]},
+{l:"sq",n:"Comp Squat primaire",v:"Volume",blocks:[{s:2,r:4,pct:82,ld:"255-270"}]},
+{l:"bn",n:"Bench Primaire",v:"Top",blocks:[{s:1,r:5,pct:85,ld:"185-195"}]},
+{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:3,r:5,pct:83,ld:"180-190"}]},
+{l:"dl",n:"Comp Deadlift secondaire",v:"Secondaire",blocks:[{s:1,r:4,pct:79,ld:"270-285"},{s:2,r:4,pct:76,ld:"260-275"}]}
+]},
+{name:"Mardi",emoji:"🇹🇬",exercises:[
+{l:"sq",n:"Comp Squat secondaire",v:"Top",blocks:[{s:1,r:6,pct:75,ld:"232-247"}]},
+{l:"sq",n:"Comp Squat secondaire",v:"Volume",blocks:[{s:3,r:4,pct:72,ld:"222-237"}]},
+{l:"bn",n:"Bench Secondaire",v:"4×4",blocks:[{s:4,r:4,pct:76,ld:"165-175"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"Top",blocks:[{s:1,r:2,pct:82,ld:"282-297"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"Volume",blocks:[{s:3,r:5,pct:78,ld:"267-282"}]}
+]},
+{name:"Jeudi",emoji:"🔥",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"RPE",blocks:[{s:1,r:4,ld:"~265"},{s:2,r:4,ld:"~250"}]},
+{l:"bn",n:"Bench Primaire",v:"RPE",blocks:[{s:1,r:5,ld:"~187"},{s:3,r:5,ld:"~172"}]},
+{l:"dl",n:"Comp Deadlift secondaire",v:"RPE",blocks:[{s:1,r:4,ld:"~265"},{s:2,r:4,ld:"~255"}]}
+]},
+{name:"Vendredi",emoji:"⚔️",exercises:[
+{l:"sq",n:"Comp Squat Pause",v:"Top",blocks:[{s:1,r:2,pct:73,ld:"227-242"}]},
+{l:"sq",n:"Comp Squat Pause",v:"Volume",blocks:[{s:2,r:3,pct:70,ld:"217-232"}]},
+{l:"bn",n:"Bench Larsen",v:"@6",blocks:[{s:4,r:5,ld:"@6"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Top",blocks:[{s:1,r:2,pct:82,ld:"282-297"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Back off",blocks:[{s:1,r:2,pct:79,ld:"272-287"}]}
+]},
+{name:"Samedi",emoji:"🏆",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"Top",blocks:[{s:1,r:4,pct:84,ld:"262-277"}]},
+{l:"sq",n:"Comp Squat primaire",v:"Intense",blocks:[{s:4,r:4,pct:82,ld:"255-270"}]},
+{l:"bn",n:"Bench Primaire",v:"Top",blocks:[{s:1,r:3,pct:82,ld:"180-190"}]},
+{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:5,r:3,pct:80,ld:"172-182"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"4 paliers",blocks:[{s:1,r:4,pct:79,ld:"270-285"},{s:1,r:4,pct:81,ld:"277-292"},{s:1,r:4,pct:82,ld:"282-297"},{s:1,r:4,pct:84,ld:"285-305"}]}
+]},
+{name:"Dimanche",emoji:"🌟",exercises:[
+{l:"sq",n:"Comp Squat Pause",v:"Singles",blocks:[{s:1,r:2,pct:73,ld:"227-242"},{s:1,r:2,pct:73,ld:"227-242"}]},
+{l:"bn",n:"Bench Larsen",v:"Technique",blocks:[{s:4,r:5,ld:"@6"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Optionnel",blocks:[{s:1,r:2,pct:82,ld:"282-297"},{s:1,r:2,pct:79,ld:"272-287"}]}
+]}
+]},
+{label:"S4",days:[
+{name:"Lundi",emoji:"⚽",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"Top",blocks:[{s:1,r:4,pct:86,ld:"270-285"}]},
+{l:"sq",n:"Comp Squat primaire",v:"Volume",blocks:[{s:2,r:4,pct:84,ld:"262-277"}]},
+{l:"bn",n:"Bench Primaire",v:"Top",blocks:[{s:1,r:5,pct:87,ld:"190-200"}]},
+{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:3,r:5,pct:85,ld:"185-195"}]},
+{l:"dl",n:"Comp Deadlift secondaire",v:"Secondaire",blocks:[{s:1,r:4,pct:79,ld:"270-285"},{s:2,r:4,pct:76,ld:"260-275"}]}
+]},
+{name:"Mardi",emoji:"🇹🇬",exercises:[
+{l:"sq",n:"Comp Squat secondaire",v:"Top",blocks:[{s:1,r:6,pct:77,ld:"240-255"}]},
+{l:"sq",n:"Comp Squat secondaire",v:"Volume",blocks:[{s:3,r:4,pct:74,ld:"232-247"}]},
+{l:"bn",n:"Bench Secondaire",v:"4×4",blocks:[{s:4,r:4,pct:78,ld:"170-180"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"Top",blocks:[{s:1,r:2,pct:85,ld:"287-307"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"Volume",blocks:[{s:3,r:4,pct:81,ld:"277-292"}]}
+]},
+{name:"Jeudi",emoji:"🔥",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"RPE",blocks:[{s:1,r:4,ld:"~265"},{s:2,r:4,ld:"~255"}]},
+{l:"bn",n:"Bench Primaire",v:"RPE",blocks:[{s:1,r:4,ld:"~197"},{s:3,r:4,ld:"~177"}]},
+{l:"dl",n:"Comp Deadlift secondaire",v:"RPE",blocks:[{s:1,r:4,ld:"~270"},{s:2,r:4,ld:"~260"}]}
+]},
+{name:"Vendredi",emoji:"⚔️",exercises:[
+{l:"sq",n:"Comp Squat Pause",v:"Top",blocks:[{s:1,r:2,pct:75,ld:"235-250"}]},
+{l:"sq",n:"Comp Squat Pause",v:"Volume",blocks:[{s:2,r:3,pct:72,ld:"225-240"}]},
+{l:"bn",n:"Bench Larsen",v:"@6",blocks:[{s:4,r:5,ld:"@6"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Top",blocks:[{s:1,r:2,pct:85,ld:"287-307"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Back off",blocks:[{s:1,r:2,pct:82,ld:"280-295"}]}
+]},
+{name:"Samedi",emoji:"🏆",exercises:[
+{l:"sq",n:"Comp Squat primaire",v:"Top",blocks:[{s:1,r:4,pct:86,ld:"270-285"}]},
+{l:"sq",n:"Comp Squat primaire",v:"Intense",blocks:[{s:2,r:4,pct:84,ld:"262-277"}]},
+{l:"bn",n:"Bench Primaire",v:"Top",blocks:[{s:1,r:3,pct:82,ld:"180-190"}]},
+{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:5,r:3,pct:80,ld:"172-182"}]},
+{l:"dl",n:"Comp Deadlift primaire",v:"4 paliers",blocks:[{s:1,r:4,pct:81,ld:"277-292"},{s:1,r:4,pct:81,ld:"277-292"},{s:1,r:4,pct:84,ld:"285-305"},{s:1,r:4,pct:87,ld:"297-317"}]}
+]},
+{name:"Dimanche",emoji:"🌟",exercises:[
+{l:"sq",n:"Comp Squat Pause",v:"Singles",blocks:[{s:1,r:2,pct:75,ld:"235-250"},{s:1,r:2,pct:75,ld:"235-250"}]},
+{l:"bn",n:"Bench Larsen",v:"Technique",blocks:[{s:4,r:5,ld:"@6"}]},
+{l:"dl",n:"Comp Deadlift Pause",v:"Optionnel",blocks:[{s:1,r:2,pct:85,ld:"287-307"},{s:1,r:2,pct:82,ld:"280-295"}]}
+]}
+]}
+]};
+
+let S={w:0,d:0,sets:{},sessionStart:null,sessionEnd:null};let timerInt=null,timerRem=180,timerTot=180;let chronoInt=null;let allSetsFlat=[];const LS_KEY='yann-v2';
+function load(){try{const x=localStorage.getItem(LS_KEY);if(x)S=JSON.parse(x);}catch(e){}}
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(S));}catch(e){}}
+function kk(){return`${S.w}-${S.d}`}
+function init(){load();renderWeeks();renderDays();renderWorkout();startChrono();}
+function renderWeeks(){document.getElementById('weekSelector').innerHTML=P.weeks.map((_,i)=>`<button class="week-btn${i===S.w?' active':''}" onclick="setW(${i})">S${i+1}</button>`).join('');}
+function renderDays(){const days=P.weeks[S.w].days;document.getElementById('dayTabs').innerHTML=days.map((d,i)=>`<button class="day-tab${i===S.d?' active':''}" onclick="setD(${i})"><span class="day-num">${d.emoji}</span>${d.name}</button>`).join('');}
+function setW(i){S.w=i;S.d=0;save();renderWeeks();renderDays();renderWorkout();}
+function setD(i){S.d=i;save();renderDays();renderWorkout();}
+function renderWorkout(){const day=P.weeks[S.w].days[S.d];const key=kk();const done=S.sets[key]||[];allSetsFlat=[];let html='';let idx=0;day.exercises.forEach(ex=>{const bc=ex.l==='sq'?'badge-sq':ex.l==='bn'?'badge-bn':ex.l==='dl'?'badge-dl':'badge-ac';html+=`<div class="exercise-block"><div class="exercise-header"><div class="exercise-name">${ex.n}</div><div class="exercise-badge ${bc}">${ex.v}</div></div>`;ex.blocks.forEach(bl=>{html+=`<div class="exercise-meta"><div class="meta-chip"><strong>${bl.s}×${bl.r}</strong></div>`;if(bl.pct)html+=`<div class="meta-chip">${bl.pct}%</div>`;if(bl.ld)html+=`<div class="meta-chip">${bl.ld}</div>`;html+=`</div>`;for(let i=0;i<bl.s;i++){const d2=done.includes(idx);allSetsFlat.push({name:ex.n,reps:bl.r,load:bl.ld,idx});html+=`<div class="set-row${d2?' completed':''}"><div class="set-num">${i+1}</div><div class="set-info"><strong>${bl.r}</strong> ${bl.ld||''}</div>`;if(bl.ld&&String(bl.ld).includes('-'))html+=`<input class="load-input" type="number" placeholder="${String(bl.ld).split('-')[0]}" inputmode="decimal">`;html+=`<div class="set-check${d2?' checked':''}" onclick="toggle(${idx})"></div></div>`;idx++;}});html+=`</div>`;});document.getElementById('exerciseList').innerHTML=html;updateBar();}
+function toggle(idx){const key=kk();if(!S.sets[key])S.sets[key]=[];const i=S.sets[key].indexOf(idx);if(i>-1){S.sets[key].splice(i,1);}else{S.sets[key].push(idx);if(!S.sessionStart)S.sessionStart=Date.now();showTimer(idx);}save();renderWorkout();}
+
+function formatNextTimerSet(next){
+  const row=next?document.querySelectorAll('.set-row')[next.idx]:null;
+  const typed=row?.querySelector('.load-input')?.value?.trim()||'';
+  const load=typed||String(next?.load||'').trim();
+  const hasUnit=/(kg|pdc|@|sec|min|amrap|m$)/i.test(load);
+  const loadText=load?` · ${load}${hasUnit?'':' kg'}`:'';
+  const reps=next?.reps??'';
+  const repText=typeof reps==='number'||/^\d+(?:[.,]\d+)?$/.test(String(reps))
+    ?`${reps} rep${Number(reps)>1?'s':''}`
+    :String(reps);
+  return `${next.name} · ${repText}${loadText}`;
+}
+
+function showTimer(justDone){const next=allSetsFlat.find(s=>s.idx>justDone&&!(S.sets[kk()]||[]).includes(s.idx));document.getElementById('timerNextSet').textContent=next?formatNextTimerSet(next):'Dernière série !';timerRem=timerTot;document.getElementById('timerOverlay').classList.add('visible');updateTimerDisplay();clearInterval(timerInt);timerInt=setInterval(()=>{timerRem--;updateTimerDisplay();if(timerRem<=0)finishTimer();},1000);}
+function updateTimerDisplay(){const m=Math.floor(Math.abs(timerRem)/60),s=Math.abs(timerRem)%60;document.getElementById('timerTime').textContent=`${m}:${String(s).padStart(2,'0')}`;const circ=2*Math.PI*85;document.getElementById('timerProgress').style.strokeDashoffset=circ*(1-timerRem/timerTot);}
+function setRest(sec){timerTot=sec;timerRem=sec;updateTimerDisplay();document.querySelectorAll('.timer-presets button').forEach(b=>b.classList.remove('active-preset'));}
+function addTime(s){timerRem+=s;timerTot+=s;updateTimerDisplay();}
+function skipTimer(){clearInterval(timerInt);document.getElementById('timerOverlay').classList.remove('visible');}
+function stopTimer(){clearInterval(timerInt);document.getElementById('timerOverlay').classList.remove('visible');}
+function finishTimer(){clearInterval(timerInt);document.getElementById('timerOverlay').classList.remove('visible');if(navigator.vibrate)navigator.vibrate([200,100,200]);}
+function updateBar(){const key=kk();const done=(S.sets[key]||[]).length;const total=allSetsFlat.length;const pct=total?Math.round(done/total*100):0;document.getElementById('barFill').style.width=pct+'%';document.getElementById('pctLabel').textContent=pct+'%';}
+function startChrono(){chronoInt=setInterval(()=>{if(!S.sessionStart){document.getElementById('chrono').textContent='00:00';return;}const end=S.sessionEnd||Date.now();const el=Math.floor((end-S.sessionStart)/1000);document.getElementById('chrono').textContent=String(Math.floor(el/60)).padStart(2,'0')+':'+String(el%60).padStart(2,'0');},1000);}
+function switchView(v){document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.view===v));document.getElementById('workoutView').classList.toggle('hidden',v!=='workout');document.getElementById('notesView').classList.toggle('visible',v==='notes');}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save();});
+init();
+</script>
+
+<!-- Synchronisation Supabase multi-athlètes -->
+<script>
+window.COACHING_ATHLETE = {
+  slug: "yann",
+  name: "Yann",
+  emoji: "⚽",
+  programKey: LS_KEY,
+  adapter: "legacy"
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="app.js?v=20260801-sorts-cinematics-v17"></script>
+<script src="session-tools.js?v=20260731-session-v2"></script>
+</body>
+</html>
