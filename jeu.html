@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e1a">
+<title>GA Coaching · Jeu</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0e1a;--surface:#141a2a;--surface2:#1c2438;--surface3:#243048;--text:#e8ecf5;--dim:#8898b8;--muted:#4a5878;--accent:#f5c518;--gold:#f5c518;--silver:#c0c8d8;--bronze:#d08840;--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh}
+.app{max-width:430px;margin:auto;padding-bottom:30px}.header{text-align:center;padding:22px 20px 10px}.brand{position:relative;display:inline-flex;align-items:center;justify-content:center;min-height:110px;padding:10px 0}.brand-logo{position:absolute;width:120px;height:120px;object-fit:contain;opacity:.22;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35));pointer-events:none}.header h1{position:relative;z-index:1;font-size:1.4rem;font-weight:900;letter-spacing:-.02em}.header span{color:var(--accent)}.header p{font-size:.68rem;color:var(--muted);margin-top:2px;text-transform:uppercase}
+.status{margin:0 16px 8px;padding:9px 12px;background:var(--surface);border-radius:10px;text-align:center;font-size:.63rem;color:var(--dim)}.status.error{color:#ff9d9d}.cloud-home-row{display:flex;justify-content:center;margin:0 16px 6px}
+.mode-nav{display:flex;gap:6px;margin:0 16px 10px}.mode-nav a{flex:1;text-align:center;text-decoration:none;padding:9px 8px;border-radius:10px;background:var(--surface);color:var(--dim);font-size:.65rem;font-weight:850;border:1px solid rgba(255,255,255,.04)}.mode-nav a.active{background:var(--accent);color:var(--bg)}.mode-nav a.wiki-link{flex:.65}.section-label{text-align:center;font-size:.68rem;color:var(--dim);font-weight:800;margin:-3px 0 10px}.game-only,.training-only{display:initial}
+
+body.game-home [data-leaderboard-mode="lift"],body.game-home [data-activity-mode="lift"],body.game-home #leaderboardLift,body.game-home #activityLift{display:none!important}body.game-home .inner-tabs:first-child{grid-template-columns:1fr}.game-hero-note{margin:0 16px 12px;padding:11px 12px;border-radius:12px;background:linear-gradient(135deg,rgba(207,43,61,.12),rgba(245,197,24,.05));border:1px solid rgba(245,197,24,.1);font-size:.65rem;color:var(--dim);line-height:1.5}
+.tabs{display:flex;gap:5px;padding:8px 16px 16px;position:sticky;top:0;background:var(--bg);z-index:20}.tab{flex:1;padding:11px;border:0;border-radius:10px;background:var(--surface);color:var(--dim);font-weight:800}.tab.active{background:var(--accent);color:var(--bg)}
+.view{display:none}.view.visible{display:block}.list{padding:0 16px;display:flex;flex-direction:column;gap:8px}
+.card,.rank{display:flex;align-items:center;gap:13px;background:var(--surface);border-radius:var(--radius);padding:14px;text-decoration:none;color:inherit}.card:active{transform:scale(.985)}
+.avatar{position:relative;width:44px;height:44px;background:var(--surface2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.45rem;flex:none;overflow:hidden;border:1px solid rgba(239,196,90,.22)}.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}.info{flex:1;min-width:0}.name{font-size:.87rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sub{font-size:.63rem;color:var(--muted);margin-top:3px}.arrow{color:var(--muted);font-size:1.1rem}
+.rank{padding:12px 14px;gap:11px}.rank.top1{border:1px solid rgba(245,197,24,.35)}.rank.top2{border:1px solid rgba(192,200,216,.25)}.rank.top3{border:1px solid rgba(208,136,64,.3)}.place{width:29px;height:29px;border-radius:8px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;flex:none}.top1 .place{background:var(--gold);color:var(--bg)}.top2 .place{background:var(--silver);color:var(--bg)}.top3 .place{background:var(--bronze)}.score{text-align:right;flex:none}.gl{font-weight:900;color:var(--accent);font-size:.95rem}.total{font-size:.58rem;color:var(--dim);margin-top:2px}.missing{opacity:.58}.empty{padding:30px 18px;text-align:center;color:var(--dim);font-size:.75rem;line-height:1.55}
+.inner-tabs{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin:0 16px 12px;padding:4px;border-radius:12px;background:var(--surface);border:1px solid rgba(255,255,255,.04)}.inner-tab{border:0;border-radius:9px;padding:9px 6px;background:transparent;color:var(--dim);font-weight:850;font-size:.68rem;cursor:pointer}.inner-tab.active{background:var(--surface3);color:var(--accent)}.metric-tabs{grid-template-columns:repeat(5,1fr)}.subview.hidden{display:none}.adventure-score{font-weight:950;color:var(--accent);font-size:.95rem}.adventure-unit{font-size:.57rem;color:var(--dim);margin-top:2px}.adventure-summary{padding:0 16px 10px;color:var(--muted);font-size:.64rem;text-align:center}
+</style>
+<link rel="stylesheet" href="index-theme.css">
+</head>
+<body class="game-home"><main class="app">
+<header class="header"><div class="brand"><img class="brand-logo" src="logo-araignee.png" alt="Logo araignée et barre"></div></header>
+<div class="status" id="status">Lecture des programmations HTML…</div>
+<div class="cloud-home-row"><button type="button" class="cloud-status" id="cloudStatus" data-cloud-status>Mode local</button></div><nav class="mode-nav"><a href="index.html">Portail</a><a href="entrainement.html">🏋️ Entraînement</a><a class="active" href="jeu.html">⚔️ Jeu</a><a class="wiki-link" href="wiki-jeu.html">📖 Wiki</a></nav><div class="section-label">Aventure RPG et événements mondiaux</div><div class="game-hero-note">Choisis ton personnage. La page s’ouvrira directement dans l’interface Jeu sans afficher la programmation d’entraînement.</div>
+<nav class="tabs"><button class="tab active" onclick="show('athletes')">Personnages</button><button class="tab" onclick="show('leaderboard');showLeaderboardMode('adventure')">🏆 Classements</button><button class="tab" onclick="show('activity');showActivityMode('adventure')">🔔 Aventure</button></nav>
+<section class="view visible" id="athletes"><div class="list" id="athleteList"></div></section>
+<section class="view" id="leaderboard">
+  <div class="inner-tabs"><button type="button" class="inner-tab" data-leaderboard-mode="lift" onclick="showLeaderboardMode('lift')">🏋️ Lift</button><button type="button" class="inner-tab active" data-leaderboard-mode="adventure" onclick="showLeaderboardMode('adventure')">⚔️ Aventure</button></div>
+  <div class="subview hidden" id="leaderboardLift"><div class="list" id="rankList"></div></div>
+  <div class="subview" id="leaderboardAdventure">
+    <div class="inner-tabs metric-tabs"><button type="button" class="inner-tab active" data-adventure-metric="xp" onclick="showAdventureMetric('xp')">XP</button><button type="button" class="inner-tab" data-adventure-metric="wins" onclick="showAdventureMetric('wins')">Monstres</button><button type="button" class="inner-tab" data-adventure-metric="damage" onclick="showAdventureMetric('damage')">Dégâts</button><button type="button" class="inner-tab" data-adventure-metric="items" onclick="showAdventureMetric('items')">Objets</button><button type="button" class="inner-tab" data-adventure-metric="trial" onclick="showAdventureMetric('trial')">Test 30s</button></div>
+    <div class="adventure-summary" id="adventureSummary">Classement de l'expérience RPG.</div>
+    <div class="list" id="adventureRankList"><div class="empty">Connexion à Supabase…</div></div>
+  </div>
+</section>
+<section class="view" id="activity">
+  <div class="inner-tabs"><button type="button" class="inner-tab" data-activity-mode="lift" onclick="showActivityMode('lift')">🏋️ Lift</button><button type="button" class="inner-tab active" data-activity-mode="adventure" onclick="showActivityMode('adventure')">⚔️ Aventure</button></div>
+  <div class="subview hidden" id="activityLift"><div class="list" id="homeActivityLift"><div class="cloud-feed-empty">Connecte Supabase pour afficher les performances.</div></div></div>
+  <div class="subview" id="activityAdventure"><div class="list" id="homeActivityAdventure"><div class="cloud-feed-empty">Connecte Supabase pour afficher les aventures.</div></div></div>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="cloud-common.js"></script>
+<script>
+const REPO={owner:'guillaumeanzalone-art',repo:'coaching',branch:'main'};
+const MALE={A:1199.72839,B:1025.18162,C:0.00921};
+const FEMALE={A:610.32796,B:1045.59282,C:0.03048};
+
+// Poids conservés quand ils ne sont pas écrits dans le HTML.
+// Remplace une valeur ici si le poids de référence change.
+const BODYWEIGHTS={
+ 'anzalone':119,
+ 'benoit':78,
+ 'celia':59,
+ 'charles':74,
+ 'clara metaknight':59,
+ 'clemosaurus':91,
+ 'dorian':97,
+ 'duane':93,
+ 'janel':87,
+ 'jolan':90,
+ 'jonathan':98,
+ 'kaoutar':60,
+ 'killian':65,
+ 'lou':58.7,
+ 'lucine':63,
+ 'magicarpe':78,
+ 'malo':88,
+ 'marvin':80,
+ 'matthieu':71,
+ 'maxence':74,
+ 'saya':90,
+ 'serena':76,
+ 'sarah':56.4,
+ 'noe':93,
+ 'tom':120,
+ 'yann':105
+};
+const SEX={
+ 'celia':'F','clara metaknight':'F','janel':'F','kaoutar':'F','lou':'F','lucine':'F','magicarpe':'F','saya':'F','serena':'F','sarah':'F'
+};
+const EMOJI={'anzalone':'🏖️','benoit':'✝️','celia':'🎖️','charles':'🦁','clara metaknight':'🐱⚔️','clemosaurus':'🦖','dorian':'🛹','duane':'🐻','flop':'🎰','gibertini':'🧠🪱','janel':'💪','jolan':'🐿️','jonathan':'🐂','kaoutar':'🌟','killian':'🎯','lou':'🐉','lucine':'🐱💕','magicarpe':'🐟','malo':'🔥','marvin':'💪','matthieu':'🎣','maxence':'👑','noe':'🪽','saya':'🇷🇪','serena':'👑','sarah':'🕷️','tom':'💣','yann':'🦾'};
+const DISPLAY_NAMES={
+ 'noe':'Noé',
+ 'flop':'The Flop',
+ 'saya':'Saya',
+ 'serena':'Serena',
+ 'sarah':'Sarah · Earth-616',
+ 'matthieu':'Matthieu',
+ 'malo':'Malo',
+ 'lou':'Lou',
+ 'killian':'Killian',
+ 'kaoutar':'Kaoutar',
+ 'jolan':'Jolan (Faux Noé)',
+ 'janel':'Janel',
+ 'clara metaknight':'Clara (Chouchou)',
+ 'benoit':'Benoît',
+ 'celia':'Célia'
+};
+const EXTRA_ATHLETES=[
+ {id:'tom gibertini tralalini',file:null,name:'Tom Gibertini Tralalini',emoji:'🧠🪱',sq:240,bn:160,dl:300,bw:78,sex:'M',total:700,storageKey:'tom-gibertini-v1'}
+];
+const PINNED_GAME_ATHLETES=[
+ {id:'lucine',file:'Lucine.html',name:'Lucine',emoji:'🐱💕',profileImage:'avatar-lucine.png',sq:null,bn:null,dl:null,bw:63,sex:'F',total:0,storageKey:null},
+ {id:'lou',file:'Lou.html',name:'Lou',emoji:'🐉',profileImage:'avatar-lou.png',sq:null,bn:null,dl:null,bw:58.7,sex:'F',total:0,storageKey:null},
+ {id:'clemosaurus',file:'Clemosaurus.html',name:'Clemosaurus',emoji:'🦖',profileImage:'avatar-clemosaurus.png',sq:null,bn:null,dl:null,bw:91,sex:'M',total:0,storageKey:null},
+ {id:'dorian',file:'Dorian.html',name:'Dorian',emoji:'🛹',profileImage:'avatar-dorian.png',sq:null,bn:null,dl:null,bw:97,sex:'M',total:0,storageKey:null}
+];
+const FALLBACK=['Anzalone.html','Benoit.html','Celia.html','Charles.html','Clara Metaknight.html','Clemosaurus.html','Dorian.html','Duane.html','Flop.html','Gibertini.html','Janel.html','Jolan.html','Jonathan.html','Kaoutar.html','Killian.html','Lou.html','Lucine.html','Magicarpe.html','Malo.html','Marvin.html','Matthieu.html','Maxence.html','Noe.html','Saya.html','Sarah.html','Serena.html','Tom.html','Yann.html'];
+function norm(s){return String(s||'').replace(/\.html?$/i,'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function number(v){if(v==null)return null;const n=Number(String(v).replace(',','.'));return Number.isFinite(n)?n:null}
+function extract(text,labels){const m=text.match(new RegExp('(?:'+labels+')\\s*[:=]?\\s*~?(-?\\d+(?:[.,]\\d+)?)','i'));return m?number(m[1]):null}
+function titleFrom(doc,file){const h=doc.querySelector('h1');let s=(h?.textContent||doc.title||file.replace(/\.html?$/i,'')).replace(/\s+/g,' ').trim();s=s.replace(/^[^\p{L}\p{N}]+/u,'').replace(/\s+[⚔️💕✨🏆]+$/u,'').trim();return s||file.replace(/\.html?$/i,'')}
+function gl(total,bw,sex){if(!(total>0&&bw>0))return 0;const c=sex==='F'?FEMALE:MALE;const coeff=Number((100/(c.A-c.B*Math.exp(-c.C*bw))).toFixed(6));return Number((total*coeff).toFixed(6))}
+function xpGlMultiplier(points){
+ if(!(points>0))return 1;
+ if(points<=60)return .5;
+ if(points<=70)return .5+(points-60)*.025;
+ if(points<=80)return .75+(points-70)*.025;
+ if(points<=90)return 1+(points-80)*.05;
+ if(points<=100)return 1.5+(points-90)*.05;
+ if(points<=110)return 2+(points-100)*.1;
+ return 3;
+}
+const XP_SLUGS={'anzalone':'guillaume','clara metaknight':'clara'};
+let GL_SYNC_ROWS=[];
+async function syncGlScores(){
+ if(!GL_SYNC_ROWS.length||!window.CoachingCloud?.client||CoachingCloud.member?.role!=='coach')return;
+ const rows=GL_SYNC_ROWS.map(a=>({athlete_slug:XP_SLUGS[a.id]||a.id,gl_points:Number(a.points.toFixed(3))}));
+ const {error}=await CoachingCloud.client.rpc('sync_athlete_gl_scores',{p_rows:rows});
+ if(error)console.warn('Synchronisation GL/XP impossible :',error.message);
+}
+function dedupe(list){const map=new Map();for(const a of list){const key=norm(a.name||a.id||a.file);const prev=map.get(key);if(!prev){map.set(key,a);continue}const prevScore=(prev.total||0)+(prev.bw||0)+(prev.file?1:0);const curScore=(a.total||0)+(a.bw||0)+(a.file?1:0);if(curScore>prevScore)map.set(key,{...prev,...a});else map.set(key,{...a,...prev})}return [...map.values()]}
+function extractStorageKey(scriptText){
+ const patterns=[
+  /const\s+SK\s*=\s*["']([^"']+)["']/,
+  /const\s+LS_KEY\s*=\s*["']([^"']+)["']/,
+  /const\s+STORAGE_KEY\s*=\s*["']([^"']+)["']/
+ ];
+ for(const pattern of patterns){const m=scriptText.match(pattern);if(m)return m[1]}
+ return null
+}
+function currentWeek(storageKey){
+ if(!storageKey)return 1;
+ try{
+  const raw=localStorage.getItem(storageKey);
+  if(!raw)return 1;
+  const data=JSON.parse(raw);
+  const index=Number.isInteger(data.W)?data.W:Number.isInteger(data.w)?data.w:0;
+  return Math.max(1,index+1)
+ }catch(e){return 1}
+}
+function weekLabel(a){return `Semaine ${currentWeek(a.storageKey)}`}
+let APP_LIST=[];
+let ADVENTURE_ROWS=[];
+let ADVENTURE_METRIC='xp';
+let ADVENTURE_CHANNEL=null;
+function refreshHomeWeeks(){
+ if(!APP_LIST.length)return;
+ render(APP_LIST)
+}
+async function files(){try{const r=await fetch(`https://api.github.com/repos/${REPO.owner}/${REPO.repo}/contents/?ref=${REPO.branch}`,{cache:'no-store'});if(!r.ok)throw 0;const j=await r.json();return j.filter(x=>x.type==='file'&&/\.html?$/i.test(x.name)&&!['index.html','index-original.html','entrainement.html','jeu.html','wiki.html','wiki-entrainement.html','wiki-jeu.html'].includes(x.name.toLowerCase())).map(x=>x.name)}catch(e){return FALLBACK}}
+async function read(file){const r=await fetch(encodeURIComponent(file),{cache:'no-store'});if(!r.ok)throw new Error(file);const html=await r.text();const doc=new DOMParser().parseFromString(html,'text/html');const pageText=(doc.body?.innerText||'').replace(/\s+/g,' ');const scriptText=Array.from(doc.scripts).map(s=>s.textContent||'').join('\n');const id=norm(file);const sq=extract(pageText,'SQ|Squat'),bn=extract(pageText,'BN|Bench'),dl=extract(pageText,'DL|Deadlift');const htmlBw=extract(pageText,'PDC|Body\\s*Weight|Poids\\s*(?:de\\s*)?corps');const bw=BODYWEIGHTS[id]??htmlBw??null;const sex=SEX[id]||'M';const name=DISPLAY_NAMES[id]||titleFrom(doc,file);const storageKey=extractStorageKey(scriptText);const emoji=Object.prototype.hasOwnProperty.call(EMOJI,id)?EMOJI[id]:'🏋️';return {id,file,name,emoji,sq,bn,dl,bw,sex,total:(sq||0)+(bn||0)+(dl||0),storageKey}}
+
+function progressSlugForAthlete(a){
+ const aliases={'anzalone':'guillaume','clara metaknight':'clara'};
+ return aliases[a.id]||a.id;
+}
+function progressForAthlete(a){const slug=progressSlugForAthlete(a);return ADVENTURE_ROWS.find(row=>row.athlete_slug===slug)||null}
+function render(list){document.getElementById('athleteList').innerHTML=list.filter(a=>a.file).map(a=>{const row=progressForAthlete(a);const sub=row?`Niveau ${row.level||1} · Palier ${row.adventure_difficulty||1} · ${row.combat_wins||0} monstres battus`:'Ouvrir le personnage RPG';return `<a class="card" href="${encodeURIComponent(a.file)}?mode=game"><div class="avatar">${esc(a.emoji||'🏋️')}${a.profileImage?`<img src="${encodeURIComponent(a.profileImage)}?v=20260805-v121" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.remove()">`:''}</div><div class="info"><div class="name">${esc(a.name)}</div><div class="sub">${esc(sub)}</div></div><div class="arrow">›</div></a>`}).join('');
+const complete=list.map(a=>({...a,points:gl(a.total,a.bw,a.sex)})).filter(a=>a.points>0).sort((a,b)=>b.points-a.points);GL_SYNC_ROWS=complete;syncGlScores();const incomplete=list.filter(a=>!((a.sq||0)+(a.bn||0)+(a.dl||0)>0&&a.bw>0));const rows=complete.map((a,i)=>`<div class="rank ${i===0?'top1':i===1?'top2':i===2?'top3':''}"><div class="place">${i+1}</div><div class="info"><div class="name">${esc(a.name)}</div><div class="sub">SQ ${a.sq} · BN ${a.bn} · DL ${a.dl} · ${a.bw} kg</div></div><div class="score"><div class="gl">${a.points.toFixed(1)}</div><div class="total">${a.total} total · XP ×${xpGlMultiplier(a.points).toFixed(2)}</div></div></div>`);const miss=incomplete.map(a=>`<div class="rank missing"><div class="place">—</div><div class="info"><div class="name">${esc(a.name)}</div><div class="sub">${a.bw?'Max manquant':'Poids de corps manquant'}</div></div><div class="score"><div class="gl">—</div><div class="total">Non classé</div></div></div>`);document.getElementById('rankList').innerHTML=[...rows,...miss].join('')||'<div class="empty">Aucune donnée trouvée.</div>'}
+
+function showLeaderboardMode(mode){
+ document.querySelectorAll('[data-leaderboard-mode]').forEach(btn=>btn.classList.toggle('active',btn.dataset.leaderboardMode===mode));
+ document.getElementById('leaderboardLift').classList.toggle('hidden',mode!=='lift');
+ document.getElementById('leaderboardAdventure').classList.toggle('hidden',mode!=='adventure');
+ if(mode==='adventure')renderAdventureLeaderboard();
+}
+function showActivityMode(mode){
+ document.querySelectorAll('[data-activity-mode]').forEach(btn=>btn.classList.toggle('active',btn.dataset.activityMode===mode));
+ document.getElementById('activityLift').classList.toggle('hidden',mode!=='lift');
+ document.getElementById('activityAdventure').classList.toggle('hidden',mode!=='adventure');
+}
+function showAdventureMetric(metric){
+ ADVENTURE_METRIC=metric;
+ document.querySelectorAll('[data-adventure-metric]').forEach(btn=>btn.classList.toggle('active',btn.dataset.adventureMetric===metric));
+ renderAdventureLeaderboard();
+}
+function athleteForProgressSlug(slug){
+ const aliases={guillaume:'anzalone',clara:'clara metaknight'};
+ const wanted=aliases[slug]||slug;
+ return APP_LIST.find(a=>a.id===wanted||norm(a.name)===norm(wanted))||null;
+}
+function adventureMetricValue(row){
+ if(ADVENTURE_METRIC==='wins')return Number(row.combat_wins)||0;
+ if(ADVENTURE_METRIC==='damage')return Number(row.total_combat_damage)||0;
+ if(ADVENTURE_METRIC==='items')return Number(row.unique_items_collected)||0;
+ if(ADVENTURE_METRIC==='trial')return Number(row.best_damage_trial)||0;
+ return Number(row.xp_total)||0;
+}
+function renderAdventureLeaderboard(){
+ const list=document.getElementById('adventureRankList');if(!list)return;
+ const labels={xp:"Classement de l'expérience RPG.",wins:'Classement des monstres vaincus.',damage:'Classement des dégâts infligés au total.',items:'Classement des objets uniques déposés dans le codex.',trial:'Classement du test de dégâts sur 30 secondes.'};
+ document.getElementById('adventureSummary').textContent=labels[ADVENTURE_METRIC];
+ const rows=[...ADVENTURE_ROWS].sort((a,b)=>adventureMetricValue(b)-adventureMetricValue(a));
+ if(!rows.length){list.innerHTML='<div class="empty">Aucune progression Aventure disponible.</div>';return}
+ list.innerHTML=rows.map((row,i)=>{
+  const athlete=athleteForProgressSlug(row.athlete_slug);const name=athlete?.name||row.athlete_slug;const emoji=athlete?.emoji||'⚔️';const value=adventureMetricValue(row);
+  const score=ADVENTURE_METRIC==='damage'?Math.round(value).toLocaleString('fr-FR'):Number(value).toLocaleString('fr-FR',{maximumFractionDigits:1});
+  const unit=ADVENTURE_METRIC==='xp'?'XP total':ADVENTURE_METRIC==='wins'?'monstres battus':ADVENTURE_METRIC==='damage'?'dégâts infligés':ADVENTURE_METRIC==='items'?'objets uniques':'dégâts en 30 s';
+  const sub=ADVENTURE_METRIC==='xp'?`Niveau ${row.level||1} · ${row.combat_wins||0} victoires`:ADVENTURE_METRIC==='wins'?`${Math.round(Number(row.total_combat_damage)||0).toLocaleString('fr-FR')} dégâts au total`:ADVENTURE_METRIC==='damage'?`${row.combat_wins||0} monstres battus · record ${Math.round(Number(row.best_combat_damage)||0).toLocaleString('fr-FR')}`:ADVENTURE_METRIC==='items'?`${row.combat_wins||0} monstres battus · ${Math.round(Number(row.total_combat_damage)||0).toLocaleString('fr-FR')} dégâts`:`${row.damage_trial_attempts||0} tentative${Number(row.damage_trial_attempts)===1?'':'s'} · meilleur score personnel`;
+  return `<div class="rank ${i===0?'top1':i===1?'top2':i===2?'top3':''}"><div class="place">${i+1}</div><div class="avatar">${esc(emoji)}</div><div class="info"><div class="name">${esc(name)}</div><div class="sub">${esc(sub)}</div></div><div class="score"><div class="adventure-score">${score}</div><div class="adventure-unit">${unit}</div></div></div>`;
+ }).join('');
+}
+async function loadAdventureLeaderboard(){
+ if(!window.CoachingCloud?.client||!CoachingCloud.session?.user)return;
+ const {data,error}=await CoachingCloud.client.from('athlete_progress').select('athlete_slug,xp_total,level,combat_wins,best_combat_damage,total_combat_damage,gold_balance,unique_items_collected,best_damage_trial,damage_trial_attempts,adventure_difficulty,rpg_class');
+ if(error){console.warn('Leaderboard aventure indisponible :',error.message);document.getElementById('adventureRankList').innerHTML=`<div class="empty">Leaderboard Aventure indisponible.<br>${esc(error.message)}</div>`;return}
+ ADVENTURE_ROWS=data||[];renderAdventureLeaderboard();if(APP_LIST.length)render(APP_LIST);
+ if(!ADVENTURE_CHANNEL){ADVENTURE_CHANNEL=CoachingCloud.client.channel('ga-adventure-leaderboard').on('postgres_changes',{event:'*',schema:'public',table:'athlete_progress'},()=>setTimeout(loadAdventureLeaderboard,100)).subscribe()}
+}
+function show(v){const order=['athletes','leaderboard','activity'];document.querySelectorAll('.view').forEach(x=>x.classList.remove('visible'));document.getElementById(v).classList.add('visible');document.querySelectorAll('.tab').forEach((x,i)=>x.classList.toggle('active',order[i]===v))}
+(async()=>{const status=document.getElementById('status');const fs=await files();const out=await Promise.allSettled(fs.map(read));const loaded=out.filter(x=>x.status==='fulfilled').map(x=>x.value);const loadedIds=new Set(loaded.map(a=>a.id));const pinnedFallbacks=PINNED_GAME_ATHLETES.filter(a=>!loadedIds.has(a.id));const raw=[...loaded,...pinnedFallbacks,...EXTRA_ATHLETES];const list=dedupe(raw).sort((a,b)=>a.name.localeCompare(b.name,'fr'));APP_LIST=list;render(APP_LIST);renderAdventureLeaderboard();const missing=list.filter(a=>!a.bw).map(a=>a.name);status.textContent=missing.length?`${list.length} athlètes chargés · poids manquants : ${missing.join(', ')}`:`${list.length} athlètes HTML synchronisés.`;status.classList.toggle('error',missing.length>0)})().catch(e=>{document.getElementById('status').textContent='Erreur de lecture des fichiers HTML.';document.getElementById('status').classList.add('error')});
+
+window.addEventListener('pageshow',refreshHomeWeeks);
+window.addEventListener('focus',refreshHomeWeeks);
+window.addEventListener('storage',refreshHomeWeeks);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshHomeWeeks()});
+CoachingCloud.onReady(()=>{Promise.all([CoachingCloud.mountActivityFeed('homeActivityLift',80,{category:'lift'}),CoachingCloud.mountActivityFeed('homeActivityAdventure',80,{category:'adventure'})]);loadAdventureLeaderboard();syncGlScores();});
+CoachingCloud.boot();
+</script></body></html>

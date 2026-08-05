@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- skill:chrome -->
+<style>
+/* Credit line — bottom-right */
+.design-ui-credit {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font: 11px/1 system-ui, sans-serif;
+  color: rgba(128,128,128,0.5);
+  pointer-events: none;
+  z-index: 2147483647;
+  transition: opacity 0.4s ease;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+/* Hide chrome on touch devices */
+@media (hover: none) {
+  .design-ui-credit { display: none; }
+}
+
+/* Print fixes */
+@media print {
+  * {
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .design-ui-credit { display: none !important; }
+}
+
+</style>
+<script>
+(function () {
+    // Design-ui pages are single compositions, so the whole body is editable.
+    function markEditable() {
+        document.body.classList.add('artifact-editable');
+    }
+
+    // Credit badge with idle-fade. Hover devices only.
+    function initChromeUI() {
+        if (!matchMedia('(hover: hover)').matches) return;
+
+        var credit = document.createElement('div');
+        credit.className = 'design-ui-credit';
+        credit.setAttribute('aria-hidden', 'true');
+        credit.innerHTML = '\u{1F49C} by ClickUp Brain';
+        document.body.appendChild(credit);
+
+        var timer = null;
+        var fade = function (out) { credit.style.opacity = out ? '0' : ''; };
+        fade(true);
+        var show = function () {
+            fade(false);
+            clearTimeout(timer);
+            timer = setTimeout(function () { fade(true); }, 3000);
+        };
+        document.addEventListener('mousemove', show);
+        show();
+    }
+
+    function init() {
+        markEditable();
+        initChromeUI();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+
+</script>
+<!-- /skill:chrome -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0e1a">
+<title>Tom Gibertini 🦶🇮🇹</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0e1a;--surface:#141a2a;--surface-2:#1c2438;--surface-3:#243048;--text:#e8ecf5;--text-dim:#8898b8;--text-muted:#4a5878;--accent:#f07020;--accent-light:#f89040;--accent-bg:rgba(240,112,32,0.1);--green:#4ae06a;--green-bg:rgba(74,224,106,0.1);--red:#f04848;--squat:#f07020;--squat-bg:rgba(240,112,32,0.1);--bench:#58a8f8;--bench-bg:rgba(88,168,248,0.1);--dead:#f87858;--dead-bg:rgba(248,120,88,0.1);--radius:14px;--radius-sm:10px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.app{max-width:430px;margin:0 auto;padding:env(safe-area-inset-top) 0 calc(72px + env(safe-area-inset-bottom)) 0;min-height:100dvh}
+.header{padding:16px 20px 12px;position:sticky;top:0;background:var(--bg);z-index:100;border-bottom:1px solid rgba(255,255,255,0.04)}
+.header-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.back-btn{width:36px;height:36px;border-radius:10px;background:var(--surface);border:none;color:var(--accent);font-size:1.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;flex-shrink:0}
+.header h1{font-size:1rem;font-weight:800;letter-spacing:-0.03em;flex:1}.header h1 span{color:var(--accent)}
+.week-selector{display:flex;gap:6px}
+.week-btn{width:36px;height:36px;border-radius:10px;border:none;background:var(--surface);color:var(--text-dim);font-weight:700;font-size:0.8rem;cursor:pointer;transition:all 0.15s}
+.week-btn.active{background:var(--accent);color:var(--bg);box-shadow:0 4px 12px rgba(240,112,32,0.25)}
+.day-tabs{display:flex;gap:4px;padding:0 16px;overflow-x:auto;scrollbar-width:none;margin-bottom:12px}.day-tabs::-webkit-scrollbar{display:none}
+.day-tab{flex-shrink:0;padding:10px 12px;border-radius:var(--radius-sm);border:none;background:var(--surface);color:var(--text-dim);font-weight:600;font-size:0.68rem;text-align:center;cursor:pointer;transition:all 0.15s;line-height:1.3}
+.day-tab.active{background:var(--surface-3);color:var(--text);border:1px solid rgba(240,112,32,0.3)}
+.day-tab .day-num{display:block;font-size:0.9rem;font-weight:800;margin-bottom:2px}
+.session-bar{display:flex;align-items:center;gap:10px;margin:0 16px 12px;padding:10px 14px;background:var(--surface);border-radius:var(--radius-sm)}
+.session-bar .chrono{font-size:0.75rem;font-weight:800;font-variant-numeric:tabular-nums;min-width:44px}
+.session-bar .bar{flex:1;height:5px;border-radius:3px;background:var(--surface-3);overflow:hidden}
+.session-bar .bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.3s}
+.session-bar .pct{font-size:0.7rem;font-weight:800;color:var(--accent);min-width:30px;text-align:right}
+.content{padding:0 16px}
+.exercise-block{background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.exercise-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.exercise-name{font-size:0.92rem;font-weight:800;letter-spacing:-0.02em}
+.exercise-badge{font-size:0.6rem;font-weight:700;padding:3px 8px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em}
+.badge-sq{background:var(--squat-bg);color:var(--squat)}.badge-bn{background:var(--bench-bg);color:var(--bench)}.badge-dl{background:var(--dead-bg);color:var(--dead)}.badge-ac{background:var(--accent-bg);color:var(--accent)}
+.exercise-meta{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.meta-chip{padding:3px 8px;background:var(--surface-2);border-radius:6px;font-size:0.68rem;font-weight:600;color:var(--text-dim)}.meta-chip strong{color:var(--text)}
+.set-row{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--surface-2);border-radius:var(--radius-sm);margin-bottom:5px;transition:all 0.2s}
+.set-row.completed{background:var(--green-bg);border:1px solid rgba(74,224,106,0.15)}
+.set-num{width:22px;height:22px;border-radius:6px;background:var(--surface-3);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:var(--text-dim);flex-shrink:0}
+.set-row.completed .set-num{background:var(--green);color:var(--bg)}
+.set-info{flex:1;font-size:0.75rem;color:var(--text-dim)}.set-info strong{color:var(--text)}
+.load-input{width:56px;padding:4px 5px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:var(--surface-3);color:var(--text);font-size:0.75rem;font-weight:700;text-align:center;font-family:inherit;outline:none}.load-input:focus{border-color:var(--accent)}
+.set-check{width:30px;height:30px;border-radius:8px;border:2px solid rgba(255,255,255,0.08);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.set-check.checked{background:var(--green);border-color:var(--green)}.set-check.checked::after{content:'';width:7px;height:4px;border-left:2px solid var(--bg);border-bottom:2px solid var(--bg);transform:rotate(-45deg) translateY(-1px)}
+.timer-overlay{display:none;position:fixed;inset:0;background:rgba(10,14,26,0.97);z-index:500;flex-direction:column;align-items:center;justify-content:center;gap:16px;backdrop-filter:blur(10px)}.timer-overlay.visible{display:flex}
+.timer-next{background:var(--surface);border-radius:12px;padding:12px 20px;text-align:center;margin-bottom:8px}.timer-next .lbl{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:4px}.timer-next .val{font-size:0.9rem;font-weight:800}
+.timer-ring-big{width:180px;height:180px;position:relative}.timer-ring-big svg{width:100%;height:100%;transform:rotate(-90deg)}.timer-ring-big .track{fill:none;stroke:var(--surface-3);stroke-width:8}.timer-ring-big .progress{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.timer-display{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.timer-time{font-size:2.8rem;font-weight:900;font-variant-numeric:tabular-nums}.timer-sub{font-size:0.7rem;color:var(--text-dim);margin-top:4px}
+.timer-presets{display:flex;gap:8px;margin-top:8px}.timer-presets button{padding:8px 14px;border-radius:8px;border:none;background:var(--surface);color:var(--text-dim);font-size:0.72rem;font-weight:700;cursor:pointer}.timer-presets button.active-preset{background:var(--accent);color:var(--bg)}
+.timer-actions{display:flex;gap:10px;margin-top:12px}.timer-actions button{padding:10px 20px;border-radius:10px;border:none;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:inherit}.timer-actions button:active{transform:scale(0.95)}
+.btn-add{background:var(--surface-2);color:var(--accent)}.btn-skip{background:var(--surface-2);color:var(--text-dim)}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--surface);border-top:1px solid rgba(255,255,255,0.04);padding:10px 20px calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:space-around;z-index:200}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 12px;border:none;background:none;color:var(--text-muted);font-family:inherit}.nav-item.active{color:var(--accent)}.nav-item span{font-size:0.6rem;font-weight:600}
+.notes-view{display:none;padding:0 16px}.notes-view.visible{display:block}.workout-view{display:block}.workout-view.hidden{display:none}
+.note-card{background:var(--surface);border-radius:var(--radius);padding:14px 18px;margin-bottom:10px}.note-card h3{font-size:0.78rem;font-weight:700;color:var(--accent);margin-bottom:5px}.note-card p{font-size:0.72rem;color:var(--text-dim);line-height:1.5}.note-card strong{color:var(--text)}
+</style>
+<link rel="stylesheet" href="program-theme.css">
+</head>
+<body>
+<div class="app">
+<div class="timer-overlay" id="timerOverlay">
+<div class="timer-next"><div class="lbl">Prochaine série</div><div class="val" id="timerNextSet">—</div></div>
+<div class="timer-ring-big"><svg viewBox="0 0 200 200"><circle class="track" cx="100" cy="100" r="85"/><circle class="progress" cx="100" cy="100" r="85" stroke-dasharray="534" stroke-dashoffset="0" id="timerProgress"/></svg><div class="timer-display"><div class="timer-time" id="timerTime">3:00</div><div class="timer-sub">🦶 Mamma mia che piedi...</div></div></div>
+<div class="timer-presets"><button onclick="setRest(150)">2:30</button><button class="active-preset" onclick="setRest(180)">3:00</button><button onclick="setRest(240)">4:00</button><button onclick="setRest(300)">5:00</button></div>
+<div class="timer-actions"><button class="btn-add" onclick="addTime(30)">+30s</button><button class="btn-skip" onclick="skipTimer()">Skip 🦶</button></div>
+</div>
+<div class="header"><div class="header-top"><a href="index.html" class="back-btn">‹</a><h1>🦶 Tom Gibertini <span>Piedi Italiani</span></h1><div class="week-selector" id="weekSelector"></div></div></div>
+<div class="day-tabs" id="dayTabs"></div>
+<div class="session-bar"><span class="chrono" id="chrono">00:00</span><div class="bar"><div class="bar-fill" id="barFill" style="width:0%"></div></div><span class="pct" id="pctLabel">0%</span></div>
+<div class="workout-view" id="workoutView"><div class="content" id="exerciseList"></div></div>
+<div class="notes-view" id="notesView">
+<div class="note-card"><h3>🦶🇮🇹 Tom Gibertini (Macro)</h3><p><strong>Squat:</strong> 240 | <strong>Bench:</strong> 160 | <strong>Deadlift:</strong> 300 | <strong>Total:</strong> 700<br>PDC: 78kg. Brain rot italiano certificato. Piedi enthusiast.</p></div>
+<div class="note-card"><h3>📚 Structure</h3><p><strong>Lundi:</strong> SQ 5s (Stance/Plus/Large) + BN 3s + DL Tempo conc.<br><strong>Mercredi:</strong> SQ Pause/OHead + BN Larsen 4s + DL Sangled 5s<br><strong>Jeudi:</strong> SQ 5s volume + BN 5s + DL 4s montant<br><strong>Vendredi:</strong> SQ technique (HB/Deep/Focus) + BN Larsen 7s + mobilité<br><strong>Samedi:</strong> SQ 3s + single + BN 3s + single FS + DL 3s + single</p></div>
+<div class="note-card" style="border:1px solid rgba(240,112,32,0.3)"><h3>🦶🇮🇹 Brain Rot Italiano</h3><p>"Mamma mia, che piedi magnifici su questa barra."<br><br>"In Italia si dice: chi non squatta, non mangia."<br><br>"Ogni rep è un passo verso la gloria dei piedi."<br><br>"Allora, questo deadlift è come la pasta: al dente, perfetto."<br><br>"Il bench è come il tiramisù: lourd, crémeux, irrésistible."<br><br>"Piedi sul sol, cuore nel cielo, barra nella mano. Andiamo."</p></div>
+</div>
+<div class="bottom-nav"><button class="nav-item active" data-view="workout" onclick="switchView('workout')"><span>🦶 Séance</span></button><button class="nav-item" data-view="notes" onclick="switchView('notes')"><span>🇮🇹 Strats</span></button></div>
+</div>
+<script>
+const P={weeks:[{label:"S1",days:[{name:"Lundi",emoji:"🦶",exercises:[{l:"sq",n:"Comp squat primaire",v:"STANCE",blocks:[{s:2,r:5,pct:69,ld:"161-171"}]},{l:"sq",n:"Comp squat primaire",v:"PLUS",blocks:[{s:1,r:5,pct:71,ld:"165-175"}]},{l:"sq",n:"Comp squat primaire",v:"LARGE",blocks:[{s:1,r:5,pct:73,ld:"170-180"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"3s",blocks:[{s:2,r:3,pct:78,ld:"121-129"},{s:2,r:3,pct:81,ld:"126-134"}]},{l:"dl",n:"Comp deadlift primaire",v:"Tempo conc.",blocks:[{s:2,r:2,pct:65,ld:"189-201"},{s:1,r:2,pct:65,ld:"189-201"},{s:1,r:2,pct:65,ld:"189-201"}]},{l:"ac",n:"DEAD BUG",v:"Core",blocks:[{s:3,r:15,ld:null}]},{l:"ac",n:"BICEPS CURL",v:"Optionnel",blocks:[{s:3,r:15,ld:null}]}]},{name:"Mercredi",emoji:"🇮🇹",exercises:[{l:"sq",n:"Comp squat primaire",v:"Pause",blocks:[{s:2,r:3,pct:71,ld:"165-175"},{s:1,r:3,pct:71,ld:"165-175"},{s:1,r:3,pct:71,ld:"165-175"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"LARSEN",blocks:[{s:2,r:4,pct:68,ld:"106-112"},{s:2,r:4,pct:70,ld:"109-115"}]},{l:"dl",n:"Comp deadlift primaire",v:"Sangled",blocks:[{s:2,r:5,pct:71,ld:"207-219"},{s:1,r:5,pct:73,ld:"212-226"},{s:1,r:5,pct:75,ld:"218-232"}]}]},{name:"Jeudi",emoji:"🍕",exercises:[{l:"sq",n:"Comp squat primaire",v:"Volume",blocks:[{s:2,r:5,pct:64,ld:"149-159"},{s:1,r:5,pct:67,ld:"156-166"},{s:1,r:5,pct:72,ld:"168-178"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:2,r:5,pct:75,ld:"116-124"},{s:2,r:5,pct:77,ld:"119-127"}]},{l:"dl",n:"Comp deadlift primaire",v:"Primaire",blocks:[{s:2,r:4,pct:72,ld:"210-222"},{s:1,r:4,pct:75,ld:"218-232"},{s:1,r:4,pct:77,ld:"224-238"}]},{l:"ac",n:"Deadbug",v:"Core",blocks:[{s:3,r:15,ld:null}]}]},{name:"Vendredi",emoji:"💅",exercises:[{l:"sq",n:"Comp squat primaire",v:"HB Talonette",blocks:[{s:2,r:10,pct:40,ld:"93-99"}]},{l:"sq",n:"Comp squat primaire",v:"Deep Squat",blocks:[{s:1,r:10,pct:40,ld:"93-99"}]},{l:"sq",n:"Comp squat primaire",v:"Focus Depth",blocks:[{s:1,r:10,pct:40,ld:"93-99"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"LARSEN",blocks:[{s:2,r:7,pct:67,ld:"104-110"},{s:2,r:7,pct:67,ld:"104-110"}]},{l:"ac",n:"Cossac Squat",v:"Mobilité",blocks:[{s:2,r:15,ld:null}]},{l:"ac",n:"Leg extension",v:"Renfo @6",blocks:[{s:2,r:20,ld:null}]}]},{name:"Samedi",emoji:"🏆",exercises:[{l:"sq",n:"Comp squat primaire",v:"Primaire",blocks:[{s:2,r:3,pct:78,ld:"181-193"},{s:1,r:3,pct:81,ld:"188-200"},{s:1,r:1,pct:85,ld:"198-210"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"Primaire",blocks:[{s:2,r:3,pct:75,ld:"116-124"},{s:2,r:1,pct:86,ld:"134-142"}]},{l:"dl",n:"Comp deadlift primaire",v:"Primaire",blocks:[{s:2,r:3,pct:75,ld:"218-232"},{s:1,r:3,pct:78,ld:"227-241"},{s:1,r:1,pct:81,ld:"236-250"}]},{l:"ac",n:"BIRD DOG",v:"Core",blocks:[{s:3,r:15,ld:null}]}]}]},{label:"S2",days:[{name:"Lundi",emoji:"🦶",exercises:[{l:"sq",n:"Comp squat primaire",v:"STANCE",blocks:[{s:2,r:5,pct:72,ld:"167-177"}]},{l:"sq",n:"Comp squat primaire",v:"PLUS",blocks:[{s:1,r:5,pct:74,ld:"172-182"}]},{l:"sq",n:"Comp squat primaire",v:"LARGE",blocks:[{s:1,r:5,pct:76,ld:"177-187"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"3s",blocks:[{s:2,r:3,pct:81,ld:"126-134"},{s:2,r:3,pct:84,ld:"131-139"}]},{l:"dl",n:"Comp deadlift primaire",v:"Tempo conc.",blocks:[{s:2,r:2,pct:65,ld:"189-201"},{s:1,r:2,pct:65,ld:"189-201"},{s:1,r:2,pct:65,ld:"189-201"}]},{l:"ac",n:"DEAD BUG",v:"Core",blocks:[{s:3,r:15,ld:null}]},{l:"ac",n:"BICEPS CURL",v:"Optionnel",blocks:[{s:3,r:15,ld:null}]}]},{name:"Mercredi",emoji:"🇮🇹",exercises:[{l:"sq",n:"Comp squat primaire",v:"Pause",blocks:[{s:2,r:3,pct:74,ld:"172-182"},{s:1,r:3,pct:74,ld:"172-182"},{s:1,r:3,pct:74,ld:"172-182"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"LARSEN",blocks:[{s:2,r:4,pct:70,ld:"109-115"},{s:2,r:4,pct:72,ld:"112-118"}]},{l:"dl",n:"Comp deadlift primaire",v:"Sangled",blocks:[{s:2,r:5,pct:73,ld:"213-227"},{s:1,r:5,pct:75,ld:"219-233"},{s:1,r:5,pct:77,ld:"225-239"}]}]},{name:"Jeudi",emoji:"🍕",exercises:[{l:"sq",n:"Comp squat primaire",v:"Volume",blocks:[{s:2,r:5,pct:67,ld:"155-165"},{s:1,r:5,pct:70,ld:"162-172"},{s:1,r:5,pct:75,ld:"174-184"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:2,r:5,pct:78,ld:"121-129"},{s:2,r:5,pct:80,ld:"124-132"}]},{l:"dl",n:"Comp deadlift primaire",v:"Primaire",blocks:[{s:2,r:4,pct:74,ld:"216-230"},{s:1,r:4,pct:77,ld:"225-239"},{s:1,r:4,pct:79,ld:"231-245"}]},{l:"ac",n:"Deadbug",v:"Core",blocks:[{s:3,r:15,ld:null}]}]},{name:"Vendredi",emoji:"💅",exercises:[{l:"sq",n:"Comp squat primaire",v:"HB Talonette",blocks:[{s:2,r:10,pct:40,ld:"93-99"}]},{l:"sq",n:"Comp squat primaire",v:"Deep Squat",blocks:[{s:1,r:10,pct:40,ld:"93-99"}]},{l:"sq",n:"Comp squat primaire",v:"Focus Depth",blocks:[{s:1,r:10,pct:40,ld:"93-99"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"LARSEN",blocks:[{s:2,r:7,pct:69,ld:"107-113"},{s:2,r:7,pct:69,ld:"107-113"}]},{l:"ac",n:"Cossac Squat",v:"Mobilité",blocks:[{s:2,r:15,ld:null}]},{l:"ac",n:"Leg extension",v:"Renfo @6",blocks:[{s:2,r:20,ld:null}]}]},{name:"Samedi",emoji:"🏆",exercises:[{l:"sq",n:"Comp squat primaire",v:"Primaire",blocks:[{s:2,r:3,pct:81,ld:"188-200"},{s:1,r:3,pct:84,ld:"195-207"},{s:1,r:1,pct:88,ld:"204-216"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"Primaire",blocks:[{s:2,r:3,pct:78,ld:"121-129"},{s:2,r:1,pct:89,ld:"139-147"}]},{l:"dl",n:"Comp deadlift primaire",v:"Primaire",blocks:[{s:2,r:3,pct:77,ld:"225-239"},{s:1,r:3,pct:80,ld:"234-248"},{s:1,r:1,pct:84,ld:"244-260"}]},{l:"ac",n:"BIRD DOG",v:"Core",blocks:[{s:3,r:15,ld:null}]}]}]},{label:"S3",days:[{name:"Lundi",emoji:"🦶",exercises:[{l:"sq",n:"Comp squat primaire",v:"STANCE",blocks:[{s:1,r:5,pct:74,ld:"174-184"}]},{l:"sq",n:"Comp squat primaire",v:"PLUS",blocks:[{s:1,r:5,pct:76,ld:"178-188"}]},{l:"sq",n:"Comp squat primaire",v:"LARGE",blocks:[{s:1,r:5,pct:78,ld:"182-194"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"3s",blocks:[{s:2,r:3,pct:85,ld:"132-140"},{s:2,r:3,pct:88,ld:"136-144"}]},{l:"dl",n:"Comp deadlift primaire",v:"Tempo conc.",blocks:[{s:2,r:2,pct:65,ld:"189-201"},{s:1,r:2,pct:65,ld:"189-201"},{s:1,r:2,pct:65,ld:"189-201"}]},{l:"ac",n:"DEAD BUG",v:"Core",blocks:[{s:3,r:15,ld:null}]},{l:"ac",n:"BICEPS CURL",v:"Optionnel",blocks:[{s:3,r:15,ld:null}]}]},{name:"Mercredi",emoji:"🇮🇹",exercises:[{l:"sq",n:"Comp squat primaire",v:"OVERHEAD",blocks:[{s:2,r:10,ld:"10KG"},{s:1,r:10,ld:"10KG"},{s:1,r:10,ld:"10KG"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"LARSEN",blocks:[{s:2,r:4,pct:72,ld:"112-118"},{s:2,r:4,pct:74,ld:"114-122"}]},{l:"dl",n:"Comp deadlift primaire",v:"Sangled",blocks:[{s:2,r:5,pct:76,ld:"220-234"},{s:1,r:5,pct:78,ld:"226-240"},{s:1,r:5,pct:80,ld:"232-246"}]}]},{name:"Jeudi",emoji:"🍕",exercises:[{l:"sq",n:"Comp squat primaire",v:"Volume",blocks:[{s:2,r:5,pct:69,ld:"162-172"},{s:1,r:5,pct:72,ld:"169-179"},{s:1,r:5,pct:77,ld:"180-192"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:2,r:5,pct:81,ld:"126-134"},{s:2,r:5,pct:83,ld:"129-137"}]},{l:"dl",n:"Comp deadlift primaire",v:"Primaire",blocks:[{s:2,r:4,pct:77,ld:"223-237"},{s:1,r:4,pct:80,ld:"232-246"},{s:1,r:4,pct:82,ld:"238-252"}]},{l:"ac",n:"Deadbug",v:"Core",blocks:[{s:3,r:15,ld:null}]}]},{name:"Vendredi",emoji:"💅",exercises:[{l:"sq",n:"Comp squat primaire",v:"HB Talonette",blocks:[{s:2,r:10,pct:40,ld:"93-99"}]},{l:"sq",n:"Comp squat primaire",v:"Deep Squat",blocks:[{s:1,r:10,pct:40,ld:"93-99"}]},{l:"sq",n:"Comp squat primaire",v:"Focus Depth",blocks:[{s:1,r:10,pct:40,ld:"93-99"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"LARSEN",blocks:[{s:2,r:7,pct:71,ld:"111-117"},{s:2,r:7,pct:71,ld:"111-117"}]},{l:"ac",n:"Cossac Squat",v:"Mobilité",blocks:[{s:2,r:15,ld:null}]},{l:"ac",n:"Leg extension",v:"Renfo @6",blocks:[{s:2,r:20,ld:null}]}]},{name:"Samedi",emoji:"🏆",exercises:[{l:"sq",n:"Comp squat primaire",v:"Primaire",blocks:[{s:2,r:3,pct:83,ld:"194-206"},{s:1,r:3,pct:86,ld:"201-213"},{s:1,r:1,pct:90,ld:"210-224"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"Primaire",blocks:[{s:2,r:3,pct:75,ld:"116-124"},{s:2,r:1,pct:93,ld:"144-152"}]},{l:"dl",n:"Comp deadlift primaire",v:"Primaire",blocks:[{s:2,r:3,pct:80,ld:"232-246"},{s:1,r:3,pct:83,ld:"241-255"},{s:1,r:1,pct:87,ld:"254-270"}]},{l:"ac",n:"BIRD DOG",v:"Core",blocks:[{s:3,r:15,ld:null}]}]}]},{label:"S4",days:[{name:"Lundi",emoji:"🦶",exercises:[{l:"sq",n:"Comp squat primaire",v:"STANCE",blocks:[{s:2,r:5,pct:77,ld:"179-191"}]},{l:"sq",n:"Comp squat primaire",v:"PLUS",blocks:[{s:1,r:5,pct:79,ld:"184-196"}]},{l:"sq",n:"Comp squat primaire",v:"LARGE",blocks:[{s:1,r:5,pct:81,ld:"189-201"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"3s",blocks:[{s:2,r:3,pct:88,ld:"137-145"},{s:2,r:3,pct:91,ld:"142-150"}]},{l:"dl",n:"Comp deadlift primaire",v:"Tempo conc.",blocks:[{s:2,r:2,pct:65,ld:"189-201"},{s:1,r:2,pct:65,ld:"189-201"},{s:1,r:2,pct:65,ld:"189-201"}]},{l:"ac",n:"DEAD BUG",v:"Core",blocks:[{s:3,r:15,ld:null}]},{l:"ac",n:"BICEPS CURL",v:"Optionnel",blocks:[{s:3,r:15,ld:null}]}]},{name:"Mercredi",emoji:"🇮🇹",exercises:[{l:"sq",n:"Comp squat primaire",v:"OVERHEAD",blocks:[{s:2,r:3,ld:"10KG"}]},{l:"sq",n:"Comp squat primaire",v:"HB",blocks:[{s:2,r:5,pct:60,ld:"140-148"},{s:2,r:5,pct:60,ld:"140-148"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"LARSEN",blocks:[{s:2,r:4,pct:74,ld:"114-122"},{s:2,r:4,pct:76,ld:"118-126"}]},{l:"dl",n:"Comp deadlift primaire",v:"Sangled",blocks:[{s:2,r:5,pct:78,ld:"228-242"},{s:1,r:5,pct:80,ld:"234-248"},{s:1,r:5,pct:82,ld:"240-254"}]}]},{name:"Jeudi",emoji:"🍕",exercises:[{l:"sq",n:"Comp squat primaire",v:"Volume",blocks:[{s:2,r:5,pct:72,ld:"168-178"},{s:1,r:5,pct:75,ld:"175-185"},{s:1,r:5,pct:80,ld:"186-198"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"Volume",blocks:[{s:2,r:5,pct:85,ld:"132-140"},{s:2,r:5,pct:87,ld:"135-143"}]},{l:"dl",n:"Comp deadlift primaire",v:"Primaire",blocks:[{s:2,r:4,pct:79,ld:"231-245"},{s:1,r:4,pct:82,ld:"240-254"},{s:1,r:4,pct:84,ld:"245-261"}]},{l:"ac",n:"Deadbug",v:"Core",blocks:[{s:3,r:15,ld:null}]}]},{name:"Vendredi",emoji:"💅",exercises:[{l:"sq",n:"Comp squat primaire",v:"HB Talonette",blocks:[{s:2,r:10,pct:40,ld:"93-99"}]},{l:"sq",n:"Comp squat primaire",v:"Deep Squat",blocks:[{s:1,r:10,pct:40,ld:"93-99"}]},{l:"sq",n:"Comp squat primaire",v:"Focus Depth",blocks:[{s:1,r:10,pct:40,ld:"93-99"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"LARSEN",blocks:[{s:2,r:7,pct:73,ld:"113-121"},{s:2,r:7,pct:73,ld:"113-121"}]},{l:"ac",n:"Cossac Squat",v:"Mobilité",blocks:[{s:2,r:15,ld:null}]},{l:"ac",n:"Leg extension",v:"Renfo",blocks:[{s:2,r:20,ld:null}]}]},{name:"Samedi",emoji:"🏆",exercises:[{l:"sq",n:"Comp squat primaire",v:"Primaire",blocks:[{s:2,r:3,pct:86,ld:"201-213"},{s:1,r:3,pct:89,ld:"208-220"},{s:1,r:1,pct:93,ld:"216-230"}]},{l:"ac",n:"Pull over haltères",v:"Grand dorsal",blocks:[{s:2,r:"10-12",ld:null}]},{l:"bn",n:"Bench Primaire",v:"Primaire",blocks:[{s:2,r:3,pct:75,ld:"116-124"},{s:2,r:1,pct:96,ld:"149-159"}]},{l:"dl",n:"Comp deadlift primaire",v:"Primaire",blocks:[{s:2,r:3,pct:82,ld:"240-254"},{s:1,r:3,pct:85,ld:"248-264"},{s:1,r:1,pct:90,ld:"263-279"}]},{l:"ac",n:"BIRD DOG",v:"Core",blocks:[{s:3,r:15,ld:null}]}]}]}]};
+
+let S={w:0,d:0,sets:{},sessionStart:null,sessionEnd:null};let timerInt=null,timerRem=180,timerTot=180;let chronoInt=null;let allSetsFlat=[];const LS_KEY='gibertini-v2';
+function load(){try{const x=localStorage.getItem(LS_KEY);if(x)S=JSON.parse(x);}catch(e){}}
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(S));}catch(e){}}
+function kk(){return`${S.w}-${S.d}`}
+function init(){load();renderWeeks();renderDays();renderWorkout();startChrono();}
+function renderWeeks(){document.getElementById('weekSelector').innerHTML=P.weeks.map((_,i)=>`<button class="week-btn${i===S.w?' active':''}" onclick="setW(${i})">S${i+1}</button>`).join('');}
+function renderDays(){const days=P.weeks[S.w].days;document.getElementById('dayTabs').innerHTML=days.map((d,i)=>`<button class="day-tab${i===S.d?' active':''}" onclick="setD(${i})"><span class="day-num">${d.emoji}</span>${d.name}</button>`).join('');}
+function setW(i){S.w=i;S.d=0;save();renderWeeks();renderDays();renderWorkout();}
+function setD(i){S.d=i;save();renderDays();renderWorkout();}
+function renderWorkout(){const day=P.weeks[S.w].days[S.d];const key=kk();const done=S.sets[key]||[];allSetsFlat=[];let html='';let idx=0;day.exercises.forEach(ex=>{const bc=ex.l==='sq'?'badge-sq':ex.l==='bn'?'badge-bn':ex.l==='dl'?'badge-dl':'badge-ac';html+=`<div class="exercise-block"><div class="exercise-header"><div class="exercise-name">${ex.n}</div><div class="exercise-badge ${bc}">${ex.v||ex.l.toUpperCase()}</div></div>`;ex.blocks.forEach(bl=>{html+=`<div class="exercise-meta"><div class="meta-chip"><strong>${bl.s}×${bl.r}</strong></div>`;if(bl.pct)html+=`<div class="meta-chip">${bl.pct}%</div>`;if(bl.ld)html+=`<div class="meta-chip">${bl.ld}</div>`;html+=`</div>`;for(let i=0;i<bl.s;i++){const d2=done.includes(idx);allSetsFlat.push({name:ex.n,reps:bl.r,load:bl.ld,idx});html+=`<div class="set-row${d2?' completed':''}"><div class="set-num">${i+1}</div><div class="set-info"><strong>${bl.r}</strong> ${bl.ld||''}</div>`;if(bl.ld&&String(bl.ld).includes('-'))html+=`<input class="load-input" type="number" placeholder="${String(bl.ld).split('-')[0]}" inputmode="decimal">`;html+=`<div class="set-check${d2?' checked':''}" onclick="toggle(${idx})"></div></div>`;idx++;}});html+=`</div>`;});document.getElementById('exerciseList').innerHTML=html;updateBar();}
+function toggle(idx){const key=kk();if(!S.sets[key])S.sets[key]=[];const i=S.sets[key].indexOf(idx);if(i>-1){S.sets[key].splice(i,1);}else{S.sets[key].push(idx);if(!S.sessionStart)S.sessionStart=Date.now();showTimer(idx);}save();renderWorkout();}
+function formatNextTimerSet(next){const load=String(next?.load||'').trim();const hasUnit=/(kg|pdc|@|sec|min|amrap|m$)/i.test(load);const loadText=load?` · ${load}${hasUnit?'':' kg'}`:'';const reps=next?.reps??'';const repText=typeof reps==='number'||/^\d+(?:[.,]\d+)?$/.test(String(reps))?`${reps} rep${Number(reps)>1?'s':''}`:String(reps);return`${next.name} · ${repText}${loadText}`;}
+function showTimer(justDone){const next=allSetsFlat.find(s=>s.idx>justDone&&!(S.sets[kk()]||[]).includes(s.idx));document.getElementById('timerNextSet').textContent=next?formatNextTimerSet(next):'Ultima serie! 🇮🇹';timerRem=timerTot;document.getElementById('timerOverlay').classList.add('visible');updateTimerDisplay();clearInterval(timerInt);timerInt=setInterval(()=>{timerRem--;updateTimerDisplay();if(timerRem<=0)finishTimer();},1000);}
+function updateTimerDisplay(){const m=Math.floor(Math.abs(timerRem)/60),s=Math.abs(timerRem)%60;document.getElementById('timerTime').textContent=`${m}:${String(s).padStart(2,'0')}`;const circ=2*Math.PI*85;document.getElementById('timerProgress').style.strokeDashoffset=circ*(1-timerRem/timerTot);}
+function setRest(sec){timerTot=sec;timerRem=sec;updateTimerDisplay();document.querySelectorAll('.timer-presets button').forEach(b=>b.classList.remove('active-preset'));}
+function addTime(s){timerRem+=s;timerTot+=s;updateTimerDisplay();}
+function skipTimer(){clearInterval(timerInt);document.getElementById('timerOverlay').classList.remove('visible');}
+function finishTimer(){clearInterval(timerInt);document.getElementById('timerOverlay').classList.remove('visible');if(navigator.vibrate)navigator.vibrate([200,100,200]);}
+function updateBar(){const key=kk();const done=(S.sets[key]||[]).length;const total=allSetsFlat.length;const pct=total?Math.round(done/total*100):0;document.getElementById('barFill').style.width=pct+'%';document.getElementById('pctLabel').textContent=pct+'%';}
+function startChrono(){chronoInt=setInterval(()=>{if(!S.sessionStart){document.getElementById('chrono').textContent='00:00';return;}const end=S.sessionEnd||Date.now();const el=Math.floor((end-S.sessionStart)/1000);document.getElementById('chrono').textContent=String(Math.floor(el/60)).padStart(2,'0')+':'+String(el%60).padStart(2,'0');},1000);}
+function switchView(v){document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.view===v));document.getElementById('workoutView').classList.toggle('hidden',v!=='workout');document.getElementById('notesView').classList.toggle('visible',v==='notes');}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save();});
+init();
+</script>
+<script>
+window.COACHING_ATHLETE = {
+slug: "gibertini",
+name: "Tom Gibertini",
+emoji: "🦶",
+programKey: LS_KEY,
+adapter: "legacy"
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="app.js?v=20260801-sorts-cinematics-v17"></script>
+</body>
+</html>
