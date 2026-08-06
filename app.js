@@ -1,5 +1,5 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V131';
+window.GA_APP_VERSION = 'V139';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
@@ -3033,30 +3033,69 @@ function requiredEquipmentLevelForDifficulty(value = currentAdventureDifficulty(
   return Math.min(1000, Math.max(1, Math.ceil(d / 10)));
 }
 
-function equippedLevelSnapshot() {
+function equipmentLevelExemptRarity(item) {
+  const rarity = String(item?.rarity || item?.item_rarity || '').trim().toLowerCase();
+  return rarity === 'ultra_mythic' || rarity === 'abyssal';
+}
+
+function equippedLevelSnapshot(requiredLevel = null) {
   const slots = ['weapon', 'armor', 'relic'];
-  const levels = slots.map(slot => {
+  const required = Math.max(1, n(requiredLevel, 1));
+
+  const details = slots.map(slot => {
     const equipped = inventory
       .filter(item => item.equipped && item.slot === slot)
-      .sort((a, b) => n(b.item_level, 0) - n(a.item_level, 0))[0];
-    return Math.max(0, n(equipped?.item_level, 0));
+      .sort((a, b) => {
+        const aExempt = equipmentLevelExemptRarity(a) ? 1 : 0;
+        const bExempt = equipmentLevelExemptRarity(b) ? 1 : 0;
+        if (aExempt !== bExempt) return bExempt - aExempt;
+        return n(b.item_level, 0) - n(a.item_level, 0);
+      })[0];
+
+    const actualLevel = Math.max(0, n(equipped?.item_level, 0));
+    const exempt = equipmentLevelExemptRarity(equipped);
+
+    // Une pièce Ultra mythique ou Abyssale couvre son propre emplacement au
+    // niveau demandé, mais ne surcompense jamais les deux autres pièces.
+    const gateLevel = exempt
+      ? Math.max(actualLevel, required)
+      : actualLevel;
+
+    return {
+      slot,
+      item: equipped || null,
+      actualLevel,
+      gateLevel,
+      exempt
+    };
   });
-  const average = levels.reduce((sum, level) => sum + level, 0) / slots.length;
-  const minimum = Math.min(...levels);
-  // Le niveau effectif récompense la moyenne, mais garde un vrai effet de
-  // goulot d'étranglement si un emplacement est très en retard ou vide.
+
+  const levels = details.map(detail => detail.actualLevel);
+  const gateLevels = details.map(detail => detail.gateLevel);
+  const average = gateLevels.reduce((sum, level) => sum + level, 0) / slots.length;
+  const minimum = Math.min(...gateLevels);
   const effective = average * 0.65 + minimum * 0.35;
-  return { levels, average, minimum, effective };
+
+  return {
+    details,
+    levels,
+    gateLevels,
+    average,
+    minimum,
+    effective,
+    exemptCount: details.filter(detail => detail.exempt).length
+  };
 }
 
 function progressionGearPenalty(value = currentAdventureDifficulty(), { boss = false } = {}) {
   const selected = Math.min(MAX_ADVENTURE_DIFFICULTY, Math.max(1, Math.floor(n(value, 1))));
   const required = requiredEquipmentLevelForDifficulty(selected);
-  const effective = equippedLevelSnapshot().effective;
-  // Aucun malus sur un palier couvert par le niveau réel de l'équipement.
-  // Le nerf apparaît uniquement quand le joueur tente un palier au-dessus de
-  // la capacité de ses trois pièces équipées.
+  const effective = equippedLevelSnapshot(required).effective;
+
+  // Aucun malus sur un palier couvert. Les pièces Ultra mythiques et
+  // Abyssales sont immunisées au niveau uniquement pour leur emplacement.
   if (effective >= required) return 1;
+
   const ratio = Math.max(0, effective / Math.max(1, required));
   return Math.max(0.02, Math.pow(ratio, boss ? 10 : 8));
 }
@@ -3881,8 +3920,15 @@ async function armCombatServerTimer(session) {
       <div class="world-picker-head"><b>⚔️ Choisir le palier de difficulté</b><span>Maximum débloqué : ${unlocked}</span></div>
       <input id="rpgDifficultyNumber" type="number" inputmode="numeric" min="1" max="${unlocked}" step="1" value="${selected}" aria-label="Palier de difficulté">
       ${unlocked > 1 ? `<input id="rpgDifficultyRange" type="range" min="1" max="${unlocked}" step="1" value="${selected}" aria-label="Réglage rapide du palier">` : ''}
-      <div class="world-picker-note">Palier choisi : <strong>${selected}</strong> · Puissance conseillée <strong>${fr(requiredPowerForDifficulty(selected),1)}</strong> · ta Puissance <strong>${fr(currentCombatPower(),1)}</strong> dont <strong>${fr(currentEquipmentPower(),1)}</strong> fournie par l’équipement · équipement conseillé <strong>niv. ${requiredEquipmentLevelForDifficulty(selected)}</strong> · ton équipement effectif <strong>niv. ${fr(equippedLevelSnapshot().effective,1)}</strong> · PV relatifs ×${fr(difficultyHpMultiplier(selected),2)} · gold ×${fr(difficultyGoldMultiplier(selected),2)}.</div>
-      <div class="world-picker-note">${progressionGearPenalty(selected) < 1 ? `<strong>Sous-équipement :</strong> dégâts ×${fr(progressionGearPenalty(selected),3)}. Monte les trois pièces vers le niveau ${requiredEquipmentLevelForDifficulty(selected)} ; un emplacement faible réduit le niveau effectif.` : selected < unlocked ? '<strong>Palier de farm couvert :</strong> aucun malus ; ta Puissance réelle écrase naturellement les anciens monstres.' : '<strong>Progression équipée :</strong> aucun malus de palier. Les dégâts dépendent directement de la Puissance fournie par ton équipement.'} Les monstres sont tirés aléatoirement dans tout le bestiaire.</div>
+      ${(() => {
+        const requiredLevel = requiredEquipmentLevelForDifficulty(selected);
+        const gear = equippedLevelSnapshot(requiredLevel);
+        const immunity = gear.exemptCount > 0
+          ? ` · <strong>${gear.exemptCount}</strong> emplacement${gear.exemptCount > 1 ? 's' : ''} Ultra/Abyssal immunisé${gear.exemptCount > 1 ? 's' : ''}`
+          : '';
+        return `<div class="world-picker-note">Palier choisi : <strong>${selected}</strong> · Puissance conseillée <strong>${fr(requiredPowerForDifficulty(selected),1)}</strong> · ta Puissance <strong>${fr(currentCombatPower(),1)}</strong> dont <strong>${fr(currentEquipmentPower(),1)}</strong> fournie par l’équipement · équipement conseillé <strong>niv. ${requiredLevel}</strong> · équipement effectif <strong>niv. ${fr(gear.effective,1)}</strong>${immunity} · PV relatifs ×${fr(difficultyHpMultiplier(selected),2)} · gold ×${fr(difficultyGoldMultiplier(selected),2)}.</div>
+        <div class="world-picker-note">${progressionGearPenalty(selected) < 1 ? `<strong>Sous-équipement :</strong> dégâts ×${fr(progressionGearPenalty(selected),3)}. Seuls les emplacements non Ultra mythiques/Abyssaux doivent atteindre le niveau ${requiredLevel}.` : selected < unlocked ? '<strong>Palier de farm couvert :</strong> aucun malus. Les pièces Ultra mythiques et Abyssales ignorent le malus de niveau pour leur emplacement.' : '<strong>Progression équipée :</strong> aucun malus de palier. Les pièces Ultra mythiques et Abyssales ignorent le malus de niveau pour leur emplacement.'} Les monstres sont tirés aléatoirement dans tout le bestiaire.</div>`;
+      })()}
     </div>`;
   }
 
@@ -6893,17 +6939,30 @@ function collectionHtml() {
       return;
     }
     const row = Array.isArray(data) ? data[0] : data;
-    if (!row) { stopBattleMusic(); return; }
+    if (!row) {
+      stopBattleMusic();
+      CoachingCloud.toast('Boss inaccessible : Supabase n’a renvoyé aucune donnée.', true);
+      return;
+    }
 
     const returnedBossCombatId = String(row.combat_id || '').trim();
+    const returnedBossHp = n(row.monster_hp, NaN);
+    const returnedBossDamage = n(row.base_damage, NaN);
+    if (!returnedBossCombatId || !Number.isFinite(returnedBossHp) || returnedBossHp <= 0 || !Number.isFinite(returnedBossDamage) || returnedBossDamage <= 0) {
+      stopBattleMusic();
+      console.error('Réponse de boss invalide :', row);
+      CoachingCloud.toast('Boss inaccessible : identifiant, PV ou dégâts invalides.', true);
+      return;
+    }
+
     const durationSetup = await prepareUnlimitedCombatV63(
       returnedBossCombatId,
       row.duration_seconds
     );
     if (durationSetup.error) {
-      stopBattleMusic();
-      CoachingCloud.toast(`Durée du boss impossible à charger : ${durationSetup.error.message}. Exécute le SQL V63.`, true);
-      return;
+      // Le RPC V63 est un confort de synchronisation, pas une condition de lancement.
+      // On conserve donc le temps renvoyé par start_rpg_boss et le combat démarre.
+      console.warn('Chronomètre V63 indisponible pour le boss, utilisation du mode local :', durationSetup.error);
     }
 
     combat = {
@@ -6912,9 +6971,13 @@ function collectionHtml() {
       level: n(row.level, 1),
       xp: n(row.xp_total),
       monsterName: monsterDisplayName(row.monster_name),
-      maxHp: n(row.monster_hp, 1),
-      hp: n(row.monster_hp, 1),
-      baseDamage: n(row.base_damage, 1),
+      monsterRarity: canonicalMonsterRarity(row.monster_name, row.monster_rarity || 'legendary', row.monster_key || ''),
+      monsterWorld: row.monster_world || 'Boss de palier',
+      monsterKey: row.monster_key || `boss_palier_${n(row.difficulty, currentAdventureDifficulty())}`,
+      skinPath: row.skin_path || '',
+      maxHp: returnedBossHp,
+      hp: returnedBossHp,
+      baseDamage: returnedBossDamage,
       critSeed: n(row.crit_seed, 1),
       critChance: n(row.crit_chance_pct, critChancePct()),
       duration: durationSetup.plannedDuration,
@@ -6943,9 +7006,9 @@ function collectionHtml() {
     setMonsterNameDisplay(document.getElementById('rpgMonsterName'), combat);
     const enemyEl = document.getElementById('rpgEnemy');
     if (enemyEl) {
-      enemyEl.innerHTML = monsterVisual(combat.monsterName || 'Boss', 'legendary');
-      applyMonsterVisualState(enemyEl, { ...combat, monsterRarity:'legendary' });
-      enemyEl.classList.add('boss-val');
+      enemyEl.innerHTML = monsterVisual(combat.monsterName || 'Boss', combat.monsterRarity || 'legendary');
+      applyMonsterVisualState(enemyEl, combat);
+      enemyEl.classList.toggle('boss-val', /kazuto|lonely shadow cowboy|val,|hanzalone/i.test(String(combat.monsterName || '')));
     }
     updateDropComboBadge(progress?.combat_drop_combo, true);
     const def = CLASS_DEFS[combat.classKey];
@@ -6954,7 +7017,7 @@ function collectionHtml() {
     updateCombatAbilityButton();
     updateCombatUi();
 
-    await showMonsterIntro({ ...combat, monsterRarity:'legendary' });
+    await showMonsterIntro(combat);
     await armCombatServerTimer(combat);
 
     initReactionSession(combat, 'combat');
