@@ -656,26 +656,28 @@ button{
 <script src="supabase-config.js"></script>
 <script>
 /*
-  GA Coaching — accueil synchronisé avec app_users · V143
+  GA Coaching — accueil synchronisé avec app_users · V144
   - Une seule carte par athlete_slug ; les changements de bloc se font dans la page de l’athlète
   - Le nom affiché vient exclusivement du slug avec une majuscule initiale
   - Saya.html ouvre une page unique avec des onglets Bloc 1 / Bloc 2
   - Les anciennes pages sans compte app_users ne sont plus ajoutées automatiquement
-  - Le slug réel magicarpe est affiché ; l’ancien typo magicapre et gibertini sont exclus
+  - Le slug réel magicarpe est affiché ; seul l’ancien typo magicapre est exclu
   - Guillaume est ajouté explicitement sous le nom Anzalone
-  - Tom utilise désormais le slug tom et son avatar dédié
+  - Tom Deneuville utilise exclusivement le slug tom
+  - Tom Gibertini utilise exclusivement le slug gibertini
   - Des pages et avatars canoniques évitent les anciens doublons
   - Les pages peuvent déclarer profileImage et bodyWeight dans COACHING_ATHLETE
 */
 const REPO={owner:'guillaumeanzalone-art',repo:'coaching',branch:'main'};
 const HOME_ATHLETES_RPC='homepage_athlete_slugs_v1';
-const EXCLUDED_ATHLETE_SLUGS=new Set(['magicapre','gibertini']);
+const EXCLUDED_ATHLETE_SLUGS=new Set(['magicapre']);
 const PINNED_ATHLETE_SLUGS=['guillaume','lou','clemosaurus','dorian'];
 const MALE={A:1199.72839,B:1025.18162,C:0.00921};
 const FEMALE={A:610.32796,B:1045.59282,C:0.03048};
 const DISPLAY_NAMES={
   'guillaume':'Anzalone',
   'tom':'Tom Deneuville',
+  'gibertini':'Tom Gibertini',
   'magicarpe':'Magicarpe',
   'marvin':'Marvin',
   'maxence':'Maxence',
@@ -684,6 +686,7 @@ const DISPLAY_NAMES={
 const PROFILE_IMAGES={
   'guillaume':'avatar-guillaume.png',
   'tom':'avatar-tom.png',
+  'gibertini':'avatar-gibertini.png',
   'magicarpe':'avatar-magicapre.png',
   'marvin':'avatar-marvin.png',
   'noe':'avatar-Noe.png',
@@ -702,6 +705,7 @@ const PROFILE_IMAGES={
 const PREFERRED_PAGES={
   'guillaume':'Anzalone.html',
   'tom':'TomDeneuville.html',
+  'gibertini':'gibertini.html',
   'magicarpe':'Magicarpe.html',
   'saya':'Saya.html',
   'marvin':'Marvin.html',
@@ -726,6 +730,7 @@ const BODYWEIGHTS={
   'duane':93,
   'flop':78,
   'tom':119,
+  'gibertini':78,
   'magicarpe':78,
   'hugo':97,
   'janel':84,
@@ -753,13 +758,13 @@ const SEX={
 };
 const EMOJI={'guillaume':'👑',
   'alexandre':'🏋️','benoit':'🏋️','celia':'🏋️','charles':'🏋️','clemosaurus':'🦖',
-  'dorian':'🛹','duane':'🐻','flop':'🎰','tom':'🏋️','hugo':'🏋️',
+  'dorian':'🛹','duane':'🐻','flop':'🎰','tom':'🐻‍❄️','gibertini':'🦶','hugo':'🏋️',
   'janel':'💪','jolan':'🐿️','jonathan':'🐂','kaoutar':'🌟','killian':'🎯',
   'lou':'🏍️','louis':'🏋️','lucine':'🐱💕','malo':'🔥',
   'marvin':'🐶','matthieu':'⚡','maxence':'👑','metaknight':'🐱⚔️','noe':'🌀',
   'sarah':'🏋️','saya':'F','serena':'💍','yann':'☀️','magicarpe':'🐟'
 };
-const FALLBACK=['Anzalone.html','TomDeneuville.html','Noe.html','Yannick.html','Alexandre.html','Benoit.html','Celia.html','Charles.html','Clemosaurus.html',
+const FALLBACK=['Anzalone.html','TomDeneuville.html','gibertini.html','Noe.html','Yannick.html','Alexandre.html','Benoit.html','Celia.html','Charles.html','Clemosaurus.html',
   'Dorian.html','Duane.html','Flop.html','Hugo.html',
   'Janel.html','Jolan.html','Jonathan.html','Kaoutar.html','Killian.html','Lou.html',
   'Louis.html','Lucine.html','Malo.html','Marvin.html','Matthieu.html',
@@ -770,6 +775,7 @@ const FALLBACK=['Anzalone.html','TomDeneuville.html','Noe.html','Yannick.html','
 // L’accueil ne crée donc aucune carte supplémentaire.
 const PROGRAM_VARIANTS=[];
 const BASE_PROGRAM_LABELS={};
+const IGNORED_HTML_FILES=new Set(['Tom.html']);
 
 function norm(s){
   return String(s||'')
@@ -868,7 +874,7 @@ async function files(){
     if(!r.ok)throw new Error('GitHub '+r.status);
     const j=await r.json();
     return j
-      .filter(x=>x.type==='file'&&/\.html?$/i.test(x.name)&&!/^index(?:[-_(].*)?\.html?$/i.test(x.name))
+      .filter(x=>x.type==='file'&&/\.html?$/i.test(x.name)&&!/^index(?:[-_(].*)?\.html?$/i.test(x.name)&&!IGNORED_HTML_FILES.has(x.name))
       .map(x=>x.name);
   }catch(e){return FALLBACK}
 }
@@ -911,7 +917,7 @@ async function loadAppUserSlugs(){
   }
   const client=window.supabase.createClient(config.url,config.publishableKey,{
     auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},
-    global:{headers:{'x-application-name':'ga-coaching-home-v142'}}
+    global:{headers:{'x-application-name':'ga-coaching-home-v144'}}
   });
 
   const rpc=await client.rpc(HOME_ATHLETES_RPC);
@@ -945,7 +951,7 @@ function render(list){
       ? `${programPrefix}${weekLabel(a)} · SQ ${a.sq??'—'} · BN ${a.bn??'—'} · DL ${a.dl??'—'}${a.bw?' · '+a.bw+' kg':''}`
       : 'Page HTML introuvable';
     const image=a.profileImage
-      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260806-v143-saya-tabs" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
+      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260806-v144-toms-slugs" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
       : '';
     const content=`<div class="avatar ${a.profileImage?'has-image':''}"><span>${esc(a.emoji)}</span>${image}</div><div class="info"><div class="name">${esc(displayName)}</div><div class="sub">${esc(sub)}</div></div><div class="arrow">${a.file?'›':'—'}</div>`;
     return a.file

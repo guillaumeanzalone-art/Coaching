@@ -1,21 +1,34 @@
-# Patch V141 — Accueil Magicarpe et Saya Bloc 2
+# Patch V144 — Séparation définitive des deux Tom
 
-## Corrections
+## Correspondances canoniques
 
-- Le compte Supabase de Magicarpe utilise réellement le slug `magicarpe`.
-- `Magicarpe.html` et `app.js` utilisent désormais ce slug sans migration SQL.
-- L’ancien typo `magicapre` n’est plus utilisé comme identité Supabase.
-- La clé de programme existante de Magicarpe est conservée pour ne pas déplacer les séries déjà saisies.
-- L’accueil affiche séparément `Saya — Bloc 1` et `Saya — Bloc 2`.
-- `Saya2.html` conserve le même athlete_slug `saya`, mais son programKey distinct protège ses séries, charges, RPE et chronomètres.
-- Le leaderboard ne contient qu’une seule ligne Saya.
+| Athlète | Slug Supabase | Page GitHub | Avatar |
+|---|---|---|---|
+| Tom Deneuville | `tom` | `TomDeneuville.html` | `avatar-tom.png` |
+| Tom Gibertini | `gibertini` | `gibertini.html` | `avatar-gibertini.png` |
+
+## Protections ajoutées
+
+- `gibertini` n’est plus exclu de la page d’accueil.
+- Les deux athlètes ont désormais chacun une carte distincte.
+- `Tom.html`, ancien fichier ambigu, n’est plus scanné par la page d’accueil.
+- `app.js` verrouille l’identité selon le fichier ouvert :
+  - `TomDeneuville.html` ne peut utiliser que `tom`.
+  - `gibertini.html` ne peut utiliser que `gibertini`.
+  - l’ancien `Tom.html` reste rattaché à `gibertini` pour ne pas déplacer ses anciennes données.
+- Aucun slug, aucune progression RPG et aucune donnée Supabase ne sont déplacés.
 
 ## Installation GitHub
 
-1. Décompresser le ZIP.
-2. Dans le dépôt GitHub : **Add file → Upload files**.
-3. Déposer `index.html`, `app.js`, `Magicarpe.html` et `Saya2.html` à la racine.
-4. Accepter le remplacement puis cliquer sur **Commit changes**.
-5. Attendre le redéploiement et recharger avec `Ctrl + F5`.
+Décompresser le ZIP puis remplacer à la racine :
 
-Aucun SQL Supabase n’est nécessaire. Ne modifie pas la ligne `app_users` de Magicarpe : elle est déjà correcte avec `athlete_slug = magicarpe`.
+- `index.html`
+- `app.js`
+- `TomDeneuville.html`
+- `gibertini.html`
+- `avatar-tom.png`
+- `avatar-gibertini.png`
+
+Cliquer sur **Commit changes**, attendre le redéploiement puis effectuer `Ctrl + F5`.
+
+Aucun SQL Supabase n’est nécessaire.

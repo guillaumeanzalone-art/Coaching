@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V142';
+window.GA_APP_VERSION = 'V144';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v141-home-slugs-programs';
+window.GA_APP_BUILD = '2026-08-06-v144-toms-slugs';
 
 
 /* --------------------------------------------------------------------------
@@ -31,6 +31,40 @@ window.GA_APP_BUILD = '2026-08-06-v141-home-slugs-programs';
       .replace(/\.html?$/i, '');
   } catch (_) {
     fileStem = String(window.location.pathname || '').split('/').pop() || '';
+  }
+
+  /*
+     GARDE CANONIQUE TOM — V144
+     Le nom du fichier décide de l'identité avant tout accès Supabase.
+     Aucune aliasation n'est autorisée entre `tom` et `gibertini`.
+  */
+  const canonicalTomPages = {
+    tomdeneuville: {
+      slug: 'tom',
+      name: 'Tom Deneuville',
+      profileImage: 'avatar-tom.png',
+      bodyWeight: 119
+    },
+    gibertini: {
+      slug: 'gibertini',
+      name: 'Tom Gibertini',
+      profileImage: 'avatar-gibertini.png',
+      bodyWeight: 78
+    },
+    // Ancienne page historique, conservée uniquement pour les vieux liens.
+    tom: {
+      slug: 'gibertini',
+      name: 'Tom Gibertini',
+      profileImage: 'avatar-gibertini.png',
+      bodyWeight: 78
+    }
+  };
+  const canonicalTomIdentity = canonicalTomPages[slugify(fileStem)];
+  if (canonicalTomIdentity) {
+    cfg.slug = canonicalTomIdentity.slug;
+    cfg.name = canonicalTomIdentity.name;
+    cfg.profileImage = canonicalTomIdentity.profileImage;
+    cfg.bodyWeight = canonicalTomIdentity.bodyWeight;
   }
 
   const signals = [cfg.name, cfg.slug, cfg.programKey, fileStem]
