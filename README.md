@@ -1,34 +1,20 @@
-# Patch V144 — Séparation définitive des deux Tom
+# Patch V148 — Décimales final
 
-## Correspondances canoniques
+Ce patch contient le dernier `app.js` et conserve toutes les corrections
+récentes, notamment :
 
-| Athlète | Slug Supabase | Page GitHub | Avatar |
-|---|---|---|---|
-| Tom Deneuville | `tom` | `TomDeneuville.html` | `avatar-tom.png` |
-| Tom Gibertini | `gibertini` | `gibertini.html` | `avatar-gibertini.png` |
-
-## Protections ajoutées
-
-- `gibertini` n’est plus exclu de la page d’accueil.
-- Les deux athlètes ont désormais chacun une carte distincte.
-- `Tom.html`, ancien fichier ambigu, n’est plus scanné par la page d’accueil.
-- `app.js` verrouille l’identité selon le fichier ouvert :
-  - `TomDeneuville.html` ne peut utiliser que `tom`.
-  - `gibertini.html` ne peut utiliser que `gibertini`.
-  - l’ancien `Tom.html` reste rattaché à `gibertini` pour ne pas déplacer ses anciennes données.
-- Aucun slug, aucune progression RPG et aucune donnée Supabase ne sont déplacés.
+- séparation stricte de Tom Deneuville (`tom`) et Tom Gibertini (`gibertini`) ;
+- saisie des charges avec virgule ou point ;
+- valeurs comme `72,5`, `72.5`, `102,25` et `102.25` ;
+- compatibilité Supabase, tonnage, PR et activités ;
+- aucune modification des anciennes charges.
 
 ## Installation GitHub
 
-Décompresser le ZIP puis remplacer à la racine :
-
-- `index.html`
-- `app.js`
-- `TomDeneuville.html`
-- `gibertini.html`
-- `avatar-tom.png`
-- `avatar-gibertini.png`
-
-Cliquer sur **Commit changes**, attendre le redéploiement puis effectuer `Ctrl + F5`.
+1. Décompresser le ZIP.
+2. Remplacer uniquement `app.js` à la racine du dépôt.
+3. Cliquer sur **Commit changes**.
+4. Attendre le redéploiement.
+5. Recharger l’application avec `Ctrl + F5`.
 
 Aucun SQL Supabase n’est nécessaire.
