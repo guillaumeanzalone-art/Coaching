@@ -675,7 +675,7 @@ const MALE={A:1199.72839,B:1025.18162,C:0.00921};
 const FEMALE={A:610.32796,B:1045.59282,C:0.03048};
 const DISPLAY_NAMES={
   'guillaume':'Anzalone',
-  'tom':'Tom',
+  'tom':'Tom Deneuville',
   'magicarpe':'Magicarpe',
   'marvin':'Marvin',
   'maxence':'Maxence',
@@ -701,7 +701,7 @@ const PROFILE_IMAGES={
 };
 const PREFERRED_PAGES={
   'guillaume':'Anzalone.html',
-  'tom':'Tom.html',
+  'tom':'TomDeneuville.html',
   'magicarpe':'Magicarpe.html',
   'marvin':'Marvin.html',
   'noe':'Noe.html',
@@ -724,7 +724,7 @@ const BODYWEIGHTS={
   'dorian':97,
   'duane':93,
   'flop':78,
-  'tom':120,
+  'tom':119,
   'magicarpe':78,
   'hugo':97,
   'janel':84,
@@ -758,7 +758,7 @@ const EMOJI={'guillaume':'👑',
   'marvin':'🐶','matthieu':'⚡','maxence':'👑','metaknight':'🐱⚔️','noe':'🌀',
   'sarah':'🏋️','saya':'F','serena':'💍','yann':'☀️','magicarpe':'🐟'
 };
-const FALLBACK=['Anzalone.html','Tom.html','Noe.html','Yannick.html','Alexandre.html','Benoit.html','Celia.html','Charles.html','Clemosaurus.html',
+const FALLBACK=['Anzalone.html','TomDeneuville.html','Noe.html','Yannick.html','Alexandre.html','Benoit.html','Celia.html','Charles.html','Clemosaurus.html',
   'Dorian.html','Duane.html','Flop.html','Hugo.html',
   'Janel.html','Jolan.html','Jonathan.html','Kaoutar.html','Killian.html','Lou.html',
   'Louis.html','Lucine.html','Malo.html','Marvin.html','Matthieu.html',
@@ -913,7 +913,7 @@ async function loadAppUserSlugs(){
   }
   const client=window.supabase.createClient(config.url,config.publishableKey,{
     auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},
-    global:{headers:{'x-application-name':'ga-coaching-home-v119'}}
+    global:{headers:{'x-application-name':'ga-coaching-home-v142'}}
   });
 
   const rpc=await client.rpc(HOME_ATHLETES_RPC);
@@ -947,7 +947,7 @@ function render(list){
       ? `${programPrefix}${weekLabel(a)} · SQ ${a.sq??'—'} · BN ${a.bn??'—'} · DL ${a.dl??'—'}${a.bw?' · '+a.bw+' kg':''}`
       : 'Page HTML introuvable';
     const image=a.profileImage
-      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260806-v141-home" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
+      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260806-v142-tom" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
       : '';
     const content=`<div class="avatar ${a.profileImage?'has-image':''}"><span>${esc(a.emoji)}</span>${image}</div><div class="info"><div class="name">${esc(displayName)}</div><div class="sub">${esc(sub)}</div></div><div class="arrow">${a.file?'›':'—'}</div>`;
     return a.file
