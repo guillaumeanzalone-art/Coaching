@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V150';
+window.GA_APP_VERSION = 'V151';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v150-benoit-restore';
+window.GA_APP_BUILD = '2026-08-06-v151-alexandre-raid05';
 
 
 /* --------------------------------------------------------------------------
@@ -4049,9 +4049,9 @@ async function armCombatServerTimer(session) {
     const canEdit = !!window.CoachingCloud?.canEditAthlete?.(cfg.slug);
     const balance = n(progress?.raid_ultra_cases);
     const keyPity = Math.max(0, n(progress?.raid_key_pity));
-    const keyChance = Math.min(20, 1.5 + keyPity * 0.4);
+    const keyChance = Math.min(20, 0.5 + keyPity * 0.4);
     if (!raid?.raid_id) {
-      return `<div class="raid-card"><div class="raid-card-head"><div class="raid-card-icon">🗝️</div><div class="raid-card-copy"><b>Aucun portail actif</b><span>Chaque nouvelle série augmente la chance d’obtenir la clé mondiale.</span></div><span class="raid-status">EN VEILLE</span></div><div class="raid-meta-grid"><div><b>${fr(keyChance,1)} %</b><span>Chance prochaine série</span></div><div><b>${Math.max(1,30-keyPity)}</b><span>Garantie au plus tard</span></div></div><div class="raid-message">La chance commence à 1,5 %, progresse après chaque échec et la clé est garantie à la 30e série. Le portail s’ouvre 90 secondes après sa découverte et reste disponible environ 20 minutes.</div><div class="raid-message">Solde : <strong>${balance} caisse${balance===1?'':'s'} Ultra</strong>.</div></div>`;
+      return `<div class="raid-card"><div class="raid-card-head"><div class="raid-card-icon">🗝️</div><div class="raid-card-copy"><b>Aucun portail actif</b><span>Chaque nouvelle série augmente la chance d’obtenir la clé mondiale.</span></div><span class="raid-status">EN VEILLE</span></div><div class="raid-meta-grid"><div><b>${fr(keyChance,1)} %</b><span>Chance prochaine série</span></div><div><b>${Math.max(1,30-keyPity)}</b><span>Garantie au plus tard</span></div></div><div class="raid-message">La chance commence à 0,5 %, progresse après chaque échec et la clé est garantie à la 30e série. Le portail s’ouvre 90 secondes après sa découverte et reste disponible environ 20 minutes.</div><div class="raid-message">Solde : <strong>${balance} caisse${balance===1?'':'s'} Ultra</strong>.</div></div>`;
     }
     const status = derivedRaidStatus();
     const now = Date.now();

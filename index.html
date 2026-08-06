@@ -656,7 +656,7 @@ button{
 <script src="supabase-config.js"></script>
 <script>
 /*
-  GA Coaching — accueil synchronisé avec app_users · V150
+  GA Coaching — accueil synchronisé avec app_users · V151
   - Une seule carte par athlete_slug ; les changements de bloc se font dans la page de l’athlète
   - Le nom affiché vient exclusivement du slug avec une majuscule initiale
   - Saya.html ouvre une page unique avec des onglets Bloc 1 / Bloc 2
@@ -684,6 +684,18 @@ const DISPLAY_NAMES={
   'metaknight':'Metaknight'
 };
 const CANONICAL_ATHLETES={
+  'alexandre':{
+    slug:'alexandre',
+    name:'Alexandre',
+    file:'Alexandre.html',
+    profileImage:'avatar-alexandre.png',
+    emoji:'🏋️',
+    bodyWeight:74,
+    sq:220,
+    bn:160,
+    dl:270,
+    sex:'M'
+  },
   'benoit':{
     slug:'benoit',
     name:'Benoît',
@@ -979,7 +991,7 @@ async function loadAppUserSlugs(){
   }
   const client=window.supabase.createClient(config.url,config.publishableKey,{
     auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},
-    global:{headers:{'x-application-name':'ga-coaching-home-v150'}}
+    global:{headers:{'x-application-name':'ga-coaching-home-v151'}}
   });
 
   const rpc=await client.rpc(HOME_ATHLETES_RPC);
