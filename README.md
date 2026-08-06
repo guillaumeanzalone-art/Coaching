@@ -1,41 +1,61 @@
-# Patch V159 — Palier aventure fiable
+# Patch V160 — Palier lu directement depuis athlete_progress
 
-## Le bandeau « Exceeding usage limits »
+## Ce que le ZIP utilisateur a révélé
 
-Il peut provoquer des erreurs si Supabase a réellement restreint les services.
-Dans ce cas, aucune requête applicative ne peut fonctionner avant la levée de
-la restriction.
+Le dépôt envoyé contient déjà :
 
-Le patch V159 distingue désormais clairement ce cas d'un bug d'affichage.
+- `app.js` V159 ;
+- `Guillaume.html` demandant V159.
 
-## Correction
+Le site affichait pourtant V151. Le navigateur ou le déploiement servait donc
+encore un ancien fichier.
 
-- RPC dédiée qui lit seulement :
-  - adventure_difficulty
-  - kills_toward_boss
-  - boss_wins
-- Aucun recalcul avec le niveau ou l'XP.
-- Aucun fallback silencieux vers palier 1.
-- En cas d'erreur Supabase, l'erreur exacte apparaît dans le panneau.
-- Lecture actualisée à chaque ouverture du panneau RPG.
-- Toutes les pages chargent une URL V159 neuve pour casser le cache V151.
+## Contournement définitif du cache
 
-## Installation
+Toutes les pages chargent désormais un nouveau fichier qui n'a jamais existé :
 
-1. Exécuter `SUPABASE/PATCH_SUPABASE_V159_PALIER_RPC.sql`.
-2. Téléverser tout le contenu du dossier `GITHUB` à la racine du dépôt.
-3. Commit changes, attendre GitHub Pages, puis Ctrl + F5.
+`app-v160.js?build=20260806-2002`
 
-## Vérification Guillaume
+Le navigateur ne peut pas réutiliser l'ancien `app.js` V151 pour cette URL.
+
+## Lecture du palier
+
+V160 lit directement dans `athlete_progress` :
+
+- `adventure_difficulty`
+- `kills_toward_boss`
+- `boss_wins`
+
+Aucune RPC n'est nécessaire.
+Aucun fallback vers le palier 1 n'est utilisé.
+
+Le slug de Guillaume est également déclaré explicitement comme `guillaume`.
+
+## Installation GitHub
+
+1. Décompresser le ZIP.
+2. Téléverser tout son contenu à la racine du dépôt.
+3. Accepter le remplacement des pages HTML et de `app.js`.
+4. Vérifier que le nouveau fichier `app-v160.js` apparaît bien dans GitHub.
+5. Commit changes.
+6. Attendre le déploiement et faire Ctrl + F5.
+
+Aucun SQL Supabase n'est nécessaire.
+
+## Résultat attendu pour Guillaume
 
 Le panneau doit afficher :
 
-- En ligne · V159
-- source RPC dédiée OK
-- palier SQL 173
-- compteur boss 50/50
+- `En ligne · V160`
+- `source lecture directe OK`
+- `palier SQL 173`
+- `compteur boss 50/50`
 
-Si une erreur 402, 5xx ou quota apparaît, le problème vient alors réellement
-de la restriction Supabase et non du calcul du palier.
+Au premier chargement V160, si l'ancien palier de farm local était resté à 1,
+le sélecteur est replacé une seule fois sur le maximum débloqué.
 
-Pages HTML mises à jour : 41.
+## Diagnostic du déploiement
+
+Si le site affiche encore V151 après avoir confirmé la présence de
+`app-v160.js` dans GitHub, GitHub Pages publie une autre branche ou un autre
+dossier que celui modifié. Ce ne sera alors plus un bug Supabase ou JavaScript.
