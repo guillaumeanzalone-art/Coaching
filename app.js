@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V151';
+window.GA_APP_VERSION = 'V153';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v151-alexandre-raid05';
+window.GA_APP_BUILD = '2026-08-06-v153-difficulty-pool';
 
 
 /* --------------------------------------------------------------------------
@@ -3036,8 +3036,20 @@ function stopEventMusic({ resumeMenu = false, resumeBattle = true } = {}) {
 
 const MAX_ADVENTURE_DIFFICULTY = 10000;
 
+function levelBasedAdventureDifficulty() {
+  const xpLevel = levelFromXp(n(progress?.xp_total));
+  return Math.min(
+    MAX_ADVENTURE_DIFFICULTY,
+    Math.max(1, Math.floor(n(progress?.level, xpLevel, 1)))
+  );
+}
+
 function currentAdventureDifficulty() {
-  return Math.min(MAX_ADVENTURE_DIFFICULTY, Math.max(1, Math.floor(n(progress?.adventure_difficulty, 1))));
+  const stored = Math.max(1, Math.floor(n(progress?.adventure_difficulty, 1)));
+  return Math.min(
+    MAX_ADVENTURE_DIFFICULTY,
+    Math.max(stored, levelBasedAdventureDifficulty())
+  );
 }
 
 function requiredPowerForDifficulty(value = currentAdventureDifficulty()) {
@@ -3193,43 +3205,51 @@ function uncommonPlusMonsterChancePct() {
   return odds.uncommon + odds.rare + odds.epic + odds.legendary + odds.mythic + odds.ultra_mythic + odds.abyssal;
 }
 
+function uncommonMonsterMultiplier() {
+  // Rendements plafonnés : la Chance reste utile, sans faire disparaître
+  // totalement les raretés de base.
+  return 1 + Math.min(1500, effectiveChancePoints()) / 750;
+}
+
 function eliteMonsterMultiplier() {
-  // Croissance linéaire sans plafond : chaque tranche de 100 points de
-  // Chance ajoute ×1 aux poids de toutes les raretés Peu commun et plus.
-  return 1 + effectiveChancePoints() / 100;
+  // Rare et supérieur progressent plus vite que Peu commun, jusqu'à ×4.
+  return 1 + Math.min(1500, effectiveChancePoints()) / 500;
 }
 
 function monsterEncounterOdds() {
-  const advancedMultiplier = Math.max(1, eliteMonsterMultiplier());
-  const hunterMultiplier = 1 + Math.max(0, equippedPassiveTotal('epic_hunter')) / 100;
+  const uncommonMultiplier = uncommonMonsterMultiplier();
+  const rarePlusMultiplier = eliteMonsterMultiplier();
+  const hunterMultiplier = 1 + Math.min(
+    100,
+    Math.max(0, equippedPassiveTotal('epic_hunter'))
+  ) / 100;
 
-  // La Chance augmente Peu commun et supérieur. Chasseur épique augmente
-  // ensuite de façon identique tout le pool Rare et supérieur. Comme chaque
-  // rang reçoit les mêmes multiplicateurs, la hiérarchie reste toujours :
-  // Peu commun > Rare > Épique > Légendaire > Mythique > Ultra > Abyssal.
+  // Table de base exactement normalisée à 100 %.
+  // La rareté est tirée avant le monstre : le nombre de monstres présents
+  // dans chaque catégorie ne déforme plus ces probabilités.
   const weights = {
-    normal: 66.339,
-    common: 27,
-    uncommon: 5 * advancedMultiplier,
-    rare: 1 * advancedMultiplier * hunterMultiplier,
-    epic: 0.5 * advancedMultiplier * hunterMultiplier,
-    legendary: 0.1 * advancedMultiplier * hunterMultiplier,
-    mythic: 0.05 * advancedMultiplier * hunterMultiplier,
-    ultra_mythic: 0.01 * advancedMultiplier * hunterMultiplier,
-    abyssal: 0.001 * advancedMultiplier * hunterMultiplier
+    normal: 32,
+    common: 28,
+    uncommon: 22 * uncommonMultiplier,
+    rare: 10 * rarePlusMultiplier * hunterMultiplier,
+    epic: 5 * rarePlusMultiplier * hunterMultiplier,
+    legendary: 2 * rarePlusMultiplier * hunterMultiplier,
+    mythic: 0.7 * rarePlusMultiplier * hunterMultiplier,
+    ultra_mythic: 0.25 * rarePlusMultiplier * hunterMultiplier,
+    abyssal: 0.05 * rarePlusMultiplier * hunterMultiplier
   };
 
   const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
   if (!(totalWeight > 0)) return {
-    normal: 66.339,
-    common: 27,
-    uncommon: 5,
-    rare: 1,
-    epic: 0.5,
-    legendary: 0.1,
-    mythic: 0.05,
-    ultra_mythic: 0.01,
-    abyssal: 0.001
+    normal: 32,
+    common: 28,
+    uncommon: 22,
+    rare: 10,
+    epic: 5,
+    legendary: 2,
+    mythic: 0.7,
+    ultra_mythic: 0.25,
+    abyssal: 0.05
   };
 
   return Object.fromEntries(
@@ -3338,11 +3358,11 @@ function monsterEncounterOddsHtml() {
     const p = monsterRarityPresentation(key);
     return `<div class="encounter-odds-card rarity-${key}"><strong style="color:${esc(p.color)}">${p.icon} ${esc(p.label)}</strong><b>${fr(odds[key],3)} %</b><small>${esc(monsterXpMonitorLabel(key))}</small></div>`;
   }).join('')}</div>
-  <div class="encounter-odds-note">À 0 Chance : 5 % Peu commun, 1 % Rare, 0,5 % Épique, 0,1 % Légendaire, 0,05 % Mythique, 0,01 % Ultra mythique et 0,001 % Abyssal. La Chance augmente Peu commun et supérieur sans plafond. Le passif Chasseur épique augmente séparément Rare et supérieur, également sans plafond. Les mêmes multiplicateurs sont appliqués à chaque rang concerné : la hiérarchie reste donc toujours Peu commun &gt; Rare &gt; Épique &gt; Légendaire &gt; Mythique &gt; Ultra &gt; Abyssal.<br><strong>XP par grands paliers de 10 niveaux :</strong> 1-10 = palier XP 1, 11-20 = palier XP 2, etc. Tous les niveaux d’une même tranche donnent 100 % entre eux. Entre tranches : écart 0 = 100 % ; 1 = 90 % ; 2 = 75 % ; 3 = 60 % ; 4 = 45 % ; 5 = 30 % ; 6 = 15 % ; 7 ou plus = 0 %. La baisse est identique vers le bas et vers le haut. Calcul actuel : maximum ${currentAdventureDifficulty()} (${monsterXpBandRange(currentAdventureDifficulty()).min}-${monsterXpBandRange(currentAdventureDifficulty()).max}) = tranche ${monsterXpBand(currentAdventureDifficulty())}, combat ${selectedCombatDifficultyForXp()} (${monsterXpBandRange(selectedCombatDifficultyForXp()).min}-${monsterXpBandRange(selectedCombatDifficultyForXp()).max}) = tranche ${monsterXpBand(selectedCombatDifficultyForXp())}, écart ${Math.abs(monsterXpBand(currentAdventureDifficulty())-monsterXpBand(selectedCombatDifficultyForXp()))}, coefficient ${Math.round(monsterPalierXpMultiplier()*100)} %.<br><strong>Val :</strong> 0,1 % par combat éligible, uniquement à partir du palier ${Math.ceil(currentAdventureDifficulty() / 2) + 1} pour un meilleur palier débloqué de ${currentAdventureDifficulty()}.</div>`;
+  <div class="encounter-odds-note"><strong>Table de base :</strong> 32 % Simple, 28 % Commun, 22 % Peu commun, 10 % Rare, 5 % Épique, 2 % Légendaire, 0,7 % Mythique, 0,25 % Ultra mythique et 0,05 % Abyssal. La Chance augmente Peu commun jusqu’à ×3 et Rare+ jusqu’à ×4. Chasseur épique renforce encore Rare+ jusqu’à ×2. Supabase tire désormais d’abord la rareté avec cette table, puis un monstre de cette rareté : les taux affichés correspondent donc au tirage réel et ne dépendent plus du nombre de monstres dans chaque catégorie.<br><strong>XP par grands paliers de 10 niveaux :</strong> 1-10 = palier XP 1, 11-20 = palier XP 2, etc. Tous les niveaux d’une même tranche donnent 100 % entre eux. Entre tranches : écart 0 = 100 % ; 1 = 90 % ; 2 = 75 % ; 3 = 60 % ; 4 = 45 % ; 5 = 30 % ; 6 = 15 % ; 7 ou plus = 0 %. La baisse est identique vers le bas et vers le haut. Calcul actuel : maximum ${currentAdventureDifficulty()} (${monsterXpBandRange(currentAdventureDifficulty()).min}-${monsterXpBandRange(currentAdventureDifficulty()).max}) = tranche ${monsterXpBand(currentAdventureDifficulty())}, combat ${selectedCombatDifficultyForXp()} (${monsterXpBandRange(selectedCombatDifficultyForXp()).min}-${monsterXpBandRange(selectedCombatDifficultyForXp()).max}) = tranche ${monsterXpBand(selectedCombatDifficultyForXp())}, écart ${Math.abs(monsterXpBand(currentAdventureDifficulty())-monsterXpBand(selectedCombatDifficultyForXp()))}, coefficient ${Math.round(monsterPalierXpMultiplier()*100)} %.<br><strong>Val :</strong> 0,1 % par combat éligible, uniquement à partir du palier ${Math.ceil(currentAdventureDifficulty() / 2) + 1} pour un meilleur palier débloqué de ${currentAdventureDifficulty()}.</div>`;
 
   const hunterBonus = Math.max(0, equippedPassiveTotal('epic_hunter'));
   return `<div class="encounter-odds-box">
-    <div class="encounter-odds-head"><b>🎲 Taux d’apparition du pool</b><span>${window.GA_APP_VERSION || 'V118'} · Chance ${fr(effectiveChancePoints(),1)} · Peu commun+ ×${fr(eliteMonsterMultiplier(),2)} · Chasseur Rare+ ×${fr(1 + hunterBonus / 100,2)} · sans plafond</span></div>
+    <div class="encounter-odds-head"><b>🎲 Taux d’apparition du pool</b><span>${window.GA_APP_VERSION || 'V153'} · Chance ${fr(effectiveChancePoints(),1)} · Peu commun ×${fr(uncommonMonsterMultiplier(),2)} · Rare+ ×${fr(eliteMonsterMultiplier(),2)} · Chasseur ×${fr(1 + Math.min(100,hunterBonus) / 100,2)}</span></div>
     ${rarityPanel}
   </div>`;
 }
@@ -4644,6 +4664,31 @@ function collectionHtml() {
       combat_drop_combo: 1, best_combat_drop_combo: 1,
       ...progress
     };
+
+    // Migration V153 : les anciens comptes pouvaient garder
+    // adventure_difficulty = 1 malgré un niveau RPG élevé.
+    const storedDifficulty = Math.max(1, Math.floor(n(progress.adventure_difficulty, 1)));
+    const correctedDifficulty = Math.max(storedDifficulty, levelBasedAdventureDifficulty());
+    if (correctedDifficulty !== storedDifficulty) {
+      progress.adventure_difficulty = correctedDifficulty;
+      const migrationKey = `rpg_difficulty_level_sync_v153_${cfg.slug}`;
+      if (!localStorage.getItem(migrationKey)) {
+        if (Math.floor(n(selectedDifficulty, 1)) <= storedDifficulty) {
+          selectedDifficulty = correctedDifficulty;
+          localStorage.setItem(`rpg_difficulty_${cfg.slug}`, String(selectedDifficulty));
+        }
+        localStorage.setItem(migrationKey, '1');
+      }
+
+      void CoachingCloud.client
+        .from('athlete_progress')
+        .update({ adventure_difficulty: correctedDifficulty })
+        .eq('athlete_slug', cfg.slug)
+        .then(({ error }) => {
+          if (error) console.warn('Synchronisation du palier V153 :', error.message);
+        });
+    }
+
     serverCasePrices.clear();
     render();
     if (activeTab === 'cases') queueServerCasePriceLoad(selectedCaseLevel);
