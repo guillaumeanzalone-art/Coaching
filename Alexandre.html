@@ -40,6 +40,13 @@ function updateDayPhrase(){const count=(P.weeks[W]&&P.weeks[W].days.length)||1;c
 let W=0,D=0,sets={},loads={},rpes={},freeMode={},cS=null,cE=0,cR=false,cI=null,rT=240,rL=0,rI=null;
 function init(){const s=localStorage.getItem(SK);if(s){try{const d=JSON.parse(s)||{};W=Number.isFinite(Number(d.W))?Number(d.W):0;D=Number.isFinite(Number(d.D))?Number(d.D):0;sets=d.sets&&typeof d.sets==="object"?d.sets:{};loads=d.loads&&typeof d.loads==="object"?d.loads:{};rpes=d.rpes&&typeof d.rpes==="object"?d.rpes:{};freeMode=d.fm&&typeof d.fm==="object"?d.fm:{};cE=Number.isFinite(Number(d.ce))?Number(d.ce):0;cS=d.cs||null;cR=Boolean(d.cr);}catch(_){W=0;D=0;sets={};loads={};rpes={};freeMode={};cE=0;cS=null;cR=false}}W=Math.max(0,Math.min(P.weeks.length-1,Math.floor(W)));const currentDays=P.weeks[W]?.days||[];D=Math.max(0,Math.min(Math.max(0,currentDays.length-1),Math.floor(D)));rW();rD();render();if(cR&&cS){cS=parseInt(cS,10);if(Number.isFinite(cS))sCT();else{cR=false;cS=null}}uC()}
 function save(){localStorage.setItem(SK,JSON.stringify({W,D,sets,loads,rpes,fm:freeMode,ce:cE,cs:cS,cr:cR}))}
+function h(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
 function parseRange(ld){if(!ld||ld==="PDC"||ld==="")return null;const m=ld.match(/([\d.]+)\s*-\s*([\d.]+)/);if(m)return{lo:parseFloat(m[1]),hi:parseFloat(m[2])};const fixed=parseFloat(ld);if(!isNaN(fixed))return{lo:fixed,hi:fixed};return null}
 function buildLoadOpts(ld){const r=parseRange(ld);if(!r)return[];const opts=[];const lo=r.lo,hi=r.hi;const extLo=lo-10,extHi=hi+10;for(let v=extLo;v<=extHi;v+=2.5){const val=parseFloat(v.toFixed(1));opts.push({v:val.toFixed(1),inRange:val>=lo&&val<=hi})}return opts}
 function formatLd(ld){if(!ld)return"";return ld.replace(/-/g," - ").replace(/\s+/g," ")}
@@ -61,7 +68,7 @@ window.COACHING_ATHLETE={slug:"alexandre",name:"Alexandre",emoji:"🏋️",profi
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app.js?v=20260806-v151-alexandre-raid05"></script>
+<script src="app.js?v=20260806-v152-display-fix"></script>
 <script src="session-tools.js?v=20260804-phrases-journalieres-v102"></script>
 <script src="program-harmonizer-v23.js?v=20260804-phrases-journalieres-v102"></script>
 </body>
