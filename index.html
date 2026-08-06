@@ -656,12 +656,12 @@ button{
 <script src="supabase-config.js"></script>
 <script>
 /*
-  GA Coaching — accueil synchronisé avec app_users · Magicarpe V140
-  - Une seule carte par athlete_slug
+  GA Coaching — accueil synchronisé avec app_users · V141
+  - Une carte principale par athlete_slug, avec blocs secondaires explicitement autorisés
   - Le nom affiché vient exclusivement du slug avec une majuscule initiale
-  - Une seule page HTML est retenue lorsque plusieurs fichiers utilisent le même slug
+  - Saya2.html est conservé comme Bloc 2 distinct sans dupliquer le leaderboard
   - Les anciennes pages sans compte app_users ne sont plus ajoutées automatiquement
-  - Magicarpe et l’ancien slug gibertini sont exclus de l’accueil et du leaderboard
+  - Le slug réel magicarpe est affiché ; l’ancien typo magicapre et gibertini sont exclus
   - Guillaume est ajouté explicitement sous le nom Anzalone
   - Tom utilise désormais le slug tom et son avatar dédié
   - Des pages et avatars canoniques évitent les anciens doublons
@@ -669,14 +669,14 @@ button{
 */
 const REPO={owner:'guillaumeanzalone-art',repo:'coaching',branch:'main'};
 const HOME_ATHLETES_RPC='homepage_athlete_slugs_v1';
-const EXCLUDED_ATHLETE_SLUGS=new Set(['magicarpe','gibertini']);
+const EXCLUDED_ATHLETE_SLUGS=new Set(['magicapre','gibertini']);
 const PINNED_ATHLETE_SLUGS=['guillaume','lou','clemosaurus','dorian'];
 const MALE={A:1199.72839,B:1025.18162,C:0.00921};
 const FEMALE={A:610.32796,B:1045.59282,C:0.03048};
 const DISPLAY_NAMES={
   'guillaume':'Anzalone',
   'tom':'Tom',
-  'magicapre':'Magicarpe',
+  'magicarpe':'Magicarpe',
   'marvin':'Marvin',
   'maxence':'Maxence',
   'metaknight':'Metaknight'
@@ -684,7 +684,7 @@ const DISPLAY_NAMES={
 const PROFILE_IMAGES={
   'guillaume':'avatar-guillaume.png',
   'tom':'avatar-tom.png',
-  'magicapre':'avatar-magicapre.png',
+  'magicarpe':'avatar-magicapre.png',
   'marvin':'avatar-marvin.png',
   'noe':'avatar-Noe.png',
   'yann':'avatar-yann.png',
@@ -702,7 +702,7 @@ const PROFILE_IMAGES={
 const PREFERRED_PAGES={
   'guillaume':'Anzalone.html',
   'tom':'Tom.html',
-  'magicapre':'Magicarpe.html',
+  'magicarpe':'Magicarpe.html',
   'marvin':'Marvin.html',
   'noe':'Noe.html',
   'yann':'Yannick.html',
@@ -725,7 +725,7 @@ const BODYWEIGHTS={
   'duane':93,
   'flop':78,
   'tom':120,
-  'magicapre':78,
+  'magicarpe':78,
   'hugo':97,
   'janel':84,
   'jolan':89,
@@ -748,7 +748,7 @@ const BODYWEIGHTS={
 };
 const SEX={
   'celia':'F','janel':'F','kaoutar':'F','lou':'F','lucine':'F',
-  'metaknight':'F','sarah':'F','saya':'F','serena':'F','magicapre':'F','marvin':'F'
+  'metaknight':'F','sarah':'F','saya':'F','serena':'F','magicarpe':'F','marvin':'F'
 };
 const EMOJI={'guillaume':'👑',
   'alexandre':'🏋️','benoit':'🏋️','celia':'🏋️','charles':'🏋️','clemosaurus':'🦖',
@@ -756,14 +756,22 @@ const EMOJI={'guillaume':'👑',
   'janel':'💪','jolan':'🐿️','jonathan':'🐂','kaoutar':'🌟','killian':'🎯',
   'lou':'🏍️','louis':'🏋️','lucine':'🐱💕','malo':'🔥',
   'marvin':'🐶','matthieu':'⚡','maxence':'👑','metaknight':'🐱⚔️','noe':'🌀',
-  'sarah':'🏋️','saya':'F','serena':'💍','yann':'☀️','magicapre':'🐟'
+  'sarah':'🏋️','saya':'F','serena':'💍','yann':'☀️','magicarpe':'🐟'
 };
 const FALLBACK=['Anzalone.html','Tom.html','Noe.html','Yannick.html','Alexandre.html','Benoit.html','Celia.html','Charles.html','Clemosaurus.html',
   'Dorian.html','Duane.html','Flop.html','Hugo.html',
   'Janel.html','Jolan.html','Jonathan.html','Kaoutar.html','Killian.html','Lou.html',
   'Louis.html','Lucine.html','Malo.html','Marvin.html','Matthieu.html',
-  'Maxence.html','Metaknight.html','Sarah.html','Saya.html','Serena.html','Magicarpe.html',
+  'Maxence.html','Metaknight.html','Sarah.html','Saya.html','Saya2.html','Serena.html','Magicarpe.html',
 ];
+
+// Plusieurs programmes peuvent rester accessibles pour un même compte.
+// Ils partagent athlete_slug (progression RPG), mais chaque page conserve son
+// propre programKey pour les séries, charges, RPE et chronomètres.
+const PROGRAM_VARIANTS=[
+  {slug:'saya',file:'Saya2.html',label:'Bloc 2',displayName:'Saya — Bloc 2'}
+];
+const BASE_PROGRAM_LABELS={saya:'Bloc 1'};
 
 function norm(s){
   return String(s||'')
@@ -923,26 +931,39 @@ async function loadAppUserSlugs(){
   return uniqueSlugs(direct.data);
 }
 function render(list){
-  const filtered=list.filter(a=>!SEARCH_QUERY||norm(a.name).includes(SEARCH_QUERY)||a.slug.includes(SEARCH_QUERY));
+  const filtered=list.filter(a=>{
+    const searchable=[a.name,a.displayName,a.programLabel,a.slug].map(norm).join(' ');
+    return !SEARCH_QUERY||searchable.includes(SEARCH_QUERY);
+  });
+
   const athleteHtml=filtered.map(a=>{
+    const displayName=a.displayName||(
+      !a.isProgramVariant&&BASE_PROGRAM_LABELS[a.slug]
+        ? `${a.name} — ${BASE_PROGRAM_LABELS[a.slug]}`
+        : a.name
+    );
+    const programPrefix=a.programLabel?`${a.programLabel} · `:'';
     const sub=a.file
-      ? `${weekLabel(a)} · SQ ${a.sq??'—'} · BN ${a.bn??'—'} · DL ${a.dl??'—'}${a.bw?' · '+a.bw+' kg':''}`
+      ? `${programPrefix}${weekLabel(a)} · SQ ${a.sq??'—'} · BN ${a.bn??'—'} · DL ${a.dl??'—'}${a.bw?' · '+a.bw+' kg':''}`
       : 'Page HTML introuvable';
     const image=a.profileImage
-      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260806-magicapre-avatar-v140" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
+      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260806-v141-home" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
       : '';
-    const content=`<div class="avatar ${a.profileImage?'has-image':''}"><span>${esc(a.emoji)}</span>${image}</div><div class="info"><div class="name">${esc(a.name)}</div><div class="sub">${esc(sub)}</div></div><div class="arrow">${a.file?'›':'—'}</div>`;
+    const content=`<div class="avatar ${a.profileImage?'has-image':''}"><span>${esc(a.emoji)}</span>${image}</div><div class="info"><div class="name">${esc(displayName)}</div><div class="sub">${esc(sub)}</div></div><div class="arrow">${a.file?'›':'—'}</div>`;
     return a.file
-      ? `<a class="card" href="${encodeURIComponent(a.file)}" data-athlete-slug="${esc(a.slug)}">${content}</a>`
+      ? `<a class="card" href="${encodeURIComponent(a.file)}" data-athlete-slug="${esc(a.slug)}" data-program-file="${esc(a.file)}">${content}</a>`
       : `<div class="card" data-athlete-slug="${esc(a.slug)}" style="opacity:.52;cursor:not-allowed">${content}</div>`;
   }).join('');
   document.getElementById('athleteList').innerHTML=athleteHtml||'<div class="empty">Aucun athlète ne correspond à cette recherche.</div>';
 
-  const complete=filtered
+  // Une seule ligne par athlète dans le leaderboard : les blocs secondaires
+  // restent visibles dans l'accueil, mais ne dupliquent pas le classement.
+  const leaderboardAthletes=filtered.filter(a=>!a.isProgramVariant);
+  const complete=leaderboardAthletes
     .map(a=>({...a,points:gl(a.total,a.bw,a.sex)}))
     .filter(a=>a.points>0)
     .sort((a,b)=>b.points-a.points);
-  const incomplete=filtered.filter(a=>!((a.sq||0)+(a.bn||0)+(a.dl||0)>0&&a.bw>0));
+  const incomplete=leaderboardAthletes.filter(a=>!((a.sq||0)+(a.bn||0)+(a.dl||0)>0&&a.bw>0));
   const rows=complete.map((a,i)=>`<div class="rank ${i===0?'top1':i===1?'top2':i===2?'top3':''}"><div class="place">${i+1}</div><div class="info"><div class="name">${esc(a.name)}</div><div class="sub">SQ ${a.sq} · BN ${a.bn} · DL ${a.dl} · ${a.bw} kg</div></div><div class="score"><div class="gl">${a.points.toFixed(1)}</div><div class="total">${a.total} total · GL</div></div></div>`);
   const miss=incomplete.map(a=>`<div class="rank missing"><div class="place">—</div><div class="info"><div class="name">${esc(a.name)}</div><div class="sub">${a.file?(a.bw?'Max manquant':'Poids de corps manquant'):'Page HTML introuvable'}</div></div><div class="score"><div class="gl">—</div><div class="total">Non classé</div></div></div>`);
   document.getElementById('rankList').innerHTML=[...rows,...miss].join('')||'<div class="empty">Aucune donnée trouvée.</div>';
@@ -972,17 +993,38 @@ async function boot(){
 
   slugs=uniqueSlugs([...PINNED_ATHLETE_SLUGS,...slugs]);
 
-  APP_LIST=slugs.map(slug=>{
+  const primaryAthletes=slugs.map(slug=>{
     const page=choosePage(pages,slug);
     return page
       ? {...page,slug,id:slug,name:displaySlug(slug),emoji:EMOJI[slug]||page.emoji||'🏋️'}
       : {slug,id:slug,name:displaySlug(slug),emoji:EMOJI[slug]||'🏋️',profileImage:PROFILE_IMAGES[slug]||'',file:null,sq:null,bn:null,dl:null,bw:BODYWEIGHTS[slug]||null,sex:SEX[slug]||'M',total:0,storageKey:null};
-  }).sort((a,b)=>a.name.localeCompare(b.name,'fr'));
+  });
+
+  const programVariants=PROGRAM_VARIANTS.map(variant=>{
+    const page=pages.find(candidate=>candidate.file===variant.file);
+    if(!page)return null;
+    const slug=norm(variant.slug);
+    return {
+      ...page,
+      slug,
+      id:`${slug}:${variant.file}`,
+      name:displaySlug(slug),
+      displayName:variant.displayName||`${displaySlug(slug)} — ${variant.label}`,
+      programLabel:variant.label,
+      isProgramVariant:true,
+      emoji:EMOJI[slug]||page.emoji||'🏋️',
+      profileImage:PROFILE_IMAGES[slug]||page.profileImage||''
+    };
+  }).filter(Boolean);
+
+  APP_LIST=[...primaryAthletes,...programVariants]
+    .sort((a,b)=>(a.displayName||a.name).localeCompare(b.displayName||b.name,'fr'));
 
   render(APP_LIST);
-  const missing=APP_LIST.filter(a=>!a.file).map(a=>a.name);
-  const duplicatesRemoved=Math.max(0,pages.filter(p=>slugs.includes(p.slug)).length-APP_LIST.filter(a=>a.file).length);
-  status.textContent=`${APP_LIST.length} slugs uniques depuis ${DATA_SOURCE} · ${duplicatesRemoved} doublon${duplicatesRemoved>1?'s':''} retiré${duplicatesRemoved>1?'s':''}${missing.length?' · pages manquantes : '+missing.join(', '):''}`;
+  const missing=primaryAthletes.filter(a=>!a.file).map(a=>a.name);
+  const missingVariants=PROGRAM_VARIANTS.filter(v=>!programVariants.some(p=>p.file===v.file)).map(v=>v.file);
+  const duplicatesRemoved=Math.max(0,pages.filter(p=>slugs.includes(p.slug)).length-primaryAthletes.filter(a=>a.file).length-programVariants.length);
+  status.textContent=`${primaryAthletes.length} athlètes depuis ${DATA_SOURCE} · ${programVariants.length} bloc${programVariants.length>1?'s':''} secondaire${programVariants.length>1?'s':''} visible${programVariants.length>1?'s':''} · ${duplicatesRemoved} doublon${duplicatesRemoved>1?'s':''} retiré${duplicatesRemoved>1?'s':''}${missing.length?' · pages manquantes : '+missing.join(', '):''}${missingVariants.length?' · blocs manquants : '+missingVariants.join(', '):''}`;
   status.classList.toggle('error',DATA_SOURCE!=='app_users'||missing.length>0);
 }
 

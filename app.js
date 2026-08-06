@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V140';
+window.GA_APP_VERSION = 'V141';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v140-magicapre-profile';
+window.GA_APP_BUILD = '2026-08-06-v141-home-slugs-programs';
 
 
 /* --------------------------------------------------------------------------
@@ -45,11 +45,6 @@ window.GA_APP_BUILD = '2026-08-06-v140-magicapre-profile';
   const normalizeProgramKey = (identity, value) => {
     const key = String(value || '').trim();
     if (!key) return key;
-    if (identity === 'magicapre') {
-      return key
-        .replace(/^clara[-_ ]*(?:magicarpe|magicapre)(?=$|[-_ ])/i, 'magicapre')
-        .replace(/^clara(?=$|[-_ ])/i, 'magicapre');
-    }
     if (identity === 'metaknight') {
       return key
         .replace(/^clara[-_ ]*(?:chevalier|metaknight|meta[-_ ]*knight|chouchou)?(?=$|[-_ ])/i, 'metaknight')
@@ -59,10 +54,11 @@ window.GA_APP_BUILD = '2026-08-06-v140-magicapre-profile';
   };
 
   if (isMagicarpe) {
-    cfg.slug = 'magicapre';
+    // Le compte réel app_users et toute la progression RPG utilisent
+    // `magicarpe`. On conserve volontairement programKey tel quel afin de ne
+    // pas déplacer les séries déjà enregistrées sous une autre clé de bloc.
+    cfg.slug = 'magicarpe';
     cfg.name = 'Magicarpe';
-    cfg.programKey = normalizeProgramKey('magicapre', cfg.programKey);
-    if (cfg.baseProgramKey) cfg.baseProgramKey = normalizeProgramKey('magicapre', cfg.baseProgramKey);
     return;
   }
 
