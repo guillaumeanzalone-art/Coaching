@@ -1,68 +1,58 @@
-# Patch V155 — Leaderboard RPG
+# Patch V157 — Palier réel
 
-## Nouvel onglet
+## Cause exacte
 
-Un onglet **🏆 Leaderboard** est placé juste après **Collection**.
+L'ancienne requête demandait une longue liste de colonnes.
 
-Il n'est pas abonné au temps réel. Les données sont récupérées uniquement :
+Si une seule colonne récente était absente du schéma ou du cache Supabase,
+l'application utilisait une requête de secours. Cette requête récupérait le
+niveau, l'XP, l'or et la puissance, mais pas :
 
-- quand l'utilisateur ouvre l'onglet ;
-- quand il clique sur **Actualiser**.
+- adventure_difficulty
+- kills_toward_boss
+- boss_wins
 
-## Classements disponibles
+Le jeu remettait donc localement le palier à 1 et le compteur à 0.
 
-- Global
-- Palier
-- Dégâts cumulés
-- Objets rares obtenus
-- Monstres rares tués
+## Correction
 
-## Statistiques affichées
+- Lecture de la ligne complète avec select('*').
+- Suppression du fallback incomplet.
+- Vérification du slug de la ligne reçue.
+- adventure_difficulty utilisé tel quel.
+- kills_toward_boss utilisé tel quel.
+- Niveau RPG et XP exclus.
+- Suppression des triggers V153/V154/V156 d'alignement sur le niveau.
 
-- Niveau RPG
-- Palier de difficulté
-- Dégâts cumulés
-- Meilleur dégât
-- Boss vaincus
-- Objets Mythiques obtenus
-- Objets Ultra mythiques obtenus
-- Objets Abyssaux obtenus
-- Monstres Mythiques tués
-- Monstres Ultra mythiques tués
-- Monstres Abyssaux tués
+## Guillaume
 
-Les grands nombres utilisent :
+La ligne montrée dans Supabase doit produire :
 
-- K, M, B, T
-- AA, AB, AC, etc.
-
-## Historique des objets
-
-Le premier lancement initialise les compteurs avec :
-
-- les quantités présentes dans l'inventaire ;
-- les objets déjà sacrifiés dans le codex.
-
-Les ventes ou transferts anciens ne peuvent pas être reconstitués s'ils ne
-sont plus présents dans la base. Après installation, les nouveaux gains sont
-comptés automatiquement. Les transferts/cadeaux explicitement identifiés par
-leur source sont exclus.
+- palier 173
+- compteur 50/50
+- boss disponible
 
 ## Installation
 
-### 1. Supabase
+### Supabase
 
 Exécuter :
 
-`SUPABASE/PATCH_SUPABASE_V155_RPG_LEADERBOARD.sql`
+SUPABASE/PATCH_SUPABASE_V157_PALIER_REEL.sql
 
-Le résultat final doit afficher les deux fonctions et le nombre d'athlètes
-initialisés.
+Le premier contrôle doit conserver les valeurs de Guillaume.
+triggers_alignement_restants doit afficher 0.
 
-### 2. GitHub
+### GitHub
 
-Remplacer uniquement :
+Téléverser tout le contenu du dossier GITHUB à la racine.
 
-`GITHUB/app.js`
+Après le déploiement et Ctrl + F5, vérifier :
 
-Puis Commit changes, attendre le déploiement et effectuer `Ctrl + F5`.
+- En ligne · V157
+- Progression V157
+- ligne guillaume
+- palier Supabase 173
+- compteur boss 50/50
+
+Pages HTML incluses : 41.

@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V155';
+window.GA_APP_VERSION = 'V157';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v155-rpg-leaderboard';
+window.GA_APP_BUILD = '2026-08-06-v157-real-adventure-progress';
 
 
 /* --------------------------------------------------------------------------
@@ -3046,24 +3046,12 @@ function stopEventMusic({ resumeMenu = false, resumeBattle = true } = {}) {
 
 const MAX_ADVENTURE_DIFFICULTY = 10000;
 
-function levelBasedAdventureDifficulty() {
-  const xpLevel = levelFromXp(n(progress?.xp_total));
-  const storedLevel = Math.max(1, Math.floor(n(progress?.level, 1)));
-
-  // La colonne level de certains anciens comptes est restée à 1 alors que
-  // xp_total correspond déjà à un niveau très élevé. On ne choisit plus l'une
-  // des deux valeurs : on prend toujours la plus élevée.
-  return Math.min(
-    MAX_ADVENTURE_DIFFICULTY,
-    Math.max(1, storedLevel, xpLevel)
-  );
-}
-
 function currentAdventureDifficulty() {
-  const stored = Math.max(1, Math.floor(n(progress?.adventure_difficulty, 1)));
+  // V157 : le palier dépend uniquement de la progression aventure enregistrée.
+  // Le niveau RPG et l'XP n'interviennent jamais dans ce calcul.
   return Math.min(
     MAX_ADVENTURE_DIFFICULTY,
-    Math.max(stored, levelBasedAdventureDifficulty())
+    Math.max(1, Math.floor(n(progress?.adventure_difficulty, 1)))
   );
 }
 
@@ -4012,7 +4000,7 @@ async function armCombatServerTimer(session) {
     const selected = normalizeSelectedDifficulty();
     return `<div class="world-picker">
       <div class="world-picker-head"><b>⚔️ Choisir le palier de difficulté</b><span>Maximum débloqué : ${unlocked}</span></div>
-      <div class="world-picker-note">Synchronisation V154 : niveau enregistré <strong>${Math.max(1,Math.floor(n(progress?.level,1)))}</strong> · niveau calculé depuis l’XP <strong>${levelFromXp(n(progress?.xp_total))}</strong> · palier retenu <strong>${unlocked}</strong>.</div>
+      <div class="world-picker-note">Progression V157 : ligne <strong>${esc(progress?.athlete_slug || cfg.slug)}</strong> · palier Supabase <strong>${Math.max(1,Math.floor(n(progress?.adventure_difficulty,1)))}</strong> · compteur boss <strong>${Math.max(0,Math.floor(n(progress?.kills_toward_boss,0)))}/50</strong>. Niveau RPG et XP exclus du calcul.</div>
       <input id="rpgDifficultyNumber" type="number" inputmode="numeric" min="1" max="${unlocked}" step="1" value="${selected}" aria-label="Palier de difficulté">
       ${unlocked > 1 ? `<input id="rpgDifficultyRange" type="range" min="1" max="${unlocked}" step="1" value="${selected}" aria-label="Réglage rapide du palier">` : ''}
       ${(() => {
@@ -4831,106 +4819,120 @@ function collectionHtml() {
 
   async function loadProgress() {
     if (!window.CoachingCloud?.client || !CoachingCloud.session?.user) return;
-    let result = await CoachingCloud.client
+
+    /*
+       V157 — lecture robuste de la ligne complète.
+
+       Avant, une seule colonne récente manquante faisait échouer la requête.
+       Le fallback récupérait alors une ancienne liste sans
+       adventure_difficulty ni kills_toward_boss et remettait localement le
+       palier à 1 et le compteur à 0.
+    */
+    const result = await CoachingCloud.client
       .from('athlete_progress')
-      .select('athlete_slug,xp_total,level,unopened_packs,gl_points,gl_multiplier,rpg_class,class_chosen_at,combat_wins,combat_losses,best_combat_damage,gold_balance,gold_total_earned,stat_power,stat_mastery,stat_fortune,collection_xp_bonus,best_damage_trial,damage_trial_attempts,last_damage_trial_at,adventure_difficulty,kills_toward_boss,boss_wins,last_boss_at,raid_ultra_cases,raid_key_pity,raid_pity_legendary,raid_pity_mythic,raid_pity_ultra,raid_best_cases,perfect_combat_streak,best_perfect_combat_streak,combat_drop_combo,best_combat_drop_combo')
+      .select('*')
       .eq('athlete_slug', cfg.slug)
       .maybeSingle();
-    if (result.error && /column|does not exist|schema cache/i.test(result.error.message || '')) {
-      result = await CoachingCloud.client
-        .from('athlete_progress')
-        .select('athlete_slug,xp_total,level,unopened_packs,gl_points,gl_multiplier,rpg_class,class_chosen_at,combat_wins,combat_losses,best_combat_damage,gold_balance,gold_total_earned,stat_power,stat_mastery,stat_fortune,collection_xp_bonus')
-        .eq('athlete_slug', cfg.slug)
-        .maybeSingle();
-    }
+
     if (result.error) {
       console.warn('Progression XP/RPG indisponible :', result.error.message);
-      CoachingCloud.toast(`Progression RPG indisponible : ${result.error.message}`, true);
+      CoachingCloud.toast(
+        `Progression RPG indisponible : ${result.error.message}`,
+        true
+      );
       return;
     }
+
     const data = result.data;
-    progress = data || {
-      athlete_slug: cfg.slug, xp_total: 0, level: 1, unopened_packs: 0,
-      gl_points: null, gl_multiplier: 1, rpg_class: null,
-      combat_wins: 0, combat_losses: 0, best_combat_damage: 0,
-      gold_balance: 0, gold_total_earned: 0,
-      stat_power: 0, stat_mastery: 0, stat_fortune: 0, collection_xp_bonus: 0,
-      best_damage_trial: 0, damage_trial_attempts: 0, last_damage_trial_at: null, raid_ultra_cases: 0, raid_key_pity: 0, raid_pity_legendary: 0, raid_pity_mythic: 0, raid_pity_ultra: 0, raid_best_cases: 0, adventure_difficulty: 1, kills_toward_boss: 0, boss_wins: 0, last_boss_at: null, perfect_combat_streak: 0, best_perfect_combat_streak: 0, combat_drop_combo: 1, best_combat_drop_combo: 1
-    };
-    progress = {
-      best_damage_trial: 0, damage_trial_attempts: 0, last_damage_trial_at: null,
-      raid_ultra_cases: 0, raid_key_pity: 0, raid_pity_legendary: 0, raid_pity_mythic: 0, raid_pity_ultra: 0, raid_best_cases: 0, adventure_difficulty: 1, kills_toward_boss: 0,
-      boss_wins: 0, last_boss_at: null, perfect_combat_streak: 0, best_perfect_combat_streak: 0,
-      combat_drop_combo: 1, best_combat_drop_combo: 1,
-      ...progress
-    };
 
-    // Migration V154 : réparation simultanée de level et du palier.
-    // Certains comptes possèdent beaucoup d'XP mais level = 1 ET
-    // adventure_difficulty = 1.
-    const xpDerivedLevel = levelFromXp(n(progress.xp_total));
-    const storedLevel = Math.max(1, Math.floor(n(progress.level, 1)));
-    const correctedLevel = Math.min(
-      1000,
-      Math.max(1, storedLevel, xpDerivedLevel)
-    );
-
-    const storedDifficulty = Math.max(
-      1,
-      Math.floor(n(progress.adventure_difficulty, 1))
-    );
-    const correctedDifficulty = Math.min(
-      MAX_ADVENTURE_DIFFICULTY,
-      Math.max(1, storedDifficulty, correctedLevel)
-    );
-
-    progress.level = correctedLevel;
-    progress.adventure_difficulty = correctedDifficulty;
-
-    const migrationKey = `rpg_difficulty_xp_sync_v154_${cfg.slug}`;
-    const currentSelected = Math.max(
-      1,
-      Math.floor(n(selectedDifficulty, 1))
-    );
-
-    // Un ancien choix local égal à 1 ne doit plus garder le joueur au palier 1.
-    if (
-      !localStorage.getItem(migrationKey)
-      || currentSelected <= storedDifficulty
-      || currentSelected === 1
-    ) {
-      selectedDifficulty = correctedDifficulty;
-      localStorage.setItem(
-        `rpg_difficulty_${cfg.slug}`,
-        String(selectedDifficulty)
-      );
-      localStorage.setItem(migrationKey, '1');
-    }
-
-    if (
-      correctedLevel !== storedLevel
-      || correctedDifficulty !== storedDifficulty
-    ) {
-      void CoachingCloud.client
-        .from('athlete_progress')
-        .update({
-          level: correctedLevel,
-          adventure_difficulty: correctedDifficulty
-        })
-        .eq('athlete_slug', cfg.slug)
-        .then(({ error }) => {
-          if (error) {
-            console.warn(
-              'Synchronisation niveau/palier V154 :',
-              error.message
-            );
-          }
+    if (!data) {
+      progress = {
+        athlete_slug: cfg.slug,
+        xp_total: 0,
+        level: 1,
+        unopened_packs: 0,
+        gl_points: null,
+        gl_multiplier: 1,
+        rpg_class: null,
+        combat_wins: 0,
+        combat_losses: 0,
+        best_combat_damage: 0,
+        gold_balance: 0,
+        gold_total_earned: 0,
+        stat_power: 0,
+        stat_mastery: 0,
+        stat_fortune: 0,
+        collection_xp_bonus: 0,
+        adventure_difficulty: 1,
+        kills_toward_boss: 0,
+        boss_wins: 0
+      };
+    } else {
+      if (
+        String(data.athlete_slug || '').toLowerCase()
+        !== String(cfg.slug || '').toLowerCase()
+      ) {
+        CoachingCloud.toast(
+          `Erreur de profil RPG : ligne ${data.athlete_slug} reçue pour ${cfg.slug}.`,
+          true
+        );
+        console.error('Mauvaise ligne athlete_progress reçue', {
+          expected: cfg.slug,
+          received: data.athlete_slug
         });
+        return;
+      }
+
+      progress = {
+        best_damage_trial: 0,
+        damage_trial_attempts: 0,
+        last_damage_trial_at: null,
+        raid_ultra_cases: 0,
+        raid_key_pity: 0,
+        raid_pity_legendary: 0,
+        raid_pity_mythic: 0,
+        raid_pity_ultra: 0,
+        raid_best_cases: 0,
+        adventure_difficulty: 1,
+        kills_toward_boss: 0,
+        boss_wins: 0,
+        last_boss_at: null,
+        perfect_combat_streak: 0,
+        best_perfect_combat_streak: 0,
+        combat_drop_combo: 1,
+        best_combat_drop_combo: 1,
+        ...data
+      };
     }
+
+    progress.adventure_difficulty = Math.min(
+      MAX_ADVENTURE_DIFFICULTY,
+      Math.max(1, Math.floor(n(progress.adventure_difficulty, 1)))
+    );
+
+    progress.kills_toward_boss = Math.max(
+      0,
+      Math.min(50, Math.floor(n(progress.kills_toward_boss, 0)))
+    );
+
+    const unlocked = currentAdventureDifficulty();
+    const localSelected = Math.max(
+      1,
+      Math.floor(n(selectedDifficulty, unlocked))
+    );
+
+    selectedDifficulty = Math.min(unlocked, localSelected);
+    localStorage.setItem(
+      `rpg_difficulty_${cfg.slug}`,
+      String(selectedDifficulty)
+    );
 
     serverCasePrices.clear();
     render();
-    if (activeTab === 'cases') queueServerCasePriceLoad(selectedCaseLevel);
+
+    if (activeTab === 'cases') {
+      queueServerCasePriceLoad(selectedCaseLevel);
+    }
   }
 
   async function loadInventory() {
