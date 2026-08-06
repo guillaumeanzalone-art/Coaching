@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V147';
+window.GA_APP_VERSION = 'V150';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v147-toms-separated';
+window.GA_APP_BUILD = '2026-08-06-v150-benoit-restore';
 
 
 /* --------------------------------------------------------------------------
@@ -179,7 +179,7 @@ window.GA_APP_BUILD = '2026-08-06-v147-toms-separated';
 
 (function () {
   'use strict';
-window.GA_APP_BUILD = 'V131-patterns-sprites';
+window.GA_APP_BUILD = window.GA_APP_BUILD || '2026-08-06-v149-raid-ultra-fun';
 
   const config = window.COACHING_SUPABASE || {};
   const configured = /^https:\/\/.+\.supabase\.co\/?$/i.test(String(config.url || ''))
@@ -2880,6 +2880,10 @@ function stopEventMusic({ resumeMenu = false, resumeBattle = true } = {}) {
   style.textContent += `
     .raid-card{margin-top:12px;padding:15px;border-radius:18px;border:1px solid rgba(137,88,255,.28);background:radial-gradient(circle at 50% 0,rgba(105,61,255,.22),transparent 58%),linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012));box-shadow:0 18px 40px rgba(14,8,40,.3)}
     .raid-card-head{display:flex;align-items:center;gap:10px}.raid-card-icon{font-size:34px}.raid-card-copy{min-width:0;flex:1}.raid-card-copy b{display:block;font-size:13px}.raid-card-copy span{display:block;margin-top:3px;font-size:9px;color:#a8a0c8}.raid-status{padding:5px 8px;border-radius:999px;font-size:8px;font-weight:950;background:rgba(143,105,255,.15);color:#c9b8ff}.raid-countdown{margin-top:11px;text-align:center;font-size:24px;font-weight:950;color:#c9b8ff;letter-spacing:.04em}.raid-meta-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}.raid-meta-grid div{padding:9px;border-radius:11px;background:rgba(255,255,255,.035);text-align:center}.raid-meta-grid b{display:block;font-size:12px}.raid-meta-grid span{display:block;margin-top:3px;font-size:7px;color:#8580a0;text-transform:uppercase}.raid-message{margin-top:10px;font-size:9px;line-height:1.5;color:#b6afca}.raid-action{width:100%;margin-top:10px;border:1px solid rgba(177,143,255,.35);border-radius:12px;padding:12px;background:linear-gradient(135deg,rgba(98,54,230,.42),rgba(207,43,61,.24));color:#fff;font-weight:950;cursor:pointer}.raid-action:disabled{opacity:.45;cursor:not-allowed}.raid-roster{display:grid;gap:5px;margin-top:10px}.raid-roster-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 9px;border-radius:9px;background:rgba(255,255,255,.025);font-size:8px}.raid-roster-row strong{color:#eee}.raid-roster-row span{color:#a6a0b8}.raid-case-card{padding:13px;border-radius:15px;border:1px solid rgba(157,108,255,.25);background:radial-gradient(circle at 20% 0,rgba(113,65,255,.22),transparent 55%),rgba(255,255,255,.025)}.raid-case-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px}.raid-case-head b{display:block;font-size:11px}.raid-case-head small{display:block;margin-top:3px;color:#9c95b1;font-size:8px}.raid-case-head>strong{font-size:22px;color:#c9b8ff}.raid-case-icon{font-size:26px}.raid-case-rates{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:10px 0;font-size:8px;color:#bdb5d1}.raid-overlay{display:none;position:fixed;z-index:650;inset:0;background:radial-gradient(circle at 50% 30%,rgba(85,48,190,.35),rgba(3,5,12,.97) 62%);padding:18px;overflow:auto}.raid-overlay.show{display:grid;place-items:center}.raid-arena{width:min(100%,430px);padding:18px;border-radius:24px;border:1px solid rgba(170,133,255,.25);background:#080b15;box-shadow:0 30px 80px rgba(0,0,0,.65)}.raid-arena-head{display:flex;justify-content:space-between;align-items:center}.raid-arena-title{font-size:12px;font-weight:950;color:#c9b8ff}.raid-clock{font-size:24px;font-weight:950;color:#fff}.raid-boss-name{text-align:center;margin-top:9px;font-size:15px;font-weight:950}.raid-infinite{text-align:center;margin-top:4px;font-size:10px;color:#9c95b1}.raid-stage{position:relative;min-height:250px;margin-top:10px;border-radius:20px;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 50%,rgba(111,64,242,.24),transparent 45%),linear-gradient(180deg,#11162a,#070912)}.raid-stage:before{content:"";position:absolute;inset:-40%;background:repeating-conic-gradient(from 0deg,rgba(150,110,255,.1) 0 8deg,transparent 8deg 20deg);animation:raidSpin 12s linear infinite}.raid-boss-button{position:relative;z-index:2;width:170px;height:170px;border:0;border-radius:50%;background:radial-gradient(circle,rgba(148,99,255,.35),rgba(18,13,38,.9) 60%);font-size:92px;cursor:pointer;filter:drop-shadow(0 0 25px rgba(141,88,255,.42))}.raid-boss-button.hit{transform:scale(.94)}.raid-info{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.raid-info div{padding:9px;border-radius:11px;background:rgba(255,255,255,.035);text-align:center}.raid-info b{display:block;font-size:13px}.raid-info span{font-size:7px;color:#8f89a2;text-transform:uppercase}.raid-result{display:none;text-align:center}.raid-result.show{display:block}.raid-result h2{color:#c9b8ff}.raid-result p{font-size:10px;line-height:1.6;color:#c8c3d4}.raid-close{width:100%;border:0;border-radius:12px;padding:12px;background:#c9b8ff;color:#111522;font-weight:950}.raid-key-overlay{display:none;position:fixed;z-index:720;inset:0;background:rgba(2,4,10,.88);padding:20px}.raid-key-overlay.show{display:grid;place-items:center}.raid-key-card{max-width:390px;padding:24px;border-radius:24px;text-align:center;border:1px solid rgba(240,196,77,.35);background:radial-gradient(circle at 50% 0,rgba(240,196,77,.16),transparent 55%),#0a0d16;box-shadow:0 30px 80px rgba(0,0,0,.6)}.raid-key-icon{font-size:62px}.raid-key-card h2{color:#f0c44d}.raid-key-card p{font-size:13px;line-height:1.6}.raid-key-card button{border:0;border-radius:12px;padding:12px 16px;background:#f0c44d;color:#171a22;font-weight:950}.rpg-damage-pop.raid-pop{color:#d6c4ff}
+    .raid-phase-wrap{margin-top:9px;padding:8px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(170,133,255,.16)}
+    .raid-phase-head{display:flex;justify-content:space-between;gap:8px;font-size:8px;font-weight:950;color:#c9b8ff;text-transform:uppercase}.raid-phase-bar{height:7px;margin-top:6px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.raid-phase-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#7961ff,#d65cff,#ff5f70);transition:width .16s linear}.raid-phase-wrap.fury{box-shadow:0 0 24px rgba(255,72,111,.25);border-color:rgba(255,92,120,.38)}
+    .raid-attempt-badge{display:inline-flex;align-items:center;justify-content:center;min-width:56px;padding:5px 8px;border-radius:999px;background:rgba(201,184,255,.12);color:#d9ccff;font-size:8px;font-weight:950}.raid-reward-now{margin-top:8px;padding:8px 9px;border-radius:10px;background:rgba(71,223,158,.08);border:1px solid rgba(71,223,158,.18);font-size:8px;color:#9ff0cb}.raid-pity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:9px 0}.raid-pity-grid span{padding:7px 5px;border-radius:9px;background:rgba(255,255,255,.035);text-align:center;font-size:7px;color:#a8a0c8}.raid-pity-grid b{display:block;margin-top:2px;font-size:10px;color:#fff}.case-pity-hit{display:inline-flex;margin-top:5px;padding:4px 7px;border-radius:999px;background:rgba(255,207,73,.14);color:#ffdc70;font-size:8px;font-weight:950}
+
     @keyframes raidSpin{to{transform:rotate(360deg)}}
   `;
   style.textContent += `
@@ -4037,26 +4041,35 @@ async function armCombatServerTimer(session) {
     return `<div class="raid-roster">${raidParticipants.slice(0,10).map(row => `<div class="raid-roster-row"><strong>${esc(row.display_name || row.athlete_slug)}</strong><span>${row.finished_at ? `${fr(row.raw_damage,0)} dégâts` : 'en attente'}</span></div>`).join('')}${raidParticipants.length>10?`<div class="raid-message">+${raidParticipants.length-10} autre${raidParticipants.length-10>1?'s':''} participant${raidParticipants.length-10>1?'s':''}</div>`:''}</div>`;
   }
 
+  function raidGuaranteeText(current, target) {
+    return Math.max(0, target - Math.max(0, Math.floor(n(current,0))));
+  }
+
   function raidCardHtml() {
     const canEdit = !!window.CoachingCloud?.canEditAthlete?.(cfg.slug);
     const balance = n(progress?.raid_ultra_cases);
+    const keyPity = Math.max(0, n(progress?.raid_key_pity));
+    const keyChance = Math.min(20, 1.5 + keyPity * 0.4);
     if (!raid?.raid_id) {
-      return `<div class="raid-card"><div class="raid-card-head"><div class="raid-card-icon">🗝️</div><div class="raid-card-copy"><b>Aucun portail de raid actif</b><span>Chaque nouvelle série validée possède 1 chance sur 100 de révéler une clé.</span></div><span class="raid-status">EN VEILLE</span></div><div class="raid-message">Quand une clé apparaît, le portail s’ouvre 15 minutes plus tard pour tous les personnages. Solde actuel : <strong>${balance} caisse${balance===1?'':'s'} Ultra</strong>.</div></div>`;
+      return `<div class="raid-card"><div class="raid-card-head"><div class="raid-card-icon">🗝️</div><div class="raid-card-copy"><b>Aucun portail actif</b><span>Chaque nouvelle série augmente la chance d’obtenir la clé mondiale.</span></div><span class="raid-status">EN VEILLE</span></div><div class="raid-meta-grid"><div><b>${fr(keyChance,1)} %</b><span>Chance prochaine série</span></div><div><b>${Math.max(1,30-keyPity)}</b><span>Garantie au plus tard</span></div></div><div class="raid-message">La chance commence à 1,5 %, progresse après chaque échec et la clé est garantie à la 30e série. Le portail s’ouvre 90 secondes après sa découverte et reste disponible environ 20 minutes.</div><div class="raid-message">Solde : <strong>${balance} caisse${balance===1?'':'s'} Ultra</strong>.</div></div>`;
     }
     const status = derivedRaidStatus();
     const now = Date.now();
     const deadline = status === 'countdown' ? new Date(raid.portal_opens_at).getTime() : new Date(raid.portal_closes_at).getTime();
     const statusLabel = status === 'countdown' ? 'PORTAIL EN CHARGE' : status === 'open' ? 'RAID OUVERT' : 'RAID TERMINÉ';
+    const attemptsUsed = n(raid.attempts_used,0);
+    const attemptsRemaining = Math.max(0,n(raid.attempts_remaining,3-attemptsUsed));
+    const bestCases = n(raid.projected_reward_cases,raid.final_reward_cases,0);
     const button = status === 'closed'
-      ? `<button type="button" class="raid-action" disabled>${raid.reward_finalized ? `🎁 ${n(raid.final_reward_cases)} caisse${n(raid.final_reward_cases)===1?'':'s'} Ultra attribuée${n(raid.final_reward_cases)===1?'':'s'}` : 'Calcul des récompenses en cours…'}</button>`
+      ? `<button type="button" class="raid-action" disabled>🎁 ${n(raid.final_reward_cases,bestCases)} caisse${n(raid.final_reward_cases,bestCases)===1?'':'s'} déjà créditée${n(raid.final_reward_cases,bestCases)===1?'':'s'}</button>`
       : !raid.joined
         ? `<button type="button" id="rpgRaidJoin" class="raid-action" ${canEdit?'':'disabled'}>🌀 Entrer dans le raid</button>`
         : status === 'countdown'
-          ? `<button type="button" class="raid-action" disabled>✅ Inscrit · attente de l’ouverture</button>`
-          : raid.run_finished
-            ? `<button type="button" class="raid-action" disabled>✅ Tentative terminée · ${n(raid.projected_reward_cases)} caisses estimées</button>`
-            : `<button type="button" id="rpgRaidStart" class="raid-action" ${canEdit?'':'disabled'}>${raid.run_started ? '⚔️ Reprendre la tentative' : '⚔️ Attaquer pendant 30 secondes'}</button>`;
-    return `<div class="raid-card"><div class="raid-card-head"><div class="raid-card-icon">${esc(raid.boss_icon || '🌀')}</div><div class="raid-card-copy"><b>${esc(raid.boss_name)}</b><span>Clé trouvée par ${esc(raid.discovered_by_name || raid.discovered_by_slug)} · niveau moyen ${n(raid.raid_level)}</span></div><span class="raid-status">${statusLabel}</span></div><div class="raid-countdown" id="raidCountdown">${status==='closed'?'00:00':raidTimeText(deadline-now)}</div><div class="raid-meta-grid"><div><b>${n(raid.participant_count)}</b><span>Participants</span></div><div><b>×${fr(raid.team_multiplier,0)}</b><span>Bonus équipe</span></div><div><b>${fr(raid.average_character_damage,0)}</b><span>Dégâts moyens</span></div><div><b>${fr(raid.global_raw_damage,0)}</b><span>Dégâts du raid</span></div></div><div class="raid-message">PV du boss : <strong>∞</strong>. Ta récompense dépend de tes dégâts personnels. Le multiplicateur collectif vaut <strong>×2 par personnage entré</strong>. Maximum : <strong>100 caisses Ultra</strong>.</div>${button}${raidParticipantsHtml()}<div class="raid-message">Solde disponible : <strong>${balance} caisse${balance===1?'':'s'} Ultra de raid</strong>.</div></div>`;
+          ? `<button type="button" class="raid-action" disabled>✅ Inscrit · prépare tes 3 tentatives</button>`
+          : attemptsRemaining <= 0
+            ? `<button type="button" class="raid-action" disabled>✅ 3/3 tentatives · meilleure récompense ${bestCases}</button>`
+            : `<button type="button" id="rpgRaidStart" class="raid-action" ${canEdit?'':'disabled'}>⚔️ Tentative ${attemptsUsed+1}/3 · 35 secondes</button>`;
+    return `<div class="raid-card"><div class="raid-card-head"><div class="raid-card-icon">${esc(raid.boss_icon || '🌀')}</div><div class="raid-card-copy"><b>${esc(raid.boss_name)}</b><span>Clé trouvée par ${esc(raid.discovered_by_name || raid.discovered_by_slug)} · palier moyen ${n(raid.raid_level)}</span></div><span class="raid-status">${statusLabel}</span></div><div class="raid-countdown" id="raidCountdown">${status==='closed'?'00:00':raidTimeText(deadline-now)}</div><div class="raid-meta-grid"><div><b>${n(raid.participant_count)}</b><span>Participants</span></div><div><b>×${fr(raid.team_multiplier,2)}</b><span>Synergie équipe</span></div><div><b>${fr(raid.personal_best_damage,0)}</b><span>Ton meilleur score</span></div><div><b>${bestCases}</b><span>Caisses gagnées</span></div></div><div class="raid-message">Tu disposes de <strong>3 tentatives</strong>. Seul ton meilleur résultat compte : améliorer ton score crédite immédiatement uniquement la différence de caisses. Le bonus collectif augmente avec les participants sans devenir exponentiel.</div>${button}${bestCases>0?`<div class="raid-reward-now">✅ ${bestCases} caisse${bestCases===1?'':'s'} Ultra déjà créditée${bestCases===1?'':'s'} sur ce raid.</div>`:''}${raidParticipantsHtml()}<div class="raid-message">Solde disponible : <strong>${balance} caisse${balance===1?'':'s'} Ultra</strong>.</div></div>`;
   }
 
   function updateRaidCountdownUi() {
@@ -4415,7 +4428,10 @@ function catalogCollectionText(item) {
       </article>`;
     }).join('');
     const raidBalance = n(progress?.raid_ultra_cases);
-    const raidCase = `<div class="raid-case-card"><div class="raid-case-head"><span class="raid-case-icon">🌀🎁</span><div><b>Caisse Ultra de raid</b><small>Récompense des portails mondiaux · niveau d’objet égal au niveau du raid</small></div><strong>${raidBalance}</strong></div><div class="raid-case-rates"><span>🫧 Abyssal 0,01 %</span><span>🌟 Ultra méga mythique 0,10 %</span><span>🔴 Mythique 1 %</span><span>🟡 Légendaire 10 %</span><span>🟠 Épique 30 %</span><span>🟣 Rare 35 %</span></div><div class="case-buy-grid">${CASE_COUNTS.map(count => `<button type="button" class="case-buy-button" data-open-raid-case="${count}" ${raidBalance<count || !canEdit || openingCase ? 'disabled' : ''}><strong>×${count}</strong> GRATUIT</button>`).join('')}</div></div>`;
+    const pityLeg = Math.max(0,n(progress?.raid_pity_legendary));
+    const pityMyth = Math.max(0,n(progress?.raid_pity_mythic));
+    const pityUltra = Math.max(0,n(progress?.raid_pity_ultra));
+    const raidCase = `<div class="raid-case-card"><div class="raid-case-head"><span class="raid-case-icon">🌀🎁</span><div><b>Caisse Ultra de raid</b><small>Objets au niveau d’équipement conseillé de ton palier · garanties persistantes</small></div><strong>${raidBalance}</strong></div><div class="raid-case-rates"><span>🫧 Abyssal 0,10 %</span><span>🌟 Ultra mythique 0,90 %</span><span>🔴 Mythique 6 %</span><span>🟡 Légendaire 22 %</span><span>🟠 Épique 35 %</span><span>🟣 Rare 36 %</span></div><div class="raid-pity-grid"><span>Légendaire+<b>${raidGuaranteeText(pityLeg,8)} restante${raidGuaranteeText(pityLeg,8)===1?'':'s'}</b></span><span>Mythique+<b>${raidGuaranteeText(pityMyth,25)} restante${raidGuaranteeText(pityMyth,25)===1?'':'s'}</b></span><span>Ultra+<b>${raidGuaranteeText(pityUltra,75)} restante${raidGuaranteeText(pityUltra,75)===1?'':'s'}</b></span></div><div class="case-buy-grid">${CASE_COUNTS.map(count => `<button type="button" class="case-buy-button" data-open-raid-case="${count}" ${raidBalance<count || !canEdit || openingCase ? 'disabled' : ''}><strong>×${count}</strong> GRATUIT</button>`).join('')}</div></div>`;
     return `
       <div class="gold-wallet"><div><span>GOLD DISPONIBLE</span><strong>🪙 ${fr(gold, 0)}</strong></div><span>Palier ${currentAdventureDifficulty()} · objet max niveau ${maxLevel}</span></div>
       <div class="xp-section"><div class="xp-section-title">Choisir le niveau de la caisse</div>
@@ -4597,7 +4613,7 @@ function collectionHtml() {
     if (!window.CoachingCloud?.client || !CoachingCloud.session?.user) return;
     let result = await CoachingCloud.client
       .from('athlete_progress')
-      .select('athlete_slug,xp_total,level,unopened_packs,gl_points,gl_multiplier,rpg_class,class_chosen_at,combat_wins,combat_losses,best_combat_damage,gold_balance,gold_total_earned,stat_power,stat_mastery,stat_fortune,collection_xp_bonus,best_damage_trial,damage_trial_attempts,last_damage_trial_at,adventure_difficulty,kills_toward_boss,boss_wins,last_boss_at,raid_ultra_cases,perfect_combat_streak,best_perfect_combat_streak,combat_drop_combo,best_combat_drop_combo')
+      .select('athlete_slug,xp_total,level,unopened_packs,gl_points,gl_multiplier,rpg_class,class_chosen_at,combat_wins,combat_losses,best_combat_damage,gold_balance,gold_total_earned,stat_power,stat_mastery,stat_fortune,collection_xp_bonus,best_damage_trial,damage_trial_attempts,last_damage_trial_at,adventure_difficulty,kills_toward_boss,boss_wins,last_boss_at,raid_ultra_cases,raid_key_pity,raid_pity_legendary,raid_pity_mythic,raid_pity_ultra,raid_best_cases,perfect_combat_streak,best_perfect_combat_streak,combat_drop_combo,best_combat_drop_combo')
       .eq('athlete_slug', cfg.slug)
       .maybeSingle();
     if (result.error && /column|does not exist|schema cache/i.test(result.error.message || '')) {
@@ -4619,11 +4635,11 @@ function collectionHtml() {
       combat_wins: 0, combat_losses: 0, best_combat_damage: 0,
       gold_balance: 0, gold_total_earned: 0,
       stat_power: 0, stat_mastery: 0, stat_fortune: 0, collection_xp_bonus: 0,
-      best_damage_trial: 0, damage_trial_attempts: 0, last_damage_trial_at: null, raid_ultra_cases: 0, adventure_difficulty: 1, kills_toward_boss: 0, boss_wins: 0, last_boss_at: null, perfect_combat_streak: 0, best_perfect_combat_streak: 0, combat_drop_combo: 1, best_combat_drop_combo: 1
+      best_damage_trial: 0, damage_trial_attempts: 0, last_damage_trial_at: null, raid_ultra_cases: 0, raid_key_pity: 0, raid_pity_legendary: 0, raid_pity_mythic: 0, raid_pity_ultra: 0, raid_best_cases: 0, adventure_difficulty: 1, kills_toward_boss: 0, boss_wins: 0, last_boss_at: null, perfect_combat_streak: 0, best_perfect_combat_streak: 0, combat_drop_combo: 1, best_combat_drop_combo: 1
     };
     progress = {
       best_damage_trial: 0, damage_trial_attempts: 0, last_damage_trial_at: null,
-      raid_ultra_cases: 0, adventure_difficulty: 1, kills_toward_boss: 0,
+      raid_ultra_cases: 0, raid_key_pity: 0, raid_pity_legendary: 0, raid_pity_mythic: 0, raid_pity_ultra: 0, raid_best_cases: 0, adventure_difficulty: 1, kills_toward_boss: 0,
       boss_wins: 0, last_boss_at: null, perfect_combat_streak: 0, best_perfect_combat_streak: 0,
       combat_drop_combo: 1, best_combat_drop_combo: 1,
       ...progress
@@ -4752,8 +4768,29 @@ function collectionHtml() {
         if (Date.now() - foundAt < 90000) showRaidKeyFound(raid);
       }
     }
-    if (progress && row) progress = { ...progress, raid_ultra_cases: n(row.ultra_cases_balance, progress?.raid_ultra_cases) };
+    if (progress && row) progress = {
+      ...progress,
+      raid_ultra_cases: n(row.ultra_cases_balance, progress?.raid_ultra_cases),
+      raid_key_pity: n(row.key_pity, progress?.raid_key_pity),
+      raid_pity_legendary: n(row.pity_legendary, progress?.raid_pity_legendary),
+      raid_pity_mythic: n(row.pity_mythic, progress?.raid_pity_mythic),
+      raid_pity_ultra: n(row.pity_ultra, progress?.raid_pity_ultra)
+    };
     render();
+  }
+
+  async function trySpawnRaidAfterSetV149() {
+    if (!window.CoachingCloud?.client || !CoachingCloud.session?.user) return null;
+    const { data, error } = await CoachingCloud.client.rpc('try_spawn_rpg_raid_v149', {
+      p_athlete_slug: cfg.slug
+    });
+    if (error) {
+      console.warn('Recherche de clé de raid indisponible :', error.message);
+      return null;
+    }
+    const row = Array.isArray(data) ? data[0] : data;
+    if (row && progress) progress = { ...progress, raid_key_pity: n(row.key_pity_after, progress?.raid_key_pity) };
+    return row || null;
   }
 
   function ensureRaidKeyOverlay() {
@@ -4851,7 +4888,9 @@ function collectionHtml() {
         power_bonus: row.power_bonus ?? row.awarded_power_bonus,
         mastery_bonus: row.mastery_bonus ?? row.awarded_mastery_bonus,
         fortune_bonus: row.fortune_bonus ?? row.awarded_fortune_bonus,
-        item_slot: row.item_slot ?? row.slot
+        item_slot: row.item_slot ?? row.slot,
+        guarantee_label: row.guarantee_label || null,
+        was_pity: !!row.was_pity
       }));
 
       items.push(...batchItems);
@@ -4861,10 +4900,10 @@ function collectionHtml() {
       if (lastRow) {
         progress = {
           ...progress,
-          raid_ultra_cases: n(
-            lastRow.raid_cases_balance_after,
-            progress?.raid_ultra_cases
-          )
+          raid_ultra_cases: n(lastRow.raid_cases_balance_after, progress?.raid_ultra_cases),
+          raid_pity_legendary: n(lastRow.pity_legendary_after, progress?.raid_pity_legendary),
+          raid_pity_mythic: n(lastRow.pity_mythic_after, progress?.raid_pity_mythic),
+          raid_pity_ultra: n(lastRow.pity_ultra_after, progress?.raid_pity_ultra)
         };
       }
     }
@@ -5275,13 +5314,13 @@ function collectionHtml() {
   function aggregateCaseResults(items) {
     const groups = new Map();
     for (const item of items) {
-      const key = [item.item_name,item.item_rarity,item.item_slot,item.item_level,item.damage_bonus_pct,item.power_bonus,item.mastery_bonus,item.fortune_bonus].join('|');
+      const key = [item.item_name,item.item_rarity,item.item_slot,item.item_level,item.damage_bonus_pct,item.power_bonus,item.mastery_bonus,item.fortune_bonus,item.guarantee_label||''].join('|');
       const group = groups.get(key) || { ...item, count: 0 };
       group.count += 1;
       groups.set(key, group);
     }
     return [...groups.values()].sort((a,b) => {
-      const order = ['mythic','legendary','epic','rare','uncommon','common','normal'];
+      const order = ['abyssal','ultra_mythic','mythic','legendary','epic','rare','uncommon','common','normal'];
       return order.indexOf(a.item_rarity) - order.indexOf(b.item_rarity) || b.count - a.count;
     });
   }
@@ -5327,7 +5366,7 @@ function collectionHtml() {
     const targetCenter = targetTile.offsetLeft + targetTile.offsetWidth/2;
     const viewportCenter = (roulette?.clientWidth || 380)/2;
     const finalX = viewportCenter - targetCenter;
-    const duration = 4300 + Math.min(4200,count*35);
+    const duration = isRaidOpening ? 2600 + Math.min(1800,count*12) : 4300 + Math.min(4200,count*35);
     progressLabel.textContent = `${count} coffre${count>1?'s':''} ${isRaidOpening?'Ultra de raid':'SBD'} en cours d’ouverture… le coffre arrêté correspond exactement à l’objet vedette.`;
     track.style.transition=`transform ${duration}ms cubic-bezier(.06,.74,.12,1)`;
     track.style.transform=`translate3d(${finalX}px,0,0)`;
@@ -5344,7 +5383,7 @@ function collectionHtml() {
     document.getElementById('caseOpeningSummary').textContent=isRaidOpening?`${count} caisse${count>1?'s':''} Ultra ouverte${count>1?'s':''} · récompense de raid · ${aggregated.length} objet${aggregated.length>1?'s':''} différent${aggregated.length>1?'s':''}. Le coffre final représentait ${showcase.item_name}.`:`${count} caisse${count>1?'s':''} ouverte${count>1?'s':''} · ${fr(totalCost,0)} gold dépensé · ${aggregated.length} objet${aggregated.length>1?'s':''} différent${aggregated.length>1?'s':''}. Le coffre final représentait ${showcase.item_name}.`;
     document.getElementById('caseResultsGrid').innerHTML=aggregated.map(item=>{
       const rarityKey=item.item_rarity||'normal';const rarity=RARITY_DEFS[rarityKey]||RARITY_DEFS.normal;const slot=SLOT_DEFS[item.item_slot]||{icon:'🎒',label:'Objet'};
-      return `<div class="case-result-row rarity-${rarityKey}"><div class="result-icon">${slot.icon}</div><div><b>${rarity.icon} ${esc(item.item_name)}</b><small>${slot.label} · niveau ${n(item.item_level,1)} · ${esc(itemStatsText(item))}</small></div><div class="result-count">×${item.count}</div></div>`;
+      return `<div class="case-result-row rarity-${rarityKey}"><div class="result-icon">${slot.icon}</div><div><b>${rarity.icon} ${esc(item.item_name)}</b><small>${slot.label} · niveau ${n(item.item_level,1)} · ${esc(itemStatsText(item))}${item.guarantee_label?`<span class="case-pity-hit">${esc(item.guarantee_label)}</span>`:''}</small></div><div class="result-count">×${item.count}</div></div>`;
     }).join('');
     results.classList.add('show');close.classList.add('ready');
     if(navigator.vibrate&&items.some(item=>['legendary','mythic','ultra_mythic','abyssal'].includes(item.item_rarity)))navigator.vibrate([120,60,180,60,260]);
@@ -5549,9 +5588,10 @@ function collectionHtml() {
     overlay.className = 'raid-overlay';
     overlay.innerHTML = `<div class="raid-arena">
       <div id="raidFightView">
-        <div class="raid-arena-head"><span class="raid-arena-title">RAID MONDIAL · PV INFINIS</span><span class="raid-clock" id="raidClock">30,0</span></div>
+        <div class="raid-arena-head"><span class="raid-arena-title">RAID MONDIAL · MEILLEUR DES 3 ESSAIS</span><span class="raid-clock" id="raidClock">35,0</span></div>
         <div class="raid-boss-name" id="raidBossName">Boss de raid</div>
-        <div class="raid-infinite">PV : ∞ · niveau <span id="raidBossLevel">1</span> · bonus collectif <strong id="raidTeamMultiplier">×2</strong></div>
+        <div class="raid-infinite">PV : ∞ · niveau <span id="raidBossLevel">1</span> · synergie <strong id="raidTeamMultiplier">×1,00</strong> · <span class="raid-attempt-badge" id="raidAttemptBadge">Essai 1/3</span></div>
+        <div class="raid-phase-wrap" id="raidPhaseWrap"><div class="raid-phase-head"><span id="raidPhaseLabel">PHASE 1 · BRÈCHE</span><span id="raidPhaseBonus">Rythme normal</span></div><div class="raid-phase-bar"><span id="raidPhaseBar"></span></div></div>
         <div class="reaction-hint" id="raidReactionHint">Observe l’écran…</div>
         <div class="raid-stage" id="raidStage"><button type="button" class="raid-boss-button" id="raidBossButton">🌀</button><button type="button" class="reaction-target hidden" id="raidReactionTarget"></button></div>
         <div class="reaction-live"><div><b id="raidReactionCombo">×0</b>Combo</div><div><b id="raidReactionPerfectStreak">×0</b>Perfect streak</div><div><b id="raidReactionAccuracy">0 %</b>Précision</div><div><b id="raidClicks">0</b>Puissance</div></div>
@@ -5602,7 +5642,10 @@ function collectionHtml() {
       serverStartedAt: row.started_at || null,
       clicks: 0,
       rawDamage: 0,
-      teamMultiplier: n(row.team_multiplier, 2),
+      teamMultiplier: n(row.team_multiplier, 1),
+      attemptNumber: n(row.attempt_number, 1),
+      attemptsRemaining: n(row.attempts_remaining, 2),
+      rewardCasesBest: n(row.reward_cases_best, 0),
       finishing: false
     };
     initReactionSession(raidBattle, 'raid');
@@ -5614,7 +5657,8 @@ function collectionHtml() {
     document.getElementById('raidBossName').textContent = raidBattle.bossName;
     document.getElementById('raidBossButton').textContent = raidBattle.bossIcon;
     document.getElementById('raidBossLevel').textContent = raidBattle.raidLevel;
-    document.getElementById('raidTeamMultiplier').textContent = `×${fr(raidBattle.teamMultiplier,0)}`;
+    document.getElementById('raidTeamMultiplier').textContent = `×${fr(raidBattle.teamMultiplier,2)}`;
+    document.getElementById('raidAttemptBadge').textContent = `Essai ${raidBattle.attemptNumber}/3`;
     updateRaidBattleUi();
     clearInterval(raidBattleTimer);
     raidBattleTimer = setInterval(updateRaidBattleClock, 50);
@@ -5628,6 +5672,25 @@ function collectionHtml() {
     const remaining = Math.max(0, raidBattle.duration * 1000 - elapsed);
     const clock = document.getElementById('raidClock');
     if (clock) clock.textContent = (remaining / 1000).toFixed(1).replace('.', ',');
+    const elapsedRatio = Math.max(0, Math.min(1, elapsed / Math.max(1, raidBattle.duration * 1000)));
+    const phaseWrap = document.getElementById('raidPhaseWrap');
+    const phaseLabel = document.getElementById('raidPhaseLabel');
+    const phaseBonus = document.getElementById('raidPhaseBonus');
+    const phaseBar = document.getElementById('raidPhaseBar');
+    if (phaseBar) phaseBar.style.width = `${Math.round(elapsedRatio * 100)}%`;
+    if (elapsedRatio >= 0.75) {
+      if (phaseLabel) phaseLabel.textContent = 'PHASE 3 · FURIE DU PORTAIL';
+      if (phaseBonus) phaseBonus.textContent = 'Tempête de cibles';
+      phaseWrap?.classList.add('fury');
+    } else if (elapsedRatio >= 0.40) {
+      if (phaseLabel) phaseLabel.textContent = 'PHASE 2 · SURCHARGE';
+      if (phaseBonus) phaseBonus.textContent = 'Rythme accéléré';
+      phaseWrap?.classList.remove('fury');
+    } else {
+      if (phaseLabel) phaseLabel.textContent = 'PHASE 1 · BRÈCHE';
+      if (phaseBonus) phaseBonus.textContent = 'Construis ton combo';
+      phaseWrap?.classList.remove('fury');
+    }
     if (remaining <= 0) finishRaidRun();
   }
 
@@ -5665,7 +5728,7 @@ function collectionHtml() {
     clearInterval(raidBattleTimer);
     const { data, error } = await CoachingCloud.client.rpc('finish_rpg_raid_run', {
       p_run_id: raidBattle.id,
-      p_actions: raidBattle.reactionActions
+      p_actions: combatActionsPayloadV64(raidBattle)
     });
     if (error) {
       raidBattle.finishing = false;
@@ -5676,7 +5739,10 @@ function collectionHtml() {
     rememberBattleMusicPosition();
     document.getElementById('raidFightView').style.display = 'none';
     document.getElementById('raidBattleResult').classList.add('show');
-    document.getElementById('raidBattleResultText').innerHTML = `Tu as infligé <strong>${fr(result?.raw_damage,0)} dégâts personnels</strong> avec <strong>${n(result?.successful_actions)} actions réussies</strong>.<br>Précision <strong>${fr(result?.accuracy_pct,0)} %</strong> · parfaits <strong>${n(result?.perfect_actions)}</strong> · combo max <strong>×${n(result?.max_combo)}</strong> · perfect streak max <strong>${n(result?.max_perfect_streak)}</strong>.<br>Avec ${n(result?.participant_count)} participant${n(result?.participant_count)===1?'':'s'}, le bonus collectif est <strong>×${fr(result?.team_multiplier,0)}</strong>, soit <strong>${fr(result?.effective_damage,0)} dégâts effectifs</strong>.<br><br>Récompense estimée : <strong>${n(result?.projected_reward_cases)} caisse${n(result?.projected_reward_cases)===1?'':'s'} Ultra</strong> sur 100 maximum.<br>Le total final est recalculé à la fermeture du portail selon le nombre définitif de participants.<br>Critiques de Chance : <strong>${n(result?.crit_count)}</strong>.`;
+    const awarded = n(result?.reward_cases_awarded,0);
+    const totalCases = n(result?.total_reward_cases,result?.projected_reward_cases,0);
+    document.getElementById('raidBattleResultText').innerHTML = `Essai <strong>${n(result?.attempt_number,raidBattle.attemptNumber)}/3</strong> · rang personnel provisoire <strong>#${n(result?.personal_rank,1)}</strong>.<br>Tu as infligé <strong>${fr(result?.raw_damage,0)} dégâts</strong> avec <strong>${n(result?.successful_actions)} actions réussies</strong>.<br>Précision <strong>${fr(result?.accuracy_pct,0)} %</strong> · parfaits <strong>${n(result?.perfect_actions)}</strong> · combo max <strong>×${n(result?.max_combo)}</strong> · perfect streak <strong>×${n(result?.max_perfect_streak)}</strong>.<br>Synergie de ${n(result?.participant_count)} participant${n(result?.participant_count)===1?'':'s'} : <strong>×${fr(result?.team_multiplier,2)}</strong>, soit <strong>${fr(result?.effective_damage,0)} dégâts effectifs</strong>.<br><br>${awarded>0?`🎁 <strong>+${awarded} caisse${awarded===1?'':'s'} Ultra créditée${awarded===1?'':'s'} immédiatement.</strong>`:`Ton meilleur résultat reste supérieur : aucune caisse supplémentaire cette fois.`}<br>Meilleure récompense du raid : <strong>${totalCases} caisse${totalCases===1?'':'s'} Ultra</strong> · ${n(result?.attempts_remaining)} tentative${n(result?.attempts_remaining)===1?'':'s'} restante${n(result?.attempts_remaining)===1?'':'s'}.<br>Critiques : <strong>${n(result?.crit_count)}</strong>.`;
+    if (progress) progress = { ...progress, raid_ultra_cases: n(progress.raid_ultra_cases) + n(result?.reward_cases_awarded,0) };
     await loadRaid();
     await publishRaidActivity(result);
     if (navigator.vibrate) navigator.vibrate([100,60,160,60,220]);
@@ -6312,7 +6378,7 @@ function collectionHtml() {
         else session.reactionGood += 1;
         // V14 : une cible ne génère plus une quantité exponentielle de frappes.
         // BON = 4 unités, PARFAIT = 6, trait lumineux = 8. Le combo est plafonné à +15 %.
-        const comboMultiplier = Math.min(1.15, 1 + Math.floor((session.reactionCombo - 1) / 5) * 0.05);
+        const comboMultiplier = session.reactionMode === 'raid' ? Math.min(1.35, 1 + Math.floor((session.reactionCombo - 1) / 5) * 0.07) : Math.min(1.15, 1 + Math.floor((session.reactionCombo - 1) / 5) * 0.05);
         const baseUnits = (quality === 'perfect' ? 6 : 4) + (spec.type === 'golden' ? 2 : 0);
         const actionTime = n(action?.t_ms, reactionElapsed(session));
         const firstSpellActive = Number.isFinite(n(session.rushElapsedMs, NaN)) && actionTime >= session.rushElapsedMs && actionTime <= session.rushElapsedMs + 5000;
@@ -6477,6 +6543,13 @@ function collectionHtml() {
   }
 
   function combatPhaseState(session) {
+    if (session?.reactionMode === 'raid') {
+      const elapsed = reactionElapsed(session);
+      const ratio = Math.max(0, Math.min(1, elapsed / Math.max(1, n(session.duration,35) * 1000)));
+      if (ratio >= 0.75) return { phase:3, label:'PHASE 3 · FURIE', intervalMultiplier:0.68 };
+      if (ratio >= 0.40) return { phase:2, label:'PHASE 2 · SURCHARGE', intervalMultiplier:0.82 };
+      return { phase:1, label:'PHASE 1 · BRÈCHE', intervalMultiplier:1 };
+    }
     if (!session || session.reactionMode !== 'combat' || !(session.maxHp > 0)) {
       return { phase:1, label:'', intervalMultiplier:1 };
     }
@@ -7536,7 +7609,10 @@ function collectionHtml() {
     render();
     celebrate(result);
     await publishMilestones(result, meta);
-    if (!result.duplicate) await loadRaid(true);
+    if (!result.duplicate) {
+      const raidSpawn = await trySpawnRaidAfterSetV149();
+      await loadRaid(!!raidSpawn?.discovered);
+    }
     return result;
   }
 
