@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V153';
+window.GA_APP_VERSION = 'V154';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v153-difficulty-pool';
+window.GA_APP_BUILD = '2026-08-06-v154-difficulty-xp-sync';
 
 
 /* --------------------------------------------------------------------------
@@ -3038,9 +3038,14 @@ const MAX_ADVENTURE_DIFFICULTY = 10000;
 
 function levelBasedAdventureDifficulty() {
   const xpLevel = levelFromXp(n(progress?.xp_total));
+  const storedLevel = Math.max(1, Math.floor(n(progress?.level, 1)));
+
+  // La colonne level de certains anciens comptes est restée à 1 alors que
+  // xp_total correspond déjà à un niveau très élevé. On ne choisit plus l'une
+  // des deux valeurs : on prend toujours la plus élevée.
   return Math.min(
     MAX_ADVENTURE_DIFFICULTY,
-    Math.max(1, Math.floor(n(progress?.level, xpLevel, 1)))
+    Math.max(1, storedLevel, xpLevel)
   );
 }
 
@@ -3980,6 +3985,7 @@ async function armCombatServerTimer(session) {
     const selected = normalizeSelectedDifficulty();
     return `<div class="world-picker">
       <div class="world-picker-head"><b>⚔️ Choisir le palier de difficulté</b><span>Maximum débloqué : ${unlocked}</span></div>
+      <div class="world-picker-note">Synchronisation V154 : niveau enregistré <strong>${Math.max(1,Math.floor(n(progress?.level,1)))}</strong> · niveau calculé depuis l’XP <strong>${levelFromXp(n(progress?.xp_total))}</strong> · palier retenu <strong>${unlocked}</strong>.</div>
       <input id="rpgDifficultyNumber" type="number" inputmode="numeric" min="1" max="${unlocked}" step="1" value="${selected}" aria-label="Palier de difficulté">
       ${unlocked > 1 ? `<input id="rpgDifficultyRange" type="range" min="1" max="${unlocked}" step="1" value="${selected}" aria-label="Réglage rapide du palier">` : ''}
       ${(() => {
@@ -4104,7 +4110,7 @@ async function armCombatServerTimer(session) {
   function progressHtml() {
     const xp = n(progress?.xp_total);
     const xpProgress = xpProgressFromTotal(xp);
-    const level = n(progress?.level, xpProgress.level);
+    const level = Math.max(1, Math.floor(n(progress?.level, 1)), xpProgress.level);
     const into = xpProgress.into;
     const nextCost = xpProgress.cost;
     const pct = Math.max(0, Math.min(100, into / Math.max(1, nextCost) * 100));
@@ -4620,7 +4626,7 @@ function collectionHtml() {
   function render() {
     inject();
     const xp = n(progress?.xp_total);
-    const level = n(progress?.level, levelFromXp(xp));
+    const level = Math.max(1, Math.floor(n(progress?.level, 1)), levelFromXp(xp));
     const gold = n(progress?.gold_balance);
     if (chip) chip.textContent = `Niv. ${level} · ${fr(xp, 1)} XP · 🪙 ${fr(gold, 0)}`;
     const body = document.getElementById('xpPanelBody');
@@ -4665,27 +4671,66 @@ function collectionHtml() {
       ...progress
     };
 
-    // Migration V153 : les anciens comptes pouvaient garder
-    // adventure_difficulty = 1 malgré un niveau RPG élevé.
-    const storedDifficulty = Math.max(1, Math.floor(n(progress.adventure_difficulty, 1)));
-    const correctedDifficulty = Math.max(storedDifficulty, levelBasedAdventureDifficulty());
-    if (correctedDifficulty !== storedDifficulty) {
-      progress.adventure_difficulty = correctedDifficulty;
-      const migrationKey = `rpg_difficulty_level_sync_v153_${cfg.slug}`;
-      if (!localStorage.getItem(migrationKey)) {
-        if (Math.floor(n(selectedDifficulty, 1)) <= storedDifficulty) {
-          selectedDifficulty = correctedDifficulty;
-          localStorage.setItem(`rpg_difficulty_${cfg.slug}`, String(selectedDifficulty));
-        }
-        localStorage.setItem(migrationKey, '1');
-      }
+    // Migration V154 : réparation simultanée de level et du palier.
+    // Certains comptes possèdent beaucoup d'XP mais level = 1 ET
+    // adventure_difficulty = 1.
+    const xpDerivedLevel = levelFromXp(n(progress.xp_total));
+    const storedLevel = Math.max(1, Math.floor(n(progress.level, 1)));
+    const correctedLevel = Math.min(
+      1000,
+      Math.max(1, storedLevel, xpDerivedLevel)
+    );
 
+    const storedDifficulty = Math.max(
+      1,
+      Math.floor(n(progress.adventure_difficulty, 1))
+    );
+    const correctedDifficulty = Math.min(
+      MAX_ADVENTURE_DIFFICULTY,
+      Math.max(1, storedDifficulty, correctedLevel)
+    );
+
+    progress.level = correctedLevel;
+    progress.adventure_difficulty = correctedDifficulty;
+
+    const migrationKey = `rpg_difficulty_xp_sync_v154_${cfg.slug}`;
+    const currentSelected = Math.max(
+      1,
+      Math.floor(n(selectedDifficulty, 1))
+    );
+
+    // Un ancien choix local égal à 1 ne doit plus garder le joueur au palier 1.
+    if (
+      !localStorage.getItem(migrationKey)
+      || currentSelected <= storedDifficulty
+      || currentSelected === 1
+    ) {
+      selectedDifficulty = correctedDifficulty;
+      localStorage.setItem(
+        `rpg_difficulty_${cfg.slug}`,
+        String(selectedDifficulty)
+      );
+      localStorage.setItem(migrationKey, '1');
+    }
+
+    if (
+      correctedLevel !== storedLevel
+      || correctedDifficulty !== storedDifficulty
+    ) {
       void CoachingCloud.client
         .from('athlete_progress')
-        .update({ adventure_difficulty: correctedDifficulty })
+        .update({
+          level: correctedLevel,
+          adventure_difficulty: correctedDifficulty
+        })
         .eq('athlete_slug', cfg.slug)
         .then(({ error }) => {
-          if (error) console.warn('Synchronisation du palier V153 :', error.message);
+          if (error) {
+            console.warn(
+              'Synchronisation niveau/palier V154 :',
+              error.message
+            );
+          }
         });
     }
 
