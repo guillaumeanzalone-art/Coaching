@@ -656,7 +656,7 @@ button{
 <script src="supabase-config.js"></script>
 <script>
 /*
-  GA Coaching — accueil synchronisé avec app_users
+  GA Coaching — accueil synchronisé avec app_users · Magicarpe V140
   - Une seule carte par athlete_slug
   - Le nom affiché vient exclusivement du slug avec une majuscule initiale
   - Une seule page HTML est retenue lorsque plusieurs fichiers utilisent le même slug
@@ -929,7 +929,7 @@ function render(list){
       ? `${weekLabel(a)} · SQ ${a.sq??'—'} · BN ${a.bn??'—'} · DL ${a.dl??'—'}${a.bw?' · '+a.bw+' kg':''}`
       : 'Page HTML introuvable';
     const image=a.profileImage
-      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260805-series-avatars-v121" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
+      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260806-magicapre-avatar-v140" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
       : '';
     const content=`<div class="avatar ${a.profileImage?'has-image':''}"><span>${esc(a.emoji)}</span>${image}</div><div class="info"><div class="name">${esc(a.name)}</div><div class="sub">${esc(sub)}</div></div><div class="arrow">${a.file?'›':'—'}</div>`;
     return a.file
