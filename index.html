@@ -656,7 +656,7 @@ button{
 <script src="supabase-config.js"></script>
 <script>
 /*
-  GA Coaching — accueil synchronisé avec app_users · V144
+  GA Coaching — accueil synchronisé avec app_users · V147
   - Une seule carte par athlete_slug ; les changements de bloc se font dans la page de l’athlète
   - Le nom affiché vient exclusivement du slug avec une majuscule initiale
   - Saya.html ouvre une page unique avec des onglets Bloc 1 / Bloc 2
@@ -683,6 +683,33 @@ const DISPLAY_NAMES={
   'maxence':'Maxence',
   'metaknight':'Metaknight'
 };
+const CANONICAL_ATHLETES={
+  'tom':{
+    slug:'tom',
+    name:'Tom Deneuville',
+    file:'TomDeneuville.html',
+    profileImage:'avatar-tom.png',
+    emoji:'🐻‍❄️',
+    bodyWeight:119,
+    sq:300,
+    bn:170,
+    dl:310,
+    sex:'M'
+  },
+  'gibertini':{
+    slug:'gibertini',
+    name:'Tom Gibertini',
+    file:'gibertini.html',
+    profileImage:'avatar-gibertini.png',
+    emoji:'🦶',
+    bodyWeight:78,
+    sq:240,
+    bn:160,
+    dl:300,
+    sex:'M'
+  }
+};
+
 const PROFILE_IMAGES={
   'guillaume':'avatar-guillaume.png',
   'tom':'avatar-tom.png',
@@ -775,7 +802,7 @@ const FALLBACK=['Anzalone.html','TomDeneuville.html','gibertini.html','Noe.html'
 // L’accueil ne crée donc aucune carte supplémentaire.
 const PROGRAM_VARIANTS=[];
 const BASE_PROGRAM_LABELS={};
-const IGNORED_HTML_FILES=new Set(['Tom.html']);
+const IGNORED_HTML_FILES=new Set(['Tom.html','Saya2.html']);
 
 function norm(s){
   return String(s||'')
@@ -857,6 +884,10 @@ function pagePriority(page,slug){
   return score;
 }
 function choosePage(pages,slug){
+  const canonical=CANONICAL_ATHLETES[slug];
+  if(canonical){
+    return pages.find(page=>page.file===canonical.file)||null;
+  }
   const exact=pages.filter(page=>page.slug===slug);
   const candidates=exact.length?exact:pages.filter(page=>compact(page.file)===compact(slug));
   return candidates.sort((a,b)=>pagePriority(b,slug)-pagePriority(a,slug))[0]||null;
@@ -895,6 +926,25 @@ async function read(file){
   const configuredBw=extractConfiguredBodyWeight(scriptText);
   const bw=configuredBw??(BODYWEIGHTS[slug]>0?BODYWEIGHTS[slug]:null)??htmlBw??null;
   const sex=SEX[slug]||'M';
+  const canonicalByFile=Object.values(CANONICAL_ATHLETES)
+    .find(profile=>profile.file===file);
+  if(canonicalByFile){
+    return {
+      slug:canonicalByFile.slug,
+      id:canonicalByFile.slug,
+      file:canonicalByFile.file,
+      name:canonicalByFile.name,
+      emoji:canonicalByFile.emoji,
+      profileImage:canonicalByFile.profileImage,
+      sq:canonicalByFile.sq,
+      bn:canonicalByFile.bn,
+      dl:canonicalByFile.dl,
+      bw:canonicalByFile.bodyWeight,
+      sex:canonicalByFile.sex,
+      total:canonicalByFile.sq+canonicalByFile.bn+canonicalByFile.dl,
+      storageKey:extractStorageKey(scriptText)
+    };
+  }
   return {
     slug,id:slug,file,
     name:displaySlug(slug),
@@ -917,7 +967,7 @@ async function loadAppUserSlugs(){
   }
   const client=window.supabase.createClient(config.url,config.publishableKey,{
     auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},
-    global:{headers:{'x-application-name':'ga-coaching-home-v144'}}
+    global:{headers:{'x-application-name':'ga-coaching-home-v147'}}
   });
 
   const rpc=await client.rpc(HOME_ATHLETES_RPC);
@@ -951,7 +1001,7 @@ function render(list){
       ? `${programPrefix}${weekLabel(a)} · SQ ${a.sq??'—'} · BN ${a.bn??'—'} · DL ${a.dl??'—'}${a.bw?' · '+a.bw+' kg':''}`
       : 'Page HTML introuvable';
     const image=a.profileImage
-      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260806-v144-toms-slugs" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
+      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260806-v147-toms-separated" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
       : '';
     const content=`<div class="avatar ${a.profileImage?'has-image':''}"><span>${esc(a.emoji)}</span>${image}</div><div class="info"><div class="name">${esc(displayName)}</div><div class="sub">${esc(sub)}</div></div><div class="arrow">${a.file?'›':'—'}</div>`;
     return a.file
@@ -998,7 +1048,27 @@ async function boot(){
   slugs=uniqueSlugs([...PINNED_ATHLETE_SLUGS,...slugs]);
 
   const primaryAthletes=slugs.map(slug=>{
+    const canonical=CANONICAL_ATHLETES[slug];
     const page=choosePage(pages,slug);
+
+    if(canonical){
+      return {
+        slug:canonical.slug,
+        id:canonical.slug,
+        name:canonical.name,
+        emoji:canonical.emoji,
+        profileImage:canonical.profileImage,
+        file:canonical.file,
+        sq:canonical.sq,
+        bn:canonical.bn,
+        dl:canonical.dl,
+        bw:canonical.bodyWeight,
+        sex:canonical.sex,
+        total:canonical.sq+canonical.bn+canonical.dl,
+        storageKey:page?.storageKey||null
+      };
+    }
+
     return page
       ? {...page,slug,id:slug,name:displaySlug(slug),emoji:EMOJI[slug]||page.emoji||'🏋️'}
       : {slug,id:slug,name:displaySlug(slug),emoji:EMOJI[slug]||'🏋️',profileImage:PROFILE_IMAGES[slug]||'',file:null,sq:null,bn:null,dl:null,bw:BODYWEIGHTS[slug]||null,sex:SEX[slug]||'M',total:0,storageKey:null};

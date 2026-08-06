@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V144';
+window.GA_APP_VERSION = 'V147';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v144-toms-slugs';
+window.GA_APP_BUILD = '2026-08-06-v147-toms-separated';
 
 
 /* --------------------------------------------------------------------------
@@ -65,6 +65,13 @@ window.GA_APP_BUILD = '2026-08-06-v144-toms-slugs';
     cfg.name = canonicalTomIdentity.name;
     cfg.profileImage = canonicalTomIdentity.profileImage;
     cfg.bodyWeight = canonicalTomIdentity.bodyWeight;
+
+    // Empêche toute persistance d'une ancienne identité mise en cache.
+    document.documentElement.dataset.canonicalAthleteSlug = canonicalTomIdentity.slug;
+    window.__GA_CANONICAL_ATHLETE__ = Object.freeze({
+      ...canonicalTomIdentity,
+      file: fileStem
+    });
   }
 
   const signals = [cfg.name, cfg.slug, cfg.programKey, fileStem]
@@ -7605,6 +7612,7 @@ function collectionHtml() {
   const style = document.createElement('style');
   style.textContent = `
     .cloud-athlete-rpe,.cloud-athlete-load{width:58px;min-width:0;padding:5px 5px;border-radius:7px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:inherit;font:700 11px Inter,system-ui,sans-serif;text-align:center;outline:none}
+    .ga-decimal-load-v146{width:72px!important;min-width:72px!important;font-variant-numeric:tabular-nums}.ga-decimal-load-v146:invalid{border-color:rgba(255,170,70,.55)!important}
     .cloud-athlete-rpe:focus,.cloud-athlete-load:focus{border-color:var(--accent,#55b9e6)}
     .cloud-athlete-panel{display:none;position:fixed;z-index:390;left:50%;transform:translateX(-50%);top:58px;bottom:61px;width:100%;max-width:430px;padding:12px 16px 18px;overflow-y:auto;background:var(--bg,#0a0e18);color:var(--text,#e8ecf5)}
     .cloud-athlete-panel.show{display:block}.cloud-athlete-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 12px}.cloud-athlete-panel-head h2{margin:0;font-size:16px}.cloud-athlete-panel-head button{border:0;border-radius:9px;background:var(--surface-2,#1c2438);color:inherit;padding:7px 10px;font-weight:800;cursor:pointer}
@@ -7633,6 +7641,21 @@ function collectionHtml() {
     try { localStorage.setItem(cacheKey, JSON.stringify(inputCache)); } catch (_) {}
   }
 
+  const decimalLoadObserverV146 = new MutationObserver(mutations => {
+    for (const mutation of mutations) {
+      mutation.addedNodes.forEach(node => {
+        if (node?.nodeType !== 1) return;
+        if (isDecimalLoadInputV146(node)) upgradeDecimalLoadInputV146(node);
+        upgradeVisibleDecimalLoadsV146(node);
+      });
+    }
+  });
+  decimalLoadObserverV146.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+  queueMicrotask(() => upgradeVisibleDecimalLoadsV146(document));
+
   function parseNumber(value) {
     const normalized = String(value ?? '').trim().replace(',', '.');
     if (!normalized) return null;
@@ -7643,6 +7666,82 @@ function collectionHtml() {
   function normalizeLoadValue(value) {
     const parsed = parseNumber(value);
     return parsed !== null && parsed >= 0 ? parsed : null;
+  }
+
+  function isDecimalLoadInputV146(control) {
+    if (!control || String(control.tagName || '').toUpperCase() !== 'INPUT') return false;
+    return control.matches?.(
+      '[data-cloud-load],.cloud-athlete-load,.load-input,.set-load,' +
+      'input[data-load],input[data-load-kg],input[data-real-load],' +
+      'input[name*="load" i],input[name*="charge" i],input[aria-label*="charge" i]'
+    ) || false;
+  }
+
+  function upgradeDecimalLoadInputV146(control) {
+    if (!isDecimalLoadInputV146(control)) return control;
+
+    const currentValue = String(control.value ?? '');
+    try {
+      // type=number bloque la virgule sur certains navigateurs et utilise
+      // souvent un pas entier implicite. Le texte décimal évite ce problème.
+      control.type = 'text';
+    } catch (_) {}
+
+    control.inputMode = 'decimal';
+    control.autocomplete = 'off';
+    control.classList.add('ga-decimal-load-v146');
+    control.setAttribute('pattern', '[0-9]+([\\.,][0-9]+)?');
+    control.setAttribute(
+      'aria-description',
+      'Décimales acceptées avec une virgule ou un point'
+    );
+    control.removeAttribute('step');
+
+    if (currentValue && !String(control.value ?? '')) control.value = currentValue;
+    return control;
+  }
+
+  function sanitizeDecimalLoadInputV146(control, commit = false) {
+    if (!isDecimalLoadInputV146(control)) return null;
+    upgradeDecimalLoadInputV146(control);
+
+    let raw = String(control.value ?? '')
+      .replace(/\s+/g, '')
+      .replace(/[^0-9.,]/g, '');
+
+    // Une seule virgule ou un seul point décimal.
+    const separatorIndex = raw.search(/[.,]/);
+    if (separatorIndex >= 0) {
+      const integerPart = raw.slice(0, separatorIndex).replace(/[.,]/g, '');
+      const decimalPart = raw.slice(separatorIndex + 1).replace(/[.,]/g, '');
+      raw = `${integerPart || '0'}${raw[separatorIndex]}${decimalPart}`;
+    }
+
+    if (!commit) {
+      if (String(control.value ?? '') !== raw) control.value = raw;
+      return normalizeLoadValue(raw);
+    }
+
+    const parsed = normalizeLoadValue(raw);
+    if (parsed === null) {
+      if (!raw) control.value = '';
+      return null;
+    }
+
+    // Format interne commun à JavaScript et Supabase.
+    const canonical = String(parsed);
+    if (control.value !== canonical) control.value = canonical;
+    return parsed;
+  }
+
+  function upgradeVisibleDecimalLoadsV146(root = document) {
+    root.querySelectorAll?.(
+      '.set-row input[data-cloud-load],.set-row .cloud-athlete-load,' +
+      '.set-row .load-input,.set-row .set-load,.set-row input[data-load],' +
+      '.set-row input[data-load-kg],.set-row input[data-real-load],' +
+      '.set-row input[name*="load" i],.set-row input[name*="charge" i],' +
+      '.set-row input[aria-label*="charge" i]'
+    ).forEach(upgradeDecimalLoadInputV146);
   }
 
   function normalizeRpeValue(value) {
@@ -8119,7 +8218,7 @@ function collectionHtml() {
       '.accessory-track-v22 .load-input',
       '.accessory-track-v22 .set-load',
       '.cloud-athlete-load',
-      '.load-select',
+      '.load-input.visible',
       '.load-input',
       '.set-load',
       'input[data-load]',
@@ -8127,7 +8226,8 @@ function collectionHtml() {
       'input[data-real-load]',
       'input[name*="load" i]',
       'input[name*="charge" i]',
-      'input[aria-label*="charge" i]'
+      'input[aria-label*="charge" i]',
+      '.load-select'
     ]);
   }
 
@@ -8342,8 +8442,10 @@ function collectionHtml() {
     const isAccessoryRow = code === 'ac';
     removeLegacyDuplicateControls(row, code);
 
+    upgradeVisibleDecimalLoadsV146(row);
     let loadInput = nativeLoadInput(row);
     let rpeInput = nativeRpeInput(row);
+    if (isDecimalLoadInputV146(loadInput)) upgradeDecimalLoadInputV146(loadInput);
     improveLoadChoiceV125(row, idx, w, d);
 
     // Les accessoires gardent uniquement la charge : aucun champ RPE,
@@ -8359,9 +8461,8 @@ function collectionHtml() {
     // Sur squat / bench / deadlift, on garde exclusivement les contrôles natifs.
     if (isAccessoryRow && !loadInput) {
       loadInput = document.createElement('input');
-      loadInput.type = 'number';
+      loadInput.type = 'text';
       loadInput.inputMode = 'decimal';
-      loadInput.step = '0.5';
       loadInput.min = '0';
       loadInput.className = 'cloud-athlete-load';
       loadInput.dataset.gaInjectedControl = '1';
@@ -8963,6 +9064,10 @@ function collectionHtml() {
     // render() immédiat ; pointerdown garantit que la charge saisie est déjà
     // copiée dans loads/state/S avant la destruction du champ courant.
     document.addEventListener('pointerdown', event => {
+      const activeLoad = document.activeElement;
+      if (isDecimalLoadInputV146(activeLoad)) {
+        sanitizeDecimalLoadInputV146(activeLoad, true);
+      }
       const checkbox = event.target.closest('[data-cloud-checkbox],.set-check,.check-btn');
       const row = checkbox?.closest('.set-row');
       if (!checkbox || !row || !exerciseContainer()?.contains(row)) return;
@@ -9111,6 +9216,7 @@ function collectionHtml() {
 
     document.addEventListener('input', event => {
       const input = event.target.closest('[data-cloud-load],.cloud-athlete-rpe,.cloud-athlete-load,.load-select,.load-input,.set-load,.rpe-select,.rpe-input,.set-rpe,.accessory-time-v22');
+      if (isDecimalLoadInputV146(input)) sanitizeDecimalLoadInputV146(input, false);
       const row = input?.closest('.set-row');
       if (!input || !row || !exerciseContainer()?.contains(row)) return;
       const idx = Number(row.dataset.cloudSetIndex);
@@ -9123,6 +9229,7 @@ function collectionHtml() {
 
     document.addEventListener('change', event => {
       const input = event.target.closest('[data-cloud-load],.cloud-athlete-rpe,.cloud-athlete-load,.load-select,.load-input,.set-load,.rpe-select,.rpe-input,.set-rpe,.accessory-time-v22');
+      if (isDecimalLoadInputV146(input)) sanitizeDecimalLoadInputV146(input, true);
       const row = input?.closest('.set-row');
       if (!input || !row || !exerciseContainer()?.contains(row)) return;
       const idx = Number(row.dataset.cloudSetIndex);
