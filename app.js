@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V158';
+window.GA_APP_VERSION = 'V159';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v158-stable-load-entry';
+window.GA_APP_BUILD = '2026-08-06-v159-adventure-rpc';
 
 
 /* --------------------------------------------------------------------------
@@ -1339,6 +1339,8 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
   if (!cfg.slug) return;
 
   let progress = null;
+  let adventureProgressErrorV159 = '';
+  let adventureProgressLoadedV159 = false;
   let inventory = [];
   let monsterCatalog = [];
   let monsterCollection = [];
@@ -3837,6 +3839,11 @@ async function armCombatServerTimer(session) {
           else stopMenuMusic();
         }
         render();
+        if (panel.classList.contains('show')) {
+          void loadAdventureProgressV159({ quiet: true }).then(ok => {
+            if (ok) render();
+          });
+        }
         if (panel.classList.contains('show') && activeTab === 'leaderboard') {
           void loadRpgLeaderboardV155(true);
         }
@@ -4000,7 +4007,8 @@ async function armCombatServerTimer(session) {
     const selected = normalizeSelectedDifficulty();
     return `<div class="world-picker">
       <div class="world-picker-head"><b>⚔️ Choisir le palier de difficulté</b><span>Maximum débloqué : ${unlocked}</span></div>
-      <div class="world-picker-note">Progression V157 : ligne <strong>${esc(progress?.athlete_slug || cfg.slug)}</strong> · palier Supabase <strong>${Math.max(1,Math.floor(n(progress?.adventure_difficulty,1)))}</strong> · compteur boss <strong>${Math.max(0,Math.floor(n(progress?.kills_toward_boss,0)))}/50</strong>. Niveau RPG et XP exclus du calcul.</div>
+      <div class="world-picker-note">Progression V159 : ligne <strong>${esc(progress?.athlete_slug || cfg.slug)}</strong> · palier SQL <strong>${Math.max(1,Math.floor(n(progress?.adventure_difficulty,1)))}</strong> · compteur boss <strong>${Math.max(0,Math.floor(n(progress?.kills_toward_boss,0)))}/50</strong> · source <strong>${adventureProgressLoadedV159 ? 'RPC dédiée OK' : 'non confirmée'}</strong>.</div>
+      ${adventureProgressErrorV159 ? `<div class="world-picker-note" style="color:#ff8b8b"><strong>Erreur Supabase :</strong> ${esc(adventureProgressErrorV159)}. Le jeu ne remplace plus cette erreur par un faux palier 1.</div>` : ''}
       <input id="rpgDifficultyNumber" type="number" inputmode="numeric" min="1" max="${unlocked}" step="1" value="${selected}" aria-label="Palier de difficulté">
       ${unlocked > 1 ? `<input id="rpgDifficultyRange" type="range" min="1" max="${unlocked}" step="1" value="${selected}" aria-label="Réglage rapide du palier">` : ''}
       ${(() => {
@@ -4817,6 +4825,62 @@ function collectionHtml() {
     body.innerHTML = `${tabsHtml()}${content}`;
   }
 
+  async function loadAdventureProgressV159({ quiet = false } = {}) {
+    if (!window.CoachingCloud?.client || !CoachingCloud.session?.user) return false;
+
+    const { data, error } = await CoachingCloud.client.rpc(
+      'get_rpg_adventure_progress_v159',
+      { p_athlete_slug: cfg.slug }
+    );
+
+    if (error) {
+      adventureProgressLoadedV159 = false;
+      adventureProgressErrorV159 = `${error.code || 'API'} · ${error.message}`;
+      console.warn('Palier aventure V159 indisponible :', error);
+      if (!quiet) {
+        CoachingCloud.toast(
+          `Palier aventure indisponible : ${error.message}`,
+          true
+        );
+      }
+      return false;
+    }
+
+    const row = Array.isArray(data) ? data[0] : data;
+    if (!row) {
+      adventureProgressLoadedV159 = false;
+      adventureProgressErrorV159 = 'Aucune ligne athlete_progress trouvée';
+      return false;
+    }
+
+    if (
+      String(row.athlete_slug || '').toLowerCase()
+      !== String(cfg.slug || '').toLowerCase()
+    ) {
+      adventureProgressLoadedV159 = false;
+      adventureProgressErrorV159 = `Mauvais slug reçu : ${row.athlete_slug || 'vide'}`;
+      return false;
+    }
+
+    progress = {
+      ...(progress || {}),
+      athlete_slug: row.athlete_slug,
+      adventure_difficulty: Math.min(
+        MAX_ADVENTURE_DIFFICULTY,
+        Math.max(1, Math.floor(n(row.adventure_difficulty, 1)))
+      ),
+      kills_toward_boss: Math.max(
+        0,
+        Math.min(50, Math.floor(n(row.kills_toward_boss, 0)))
+      ),
+      boss_wins: Math.max(0, Math.floor(n(row.boss_wins, 0)))
+    };
+
+    adventureProgressLoadedV159 = true;
+    adventureProgressErrorV159 = '';
+    return true;
+  }
+
   async function loadProgress() {
     if (!window.CoachingCloud?.client || !CoachingCloud.session?.user) return;
 
@@ -4835,11 +4899,16 @@ function collectionHtml() {
       .maybeSingle();
 
     if (result.error) {
-      console.warn('Progression XP/RPG indisponible :', result.error.message);
-      CoachingCloud.toast(
-        `Progression RPG indisponible : ${result.error.message}`,
-        true
-      );
+      console.warn('Progression générale indisponible :', result.error.message);
+      const adventureRecovered = await loadAdventureProgressV159({ quiet: true });
+      if (!adventureRecovered) {
+        adventureProgressErrorV159 = `${result.error.code || 'API'} · ${result.error.message}`;
+        CoachingCloud.toast(
+          `Supabase ne répond pas correctement : ${result.error.message}`,
+          true
+        );
+      }
+      render();
       return;
     }
 
@@ -4914,6 +4983,8 @@ function collectionHtml() {
       0,
       Math.min(50, Math.floor(n(progress.kills_toward_boss, 0)))
     );
+
+    await loadAdventureProgressV159({ quiet: true });
 
     const unlocked = currentAdventureDifficulty();
     const localSelected = Math.max(
