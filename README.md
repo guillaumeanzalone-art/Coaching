@@ -1,70 +1,68 @@
-# Patch V153 — Difficulté et pool de monstres
+# Patch V155 — Leaderboard RPG
 
-## Palier débloqué
+## Nouvel onglet
 
-Le palier disponible est maintenant toujours :
+Un onglet **🏆 Leaderboard** est placé juste après **Collection**.
 
-`max(adventure_difficulty, niveau RPG)`
+Il n'est pas abonné au temps réel. Les données sont récupérées uniquement :
 
-Un joueur niveau 173 ayant encore la valeur historique `1` passe donc
-automatiquement au palier 173. La correction est appliquée :
+- quand l'utilisateur ouvre l'onglet ;
+- quand il clique sur **Actualiser**.
 
-- dans l'interface ;
-- dans Supabase ;
-- à tous les comptes déjà existants ;
-- à chaque future montée de niveau.
+## Classements disponibles
 
-## Nouveau pool de rareté
+- Global
+- Palier
+- Dégâts cumulés
+- Objets rares obtenus
+- Monstres rares tués
 
-Table à 0 Chance :
+## Statistiques affichées
 
-- Simple : 32 %
-- Commun : 28 %
-- Peu commun : 22 %
-- Rare : 10 %
-- Épique : 5 %
-- Légendaire : 2 %
-- Mythique : 0,7 %
-- Ultra mythique : 0,25 %
-- Abyssal : 0,05 %
+- Niveau RPG
+- Palier de difficulté
+- Dégâts cumulés
+- Meilleur dégât
+- Boss vaincus
+- Objets Mythiques obtenus
+- Objets Ultra mythiques obtenus
+- Objets Abyssaux obtenus
+- Monstres Mythiques tués
+- Monstres Ultra mythiques tués
+- Monstres Abyssaux tués
 
-La Chance augmente Peu commun jusqu'à ×3 et Rare+ jusqu'à ×4.
-Chasseur épique renforce Rare+ jusqu'à ×2.
+Les grands nombres utilisent :
 
-Pour les valeurs visibles sur la capture — Chance 997 et Chasseur +22 % —
-la nouvelle estimation est :
+- K, M, B, T
+- AA, AB, AC, etc.
 
-- Simple : 18.080 %
-- Commun : 15.820 %
-- Peu commun : 28.953 %
-- Rare : 20.637 %
-- Épique : 10.319 %
-- Légendaire : 4.127 %
-- Mythique : 1.445 %
-- Ultra mythique : 0.516 %
-- Abyssal : 0.103 %
+## Historique des objets
 
-Le serveur tire d'abord la rareté, puis un monstre de cette rareté. Le nombre
-de monstres présents dans une catégorie ne modifie donc plus sa probabilité.
+Le premier lancement initialise les compteurs avec :
+
+- les quantités présentes dans l'inventaire ;
+- les objets déjà sacrifiés dans le codex.
+
+Les ventes ou transferts anciens ne peuvent pas être reconstitués s'ils ne
+sont plus présents dans la base. Après installation, les nouveaux gains sont
+comptés automatiquement. Les transferts/cadeaux explicitement identifiés par
+leur source sont exclus.
 
 ## Installation
 
-### Supabase — en premier
+### 1. Supabase
 
 Exécuter :
 
-`SUPABASE/PATCH_SUPABASE_V153_DIFFICULTE_POOL.sql`
+`SUPABASE/PATCH_SUPABASE_V155_RPG_LEADERBOARD.sql`
 
-Les contrôles finaux doivent afficher :
+Le résultat final doit afficher les deux fonctions et le nombre d'athlètes
+initialisés.
 
-- `comptes_encore_bloques = 0`
-- `pool_v153_actif = true`
+### 2. GitHub
 
-### GitHub
+Remplacer uniquement :
 
-Remplacer uniquement `app.js` par celui du dossier `GITHUB`.
+`GITHUB/app.js`
 
-Faire ensuite **Commit changes**, attendre le déploiement et recharger avec
-`Ctrl + F5`.
-
-Aucun compte, équipement, XP, gold ou bestiaire n'est réinitialisé.
+Puis Commit changes, attendre le déploiement et effectuer `Ctrl + F5`.

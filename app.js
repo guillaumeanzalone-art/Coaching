@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V154';
+window.GA_APP_VERSION = 'V155';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v154-difficulty-xp-sync';
+window.GA_APP_BUILD = '2026-08-06-v155-rpg-leaderboard';
 
 
 /* --------------------------------------------------------------------------
@@ -1361,6 +1361,11 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
   let activeTab = 'progress';
   let collectionSubTab = 'bestiary';
   let collectionBusy = false;
+  let leaderboardRows = [];
+  let leaderboardBusy = false;
+  let leaderboardError = '';
+  let leaderboardLoadedAt = null;
+  let leaderboardSort = localStorage.getItem('rpg_leaderboard_sort_v155') || 'global';
   let transferBusy = false;
   let transferRecipients = [];
   let transferModalItemId = null;
@@ -2755,7 +2760,12 @@ function stopEventMusic({ resumeMenu = false, resumeBattle = true } = {}) {
     .xp-chip{flex:0 0 auto;border:1px solid rgba(240,196,77,.18);border-radius:11px;padding:6px 9px;background:rgba(240,196,77,.07);color:var(--accent,#f0c44d);font:900 10px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}
     .xp-panel{display:none;position:fixed;z-index:430;left:50%;transform:translateX(-50%);top:56px;bottom:62px;width:100%;max-width:430px;padding:13px 16px 22px;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;background:var(--bg,#05070d);color:var(--text,#eef2f7)}.xp-panel *{box-sizing:border-box;min-width:0}
     .xp-panel.show{display:block}.xp-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 10px}.xp-panel-head h2{margin:0;font-size:17px}.xp-panel-head>div{display:flex;gap:6px;align-items:center}.xp-panel-head button{border:1px solid rgba(255,255,255,.07);border-radius:10px;background:var(--surface-2,#141c2d);color:inherit;padding:8px 10px;font-weight:800;cursor:pointer;white-space:nowrap}.rpg-audio-settings[hidden]{display:none}.rpg-audio-settings{margin:0 0 12px;padding:13px;border:1px solid rgba(112,178,255,.18);border-radius:16px;background:linear-gradient(145deg,rgba(57,102,177,.13),rgba(255,255,255,.02))}.rpg-audio-settings-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.rpg-audio-settings-head b{font-size:13px}.rpg-audio-settings-head button{border:0;background:transparent;color:#9ba8bd;font-weight:900;cursor:pointer}.rpg-audio-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:11px;padding:10px 11px;border-radius:12px;background:rgba(255,255,255,.035)}.rpg-audio-row strong{display:block;font-size:11px}.rpg-audio-row small{display:block;margin-top:3px;font-size:8px;line-height:1.4;color:#8995aa}.rpg-audio-switch{width:42px;height:24px;appearance:none;border-radius:999px;background:#30394a;position:relative;cursor:pointer;transition:.2s}.rpg-audio-switch:after{content:'';position:absolute;width:18px;height:18px;top:3px;left:3px;border-radius:50%;background:#fff;transition:.2s}.rpg-audio-switch:checked{background:#5aa8ff}.rpg-audio-switch:checked:after{transform:translateX(18px)}.rpg-audio-slider{margin-top:8px;display:grid;grid-template-columns:1fr 42px;gap:8px;align-items:center}.rpg-audio-slider input{width:100%;accent-color:#6db4ff}.rpg-audio-slider span{text-align:right;font-size:9px;font-weight:900;color:#9fcaff}.rpg-audio-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}.rpg-audio-actions button{border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:10px 8px;background:#121a29;color:#eef4ff;font-weight:900;font-size:10px;cursor:pointer}.rpg-audio-actions button:first-child{border-color:rgba(76,190,130,.25);background:rgba(76,190,130,.09)}.rpg-audio-actions button:last-child{border-color:rgba(90,168,255,.25);background:rgba(90,168,255,.09)}.rpg-audio-status{margin-top:9px;font-size:8px;line-height:1.5;color:#8e9bb1}
-    .xp-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px;padding:4px;border-radius:13px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.045)}.xp-tab{border:0;border-radius:10px;padding:9px 4px;background:transparent;color:var(--text-muted,#5d6780);font:850 10px Inter,system-ui,sans-serif;cursor:pointer}.xp-tab.active{background:var(--surface-2,#141c2d);color:var(--accent,#f0c44d);box-shadow:0 7px 16px rgba(0,0,0,.18)}
+    .xp-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin-bottom:12px;padding:4px;border-radius:13px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.045)}.xp-tab{min-width:0;border:0;border-radius:10px;padding:9px 2px;background:transparent;color:var(--text-muted,#5d6780);font:850 9px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.xp-tab.active{background:var(--surface-2,#141c2d);color:var(--accent,#f0c44d);box-shadow:0 7px 16px rgba(0,0,0,.18)}
+    .rpg-leaderboard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}.rpg-leaderboard-head h3{margin:0;font-size:14px}.rpg-leaderboard-head p{margin:4px 0 0;color:#7886a2;font-size:9px;line-height:1.45}.rpg-leaderboard-refresh{flex:0 0 auto;border:1px solid rgba(240,196,77,.28);border-radius:10px;padding:8px 10px;background:rgba(240,196,77,.1);color:#f4cf67;font:850 9px Inter,system-ui,sans-serif;cursor:pointer}.rpg-leaderboard-refresh:disabled{opacity:.5;cursor:wait}
+    .rpg-leaderboard-sorts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-bottom:11px}.rpg-leaderboard-sort{border:1px solid rgba(255,255,255,.07);border-radius:9px;padding:7px 3px;background:rgba(255,255,255,.025);color:#7f8ba4;font:800 8px Inter,system-ui,sans-serif;cursor:pointer}.rpg-leaderboard-sort.active{border-color:rgba(240,196,77,.38);background:rgba(240,196,77,.12);color:#f5d36e}
+    .rpg-leaderboard-podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;align-items:end;margin:10px 0 12px}.rpg-podium-card{min-width:0;padding:10px 5px;border-radius:14px;text-align:center;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.07)}.rpg-podium-card.place-1{padding-top:17px;border-color:rgba(240,196,77,.38);background:linear-gradient(180deg,rgba(240,196,77,.16),rgba(240,196,77,.035))}.rpg-podium-rank{font-size:20px}.rpg-podium-name{display:block;min-height:28px;margin-top:4px;font-size:9px;font-weight:900;line-height:1.25;overflow:hidden}.rpg-podium-value{display:block;margin-top:5px;color:#f3ce66;font-size:9px;font-weight:850}
+    .rpg-leaderboard-table{display:grid;gap:7px}.rpg-leaderboard-row{display:grid;grid-template-columns:28px minmax(86px,1.3fr) minmax(58px,.75fr) minmax(72px,1fr);gap:7px;align-items:center;padding:9px;border-radius:12px;background:rgba(255,255,255,.028);border:1px solid rgba(255,255,255,.055)}.rpg-leaderboard-row.me{border-color:rgba(94,214,155,.38);background:rgba(54,190,130,.075)}.rpg-leaderboard-rank{font-size:11px;font-weight:950;color:#f0c44d;text-align:center}.rpg-leaderboard-athlete{min-width:0}.rpg-leaderboard-athlete strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}.rpg-leaderboard-athlete small{display:block;margin-top:3px;color:#77849e;font-size:8px}.rpg-leaderboard-main{text-align:right}.rpg-leaderboard-main strong{display:block;font-size:11px;color:#fff}.rpg-leaderboard-main small{display:block;margin-top:2px;color:#75829c;font-size:7px}.rpg-leaderboard-rarities{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}.rpg-rarity-stat{padding:4px 2px;border-radius:7px;text-align:center;background:rgba(255,255,255,.025);font-size:7px;color:#73809a}.rpg-rarity-stat b{display:block;margin-top:2px;font-size:8px;color:#d7deeb}.rpg-leaderboard-details{grid-column:2/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding-top:6px;border-top:1px solid rgba(255,255,255,.045)}.rpg-leaderboard-detail{font-size:7px;color:#7d89a0}.rpg-leaderboard-detail b{color:#cbd4e5}
+    .rpg-leaderboard-empty{padding:24px 14px;border-radius:14px;text-align:center;background:rgba(255,255,255,.025);color:#7f8ba2;font-size:10px}.rpg-leaderboard-updated{margin-top:9px;text-align:center;color:#5f6c84;font-size:7px}
     .xp-hero{padding:17px;border:1px solid rgba(240,196,77,.16);border-radius:18px;background:radial-gradient(circle at 50% 0,rgba(179,27,42,.19),transparent 55%),linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012));box-shadow:0 18px 38px rgba(0,0,0,.2)}
     .xp-level{font-size:11px;color:var(--text-muted,#5d6780);font-weight:900;letter-spacing:.08em;text-transform:uppercase}.xp-total{margin-top:4px;font-size:30px;font-weight:950;color:var(--accent,#f0c44d)}.xp-total small{font-size:12px;color:var(--text-dim,#a0abc0)}
     .xp-progress{height:8px;margin-top:12px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}.xp-progress span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#cf2b3d,var(--accent,#f0c44d))}.xp-next{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font-size:10px;color:var(--text-muted,#5d6780)}
@@ -3839,6 +3849,9 @@ async function armCombatServerTimer(session) {
           else stopMenuMusic();
         }
         render();
+        if (panel.classList.contains('show') && activeTab === 'leaderboard') {
+          void loadRpgLeaderboardV155(true);
+        }
       });
       document.getElementById('xpPanelClose')?.addEventListener('click', () => {
         panel.classList.remove('show');
@@ -3856,6 +3869,19 @@ async function armCombatServerTimer(session) {
           activeTab = tabButton.dataset.xpTab;
           render();
           if (activeTab === 'cases') queueServerCasePriceLoad(selectedCaseLevel);
+          if (activeTab === 'leaderboard') void loadRpgLeaderboardV155(true);
+          return;
+        }
+        const leaderboardRefresh = event.target.closest('[data-leaderboard-refresh]');
+        if (leaderboardRefresh) {
+          void loadRpgLeaderboardV155(true);
+          return;
+        }
+        const leaderboardSortButton = event.target.closest('[data-leaderboard-sort]');
+        if (leaderboardSortButton) {
+          leaderboardSort = leaderboardSortButton.dataset.leaderboardSort || 'global';
+          localStorage.setItem('rpg_leaderboard_sort_v155', leaderboardSort);
+          render();
           return;
         }
         const classButton = event.target.closest('[data-rpg-class]');
@@ -3958,6 +3984,7 @@ async function armCombatServerTimer(session) {
       <button type="button" class="xp-tab ${activeTab === 'equipment' ? 'active' : ''}" data-xp-tab="equipment">🛡️ Équipement</button>
       <button type="button" class="xp-tab ${activeTab === 'cases' ? 'active' : ''}" data-xp-tab="cases">🎁 Cases</button>
       <button type="button" class="xp-tab ${activeTab === 'collection' ? 'active' : ''}" data-xp-tab="collection">📚 Collection</button>
+      <button type="button" class="xp-tab ${activeTab === 'leaderboard' ? 'active' : ''}" data-xp-tab="leaderboard">🏆 Leaderboard</button>
     </div>`;
   }
 
@@ -4623,6 +4650,165 @@ function collectionHtml() {
       <div class="xp-section"><div class="xp-section-title">${collectionSubTab==='bestiary'?'Collection de monstres':'Album des équipements'}</div>${collectionSubTab==='bestiary'?bestiaryCollectionHtml():itemCodexHtml()}</div>`;
   }
 
+
+  function leaderboardBigInt(value) {
+    try {
+      const normalized = String(value ?? '0').split('.')[0].replace(/[^\d-]/g, '') || '0';
+      return BigInt(normalized);
+    } catch (_) {
+      return 0n;
+    }
+  }
+
+  function leaderboardSuffixV155(groupIndex) {
+    if (groupIndex === 1) return 'K';
+    if (groupIndex === 2) return 'M';
+    if (groupIndex === 3) return 'B';
+    if (groupIndex === 4) return 'T';
+    let index = Math.max(0, groupIndex - 5);
+    let result = '';
+    do {
+      result = String.fromCharCode(65 + (index % 26)) + result;
+      index = Math.floor(index / 26) - 1;
+    } while (index >= 0);
+    return result.length === 1 ? `A${result}` : result;
+  }
+
+  function formatHugeNumberV155(value) {
+    const negative = String(value ?? '').trim().startsWith('-');
+    let digits = String(value ?? '0').replace(/[^\d]/g, '').replace(/^0+(?=\d)/, '');
+    if (!digits) digits = '0';
+    if (digits.length <= 3) return `${negative ? '-' : ''}${digits}`;
+
+    const group = Math.floor((digits.length - 1) / 3);
+    const leadingLength = digits.length - group * 3;
+    const integerPart = digits.slice(0, leadingLength);
+    const decimals = digits.slice(leadingLength, leadingLength + Math.max(0, 3 - leadingLength));
+    const trimmedDecimals = decimals.replace(/0+$/, '');
+    return `${negative ? '-' : ''}${integerPart}${trimmedDecimals ? `,${trimmedDecimals}` : ''} ${leaderboardSuffixV155(group)}`;
+  }
+
+  function leaderboardItemScore(row) {
+    return n(row?.mythic_item_drops)
+      + n(row?.ultra_mythic_item_drops) * 6
+      + n(row?.abyssal_item_drops) * 30;
+  }
+
+  function leaderboardMonsterScore(row) {
+    return n(row?.mythic_monster_kills)
+      + n(row?.ultra_mythic_monster_kills) * 6
+      + n(row?.abyssal_monster_kills) * 30;
+  }
+
+  function leaderboardSortValue(row, mode = leaderboardSort) {
+    if (mode === 'difficulty') return n(row?.adventure_difficulty);
+    if (mode === 'items') return leaderboardItemScore(row);
+    if (mode === 'monsters') return leaderboardMonsterScore(row);
+    if (mode === 'damage') return leaderboardBigInt(row?.total_damage);
+    return n(row?.global_score);
+  }
+
+  function sortedLeaderboardRows() {
+    return [...leaderboardRows].sort((a, b) => {
+      const av = leaderboardSortValue(a);
+      const bv = leaderboardSortValue(b);
+      if (typeof av === 'bigint' || typeof bv === 'bigint') {
+        const abi = typeof av === 'bigint' ? av : BigInt(Math.floor(n(av)));
+        const bbi = typeof bv === 'bigint' ? bv : BigInt(Math.floor(n(bv)));
+        if (abi !== bbi) return abi > bbi ? -1 : 1;
+      } else if (av !== bv) {
+        return bv - av;
+      }
+      return String(a?.display_name || a?.athlete_slug || '').localeCompare(
+        String(b?.display_name || b?.athlete_slug || ''),
+        'fr'
+      );
+    });
+  }
+
+  function leaderboardPrimaryValue(row) {
+    if (leaderboardSort === 'difficulty') return `Palier ${n(row?.adventure_difficulty, 1)}`;
+    if (leaderboardSort === 'damage') return `${formatHugeNumberV155(row?.total_damage)} dégâts`;
+    if (leaderboardSort === 'items') return `${leaderboardItemScore(row)} pts objets`;
+    if (leaderboardSort === 'monsters') return `${leaderboardMonsterScore(row)} pts monstres`;
+    return `${fr(row?.global_score, 0)} pts`;
+  }
+
+  function leaderboardHtml() {
+    const sortButtons = [
+      ['global', '🌟 Global'],
+      ['difficulty', '🗺️ Palier'],
+      ['damage', '💥 Dégâts'],
+      ['items', '🎴 Objets'],
+      ['monsters', '👾 Monstres']
+    ].map(([key, label]) => `<button type="button" class="rpg-leaderboard-sort ${leaderboardSort === key ? 'active' : ''}" data-leaderboard-sort="${key}">${label}</button>`).join('');
+
+    if (leaderboardBusy && !leaderboardRows.length) {
+      return `<div class="xp-section"><div class="rpg-leaderboard-head"><div><h3>🏆 Leaderboard RPG</h3><p>Chargement uniquement à l’ouverture de cet onglet.</p></div></div><div class="rpg-leaderboard-empty">Chargement du classement…</div></div>`;
+    }
+
+    if (leaderboardError && !leaderboardRows.length) {
+      return `<div class="xp-section"><div class="rpg-leaderboard-head"><div><h3>🏆 Leaderboard RPG</h3><p>Le classement ne possède aucun abonnement temps réel.</p></div><button type="button" class="rpg-leaderboard-refresh" data-leaderboard-refresh>Réessayer</button></div><div class="rpg-leaderboard-empty">${esc(leaderboardError)}</div></div>`;
+    }
+
+    const rows = sortedLeaderboardRows();
+    const podiumIcons = ['🥇', '🥈', '🥉'];
+    const podium = rows.slice(0, 3).map((row, index) => `<article class="rpg-podium-card place-${index + 1}"><div class="rpg-podium-rank">${podiumIcons[index]}</div><strong class="rpg-podium-name">${esc(row.display_name || row.athlete_slug)}</strong><span class="rpg-podium-value">${esc(leaderboardPrimaryValue(row))}</span></article>`).join('');
+
+    const table = rows.map((row, index) => {
+      const isMe = row.athlete_slug === cfg.slug;
+      return `<article class="rpg-leaderboard-row ${isMe ? 'me' : ''}">
+        <div class="rpg-leaderboard-rank">#${index + 1}</div>
+        <div class="rpg-leaderboard-athlete"><strong>${esc(row.display_name || row.athlete_slug)}${isMe ? ' · toi' : ''}</strong><small>Niv. ${n(row.level,1)} · ${esc(CLASS_DEFS[row.rpg_class]?.title || row.rpg_class || 'Classe non choisie')}</small></div>
+        <div class="rpg-leaderboard-main"><strong>${esc(leaderboardPrimaryValue(row))}</strong><small>Palier ${n(row.adventure_difficulty,1)} · ${formatHugeNumberV155(row.total_damage)} dégâts</small></div>
+        <div class="rpg-leaderboard-rarities">
+          <span class="rpg-rarity-stat">Mythique<b>${n(row.mythic_item_drops)}</b></span>
+          <span class="rpg-rarity-stat">Ultra<b>${n(row.ultra_mythic_item_drops)}</b></span>
+          <span class="rpg-rarity-stat">Abyssal<b>${n(row.abyssal_item_drops)}</b></span>
+        </div>
+        <div class="rpg-leaderboard-details">
+          <span class="rpg-leaderboard-detail">Monstres : <b>Myth. ${n(row.mythic_monster_kills)} · Ultra ${n(row.ultra_mythic_monster_kills)} · Abyssal ${n(row.abyssal_monster_kills)}</b></span>
+          <span class="rpg-leaderboard-detail">Boss vaincus : <b>${n(row.boss_wins)}</b> · meilleur coup : <b>${formatHugeNumberV155(row.best_combat_damage)}</b></span>
+        </div>
+      </article>`;
+    }).join('');
+
+    const updated = leaderboardLoadedAt
+      ? new Intl.DateTimeFormat('fr-FR', { hour:'2-digit', minute:'2-digit', second:'2-digit' }).format(leaderboardLoadedAt)
+      : 'jamais';
+
+    return `<div class="xp-section">
+      <div class="rpg-leaderboard-head"><div><h3>🏆 Leaderboard RPG</h3><p>Le classement est chargé seulement quand tu ouvres cet onglet ou appuies sur Actualiser.</p></div><button type="button" class="rpg-leaderboard-refresh" data-leaderboard-refresh ${leaderboardBusy ? 'disabled' : ''}>${leaderboardBusy ? 'Actualisation…' : '↻ Actualiser'}</button></div>
+      <div class="rpg-leaderboard-sorts">${sortButtons}</div>
+      ${rows.length ? `<div class="rpg-leaderboard-podium">${podium}</div><div class="rpg-leaderboard-table">${table}</div>` : '<div class="rpg-leaderboard-empty">Aucune statistique de classement disponible.</div>'}
+      ${leaderboardError ? `<div class="rpg-leaderboard-updated">${esc(leaderboardError)}</div>` : `<div class="rpg-leaderboard-updated">Dernière actualisation volontaire : ${updated}</div>`}
+    </div>`;
+  }
+
+  async function loadRpgLeaderboardV155(force = false) {
+    if (!window.CoachingCloud?.client || !CoachingCloud.session?.user) return;
+    if (leaderboardBusy) return;
+    if (!force && leaderboardRows.length) return;
+
+    leaderboardBusy = true;
+    leaderboardError = '';
+    render();
+
+    const { data, error } = await CoachingCloud.client.rpc('get_rpg_leaderboard_v155');
+    leaderboardBusy = false;
+
+    if (error) {
+      leaderboardError = `Leaderboard indisponible : ${error.message}`;
+      console.warn(leaderboardError);
+      render();
+      return;
+    }
+
+    leaderboardRows = Array.isArray(data) ? data : data ? [data] : [];
+    leaderboardLoadedAt = new Date();
+    render();
+  }
+
   function render() {
     inject();
     const xp = n(progress?.xp_total);
@@ -4631,7 +4817,15 @@ function collectionHtml() {
     if (chip) chip.textContent = `Niv. ${level} · ${fr(xp, 1)} XP · 🪙 ${fr(gold, 0)}`;
     const body = document.getElementById('xpPanelBody');
     if (!body) return;
-    const content = activeTab === 'equipment' ? equipmentHtml() : activeTab === 'cases' ? casesHtml() : activeTab === 'collection' ? collectionHtml() : progressHtml();
+    const content = activeTab === 'equipment'
+      ? equipmentHtml()
+      : activeTab === 'cases'
+        ? casesHtml()
+        : activeTab === 'collection'
+          ? collectionHtml()
+          : activeTab === 'leaderboard'
+            ? leaderboardHtml()
+            : progressHtml();
     body.innerHTML = `${tabsHtml()}${content}`;
   }
 
