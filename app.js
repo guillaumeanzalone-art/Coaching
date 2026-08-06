@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V157';
+window.GA_APP_VERSION = 'V158';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-06-v157-real-adventure-progress';
+window.GA_APP_BUILD = '2026-08-06-v158-stable-load-entry';
 
 
 /* --------------------------------------------------------------------------
@@ -7975,6 +7975,13 @@ function collectionHtml() {
   style.textContent = `
     .cloud-athlete-rpe,.cloud-athlete-load{width:58px;min-width:0;padding:5px 5px;border-radius:7px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:inherit;font:700 11px Inter,system-ui,sans-serif;text-align:center;outline:none}
     .ga-decimal-load-v146{width:72px!important;min-width:72px!important;font-variant-numeric:tabular-nums}.ga-decimal-load-v146:invalid{border-color:rgba(255,170,70,.55)!important}
+    .ga-stable-load-v158{width:78px!important;min-width:78px!important;min-height:38px!important;padding:7px 6px!important;font-size:14px!important;line-height:1!important;font-variant-numeric:tabular-nums;touch-action:manipulation;caret-color:var(--accent,#f0c44d)}
+    .ga-stable-load-v158.ga-load-editing-v158{border-color:var(--accent,#f0c44d)!important;box-shadow:0 0 0 2px rgba(240,196,77,.13)!important;background:rgba(240,196,77,.075)!important}
+    .ga-stable-load-v158.ga-load-error-v158{border-color:#ff6d6d!important;box-shadow:0 0 0 2px rgba(255,109,109,.12)!important}
+    .set-check,.check-btn,[data-cloud-checkbox]{min-width:40px!important;width:40px!important;min-height:40px!important;height:40px!important;flex:0 0 40px!important;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+    .set-check:focus-visible,.check-btn:focus-visible,[data-cloud-checkbox]:focus-visible{outline:2px solid var(--accent,#f0c44d)!important;outline-offset:2px}
+    @media (max-width:370px){.ga-stable-load-v158{width:72px!important;min-width:72px!important;font-size:13px!important}}
+
     .cloud-athlete-rpe:focus,.cloud-athlete-load:focus{border-color:var(--accent,#55b9e6)}
     .cloud-athlete-panel{display:none;position:fixed;z-index:390;left:50%;transform:translateX(-50%);top:58px;bottom:61px;width:100%;max-width:430px;padding:12px 16px 18px;overflow-y:auto;background:var(--bg,#0a0e18);color:var(--text,#e8ecf5)}
     .cloud-athlete-panel.show{display:block}.cloud-athlete-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 12px}.cloud-athlete-panel-head h2{margin:0;font-size:16px}.cloud-athlete-panel-head button{border:0;border-radius:9px;background:var(--surface-2,#1c2438);color:inherit;padding:7px 10px;font-weight:800;cursor:pointer}
@@ -8003,20 +8010,20 @@ function collectionHtml() {
     try { localStorage.setItem(cacheKey, JSON.stringify(inputCache)); } catch (_) {}
   }
 
-  const decimalLoadObserverV146 = new MutationObserver(mutations => {
+  const decimalLoadObserverV158 = new MutationObserver(mutations => {
     for (const mutation of mutations) {
       mutation.addedNodes.forEach(node => {
         if (node?.nodeType !== 1) return;
-        if (isDecimalLoadInputV146(node)) upgradeDecimalLoadInputV146(node);
-        upgradeVisibleDecimalLoadsV146(node);
+        if (isStableLoadInputV158(node)) upgradeStableLoadInputV158(node);
+        upgradeVisibleStableLoadsV158(node);
       });
     }
   });
-  decimalLoadObserverV146.observe(document.documentElement, {
+  decimalLoadObserverV158.observe(document.documentElement, {
     childList: true,
     subtree: true
   });
-  queueMicrotask(() => upgradeVisibleDecimalLoadsV146(document));
+  queueMicrotask(() => upgradeVisibleStableLoadsV158(document));
 
   function parseNumber(value) {
     const normalized = String(value ?? '').trim().replace(',', '.');
@@ -8104,6 +8111,142 @@ function collectionHtml() {
       '.set-row input[name*="load" i],.set-row input[name*="charge" i],' +
       '.set-row input[aria-label*="charge" i]'
     ).forEach(upgradeDecimalLoadInputV146);
+  }
+
+  function isStableLoadInputV158(control) {
+    return isDecimalLoadInputV146(control);
+  }
+
+  function sanitizeLoadDraftV158(value) {
+    let raw = String(value ?? '').replace(/\s+/g, '').replace(/[^0-9.,]/g, '');
+    if (!raw) return '';
+    if (/^[.,]/.test(raw)) raw = `0${raw}`;
+    const separatorIndex = raw.search(/[.,]/);
+    if (separatorIndex >= 0) {
+      const integerPart = raw.slice(0, separatorIndex).replace(/[.,]/g, '') || '0';
+      const decimalPart = raw.slice(separatorIndex + 1).replace(/[.,]/g, '').slice(0, 3);
+      raw = `${integerPart}${raw[separatorIndex]}${decimalPart}`;
+    } else {
+      raw = raw.replace(/[.,]/g, '');
+    }
+    return raw;
+  }
+
+  function committedLoadFromDraftV158(value, finalize = false) {
+    let raw = sanitizeLoadDraftV158(value);
+    if (!raw) return null;
+    if (/^[0-9]+[.,]$/.test(raw)) {
+      if (!finalize) return null;
+      raw = raw.slice(0, -1);
+    }
+    if (!/^[0-9]+(?:[.,][0-9]{1,3})?$/.test(raw)) return null;
+    return normalizeLoadValue(raw);
+  }
+
+  function loadContextV158(input) {
+    const row = input?.closest('.set-row');
+    const idx = Number(row?.dataset?.cloudSetIndex);
+    if (!row || !Number.isInteger(idx)) return null;
+    const { w, d } = currentIndices();
+    return { row, idx, w, d, key: valueKey(w, d, idx) };
+  }
+
+  function upgradeStableLoadInputV158(input) {
+    if (!isStableLoadInputV158(input)) return input;
+    const currentValue = String(input.value ?? '');
+    try { input.type = 'text'; } catch (_) {}
+    input.inputMode = 'decimal';
+    input.autocomplete = 'off';
+    input.autocorrect = 'off';
+    input.spellcheck = false;
+    input.enterKeyHint = 'done';
+    input.removeAttribute('pattern');
+    input.removeAttribute('step');
+    input.removeAttribute('min');
+    input.classList.add('ga-stable-load-v158');
+    input.setAttribute('aria-label', input.getAttribute('aria-label') || 'Charge réalisée en kilogrammes');
+    input.setAttribute('aria-description', 'Virgule ou point acceptés. Sauvegarde en quittant le champ.');
+    if (currentValue && !String(input.value ?? '')) input.value = currentValue;
+    return input;
+  }
+
+  function upgradeVisibleStableLoadsV158(root = document) {
+    if (isStableLoadInputV158(root)) upgradeStableLoadInputV158(root);
+    root.querySelectorAll?.('.set-row input[data-cloud-load],.set-row .cloud-athlete-load,.set-row .load-input,.set-row .set-load,.set-row input[data-load],.set-row input[data-load-kg],.set-row input[data-real-load],.set-row input[name*="load" i],.set-row input[name*="charge" i],.set-row input[aria-label*="charge" i]').forEach(upgradeStableLoadInputV158);
+    root.querySelectorAll?.('.set-check,.check-btn,[data-cloud-checkbox]').forEach(button => {
+      button.setAttribute('role', 'button');
+      button.setAttribute('tabindex', '0');
+      button.setAttribute('aria-label', button.classList.contains('checked') ? 'Annuler la validation de la série' : 'Valider la série');
+    });
+  }
+
+  function rememberLoadDraftV158(input) {
+    if (!isStableLoadInputV158(input)) return '';
+    upgradeStableLoadInputV158(input);
+    const before = String(input.value ?? '');
+    const caret = input.selectionStart ?? before.length;
+    const raw = sanitizeLoadDraftV158(before);
+    if (raw !== before) {
+      input.value = raw;
+      const pos = Math.min(raw.length, Math.max(0, caret - (before.length - raw.length)));
+      try { input.setSelectionRange(pos, pos); } catch (_) {}
+    }
+    input.dataset.gaLoadEditingV158 = '1';
+    input.classList.add('ga-load-editing-v158');
+    input.classList.remove('ga-load-error-v158');
+    const ctx = loadContextV158(input);
+    if (ctx) {
+      const prev = inputCache[ctx.key] || {};
+      inputCache[ctx.key] = { ...prev, loadDraft: raw, loadDraftUpdatedAt: Date.now() };
+      writeCache();
+    }
+    return raw;
+  }
+
+  function previousCommittedLoadV158(input) {
+    const datasetValue = normalizeLoadValue(input?.dataset?.gaLastCommittedV158);
+    if (datasetValue !== null) return datasetValue;
+    const ctx = loadContextV158(input);
+    return ctx ? normalizeLoadValue(inputCache[ctx.key]?.load) : null;
+  }
+
+  function commitStableLoadInputV158(input, { restorePreviousWhenEmpty = true, quiet = false } = {}) {
+    if (!isStableLoadInputV158(input)) return null;
+    upgradeStableLoadInputV158(input);
+    const ctx = loadContextV158(input);
+    const raw = sanitizeLoadDraftV158(input.value);
+    const previous = previousCommittedLoadV158(input);
+    let committed = committedLoadFromDraftV158(raw, true);
+    if (committed === null && !raw && restorePreviousWhenEmpty && previous !== null) committed = previous;
+    if (committed === null) {
+      input.dataset.gaLoadEditingV158 = '0';
+      input.classList.remove('ga-load-editing-v158');
+      input.classList.toggle('ga-load-error-v158', !!raw);
+      if (!quiet && raw) {
+        const now = Date.now();
+        if (!window.__gaLoadInvalidToastAt || now - window.__gaLoadInvalidToastAt > 2500) {
+          window.__gaLoadInvalidToastAt = now;
+          CoachingCloud?.toast?.('Charge invalide. Utilise par exemple 72,5 ou 72.5.', true);
+        }
+      }
+      return null;
+    }
+    const canonical = String(committed);
+    input.value = canonical;
+    input.dataset.gaLastCommittedV158 = canonical;
+    input.dataset.gaLoadEditingV158 = '0';
+    input.classList.remove('ga-load-editing-v158', 'ga-load-error-v158');
+    if (ctx) {
+      const prev = inputCache[ctx.key] || {};
+      inputCache[ctx.key] = { ...prev, load: committed, loadDraft: '', loadDraftUpdatedAt: 0, dirty: true, updatedAt: Date.now() };
+      writeCache();
+    }
+    return committed;
+  }
+
+  function rowHasActiveLoadEditorV158(row) {
+    const active = document.activeElement;
+    return !!(row && active && row.contains(active) && isStableLoadInputV158(active) && active.dataset.gaLoadEditingV158 === '1');
   }
 
   function normalizeRpeValue(value) {
@@ -8709,6 +8852,7 @@ function collectionHtml() {
 
   function writeControlValue(control, value, kind = '') {
     if (!control || value === null || value === undefined || value === '') return;
+    if (kind === 'load' && isStableLoadInputV158(control) && (document.activeElement === control || control.dataset.gaLoadEditingV158 === '1')) return;
     const normalized = kind === 'rpe' ? normalizeRpeValue(value) : normalizeLoadValue(value);
     if (normalized === null) return;
     const text = String(normalized);
@@ -8804,10 +8948,14 @@ function collectionHtml() {
     const isAccessoryRow = code === 'ac';
     removeLegacyDuplicateControls(row, code);
 
-    upgradeVisibleDecimalLoadsV146(row);
+    upgradeVisibleStableLoadsV158(row);
     let loadInput = nativeLoadInput(row);
     let rpeInput = nativeRpeInput(row);
-    if (isDecimalLoadInputV146(loadInput)) upgradeDecimalLoadInputV146(loadInput);
+    if (isStableLoadInputV158(loadInput)) {
+      upgradeStableLoadInputV158(loadInput);
+      const initialCommitted = normalizeLoadValue(loadInput.value) ?? normalizeLoadValue(inputCache[valueKey(w, d, idx)]?.load);
+      if (initialCommitted !== null && !loadInput.dataset.gaLastCommittedV158) loadInput.dataset.gaLastCommittedV158 = String(initialCommitted);
+    }
     improveLoadChoiceV125(row, idx, w, d);
 
     // Les accessoires gardent uniquement la charge : aucun champ RPE,
@@ -9030,6 +9178,7 @@ function collectionHtml() {
       syncingRemote = true;
       for (let idx = 0; idx < currentRows.length; idx++) {
         const row = currentRows[idx];
+        if (rowHasActiveLoadEditorV158(row)) continue;
         const remote = remoteRows.get(remoteKey(w, d, idx));
         if (!remote) continue;
         const key = valueKey(w, d, idx);
@@ -9091,6 +9240,7 @@ function collectionHtml() {
       syncingRemote = false;
 
       currentRows.forEach((row, idx) => {
+        if (rowHasActiveLoadEditorV158(row)) return;
         const cached = inputCache[valueKey(w, d, idx)];
         if (!cached?.dirty) return;
         const meta = rowMeta(row, idx, w, d);
@@ -9367,6 +9517,10 @@ function collectionHtml() {
   const valueSyncTimers = new Map();
 
   function persistSetValues(meta, row, options = {}) {
+    if (rowHasActiveLoadEditorV158(row)) {
+      rememberLoadDraftV158(meta.loadInput || document.activeElement);
+      return;
+    }
     cacheInputs(meta, options);
     const stored = inputCache[valueKey(meta.w, meta.d, meta.idx)] || {};
     const durableLoad = normalizeLoadValue(meta.load) ?? normalizeLoadValue(stored.load);
@@ -9422,13 +9576,54 @@ function collectionHtml() {
   }
 
   function bindInteractions() {
+    document.addEventListener('focusin', event => {
+      const input = event.target.closest('[data-cloud-load],.cloud-athlete-load,.load-input,.set-load,input[data-load],input[data-load-kg],input[data-real-load],input[name*="load" i],input[name*="charge" i],input[aria-label*="charge" i]');
+      if (!isStableLoadInputV158(input)) return;
+      upgradeStableLoadInputV158(input);
+      const current = normalizeLoadValue(input.value) ?? previousCommittedLoadV158(input);
+      if (current !== null) input.dataset.gaLastCommittedV158 = String(current);
+      input.dataset.gaLoadEditingV158 = '1';
+      input.classList.add('ga-load-editing-v158');
+      input.classList.remove('ga-load-error-v158');
+    }, true);
+
+    document.addEventListener('focusout', event => {
+      const input = event.target;
+      if (!isStableLoadInputV158(input)) return;
+      const committed = commitStableLoadInputV158(input, { restorePreviousWhenEmpty: true });
+      const ctx = loadContextV158(input);
+      if (!ctx || committed === null) return;
+      const meta = rowMeta(ctx.row, ctx.idx, ctx.w, ctx.d);
+      meta.load = committed;
+      persistSetValues(meta, ctx.row, { dirty: true });
+      scheduleSetValueSync(meta, originalCompleted(ctx.w, ctx.d, ctx.idx, ctx.row), 0);
+    }, true);
+
+    document.addEventListener('keydown', event => {
+      const input = event.target;
+      if (!isStableLoadInputV158(input) || event.key !== 'Enter') return;
+      event.preventDefault();
+      const committed = commitStableLoadInputV158(input, { restorePreviousWhenEmpty: true });
+      if (committed === null && String(input.value || '').trim()) return;
+      const row = input.closest('.set-row');
+      input.blur();
+      requestAnimationFrame(() => checkboxFor(row)?.focus?.());
+    }, true);
+
+    document.addEventListener('keydown', event => {
+      const box = event.target.closest('[data-cloud-checkbox],.set-check,.check-btn');
+      if (!box || !['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      box.click();
+    }, true);
+
     // Sauvegarde dès l'appui sur la coche. Le click natif peut provoquer un
     // render() immédiat ; pointerdown garantit que la charge saisie est déjà
     // copiée dans loads/state/S avant la destruction du champ courant.
     document.addEventListener('pointerdown', event => {
       const activeLoad = document.activeElement;
-      if (isDecimalLoadInputV146(activeLoad)) {
-        sanitizeDecimalLoadInputV146(activeLoad, true);
+      if (isStableLoadInputV158(activeLoad)) {
+        commitStableLoadInputV158(activeLoad, { restorePreviousWhenEmpty: true, quiet: true });
       }
       const checkbox = event.target.closest('[data-cloud-checkbox],.set-check,.check-btn');
       const row = checkbox?.closest('.set-row');
@@ -9578,7 +9773,10 @@ function collectionHtml() {
 
     document.addEventListener('input', event => {
       const input = event.target.closest('[data-cloud-load],.cloud-athlete-rpe,.cloud-athlete-load,.load-select,.load-input,.set-load,.rpe-select,.rpe-input,.set-rpe,.accessory-time-v22');
-      if (isDecimalLoadInputV146(input)) sanitizeDecimalLoadInputV146(input, false);
+      if (isStableLoadInputV158(input)) {
+        rememberLoadDraftV158(input);
+        return;
+      }
       const row = input?.closest('.set-row');
       if (!input || !row || !exerciseContainer()?.contains(row)) return;
       const idx = Number(row.dataset.cloudSetIndex);
@@ -9591,7 +9789,7 @@ function collectionHtml() {
 
     document.addEventListener('change', event => {
       const input = event.target.closest('[data-cloud-load],.cloud-athlete-rpe,.cloud-athlete-load,.load-select,.load-input,.set-load,.rpe-select,.rpe-input,.set-rpe,.accessory-time-v22');
-      if (isDecimalLoadInputV146(input)) sanitizeDecimalLoadInputV146(input, true);
+      if (isStableLoadInputV158(input)) commitStableLoadInputV158(input, { restorePreviousWhenEmpty: true });
       const row = input?.closest('.set-row');
       if (!input || !row || !exerciseContainer()?.contains(row)) return;
       const idx = Number(row.dataset.cloudSetIndex);

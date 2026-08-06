@@ -1,58 +1,19 @@
-# Patch V157 — Palier réel
-
-## Cause exacte
-
-L'ancienne requête demandait une longue liste de colonnes.
-
-Si une seule colonne récente était absente du schéma ou du cache Supabase,
-l'application utilisait une requête de secours. Cette requête récupérait le
-niveau, l'XP, l'or et la puissance, mais pas :
-
-- adventure_difficulty
-- kills_toward_boss
-- boss_wins
-
-Le jeu remettait donc localement le palier à 1 et le compteur à 0.
+# Patch V158 — Saisie stable des charges
 
 ## Correction
 
-- Lecture de la ligne complète avec select('*').
-- Suppression du fallback incomplet.
-- Vérification du slug de la ligne reçue.
-- adventure_difficulty utilisé tel quel.
-- kills_toward_boss utilisé tel quel.
-- Niveau RPG et XP exclus.
-- Suppression des triggers V153/V154/V156 d'alignement sur le niveau.
-
-## Guillaume
-
-La ligne montrée dans Supabase doit produire :
-
-- palier 173
-- compteur 50/50
-- boss disponible
+- La charge reste un brouillon pendant la frappe.
+- Aucun appel Supabase et aucun rendu pendant que l'athlète écrit.
+- Virgule et point acceptés : `5`, `72,5`, `72.5`, `102,25`.
+- Sauvegarde uniquement à la sortie du champ, avec Entrée ou au clic sur la série.
+- Une actualisation distante ne peut plus écraser la ligne active.
+- Un effacement accidentel restaure la dernière charge valide.
+- Entrée place le focus sur la validation de la série.
+- Cible de validation agrandie à 40 × 40 px.
 
 ## Installation
 
-### Supabase
+Téléverser tout le contenu du ZIP à la racine GitHub.
+Les 41 pages HTML sont incluses uniquement pour forcer le chargement de `app.js?v=20260806-v158-stable-load-entry`.
 
-Exécuter :
-
-SUPABASE/PATCH_SUPABASE_V157_PALIER_REEL.sql
-
-Le premier contrôle doit conserver les valeurs de Guillaume.
-triggers_alignement_restants doit afficher 0.
-
-### GitHub
-
-Téléverser tout le contenu du dossier GITHUB à la racine.
-
-Après le déploiement et Ctrl + F5, vérifier :
-
-- En ligne · V157
-- Progression V157
-- ligne guillaume
-- palier Supabase 173
-- compteur boss 50/50
-
-Pages HTML incluses : 41.
+Aucun SQL Supabase nécessaire. Après déploiement, faire `Ctrl + F5` et vérifier le badge V158.
