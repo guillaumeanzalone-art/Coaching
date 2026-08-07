@@ -767,7 +767,8 @@ const PREFERRED_PAGES={
   'celia':'Celia.html',
   'charles':'Charles.html',
   'maxence':'Maxence.html',
-  'metaknight':'Metaknight.html'
+  'metaknight':'Metaknight.html',
+  'louis':'Louis (2).html'
 };
 
 const BODYWEIGHTS={
@@ -840,6 +841,22 @@ function compact(s){return norm(s).replace(/[\s_-]+/g,'')}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function number(v){if(v==null)return null;const n=Number(String(v).replace(',','.'));return Number.isFinite(n)?n:null}
 function extract(text,labels){const m=text.match(new RegExp('(?:'+labels+')\\s*[:=]?\\s*~?(-?\\d+(?:[.,]\\d+)?)','i'));return m?number(m[1]):null}
+function extractLiftMax(text,label){
+  const exact=text.match(new RegExp('\\b'+label+'\\s*:\\s*~?(-?\\d+(?:[.,]\\d+)?)\\s*(?:kg)?','i'));
+  return exact?number(exact[1]):extract(text,label);
+}
+function extractProfileBodyWeight(text){
+  for(const pattern of [
+    /Poids utilisé\s*:\s*~?(\d+(?:[.,]\d+)?)/i,
+    /Poids de référence\s*:\s*~?(\d+(?:[.,]\d+)?)/i,
+    /Poids\s*:\s*~?(\d+(?:[.,]\d+)?)/i,
+    /PDC\s*:\s*~?(\d+(?:[.,]\d+)?)/i
+  ]){
+    const m=text.match(pattern);
+    if(m)return number(m[1]);
+  }
+  return null;
+}
 function displaySlug(slug){
   const normalized=norm(slug);
   if(DISPLAY_NAMES[normalized])return DISPLAY_NAMES[normalized];
@@ -921,6 +938,7 @@ let APP_LIST=[];
 let SEARCH_QUERY='';
 let ACTIVE_VIEW='athletes';
 let DATA_SOURCE='app_users';
+let HOME_SUPABASE_CLIENT=null;
 
 function refreshHomeWeeks(){if(APP_LIST.length)render(APP_LIST)}
 async function files(){
@@ -943,10 +961,10 @@ async function read(file){
   const pageSlug=extractAthleteSlug(scriptText);
   const fallbackSlug=norm(file);
   const slug=pageSlug||fallbackSlug;
-  const sq=extract(pageText,'SQ|Squat');
-  const bn=extract(pageText,'BN|Bench');
-  const dl=extract(pageText,'DL|Deadlift');
-  const htmlBw=extract(pageText,'PDC|Body\\s*Weight|Poids\\s*(?:de\\s*)?corps');
+  const sq=extractLiftMax(pageText,'Squat');
+  const bn=extractLiftMax(pageText,'Bench');
+  const dl=extractLiftMax(pageText,'Deadlift');
+  const htmlBw=extractProfileBodyWeight(pageText);
   const configuredBw=extractConfiguredBodyWeight(scriptText);
   const bw=configuredBw??(BODYWEIGHTS[slug]>0?BODYWEIGHTS[slug]:null)??htmlBw??null;
   const sex=SEX[slug]||'M';
@@ -960,12 +978,12 @@ async function read(file){
       name:canonicalByFile.name,
       emoji:canonicalByFile.emoji,
       profileImage:canonicalByFile.profileImage,
-      sq:canonicalByFile.sq,
-      bn:canonicalByFile.bn,
-      dl:canonicalByFile.dl,
-      bw:canonicalByFile.bodyWeight,
-      sex:canonicalByFile.sex,
-      total:canonicalByFile.sq+canonicalByFile.bn+canonicalByFile.dl,
+      sq:sq??canonicalByFile.sq,
+      bn:bn??canonicalByFile.bn,
+      dl:dl??canonicalByFile.dl,
+      bw:bw??canonicalByFile.bodyWeight,
+      sex:sex??canonicalByFile.sex,
+      total:(sq??canonicalByFile.sq)+(bn??canonicalByFile.bn)+(dl??canonicalByFile.dl),
       storageKey:extractStorageKey(scriptText)
     };
   }
@@ -991,8 +1009,9 @@ async function loadAppUserSlugs(){
   }
   const client=window.supabase.createClient(config.url,config.publishableKey,{
     auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},
-    global:{headers:{'x-application-name':'ga-coaching-home-v151'}}
+    global:{headers:{'x-application-name':'ga-coaching-home-v171'}}
   });
+  HOME_SUPABASE_CLIENT=client;
 
   const rpc=await client.rpc(HOME_ATHLETES_RPC);
   if(!rpc.error){
@@ -1008,6 +1027,42 @@ async function loadAppUserSlugs(){
   if(direct.error)throw direct.error;
   return uniqueSlugs(direct.data);
 }
+
+async function syncCurrentGlProfilesV171(list){
+  const client=HOME_SUPABASE_CLIENT;
+  if(!client||!Array.isArray(list)||!list.length)return 0;
+
+  const sessionResult=await client.auth.getSession();
+  if(!sessionResult?.data?.session)return 0;
+
+  const profiles=list
+    .filter(a=>!a.isProgramVariant&&a.slug&&a.storageKey&&a.sq>0&&a.bn>0&&a.dl>0&&a.bw>0)
+    .map(a=>({
+      athlete_slug:a.slug,
+      program_key:a.storageKey,
+      squat_max:a.sq,
+      bench_max:a.bn,
+      deadlift_max:a.dl,
+      bodyweight:a.bw,
+      sex:a.sex==='F'?'F':'M'
+    }));
+
+  if(!profiles.length)return 0;
+
+  const {data,error}=await client.rpc(
+    'sync_athlete_program_gl_batch_v171',
+    {p_profiles:profiles}
+  );
+
+  if(error){
+    if(!/function|schema cache|does not exist/i.test(error.message||'')){
+      console.warn('Sync GL V171 accueil :',error.message);
+    }
+    return 0;
+  }
+  return Number(data)||0;
+}
+
 function render(list){
   const filtered=list.filter(a=>{
     const searchable=[a.name,a.displayName,a.programLabel,a.slug].map(norm).join(' ');
@@ -1083,12 +1138,12 @@ async function boot(){
         emoji:canonical.emoji,
         profileImage:canonical.profileImage,
         file:canonical.file,
-        sq:canonical.sq,
-        bn:canonical.bn,
-        dl:canonical.dl,
-        bw:canonical.bodyWeight,
-        sex:canonical.sex,
-        total:canonical.sq+canonical.bn+canonical.dl,
+        sq:page?.sq??canonical.sq,
+        bn:page?.bn??canonical.bn,
+        dl:page?.dl??canonical.dl,
+        bw:page?.bw??canonical.bodyWeight,
+        sex:page?.sex??canonical.sex,
+        total:(page?.sq??canonical.sq)+(page?.bn??canonical.bn)+(page?.dl??canonical.dl),
         storageKey:page?.storageKey||null
       };
     }
@@ -1118,6 +1173,7 @@ async function boot(){
   APP_LIST=[...primaryAthletes,...programVariants]
     .sort((a,b)=>(a.displayName||a.name).localeCompare(b.displayName||b.name,'fr'));
 
+  await syncCurrentGlProfilesV171(primaryAthletes);
   render(APP_LIST);
   const missing=primaryAthletes.filter(a=>!a.file).map(a=>a.name);
   const missingVariants=PROGRAM_VARIANTS.filter(v=>!programVariants.some(p=>p.file===v.file)).map(v=>v.file);

@@ -1,54 +1,23 @@
-# V166 — Résistance d'équipement universelle + XP à 50 paliers
+# V171 — GL Points automatiques
 
-## Règle des dégâts
+- IPF GL Classic / Raw 3-Lift uniquement.
+- Backfill immédiat de tous les `athlete_progress.gl_points`.
+- Anzalone : 350 / 210 / 350 à 120 kg = 105.783819 GL.
+- Le programme courant est identifié par `programKey`.
+- À chaque nouveau programme principal, l'accueil et la page de l'athlète
+  renvoient ses nouveaux maxes/PDC/sexe à Supabase.
+- Les maxes figés des profils canoniques de l'accueil ne bloquent plus les
+  nouvelles programmations.
+- Le parsing des maxes recherche explicitement `Squat:`, `Bench:`, `Deadlift:`.
+- Louis utilise `Louis (2).html` / `louis_v3`, le bloc le plus récent.
+- Magicarpe V170 est conservée.
+- RPE Tom Gibertini V167 conservé.
+- Roi Noeil / leaderboard V168 conservé.
 
-Tous les monstres appliquent le malus de sous-équipement :
+`gl_multiplier` n'est pas réinventé ici : ce patch corrige la source
+`gl_points` et conserve la logique de coefficient XP déjà existante.
 
-- Simple
-- Commun
-- Peu commun
-- Rare
-- Épique
-- Légendaire
-- Mythique
-- Ultra mythique
-- Abyssal
-- personnages spéciaux
-- boss
-
-Il n'existe aucune immunité liée à la rareté DU MONSTRE.
-
-L'immunité concerne uniquement les PIÈCES équipées :
-
-- Ultra mythique
-- Abyssale
-
-Une telle pièce est considérée comme couvrant le niveau requis pour son propre
-emplacement. Les autres emplacements ordinaires peuvent toujours provoquer
-le malus.
-
-## XP
-
-L'écart est calculé directement en paliers par rapport au maximum débloqué :
-
-- 0–9 : 100 %
-- 10–19 : 90 %
-- 20–29 : 75 %
-- 30–39 : 60 %
-- 40–49 : 45 %
-- 50+ : 0 %
-
-Exemple max 173 :
-- palier 124 = écart 49 = 45 % XP
-- palier 123 = écart 50 = 0 XP
-
-Les boss restent à 0 XP selon la règle déjà existante.
-
-## Installation
-
-1. Exécuter le SQL Supabase.
-2. Téléverser le contenu GITHUB à la racine quand GitHub Pages est disponible.
-3. Vérifier que le badge affiche V166.
-
-Le SQL crée un wrapper de validation de combat idempotent afin qu'un clic
-"Réessayer la validation" ne puisse pas appliquer deux fois la correction XP.
+Installation :
+1. SQL Supabase.
+2. Contenu GITHUB à la racine.
+3. Vérifier V171.
