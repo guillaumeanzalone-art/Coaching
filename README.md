@@ -1,24 +1,54 @@
-# V163 — Pool monstres ultra-rare
+# V166 — Résistance d'équipement universelle + XP à 50 paliers
 
-Base sans Chance / Chasseur :
+## Règle des dégâts
 
-- Simple : 33,889 %
-- Commun : 30 %
-- Peu commun : 20 %
-- Rare : 10 %
-- Épique : 5 %
-- Légendaire : 1 %
-- Mythique : 0,1 %
-- Ultra mythique : 0,01 %
-- Abyssal : 0,001 %
+Tous les monstres appliquent le malus de sous-équipement :
 
-Total : 100 %.
+- Simple
+- Commun
+- Peu commun
+- Rare
+- Épique
+- Légendaire
+- Mythique
+- Ultra mythique
+- Abyssal
+- personnages spéciaux
+- boss
 
-La Chance et Chasseur s'appliquent ensuite et la table est renormalisée.
+Il n'existe aucune immunité liée à la rareté DU MONSTRE.
+
+L'immunité concerne uniquement les PIÈCES équipées :
+
+- Ultra mythique
+- Abyssale
+
+Une telle pièce est considérée comme couvrant le niveau requis pour son propre
+emplacement. Les autres emplacements ordinaires peuvent toujours provoquer
+le malus.
+
+## XP
+
+L'écart est calculé directement en paliers par rapport au maximum débloqué :
+
+- 0–9 : 100 %
+- 10–19 : 90 %
+- 20–29 : 75 %
+- 30–39 : 60 %
+- 40–49 : 45 %
+- 50+ : 0 %
+
+Exemple max 173 :
+- palier 124 = écart 49 = 45 % XP
+- palier 123 = écart 50 = 0 XP
+
+Les boss restent à 0 XP selon la règle déjà existante.
 
 ## Installation
 
 1. Exécuter le SQL Supabase.
-2. Quand GitHub Pages fonctionne de nouveau, téléverser le contenu de GITHUB.
+2. Téléverser le contenu GITHUB à la racine quand GitHub Pages est disponible.
+3. Vérifier que le badge affiche V166.
 
-Le SQL modifie immédiatement la vraie table de tirage côté serveur.
+Le SQL crée un wrapper de validation de combat idempotent afin qu'un clic
+"Réessayer la validation" ne puisse pas appliquer deux fois la correction XP.
