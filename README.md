@@ -1,61 +1,24 @@
-# Patch V160 — Palier lu directement depuis athlete_progress
+# V163 — Pool monstres ultra-rare
 
-## Ce que le ZIP utilisateur a révélé
+Base sans Chance / Chasseur :
 
-Le dépôt envoyé contient déjà :
+- Simple : 33,889 %
+- Commun : 30 %
+- Peu commun : 20 %
+- Rare : 10 %
+- Épique : 5 %
+- Légendaire : 1 %
+- Mythique : 0,1 %
+- Ultra mythique : 0,01 %
+- Abyssal : 0,001 %
 
-- `app.js` V159 ;
-- `Guillaume.html` demandant V159.
+Total : 100 %.
 
-Le site affichait pourtant V151. Le navigateur ou le déploiement servait donc
-encore un ancien fichier.
+La Chance et Chasseur s'appliquent ensuite et la table est renormalisée.
 
-## Contournement définitif du cache
+## Installation
 
-Toutes les pages chargent désormais un nouveau fichier qui n'a jamais existé :
+1. Exécuter le SQL Supabase.
+2. Quand GitHub Pages fonctionne de nouveau, téléverser le contenu de GITHUB.
 
-`app-v160.js?build=20260806-2002`
-
-Le navigateur ne peut pas réutiliser l'ancien `app.js` V151 pour cette URL.
-
-## Lecture du palier
-
-V160 lit directement dans `athlete_progress` :
-
-- `adventure_difficulty`
-- `kills_toward_boss`
-- `boss_wins`
-
-Aucune RPC n'est nécessaire.
-Aucun fallback vers le palier 1 n'est utilisé.
-
-Le slug de Guillaume est également déclaré explicitement comme `guillaume`.
-
-## Installation GitHub
-
-1. Décompresser le ZIP.
-2. Téléverser tout son contenu à la racine du dépôt.
-3. Accepter le remplacement des pages HTML et de `app.js`.
-4. Vérifier que le nouveau fichier `app-v160.js` apparaît bien dans GitHub.
-5. Commit changes.
-6. Attendre le déploiement et faire Ctrl + F5.
-
-Aucun SQL Supabase n'est nécessaire.
-
-## Résultat attendu pour Guillaume
-
-Le panneau doit afficher :
-
-- `En ligne · V160`
-- `source lecture directe OK`
-- `palier SQL 173`
-- `compteur boss 50/50`
-
-Au premier chargement V160, si l'ancien palier de farm local était resté à 1,
-le sélecteur est replacé une seule fois sur le maximum débloqué.
-
-## Diagnostic du déploiement
-
-Si le site affiche encore V151 après avoir confirmé la présence de
-`app-v160.js` dans GitHub, GitHub Pages publie une autre branche ou un autre
-dossier que celui modifié. Ce ne sera alors plus un bug Supabase ou JavaScript.
+Le SQL modifie immédiatement la vraie table de tirage côté serveur.
