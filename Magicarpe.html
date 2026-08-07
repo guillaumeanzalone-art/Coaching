@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- V170 Magicarpe nouveau programme -->
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -51,6 +52,9 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 .set-info strong{color:var(--text)}
 .load-input{width:56px;padding:4px 5px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:var(--surface-3);color:var(--text);font-size:0.75rem;font-weight:700;text-align:center;font-family:inherit;outline:none}
 .load-input:focus{border-color:var(--accent)}
+.rpe-input{width:52px;padding:4px 5px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:var(--surface-3);color:var(--text);font-size:0.75rem;font-weight:800;text-align:center;font-family:inherit;outline:none}
+.rpe-input:focus{border-color:var(--accent)}
+.rpe-input::placeholder{color:var(--text-muted);opacity:.8}
 .set-check{width:30px;height:30px;border-radius:8px;border:2px solid rgba(255,255,255,0.08);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
 .set-check.checked{background:var(--green);border-color:var(--green)}
 .set-check.checked::after{content:'';width:7px;height:4px;border-left:2px solid white;border-bottom:2px solid white;transform:rotate(-45deg) translateY(-1px)}
@@ -112,10 +116,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 
   <div class="workout-view" id="workoutView"><div class="content" id="exerciseList"></div></div>
   <div class="notes-view" id="notesView">
-    <div class="note-card"><h3>🐟 Programme CAR + VOL (Macro 1/4)</h3><p>Magicarpe utilise Splash... c'est pas très efficace. Mais un jour : <strong>EVOLUTION</strong>. Chaque série te rapproche de Léviator.</p></div>
-    <div class="note-card"><h3>🎯 Maxes</h3><p><strong>Squat:</strong> 130 | <strong>Bench:</strong> 95 | <strong>Deadlift:</strong> 160 | <strong>Total:</strong> 385 | <strong>PDC:</strong> ~83kg</p></div>
-    <div class="note-card"><h3>📚 Structure</h3><p><strong>J1 Lundi:</strong> Squat Pause 2×5 prog + Bench 4×2 lourd + BSS + Triceps<br><strong>J2 Mardi:</strong> Deadlift 2×5 + 1×5 + Bench 3×3 + Leg Curl + Tirage + Bird Dog<br><strong>J3:</strong> Squat HB léger + Bench CG 2×7 + Pallof + Sissy + Rameur<br><strong>J4:</strong> Deadlift 2×3 lourd + Bench 3×3 + Épaules + L Fly<br><strong>J5:</strong> Squat Stance Close 2×6 + Bench heavy/single + DL Yielding</p></div>
-    <div class="note-card" style="border:1px solid rgba(240,128,48,0.2)"><h3 style="color:var(--accent)">Règle Magicarpe</h3><p>Magicarpe évolue à force de persévérance. Pas de skip. Chaque splash compte. <strong>Un jour tu seras Léviator.</strong></p></div>
+    <div class="note-card"><h3>🐟 Nouveau bloc Magicarpe</h3><p><strong>4 semaines · 5 séances par semaine</strong> : Boule, Bill, Mercredi, Dino et Shirley. Programme reconstruit à partir du tableau fourni.</p></div>
+    <div class="note-card"><h3>🎯 Maxes de référence</h3><p><strong>Squat :</strong> 130 kg · <strong>Bench :</strong> 100 kg · <strong>Deadlift :</strong> 160 kg · <strong>Total :</strong> 390 kg · <strong>PDC :</strong> 78 kg.</p></div>
+    <div class="note-card"><h3>📚 Organisation</h3><p><strong>Boule :</strong> Squat + Bench + Deadlift en séries de 5.<br><strong>Bill :</strong> Over Head, Larsen, circuit HIT/CT et rameur.<br><strong>Mercredi :</strong> Squat ×6, Bench ×4, Deadlift ×4.<br><strong>Dino :</strong> travail squat technique, Larsen et Deadlift pause.<br><strong>Shirley :</strong> progression principale Squat / Bench / Deadlift.</p></div>
+    <div class="note-card"><h3>✍️ Suivi</h3><p>Sur Squat, Bench et Deadlift, tu peux renseigner la <strong>charge réellement faite</strong> ainsi que le <strong>RPE</strong>. Les anciennes charges réelles et anciens RPE du tableau ne sont pas préremplis dans ce nouveau bloc.</p></div>
   </div>
 
   <div class="bottom-nav">
@@ -125,174 +129,1960 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var
 </div>
 
 <script>
-const P={weeks:[
-{label:"S1",days:[
-{name:"J1 Lundi",emoji:"🌊",exercises:[
-{l:"sq",n:"Squat Pause",v:"Primaire",blocks:[{s:2,r:5,pct:70,ld:"87-92"},{s:2,r:5,pct:72,ld:"90-95"},{s:2,r:5,pct:74,ld:"92-97"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:4,r:2,pct:82,ld:"75-80"},{s:4,r:2,pct:84,ld:"77-82"}]},
-{l:"ac",n:"BSS FFE",v:"Renfo",blocks:[{s:3,r:"15-18",ld:null}]},
-{l:"ac",n:"Triceps Extension",v:"Renfo",blocks:[{s:3,r:"12-15",ld:null}]},
-{l:"ac",n:"Magic Triceps Akimbo",v:"Renfo",blocks:[{s:3,r:15,ld:"PDC"}]}
-]},
-{name:"J2 Mardi",emoji:"⚡",exercises:[
-{l:"dl",n:"Comp Deadlift",v:"Primaire",blocks:[{s:2,r:5,pct:71,ld:"110-115"},{s:2,r:5,pct:73,ld:"115-120"},{s:1,r:5,pct:75,ld:"117-122"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:3,r:3,pct:78,ld:"72-77"},{s:3,r:3,pct:80,ld:"72-77"}]},
-{l:"ac",n:"Leg Curl Swiss Ball",v:"Renfo",blocks:[{s:3,r:20,ld:null}]},
-{l:"ac",n:"Tirage PN Verticale",v:"Renfo",blocks:[{s:3,r:"10-12",ld:"39"}]},
-{l:"ac",n:"QL Side Raises",v:"Milow Press",blocks:[{s:3,r:"15-18",ld:"2.5"}]},
-{l:"ac",n:"Bird Dog",v:"Core",blocks:[{s:3,r:15,ld:"PDC"}]}
-]},
-{name:"J3",emoji:"🐟",exercises:[
-{l:"sq",n:"Squat HB",v:"Technique",blocks:[{s:2,r:8,pct:50,ld:"62-67"},{s:1,r:8,pct:50,ld:"62-67"},{s:1,r:8,pct:50,ld:"62-67"}]},
-{l:"ac",n:"Pallof Press",v:"Core",blocks:[{s:3,r:15,ld:null}]},
-{l:"bn",n:"Bench Close Grip",v:"Secondaire",blocks:[{s:2,r:7,pct:65,ld:"60-65"},{s:2,r:7,pct:68,ld:"62-67"}]},
-{l:"ac",n:"Banded Adduction",v:"Side Walk",blocks:[{s:2,r:15,ld:null}]},
-{l:"ac",n:"Sissy Squat",v:"Tenue",blocks:[{s:2,r:"12-15",ld:"PDC"}]},
-{l:"ac",n:"Rameur Zone 2",v:"Cardio",blocks:[{s:3,r:"500m",ld:null}]}
-]},
-{name:"J4",emoji:"🔥",exercises:[
-{l:"ac",n:"Half Kneeling Stretch",v:"Mobilité",blocks:[{s:2,r:"30sec",ld:"PDC"}]},
-{l:"dl",n:"Comp Deadlift",v:"Primaire",blocks:[{s:2,r:3,pct:73,ld:"115-120"},{s:2,r:3,pct:76,ld:"120-125"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:3,r:3,pct:78,ld:"72-77"},{s:3,r:3,pct:80,ld:"72-77"}]},
-{l:"ac",n:"Front Raises",v:"Épaules",blocks:[{s:4,r:"30sec",ld:"poulie"}]},
-{l:"ac",n:"Élévation Latérale",v:"Épaules",blocks:[{s:4,r:15,ld:"2-3"}]},
-{l:"ac",n:"L Fly",v:"Soin",blocks:[{s:2,r:"30sec",ld:"2.5"}]},
-{l:"ac",n:"Facepull",v:"100 reps",blocks:[{s:1,r:100,ld:"20"}]}
-]},
-{name:"J5",emoji:"🏆",exercises:[
-{l:"sq",n:"Squat Stance Close",v:"Primaire",blocks:[{s:2,r:6,pct:69,ld:"87-92"},{s:2,r:6,pct:71,ld:"90-95"},{s:1,r:6,pct:73,ld:"92-97"}]},
-{l:"bn",n:"Bench",v:"Heavy",blocks:[{s:3,r:3,pct:80,ld:"72-77"}]},
-{l:"bn",n:"Bench Single",v:"Top set",blocks:[{s:1,r:1,pct:87,ld:"80-85"}]},
-{l:"dl",n:"DL Pause Yielding",v:"Secondaire",blocks:[{s:1,r:"20sec",pct:40,ld:"62-67"},{s:1,r:"20sec",pct:40,ld:"62-67"},{s:1,r:"20sec",pct:40,ld:"62-67"}]}
-]}
-]},
-{label:"S2",days:[
-{name:"J1 Lundi",emoji:"🌊",exercises:[
-{l:"sq",n:"Squat Pause",v:"Primaire",blocks:[{s:2,r:5,pct:72,ld:"90-95"},{s:2,r:5,pct:74,ld:"92-97"},{s:2,r:5,pct:76,ld:"97-102"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:4,r:2,pct:84,ld:"77-82"},{s:4,r:2,pct:86,ld:"80-85"}]},
-{l:"ac",n:"BSS FFE",v:"Renfo",blocks:[{s:3,r:"15-18",ld:"14"}]},
-{l:"ac",n:"Triceps Extension",v:"Renfo",blocks:[{s:3,r:"12-15",ld:"18"}]},
-{l:"ac",n:"Magic Triceps Akimbo",v:"Renfo",blocks:[{s:3,r:15,ld:"PDC"}]}
-]},
-{name:"J2 Mardi",emoji:"⚡",exercises:[
-{l:"dl",n:"Comp Deadlift",v:"Primaire",blocks:[{s:2,r:5,pct:71,ld:"110-115"},{s:2,r:5,pct:73,ld:"115-120"},{s:1,r:5,pct:75,ld:"117-122"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:3,r:3,pct:78,ld:"72-77"},{s:3,r:3,pct:81,ld:"75-80"}]},
-{l:"ac",n:"Leg Curl Swiss Ball",v:"Renfo",blocks:[{s:3,r:20,ld:null}]},
-{l:"ac",n:"Tirage PN Verticale",v:"Renfo",blocks:[{s:3,r:"10-12",ld:"39-45"}]},
-{l:"ac",n:"QL Side Raises",v:"Milow Press",blocks:[{s:3,r:"15-18",ld:"3"}]},
-{l:"ac",n:"Bird Dog",v:"Core",blocks:[{s:3,r:15,ld:"PDC"}]}
-]},
-{name:"J3",emoji:"🐟",exercises:[
-{l:"sq",n:"Squat HB",v:"Technique",blocks:[{s:2,r:8,pct:50,ld:"62-67"},{s:1,r:8,pct:50,ld:"62-67"},{s:1,r:8,pct:50,ld:"62-67"}]},
-{l:"ac",n:"Pallof Press + GM",v:"Core",blocks:[{s:3,r:15,ld:null}]},
-{l:"bn",n:"Bench Close Grip",v:"Secondaire",blocks:[{s:2,r:7,pct:65,ld:"60-65"},{s:2,r:7,pct:68,ld:"62-67"}]},
-{l:"ac",n:"Banded Adduction",v:"Side Walk",blocks:[{s:2,r:15,ld:null}]},
-{l:"ac",n:"Sissy Squat",v:"Tenue",blocks:[{s:2,r:"12-15",ld:"PDC"}]},
-{l:"ac",n:"Rameur Zone 2",v:"Cardio",blocks:[{s:3,r:"500m",ld:null}]}
-]},
-{name:"J4",emoji:"🔥",exercises:[
-{l:"ac",n:"Half Kneeling Stretch",v:"Mobilité",blocks:[{s:2,r:"30sec",ld:"PDC"}]},
-{l:"dl",n:"Comp Deadlift",v:"Primaire",blocks:[{s:2,r:3,pct:76,ld:"120-125"},{s:2,r:3,pct:79,ld:"122-132"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:3,r:3,pct:78,ld:"72-77"},{s:3,r:3,pct:81,ld:"75-80"}]},
-{l:"ac",n:"Front Raises",v:"Épaules",blocks:[{s:4,r:"30sec",ld:"poulie"}]},
-{l:"ac",n:"Élévation Latérale",v:"Épaules",blocks:[{s:4,r:15,ld:"2-3"}]},
-{l:"ac",n:"L Fly",v:"Soin",blocks:[{s:2,r:"30sec",ld:"4.5"}]},
-{l:"ac",n:"Facepull",v:"100 reps",blocks:[{s:1,r:100,ld:"20"}]}
-]},
-{name:"J5",emoji:"🏆",exercises:[
-{l:"sq",n:"Squat Stance Close",v:"Primaire",blocks:[{s:2,r:6,pct:71,ld:"90-95"},{s:2,r:6,pct:73,ld:"92-97"},{s:1,r:6,pct:75,ld:"95-100"}]},
-{l:"bn",n:"Bench",v:"Heavy",blocks:[{s:3,r:3,pct:89,ld:"82-87"}]},
-{l:"bn",n:"Bench Single",v:"Top set",blocks:[{s:1,r:1,pct:87,ld:"80-85"}]},
-{l:"dl",n:"DL Pause Yielding",v:"Secondaire",blocks:[{s:1,r:"20sec",pct:42,ld:"65-70"},{s:1,r:"20sec",pct:42,ld:"65-70"},{s:1,r:"20sec",pct:42,ld:"65-70"}]}
-]}
-]},
-{label:"S3",days:[
-{name:"J1 Lundi",emoji:"🌊",exercises:[
-{l:"sq",n:"Squat Pause",v:"Primaire",blocks:[{s:2,r:5,pct:76,ld:"97-102"},{s:2,r:5,pct:76,ld:"97-102"},{s:1,r:5,pct:76,ld:"97-102"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:3,r:2,pct:86,ld:"80-85"},{s:2,r:2,pct:90,ld:"82-87"}]},
-{l:"ac",n:"BSS FFE",v:"Renfo",blocks:[{s:3,r:"15-18",ld:"14"}]},
-{l:"ac",n:"Triceps Extension",v:"Renfo",blocks:[{s:3,r:"12-15",ld:"18"}]},
-{l:"ac",n:"Magic Triceps Akimbo",v:"Renfo",blocks:[{s:3,r:15,ld:"PDC"}]}
-]},
-{name:"J2 Mardi",emoji:"⚡",exercises:[
-{l:"dl",n:"Comp Deadlift",v:"Primaire",blocks:[{s:2,r:5,pct:75,ld:"117-122"},{s:2,r:5,pct:78,ld:"122-130"},{s:1,r:5,pct:80,ld:"122-132"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:3,r:3,pct:82,ld:"75-80"},{s:3,r:3,pct:84,ld:"77-82"}]},
-{l:"ac",n:"Leg Curl Swiss Ball",v:"Renfo",blocks:[{s:3,r:20,ld:null}]},
-{l:"ac",n:"Tirage PN Verticale",v:"Renfo",blocks:[{s:2,r:"10-12",ld:"39"}]},
-{l:"ac",n:"QL Side Raises",v:"Milow Press",blocks:[{s:3,r:"15-18",ld:null}]},
-{l:"ac",n:"Bird Dog",v:"Core",blocks:[{s:3,r:15,ld:"PDC"}]}
-]},
-{name:"J3",emoji:"🐟",exercises:[
-{l:"sq",n:"Squat HB",v:"Technique",blocks:[{s:2,r:8,pct:50,ld:"62-67"},{s:1,r:8,pct:50,ld:"62-67"},{s:1,r:8,pct:50,ld:"62-67"}]},
-{l:"ac",n:"Pallof Press",v:"Core",blocks:[{s:3,r:15,ld:null}]},
-{l:"bn",n:"Bench Close Grip",v:"Secondaire",blocks:[{s:2,r:7,pct:68,ld:"62-67"},{s:2,r:7,pct:68,ld:"62-67"}]},
-{l:"ac",n:"Banded Adduction",v:"Side Walk",blocks:[{s:2,r:15,ld:null}]},
-{l:"ac",n:"Sissy Squat",v:"Tenue",blocks:[{s:2,r:"12-15",ld:"PDC"}]},
-{l:"ac",n:"Rameur Zone 2",v:"Cardio",blocks:[{s:3,r:"500m",ld:null}]}
-]},
-{name:"J4",emoji:"🔥",exercises:[
-{l:"ac",n:"Half Kneeling Stretch",v:"Mobilité",blocks:[{s:2,r:"30sec",ld:"PDC"}]},
-{l:"dl",n:"Comp Deadlift",v:"Primaire",blocks:[{s:2,r:3,pct:73,ld:"115-120"},{s:2,r:3,pct:76,ld:"120-125"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:2,r:3,pct:83,ld:"77-82"},{s:3,r:3,pct:84,ld:"77-82"}]},
-{l:"ac",n:"Front Raises",v:"Épaules",blocks:[{s:4,r:"30sec",ld:"poulie"}]},
-{l:"ac",n:"Élévation Latérale",v:"Épaules",blocks:[{s:4,r:15,ld:"3"}]},
-{l:"ac",n:"L Fly",v:"Soin",blocks:[{s:2,r:"30sec",ld:null}]},
-{l:"ac",n:"Facepull",v:"100 reps",blocks:[{s:1,r:100,ld:"20"}]}
-]},
-{name:"J5",emoji:"🏆",exercises:[
-{l:"sq",n:"Squat Stance Close",v:"Primaire",blocks:[{s:2,r:6,pct:73,ld:"92-97"},{s:2,r:6,pct:75,ld:"95-100"},{s:1,r:6,pct:78,ld:"100-105"}]},
-{l:"bn",n:"Bench",v:"Heavy",blocks:[{s:1,r:1,pct:98,ld:"90-95"}]},
-{l:"dl",n:"DL Pause Yielding",v:"Secondaire",blocks:[{s:1,r:"20sec",pct:40,ld:"62-67"},{s:1,r:"20sec",pct:40,ld:"62-67"},{s:1,r:"20sec",pct:40,ld:"62-67"}]}
-]}
-]},
-{label:"S4",days:[
-{name:"J1 Lundi",emoji:"🌊",exercises:[
-{l:"sq",n:"Squat Front",v:"Technique",blocks:[{s:2,r:5,pct:30,ld:"40"}]},
-{l:"sq",n:"Squat",v:"Primaire",blocks:[{s:2,r:5,pct:40,ld:"50-55"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:2,r:2,pct:82,ld:"75-80"},{s:2,r:2,pct:84,ld:"77-82"}]},
-{l:"ac",n:"BSS FFE",v:"Renfo",blocks:[{s:3,r:"15-18",ld:null}]},
-{l:"ac",n:"Triceps Extension",v:"Renfo",blocks:[{s:3,r:"12-15",ld:null}]},
-{l:"ac",n:"Magic Triceps Akimbo",v:"Renfo",blocks:[{s:3,r:15,ld:"PDC"}]}
-]},
-{name:"J2 Mardi",emoji:"⚡",exercises:[
-{l:"dl",n:"Comp Deadlift",v:"Primaire",blocks:[{s:2,r:5,pct:75,ld:"117-122"},{s:2,r:5,pct:78,ld:"122-130"},{s:1,r:5,pct:78,ld:"122-130"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:3,r:3,pct:78,ld:"72-77"},{s:3,r:3,pct:81,ld:"75-80"}]},
-{l:"ac",n:"Leg Curl Swiss Ball",v:"Renfo",blocks:[{s:3,r:20,ld:null}]},
-{l:"ac",n:"Tirage PN Verticale",v:"Renfo",blocks:[{s:3,r:"10-12",ld:"39"}]},
-{l:"ac",n:"QL Side Raises",v:"Milow Press",blocks:[{s:3,r:"15-18",ld:"2.5"}]},
-{l:"ac",n:"Bird Dog",v:"Core",blocks:[{s:3,r:15,ld:"PDC"}]}
-]},
-{name:"J3",emoji:"🐟",exercises:[
-{l:"sq",n:"Squat Zercher",v:"Technique",blocks:[{s:2,r:8,pct:30,ld:"40"}]},
-{l:"sq",n:"Squat Smith/HB ATG",v:"Technique",blocks:[{s:2,r:8,ld:"@8"}]},
-{l:"ac",n:"Pallof Press",v:"Core",blocks:[{s:3,r:15,ld:null}]},
-{l:"bn",n:"Bench Close Grip",v:"Secondaire",blocks:[{s:2,r:7,pct:65,ld:"60-65"},{s:2,r:7,pct:68,ld:"62-67"}]},
-{l:"ac",n:"Banded Adduction",v:"Side Walk",blocks:[{s:2,r:15,ld:null}]},
-{l:"ac",n:"Sissy Squat",v:"Tenue",blocks:[{s:2,r:"12-15",ld:"PDC"}]},
-{l:"ac",n:"Rameur Zone 2",v:"Cardio",blocks:[{s:3,r:"500m",ld:null}]}
-]},
-{name:"J4",emoji:"🔥",exercises:[
-{l:"ac",n:"Half Kneeling Stretch",v:"Mobilité",blocks:[{s:2,r:"30sec",ld:"PDC"}]},
-{l:"dl",n:"Comp Deadlift",v:"Primaire",blocks:[{s:2,r:3,pct:76,ld:"120-125"},{s:2,r:3,pct:79,ld:"122-132"}]},
-{l:"bn",n:"Bench",v:"Primaire",blocks:[{s:3,r:3,pct:78,ld:"72-77"},{s:3,r:3,pct:80,ld:"72-77"}]},
-{l:"ac",n:"Front Raises",v:"Épaules",blocks:[{s:4,r:"30sec",ld:"poulie"}]},
-{l:"ac",n:"Élévation Latérale",v:"Épaules",blocks:[{s:4,r:45,ld:null}]},
-{l:"ac",n:"L Fly",v:"Soin",blocks:[{s:2,r:"30sec",ld:null}]},
-{l:"ac",n:"Facepull",v:"100 reps",blocks:[{s:1,r:100,ld:"20"}]}
-]},
-{name:"J5",emoji:"🏆",exercises:[
-{l:"sq",n:"Squat",v:"Test",blocks:[{s:2,r:2,pct:75,ld:"95-100"},{s:2,r:2,pct:78,ld:"100-105"},{s:1,r:1,pct:82,ld:"105-110"}]},
-{l:"bn",n:"Bench",v:"Heavy",blocks:[{s:1,r:1,pct:103,ld:"95-100"}]},
-{l:"bn",n:"Bench Back Off",v:"Volume",blocks:[{s:2,r:2,pct:87,ld:"80-85"}]},
-{l:"dl",n:"DL Pause Yielding",v:"Secondaire",blocks:[{s:1,r:"20sec",pct:40,ld:"62-67"},{s:1,r:"20sec",pct:40,ld:"62-67"},{s:1,r:"20sec",pct:40,ld:"62-67"}]}
-]}
-]}
-]};
+const P={
+  weeks:[
+    {
+      label:"S1",
+      days:[
+        {
+          name:"Boule",
+          emoji:"🔵",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:69,
+                  ld:"87-93"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:71,
+                  ld:"89-95"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:73,
+                  ld:"92-98"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null,
+                  note:"Full ampli pour étirer le delt ant"
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:75,
+                  ld:"73-77"
+                },
+                {
+                  s:2,
+                  r:5,
+                  pct:77,
+                  ld:"75-79"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:67,
+                  ld:"104-110"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:70,
+                  ld:"109-115"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:72,
+                  ld:"112-118"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Bill",
+          emoji:"⚡",
+          exercises:[
+            {
+              l:"sq",
+              n:"OVER HEAD",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:10,
+                  ld:null
+                },
+                {
+                  s:1,
+                  r:10,
+                  ld:null
+                },
+                {
+                  s:1,
+                  r:10,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  pct:75,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Secondaire",
+              v:"Larsen",
+              blocks:[
+                {
+                  s:2,
+                  r:7,
+                  intensity:"@7,0",
+                  ld:null
+                },
+                {
+                  s:2,
+                  r:7,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Gobelet Squat",
+              v:"HIT",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Dead bug",
+              v:"CT",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Push ups",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Cossac Squat",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Rammeur",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:4,
+                  r:500,
+                  ld:null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Mercredi",
+          emoji:"🐟",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:6,
+                  pct:65,
+                  ld:"82-88"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:67,
+                  ld:"84-90"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:69,
+                  ld:"87-93"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:75,
+                  ld:"73-77"
+                },
+                {
+                  s:2,
+                  r:4,
+                  pct:77,
+                  ld:"75-79"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:70,
+                  ld:"109-115"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:74,
+                  ld:"114-122"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Dino",
+          emoji:"🦖",
+          exercises:[
+            {
+              l:"sq",
+              n:"HB AVEC TALONETTE",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"sq",
+              n:"DEEP SQUAT",
+              v:"Squat",
+              blocks:[
+                {
+                  s:1,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"sq",
+              n:"FOCUS DEPTH AMP",
+              v:"Squat",
+              blocks:[
+                {
+                  s:1,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"LARSEN",
+              blocks:[
+                {
+                  s:2,
+                  r:7,
+                  pct:65,
+                  ld:"63-67"
+                },
+                {
+                  s:2,
+                  r:7,
+                  pct:65,
+                  ld:"63-67"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Pause",
+              blocks:[
+                {
+                  s:2,
+                  r:2,
+                  pct:69,
+                  ld:"107-113"
+                },
+                {
+                  s:1,
+                  r:2,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:2,
+                  pct:74,
+                  ld:"114-122"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Shirley",
+          emoji:"🌟",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:6,
+                  pct:65,
+                  ld:"82-88"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:67,
+                  ld:"84-90"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:69,
+                  ld:"87-93"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:75,
+                  ld:"73-77"
+                },
+                {
+                  s:2,
+                  r:4,
+                  pct:77,
+                  ld:"75-79"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:70,
+                  ld:"109-115"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:74,
+                  ld:"114-122"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      label:"S2",
+      days:[
+        {
+          name:"Boule",
+          emoji:"🔵",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:71,
+                  ld:"90-96"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:73,
+                  ld:"92-98"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:75,
+                  ld:"95-101"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:78,
+                  ld:"76-80"
+                },
+                {
+                  s:2,
+                  r:5,
+                  pct:80,
+                  ld:"78-82"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:69,
+                  ld:"107-113"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:74,
+                  ld:"114-122"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Bill",
+          emoji:"⚡",
+          exercises:[
+            {
+              l:"sq",
+              n:"OVER HEAD",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:10,
+                  ld:null
+                },
+                {
+                  s:1,
+                  r:10,
+                  ld:null
+                },
+                {
+                  s:1,
+                  r:10,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  pct:75,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Secondaire",
+              v:"Larsen",
+              blocks:[
+                {
+                  s:2,
+                  r:7,
+                  intensity:"@7,0",
+                  ld:null
+                },
+                {
+                  s:2,
+                  r:7,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Gobelet Squat",
+              v:"HIT",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Dead bug",
+              v:"CT",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Push ups",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Cossac Squat",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Rammeur",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:4,
+                  r:500,
+                  ld:null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Mercredi",
+          emoji:"🐟",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:6,
+                  pct:65,
+                  ld:"82-88"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:67,
+                  ld:"84-90"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:69,
+                  ld:"87-93"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:75,
+                  ld:"73-77"
+                },
+                {
+                  s:2,
+                  r:4,
+                  pct:77,
+                  ld:"75-79"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:70,
+                  ld:"109-115"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:74,
+                  ld:"114-122"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Dino",
+          emoji:"🦖",
+          exercises:[
+            {
+              l:"sq",
+              n:"HB AVEC TALONETTE",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"sq",
+              n:"DEEP SQUAT",
+              v:"Squat",
+              blocks:[
+                {
+                  s:1,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"sq",
+              n:"FOCUS DEPTH AMP",
+              v:"Squat",
+              blocks:[
+                {
+                  s:1,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"LARSEN",
+              blocks:[
+                {
+                  s:2,
+                  r:7,
+                  pct:68,
+                  ld:"66-70"
+                },
+                {
+                  s:2,
+                  r:7,
+                  pct:68,
+                  ld:"66-70"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Pause",
+              blocks:[
+                {
+                  s:2,
+                  r:2,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:2,
+                  pct:75,
+                  ld:"116-124"
+                },
+                {
+                  s:1,
+                  r:2,
+                  pct:77,
+                  ld:"119-127"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Shirley",
+          emoji:"🌟",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:6,
+                  pct:67,
+                  ld:"84-90"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:69,
+                  ld:"87-93"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:71,
+                  ld:"90-96"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:77,
+                  ld:"75-79"
+                },
+                {
+                  s:2,
+                  r:4,
+                  pct:79,
+                  ld:"77-81"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:74,
+                  ld:"114-122"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:76,
+                  ld:"118-126"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      label:"S3",
+      days:[
+        {
+          name:"Boule",
+          emoji:"🔵",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:74,
+                  ld:"93-99"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:76,
+                  ld:"96-102"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:78,
+                  ld:"98-104"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:80,
+                  ld:"78-82"
+                },
+                {
+                  s:2,
+                  r:5,
+                  pct:82,
+                  ld:"80-84"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:71,
+                  ld:"111-117"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:74,
+                  ld:"114-122"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:76,
+                  ld:"118-126"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Bill",
+          emoji:"⚡",
+          exercises:[
+            {
+              l:"sq",
+              n:"OVER HEAD",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:10,
+                  ld:null
+                },
+                {
+                  s:1,
+                  r:10,
+                  ld:null
+                },
+                {
+                  s:1,
+                  r:10,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  pct:75,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Secondaire",
+              v:"Larsen",
+              blocks:[
+                {
+                  s:2,
+                  r:7,
+                  intensity:"@7,0",
+                  ld:null
+                },
+                {
+                  s:2,
+                  r:7,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Gobelet Squat",
+              v:"HIT",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Dead bug",
+              v:"CT",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Push ups",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Cossac Squat",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Rammeur",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:4,
+                  r:500,
+                  ld:null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Mercredi",
+          emoji:"🐟",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:6,
+                  pct:65,
+                  ld:"82-88"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:67,
+                  ld:"84-90"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:69,
+                  ld:"87-93"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:75,
+                  ld:"73-77"
+                },
+                {
+                  s:2,
+                  r:4,
+                  pct:77,
+                  ld:"75-79"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:70,
+                  ld:"109-115"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:74,
+                  ld:"114-122"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Dino",
+          emoji:"🦖",
+          exercises:[
+            {
+              l:"sq",
+              n:"HB AVEC TALONETTE",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"sq",
+              n:"DEEP SQUAT",
+              v:"Squat",
+              blocks:[
+                {
+                  s:1,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"sq",
+              n:"FOCUS DEPTH AMP",
+              v:"Squat",
+              blocks:[
+                {
+                  s:1,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"LARSEN",
+              blocks:[
+                {
+                  s:2,
+                  r:7,
+                  pct:65,
+                  ld:"63-67"
+                },
+                {
+                  s:2,
+                  r:7,
+                  pct:65,
+                  ld:"63-67"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Pause",
+              blocks:[
+                {
+                  s:2,
+                  r:2,
+                  pct:69,
+                  ld:"107-113"
+                },
+                {
+                  s:1,
+                  r:2,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:2,
+                  pct:74,
+                  ld:"114-122"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Shirley",
+          emoji:"🌟",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:6,
+                  pct:70,
+                  ld:"88-94"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:72,
+                  ld:"90-96"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:74,
+                  ld:"93-99"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:80,
+                  ld:"78-82"
+                },
+                {
+                  s:2,
+                  r:4,
+                  pct:82,
+                  ld:"80-84"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:74,
+                  ld:"114-122"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:76,
+                  ld:"118-126"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:78,
+                  ld:"121-129"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      label:"S4",
+      days:[
+        {
+          name:"Boule",
+          emoji:"🔵",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:77,
+                  ld:"97-103"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:79,
+                  ld:"99-105"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:81,
+                  ld:"102-108"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  intensity:"@2,4",
+                  ld:null
+                },
+                {
+                  s:2,
+                  r:5,
+                  intensity:"@2,4",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:5,
+                  pct:74,
+                  ld:"114-122"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:77,
+                  ld:"119-127"
+                },
+                {
+                  s:1,
+                  r:5,
+                  pct:79,
+                  ld:"122-130"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Bill",
+          emoji:"⚡",
+          exercises:[
+            {
+              l:"sq",
+              n:"OVER HEAD",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:10,
+                  ld:null
+                },
+                {
+                  s:1,
+                  r:10,
+                  ld:null
+                },
+                {
+                  s:1,
+                  r:10,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  pct:75,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Secondaire",
+              v:"Larsen",
+              blocks:[
+                {
+                  s:2,
+                  r:7,
+                  intensity:"@7,0",
+                  ld:null
+                },
+                {
+                  s:2,
+                  r:7,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Gobelet Squat",
+              v:"HIT",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Dead bug",
+              v:"CT",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Push ups",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Cossac Squat",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:5,
+                  r:40,
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Rammeur",
+              v:"Accessoire",
+              blocks:[
+                {
+                  s:4,
+                  r:500,
+                  ld:null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Mercredi",
+          emoji:"🐟",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:6,
+                  pct:65,
+                  ld:"82-88"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:67,
+                  ld:"84-90"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:69,
+                  ld:"87-93"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:75,
+                  ld:"73-77"
+                },
+                {
+                  s:2,
+                  r:4,
+                  pct:77,
+                  ld:"75-79"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:70,
+                  ld:"109-115"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:74,
+                  ld:"114-122"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Dino",
+          emoji:"🦖",
+          exercises:[
+            {
+              l:"sq",
+              n:"HB AVEC TALONETTE",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"sq",
+              n:"DEEP SQUAT",
+              v:"Squat",
+              blocks:[
+                {
+                  s:1,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"sq",
+              n:"FOCUS DEPTH AMP",
+              v:"Squat",
+              blocks:[
+                {
+                  s:1,
+                  r:10,
+                  pct:40,
+                  ld:"50-54"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"LARSEN",
+              blocks:[
+                {
+                  s:2,
+                  r:7,
+                  pct:65,
+                  ld:"63-67"
+                },
+                {
+                  s:2,
+                  r:7,
+                  pct:65,
+                  ld:"63-67"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Pause",
+              blocks:[
+                {
+                  s:2,
+                  r:2,
+                  pct:69,
+                  ld:"107-113"
+                },
+                {
+                  s:1,
+                  r:2,
+                  pct:72,
+                  ld:"112-118"
+                },
+                {
+                  s:1,
+                  r:2,
+                  pct:74,
+                  ld:"114-122"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name:"Shirley",
+          emoji:"🌟",
+          exercises:[
+            {
+              l:"sq",
+              n:"Comp squat primaire",
+              v:"Squat",
+              blocks:[
+                {
+                  s:2,
+                  r:6,
+                  pct:73,
+                  ld:"91-97"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:75,
+                  ld:"94-100"
+                },
+                {
+                  s:1,
+                  r:6,
+                  pct:77,
+                  ld:"97-103"
+                }
+              ]
+            },
+            {
+              l:"ac",
+              n:"Pull over haltères",
+              v:"Grand dorsal pontage",
+              blocks:[
+                {
+                  s:2,
+                  r:"10-12",
+                  ld:null
+                }
+              ]
+            },
+            {
+              l:"bn",
+              n:"Bench Primaire",
+              v:"Bench",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:82,
+                  ld:"80-84"
+                },
+                {
+                  s:2,
+                  r:4,
+                  pct:84,
+                  ld:"81-87"
+                }
+              ]
+            },
+            {
+              l:"dl",
+              n:"Comp deadlift primaire",
+              v:"Deadlift",
+              blocks:[
+                {
+                  s:2,
+                  r:4,
+                  pct:77,
+                  ld:"119-127"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:79,
+                  ld:"122-130"
+                },
+                {
+                  s:1,
+                  r:4,
+                  pct:81,
+                  ld:"125-133"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};
 
 let S={w:0,d:0,sets:{},sessionStart:null,sessionEnd:null};
 let timerInt=null,timerRem=180,timerTot=180;
 let allSetsFlat=[];
-const LS_KEY='magiclarpe-v2';
+const LS_KEY='magicarpe_programme_4_semaines_130_100_160_v3';
 
 function load(){try{const x=localStorage.getItem(LS_KEY);if(x)S=JSON.parse(x);}catch(e){}}
 function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(S));}catch(e){}}
@@ -313,13 +2103,16 @@ function renderWorkout(){
     ex.blocks.forEach(bl=>{
       html+=`<div class="exercise-meta"><div class="meta-chip"><strong>${bl.s}×${bl.r}</strong></div>`;
       if(bl.pct)html+=`<div class="meta-chip">${bl.pct}%</div>`;
+      if(bl.intensity)html+=`<div class="meta-chip">${bl.intensity}</div>`;
       if(bl.ld)html+=`<div class="meta-chip">${bl.ld}</div>`;
+      if(bl.note)html+=`<div class="meta-chip">${bl.note}</div>`;
       html+=`</div>`;
       for(let i=0;i<bl.s;i++){
         const d2=done.includes(idx);
         allSetsFlat.push({name:ex.n,reps:bl.r,load:bl.ld,idx});
         html+=`<div class="set-row${d2?' completed':''}"><div class="set-num">${i+1}</div><div class="set-info"><strong>${bl.r}</strong> ${bl.ld||''}</div>`;
-        if(bl.ld&&String(bl.ld).includes('-'))html+=`<input class="load-input" type="number" placeholder="${String(bl.ld).split('-')[0]}" inputmode="decimal">`;
+        if(bl.ld&&String(bl.ld).includes('-'))html+=`<input class="load-input" type="number" step="0.5" placeholder="${String(bl.ld).split('-')[0]}" inputmode="decimal" aria-label="Charge réalisée">`;
+        if(ex.l!=='ac')html+=`<input class="rpe-input" type="text" inputmode="decimal" placeholder="RPE" aria-label="RPE réalisé" autocomplete="off">`;
         html+=`<div class="set-check${d2?' checked':''}" onclick="toggle(${idx})"></div></div>`;
         idx++;
       }
@@ -377,13 +2170,14 @@ window.COACHING_ATHLETE = {
   slug: "magicarpe",
   name: "Clara Magiclarpe",
   emoji: "🐟",
+  bodyWeight: 78,
   programKey: LS_KEY,
   adapter: "legacy"
 };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app-v166.js?build=20260807-v166-resistance-xp"></script>
+<script src="app-v168.js?build=20260807-v168-roi-noeil"></script>
 <script src="session-tools.js?v=20260801-harmonisation-v23"></script>
 
 <!-- Utilitaires communs GA Coaching V23 -->
