@@ -1,0 +1,83 @@
+PATCH V175 — BESTIAIRE V57
+
+BUT
+Le jeu et le PDF V57 utilisent maintenant la même hiérarchie et les mêmes taux
+de base.
+
+SOURCE DE VÉRITÉ V57
+Simple : 66 monstres — 67,339 %
+Commun : 26 — 27 %
+Peu commun : 88 — 4 %
+Rare : 89 — 1 %
+Épique : 61 — 0,5 %
+Légendaire : 8 — 0,1 %
+Mythique : 5 — 0,05 %
+Ultra rare mythique : 2 — 0,01 %
+Abyssal : 1 — 0,001 %
+
+RARETÉS EXCEPTIONNELLES
+Légendaires :
+- Val
+- Lucine Lumière
+- Saya Réunion
+- Janel Janvier
+- Lou Dragonne
+- Serena Sérénité
+- Kaoutar Counter
+- Clara Métaknight
+
+Mythiques :
+- Noah le nain furtif
+- Corentin Véhément, Tempête du RPE Onze
+- The Panaché, Mèche de l’Apocalypse
+- L’IA Bavoil V2, Calculatrice à Genouillères
+- Turbo Tif Prime, Gremlin Supersonique
+
+Ultra rare mythiques :
+- Hanzalone
+- Guillaume Glorieux
+
+Abyssal :
+- Le père de Noé
+
+IMPORTANT
+Le patch corrige aussi une erreur de V174 : les versions RARES de Corentin,
+Panaché, Bavoil et Turbo Tif restent Rares. Seules leurs formes supérieures
+précises deviennent Mythiques.
+
+INSTALLATION SUPABASE
+1. Ouvrir Supabase > SQL Editor.
+2. Créer une nouvelle requête.
+3. Copier tout PATCH_SUPABASE_V175_BESTIAIRE_V57.sql.
+4. Cliquer sur Run.
+5. Dans le tableau de contrôle "expected_count / actual_count", idéalement les
+   neuf lignes affichent ok = true.
+6. Aucun reset de progression n'est effectué.
+
+INSTALLATION GITHUB / APP.JS
+Le SQL suffit pour que le serveur tire les bonnes raretés et que le catalogue
+Supabase soit corrigé.
+
+Pour que le panneau de probabilités côté navigateur affiche lui aussi exactement
+67,339 / 27 / 4 / 1 / 0,5 / 0,1 / 0,05 / 0,01 / 0,001 et pour corriger les
+anciens alias Funk/Phonk, appliquer les changements contenus dans :
+PATCH_APP_JS_V175_BESTIAIRE_V57.diff
+
+Ensuite :
+- commit app.js ;
+- recharger le jeu avec Ctrl + F5.
+
+CE QUI N'EST PAS RESET
+- niveaux et XP ;
+- paliers ;
+- gold ;
+- inventaire ;
+- équipements ;
+- kills ;
+- découvertes ;
+- boss ;
+- leaderboard.
+
+NOTE SUR LE LEADERBOARD
+Le leaderboard lit la rareté des monstres depuis rpg_monster_catalog. Il suivra
+donc automatiquement V57 une fois le SQL exécuté.

@@ -1,0 +1,50 @@
+--- app.js
++++ app.js
+@@
+-    if (normalized === 'roi du funk synthetique' || normalized === 'le roi du funk synthetique') {
+-      return 'Roi de la Funk Synthétique';
++    if (
++      normalized === 'roi du funk synthetique'
++      || normalized === 'le roi du funk synthetique'
++      || normalized === 'roi de la funk synthetique'
++    ) {
++      return 'Roi de la Phonk synthétique';
+     }
+     if (normalized === 'le mec en jeans') {
+-      return 'Roi de la Phonk';
++      return 'Le Roi de la Funk';
+     }
+
+@@
+   const weights = {
+-    normal: 66.339,
++    normal: 67.339,
+     common: 27,
+-    uncommon: 5 * advancedMultiplier,
++    uncommon: 4 * advancedMultiplier,
+     rare: 1 * advancedMultiplier * hunterMultiplier,
+     epic: 0.5 * advancedMultiplier * hunterMultiplier,
+     legendary: 0.1 * advancedMultiplier * hunterMultiplier,
+     mythic: 0.05 * advancedMultiplier * hunterMultiplier,
+     ultra_mythic: 0.01 * advancedMultiplier * hunterMultiplier,
+     abyssal: 0.001 * advancedMultiplier * hunterMultiplier
+   };
+
+@@
+   if (!(totalWeight > 0)) return {
+-    normal: 66.339,
++    normal: 67.339,
+     common: 27,
+-    uncommon: 5,
++    uncommon: 4,
+     rare: 1,
+     epic: 0.5,
+     legendary: 0.1,
+     mythic: 0.05,
+     ultra_mythic: 0.01,
+     abyssal: 0.001
+   };
+
+@@
+-  <div class="encounter-odds-note">À 0 Chance : 5 % Peu commun, 1 % Rare, 0,5 % Épique, 0,1 % Légendaire, 0,05 % Mythique, 0,01 % Ultra mythique et 0,001 % Abyssal.
++  <div class="encounter-odds-note">À 0 Chance : 4 % Peu commun, 1 % Rare, 0,5 % Épique, 0,1 % Légendaire, 0,05 % Mythique, 0,01 % Ultra mythique et 0,001 % Abyssal.
