@@ -1,0 +1,44 @@
+--- app.js
++++ app.js
+@@
+   function combatActionsPayloadV64(session) {
+     const actions = Array.isArray(session?.reactionActions)
+       ? session.reactionActions.map(action => ({ ...action }))
+       : [];
+
+     // Résumé fiable du combat dynamique pour le SQL du combo persistant.
+     // Le kind reste combat_summary_v62 afin de rester compatible avec le RPC installé.
+     actions.push({
+       kind: 'combat_summary_v62',
+       successful_actions: Math.max(0, Math.floor(n(session?.reactionSuccessful))),
+       perfect_actions: Math.max(0, Math.floor(n(session?.reactionPerfect))),
+       good_actions: Math.max(0, Math.floor(n(session?.reactionGood))),
+       missed_actions: Math.max(0, Math.floor(n(session?.reactionMisses))),
+       processed_actions: Math.max(0, Math.floor(n(session?.reactionProcessed))),
++      effective_clicks: Math.max(0, Math.floor(n(session?.reactionEffectiveClicks, session?.clicks))),
++      client_raw_damage: Math.max(0, Math.floor(n(session?.rawDamage, session?.damage))),
+       generated_targets: Math.max(0, Math.floor(n(session?.reactionTargetCount))),
+       client_combo_max: Math.max(0, Math.floor(n(session?.reactionMaxCombo))),
+       client_perfect_streak_max: Math.max(0, Math.floor(n(session?.reactionMaxPerfectStreak))),
+       definition: 'perfect_zero_ok_zero_miss'
+     });
+
+     return actions;
+   }
+
+@@
+   async function finishRaidRun() {
+     if (!raidBattle || raidBattle.finishing) return;
+     raidBattle.finishing = true;
+     clearInterval(raidBattleTimer);
++    const raidActions = combatActionsPayloadV64(raidBattle);
+     const { data, error } = await CoachingCloud.client.rpc('finish_rpg_raid_run', {
+       p_run_id: raidBattle.id,
+-      p_actions: raidBattle.reactionActions
++      p_actions: raidActions
+     });
+     if (error) {
+       raidBattle.finishing = false;
+       CoachingCloud.toast(`Contribution non enregistrée : ${error.message}`, true);
+       return;
+     }

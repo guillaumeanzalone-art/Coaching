@@ -1,0 +1,41 @@
+PATCH V176 — RAID : 0 DÉGÂT À LA FIN
+
+CAUSE IDENTIFIÉE
+Pendant le raid, app.js calcule bien les dégâts en local dans raidBattle.rawDamage.
+
+Mais au moment de terminer le raid, l'ancienne version envoyait seulement :
+    p_actions: raidBattle.reactionActions
+
+Or le RPC Supabase finish_rpg_raid_run cherche en priorité un objet :
+    kind = 'combat_summary_v62'
+
+Ce résumé contient les compteurs fiables :
+- successful_actions
+- perfect_actions
+- good_actions
+- missed_actions
+- processed_actions
+- client_combo_max
+- client_perfect_streak_max
+
+Les combats normaux utilisent déjà combatActionsPayloadV64(), qui ajoute ce résumé.
+Le raid ne l'utilisait pas.
+
+CORRECTION V176
+Le raid envoie désormais :
+    p_actions: combatActionsPayloadV64(raidBattle)
+
+Le résumé reçoit aussi :
+- effective_clicks
+- client_raw_damage
+
+INSTALLATION
+1. Ouvrir app.js sur GitHub.
+2. Appliquer les changements de PATCH_APP_JS_V176_RAID_ZERO_DAMAGE.diff.
+3. Commit changes.
+4. Recharger le jeu avec Ctrl + F5.
+5. Lancer un nouveau raid.
+
+AUCUN RESET
+Ce patch ne touche ni aux comptes, ni à l'XP, ni au gold, ni à l'inventaire,
+ni au bestiaire, ni aux anciennes tentatives.
