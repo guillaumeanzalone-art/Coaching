@@ -1,0 +1,36 @@
+V190 — BLACKJACK CHEZ LE NAIN FORGERON
+
+CONSERVÉ
+- V189 sprites
+- Forge 10 Légendaires / 5 Mythiques / 2 URM
+- Casino Gold RTP 95 %
+- Jackpot normal 1/20 000
+- Jackpot bonus 1/400
+- Fix scroll entraînement Tom
+
+NOUVEAU
+Progression RPG > Équipement > Le Nain Forgeron > 🃏 Blackjack
+
+RÈGLES BLACKJACK
+- mise en Gold
+- Hit / Stand
+- Blackjack naturel payé 3:2
+- victoire normale 1:1
+- égalité = mise rendue
+- dealer reste à 17
+- pas de split / double / assurance en V190
+- la carte cachée du dealer reste réellement cachée côté serveur
+
+INSTALLATION
+1. Supabase > SQL Editor
+2. Exécute PATCH_SUPABASE_V190_BLACKJACK.sql
+3. Sur GitHub, remplace TOUS les fichiers HTML + app-v171.js contenus dans ce ZIP
+4. Commit
+5. Attends GitHub Pages puis recharge
+
+TEST
+- le badge doit afficher : En ligne · V190
+- Progression RPG > Équipement
+- Le Nain doit proposer : Forge / Slot / Blackjack
+
+Pages HTML cache-bustées : 42

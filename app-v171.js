@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V189';
+window.GA_APP_VERSION = 'V190';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-09-v189-sprites-flat-path-fix';
+window.GA_APP_BUILD = '2026-08-09-v190-blackjack-forgeron';
 
 
 /* --------------------------------------------------------------------------
@@ -1387,6 +1387,23 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
   let casinoBonusWinV185 = 0;
   let casinoBetV185 = Math.max(1, Math.floor(Number(localStorage.getItem(`rpg_casino_bet_v185_${cfg.slug}`)) || 1000));
 
+  // V190 — Blackjack du Nain
+  let blackjackBusyV190 = false;
+  let blackjackServerReadyV190 = null;
+  let blackjackServerErrorV190 = '';
+  let blackjackBetV190 = Math.max(1, Math.floor(Number(localStorage.getItem(`rpg_blackjack_bet_v190_${cfg.slug}`)) || 1000));
+  let blackjackStateV190 = {
+    round_status: 'idle',
+    player_cards: [],
+    dealer_cards: [],
+    player_total: 0,
+    dealer_total: 0,
+    bet: 0,
+    result: '',
+    payout: 0,
+    gold_balance: 0
+  };
+
   const dwarfWorkshopStyleV187 = document.createElement('style');
   dwarfWorkshopStyleV187.id = 'dwarfWorkshopStyleV187';
   dwarfWorkshopStyleV187.textContent = `
@@ -1396,7 +1413,7 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
     .dwarf-head{position:relative;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:15px 15px 10px}
     .dwarf-avatar{width:54px;height:54px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(145deg,#342319,#17100d);border:1px solid rgba(255,196,95,.24);font-size:31px;box-shadow:inset 0 0 20px rgba(255,154,61,.08)}
     .dwarf-head b{display:block;font-size:15px;color:#ffd06b}.dwarf-head small{display:block;margin-top:4px;font-size:9px;line-height:1.45;color:#b9a994}
-    .dwarf-mode-tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px 12px}
+    .dwarf-mode-tabs{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 12px 12px}
     .dwarf-mode-tabs button{border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:10px 8px;background:rgba(255,255,255,.035);color:#a7aebd;font-weight:950;font-size:10px;cursor:pointer}.dwarf-mode-tabs button.active{background:linear-gradient(135deg,rgba(185,108,37,.50),rgba(105,57,24,.55));border-color:rgba(255,192,84,.34);color:#ffe1a0}
     .dwarf-body{position:relative;padding:0 12px 13px}.dwarf-rule-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:9px}
     .dwarf-rule{padding:9px 6px;border-radius:11px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05);text-align:center}.dwarf-rule b{display:block;font-size:10px;color:#fff}.dwarf-rule span{display:block;margin-top:3px;font-size:7px;color:#a99d91}
@@ -1415,6 +1432,18 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
     .casino-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:7px}.casino-presets button{border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:7px 3px;background:rgba(255,255,255,.035);color:#b9bfd0;font-size:8px;font-weight:900;cursor:pointer}
     .casino-math{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:10px}.casino-math div{padding:8px;border-radius:10px;background:rgba(255,255,255,.03);font-size:8px;color:#959fb4}.casino-math b{display:block;margin-top:2px;font-size:10px;color:#fff}
     .casino-server-error{margin-top:8px;padding:9px;border-radius:10px;background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.16);font-size:8px;color:#ffb6b6;line-height:1.45}
+    .blackjack-table{padding:12px;border-radius:18px;background:radial-gradient(circle at 50% -10%,rgba(57,148,92,.24),transparent 42%),linear-gradient(180deg,#0c2618,#07140e);border:1px solid rgba(90,211,133,.20);box-shadow:inset 0 0 36px rgba(0,0,0,.34)}
+    .blackjack-title{display:flex;align-items:center;justify-content:space-between;gap:8px}.blackjack-title b{font-size:13px;color:#d7ffe4}.blackjack-title span{font-size:8px;color:#94b8a0}
+    .blackjack-hand{margin-top:12px;padding:10px;border-radius:13px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.055)}
+    .blackjack-hand-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.blackjack-hand-head b{font-size:10px;color:#e8fff0}.blackjack-hand-head span{font-size:9px;color:#a9c8b3}
+    .blackjack-cards{display:flex;flex-wrap:wrap;gap:7px;min-height:62px}
+    .blackjack-card{width:42px;height:58px;border-radius:7px;background:linear-gradient(145deg,#fffdf6,#e9e3d6);border:1px solid rgba(0,0,0,.18);display:flex;flex-direction:column;justify-content:space-between;padding:5px;color:#151515;font-weight:1000;box-shadow:0 4px 9px rgba(0,0,0,.25)}
+    .blackjack-card.red{color:#c52b34}.blackjack-card .rank{font-size:14px;line-height:1}.blackjack-card .suit{align-self:flex-end;font-size:20px;line-height:1}.blackjack-card.hidden{background:repeating-linear-gradient(45deg,#6a261f,#6a261f 5px,#a24638 5px,#a24638 10px);border-color:#d39a73;color:#fff;display:grid;place-items:center;font-size:20px}
+    .blackjack-status{margin-top:10px;padding:9px 10px;border-radius:11px;background:rgba(255,255,255,.045);font-size:9px;line-height:1.45;color:#d2e6d8;text-align:center}.blackjack-status.win{border:1px solid rgba(87,236,144,.22);color:#aaffc9}.blackjack-status.lose{border:1px solid rgba(255,88,88,.20);color:#ffb4b4}.blackjack-status.push{border:1px solid rgba(255,211,93,.20);color:#ffe09a}
+    .blackjack-controls{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:10px}.blackjack-controls input{width:100%;border:1px solid rgba(255,255,255,.10);border-radius:10px;padding:10px;background:#101912;color:#fff;font-weight:900}.blackjack-controls button,.blackjack-actions button{border:0;border-radius:10px;padding:10px 13px;font-weight:1000;cursor:pointer}
+    .blackjack-controls button{background:linear-gradient(135deg,#e2b947,#9a681f);color:#151005}.blackjack-controls button:disabled,.blackjack-actions button:disabled{opacity:.4;cursor:not-allowed}
+    .blackjack-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.blackjack-actions .hit{background:linear-gradient(135deg,#4ebd78,#257249);color:#06170d}.blackjack-actions .stand{background:linear-gradient(135deg,#d6a13e,#80571b);color:#160e03}
+    .blackjack-rules{margin-top:9px;font-size:8px;line-height:1.5;color:#8eaa96}.blackjack-rules b{color:#d4ead9}
     @keyframes casinoReelV185{0%{transform:translateY(-4px);filter:blur(0)}50%{transform:translateY(4px);filter:blur(1px)}100%{transform:translateY(-4px);filter:blur(0)}}
     @media(max-width:390px){.dwarf-rule-grid{grid-template-columns:1fr}.casino-presets{grid-template-columns:repeat(2,1fr)}}
   
@@ -4128,7 +4157,10 @@ async function armCombatServerTimer(session) {
           activeTab = tabButton.dataset.xpTab;
           render();
           if (activeTab === 'cases') queueServerCasePriceLoad(selectedCaseLevel);
-          if (activeTab === 'equipment') void loadCasinoStateV185(true);
+          if (activeTab === 'equipment') {
+            void loadCasinoStateV185(true);
+            void loadBlackjackStateV190(true);
+          }
           if (activeTab === 'leaderboard') void loadRpgLeaderboardV155(true);
           return;
         }
@@ -4160,10 +4192,12 @@ async function armCombatServerTimer(session) {
 
         const dwarfModeButtonV185 = event.target.closest('[data-dwarf-mode-v185]');
         if (dwarfModeButtonV185) {
-          dwarfWorkshopModeV185 = dwarfModeButtonV185.dataset.dwarfModeV185 === 'casino' ? 'casino' : 'forge';
+          const requestedModeV190 = dwarfModeButtonV185.dataset.dwarfModeV185;
+          dwarfWorkshopModeV185 = ['forge','casino','blackjack'].includes(requestedModeV190) ? requestedModeV190 : 'forge';
           localStorage.setItem(`rpg_dwarf_mode_v185_${cfg.slug}`, dwarfWorkshopModeV185);
           render();
           if (dwarfWorkshopModeV185 === 'casino') void loadCasinoStateV185(true);
+          if (dwarfWorkshopModeV185 === 'blackjack') void loadBlackjackStateV190(true);
           return;
         }
 
@@ -4183,6 +4217,25 @@ async function armCombatServerTimer(session) {
 
         if (event.target.closest('[data-casino-spin-v185]')) {
           void spinCasinoV185();
+          return;
+        }
+
+        const blackjackPresetV190 = event.target.closest('[data-blackjack-preset-v190]');
+        if (blackjackPresetV190) {
+          blackjackBetV190 = Math.max(1, Math.floor(n(blackjackPresetV190.dataset.blackjackPresetV190, 1)));
+          localStorage.setItem(`rpg_blackjack_bet_v190_${cfg.slug}`, String(blackjackBetV190));
+          render();
+          return;
+        }
+
+        if (event.target.closest('[data-blackjack-deal-v190]')) {
+          void startBlackjackV190();
+          return;
+        }
+
+        const blackjackActionButtonV190 = event.target.closest('[data-blackjack-action-v190]');
+        if (blackjackActionButtonV190) {
+          void blackjackActionV190(blackjackActionButtonV190.dataset.blackjackActionV190);
           return;
         }
 
@@ -4216,6 +4269,11 @@ async function armCombatServerTimer(session) {
         if (caseButton) openCases(n(caseButton.dataset.openCase), caseButton.dataset.caseType || 'global', n(caseButton.dataset.openCount, 1));
       });
       panel.addEventListener('input', event => {
+        if (event.target?.id === 'dwarfBlackjackBetV190') {
+          blackjackBetV190 = Math.max(1, Math.floor(n(event.target.value, 1)));
+          localStorage.setItem(`rpg_blackjack_bet_v190_${cfg.slug}`, String(blackjackBetV190));
+          return;
+        }
         if (event.target?.id === 'dwarfCasinoBetV185') {
           casinoBetV185 = Math.max(1, Math.floor(n(event.target.value, 1)));
           localStorage.setItem(`rpg_casino_bet_v185_${cfg.slug}`, String(casinoBetV185));
@@ -4865,14 +4923,192 @@ function catalogCollectionText(item) {
     </div>`;
   }
 
-  function dwarfWorkshopHtmlV185() {
-    return `<div class="dwarf-workshop">
-      <div class="dwarf-head"><div class="dwarf-avatar">🧔‍♂️⚒️</div><div><b>Le Nain Forgeron</b><small>« Donne-moi tes reliques… ou ton gold. Le métal et la roue décideront. »</small></div></div>
-      <div class="dwarf-mode-tabs">
-        <button type="button" data-dwarf-mode-v185="forge" class="${dwarfWorkshopModeV185 === 'forge' ? 'active' : ''}">⚒️ Forge d’équipement</button>
-        <button type="button" data-dwarf-mode-v185="casino" class="${dwarfWorkshopModeV185 === 'casino' ? 'active' : ''}">🎰 Casino Gold</button>
+
+  function blackjackCardHtmlV190(card) {
+    const rank = String(card?.rank || '?');
+    const suit = String(card?.suit || '');
+    if (rank === '?') return '<div class="blackjack-card hidden">⚒️</div>';
+    const red = suit === '♥' || suit === '♦';
+    return `<div class="blackjack-card ${red ? 'red' : ''}"><span class="rank">${esc(rank)}</span><span class="suit">${esc(suit)}</span></div>`;
+  }
+
+  function blackjackResultTextV190() {
+    const state = blackjackStateV190 || {};
+    if (state.round_status === 'player_turn') return 'À toi de jouer : tire une carte ou reste.';
+    const result = String(state.result || '');
+    if (!result) return 'Fais ta mise et demande une donne au Nain.';
+    if (result === 'blackjack') return `🃏 BLACKJACK ! Paiement 3:2 · ${fr(state.payout,0)} gold rendus.`;
+    if (result === 'win') return `🏆 GAGNÉ · ${fr(state.payout,0)} gold rendus.`;
+    if (result === 'push') return `🤝 ÉGALITÉ · mise de ${fr(state.payout,0)} gold rendue.`;
+    if (result === 'bust') return '💥 BUST · tu dépasses 21, mise perdue.';
+    if (result === 'dealer_blackjack') return '🂡 Blackjack du croupier · mise perdue.';
+    if (result === 'dealer_win') return '🧔‍♂️ Le Nain gagne cette main.';
+    return result;
+  }
+
+  function blackjackHtmlV190() {
+    const state = blackjackStateV190 || {};
+    const active = state.round_status === 'player_turn';
+    const gold = Math.max(0, Math.floor(n(progress?.gold_balance, state.gold_balance || 0)));
+    const bet = active ? Math.max(1, Math.floor(n(state.bet, blackjackBetV190))) : Math.max(1, Math.floor(n(blackjackBetV190, 1000)));
+    const canEdit = !!window.CoachingCloud?.canEditAthlete?.(cfg.slug);
+    const result = String(state.result || '');
+    const statusClass = ['win','blackjack'].includes(result) ? 'win' : ['bust','dealer_blackjack','dealer_win'].includes(result) ? 'lose' : result === 'push' ? 'push' : '';
+
+    return `<div class="blackjack-table">
+      <div class="blackjack-title"><b>🃏 BLACKJACK DU NAIN</b><span>Gold disponible : ${fr(gold,0)} 🪙</span></div>
+
+      <div class="blackjack-hand">
+        <div class="blackjack-hand-head"><b>🧔‍♂️ Croupier</b><span>${state.dealer_total ? `Total : ${n(state.dealer_total,0)}` : ''}</span></div>
+        <div class="blackjack-cards">${(Array.isArray(state.dealer_cards) ? state.dealer_cards : []).map(blackjackCardHtmlV190).join('') || '<span style="font-size:9px;color:#789282">En attente de la donne…</span>'}</div>
       </div>
-      <div class="dwarf-body">${dwarfWorkshopModeV185 === 'casino' ? casinoHtmlV185() : forgeHtmlV185()}</div>
+
+      <div class="blackjack-hand">
+        <div class="blackjack-hand-head"><b>👤 Toi</b><span>${state.player_total ? `Total : ${n(state.player_total,0)}` : ''}</span></div>
+        <div class="blackjack-cards">${(Array.isArray(state.player_cards) ? state.player_cards : []).map(blackjackCardHtmlV190).join('') || '<span style="font-size:9px;color:#789282">En attente de la donne…</span>'}</div>
+      </div>
+
+      <div class="blackjack-status ${statusClass}">${blackjackResultTextV190()}</div>
+
+      ${active ? `
+        <div class="blackjack-actions">
+          <button type="button" class="hit" data-blackjack-action-v190="hit" ${blackjackBusyV190 || !canEdit ? 'disabled' : ''}>➕ HIT</button>
+          <button type="button" class="stand" data-blackjack-action-v190="stand" ${blackjackBusyV190 || !canEdit ? 'disabled' : ''}>✋ STAND</button>
+        </div>
+      ` : `
+        <div class="blackjack-controls">
+          <input id="dwarfBlackjackBetV190" type="number" min="1" step="1" value="${bet}" ${blackjackBusyV190 ? 'disabled' : ''} aria-label="Mise blackjack">
+          <button type="button" data-blackjack-deal-v190 ${!canEdit || blackjackBusyV190 || bet < 1 || bet > gold || blackjackServerReadyV190 === false ? 'disabled' : ''}>${blackjackBusyV190 ? 'Mélange…' : '🃏 DONNER'}</button>
+        </div>
+        <div class="casino-presets">${[1000,10000,100000,1000000].map(value => `<button type="button" data-blackjack-preset-v190="${value}" ${blackjackBusyV190 ? 'disabled' : ''}>${fr(value,0)}</button>`).join('')}</div>
+      `}
+
+      <div class="blackjack-rules"><b>Règles :</b> Blackjack naturel payé 3:2 · victoire normale 1:1 · égalité = mise rendue · le croupier reste à 17 · pas de split, double ni assurance dans cette version.</div>
+      ${blackjackServerReadyV190 === false ? `<div class="casino-server-error">⚠️ SQL Blackjack V190 non détecté : ${esc(blackjackServerErrorV190 || 'exécute PATCH_SUPABASE_V190_BLACKJACK.sql dans Supabase.')}</div>` : ''}
+    </div>`;
+  }
+
+  function applyBlackjackStateV190(row) {
+    if (!row) return;
+    blackjackStateV190 = {
+      round_status: String(row.round_status || 'idle'),
+      player_cards: Array.isArray(row.player_cards) ? row.player_cards : [],
+      dealer_cards: Array.isArray(row.dealer_cards) ? row.dealer_cards : [],
+      player_total: Math.max(0, Math.floor(n(row.player_total,0))),
+      dealer_total: Math.max(0, Math.floor(n(row.dealer_total,0))),
+      bet: Math.max(0, Math.floor(n(row.bet,0))),
+      result: String(row.result || ''),
+      payout: Math.max(0, Math.floor(n(row.payout,0))),
+      gold_balance: Math.max(0, Math.floor(n(row.gold_balance,0)))
+    };
+    if (progress && row.gold_balance !== undefined && row.gold_balance !== null) {
+      progress = { ...progress, gold_balance: n(row.gold_balance, progress.gold_balance) };
+    }
+  }
+
+  async function loadBlackjackStateV190(renderAfter = false) {
+    if (!window.CoachingCloud?.client || !CoachingCloud.session?.user) return false;
+    const { data, error } = await CoachingCloud.client.rpc('get_rpg_blackjack_state_v190', {
+      p_athlete_slug: cfg.slug
+    });
+    if (error) {
+      blackjackServerReadyV190 = false;
+      blackjackServerErrorV190 = error.message || String(error);
+      if (renderAfter) render();
+      return false;
+    }
+    blackjackServerReadyV190 = true;
+    blackjackServerErrorV190 = '';
+    const row = Array.isArray(data) ? data[0] : data;
+    applyBlackjackStateV190(row);
+    if (renderAfter) render();
+    return true;
+  }
+
+  async function startBlackjackV190() {
+    if (blackjackBusyV190) return;
+    blackjackBetV190 = Math.max(1, Math.floor(n(blackjackBetV190,1)));
+    localStorage.setItem(`rpg_blackjack_bet_v190_${cfg.slug}`, String(blackjackBetV190));
+    blackjackBusyV190 = true;
+    workshopToneV185([523.25,659.25,783.99], .16);
+    render();
+
+    const { data, error } = await CoachingCloud.client.rpc('rpg_blackjack_start_v190', {
+      p_athlete_slug: cfg.slug,
+      p_bet: blackjackBetV190
+    });
+
+    blackjackBusyV190 = false;
+    if (error) {
+      blackjackServerReadyV190 = false;
+      blackjackServerErrorV190 = error.message || String(error);
+      CoachingCloud.toast(`Blackjack impossible : ${error.message}`, true);
+      render();
+      return;
+    }
+
+    blackjackServerReadyV190 = true;
+    blackjackServerErrorV190 = '';
+    const row = Array.isArray(data) ? data[0] : data;
+    applyBlackjackStateV190(row);
+    if (row?.result === 'blackjack') {
+      workshopResultToneV185(true);
+      CoachingCloud.toast(`🃏 BLACKJACK ! Paiement 3:2 · ${fr(row.payout,0)} gold.`);
+    } else if (row?.result === 'dealer_blackjack') {
+      CoachingCloud.toast('🧔‍♂️ Blackjack du Nain.', true);
+    }
+    render();
+  }
+
+  async function blackjackActionV190(action) {
+    if (blackjackBusyV190 || !['hit','stand'].includes(action)) return;
+    blackjackBusyV190 = true;
+    workshopToneV185(action === 'hit' ? [659.25] : [523.25,392], .12);
+    render();
+
+    const { data, error } = await CoachingCloud.client.rpc('rpg_blackjack_action_v190', {
+      p_athlete_slug: cfg.slug,
+      p_action: action
+    });
+
+    blackjackBusyV190 = false;
+    if (error) {
+      blackjackServerReadyV190 = false;
+      blackjackServerErrorV190 = error.message || String(error);
+      CoachingCloud.toast(`Blackjack impossible : ${error.message}`, true);
+      render();
+      return;
+    }
+
+    blackjackServerReadyV190 = true;
+    blackjackServerErrorV190 = '';
+    const row = Array.isArray(data) ? data[0] : data;
+    applyBlackjackStateV190(row);
+
+    if (['win','blackjack'].includes(row?.result)) {
+      workshopResultToneV185(true);
+      CoachingCloud.toast(`🏆 Blackjack gagné · ${fr(row.payout,0)} gold rendus.`);
+    } else if (['bust','dealer_blackjack','dealer_win'].includes(row?.result)) {
+      workshopResultToneV185(false);
+    }
+    render();
+  }
+
+  function dwarfWorkshopHtmlV185() {
+    const body = dwarfWorkshopModeV185 === 'casino'
+      ? casinoHtmlV185()
+      : dwarfWorkshopModeV185 === 'blackjack'
+        ? blackjackHtmlV190()
+        : forgeHtmlV185();
+
+    return `<div class="dwarf-workshop">
+      <div class="dwarf-head"><div class="dwarf-avatar">🧔‍♂️⚒️</div><div><b>Le Nain Forgeron</b><small>« Donne-moi tes reliques… ou ton gold. Le métal, les cartes et la roue décideront. »</small></div></div>
+      <div class="dwarf-mode-tabs">
+        <button type="button" data-dwarf-mode-v185="forge" class="${dwarfWorkshopModeV185 === 'forge' ? 'active' : ''}">⚒️ Forge</button>
+        <button type="button" data-dwarf-mode-v185="casino" class="${dwarfWorkshopModeV185 === 'casino' ? 'active' : ''}">🎰 Slot</button>
+        <button type="button" data-dwarf-mode-v185="blackjack" class="${dwarfWorkshopModeV185 === 'blackjack' ? 'active' : ''}">🃏 Blackjack</button>
+      </div>
+      <div class="dwarf-body">${body}</div>
     </div>`;
   }
 
@@ -5995,7 +6231,7 @@ function collectionHtml() {
   }
 
   async function loadAll() {
-    await Promise.all([loadProgress(), loadInventory(), loadCollections(), loadRaid(), loadTransferRecipients(), loadCasinoStateV185(false)]);
+    await Promise.all([loadProgress(), loadInventory(), loadCollections(), loadRaid(), loadTransferRecipients(), loadCasinoStateV185(false), loadBlackjackStateV190(false)]);
     render();
   }
 
