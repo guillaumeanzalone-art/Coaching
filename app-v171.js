@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V171';
+window.GA_APP_VERSION = 'V187';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-07-v171-auto-ipf-gl';
+window.GA_APP_BUILD = '2026-08-09-v187-casino-forgeron-scroll';
 
 
 /* --------------------------------------------------------------------------
@@ -729,6 +729,7 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
 (function () {
   'use strict';
 
+  // V187 — app-v171 réel : Nain Forgeron + Casino V185 + correctif scroll V186.
   const cfg = window.COACHING_ATHLETE || {};
   if (!cfg.slug) return;
 
@@ -1372,6 +1373,54 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
   let transferRecipients = [];
   let transferModalItemId = null;
   let openingCase = false;
+
+  // V185 — Nain Forgeron + Casino Gold
+  let dwarfWorkshopModeV185 = localStorage.getItem(`rpg_dwarf_mode_v185_${cfg.slug}`) || 'forge';
+  let forgeBusyV185 = false;
+  let forgeLastResultV185 = null;
+  let casinoBusyV185 = false;
+  let casinoAutoBonusV185 = false;
+  let casinoServerReadyV185 = null;
+  let casinoServerErrorV185 = '';
+  let casinoStateV185 = { free_spins_remaining: 0, free_spin_bet: 0 };
+  let casinoLastResultV185 = null;
+  let casinoBonusWinV185 = 0;
+  let casinoBetV185 = Math.max(1, Math.floor(Number(localStorage.getItem(`rpg_casino_bet_v185_${cfg.slug}`)) || 1000));
+
+  const dwarfWorkshopStyleV187 = document.createElement('style');
+  dwarfWorkshopStyleV187.id = 'dwarfWorkshopStyleV187';
+  dwarfWorkshopStyleV187.textContent = `
+    /* V185 — Nain Forgeron / Casino */
+    .dwarf-workshop{position:relative;overflow:hidden;border:1px solid rgba(255,190,76,.24);border-radius:20px;background:radial-gradient(circle at 8% 0,rgba(255,156,46,.16),transparent 38%),linear-gradient(145deg,rgba(40,25,18,.94),rgba(10,12,19,.96));box-shadow:0 18px 44px rgba(0,0,0,.32)}
+    .dwarf-workshop:before{content:"";position:absolute;inset:-40% auto auto -30%;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(255,150,60,.10),transparent 70%);pointer-events:none}
+    .dwarf-head{position:relative;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:15px 15px 10px}
+    .dwarf-avatar{width:54px;height:54px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(145deg,#342319,#17100d);border:1px solid rgba(255,196,95,.24);font-size:31px;box-shadow:inset 0 0 20px rgba(255,154,61,.08)}
+    .dwarf-head b{display:block;font-size:15px;color:#ffd06b}.dwarf-head small{display:block;margin-top:4px;font-size:9px;line-height:1.45;color:#b9a994}
+    .dwarf-mode-tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px 12px}
+    .dwarf-mode-tabs button{border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:10px 8px;background:rgba(255,255,255,.035);color:#a7aebd;font-weight:950;font-size:10px;cursor:pointer}.dwarf-mode-tabs button.active{background:linear-gradient(135deg,rgba(185,108,37,.50),rgba(105,57,24,.55));border-color:rgba(255,192,84,.34);color:#ffe1a0}
+    .dwarf-body{position:relative;padding:0 12px 13px}.dwarf-rule-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:9px}
+    .dwarf-rule{padding:9px 6px;border-radius:11px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.05);text-align:center}.dwarf-rule b{display:block;font-size:10px;color:#fff}.dwarf-rule span{display:block;margin-top:3px;font-size:7px;color:#a99d91}
+    .forge-warning{padding:9px 10px;border-radius:11px;background:rgba(255,75,70,.08);border:1px solid rgba(255,91,72,.16);font-size:8px;line-height:1.45;color:#ffc0b9}
+    .forge-groups{display:grid;gap:7px;margin-top:9px}.forge-group{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center;padding:11px;border-radius:13px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.055)}
+    .forge-group strong{display:block;font-size:11px}.forge-group small{display:block;margin-top:4px;font-size:8px;color:#9da4b2}.forge-group button{min-width:92px;border:1px solid rgba(255,193,83,.28);border-radius:10px;padding:9px 7px;background:linear-gradient(135deg,#9d572a,#5d321d);color:#fff3d2;font-weight:950;font-size:9px;cursor:pointer}.forge-group button:disabled{opacity:.35;cursor:not-allowed}
+    .forge-result{margin-top:9px;padding:10px;border-radius:12px;font-size:9px;font-weight:850;line-height:1.45}.forge-result.success{background:rgba(67,220,139,.10);border:1px solid rgba(67,220,139,.22);color:#a9f4cd}.forge-result.fail{background:rgba(255,72,79,.09);border:1px solid rgba(255,72,79,.20);color:#ffb2b6}
+    .casino-machine{padding:12px;border-radius:17px;background:linear-gradient(180deg,#181321,#090b12);border:1px solid rgba(255,210,82,.20);box-shadow:inset 0 0 0 2px rgba(255,197,54,.025)}
+    .casino-topline{display:flex;justify-content:space-between;gap:8px;align-items:center}.casino-topline b{font-size:12px;color:#ffd65c}.casino-topline span{font-size:8px;color:#aaa3bb}
+    .casino-reels{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:11px;padding:9px;border-radius:14px;background:#05060a;border:1px solid rgba(255,255,255,.07)}
+    .casino-reel{height:66px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(180deg,#fff9e8,#dfd8c6);color:#15121a;font-size:35px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.08)}
+    .casino-machine.spinning .casino-reel{animation:casinoReelV185 .16s linear infinite}.casino-machine.jackpot{box-shadow:0 0 32px rgba(255,213,72,.25),inset 0 0 0 1px rgba(255,215,82,.28)}
+    .casino-result-line{min-height:32px;margin-top:8px;text-align:center;font-size:10px;font-weight:950;color:#e9e2f2}.casino-result-line strong{color:#ffd75b}
+    .casino-bonus-banner{margin-top:8px;padding:9px;border-radius:11px;text-align:center;background:linear-gradient(135deg,rgba(255,127,32,.18),rgba(255,213,69,.10));border:1px solid rgba(255,180,65,.22);font-size:9px;font-weight:950;color:#ffd68a}
+    .casino-bet{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:10px}.casino-bet input{width:100%;border:1px solid rgba(255,255,255,.09);border-radius:10px;padding:10px;background:#121622;color:#fff;font-weight:900}.casino-bet button{border:0;border-radius:10px;padding:10px 14px;background:linear-gradient(135deg,#e1ac36,#8e5c18);color:#130e08;font-weight:1000;cursor:pointer}.casino-bet button:disabled{opacity:.4;cursor:not-allowed}
+    .casino-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:7px}.casino-presets button{border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:7px 3px;background:rgba(255,255,255,.035);color:#b9bfd0;font-size:8px;font-weight:900;cursor:pointer}
+    .casino-math{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:10px}.casino-math div{padding:8px;border-radius:10px;background:rgba(255,255,255,.03);font-size:8px;color:#959fb4}.casino-math b{display:block;margin-top:2px;font-size:10px;color:#fff}
+    .casino-server-error{margin-top:8px;padding:9px;border-radius:10px;background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.16);font-size:8px;color:#ffb6b6;line-height:1.45}
+    @keyframes casinoReelV185{0%{transform:translateY(-4px);filter:blur(0)}50%{transform:translateY(4px);filter:blur(1px)}100%{transform:translateY(-4px);filter:blur(0)}}
+    @media(max-width:390px){.dwarf-rule-grid{grid-template-columns:1fr}.casino-presets{grid-template-columns:repeat(2,1fr)}}
+  
+  `;
+  if (!document.getElementById(dwarfWorkshopStyleV187.id)) document.head.appendChild(dwarfWorkshopStyleV187);
+
   let inventorySort = localStorage.getItem(`rpg_inventory_sort_${cfg.slug}`) || 'rarity';
   let inventorySlotFilter = localStorage.getItem(`rpg_inventory_slot_${cfg.slug}`) || 'all';
   let inventoryTypeFilter = localStorage.getItem(`rpg_inventory_type_${cfg.slug}`) || 'all';
@@ -3879,6 +3928,7 @@ async function armCombatServerTimer(session) {
           activeTab = tabButton.dataset.xpTab;
           render();
           if (activeTab === 'cases') queueServerCasePriceLoad(selectedCaseLevel);
+          if (activeTab === 'equipment') void loadCasinoStateV185(true);
           if (activeTab === 'leaderboard') void loadRpgLeaderboardV155(true);
           return;
         }
@@ -3907,6 +3957,35 @@ async function armCombatServerTimer(session) {
         if (raidCaseButton) openRaidCases(n(raidCaseButton.dataset.openRaidCase, 1));
         const upgradeButton = event.target.closest('[data-upgrade-stat]');
         if (upgradeButton) upgradeStat(upgradeButton.dataset.upgradeStat);
+
+        const dwarfModeButtonV185 = event.target.closest('[data-dwarf-mode-v185]');
+        if (dwarfModeButtonV185) {
+          dwarfWorkshopModeV185 = dwarfModeButtonV185.dataset.dwarfModeV185 === 'casino' ? 'casino' : 'forge';
+          localStorage.setItem(`rpg_dwarf_mode_v185_${cfg.slug}`, dwarfWorkshopModeV185);
+          render();
+          if (dwarfWorkshopModeV185 === 'casino') void loadCasinoStateV185(true);
+          return;
+        }
+
+        const forgeButtonV185 = event.target.closest('[data-forge-v185]');
+        if (forgeButtonV185) {
+          void forgeItemsV185(forgeButtonV185.dataset.forgeRarity, n(forgeButtonV185.dataset.forgeLevel, 1));
+          return;
+        }
+
+        const casinoPresetV185 = event.target.closest('[data-casino-preset-v185]');
+        if (casinoPresetV185) {
+          casinoBetV185 = Math.max(1, Math.floor(n(casinoPresetV185.dataset.casinoPresetV185, 1)));
+          localStorage.setItem(`rpg_casino_bet_v185_${cfg.slug}`, String(casinoBetV185));
+          render();
+          return;
+        }
+
+        if (event.target.closest('[data-casino-spin-v185]')) {
+          void spinCasinoV185();
+          return;
+        }
+
         const lockButton = event.target.closest('[data-lock-item]');
         if (lockButton) {
           toggleItemLock(lockButton.dataset.lockItem, lockButton.dataset.locked !== 'true');
@@ -3937,6 +4016,11 @@ async function armCombatServerTimer(session) {
         if (caseButton) openCases(n(caseButton.dataset.openCase), caseButton.dataset.caseType || 'global', n(caseButton.dataset.openCount, 1));
       });
       panel.addEventListener('input', event => {
+        if (event.target?.id === 'dwarfCasinoBetV185') {
+          casinoBetV185 = Math.max(1, Math.floor(n(event.target.value, 1)));
+          localStorage.setItem(`rpg_casino_bet_v185_${cfg.slug}`, String(casinoBetV185));
+          return;
+        }
         if (event.target?.id === 'caseLevelRange') {
           selectedCaseLevel = Math.min(itemLevelForDifficulty(), Math.max(1, Math.floor(n(event.target.value, 1))));
           localStorage.setItem(`rpg_case_level_${cfg.slug}`, String(selectedCaseLevel));
@@ -4452,6 +4536,293 @@ function catalogCollectionText(item) {
     }).join('')}</div>` : '<div class="inventory-empty-filter">Aucun objet ne correspond à ces filtres.</div>'}${itemTransferModalHtml()}`;
   }
 
+
+  const FORGE_RULES_V185 = {
+    legendary: { required:10, target:'mythic', sourceLabel:'Légendaire', targetLabel:'Mythique' },
+    mythic: { required:5, target:'ultra_mythic', sourceLabel:'Mythique', targetLabel:'URM' },
+    ultra_mythic: { required:2, target:'abyssal', sourceLabel:'URM', targetLabel:'Abyssal' }
+  };
+
+  function forgeGroupsV185() {
+    const groups = new Map();
+    for (const item of inventory) {
+      const rarity = String(item?.rarity || '').toLowerCase();
+      if (!FORGE_RULES_V185[rarity]) continue;
+      if (item?.equipped || item?.is_locked) continue;
+      const level = Math.max(1, Math.floor(n(item?.item_level, 1)));
+      const key = `${rarity}:${level}`;
+      if (!groups.has(key)) groups.set(key, { rarity, level, quantity:0 });
+      groups.get(key).quantity += Math.max(0, Math.floor(n(item?.quantity, 1)));
+    }
+    const rank = { ultra_mythic:3, mythic:2, legendary:1 };
+    return [...groups.values()].sort((a,b) =>
+      (rank[b.rarity] || 0) - (rank[a.rarity] || 0) || b.level - a.level
+    );
+  }
+
+  function workshopToneV185(frequencies = [659.25, 783.99, 987.77], duration = .16) {
+    if (!sfxAllowed()) return;
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      const context = window.__rpgAudioContext || (window.__rpgAudioContext = new AudioContextClass());
+      if (context.state === 'suspended') void context.resume();
+      const now = context.currentTime;
+      frequencies.forEach((frequency, index) => {
+        const osc = context.createOscillator();
+        const gain = context.createGain();
+        osc.type = index === frequencies.length - 1 ? 'triangle' : 'sine';
+        osc.frequency.value = frequency;
+        const start = now + index * .13;
+        gain.gain.setValueAtTime(.0001, start);
+        gain.gain.exponentialRampToValueAtTime(Math.max(.0001, effectiveSfxVolume(.18)), start + .015);
+        gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+        osc.connect(gain).connect(context.destination);
+        osc.start(start);
+        osc.stop(start + duration + .03);
+      });
+    } catch (_) {}
+  }
+
+  function workshopResultToneV185(success) {
+    workshopToneV185(success ? [880,1174.66,1567.98] : [392,311.13,196], success ? .32 : .38);
+  }
+
+  function casinoReelsV185(outcome = '') {
+    const reels = {
+      jackpot:['💎','💎','💎'],
+      bonus:['🔥','🔥','🔥'],
+      x10:['👑','👑','👑'],
+      x5:['🍒','🍒','🍒'],
+      x2:['🔔','🔔','🔔'],
+      x1:['🍋','🍋','🍋'],
+      loss:['🍒','7️⃣','🍋']
+    };
+    return reels[String(outcome || '').toLowerCase()] || ['⚒️','🎰','🪙'];
+  }
+
+  function forgeHtmlV185() {
+    const canEdit = !!window.CoachingCloud?.canEditAthlete?.(cfg.slug);
+    const groups = forgeGroupsV185();
+    const cards = groups.length ? groups.map(group => {
+      const rule = FORGE_RULES_V185[group.rarity];
+      const enough = group.quantity >= rule.required;
+      const rarity = RARITY_DEFS[group.rarity] || { icon:'✨', label:rule.sourceLabel };
+      return `<div class="forge-group rarity-${esc(group.rarity)}">
+        <div><strong>${rarity.icon} ${esc(rule.sourceLabel)} niv. ${group.level} → ${esc(rule.targetLabel)}</strong>
+        <small>${group.quantity}/${rule.required} objets utilisables · même niveau obligatoire · équipés/verrouillés exclus</small></div>
+        <button type="button" data-forge-v185 data-forge-rarity="${esc(group.rarity)}" data-forge-level="${group.level}" ${!canEdit || forgeBusyV185 || !enough ? 'disabled' : ''}>${forgeBusyV185 ? 'TING…' : `Forger ×${rule.required}`}</button>
+      </div>`;
+    }).join('') : '<div class="empty-state">Aucun Légendaire, Mythique ou URM non équipé/non verrouillé disponible pour la forge.</div>';
+
+    const last = forgeLastResultV185
+      ? `<div class="forge-result ${forgeLastResultV185.success ? 'success' : 'fail'}">${forgeLastResultV185.success
+          ? `✨ RÉUSSITE · ${esc(forgeLastResultV185.result_item_name || forgeLastResultV185.target_rarity || 'Objet supérieur')} créé au niveau ${n(forgeLastResultV185.item_level,1)}.`
+          : `💥 ÉCHEC · ${n(forgeLastResultV185.items_consumed,0)} objets ont été détruits.`}</div>`
+      : '';
+
+    return `<div class="dwarf-rule-grid">
+      <div class="dwarf-rule"><b>10 Légendaires</b><span>→ 1 Mythique</span></div>
+      <div class="dwarf-rule"><b>5 Mythiques</b><span>→ 1 URM</span></div>
+      <div class="dwarf-rule"><b>2 URM</b><span>→ 1 Abyssal</span></div>
+    </div>
+    <div class="forge-warning"><strong>25 % réussite / 75 % destruction.</strong> En cas d’échec, tout le lot est perdu. Le niveau de l’objet créé reste exactement le même.</div>
+    <div class="forge-groups">${cards}</div>${last}`;
+  }
+
+  function casinoHtmlV185() {
+    const gold = Math.max(0, Math.floor(n(progress?.gold_balance, 0)));
+    const free = Math.max(0, Math.floor(n(casinoStateV185?.free_spins_remaining, 0)));
+    const lockedBet = Math.max(0, Math.floor(n(casinoStateV185?.free_spin_bet, 0)));
+    const bet = free > 0 ? lockedBet : Math.max(1, Math.floor(n(casinoBetV185, 1000)));
+    const canEdit = !!window.CoachingCloud?.canEditAthlete?.(cfg.slug);
+    const reels = casinoReelsV185(casinoLastResultV185?.outcome);
+    const outcome = casinoLastResultV185?.outcome || '';
+    const resultText = !casinoLastResultV185 ? 'Mise ton gold et tente la roue.'
+      : outcome === 'jackpot' ? `💎 MAX WIN ×10 000 · +${fr(casinoLastResultV185.payout,0)} gold`
+      : outcome === 'bonus' ? '🔥 BONUS · 10 FREE SPINS déclenchés'
+      : outcome === 'loss' ? 'Rien cette fois.'
+      : `${String(outcome).toUpperCase()} · +${fr(casinoLastResultV185.payout,0)} gold`;
+
+    return `<div class="casino-machine ${casinoBusyV185 || casinoAutoBonusV185 ? 'spinning' : ''} ${outcome === 'jackpot' ? 'jackpot' : ''}">
+      <div class="casino-topline"><b>🎰 GOLD SLOT</b><span>RTP théorique global : 95,00 %</span></div>
+      <div class="casino-reels">${reels.map(symbol => `<div class="casino-reel">${symbol}</div>`).join('')}</div>
+      <div class="casino-result-line">${resultText}</div>
+      ${free > 0 ? `<div class="casino-bonus-banner">🔥 BONUS ACTIF · ${free}/10 FREE SPINS RESTANTS · mise verrouillée : ${fr(lockedBet,0)} 🪙 · Jackpot = 1/400 par spin</div>` : ''}
+      ${casinoAutoBonusV185 ? `<div class="casino-bonus-banner">⚡ AUTO FREE SPINS · gains bonus cumulés : ${fr(casinoBonusWinV185,0)} 🪙</div>` : ''}
+      <div class="casino-bet">
+        <input id="dwarfCasinoBetV185" type="number" min="1" step="1" value="${bet}" ${free > 0 || casinoBusyV185 || casinoAutoBonusV185 ? 'disabled' : ''} aria-label="Mise casino">
+        <button type="button" data-casino-spin-v185 ${!canEdit || casinoBusyV185 || casinoAutoBonusV185 || (free <= 0 && (bet < 1 || bet > gold)) || casinoServerReadyV185 === false ? 'disabled' : ''}>${casinoBusyV185 ? 'TING TING…' : free > 0 ? `🔥 JOUER ${free} FREE SPINS` : 'SPIN'}</button>
+      </div>
+      <div class="casino-presets">${[1000,10000,100000,1000000].map(value => `<button type="button" data-casino-preset-v185="${value}" ${free > 0 || casinoBusyV185 || casinoAutoBonusV185 ? 'disabled' : ''}>${fr(value,0)}</button>`).join('')}</div>
+      <div class="casino-math">
+        <div>Jackpot normal<b>×10 000 · 1/20 000</b></div>
+        <div>Déclenchement bonus<b>10 spins · 1/2 000</b></div>
+        <div>Jackpot en bonus<b>×10 000 · 1/400</b></div>
+        <div>Max Win<b>10 000 × la mise</b></div>
+      </div>
+      ${casinoServerReadyV185 === false ? `<div class="casino-server-error">⚠️ SQL V185 non détecté : ${esc(casinoServerErrorV185 || 'exécute PATCH_SUPABASE_V185_NAIN_FORGERON_CASINO.sql dans Supabase.')}</div>` : ''}
+    </div>`;
+  }
+
+  function dwarfWorkshopHtmlV185() {
+    return `<div class="dwarf-workshop">
+      <div class="dwarf-head"><div class="dwarf-avatar">🧔‍♂️⚒️</div><div><b>Le Nain Forgeron</b><small>« Donne-moi tes reliques… ou ton gold. Le métal et la roue décideront. »</small></div></div>
+      <div class="dwarf-mode-tabs">
+        <button type="button" data-dwarf-mode-v185="forge" class="${dwarfWorkshopModeV185 === 'forge' ? 'active' : ''}">⚒️ Forge d’équipement</button>
+        <button type="button" data-dwarf-mode-v185="casino" class="${dwarfWorkshopModeV185 === 'casino' ? 'active' : ''}">🎰 Casino Gold</button>
+      </div>
+      <div class="dwarf-body">${dwarfWorkshopModeV185 === 'casino' ? casinoHtmlV185() : forgeHtmlV185()}</div>
+    </div>`;
+  }
+
+  async function loadCasinoStateV185(renderAfter = false) {
+    if (!window.CoachingCloud?.client || !CoachingCloud.session?.user) return false;
+    const { data, error } = await CoachingCloud.client.rpc('get_rpg_casino_state_v185', {
+      p_athlete_slug: cfg.slug
+    });
+    if (error) {
+      casinoServerReadyV185 = false;
+      casinoServerErrorV185 = error.message || String(error);
+      if (renderAfter) render();
+      return false;
+    }
+    const row = Array.isArray(data) ? data[0] : data;
+    casinoServerReadyV185 = true;
+    casinoServerErrorV185 = '';
+    casinoStateV185 = {
+      free_spins_remaining: Math.max(0, Math.floor(n(row?.free_spins_remaining, 0))),
+      free_spin_bet: Math.max(0, Math.floor(n(row?.free_spin_bet, 0)))
+    };
+    if (renderAfter) render();
+    return true;
+  }
+
+  async function forgeItemsV185(rarity, itemLevel) {
+    const rule = FORGE_RULES_V185[rarity];
+    if (!rule || forgeBusyV185) return;
+    if (!confirm(`Sacrifier ${rule.required} objets ${rule.sourceLabel} niveau ${itemLevel} ?\\n\\n25 % : 1 ${rule.targetLabel} niveau ${itemLevel}\\n75 % : les ${rule.required} objets sont détruits.`)) return;
+
+    forgeBusyV185 = true;
+    forgeLastResultV185 = null;
+    workshopToneV185();
+    render();
+
+    const { data, error } = await CoachingCloud.client.rpc('forge_rpg_items_v185', {
+      p_athlete_slug: cfg.slug,
+      p_rarity: rarity,
+      p_item_level: Math.max(1, Math.floor(n(itemLevel, 1)))
+    });
+
+    forgeBusyV185 = false;
+    if (error) {
+      CoachingCloud.toast(`Forge impossible : ${error.message}`, true);
+      render();
+      return;
+    }
+
+    const row = Array.isArray(data) ? data[0] : data;
+    forgeLastResultV185 = row || { success:false, items_consumed:rule.required, item_level:itemLevel };
+    workshopResultToneV185(!!row?.success);
+
+    if (row?.success) {
+      CoachingCloud.toast(`✨ FORGE RÉUSSIE · ${row.result_item_name || rule.targetLabel} niveau ${n(row.item_level,itemLevel)} obtenu !`);
+    } else {
+      CoachingCloud.toast(`💥 Forge ratée · ${n(row?.items_consumed,rule.required)} objets détruits.`);
+    }
+    await loadInventory();
+  }
+
+  async function casinoSingleSpinV185() {
+    if (casinoBusyV185 || casinoAutoBonusV185 && n(casinoStateV185?.free_spins_remaining,0) <= 0) return null;
+    casinoBusyV185 = true;
+    workshopToneV185([740,880,1046.5], .12);
+    render();
+
+    await new Promise(resolve => setTimeout(resolve, 430));
+
+    const { data, error } = await CoachingCloud.client.rpc('rpg_casino_spin_v185', {
+      p_athlete_slug: cfg.slug,
+      p_bet: Math.max(1, Math.floor(n(casinoBetV185, 1)))
+    });
+
+    casinoBusyV185 = false;
+    if (error) {
+      casinoServerReadyV185 = false;
+      casinoServerErrorV185 = error.message || String(error);
+      CoachingCloud.toast(`Casino indisponible : ${error.message}`, true);
+      render();
+      return null;
+    }
+
+    casinoServerReadyV185 = true;
+    casinoServerErrorV185 = '';
+    const row = Array.isArray(data) ? data[0] : data;
+    if (!row) { render(); return null; }
+
+    casinoLastResultV185 = row;
+    casinoStateV185 = {
+      free_spins_remaining: Math.max(0, Math.floor(n(row.free_spins_remaining, 0))),
+      free_spin_bet: Math.max(0, Math.floor(n(row.free_spin_bet, 0)))
+    };
+    if (progress) {
+      progress = {
+        ...progress,
+        gold_balance: n(row.gold_after, progress.gold_balance),
+        gold_total_earned: n(row.gold_total_earned_after, progress.gold_total_earned)
+      };
+    }
+
+    if (row.jackpot) {
+      workshopResultToneV185(true);
+      if (navigator.vibrate) navigator.vibrate([120,60,120,60,300]);
+      CoachingCloud.toast(`💎💎💎 JACKPOT ×10 000 · +${fr(row.payout,0)} gold !`);
+    } else if (row.bonus_triggered) {
+      workshopToneV185([523.25,659.25,783.99,1046.5], .3);
+      CoachingCloud.toast('🔥 BONUS ! 10 FREE SPINS · jackpot porté à 1 chance sur 400.');
+    }
+    render();
+    return row;
+  }
+
+  async function runCasinoBonusV185() {
+    if (casinoAutoBonusV185 || n(casinoStateV185?.free_spins_remaining,0) <= 0) return;
+    casinoAutoBonusV185 = true;
+    casinoBonusWinV185 = 0;
+    render();
+
+    while (n(casinoStateV185?.free_spins_remaining,0) > 0) {
+      const row = await casinoSingleSpinV185();
+      if (!row) break;
+      casinoBonusWinV185 += Math.max(0, n(row.payout,0));
+      render();
+      await new Promise(resolve => setTimeout(resolve, 620));
+    }
+
+    casinoAutoBonusV185 = false;
+    render();
+    if (casinoBonusWinV185 > 0) {
+      CoachingCloud.toast(`🔥 Bonus terminé · ${fr(casinoBonusWinV185,0)} gold gagnés sur les free spins.`);
+    }
+  }
+
+  async function spinCasinoV185() {
+    if (casinoBusyV185 || casinoAutoBonusV185) return;
+    if (n(casinoStateV185?.free_spins_remaining,0) > 0) {
+      await runCasinoBonusV185();
+      return;
+    }
+
+    casinoBetV185 = Math.max(1, Math.floor(n(casinoBetV185,1)));
+    localStorage.setItem(`rpg_casino_bet_v185_${cfg.slug}`, String(casinoBetV185));
+
+    const row = await casinoSingleSpinV185();
+    if (row?.bonus_triggered && n(casinoStateV185?.free_spins_remaining,0) > 0) {
+      await new Promise(resolve => setTimeout(resolve, 900));
+      await runCasinoBonusV185();
+    }
+  }
+
   function equipmentHtml() {
     const def = CLASS_DEFS[progress?.rpg_class] || CLASS_DEFS.warrior;
     return `
@@ -4462,6 +4833,7 @@ function catalogCollectionText(item) {
         ${statUpgradeHtml('fortune', 'Fortune', '+3 % de gold gagné par victoire et par rang.')}
       </div></div>
       <div class="xp-section"><div class="xp-section-title">Équipement porté</div>${equippedSlotsHtml()}</div>
+      <div class="xp-section"><div class="xp-section-title">🧔‍♂️ Le Nain Forgeron</div>${dwarfWorkshopHtmlV185()}</div>
       <div class="xp-section"><div class="xp-section-title">Inventaire (${inventory.reduce((sum,item)=>sum+n(item.quantity,1),0)} objets · ${inventory.length} piles)</div>${inventoryHtml()}</div>`;
   }
 
@@ -5423,7 +5795,7 @@ function collectionHtml() {
   }
 
   async function loadAll() {
-    await Promise.all([loadProgress(), loadInventory(), loadCollections(), loadRaid(), loadTransferRecipients()]);
+    await Promise.all([loadProgress(), loadInventory(), loadCollections(), loadRaid(), loadTransferRecipients(), loadCasinoStateV185(false)]);
     render();
   }
 
@@ -9803,6 +10175,7 @@ function collectionHtml() {
     setTimeout(loadCloudState, 450);
   }
 
+  // V186 — FIX SCROLL CHARGE : aucune reconstruction de page lors de la saisie SBD.
   // V111 : toutes les écritures d'une même série sont sérialisées. Une ancienne
   // requête ne peut plus arriver après la nouvelle et remettre une charge obsolète.
   const setSyncChains = new Map();
@@ -9904,6 +10277,10 @@ function collectionHtml() {
       scheduleSetValueSync(meta, originalCompleted(ctx.w, ctx.d, ctx.idx, ctx.row), 0);
     }, true);
 
+    // V186 : empêcher les sauts de viewport lors de la validation d'une charge.
+    // Sur mobile, fermer le clavier suffit : on ne force plus le focus vers la
+    // coche, car iOS/Android peuvent alors repositionner brutalement la page.
+    // Sur desktop, le raccourci clavier reste disponible avec preventScroll.
     document.addEventListener('keydown', event => {
       const input = event.target;
       if (!isStableLoadInputV158(input) || event.key !== 'Enter') return;
@@ -9911,8 +10288,29 @@ function collectionHtml() {
       const committed = commitStableLoadInputV158(input, { restorePreviousWhenEmpty: true });
       if (committed === null && String(input.value || '').trim()) return;
       const row = input.closest('.set-row');
+      const scrollXBefore = window.scrollX;
+      const scrollYBefore = window.scrollY;
+      const isTouchViewport = window.matchMedia?.('(pointer: coarse)')?.matches
+        || navigator.maxTouchPoints > 0;
+
       input.blur();
-      requestAnimationFrame(() => checkboxFor(row)?.focus?.());
+
+      requestAnimationFrame(() => {
+        if (!isTouchViewport) {
+          const checkbox = checkboxFor(row);
+          try {
+            checkbox?.focus?.({ preventScroll: true });
+          } catch (_) {
+            // Aucun focus forcé si preventScroll n'est pas supporté.
+          }
+        }
+
+        // Filet de sécurité : un navigateur mobile ne doit jamais envoyer
+        // l'athlète plusieurs écrans plus bas en refermant son clavier.
+        if (Math.abs(window.scrollY - scrollYBefore) > Math.max(140, window.innerHeight * 0.45)) {
+          window.scrollTo(scrollXBefore, scrollYBefore);
+        }
+      });
     }, true);
 
     document.addEventListener('keydown', event => {
@@ -10094,13 +10492,24 @@ function collectionHtml() {
 
     document.addEventListener('change', event => {
       const input = event.target.closest('[data-cloud-load],.cloud-athlete-rpe,.cloud-athlete-load,.load-select,.load-input,.set-load,.rpe-select,.rpe-input,.set-rpe,.accessory-time-v22');
-      if (isStableLoadInputV158(input)) commitStableLoadInputV158(input, { restorePreviousWhenEmpty: true });
+      const stableLoadV186 = isStableLoadInputV158(input);
+      if (stableLoadV186) commitStableLoadInputV158(input, { restorePreviousWhenEmpty: true });
       const row = input?.closest('.set-row');
       if (!input || !row || !exerciseContainer()?.contains(row)) return;
       const idx = Number(row.dataset.cloudSetIndex);
       if (!Number.isInteger(idx)) return;
       const { w, d } = currentIndices();
       const meta = rowMeta(row, idx, w, d);
+
+      // V186 : plusieurs pages athlètes historiques possèdent encore un
+      // onchange inline du type sL(...), dont sL() exécute render().
+      // Pour SQ/BN/DL, le moteur V171 vient déjà de sauvegarder la charge :
+      // empêcher l'évènement d'atteindre cet onchange évite de détruire/recréer
+      // tout le DOM et supprime le saut en bas de page sur téléphone.
+      if (stableLoadV186 && ['sq', 'bn', 'dl'].includes(meta.code)) {
+        event.stopPropagation();
+      }
+
       input.classList?.toggle('ga-load-missing-v125', input.classList?.contains('load-select') && !String(input.value || '').trim());
       persistSetValues(meta, row);
       scheduleSetValueSync(meta, originalCompleted(w, d, idx, row), 0);
