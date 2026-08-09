@@ -1,0 +1,62 @@
+PATCH V176 — PROBABILITÉS MONSTRES = SERVEUR
+
+OBJECTIF
+Le panneau de probabilités du jeu affiche désormais les mêmes pourcentages que
+le moteur Supabase qui tire réellement les monstres.
+
+BUG CORRIGÉ
+L'ancien navigateur utilisait encore une formule locale différente :
+- Chance côté navigateur : multiplicateur 1 + Chance/100 ;
+- serveur V175 :
+  * Peu commun = 1 + Chance/750 ;
+  * Rare et supérieur = 1 + Chance/500 ;
+  * Chance plafonnée à 1500 ;
+  * Chasseur plafonné à 100 %.
+
+C'est pour cela que Guillaume pouvait voir environ 3 % de Légendaire dans
+l'interface alors que Supabase utilisait réellement environ 0,56 %.
+
+V176
+1. Le navigateur appelle directement :
+   public.rpg_monster_encounter_odds_v153(athlete_slug, level)
+2. La réponse Supabase devient la source de vérité pour l'affichage.
+3. Si Supabase est momentanément indisponible, un calcul local de secours
+   reproduit exactement la formule V175.
+4. Les probabilités sont rechargées après :
+   - chargement de la progression ;
+   - chargement / modification de l'équipement ;
+   - chargement / modification du codex.
+5. Le panneau indique clairement :
+   - « Taux serveur en direct » lorsque le RPC a répondu ;
+   - « Calcul local de secours » sinon.
+
+INSTALLATION
+Aucun nouveau SQL n'est nécessaire si V175 est déjà installé.
+
+GitHub :
+1. Ouvrir app.js.
+2. Appliquer PATCH_APP_JS_V176_ODDS_SERVEUR.diff.
+3. Commit changes.
+4. Recharger le jeu avec Ctrl + F5.
+
+CONTRÔLE
+Sur Guillaume, le panneau doit afficher des valeurs proches de celles renvoyées
+par cette requête Supabase :
+
+select
+  rarity,
+  chance_pct,
+  sort_order
+from public.rpg_monster_encounter_odds_v153('guillaume', 21)
+order by sort_order;
+
+Avec l'état testé lors du diagnostic, Légendaire était à environ 0,56003378 %.
+L'interface doit donc afficher environ 0,560 %, et non ~3 %.
+
+AUCUN RESET
+- niveaux / XP : conservés
+- gold : conservé
+- inventaire : conservé
+- équipements : conservés
+- kills / découvertes : conservés
+- boss / raids : conservés

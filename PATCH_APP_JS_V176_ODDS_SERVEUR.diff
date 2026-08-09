@@ -1,0 +1,205 @@
+--- app.js
++++ app.js
+@@
+   let monsterCatalog = [];
+   let monsterCollection = [];
+   let itemCatalog = [];
+   let itemCollection = [];
++  // V176 — source de vérité des probabilités de rencontre :
++  // le navigateur affiche en priorité les taux calculés par Supabase.
++  let serverEncounterOdds = null;
++  let serverEncounterOddsPromise = null;
+   let channel = null;
+   let panel = null;
+   let chip = null;
+@@
+-function eliteMonsterMultiplier() {
+-  // Croissance linéaire sans plafond : chaque tranche de 100 points de
+-  // Chance ajoute ×1 aux poids de toutes les raretés Peu commun et plus.
+-  return 1 + effectiveChancePoints() / 100;
+-}
+-
+-function monsterEncounterOdds() {
+-  const advancedMultiplier = Math.max(1, eliteMonsterMultiplier());
+-  const hunterMultiplier = 1 + Math.max(0, equippedPassiveTotal('epic_hunter')) / 100;
+-
+-  // La Chance augmente Peu commun et supérieur. Chasseur épique augmente
+-  // ensuite de façon identique tout le pool Rare et supérieur. Comme chaque
+-  // rang reçoit les mêmes multiplicateurs, la hiérarchie reste toujours :
+-  // Peu commun > Rare > Épique > Légendaire > Mythique > Ultra > Abyssal.
+-  const weights = {
+-    normal: 67.339,
+-    common: 27,
+-    uncommon: 4 * advancedMultiplier,
+-    rare: 1 * advancedMultiplier * hunterMultiplier,
+-    epic: 0.5 * advancedMultiplier * hunterMultiplier,
+-    legendary: 0.1 * advancedMultiplier * hunterMultiplier,
+-    mythic: 0.05 * advancedMultiplier * hunterMultiplier,
+-    ultra_mythic: 0.01 * advancedMultiplier * hunterMultiplier,
+-    abyssal: 0.001 * advancedMultiplier * hunterMultiplier
+-  };
+-
+-  const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
+-  if (!(totalWeight > 0)) return {
+-    normal: 67.339,
+-    common: 27,
+-    uncommon: 4,
+-    rare: 1,
+-    epic: 0.5,
+-    legendary: 0.1,
+-    mythic: 0.05,
+-    ultra_mythic: 0.01,
+-    abyssal: 0.001
+-  };
+-
+-  return Object.fromEntries(
+-    Object.entries(weights).map(([key, value]) => [key, value / totalWeight * 100])
+-  );
+-}
++function monsterEncounterOddsFallback() {
++  // V176 — copie de secours EXACTE de la formule serveur V175.
++  // Elle n'est utilisée que si le RPC Supabase est momentanément indisponible.
++  const chancePoints = Math.min(1500, Math.max(0, effectiveChancePoints()));
++  const hunterBonus = Math.min(100, Math.max(0, equippedPassiveTotal('epic_hunter')));
++
++  const uncommonMultiplier = 1 + chancePoints / 750;
++  const rarePlusMultiplier = 1 + chancePoints / 500;
++  const hunterMultiplier = 1 + hunterBonus / 100;
++
++  const weights = {
++    normal: 67.339,
++    common: 27,
++    uncommon: 4 * uncommonMultiplier,
++    rare: 1 * rarePlusMultiplier * hunterMultiplier,
++    epic: 0.5 * rarePlusMultiplier * hunterMultiplier,
++    legendary: 0.1 * rarePlusMultiplier * hunterMultiplier,
++    mythic: 0.05 * rarePlusMultiplier * hunterMultiplier,
++    ultra_mythic: 0.01 * rarePlusMultiplier * hunterMultiplier,
++    abyssal: 0.001 * rarePlusMultiplier * hunterMultiplier
++  };
++
++  const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
++  if (!(totalWeight > 0)) return {
++    normal: 67.339,
++    common: 27,
++    uncommon: 4,
++    rare: 1,
++    epic: 0.5,
++    legendary: 0.1,
++    mythic: 0.05,
++    ultra_mythic: 0.01,
++    abyssal: 0.001
++  };
++
++  return Object.fromEntries(
++    Object.entries(weights).map(([key, value]) => [key, value / totalWeight * 100])
++  );
++}
++
++function monsterEncounterOdds() {
++  return serverEncounterOdds || monsterEncounterOddsFallback();
++}
++
++async function loadServerEncounterOdds() {
++  if (!window.CoachingCloud?.client || !CoachingCloud.session?.user) {
++    return serverEncounterOdds;
++  }
++
++  // Plusieurs chargements (progression / inventaire / codex) peuvent arriver
++  // en même temps. Un seul RPC est lancé et les autres attendent le même.
++  if (serverEncounterOddsPromise) return serverEncounterOddsPromise;
++
++  serverEncounterOddsPromise = (async () => {
++    const { data, error } = await CoachingCloud.client.rpc(
++      'rpg_monster_encounter_odds_v153',
++      {
++        p_athlete_slug: cfg.slug,
++        p_player_level: Math.max(1, Math.floor(n(progress?.level, 1)))
++      }
++    );
++
++    if (error) {
++      console.warn('Probabilités monstres serveur indisponibles :', error.message);
++      return serverEncounterOdds;
++    }
++
++    const rows = Array.isArray(data) ? data : data ? [data] : [];
++    if (!rows.length) {
++      console.warn('Probabilités monstres serveur vides.');
++      return serverEncounterOdds;
++    }
++
++    // Une rareté absente de la réponse serveur doit apparaître à 0 %,
++    // et surtout ne jamais être recréée artificiellement côté navigateur.
++    const next = {
++      normal: 0,
++      common: 0,
++      uncommon: 0,
++      rare: 0,
++      epic: 0,
++      legendary: 0,
++      mythic: 0,
++      ultra_mythic: 0,
++      abyssal: 0
++    };
++
++    for (const row of rows) {
++      const key = normalizedMonsterRarity(row?.rarity);
++      const pct = Number(row?.chance_pct);
++      if (Object.prototype.hasOwnProperty.call(next, key) && Number.isFinite(pct)) {
++        next[key] = pct;
++      }
++    }
++
++    serverEncounterOdds = next;
++    return serverEncounterOdds;
++  })();
++
++  try {
++    return await serverEncounterOddsPromise;
++  } finally {
++    serverEncounterOddsPromise = null;
++  }
++}
+@@
+ function monsterEncounterOddsHtml() {
+   const odds = monsterEncounterOdds();
+   const order = ['normal','common','uncommon','rare','epic','legendary','mythic','ultra_mythic','abyssal'];
++  const oddsSource = serverEncounterOdds
++    ? 'Taux serveur en direct'
++    : 'Calcul local de secours';
+
+   const rarityPanel = `<div class="encounter-odds-grid">${order.map(key => {
+     const p = monsterRarityPresentation(key);
+     return `<div class="encounter-odds-card rarity-${key}"><strong style="color:${esc(p.color)}">${p.icon} ${esc(p.label)}</strong><b>${fr(odds[key],3)} %</b><small>${esc(monsterXpMonitorLabel(key))}</small></div>`;
+   }).join('')}</div>
+-  <div class="encounter-odds-note">À 0 Chance : 4 % Peu commun, 1 % Rare, 0,5 % Épique, 0,1 % Légendaire, 0,05 % Mythique, 0,01 % Ultra mythique et 0,001 % Abyssal. La Chance augmente Peu commun et supérieur sans plafond. Le passif Chasseur épique augmente séparément Rare et supérieur, également sans plafond. Les mêmes multiplicateurs sont appliqués à chaque rang concerné : la hiérarchie reste donc toujours Peu commun &gt; Rare &gt; Épique &gt; Légendaire &gt; Mythique &gt; Ultra &gt; Abyssal.<br><strong>XP par grands paliers de 10 niveaux :</strong>
++  <div class="encounter-odds-note"><strong>${oddsSource}.</strong> À 0 Chance : 4 % Peu commun, 1 % Rare, 0,5 % Épique, 0,1 % Légendaire, 0,05 % Mythique, 0,01 % Ultra mythique et 0,001 % Abyssal. La Chance serveur est plafonnée à 1 500 points : Peu commun utilise ×(1 + Chance/750), tandis que Rare et supérieur utilisent ×(1 + Chance/500). Le passif Chasseur épique augmente Rare et supérieur avec ×(1 + bonus/100), bonus plafonné à 100 %. Le serveur renormalise ensuite les raretés disponibles à 100 %.<br><strong>XP par grands paliers de 10 niveaux :</strong>
+@@
+     progress = {
+       best_damage_trial: 0, damage_trial_attempts: 0, last_damage_trial_at: null,
+       raid_ultra_cases: 0, adventure_difficulty: 1, kills_toward_boss: 0,
+       boss_wins: 0, last_boss_at: null, perfect_combat_streak: 0, best_perfect_combat_streak: 0,
+       combat_drop_combo: 1, best_combat_drop_combo: 1,
+       ...progress
+     };
+     serverCasePrices.clear();
++    await loadServerEncounterOdds();
+     render();
+     if (activeTab === 'cases') queueServerCasePriceLoad(selectedCaseLevel);
+   }
+@@
+     if (result.error) {
+       console.warn('Inventaire RPG indisponible :', result.error.message);
+       return;
+     }
+     inventory = Array.isArray(result.data) ? result.data : [];
++    await loadServerEncounterOdds();
+     render();
+   }
+@@
+     monsterCatalog.sort((a, b) => n(a.sort_order, 999999) - n(b.sort_order, 999999));
+     itemCatalog.sort((a, b) => n(a.sort_order, 999999) - n(b.sort_order, 999999));
++    await loadServerEncounterOdds();
+     render();
+   }
