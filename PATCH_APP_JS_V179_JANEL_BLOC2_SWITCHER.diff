@@ -1,0 +1,125 @@
+--- app.js
++++ app.js
+@@
+ (function prepareProgramInstanceKey() {
+   const cfg = window.COACHING_ATHLETE;
+   if (!cfg || !cfg.slug || !cfg.programKey) return;
+@@
+   cfg.programKey = `${currentKey}-bloc-${blockNumber}`;
+ })();
++
++/* --------------------------------------------------------------------------
++   V179 — SÉLECTEUR DE PROGRAMMES JANEL
++
++   Janel possède désormais deux pages de programmation :
++     - Janel.html  : programme historique
++     - Janel2.html : nouveau Bloc 2
++
++   Le profil historique de Janel continuait d'ouvrir Janel.html, ce qui donnait
++   l'impression que le nouveau bloc n'existait pas. On ajoute donc un sélecteur
++   explicite Bloc 1 / Bloc 2 sur les deux pages, sans remplacer ni supprimer le
++   programme historique.
++---------------------------------------------------------------------------- */
++(function installJanelProgramSwitcherV179() {
++  const cfg = window.COACHING_ATHLETE || {};
++  if (String(cfg.slug || '').toLowerCase() !== 'janel') return;
++
++  function currentFileName() {
++    try {
++      return decodeURIComponent(String(location.pathname || '').split('/').pop() || '');
++    } catch (_) {
++      return String(location.pathname || '').split('/').pop() || '';
++    }
++  }
++
++  function addStyles() {
++    if (document.getElementById('gaJanelProgramSwitcherStyleV179')) return;
++    const style = document.createElement('style');
++    style.id = 'gaJanelProgramSwitcherStyleV179';
++    style.textContent = `
++      .ga-janel-program-switcher-v179{
++        display:flex;
++        gap:7px;
++        margin:10px 16px 12px;
++        padding:6px;
++        border-radius:13px;
++        background:rgba(255,255,255,.035);
++        border:1px solid rgba(198,155,85,.18);
++      }
++      .ga-janel-program-switcher-v179 a{
++        flex:1;
++        min-width:0;
++        display:flex;
++        align-items:center;
++        justify-content:center;
++        gap:6px;
++        min-height:38px;
++        padding:8px 10px;
++        border-radius:9px;
++        text-decoration:none;
++        color:var(--text-dim,#d8cbd0);
++        background:rgba(255,255,255,.025);
++        border:1px solid transparent;
++        font-size:11px;
++        font-weight:850;
++        letter-spacing:.01em;
++      }
++      .ga-janel-program-switcher-v179 a.active{
++        color:#fff8e8;
++        background:linear-gradient(135deg,rgba(111,24,50,.55),rgba(198,155,85,.22));
++        border-color:rgba(198,155,85,.42);
++        box-shadow:0 5px 16px rgba(0,0,0,.18);
++      }
++      .ga-janel-program-switcher-v179 a small{
++        display:block;
++        opacity:.68;
++        font-size:8px;
++        font-weight:700;
++      }
++    `;
++    document.head.appendChild(style);
++  }
++
++  function install() {
++    if (document.querySelector('.ga-janel-program-switcher-v179')) return;
++
++    const file = currentFileName().toLowerCase();
++    const isBlock2 = /^janel(?:[\s_-]*(?:bloc|block|programme|program|prog))?[\s_-]*2\.html?$/i.test(file)
++      || /^janel2\.html?$/i.test(file);
++
++    const host =
++      document.querySelector('.header') ||
++      document.querySelector('header') ||
++      document.querySelector('.app');
++    if (!host) return;
++
++    addStyles();
++
++    const switcher = document.createElement('nav');
++    switcher.className = 'ga-janel-program-switcher-v179';
++    switcher.setAttribute('aria-label', 'Choisir le programme de Janel');
++    switcher.innerHTML = `
++      <a href="Janel.html" class="${isBlock2 ? '' : 'active'}">
++        <span>🏁 Bloc 1<small>Programme précédent</small></span>
++      </a>
++      <a href="Janel2.html" class="${isBlock2 ? 'active' : ''}">
++        <span>✨ Bloc 2<small>Nouveau programme</small></span>
++      </a>
++    `;
++
++    if (host.classList?.contains('header') || host.classList?.contains('header')) {
++      host.insertAdjacentElement('afterend', switcher);
++    } else {
++      host.prepend(switcher);
++    }
++  }
++
++  if (document.readyState === 'loading') {
++    document.addEventListener('DOMContentLoaded', install, { once:true });
++  } else {
++    install();
++  }
++})();
+
+ (function () {
+   'use strict';

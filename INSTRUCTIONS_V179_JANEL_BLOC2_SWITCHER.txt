@@ -1,0 +1,42 @@
+PATCH V179 — JANEL : AFFICHER LE BLOC 2 DEPUIS SON PROGRAMME
+
+DIAGNOSTIC
+La capture montre encore le programme historique de Janel :
+- bannière « JANEL MOTORSPORT »
+- « BMW Bordeaux — Grand Tour SBD »
+- « Porsche GT — Circuit technique »
+
+Ce n'est pas le nouveau Janel2.html.
+
+Le fichier Janel2 existe bien avec :
+- 4 semaines
+- 5 séances
+- clé cloud dédiée : janel_nouveau_programme_4_semaines_bloc-2
+
+Le problème restant est donc l'accès/navigation : Janel.html continue naturellement
+d'ouvrir l'ancien programme.
+
+CORRECTION V179
+Le patch app.js injecte automatiquement sur toutes les pages de Janel un
+sélecteur visible :
+
+🏁 Bloc 1 — Programme précédent
+✨ Bloc 2 — Nouveau programme
+
+- Janel.html active Bloc 1.
+- Janel2.html active Bloc 2.
+- Aucun programme n'est supprimé.
+- Les deux program_key restent séparées.
+- Aucun SQL nécessaire.
+
+INSTALLATION
+1. Vérifier que Janel2.html est bien à la racine GitHub, avec exactement ce nom.
+2. Appliquer PATCH_APP_JS_V179_JANEL_BLOC2_SWITCHER.diff sur l'app.js de production.
+3. Commit GitHub.
+4. Ctrl + F5.
+5. Ouvrir Janel : le bouton « ✨ Bloc 2 » doit apparaître et ouvrir Janel2.html.
+
+IMPORTANT
+La capture fournie est bien l'ancien Janel.html, pas Janel2.html. Le patch précédent
+sur programKey était nécessaire pour séparer les sauvegardes, mais il ne changeait
+pas le lien de navigation depuis l'ancien programme. V179 corrige précisément ce point.
