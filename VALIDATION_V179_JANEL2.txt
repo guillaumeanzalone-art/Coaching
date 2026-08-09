@@ -1,0 +1,7 @@
+V179 intégré directement dans app.js
+Janel2.html présent
+programKey Janel2 : janel_nouveau_programme_4_semaines_bloc-2
+Sélecteur Bloc 1 / Bloc 2 : actif pour le slug janel
+Syntaxe app.js (node --check) : OK
+
+Attention : les fichiers .diff V176 et V178 présents dans le dépôt ne sont pas appliqués automatiquement par GitHub.
