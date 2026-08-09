@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V187';
+window.GA_APP_VERSION = 'V188';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-09-v187-casino-forgeron-scroll';
+window.GA_APP_BUILD = '2026-08-09-v188-forgeron-casino-cache-buster';
 
 
 /* --------------------------------------------------------------------------

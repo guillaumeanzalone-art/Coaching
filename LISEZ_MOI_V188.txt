@@ -1,0 +1,24 @@
+V188 — FORGERON/CASINO + CACHE BUSTER
+
+Pourquoi V187 pouvait rester invisible :
+les pages HTML chargeaient encore :
+app-v171.js?build=20260807-v171-auto-gl
+
+V188 change réellement l'URL du script en :
+app-v171.js?build=20260809-v188-forgeron-casino
+
+INSTALLATION
+1. Décompresse ce ZIP.
+2. Sur GitHub, envoie/remplace TOUS les fichiers contenus dans le ZIP à la racine du projet.
+3. Commit changes.
+4. Attends le déploiement GitHub Pages.
+5. Recharge la page.
+
+TEST
+Le badge RPG doit afficher : En ligne · V188
+Puis Progression RPG > Équipement doit afficher :
+🧔‍♂️ Le Nain Forgeron
+
+Le SQL V185 reste nécessaire côté Supabase pour faire fonctionner les actions de forge/casino.
+
+Fichiers HTML dont le cache-buster a été mis à jour : 42
