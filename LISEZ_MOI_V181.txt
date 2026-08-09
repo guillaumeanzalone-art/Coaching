@@ -1,0 +1,46 @@
+PATCH V181 — JANEL EN 2 BLOCS COMME SAYA
+
+CAUSE TROUVÉE
+Saya ne dépend pas d'un patch JavaScript pour afficher ses deux blocs :
+- Saya.html contient directement les onglets Bloc 1 / Bloc 2.
+- Saya2.html contient directement les mêmes onglets.
+- index.html ignore Saya2.html comme fiche athlète séparée.
+
+Janel n'était pas structurée de la même manière.
+
+V181 CORRIGE EXACTEMENT ÇA
+1. Janel.html :
+   - ajoute Bloc 1 / Bloc 2 directement dans le HTML ;
+   - Bloc 1 actif ;
+   - Bloc 2 ouvre Janel2.html.
+
+2. Janel2.html :
+   - ajoute le même sélecteur ;
+   - Bloc 2 actif ;
+   - Bloc 1 retourne vers Janel.html.
+
+3. index.html :
+   - Janel.html devient la page canonique de Janel ;
+   - Janel2.html est ignoré comme deuxième fiche athlète ;
+   - l'accueil conserve UNE seule Janel.
+
+INSTALLATION GITHUB
+Tu n'as que 3 fichiers à envoyer :
+- index.html
+- Janel.html
+- Janel2.html
+
+Dans GitHub :
+1. Upload files.
+2. Dépose ces 3 fichiers à la racine.
+3. Accepte le remplacement des fichiers existants.
+4. Commit changes.
+5. Ctrl + F5.
+
+AUCUN SQL.
+AUCUN app.js À MODIFIER.
+AUCUN RESET DE PROGRESSION.
+
+Résultat attendu :
+sur Janel, exactement comme Saya, deux onglets visibles :
+[ Bloc 1 — précédent ] [ Bloc 2 — nouveau ]
