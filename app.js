@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V171';
+window.GA_APP_VERSION = 'V180';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-07-v171-auto-ipf-gl';
+window.GA_APP_BUILD = '2026-08-09-v180-sprites-rpg-158';
 
 
 /* --------------------------------------------------------------------------
@@ -176,6 +176,120 @@ window.GA_APP_BUILD = '2026-08-07-v171-auto-ipf-gl';
   cfg.programBlock = blockNumber;
   cfg.programKey = `${currentKey}-bloc-${blockNumber}`;
 })();
+
+/* --------------------------------------------------------------------------
+   V179 — SÉLECTEUR DE PROGRAMMES JANEL
+
+   Janel possède désormais deux pages de programmation :
+     - Janel.html  : programme historique
+     - Janel2.html : nouveau Bloc 2
+
+   Le profil historique de Janel continuait d'ouvrir Janel.html, ce qui donnait
+   l'impression que le nouveau bloc n'existait pas. On ajoute donc un sélecteur
+   explicite Bloc 1 / Bloc 2 sur les deux pages, sans remplacer ni supprimer le
+   programme historique.
+---------------------------------------------------------------------------- */
+(function installJanelProgramSwitcherV179() {
+  const cfg = window.COACHING_ATHLETE || {};
+  if (String(cfg.slug || '').toLowerCase() !== 'janel') return;
+
+  function currentFileName() {
+    try {
+      return decodeURIComponent(String(location.pathname || '').split('/').pop() || '');
+    } catch (_) {
+      return String(location.pathname || '').split('/').pop() || '';
+    }
+  }
+
+  function addStyles() {
+    if (document.getElementById('gaJanelProgramSwitcherStyleV179')) return;
+    const style = document.createElement('style');
+    style.id = 'gaJanelProgramSwitcherStyleV179';
+    style.textContent = `
+      .ga-janel-program-switcher-v179{
+        display:flex;
+        gap:7px;
+        margin:10px 16px 12px;
+        padding:6px;
+        border-radius:13px;
+        background:rgba(255,255,255,.035);
+        border:1px solid rgba(198,155,85,.18);
+      }
+      .ga-janel-program-switcher-v179 a{
+        flex:1;
+        min-width:0;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:6px;
+        min-height:38px;
+        padding:8px 10px;
+        border-radius:9px;
+        text-decoration:none;
+        color:var(--text-dim,#d8cbd0);
+        background:rgba(255,255,255,.025);
+        border:1px solid transparent;
+        font-size:11px;
+        font-weight:850;
+        letter-spacing:.01em;
+      }
+      .ga-janel-program-switcher-v179 a.active{
+        color:#fff8e8;
+        background:linear-gradient(135deg,rgba(111,24,50,.55),rgba(198,155,85,.22));
+        border-color:rgba(198,155,85,.42);
+        box-shadow:0 5px 16px rgba(0,0,0,.18);
+      }
+      .ga-janel-program-switcher-v179 a small{
+        display:block;
+        opacity:.68;
+        font-size:8px;
+        font-weight:700;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function install() {
+    if (document.querySelector('.ga-janel-program-switcher-v179')) return;
+
+    const file = currentFileName().toLowerCase();
+    const isBlock2 = /^janel(?:[\s_-]*(?:bloc|block|programme|program|prog))?[\s_-]*2\.html?$/i.test(file)
+      || /^janel2\.html?$/i.test(file);
+
+    const host =
+      document.querySelector('.header') ||
+      document.querySelector('header') ||
+      document.querySelector('.app');
+    if (!host) return;
+
+    addStyles();
+
+    const switcher = document.createElement('nav');
+    switcher.className = 'ga-janel-program-switcher-v179';
+    switcher.setAttribute('aria-label', 'Choisir le programme de Janel');
+    switcher.innerHTML = `
+      <a href="Janel.html" class="${isBlock2 ? '' : 'active'}">
+        <span>🏁 Bloc 1<small>Programme précédent</small></span>
+      </a>
+      <a href="Janel2.html" class="${isBlock2 ? 'active' : ''}">
+        <span>✨ Bloc 2<small>Nouveau programme</small></span>
+      </a>
+    `;
+
+    if (host.matches?.('.header, header')) {
+      host.insertAdjacentElement('afterend', switcher);
+    } else {
+      host.prepend(switcher);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', install, { once:true });
+  } else {
+    install();
+  }
+})();
+
 
 (function () {
   'use strict';
@@ -3462,74 +3576,178 @@ function caseLuckBoostPct() {
 
 
   const MONSTER_SPRITE_FILES = {
-    "arnold schwarzeneggerie le chene en plastique": "sprites/monsters/epique/Arnold Schwarzeneggerie, le Chêne en Plastique.webp",
-    "avatar du rpe 10 permanent": "sprites/monsters/epique/Avatar du RPE 10 permanent.webp",
-    "barre proteinee gout beton": "sprites/monsters/commun/Barre protéinée goût béton.webp",
-    "bouteille d eau tiede consciente": "sprites/monsters/commun/Bouteille d’eau tiède consciente.webp",
-    "celia celeste reine du challenge abdo": "sprites/monsters/epique/Célia Céleste, Reine du Challenge Abdo.webp",
-    "chaussette de gym sauvage": "sprites/monsters/commun/Chaussette de gym sauvage.webp",
-    "chicken broccoli rice final form": "sprites/monsters/epique/Chicken Broccoli Rice final form.webp",
-    "clara metaknight lame de la tempo": "sprites/monsters/epique/Clara Métaknight, Lame de la Tempo.webp",
-    "controleur urssaf dimensionnel": "sprites/monsters/epique/Contrôleur URSSAF dimensionnel.webp",
-    "donut malicieux": "sprites/monsters/commun/Donut malicieux.webp",
-    "fantome du mock meet annule": "sprites/monsters/epique/Fantôme du mock meet annulé.webp",
-    "greg doucette de porc le crieur hypocalorique": "sprites/monsters/mythique/Greg Doucette de Porc, le Crieur Hypocalorique.webp",
-    "guillaume glorieux seigneur du gl": "sprites/monsters/epique/Guillaume Glorieux, Seigneur du GL.webp",
-    "hanzalone la version malefique": "sprites/monsters/ultra-mythique/Hanzalone, la version maléfique.webp",
-    "hydre du deload refuse": "sprites/monsters/epique/Hydre du deload refusé.webp",
-    "janel janvier reine du cycle": "sprites/monsters/epique/Janel Janvier, Reine du Cycle.webp",
-    "jo lindnergarten le jardinier veineux": "sprites/monsters/legendaire/Jo Lindnergarten, le Jardinier Veineux.webp",
-    "jolan joliment faux": "sprites/monsters/epique/Jolan Joliment Faux.webp",
-    "kali muscleton le prisonnier proteine": "sprites/monsters/mythique/Kali Muscleton, le Prisonnier Protéiné.webp",
-    "kaoutar counter paradeuse de bench": "sprites/monsters/epique/Kaoutar Counter, Paradeuse de Bench.webp",
-    "killian kill ton pr": "sprites/monsters/epique/Killian Kill-Ton-PR.webp",
-    "l abonne fantome de fevrier": "sprites/monsters/commun/L’Abonné Fantôme de Février.webp",
-    "l influenceur du miroir": "sprites/monsters/commun/L’Influenceur du Miroir.webp",
-    "l orteil de noe": "sprites/monsters/epique/L'Orteil de Noé.webp",
-    "la manager basic fit reine du bip rouge": "sprites/monsters/epique/La Manager Basic-Fit, Reine du Bip Rouge.webp",
-    "le banc toujours pris": "sprites/monsters/commun/Le Banc Toujours Pris.webp",
-    "le bro aux trois serviettes": "sprites/monsters/commun/Le Bro aux Trois Serviettes.webp",
-    "le cadenas sans code": "sprites/monsters/commun/Le Cadenas Sans Code.webp",
-    "le dj bluetooth interdit": "sprites/monsters/commun/Le DJ Bluetooth Interdit.webp",
-    "le donut malicieux": "sprites/monsters/commun/Donut malicieux.webp",
-    "le donut malicieux supreme": "sprites/monsters/epique/Le Donut Malicieux Suprême.webp",
-    "le gerant du vestiaire oublie": "sprites/monsters/commun/Le Gérant du Vestiaire Oublié.webp",
-    "le grand deltoide masque": "sprites/monsters/abyssal/Le père de Noé.webp",
-    "le manager esn ultime": "sprites/monsters/epique/Le Manager ESN Ultime.webp",
-    "le mec en jeans": "sprites/monsters/epique/Roi de la Phonk.webp",
-    "le nettoyeur de banc sec": "sprites/monsters/commun/Le Nettoyeur de Banc Sec.webp",
-    "le pere de noe": "sprites/monsters/abyssal/Le père de Noé.webp",
-    "le roi de la funk": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
-    "le roi de la phonk synthetique": "sprites/monsters/epique/Roi de la Phonk.webp",
-    "le squatteur de poulie": "sprites/monsters/commun/Le Squatteur de Poulie.webp",
-    "le tapis de course possede": "sprites/monsters/commun/Le Tapis de Course Possédé.webp",
-    "lou dragonne souffle de magnesie": "sprites/monsters/epique/Lou Dragonne, Souffle de Magnésie.webp",
-    "lucine lumiere camera critique": "sprites/monsters/epique/Lucine Lumière, Caméra Critique.webp",
-    "machine a adducteurs cosmique": "sprites/monsters/epique/Machine à adducteurs cosmique.webp",
-    "malo malosse petit boss du rack": "sprites/monsters/epique/Malo Malosse, Petit Boss du Rack.webp",
-    "matthieu pecheur maitre de la canne a tirage": "sprites/monsters/epique/Matthieu Pêcheur, Maître de la Canne à Tirage.webp",
-    "mike o hearnia l eternel naturellement mysterieux": "sprites/monsters/epique/Mike O’Hearnia, l’Éternel Naturellement Mystérieux.webp",
-    "noah le nain furtif": "sprites/monsters/mythique/Noah le nain furtif.webp",
-    "noe faux noe copie conforme": "sprites/monsters/epique/Noé Faux-Noé, Copie Conforme.webp",
-    "noel deyzel diesel le pere noel du bulk": "sprites/monsters/epique/Noel Deyzel Diesel, le Père Noël du Bulk.webp",
-    "omelette fantome": "sprites/monsters/commun/Omelette fantôme.webp",
-    "phil heath ledger le cadeau maudit": "sprites/monsters/epique/Phil Heath Ledger, le Cadeau Maudit.webp",
-    "rich piano bar le musicien a huit repas": "sprites/monsters/mythique/Rich Piano-Bar, le Musicien à Huit Repas.webp",
-    "riz sec vengeur": "Riz sec vengeur.png",
-    "roi de la funk synthetique": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
-    "roi du funk synthetique": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
-    "le roi du funk synthetique": "sprites/monsters/epique/Roi de la Funk Synthétique.webp",
-    "roi de la phonk": "sprites/monsters/epique/Roi de la Phonk.webp",
-    "roi de la phonk synthetique": "sprites/monsters/epique/Roi de la Phonk.webp",
-    "roi du rest timer infini": "sprites/monsters/epique/Roi du rest timer infini.webp",
-    "saya reunion foudre creole": "sprites/monsters/epique/Saya Réunion, Foudre Créole.webp",
-    "seigneur du superset infini": "sprites/monsters/epique/Seigneur du superset infini.webp",
-    "serena serenite calme avant le top set": "sprites/monsters/epique/Serena Sérénité, Calme Avant le Top Set.webp",
-    "slime des tenebres": "sprites/monsters/commun/Slime des ténèbres.webp",
-    "titan du total": "sprites/monsters/epique/Titan du total.webp",
-    "val aka kazuto aka the shadow aka the lonely shadow cowboy": "sprites/monsters/legendaire/Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy.webp",
-    "val aka kazuto aka the shadow the lonely shadow cowboy": "sprites/monsters/legendaire/Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy.webp",
-    "val kazuto the shadow the lonely shadow cowboy": "sprites/monsters/legendaire/Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy.webp"
+    "arnold schwarzeneggerie le chene en plastique": "sprites/monsters/arnold-schwarzeneggerie-le-chene-en-plastique.webp",
+    "avatar du rpe 10 permanent": "sprites/monsters/avatar-du-rpe-10-permanent.webp",
+    "banane pre workout fossilisee": "sprites/monsters/banane-pre-workout-fossilisee.webp",
+    "barre proteinee gout beton": "sprites/monsters/barre-proteinee-gout-beton.webp",
+    "belt squat baron": "sprites/monsters/belt-squat-baron.webp",
+    "bouteille d eau tiede consciente": "sprites/monsters/bouteille-d-eau-tiede-consciente.webp",
+    "burpeepocalypse": "sprites/monsters/burpeepocalypse.webp",
+    "celia celeste reine du challenge abdo": "sprites/monsters/celia-celeste-reine-du-challenge-abdo.webp",
+    "chaussette de gym sauvage": "sprites/monsters/chaussette-de-gym-sauvage.webp",
+    "chicken broccoli rice final form": "sprites/monsters/chicken-broccoli-rice-final-form.webp",
+    "chris bumsteak junior heritier du vacuum": "sprites/monsters/chris-bumsteak-junior-heritier-du-vacuum.webp",
+    "clara metaknight lame de la tempo": "sprites/monsters/clara-metaknight-lame-de-la-tempo.webp",
+    "controleur urssaf dimensionnel": "sprites/monsters/controleur-urssaf-dimensionnel.webp",
+    "corentin vehement tempete du rpe onze": "sprites/monsters/corentin-vehement-tempete-du-rpe-onze.webp",
+    "donut malicieux": "sprites/monsters/donut-malicieux.webp",
+    "donut malicieux supreme": "sprites/monsters/le-donut-malicieux-supreme.webp",
+    "fantome du mock meet annule": "sprites/monsters/fantome-du-mock-meet-annule.webp",
+    "fractionnator une une": "sprites/monsters/fractionnator-une-une.webp",
+    "fromage blanc proteine oublie dans le frigo": "sprites/monsters/le-fromage-blanc-proteine-oublie.webp",
+    "greg doucette de porc le crieur hypocalorique": "sprites/monsters/greg-doucette-de-porc-le-crieur-hypocalorique.webp",
+    "guillaume glorieux seigneur du gl": "sprites/monsters/guillaume-glorieux-seigneur-du-gl.webp",
+    "hack squatteur le guide": "sprites/monsters/hack-squatteur-le-guide.webp",
+    "halterion le fonteux": "sprites/monsters/halterion-le-fonteux.webp",
+    "hanzalone la version malefique": "sprites/monsters/hanzalone-la-version-malefique.webp",
+    "hydre du deload refuse": "sprites/monsters/hydre-du-deload-refuse.webp",
+    "hyroxydable le coureur de stations": "sprites/monsters/hyroxydable-le-coureur-de-stations.webp",
+    "janel janvier reine du cycle": "sprites/monsters/janel-janvier-reine-du-cycle.webp",
+    "jo lindnergarten le jardinier veineux": "sprites/monsters/jo-lindnergarten-le-jardinier-veineux.webp",
+    "jolan joliment faux": "sprites/monsters/jolan-joliment-faux.webp",
+    "kali muscleton le prisonnier proteine": "sprites/monsters/kali-muscleton-le-prisonnier-proteine.webp",
+    "kaoutar counter paradeuse de bench": "sprites/monsters/kaoutar-counter-paradeuse-de-bench.webp",
+    "killian kill ton pr": "sprites/monsters/killian-kill-ton-pr.webp",
+    "l abonne fantome de fevrier": "sprites/monsters/l-abonne-fantome-de-fevrier.webp",
+    "l ambassadeur sans contrat": "sprites/monsters/l-ambassadeur-sans-contrat.webp",
+    "l archidemon du water cut": "sprites/monsters/l-archidemon-du-water-cut.webp",
+    "l ia bavoil v2 calculatrice a genouilleres": "sprites/monsters/l-ia-bavoil-v2-calculatrice-a-genouilleres.webp",
+    "l influenceur du miroir": "sprites/monsters/l-influenceur-du-miroir.webp",
+    "l omnibro du gymnase": "sprites/monsters/l-omnibro-du-gymnase.webp",
+    "l orteil de noe": "sprites/monsters/l-orteil-de-noe.webp",
+    "la banane pre seance": "sprites/monsters/la-banane-pre-seance.webp",
+    "la casquette a l envers collee": "sprites/monsters/la-casquette-a-l-envers-collee.webp",
+    "la ceinture trou numero treize": "sprites/monsters/la-ceinture-trou-numero-treize.webp",
+    "la corde a sauter serpent": "sprites/monsters/la-corde-a-sauter-serpent.webp",
+    "la corde a triceps vivante": "sprites/monsters/la-corde-a-triceps-vivante.webp",
+    "la creatine granuleuse": "sprites/monsters/la-creatine-granuleuse.webp",
+    "la licence pwl vivante": "sprites/monsters/la-licence-pwl-vivante.webp",
+    "la mamie au goblet squat parfait": "sprites/monsters/la-mamie-au-goblet-squat-parfait.webp",
+    "la manager basic fit reine du bip rouge": "sprites/monsters/la-manager-basic-fit-reine-du-bip-rouge.webp",
+    "la sorciere du hook grip": "sprites/monsters/la-sorciere-du-hook-grip.webp",
+    "la story du pr flou": "sprites/monsters/la-story-du-pr-flou.webp",
+    "la whey vanille radioactive": "sprites/monsters/la-whey-vanille-radioactive.webp",
+    "le banc toujours pris": "sprites/monsters/le-banc-toujours-pris.webp",
+    "le beurre de cacahuete collant": "sprites/monsters/le-beurre-de-cacahuete-collant.webp",
+    "le boss du dernier warm up": "sprites/monsters/le-boss-du-dernier-warm-up.webp",
+    "le bourrelet de teufeur": "sprites/monsters/le-bourrelet-de-teufeur.webp",
+    "le bro aux trois serviettes": "sprites/monsters/le-bro-aux-trois-serviettes.webp",
+    "le bro en claquettes": "sprites/monsters/le-bro-en-claquettes.webp",
+    "le bro science encyclopedique": "sprites/monsters/le-bro-science-encyclopedique.webp",
+    "le brocoli vengeur": "sprites/monsters/le-brocoli-vengeur.webp",
+    "le c est mon mauvais jour": "sprites/monsters/le-c-est-mon-mauvais-jour.webp",
+    "le cadenas sans code": "sprites/monsters/le-cadenas-sans-code.webp",
+    "le cameraman qui passe devant": "sprites/monsters/le-cameraman-qui-passe-devant.webp",
+    "le captionneur motivationnel": "sprites/monsters/le-captionneur-motivationnel.webp",
+    "le casque sans musique": "sprites/monsters/le-casque-sans-musique.webp",
+    "le chevalier du tempo trois un zero": "sprites/monsters/le-chevalier-du-tempo-trois-un-zero.webp",
+    "le coach dm frerot": "sprites/monsters/le-coach-dm-frerot.webp",
+    "le code promo eternel": "sprites/monsters/le-code-promo-eternel.webp",
+    "le collier oublie": "sprites/monsters/le-collier-oublie.webp",
+    "le commentaire natty": "sprites/monsters/le-commentaire-natty.webp",
+    "le cousin du champion regional": "sprites/monsters/le-cousin-du-champion-regional.webp",
+    "le cri avant la serie": "sprites/monsters/le-cri-avant-la-serie.webp",
+    "le curl du precheur": "sprites/monsters/le-curl-du-precheur.webp",
+    "le debardeur string vivant": "sprites/monsters/le-debardeur-string-vivant.webp",
+    "le demon du meet day": "sprites/monsters/le-demon-du-meet-day.webp",
+    "le dj bluetooth interdit": "sprites/monsters/le-dj-bluetooth-interdit.webp",
+    "le donut malicieux": "sprites/monsters/donut-malicieux.webp",
+    "le donut malicieux supreme": "sprites/monsters/le-donut-malicieux-supreme.webp",
+    "le dragon du leg drive": "sprites/monsters/le-dragon-du-leg-drive.webp",
+    "le faux natty de la prophetie": "sprites/monsters/le-faux-natty-de-la-prophetie.webp",
+    "le fils du coach du coach": "sprites/monsters/le-fils-du-coach-du-coach.webp",
+    "le filtre veineux": "sprites/monsters/le-filtre-veineux.webp",
+    "le flocon d avoine sauvage": "sprites/monsters/le-flocon-d-avoine-sauvage.webp",
+    "le form checkeur sauvage": "sprites/monsters/le-form-checkeur-sauvage.webp",
+    "le fromage blanc proteine oublie": "sprites/monsters/le-fromage-blanc-proteine-oublie.webp",
+    "le gerant du vestiaire oublie": "sprites/monsters/le-gerant-du-vestiaire-oublie.webp",
+    "le giveaway jamais tire": "sprites/monsters/le-giveaway-jamais-tire.webp",
+    "le grand deltoide masque": "sprites/monsters/le-pere-de-noe.webp",
+    "le hater a quarante kilos": "sprites/monsters/le-hater-a-quarante-kilos.webp",
+    "le hurlement apres echec": "sprites/monsters/le-hurlement-apres-echec.webp",
+    "le j avais pas mange": "sprites/monsters/le-j-avais-pas-mange.webp",
+    "le je suis en bulk": "sprites/monsters/le-je-suis-en-bulk.webp",
+    "le je suis en cut": "sprites/monsters/le-je-suis-en-cut.webp",
+    "le joggeur du finisher": "sprites/monsters/le-joggeur-du-finisher.webp",
+    "le knee sleeve cannibale": "sprites/monsters/le-knee-sleeve-cannibale.webp",
+    "le le spotter a touche": "sprites/monsters/le-le-spotter-a-touche.webp",
+    "le legging transparent": "sprites/monsters/le-legging-transparent.webp",
+    "le lyceen en mariniere": "sprites/monsters/le-lyceen-en-mariniere.webp",
+    "le manager esn ultime": "sprites/monsters/le-manager-esn-ultime.webp",
+    "le marcheur dix mille pas": "sprites/monsters/le-marcheur-dix-mille-pas.webp",
+    "le mec en jeans": "sprites/monsters/roi-de-la-phonk.webp",
+    "le minot en crocs": "sprites/monsters/le-minot-en-crocs.webp",
+    "le monstre du sbd complet": "sprites/monsters/le-monstre-du-sbd-complet.webp",
+    "le nettoyeur de banc sec": "sprites/monsters/le-nettoyeur-de-banc-sec.webp",
+    "le neveu du patron de la salle": "sprites/monsters/le-neveu-du-patron-de-la-salle.webp",
+    "le pere de noe": "sprites/monsters/le-pere-de-noe.webp",
+    "le pre workout trop dose": "sprites/monsters/le-pre-workout-trop-dose.webp",
+    "le rameur des abysses": "sprites/monsters/le-rameur-des-abysses.webp",
+    "le reel sans echauffement": "sprites/monsters/le-reel-sans-echauffement.webp",
+    "le roi de la funk": "sprites/monsters/roi-de-la-funk-synthetique.webp",
+    "le roi de la phonk synthetique": "sprites/monsters/roi-de-la-phonk.webp",
+    "le roi du funk synthetique": "sprites/monsters/roi-de-la-funk-synthetique.webp",
+    "le roi noeil et sa couronne": "sprites/monsters/le-roi-noeil-et-sa-couronne.webp",
+    "le shaker de l abime": "sprites/monsters/le-shaker-de-l-abime.webp",
+    "le shaker moisi": "sprites/monsters/le-shaker-moisi.webp",
+    "le singlet compressif": "sprites/monsters/le-singlet-compressif.webp",
+    "le sled pull revenant": "sprites/monsters/le-sled-pull-revenant.webp",
+    "le sled push fantome": "sprites/monsters/le-sled-push-fantome.webp",
+    "le sled sans sol": "sprites/monsters/le-sled-sans-sol.webp",
+    "le sprinteur sans echauffement": "sprites/monsters/le-sprinteur-sans-echauffement.webp",
+    "le squatteur de poulie": "sprites/monsters/le-squatteur-de-poulie.webp",
+    "le steak hache 5 furieux": "sprites/monsters/le-steak-hache-5-furieux.webp",
+    "le tapis de course possede": "sprites/monsters/le-tapis-de-course-possede.webp",
+    "le tapis roulant de l infini": "sprites/monsters/le-tapis-roulant-de-l-infini.webp",
+    "le tiktokeur trois quarts": "sprites/monsters/le-tiktokeur-trois-quarts.webp",
+    "le titan du total": "sprites/monsters/le-titan-du-total.webp",
+    "le totalisateur des ames": "sprites/monsters/le-totalisateur-des-ames.webp",
+    "le trepied vole": "sprites/monsters/le-trepied-vole.webp",
+    "le tupperware sans couvercle": "sprites/monsters/tupperware-sans-couvercle.webp",
+    "le velo zone deux zombie": "sprites/monsters/le-velo-zone-deux-zombie.webp",
+    "le vieux monsieur qui bench cent quatre vingts": "sprites/monsters/le-vieux-monsieur-qui-bench-cent-quatre-vingts.webp",
+    "leg press express": "sprites/monsters/leg-press-express.webp",
+    "les pates carbonara bulk": "sprites/monsters/les-pates-carbonara-bulk.webp",
+    "lou dragonne souffle de magnesie": "sprites/monsters/lou-dragonne-souffle-de-magnesie.webp",
+    "lucine lumiere camera critique": "sprites/monsters/lucine-lumiere-camera-critique.webp",
+    "machine a adducteurs cosmique": "sprites/monsters/machine-a-adducteurs-cosmique.webp",
+    "maile noir slender du bloc quatre": "sprites/monsters/maile-noir-slender-du-bloc-quatre.webp",
+    "malo malosse petit boss du rack": "sprites/monsters/malo-malosse-petit-boss-du-rack.webp",
+    "manager esn ultime": "sprites/monsters/le-manager-esn-ultime.webp",
+    "matthieu pecheur maitre de la canne a tirage": "sprites/monsters/matthieu-pecheur-maitre-de-la-canne-a-tirage.webp",
+    "mike o hearnia l eternel naturellement mysterieux": "sprites/monsters/mike-o-hearnia-l-eternel-naturellement-mysterieux.webp",
+    "noah le nain furtif": "sprites/monsters/noah-le-nain-furtif.webp",
+    "noe faux noe copie conforme": "sprites/monsters/noe-faux-noe-copie-conforme.webp",
+    "noel deyzel diesel le pere noel du bulk": "sprites/monsters/noel-deyzel-diesel-le-pere-noel-du-bulk.webp",
+    "omelette fantome": "sprites/monsters/omelette-fantome.webp",
+    "pec deck dracula": "sprites/monsters/pec-deck-dracula.webp",
+    "phil heath ledger le cadeau maudit": "sprites/monsters/phil-heath-ledger-le-cadeau-maudit.webp",
+    "poulie poulidor l eternel second": "sprites/monsters/poulie-poulidor-l-eternel-second.webp",
+    "pull over pulmonaire": "sprites/monsters/pull-over-pulmonaire.webp",
+    "rich piano bar le musicien a huit repas": "sprites/monsters/rich-piano-bar-le-musicien-a-huit-repas.webp",
+    "rico la seigneur du j arrive": "sprites/monsters/rico-la-seigneur-du-j-arrive.webp",
+    "riz basmatueur le grain assassin": "sprites/monsters/riz-basmatueur-le-grain-assassin.webp",
+    "riz sec vengeur": "sprites/monsters/riz-sec-vengeur.webp",
+    "roi de la funk synthetique": "sprites/monsters/roi-de-la-funk-synthetique.webp",
+    "roi de la phonk": "sprites/monsters/roi-de-la-phonk.webp",
+    "roi de la phonk synthetique": "sprites/monsters/roi-de-la-phonk.webp",
+    "roi du funk synthetique": "sprites/monsters/roi-de-la-funk-synthetique.webp",
+    "roi du rest timer infini": "sprites/monsters/roi-du-rest-timer-infini.webp",
+    "rowing bucheron": "sprites/monsters/rowing-bucheron.webp",
+    "saya reunion foudre creole": "sprites/monsters/saya-reunion-foudre-creole.webp",
+    "seigneur du superset infini": "sprites/monsters/seigneur-du-superset-infini.webp",
+    "serena serenite calme avant le top set": "sprites/monsters/serena-serenite-calme-avant-le-top-set.webp",
+    "skull crusher ecrase crane": "sprites/monsters/skull-crusher-ecrase-crane.webp",
+    "slime des tenebres": "sprites/monsters/slime-des-tenebres.webp",
+    "smith machine gun": "sprites/monsters/smith-machine-gun.webp",
+    "stephane matelas dormeur du deload": "sprites/monsters/stephane-matelas-dormeur-du-deload.webp",
+    "the panache meche de l apocalypse": "sprites/monsters/the-panache-meche-de-l-apocalypse.webp",
+    "titan du total": "sprites/monsters/titan-du-total.webp",
+    "tupperware sans couvercle": "sprites/monsters/tupperware-sans-couvercle.webp",
+    "turbo tif prime gremlin supersonique": "sprites/monsters/turbo-tif-prime-gremlin-supersonique.webp",
+    "val aka kazuto aka the shadow the lonely": "sprites/monsters/val-aka-kazuto-aka-the-shadow-the-lonely-shadow-cowboy.webp",
+    "val aka kazuto aka the shadow the lonely shadow cowboy": "sprites/monsters/val-aka-kazuto-aka-the-shadow-the-lonely-shadow-cowboy.webp",
+    "val kazuto the shadow the lonely shadow cowboy": "sprites/monsters/val-aka-kazuto-aka-the-shadow-the-lonely-shadow-cowboy.webp"
   };
 
   function normalizeSpriteKey(value) {
