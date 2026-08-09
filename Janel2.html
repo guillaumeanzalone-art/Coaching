@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!-- JANEL2 — Bloc 2 généré à partir du tableau fourni le 09/08/2026 -->
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#13080c">
+<title>Janel | Bloc 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#10070b;--surface:#1a0e14;--surface-2:#28131d;--surface-3:#3b1d2a;
+  --text:#fff7f3;--text-dim:#decbd1;--text-muted:#9d858e;
+  --accent:#c69b55;--accent-light:#f1d49a;--accent-bg:rgba(198,155,85,.14);
+  --wine:#6f1832;--wine-light:#b74c70;--green:#6ed39c;--green-bg:rgba(110,211,156,.12);
+  --squat:#d65c68;--squat-bg:rgba(214,92,104,.13);
+  --bench:#7b8ce8;--bench-bg:rgba(123,140,232,.13);
+  --dead:#b66adb;--dead-bg:rgba(182,106,219,.13);
+  --accessory:#d69a55;--accessory-bg:rgba(214,154,85,.12);
+  --radius:14px;--radius-sm:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:
+radial-gradient(circle at 10% 0%,rgba(111,24,50,.30),transparent 28%),
+radial-gradient(circle at 100% 10%,rgba(198,155,85,.12),transparent 30%),
+linear-gradient(145deg,rgba(255,255,255,.012),transparent 35%),var(--bg);
+color:var(--text);min-height:100dvh;-webkit-font-smoothing:antialiased}
+.app{max-width:430px;margin:0 auto;padding:env(safe-area-inset-top) 0 calc(76px + env(safe-area-inset-bottom))}
+.header{position:sticky;top:0;z-index:100;padding:14px 16px 11px;background:rgba(16,7,11,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(198,155,85,.17)}
+.header-top{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.back-btn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;text-decoration:none;background:var(--surface);color:var(--accent-light);font-size:1.15rem}
+.avatar{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,var(--wine),#281018);border:1px solid rgba(198,155,85,.42);font-size:21px;box-shadow:0 6px 18px rgba(0,0,0,.30)}
+.title{flex:1;min-width:0} .title h1{font-size:1.08rem;letter-spacing:-.03em;font-weight:900} .title h1 span{color:var(--accent-light)}
+.title p{margin-top:2px;font-size:.61rem;color:var(--text-muted);font-weight:700}
+.week-selector{display:flex;gap:6px}
+.week-btn{width:37px;height:36px;border:0;border-radius:10px;background:var(--surface);color:var(--text-dim);font-weight:900;font-size:.75rem;cursor:pointer}
+.week-btn.active{background:linear-gradient(145deg,#b88a47,var(--accent));color:#160c07;box-shadow:0 4px 14px rgba(198,155,85,.25)}
+.hero{margin:12px 16px 10px;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(111,24,50,.30),rgba(198,155,85,.08));border:1px solid rgba(198,155,85,.18)}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hero strong{font-size:.79rem} .hero small{display:block;margin-top:4px;color:var(--text-dim);font-size:.62rem;line-height:1.45}
+.maxes{display:flex;gap:6px;margin-top:9px} .max{flex:1;padding:7px 5px;border-radius:9px;background:rgba(0,0,0,.16);text-align:center}
+.max b{display:block;font-size:.76rem;color:var(--accent-light)} .max span{font-size:.53rem;color:var(--text-muted);font-weight:700;text-transform:uppercase}
+.day-tabs{display:flex;gap:5px;padding:0 16px;margin-bottom:10px;overflow-x:auto;scrollbar-width:none} .day-tabs::-webkit-scrollbar{display:none}
+.day-tab{flex:0 0 auto;border:0;border-radius:10px;padding:9px 10px;background:var(--surface);color:var(--text-dim);font:700 .64rem/1.25 Inter;cursor:pointer}
+.day-tab .day-num{display:block;font-size:.85rem;margin-bottom:2px} .day-tab.active{background:var(--surface-3);color:#fff;border:1px solid rgba(198,155,85,.32)}
+.session-bar{display:flex;align-items:center;gap:9px;margin:0 16px 11px;padding:9px 12px;border-radius:11px;background:var(--surface)}
+.chrono{min-width:47px;font-size:.72rem;font-weight:900;font-variant-numeric:tabular-nums;cursor:pointer;color:var(--accent-light)}
+.bar{height:5px;flex:1;border-radius:99px;overflow:hidden;background:var(--surface-3)} .bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--wine-light),var(--accent));transition:width .25s}
+.pct{min-width:30px;text-align:right;color:var(--accent-light);font-size:.67rem;font-weight:900}
+.content{padding:0 16px} .exercise-block{padding:14px;margin-bottom:10px;border-radius:var(--radius);background:var(--surface);border:1px solid rgba(255,255,255,.025)}
+.exercise-block.done-block{opacity:.58} .exercise-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.exercise-name{font-size:.84rem;font-weight:900;letter-spacing:-.02em} .variant{font-size:.61rem;color:var(--accent-light);font-weight:700;margin-top:3px}
+.exercise-badge{flex:0 0 auto;padding:3px 7px;border-radius:99px;font-size:.53rem;font-weight:900;letter-spacing:.05em}
+.badge-sq{background:var(--squat-bg);color:var(--squat)} .badge-bn{background:var(--bench-bg);color:var(--bench)} .badge-dl{background:var(--dead-bg);color:var(--dead)} .badge-ac{background:var(--accessory-bg);color:var(--accessory)}
+.set-row{display:flex;align-items:center;gap:6px;margin-top:5px;padding:8px 8px;border-radius:9px;background:var(--surface-2);transition:.18s}
+.set-row.completed{background:var(--green-bg);box-shadow:inset 0 0 0 1px rgba(110,211,156,.12)} .set-num{width:22px;height:22px;flex:0 0 22px;border-radius:6px;display:grid;place-items:center;background:var(--surface-3);font-size:.61rem;font-weight:900;color:var(--text-dim)}
+.set-row.completed .set-num{background:var(--green);color:#07130c} .set-info{flex:1;min-width:72px;font-size:.69rem;color:var(--text-dim);line-height:1.35}
+.set-info strong{color:#fff;font-size:.73rem} .pct-label{font-size:.58rem;color:var(--accent-light);font-weight:800} .load-range{font-size:.63rem;color:var(--text-dim);font-weight:800}
+.load-input{width:69px;padding:5px 4px;border:1px solid rgba(255,255,255,.07);border-radius:7px;background:var(--surface-3);color:#fff;text-align:center;font:800 .69rem Inter;outline:none}
+.load-input:focus{border-color:var(--accent)} .rpe-select{width:49px;padding:5px 2px;border:1px solid rgba(255,255,255,.07);border-radius:7px;background:var(--surface-3);color:#fff;text-align:center;font:700 .64rem Inter;outline:none}
+.rpe-select.filled{border-color:rgba(198,155,85,.45);color:var(--accent-light)} .set-check{width:29px;height:29px;flex:0 0 29px;border-radius:8px;border:2px solid rgba(255,255,255,.10);cursor:pointer;position:relative}
+.set-check.checked{background:var(--green);border-color:var(--green)} .set-check.checked:after{content:"";position:absolute;width:8px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);left:8px;top:8px}
+.end-session-btn{display:none;width:calc(100% - 32px);margin:16px;padding:13px;border-radius:12px;border:1px solid rgba(198,155,85,.48);background:var(--accent-bg);color:var(--accent-light);font:900 .78rem Inter;cursor:pointer}
+.end-session-btn.visible{display:block} .workout-view.hidden{display:none} .notes-view{display:none;padding:0 16px} .notes-view.visible{display:block}
+.note-card{padding:14px;margin-bottom:10px;border-radius:13px;background:var(--surface);border:1px solid rgba(198,155,85,.12)} .note-card h3{font-size:.76rem;color:var(--accent-light);margin-bottom:6px} .note-card p{font-size:.68rem;line-height:1.55;color:var(--text-dim)}
+.bottom-nav{position:fixed;z-index:200;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;display:flex;justify-content:space-around;padding:9px 16px calc(9px + env(safe-area-inset-bottom));background:rgba(26,14,20,.96);backdrop-filter:blur(12px);border-top:1px solid rgba(198,155,85,.16)}
+.nav-item{border:0;background:none;color:var(--text-muted);font-family:Inter;padding:4px 14px;cursor:pointer} .nav-item.active{color:var(--accent-light)} .nav-item b{display:block;font-size:.95rem} .nav-item span{font-size:.56rem;font-weight:800}
+.timer-overlay,.end-overlay{display:none;position:fixed;inset:0;z-index:600;align-items:center;justify-content:center;flex-direction:column;padding:24px;background:rgba(10,4,7,.96);backdrop-filter:blur(12px)}
+.timer-overlay.visible,.end-overlay.visible{display:flex} .timer-card,.end-card{width:min(100%,310px);padding:20px;border-radius:20px;background:var(--surface);border:1px solid rgba(198,155,85,.22);text-align:center}
+.timer-next{font-size:.68rem;line-height:1.45;color:var(--text-dim);margin-bottom:12px} .timer-time{font-size:3rem;font-weight:900;font-variant-numeric:tabular-nums;color:var(--accent-light);margin:8px 0}
+.timer-presets,.timer-actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:10px} .timer-presets button,.timer-actions button,.end-close{border:0;border-radius:9px;padding:9px 12px;background:var(--surface-3);color:#fff;font:800 .68rem Inter;cursor:pointer}
+.timer-presets button.active-preset,.end-close{background:var(--accent);color:#160c07} .end-big{font-size:2.2rem;font-weight:900;color:var(--green)} .end-sub{font-size:.67rem;color:var(--text-dim);margin:3px 0 12px}
+.end-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px} .end-stat{padding:9px 4px;border-radius:9px;background:var(--surface-2)} .end-stat b{display:block;font-size:.77rem} .end-stat span{font-size:.51rem;color:var(--text-muted)}
+</style>
+<link rel="stylesheet" href="program-theme.css?v=20260809-janel2">
+</head>
+<body>
+<div class="app">
+  <div class="timer-overlay" id="timerOverlay">
+    <div class="timer-card">
+      <div class="timer-next" id="timerNextInfo">Prochaine série</div>
+      <div class="timer-time" id="timerTime">3:00</div>
+      <div style="font-size:.62rem;color:var(--text-muted)">🍪 Janel — Bloc 2</div>
+      <div class="timer-presets">
+        <button onclick="setRP(120)">2:00</button>
+        <button class="active-preset" onclick="setRP(180)">3:00</button>
+        <button onclick="setRP(240)">4:00</button>
+        <button onclick="setRP(300)">5:00</button>
+      </div>
+      <div class="timer-actions">
+        <button onclick="addRT(30)">+30 s</button>
+        <button onclick="skipR()">Passer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="end-overlay" id="endOverlay">
+    <div class="end-card">
+      <div class="end-big" id="endPct">100%</div>
+      <div class="end-sub">Séance terminée</div>
+      <div class="end-grid">
+        <div class="end-stat"><b id="endTime">00:00</b><span>Temps</span></div>
+        <div class="end-stat"><b id="endSets">0/0</b><span>Séries</span></div>
+        <div class="end-stat"><b id="endTonnage">—</b><span>Tonnage</span></div>
+      </div>
+      <button class="end-close" onclick="closeEnd()">Fermer</button>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-top">
+      <a class="back-btn" href="index.html" aria-label="Retour">‹</a>
+      <div class="avatar">🍪</div>
+      <div class="title"><h1>Janel <span>Bloc 2</span></h1><p>BMW · Bordeaux · Porsche · luxe</p></div>
+      <div class="week-selector" id="weekSelector"></div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-top"><strong>Programme 4 semaines</strong><span style="font-size:.62rem;color:var(--accent-light);font-weight:900">296 séries</span></div>
+    <small>Programme retranscrit depuis le tableau fourni. Les charges indiquées sont les fourchettes prescrites.</small>
+    <div class="maxes">
+      <div class="max"><b>135 kg</b><span>Squat</span></div>
+      <div class="max"><b>70 kg</b><span>Bench</span></div>
+      <div class="max"><b>180 kg</b><span>Deadlift</span></div>
+      <div class="max"><b>84 kg</b><span>PDC</span></div>
+    </div>
+  </div>
+
+  <div class="day-tabs" id="dayTabs"></div>
+  <div class="session-bar">
+    <div class="chrono" id="chrono" onclick="toggleChrono()">00:00</div>
+    <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+    <div class="pct" id="pctLabel">0%</div>
+  </div>
+
+  <main class="workout-view" id="workoutView">
+    <div class="content" id="exerciseList"></div>
+    <button class="end-session-btn" id="endSessionBtn" onclick="endSession()">Terminer la séance</button>
+  </main>
+
+  <section class="notes-view" id="notesView">
+    <div class="note-card"><h3>Repères du bloc</h3><p>Squat 135 kg · Bench 70 kg · Deadlift 180 kg · Total 385 kg · PDC 84 kg.</p></div>
+    <div class="note-card"><h3>Organisation</h3><p>5 journées par semaine : LUNDI : SOIN ET AMOUR, MARDI : VOITURE ET HAINE, MERCREDI, Dino et Shirley.</p></div>
+    <div class="note-card"><h3>Synchronisation</h3><p>Cette page utilise l’athlète Supabase <strong>janel</strong>. Le fichier étant nommé <strong>Janel2.html</strong>, app.js isole automatiquement ce deuxième bloc du programme principal.</p></div>
+  </section>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="showV('workout')"><b>🏋️</b><span>SÉANCE</span></button>
+    <button class="nav-item" onclick="showV('notes')"><b>📝</b><span>INFOS</span></button>
+  </nav>
+</div>
+
+<script>
+const P={"weeks":[{"label":"S1","days":[{"name":"LUNDI : SOIN ET AMOUR","emoji":"🤍","exercises":[{"l":"bn","n":"Larsen","v":"","blocks":[{"s":2,"r":"6","pct":67,"ld":"46 - 48"}]},{"l":"bn","n":"Larsen","v":"","blocks":[{"s":2,"r":"6","pct":70,"ld":"48 - 50"}]},{"l":"ac","n":"Pallof Press Isométrique","v":"","blocks":[{"s":3,"r":"30sec","pct":null,"ld":null}]},{"l":"ac","n":"Half Kneeling Chop/lift","v":"","blocks":[{"s":3,"r":"10-12","pct":null,"ld":null}]},{"l":"ac","n":"Planche latérale","v":"","blocks":[{"s":2,"r":"Amrap per side","pct":null,"ld":null}]},{"l":"ac","n":"Deadbug Challenge","v":"","blocks":[{"s":1,"r":"Amrap","pct":null,"ld":null}]},{"l":"ac","n":"Marche inclinée","v":"1 min de repos entre","blocks":[{"s":3,"r":"10 min","pct":null,"ld":null}]}]},{"name":"MARDI : VOITURE ET HAINE","emoji":"🏎️","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":2,"r":"5","pct":69,"ld":"90 - 96"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"5","pct":71,"ld":"93 - 99"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"5","pct":73,"ld":"96 - 102"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"5","pct":75,"ld":"51 - 55"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"5","pct":77,"ld":"52 - 56"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentrique","blocks":[{"s":2,"r":"2","pct":52,"ld":"91 - 97"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentrique","blocks":[{"s":1,"r":"2","pct":54,"ld":"94 - 100"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentriqe","blocks":[{"s":1,"r":"2","pct":57,"ld":"100 - 106"}]}]},{"name":"MERCREDI","emoji":"🍷","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":2,"r":"6","pct":65,"ld":"85 - 91"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"6","pct":67,"ld":"87 - 93"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"6","pct":69,"ld":"90 - 96"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"4","pct":75,"ld":"51 - 55"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"4","pct":77,"ld":"52 - 56"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":2,"r":"4","pct":70,"ld":"122 - 130"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"4","pct":72,"ld":"126 - 134"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"4","pct":74,"ld":"129 - 137"}]}]},{"name":"Dino","emoji":"🦖","exercises":[{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":2,"r":"2","pct":65,"ld":"113 - 121"}]},{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":1,"r":"2","pct":67,"ld":"117 - 125"}]},{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":1,"r":"2","pct":69,"ld":"120 - 128"}]},{"l":"ac","n":"Pallof Press Isométrique","v":"Sur les genoux","blocks":[{"s":3,"r":"30sec","pct":null,"ld":null}]},{"l":"ac","n":"90/90s bridge","v":"","blocks":[{"s":3,"r":"10-12","pct":null,"ld":null}]},{"l":"ac","n":"Face pull assis","v":"","blocks":[{"s":3,"r":"Amrap per side","pct":null,"ld":null}]},{"l":"ac","n":"T Bar row (nouvelle machine)","v":"","blocks":[{"s":3,"r":"12-15","pct":null,"ld":null}]},{"l":"ac","n":"Rameur","v":"1 min de repos entre","blocks":[{"s":3,"r":"10 min","pct":null,"ld":null}]}]},{"name":"Shirley","emoji":"✨","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":78,"ld":"102 - 108"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":80,"ld":"105 - 111"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":82,"ld":"108 - 114"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"3","pct":80,"ld":"54 - 58"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":1,"r":"3","pct":82,"ld":"55 - 59"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":78,"ld":"136 - 144"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":80,"ld":"140 - 148"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":82,"ld":"144 - 152"}]}]}]},{"label":"S2","days":[{"name":"LUNDI : SOIN ET AMOUR","emoji":"🤍","exercises":[{"l":"bn","n":"Larsen","v":"","blocks":[{"s":2,"r":"6","pct":69,"ld":"47 - 49"}]},{"l":"bn","n":"Larsen","v":"","blocks":[{"s":2,"r":"6","pct":72,"ld":"49 - 52"}]},{"l":"ac","n":"Pallof Press Isométrique","v":"","blocks":[{"s":3,"r":"30sec","pct":null,"ld":null}]},{"l":"ac","n":"Half Kneeling Chop/lift","v":"","blocks":[{"s":3,"r":"10-12","pct":null,"ld":null}]},{"l":"ac","n":"Planche latérale","v":"","blocks":[{"s":2,"r":"Amrap per side","pct":null,"ld":null}]},{"l":"ac","n":"Deadbug Challenge","v":"","blocks":[{"s":1,"r":"Amrap","pct":null,"ld":null}]},{"l":"ac","n":"Marche inclinée","v":"1 min de repos entre","blocks":[{"s":3,"r":"10 min","pct":null,"ld":null}]}]},{"name":"MARDI : VOITURE ET HAINE","emoji":"🏎️","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":2,"r":"5","pct":72,"ld":"94 - 100"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"5","pct":74,"ld":"97 - 103"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"5","pct":76,"ld":"100 - 106"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"5","pct":78,"ld":"53 - 57"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"5","pct":80,"ld":"54 - 58"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentrique","blocks":[{"s":2,"r":"2","pct":52,"ld":"91 - 97"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentrique","blocks":[{"s":1,"r":"2","pct":54,"ld":"94 - 100"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentriqe","blocks":[{"s":1,"r":"2","pct":57,"ld":"100 - 106"}]}]},{"name":"MERCREDI","emoji":"🍷","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":2,"r":"6","pct":65,"ld":"85 - 91"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"6","pct":67,"ld":"87 - 93"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"6","pct":69,"ld":"90 - 96"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"4","pct":75,"ld":"51 - 55"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"4","pct":77,"ld":"52 - 56"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":2,"r":"4","pct":70,"ld":"122 - 130"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"4","pct":72,"ld":"126 - 134"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"4","pct":74,"ld":"129 - 137"}]}]},{"name":"Dino","emoji":"🦖","exercises":[{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":2,"r":"2","pct":65,"ld":"113 - 121"}]},{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":1,"r":"2","pct":67,"ld":"117 - 125"}]},{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":1,"r":"2","pct":69,"ld":"120 - 128"}]},{"l":"ac","n":"Pallof Press Isométrique","v":"Sur les genoux","blocks":[{"s":3,"r":"30sec","pct":null,"ld":null}]},{"l":"ac","n":"90/90s bridge","v":"","blocks":[{"s":3,"r":"10-12","pct":null,"ld":null}]},{"l":"ac","n":"Face pull assis","v":"","blocks":[{"s":3,"r":"Amrap per side","pct":null,"ld":null}]},{"l":"ac","n":"T Bar row (nouvelle machine)","v":"","blocks":[{"s":3,"r":"12-15","pct":null,"ld":null}]},{"l":"ac","n":"Rameur","v":"1 min de repos entre","blocks":[{"s":3,"r":"10 min","pct":null,"ld":null}]}]},{"name":"Shirley","emoji":"✨","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":81,"ld":"106 - 112"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":83,"ld":"109 - 115"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":85,"ld":"112 - 118"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"3","pct":83,"ld":"56 - 60"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":1,"r":"3","pct":85,"ld":"58 - 62"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":81,"ld":"142 - 150"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":83,"ld":"146 - 155"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":85,"ld":"148 - 158"}]}]}]},{"label":"S3","days":[{"name":"LUNDI : SOIN ET AMOUR","emoji":"🤍","exercises":[{"l":"bn","n":"Larsen","v":"","blocks":[{"s":2,"r":"6","pct":71,"ld":"49 - 52"}]},{"l":"bn","n":"Larsen","v":"","blocks":[{"s":2,"r":"6","pct":74,"ld":"50 - 54"}]},{"l":"ac","n":"Pallof Press Isométrique","v":"","blocks":[{"s":3,"r":"30sec","pct":null,"ld":null}]},{"l":"ac","n":"Half Kneeling Chop/lift","v":"","blocks":[{"s":3,"r":"10-12","pct":null,"ld":null}]},{"l":"ac","n":"Planche latérale","v":"","blocks":[{"s":2,"r":"Amrap per side","pct":null,"ld":null}]},{"l":"ac","n":"Deadbug Challenge","v":"","blocks":[{"s":1,"r":"Amrap","pct":null,"ld":null}]},{"l":"ac","n":"Marche inclinée","v":"1 min de repos entre","blocks":[{"s":3,"r":"10 min","pct":null,"ld":null}]}]},{"name":"MARDI : VOITURE ET HAINE","emoji":"🏎️","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":2,"r":"5","pct":75,"ld":"99 - 105"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"5","pct":77,"ld":"101 - 107"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"5","pct":79,"ld":"104 - 110"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"5","pct":81,"ld":"55 - 59"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"5","pct":83,"ld":"56 - 60"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentrique","blocks":[{"s":2,"r":"2","pct":52,"ld":"91 - 97"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentrique","blocks":[{"s":1,"r":"2","pct":54,"ld":"94 - 100"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentriqe","blocks":[{"s":1,"r":"2","pct":57,"ld":"100 - 106"}]}]},{"name":"MERCREDI","emoji":"🍷","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":2,"r":"6","pct":65,"ld":"85 - 91"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"6","pct":67,"ld":"87 - 93"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"6","pct":69,"ld":"90 - 96"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"4","pct":75,"ld":"51 - 55"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"4","pct":77,"ld":"52 - 56"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":2,"r":"4","pct":70,"ld":"122 - 130"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"4","pct":72,"ld":"126 - 134"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"4","pct":74,"ld":"129 - 137"}]}]},{"name":"Dino","emoji":"🦖","exercises":[{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":2,"r":"2","pct":65,"ld":"113 - 121"}]},{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":1,"r":"2","pct":67,"ld":"117 - 125"}]},{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":1,"r":"2","pct":69,"ld":"120 - 128"}]},{"l":"ac","n":"Pallof Press Isométrique","v":"Sur les genoux","blocks":[{"s":3,"r":"30sec","pct":null,"ld":null}]},{"l":"ac","n":"90/90s bridge","v":"","blocks":[{"s":3,"r":"10-12","pct":null,"ld":null}]},{"l":"ac","n":"Face pull assis","v":"","blocks":[{"s":3,"r":"Amrap per side","pct":null,"ld":null}]},{"l":"ac","n":"T Bar row (nouvelle machine)","v":"","blocks":[{"s":3,"r":"12-15","pct":null,"ld":null}]},{"l":"ac","n":"Rameur","v":"1 min de repos entre","blocks":[{"s":3,"r":"10 min","pct":null,"ld":null}]}]},{"name":"Shirley","emoji":"✨","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":84,"ld":"111 - 117"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":86,"ld":"113 - 119"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":88,"ld":"115 - 123"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"3","pct":86,"ld":"58 - 62"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":1,"r":"3","pct":88,"ld":"60 - 64"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":84,"ld":"147 - 157"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":86,"ld":"150 - 160"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":88,"ld":"154 - 164"}]}]}]},{"label":"S4","days":[{"name":"LUNDI : SOIN ET AMOUR","emoji":"🤍","exercises":[{"l":"bn","n":"Larsen","v":"","blocks":[{"s":2,"r":"6","pct":73,"ld":"49 - 53"}]},{"l":"bn","n":"Larsen","v":"","blocks":[{"s":2,"r":"6","pct":76,"ld":"51 - 55"}]},{"l":"ac","n":"Pallof Press Isométrique","v":"","blocks":[{"s":3,"r":"30sec","pct":null,"ld":null}]},{"l":"ac","n":"Half Kneeling Chop/lift","v":"","blocks":[{"s":3,"r":"10-12","pct":null,"ld":null}]},{"l":"ac","n":"Planche latérale","v":"","blocks":[{"s":2,"r":"Amrap per side","pct":null,"ld":null}]},{"l":"ac","n":"Deadbug Challenge","v":"","blocks":[{"s":1,"r":"Amrap","pct":null,"ld":null}]},{"l":"ac","n":"Marche inclinée","v":"1 min de repos entre","blocks":[{"s":3,"r":"10 min","pct":null,"ld":null}]}]},{"name":"MARDI : VOITURE ET HAINE","emoji":"🏎️","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":2,"r":"5","pct":78,"ld":"103 - 109"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"5","pct":80,"ld":"105 - 111"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"5","pct":82,"ld":"108 - 114"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"5","pct":84,"ld":"57 - 61"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"5","pct":86,"ld":"58 - 62"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentrique","blocks":[{"s":2,"r":"2","pct":52,"ld":"91 - 97"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentrique","blocks":[{"s":1,"r":"2","pct":54,"ld":"94 - 100"}]},{"l":"dl","n":"Comp deadlift secondaire","v":"Tempo Concentriqe","blocks":[{"s":1,"r":"2","pct":57,"ld":"100 - 106"}]}]},{"name":"MERCREDI","emoji":"🍷","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":2,"r":"6","pct":65,"ld":"85 - 91"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"6","pct":67,"ld":"87 - 93"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"6","pct":69,"ld":"90 - 96"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"4","pct":75,"ld":"51 - 55"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"4","pct":77,"ld":"52 - 56"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":2,"r":"4","pct":70,"ld":"122 - 130"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"4","pct":72,"ld":"126 - 134"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"4","pct":74,"ld":"129 - 137"}]}]},{"name":"Dino","emoji":"🦖","exercises":[{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":2,"r":"2","pct":65,"ld":"113 - 121"}]},{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":1,"r":"2","pct":67,"ld":"117 - 125"}]},{"l":"dl","n":"Comp deadlift primaire","v":"Pause 3 ct","blocks":[{"s":1,"r":"2","pct":69,"ld":"120 - 128"}]},{"l":"ac","n":"Pallof Press Isométrique","v":"Sur les genoux","blocks":[{"s":3,"r":"30sec","pct":null,"ld":null}]},{"l":"ac","n":"90/90s bridge","v":"","blocks":[{"s":3,"r":"10-12","pct":null,"ld":null}]},{"l":"ac","n":"Face pull assis","v":"","blocks":[{"s":3,"r":"Amrap per side","pct":null,"ld":null}]},{"l":"ac","n":"T Bar row (nouvelle machine)","v":"","blocks":[{"s":3,"r":"12-15","pct":null,"ld":null}]},{"l":"ac","n":"Rameur","v":"1 min de repos entre","blocks":[{"s":3,"r":"10 min","pct":null,"ld":null}]}]},{"name":"Shirley","emoji":"✨","exercises":[{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":87,"ld":"114 - 122"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":89,"ld":"117 - 125"}]},{"l":"sq","n":"Comp squat primaire","v":"","blocks":[{"s":1,"r":"3","pct":91,"ld":"119 - 127"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":2,"r":"3","pct":89,"ld":"61 - 65"}]},{"l":"bn","n":"Bench Primaire","v":"","blocks":[{"s":1,"r":"3","pct":91,"ld":"62 - 66"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":87,"ld":"152 - 162"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":89,"ld":"156 - 166"}]},{"l":"dl","n":"Comp deadlift primaire","v":"","blocks":[{"s":1,"r":"3","pct":91,"ld":"159 - 169"}]}]}]}]};
+const SK="janel_bloc2_local_v1";
+const BASE_PROGRAM_KEY="janel_bmw_bordeaux_porsche_luxe_4_semaines_v1";
+let W=0,D=0,sets={},loads={},rpes={},cS=null,cE=0,cR=false,cI=null,rT=180,rL=180,rI=null;
+
+function h(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+function loadLocal(){
+  try{const raw=localStorage.getItem(SK);if(!raw)return;const d=JSON.parse(raw);W=Number(d.W)||0;D=Number(d.D)||0;sets=d.sets||{};loads=d.loads||{};rpes=d.rpes||{};cE=Number(d.cE)||0;cS=d.cS||null;cR=!!d.cR}catch(e){console.warn(e)}
+}
+function save(){try{localStorage.setItem(SK,JSON.stringify({W,D,sets,loads,rpes,cE,cS,cR}))}catch(e){}}
+function parseRange(ld){if(!ld)return null;const m=String(ld).match(/([\d.]+)\s*-\s*([\d.]+)/);return m?{lo:Number(m[1]),hi:Number(m[2])}:null}
+function fmtRange(ld){return String(ld||"").replace(/\s*-\s*/g," – ")}
+function currentDay(){return P.weeks[W].days[D]}
+function setKey(ei,bi,si){return `${W}_${D}_${ei}_${bi}_${si}`}
+function rW(){document.getElementById("weekSelector").innerHTML=P.weeks.map((w,i)=>`<button class="week-btn ${W===i?'active':''}" onclick="sW(${i})">${h(w.label)}</button>`).join("")}
+function rD(){document.getElementById("dayTabs").innerHTML=currentWeekDays().map((d,i)=>`<button class="day-tab ${D===i?'active':''}" onclick="sD(${i})"><span class="day-num">${h(d.emoji)}</span>${h(d.name)}</button>`).join("")}
+function currentWeekDays(){return P.weeks[W].days}
+function sW(i){W=i;D=0;rW();rD();render();save()}
+function sD(i){D=i;rD();render();save()}
+function badgeFor(l){return l==="sq"?["badge-sq","SQUAT"]:l==="bn"?["badge-bn","BENCH"]:l==="dl"?["badge-dl","DEAD"]:["badge-ac","ACC"]}
+function rpeOptions(value){return ["","6","6.5","7","7.5","8","8.5","9","9.5","10"].map(v=>`<option value="${v}" ${String(value)===v?'selected':''}>${v||'RPE'}</option>`).join("")}
+function render(){
+  const exs=currentDay().exercises,el=document.getElementById("exerciseList");let total=0,done=0;
+  el.innerHTML=exs.map((ex,ei)=>{
+    const [bc,bt]=badgeFor(ex.l);let rows="",allDone=true,displaySet=0;
+    ex.blocks.forEach((b,bi)=>{
+      for(let si=0;si<Number(b.s||0);si++){
+        displaySet++;total++;
+        const k=setKey(ei,bi,si),lk=k+"_ld",rk=k+"_rpe",isDone=!!sets[k];
+        if(isDone)done++;else allDone=false;
+        const load=loads[lk]??"",rpe=rpes[rk]??"";
+        const range=b.ld?`<br><span class="load-range">${h(fmtRange(b.ld))} kg</span>`:"";
+        const pct=(b.pct!==null&&b.pct!==undefined)?` <span class="pct-label">${h(b.pct)}%</span>`:"";
+        rows+=`<div class="set-row ${isDone?'completed':''}" data-ga-set-row>
+          <div class="set-num">${displaySet}</div>
+          <div class="set-info"><strong>${h(b.r)}</strong>${pct}${range}</div>
+          <input class="load-input ga-direct-load-v129" type="text" inputmode="decimal" autocomplete="off" aria-label="Charge réalisée en kilogrammes" placeholder="${h(b.ld||'kg')}" value="${h(load)}" oninput="sL('${lk}',this.value)">
+          ${ex.l!=="ac"?`<select class="rpe-select ${rpe?'filled':''}" aria-label="RPE réalisé" onchange="sRPE('${rk}',this.value)">${rpeOptions(rpe)}</select>`:""}
+          <div class="set-check ${isDone?'checked':''}" role="button" aria-label="Valider la série" onclick="toggleSet('${k}')"></div>
+        </div>`;
+      }
+    });
+    return `<section class="exercise-block ${allDone?'done-block':''}">
+      <div class="exercise-header">
+        <div><div class="exercise-name">${h(ex.n)}</div>${ex.v?`<div class="variant">${h(ex.v)}</div>`:""}</div>
+        <div class="exercise-badge ${bc}">${bt}</div>
+      </div>${rows}
+    </section>`;
+  }).join("");
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById("barFill").style.width=pct+"%";
+  document.getElementById("pctLabel").textContent=pct+"%";
+  document.getElementById("endSessionBtn").classList.toggle("visible",done>0);
+}
+function sL(k,v){loads[k]=String(v??"").replace(",",".");save()}
+function sRPE(k,v){rpes[k]=v;save();render()}
+function nextSetText(doneKey){
+  const rows=[];
+  currentDay().exercises.forEach((ex,ei)=>ex.blocks.forEach((b,bi)=>{for(let si=0;si<b.s;si++)rows.push({k:setKey(ei,bi,si),ex,b})}));
+  const idx=rows.findIndex(x=>x.k===doneKey);
+  const next=rows.slice(idx+1).find(x=>!sets[x.k]);
+  if(!next)return "Dernière série de la séance.";
+  const load=next.b.ld?` · ${fmtRange(next.b.ld)} kg`:"";
+  return `${next.ex.n} · ${next.b.r}${load}`;
+}
+function toggleSet(k){
+  sets[k]=!sets[k];
+  if(sets[k]){if(!cR&&cE===0)toggleChrono();document.getElementById("timerNextInfo").textContent=nextSetText(k);startR()}
+  save();render();
+}
+function toggleChrono(){
+  if(cR){cR=false;cE+=Date.now()-cS;cS=null;clearInterval(cI)}else{cR=true;cS=Date.now();startChronoInterval()}
+  save();updateChrono();
+}
+function startChronoInterval(){clearInterval(cI);cI=setInterval(updateChrono,1000)}
+function updateChrono(){let t=cE;if(cR&&cS)t+=Date.now()-Number(cS);const m=Math.floor(t/60000),s=Math.floor((t%60000)/1000);document.getElementById("chrono").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`}
+function startR(){rL=rT;document.getElementById("timerOverlay").classList.add("visible");updateRest();clearInterval(rI);rI=setInterval(()=>{rL--;updateRest();if(rL<=0){skipR();if(navigator.vibrate)navigator.vibrate([180,80,180])}},1000)}
+function updateRest(){const m=Math.floor(Math.max(0,rL)/60),s=Math.max(0,rL)%60;document.getElementById("timerTime").textContent=`${m}:${String(s).padStart(2,"0")}`}
+function setRP(v){rT=v;rL=v;updateRest();document.querySelectorAll(".timer-presets button").forEach(b=>b.classList.remove("active-preset"));if(event?.target)event.target.classList.add("active-preset")}
+function addRT(v){rL+=v;updateRest()}
+function skipR(){clearInterval(rI);document.getElementById("timerOverlay").classList.remove("visible")}
+function endSession(){
+  if(cR){cR=false;cE+=Date.now()-cS;cS=null;clearInterval(cI)}
+  let total=0,done=0,tonnage=0;
+  currentDay().exercises.forEach((ex,ei)=>ex.blocks.forEach((b,bi)=>{for(let si=0;si<b.s;si++){const k=setKey(ei,bi,si);total++;if(sets[k]){done++;const v=parseFloat(loads[k+"_ld"]);const reps=parseInt(String(b.r),10);if(Number.isFinite(v)&&Number.isFinite(reps))tonnage+=v*reps}}}));
+  const pct=total?Math.round(done/total*100):0,m=Math.floor(cE/60000),s=Math.floor((cE%60000)/1000);
+  document.getElementById("endPct").textContent=pct+"%";document.getElementById("endTime").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;document.getElementById("endSets").textContent=`${done}/${total}`;document.getElementById("endTonnage").textContent=tonnage>0?(tonnage/1000).toFixed(1)+"t":"—";
+  document.getElementById("endOverlay").classList.add("visible");save();updateChrono();
+}
+function closeEnd(){document.getElementById("endOverlay").classList.remove("visible")}
+function showV(v){document.getElementById("workoutView").classList.toggle("hidden",v!=="workout");document.getElementById("notesView").classList.toggle("visible",v==="notes");document.querySelectorAll(".nav-item").forEach((n,i)=>n.classList.toggle("active",i===(v==="workout"?0:1)))}
+function init(){loadLocal();W=Math.min(P.weeks.length-1,Math.max(0,W));D=Math.min(currentWeekDays().length-1,Math.max(0,D));rW();rD();render();if(cR){cS=Number(cS)||Date.now();startChronoInterval()}updateChrono()}
+document.addEventListener("visibilitychange",()=>{if(document.hidden)save()});
+init();
+</script>
+
+<script>
+window.COACHING_ATHLETE={
+  slug:"janel",
+  name:"Janel",
+  emoji:"🍪",
+  bodyWeight:84,
+  programKey:BASE_PROGRAM_KEY,
+  adapter:"boolean"
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="app.js?v=20260809-v176-odds-server-janel2"></script>
+<script src="session-tools.js?v=20260809-janel2"></script>
+<script src="program-harmonizer-v23.js?v=20260809-janel2"></script>
+</body>
+</html>
