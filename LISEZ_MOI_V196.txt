@@ -1,0 +1,22 @@
+V196 — FIX AFFICHAGE PROGRAMME MARVIN
+
+CAUSE EXACTE
+La balise de navigation des jours contenait :
+<div class="day-tabs id="dayTabs"></div>
+
+Elle devait être :
+<div class="day-tabs" id="dayTabs"></div>
+
+Conséquence :
+rD() appelait document.getElementById("dayTabs"), recevait null,
+puis JavaScript s'arrêtait avant render().
+Le programme existait donc bien dans la page, mais n'était jamais affiché.
+
+INSTALLATION
+- Remplace uniquement Marvin.html à la racine GitHub.
+- Commit.
+- Recharge la page Marvin.
+
+AUCUN SQL.
+AUCUN index.html.
+AUCUN app-v171.js.
