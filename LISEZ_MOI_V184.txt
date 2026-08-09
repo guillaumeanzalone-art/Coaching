@@ -1,0 +1,42 @@
+PATCH V184 — METAKNIGHT EN 2 BLOCS COMME JANEL / LOU / SAYA
+
+Le programme fourni a été transformé en Metaknight2.html.
+
+DONNÉES SOURCE
+- Squat : 135 kg
+- Bench : 72,3 kg
+- Deadlift : 170 kg
+- Total : 377,3 kg
+- PDC : 58,7 kg
+- 4 semaines
+- 5 séances par semaine
+- 192 lignes d'exercices
+- 423 séries prescrites
+
+CLÉ CLOUD DU BLOC 2
+metaknight_nouveau_programme_4_semaines_bloc-2
+
+FICHIERS À UPLOADER SUR GITHUB
+Seulement 3 :
+1. index.html
+2. Metaknight.html
+3. Metaknight2.html
+
+EFFET
+- Metaknight reste UNE seule fiche sur l'accueil.
+- Metaknight.html affiche Bloc 1 actif + lien Bloc 2.
+- Metaknight2.html affiche Bloc 2 actif + lien Bloc 1.
+- Metaknight2.html n'apparaît pas comme une deuxième athlète.
+- Les sauvegardes Bloc 1 / Bloc 2 restent séparées.
+
+INSTALLATION
+1. Décompresser ce ZIP.
+2. GitHub > racine du dépôt > Add file > Upload files.
+3. Uploader seulement index.html, Metaknight.html et Metaknight2.html.
+4. Remplacer les fichiers existants.
+5. Commit changes.
+6. Ctrl + F5.
+
+Aucun SQL.
+Aucun app.js à modifier.
+Aucun reset RPG.
