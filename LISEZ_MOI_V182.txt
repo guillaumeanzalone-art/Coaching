@@ -1,0 +1,40 @@
+PATCH V182 — LOU EN 2 BLOCS COMME SAYA / JANEL
+
+Le fichier de programmation fourni a été intégré dans Lou2.html.
+
+Bloc 2 :
+- 4 semaines
+- 5 séances par semaine
+- 176 lignes d'exercices
+- 316 séries prescrites
+- Squat max : 90 kg
+- Bench max : 60 kg
+- Deadlift max : 125 kg
+- Total : 275 kg
+- PDC : 63 kg
+- programKey dédiée : lou_nouveau_programme_4_semaines_bloc-2
+
+FICHIERS À UPLOADER SUR GITHUB
+Seulement 3 :
+1. index.html
+2. Lou.html
+3. Lou2.html
+
+EFFET
+- Lou reste une seule fiche sur l'accueil.
+- Lou.html affiche Bloc 1 actif et un bouton vers Bloc 2.
+- Lou2.html affiche Bloc 2 actif et un bouton vers Bloc 1.
+- Lou2 n'apparaît pas comme une deuxième athlète.
+- Les sauvegardes Bloc 1 et Bloc 2 sont séparées par programKey.
+
+INSTALLATION
+1. Décompresser ce ZIP.
+2. GitHub > Upload files.
+3. Déposer index.html, Lou.html et Lou2.html à la racine.
+4. Remplacer les fichiers existants quand demandé.
+5. Commit changes.
+6. Ctrl + F5.
+
+Aucun SQL.
+Aucun app.js à modifier.
+Aucun reset de progression RPG.
