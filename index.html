@@ -671,7 +671,7 @@ button{
 const REPO={owner:'guillaumeanzalone-art',repo:'coaching',branch:'main'};
 const HOME_ATHLETES_RPC='homepage_athlete_slugs_v1';
 const EXCLUDED_ATHLETE_SLUGS=new Set(['magicapre']);
-const PINNED_ATHLETE_SLUGS=['guillaume','lou','clemosaurus','dorian'];
+const PINNED_ATHLETE_SLUGS=['guillaume','lou','clemosaurus','dorian','marvin'];
 const MALE={A:1199.72839,B:1025.18162,C:0.00921};
 const FEMALE={A:610.32796,B:1045.59282,C:0.03048};
 const DISPLAY_NAMES={
@@ -730,6 +730,18 @@ const CANONICAL_ATHLETES={
     sq:240,
     bn:160,
     dl:300,
+    sex:'M'
+  },
+  'marvin':{
+    slug:'marvin',
+    name:'Marvin',
+    file:'Marvin.html',
+    profileImage:'avatar-marvin.png',
+    emoji:'🏆',
+    bodyWeight:83,
+    sq:270,
+    bn:175,
+    dl:270,
     sex:'M'
   }
 };
@@ -1082,7 +1094,7 @@ function render(list){
       ? `${programPrefix}${weekLabel(a)} · SQ ${a.sq??'—'} · BN ${a.bn??'—'} · DL ${a.dl??'—'}${a.bw?' · '+a.bw+' kg':''}`
       : 'Page HTML introuvable';
     const image=a.profileImage
-      ? `<img src="${esc(assetHref(a.profileImage))}?v=20260806-v147-toms-separated" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
+      ? `<img src="${esc(assetHref(a.profileImage))}?v=${a.slug==='marvin'?'20260809-v193-marvin':'20260806-v147-toms-separated'}" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
       : '';
     const content=`<div class="avatar ${a.profileImage?'has-image':''}"><span>${esc(a.emoji)}</span>${image}</div><div class="info"><div class="name">${esc(displayName)}</div><div class="sub">${esc(sub)}</div></div><div class="arrow">${a.file?'›':'—'}</div>`;
     return a.file
