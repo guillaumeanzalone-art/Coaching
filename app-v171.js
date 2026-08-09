@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V198';
+window.GA_APP_VERSION = 'V201';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-09-v198-raid-sync-damage-attempts';
+window.GA_APP_BUILD = '2026-08-09-v201-casino-forge-raid-cases';
 
 
 /* --------------------------------------------------------------------------
@@ -4884,7 +4884,7 @@ function catalogCollectionText(item) {
       <div class="dwarf-rule"><b>5 Mythiques</b><span>→ 1 URM</span></div>
       <div class="dwarf-rule"><b>2 URM</b><span>→ 1 Abyssal</span></div>
     </div>
-    <div class="forge-warning"><strong>25 % réussite / 75 % destruction.</strong> En cas d’échec, tout le lot est perdu. Le niveau de l’objet créé reste exactement le même.</div>
+    <div class="forge-warning"><strong>7/8 réussite · 1/8 FAIL.</strong> En cas d’échec, tout le lot est perdu. Le niveau de l’objet créé reste exactement le même.</div>
     <div class="forge-groups">${cards}</div>${last}`;
   }
 
@@ -4903,10 +4903,10 @@ function catalogCollectionText(item) {
       : `${String(outcome).toUpperCase()} · +${fr(casinoLastResultV185.payout,0)} gold`;
 
     return `<div class="casino-machine ${casinoBusyV185 || casinoAutoBonusV185 ? 'spinning' : ''} ${outcome === 'jackpot' ? 'jackpot' : ''}">
-      <div class="casino-topline"><b>🎰 GOLD SLOT</b><span>RTP théorique global : 95,00 %</span></div>
+      <div class="casino-topline"><b>🎰 GOLD SLOT</b><span>RTP théorique ≈ 491,03 % · mode ultra généreux</span></div>
       <div class="casino-reels">${reels.map(symbol => `<div class="casino-reel">${symbol}</div>`).join('')}</div>
       <div class="casino-result-line">${resultText}</div>
-      ${free > 0 ? `<div class="casino-bonus-banner">🔥 BONUS ACTIF · ${free}/10 FREE SPINS RESTANTS · mise verrouillée : ${fr(lockedBet,0)} 🪙 · Jackpot = 1/400 par spin</div>` : ''}
+      ${free > 0 ? `<div class="casino-bonus-banner">🔥 BONUS ACTIF · ${free}/10 FREE SPINS RESTANTS · mise verrouillée : ${fr(lockedBet,0)} 🪙 · Max Win ×10 000 = 1/200 par spin</div>` : ''}
       ${casinoAutoBonusV185 ? `<div class="casino-bonus-banner">⚡ AUTO FREE SPINS · gains bonus cumulés : ${fr(casinoBonusWinV185,0)} 🪙</div>` : ''}
       <div class="casino-bet">
         <input id="dwarfCasinoBetV185" type="number" min="1" step="1" value="${bet}" ${free > 0 || casinoBusyV185 || casinoAutoBonusV185 ? 'disabled' : ''} aria-label="Mise casino">
@@ -4914,9 +4914,9 @@ function catalogCollectionText(item) {
       </div>
       <div class="casino-presets">${[1000,10000,100000,1000000].map(value => `<button type="button" data-casino-preset-v185="${value}" ${free > 0 || casinoBusyV185 || casinoAutoBonusV185 ? 'disabled' : ''}>${fr(value,0)}</button>`).join('')}</div>
       <div class="casino-math">
-        <div>Jackpot normal<b>×10 000 · 1/20 000</b></div>
-        <div>Déclenchement bonus<b>10 spins · 1/2 000</b></div>
-        <div>Jackpot en bonus<b>×10 000 · 1/400</b></div>
+        <div>Max Win hors bonus<b>×10 000 · 1/3 000</b></div>
+        <div>Déclenchement bonus<b>10 spins · 1/400</b></div>
+        <div>Max Win dans le bonus<b>×10 000 · 1/200</b></div>
         <div>Max Win<b>10 000 × la mise</b></div>
       </div>
       ${casinoServerReadyV185 === false ? `<div class="casino-server-error">⚠️ SQL V185 non détecté : ${esc(casinoServerErrorV185 || 'exécute PATCH_SUPABASE_V185_NAIN_FORGERON_CASINO.sql dans Supabase.')}</div>` : ''}
@@ -5137,7 +5137,7 @@ function catalogCollectionText(item) {
   async function forgeItemsV185(rarity, itemLevel) {
     const rule = FORGE_RULES_V185[rarity];
     if (!rule || forgeBusyV185) return;
-    if (!confirm(`Sacrifier ${rule.required} objets ${rule.sourceLabel} niveau ${itemLevel} ?\\n\\n25 % : 1 ${rule.targetLabel} niveau ${itemLevel}\\n75 % : les ${rule.required} objets sont détruits.`)) return;
+    if (!confirm(`Sacrifier ${rule.required} objets ${rule.sourceLabel} niveau ${itemLevel} ?\\n\\n7/8 : 1 ${rule.targetLabel} niveau ${itemLevel}\\n1/8 FAIL : les ${rule.required} objets sont détruits.`)) return;
 
     forgeBusyV185 = true;
     forgeLastResultV185 = null;

@@ -1,0 +1,22 @@
+V201 — FICHIERS GITHUB
+
+Le ZIP contient uniquement :
+- app-v171.js
+
+À faire :
+1. Remplacer app-v171.js sur GitHub.
+2. Commit.
+3. Recharger la page / vider le cache si nécessaire.
+
+Le SQL est fourni séparément, volontairement hors du ZIP :
+PATCH_SUPABASE_V201_CASINO_FORGE_RAID_CASES.sql
+
+V201 :
+- Casino : bonus 1/400.
+- Casino : Max Win x10 000 dans le bonus 1/200.
+- Casino : Max Win x10 000 hors bonus 1/3000.
+- Forgeron : 7/8 réussite, 1/8 FAIL.
+- Caisses Ultra de raid : RPC réparé côté Supabase.
+
+Note : avec ces odds et un Max Win x10 000, le RTP 95 % n'est plus possible.
+En conservant les autres gains V185, le RTP théorique est d'environ 491,03 %.
