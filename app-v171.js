@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V188';
+window.GA_APP_VERSION = 'V189';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-09-v188-forgeron-casino-cache-buster';
+window.GA_APP_BUILD = '2026-08-09-v189-sprites-flat-path-fix';
 
 
 /* --------------------------------------------------------------------------
@@ -3581,6 +3581,186 @@ function caseLuckBoostPct() {
     "val kazuto the shadow the lonely shadow cowboy": "sprites/monsters/legendaire/Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy.webp"
   };
 
+  // V189 — Les 158 sprites réellement présents sur GitHub sont stockés à plat :
+  // sprites/monsters/<slug>.webp
+  const MONSTER_SPRITE_SLUGS_V189 = new Set([
+    "arnold-schwarzeneggerie-le-chene-en-plastique",
+    "avatar-du-rpe-10-permanent",
+    "banane-pre-workout-fossilisee",
+    "barre-proteinee-gout-beton",
+    "belt-squat-baron",
+    "bouteille-d-eau-tiede-consciente",
+    "burpeepocalypse",
+    "celia-celeste-reine-du-challenge-abdo",
+    "chaussette-de-gym-sauvage",
+    "chicken-broccoli-rice-final-form",
+    "chris-bumsteak-junior-heritier-du-vacuum",
+    "clara-metaknight-lame-de-la-tempo",
+    "controleur-urssaf-dimensionnel",
+    "corentin-vehement-tempete-du-rpe-onze",
+    "donut-malicieux",
+    "fantome-du-mock-meet-annule",
+    "fractionnator-une-une",
+    "greg-doucette-de-porc-le-crieur-hypocalorique",
+    "guillaume-glorieux-seigneur-du-gl",
+    "hack-squatteur-le-guide",
+    "halterion-le-fonteux",
+    "hanzalone-la-version-malefique",
+    "hydre-du-deload-refuse",
+    "hyroxydable-le-coureur-de-stations",
+    "janel-janvier-reine-du-cycle",
+    "jo-lindnergarten-le-jardinier-veineux",
+    "jolan-joliment-faux",
+    "kali-muscleton-le-prisonnier-proteine",
+    "kaoutar-counter-paradeuse-de-bench",
+    "killian-kill-ton-pr",
+    "l-abonne-fantome-de-fevrier",
+    "l-ambassadeur-sans-contrat",
+    "l-archidemon-du-water-cut",
+    "l-ia-bavoil-v2-calculatrice-a-genouilleres",
+    "l-influenceur-du-miroir",
+    "l-omnibro-du-gymnase",
+    "l-orteil-de-noe",
+    "la-banane-pre-seance",
+    "la-casquette-a-l-envers-collee",
+    "la-ceinture-trou-numero-treize",
+    "la-corde-a-sauter-serpent",
+    "la-corde-a-triceps-vivante",
+    "la-creatine-granuleuse",
+    "la-licence-pwl-vivante",
+    "la-mamie-au-goblet-squat-parfait",
+    "la-manager-basic-fit-reine-du-bip-rouge",
+    "la-sorciere-du-hook-grip",
+    "la-story-du-pr-flou",
+    "la-whey-vanille-radioactive",
+    "le-banc-toujours-pris",
+    "le-beurre-de-cacahuete-collant",
+    "le-boss-du-dernier-warm-up",
+    "le-bourrelet-de-teufeur",
+    "le-bro-aux-trois-serviettes",
+    "le-bro-en-claquettes",
+    "le-bro-science-encyclopedique",
+    "le-brocoli-vengeur",
+    "le-c-est-mon-mauvais-jour",
+    "le-cadenas-sans-code",
+    "le-cameraman-qui-passe-devant",
+    "le-captionneur-motivationnel",
+    "le-casque-sans-musique",
+    "le-chevalier-du-tempo-trois-un-zero",
+    "le-coach-dm-frerot",
+    "le-code-promo-eternel",
+    "le-collier-oublie",
+    "le-commentaire-natty",
+    "le-cousin-du-champion-regional",
+    "le-cri-avant-la-serie",
+    "le-curl-du-precheur",
+    "le-debardeur-string-vivant",
+    "le-demon-du-meet-day",
+    "le-dj-bluetooth-interdit",
+    "le-donut-malicieux-supreme",
+    "le-dragon-du-leg-drive",
+    "le-faux-natty-de-la-prophetie",
+    "le-fils-du-coach-du-coach",
+    "le-filtre-veineux",
+    "le-flocon-d-avoine-sauvage",
+    "le-form-checkeur-sauvage",
+    "le-fromage-blanc-proteine-oublie",
+    "le-gerant-du-vestiaire-oublie",
+    "le-giveaway-jamais-tire",
+    "le-hater-a-quarante-kilos",
+    "le-hurlement-apres-echec",
+    "le-j-avais-pas-mange",
+    "le-je-suis-en-bulk",
+    "le-je-suis-en-cut",
+    "le-joggeur-du-finisher",
+    "le-knee-sleeve-cannibale",
+    "le-le-spotter-a-touche",
+    "le-legging-transparent",
+    "le-lyceen-en-mariniere",
+    "le-manager-esn-ultime",
+    "le-marcheur-dix-mille-pas",
+    "le-minot-en-crocs",
+    "le-monstre-du-sbd-complet",
+    "le-nettoyeur-de-banc-sec",
+    "le-neveu-du-patron-de-la-salle",
+    "le-pere-de-noe",
+    "le-pre-workout-trop-dose",
+    "le-rameur-des-abysses",
+    "le-reel-sans-echauffement",
+    "le-roi-noeil-et-sa-couronne",
+    "le-shaker-de-l-abime",
+    "le-shaker-moisi",
+    "le-singlet-compressif",
+    "le-sled-pull-revenant",
+    "le-sled-push-fantome",
+    "le-sled-sans-sol",
+    "le-sprinteur-sans-echauffement",
+    "le-squatteur-de-poulie",
+    "le-steak-hache-5-furieux",
+    "le-tapis-de-course-possede",
+    "le-tapis-roulant-de-l-infini",
+    "le-tiktokeur-trois-quarts",
+    "le-titan-du-total",
+    "le-totalisateur-des-ames",
+    "le-trepied-vole",
+    "le-velo-zone-deux-zombie",
+    "le-vieux-monsieur-qui-bench-cent-quatre-vingts",
+    "leg-press-express",
+    "les-pates-carbonara-bulk",
+    "lou-dragonne-souffle-de-magnesie",
+    "lucine-lumiere-camera-critique",
+    "machine-a-adducteurs-cosmique",
+    "maile-noir-slender-du-bloc-quatre",
+    "malo-malosse-petit-boss-du-rack",
+    "matthieu-pecheur-maitre-de-la-canne-a-tirage",
+    "mike-o-hearnia-l-eternel-naturellement-mysterieux",
+    "noah-le-nain-furtif",
+    "noe-faux-noe-copie-conforme",
+    "noel-deyzel-diesel-le-pere-noel-du-bulk",
+    "omelette-fantome",
+    "pec-deck-dracula",
+    "phil-heath-ledger-le-cadeau-maudit",
+    "poulie-poulidor-l-eternel-second",
+    "pull-over-pulmonaire",
+    "rich-piano-bar-le-musicien-a-huit-repas",
+    "rico-la-seigneur-du-j-arrive",
+    "riz-basmatueur-le-grain-assassin",
+    "riz-sec-vengeur",
+    "roi-de-la-funk-synthetique",
+    "roi-de-la-phonk",
+    "roi-du-rest-timer-infini",
+    "rowing-bucheron",
+    "saya-reunion-foudre-creole",
+    "seigneur-du-superset-infini",
+    "serena-serenite-calme-avant-le-top-set",
+    "skull-crusher-ecrase-crane",
+    "slime-des-tenebres",
+    "smith-machine-gun",
+    "stephane-matelas-dormeur-du-deload",
+    "the-panache-meche-de-l-apocalypse",
+    "titan-du-total",
+    "tupperware-sans-couvercle",
+    "turbo-tif-prime-gremlin-supersonique",
+    "val-aka-kazuto-aka-the-shadow-the-lonely-shadow-cowboy"
+  ]);
+
+  const MONSTER_SPRITE_ALIASES_V189 = {
+    "donut malicieux supreme": "le-donut-malicieux-supreme",
+    "fromage blanc proteine oublie dans le frigo": "le-fromage-blanc-proteine-oublie",
+    "le donut malicieux": "donut-malicieux",
+    "le grand deltoide masque": "le-pere-de-noe",
+    "le mec en jeans": "roi-de-la-phonk",
+    "le roi de la funk": "roi-de-la-funk-synthetique",
+    "le roi de la phonk synthetique": "roi-de-la-phonk",
+    "le roi du funk synthetique": "roi-de-la-funk-synthetique",
+    "le tupperware sans couvercle": "tupperware-sans-couvercle",
+    "manager esn ultime": "le-manager-esn-ultime",
+    "roi de la phonk synthetique": "roi-de-la-phonk",
+    "roi du funk synthetique": "roi-de-la-funk-synthetique",
+    "val aka kazuto aka the shadow the lonely": "val-aka-kazuto-aka-the-shadow-the-lonely-shadow-cowboy",
+    "val kazuto the shadow the lonely shadow cowboy": "val-aka-kazuto-aka-the-shadow-the-lonely-shadow-cowboy"
+  };
+
   function normalizeSpriteKey(value) {
     return String(value || '')
       .normalize('NFD')
@@ -3599,17 +3779,37 @@ function caseLuckBoostPct() {
 
   function monsterSpriteFile(name) {
     const key = normalizeSpriteKey(name);
+    const aliasSlug = MONSTER_SPRITE_ALIASES_V189[key] || '';
+    const directSlug = key.replace(/\s+/g, '-');
+    const slug = aliasSlug || directSlug;
+
+    // V189 : chemin correspondant aux 158 WebP réellement uploadés.
+    if (MONSTER_SPRITE_SLUGS_V189.has(slug)) {
+      return `sprites/monsters/${slug}.webp`;
+    }
+
+    // Compatibilité avec l'ancien pack par dossiers de rareté.
     return MONSTER_SPRITE_FILES[key] || null;
   }
 
   function monsterSpriteCandidates(name) {
-    const file = monsterSpriteFile(name);
-    if (!file) return [];
-    const version = encodeURIComponent(window.GA_APP_VERSION || 'V131');
-    const encoded = encodeAssetPath(file);
-    const candidates = [`${encoded}?v=${version}`];
-    const basename = String(file).split('/').pop();
-    if (basename && basename !== file) candidates.push(`${encodeAssetPath(basename)}?v=${version}`);
+    const key = normalizeSpriteKey(name);
+    const primary = monsterSpriteFile(name);
+    const legacy = MONSTER_SPRITE_FILES[key] || null;
+    const files = [primary, legacy].filter(Boolean);
+    if (!files.length) return [];
+
+    const version = encodeURIComponent(window.GA_APP_VERSION || 'V189');
+    const candidates = [];
+    for (const file of files) {
+      candidates.push(`${encodeAssetPath(file)}?v=${version}`);
+      const basename = String(file).split('/').pop();
+      if (basename && basename !== file) {
+        // Dernier fallback pour les anciennes installations qui avaient placé
+        // certains fichiers directement à la racine.
+        candidates.push(`${encodeAssetPath(basename)}?v=${version}`);
+      }
+    }
     return [...new Set(candidates)];
   }
 

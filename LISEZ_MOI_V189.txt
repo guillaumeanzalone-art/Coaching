@@ -1,0 +1,26 @@
+V189 — FIX SPRITES
+
+PROBLÈME CORRIGÉ
+V188 cherchait encore des chemins historiques comme :
+sprites/monsters/epique/Nom du monstre.webp
+
+Le pack de sprites installé contient 158 fichiers au format :
+sprites/monsters/nom-du-monstre.webp
+
+V189 utilise maintenant exactement ce format et conserve l'ancien chemin en secours.
+
+INSTALLATION
+1. Décompresse le ZIP.
+2. Remplace TOUS les fichiers contenus dans le ZIP à la racine GitHub.
+3. Ne supprime surtout pas le dossier sprites/monsters existant.
+4. Commit changes.
+5. Attends GitHub Pages puis recharge.
+
+VÉRIFICATION
+- Le badge doit afficher : En ligne · V189
+- Ouvre le Bestiaire puis un combat.
+- Les sprites doivent remplacer les emojis pour les monstres présents dans le pack.
+
+Le ZIP ne contient PAS les 158 sprites : il corrige leur chemin dans l'application.
+Nombre de sprites indexés : 158
+Pages HTML rebumpées : 42
