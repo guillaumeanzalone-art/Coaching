@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V190';
+window.GA_APP_VERSION = 'V198';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-09-v190-blackjack-forgeron';
+window.GA_APP_BUILD = '2026-08-09-v198-raid-sync-damage-attempts';
 
 
 /* --------------------------------------------------------------------------
@@ -7020,8 +7020,10 @@ function collectionHtml() {
     document.getElementById('raidFightView').style.display = 'none';
     document.getElementById('raidBattleResult').classList.add('show');
     const awarded = n(result?.reward_cases_awarded,0);
-    const totalCases = n(result?.total_reward_cases,result?.projected_reward_cases,0);
-    document.getElementById('raidBattleResultText').innerHTML = `Essai <strong>${n(result?.attempt_number,raidBattle.attemptNumber)}/3</strong> · rang personnel provisoire <strong>#${n(result?.personal_rank,1)}</strong>.<br>Tu as infligé <strong>${fr(result?.raw_damage,0)} dégâts</strong> avec <strong>${n(result?.successful_actions)} actions réussies</strong>.<br>Précision <strong>${fr(result?.accuracy_pct,0)} %</strong> · parfaits <strong>${n(result?.perfect_actions)}</strong> · combo max <strong>×${n(result?.max_combo)}</strong> · perfect streak <strong>×${n(result?.max_perfect_streak)}</strong>.<br>Synergie de ${n(result?.participant_count)} participant${n(result?.participant_count)===1?'':'s'} : <strong>×${fr(result?.team_multiplier,2)}</strong>, soit <strong>${fr(result?.effective_damage,0)} dégâts effectifs</strong>.<br><br>${awarded>0?`🎁 <strong>+${awarded} caisse${awarded===1?'':'s'} Ultra créditée${awarded===1?'':'s'} immédiatement.</strong>`:`Ton meilleur résultat reste supérieur : aucune caisse supplémentaire cette fois.`}<br>Meilleure récompense du raid : <strong>${totalCases} caisse${totalCases===1?'':'s'} Ultra</strong> · ${n(result?.attempts_remaining)} tentative${n(result?.attempts_remaining)===1?'':'s'} restante${n(result?.attempts_remaining)===1?'':'s'}.<br>Critiques : <strong>${n(result?.crit_count)}</strong>.`;
+    const totalCases = n(result?.total_reward_cases, n(result?.projected_reward_cases,0));
+    const attemptNumber = Math.max(1, Math.min(3, n(result?.attempt_number, raidBattle.attemptNumber)));
+    const attemptsRemaining = Math.max(0, Math.min(3, n(result?.attempts_remaining, 3 - attemptNumber)));
+    document.getElementById('raidBattleResultText').innerHTML = `Essai <strong>${attemptNumber}/3</strong> · rang personnel provisoire <strong>#${n(result?.personal_rank,1)}</strong>.<br>Tu as infligé <strong>${fr(result?.raw_damage,0)} dégâts</strong> avec <strong>${n(result?.successful_actions)} actions réussies</strong>.<br>Précision <strong>${fr(result?.accuracy_pct,0)} %</strong> · parfaits <strong>${n(result?.perfect_actions)}</strong> · combo max <strong>×${n(result?.max_combo)}</strong> · perfect streak <strong>×${n(result?.max_perfect_streak)}</strong>.<br>Synergie de ${n(result?.participant_count)} participant${n(result?.participant_count)===1?'':'s'} : <strong>×${fr(result?.team_multiplier,2)}</strong>, soit <strong>${fr(result?.effective_damage,0)} dégâts effectifs</strong>.<br><br>${awarded>0?`🎁 <strong>+${awarded} caisse${awarded===1?'':'s'} Ultra créditée${awarded===1?'':'s'} immédiatement.</strong>`:`Ton meilleur résultat reste supérieur : aucune caisse supplémentaire cette fois.`}<br>Meilleure récompense du raid : <strong>${totalCases} caisse${totalCases===1?'':'s'} Ultra</strong> · ${attemptsRemaining} tentative${attemptsRemaining===1?'':'s'} restante${attemptsRemaining===1?'':'s'}.<br>Critiques : <strong>${n(result?.crit_count)}</strong>.`;
     if (progress) progress = { ...progress, raid_ultra_cases: n(progress.raid_ultra_cases) + n(result?.reward_cases_awarded,0) };
     await loadRaid();
     await publishRaidActivity(result);
@@ -8571,6 +8573,7 @@ function collectionHtml() {
       client_combo_max: Math.max(0, Math.floor(n(session?.reactionMaxCombo))),
       client_perfect_streak_max: Math.max(0, Math.floor(n(session?.reactionMaxPerfectStreak))),
       effective_clicks: Math.max(0, Math.floor(n(session?.reactionEffectiveClicks))),
+      client_raw_damage: Math.max(0, Math.floor(n(session?.rawDamage, session?.damage))),
       definition: 'perfect_zero_ok_zero_miss'
     });
 
