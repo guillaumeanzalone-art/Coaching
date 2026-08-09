@@ -1,0 +1,33 @@
+V191 — MARVIN
+
+FICHIERS À REMPLACER À LA RACINE GITHUB
+- Marvin.html
+- index.html
+- avatar-marvin.png
+
+PROFIL
+- Marvin
+- 83 kg (valeur demandée dans le message, utilisée à la place du 63 kg affiché dans le tableau source)
+- Squat 270 kg
+- Bench 175 kg
+- Deadlift 270 kg
+- Total 715 kg
+- Homme
+
+PROGRAMMATION
+- 4 semaines
+- 5 séances par semaine
+- 176 lignes d'exercices
+- 308 séries prescrites
+- programmeKey : marvin_nouveau_programme_4_semaines_v191
+
+MOTIVATION
+Les phrases tournent selon la semaine et le jour autour de :
+- « T’avais dit que t’étais pas une salope. »
+- « Noé croit que t’es le meilleur du groupe, tu peux pas abandonner. »
+- « T’avais dit à ta mère que t’allais être champion, fais-le. »
+
+Aucun nom de thème n'est affiché.
+
+AUCUN SQL ET AUCUNE MODIFICATION DE app-v171.js NÉCESSAIRES.
+Le profil reste compatible avec la V190 actuelle.
