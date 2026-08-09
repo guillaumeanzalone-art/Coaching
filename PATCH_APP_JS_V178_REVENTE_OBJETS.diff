@@ -1,0 +1,65 @@
+--- app.js
++++ app.js
+@@
+   const ITEM_VALUE_RARITY_MULTIPLIER = {
+     normal:1, common:2, uncommon:4, rare:8, epic:15,
+     legendary:30, mythic:60, ultra_mythic:120, abyssal:200
+   };
++
++  // V178 — les quatre raretés premium ne sont plus valorisées avec
++  // l'ancien multiplicateur arbitraire. Leur revente est indexée sur le
++  // coût de 500 caisses globales du même niveau.
++  const PREMIUM_RESALE_CASE500_FACTOR = {
++    legendary: 0.03,
++    mythic: 0.33,
++    ultra_mythic: 3,
++    abyssal: 10
++  };
+@@
+   function itemSaleEstimate(item) {
+     const level = Math.min(1000, Math.max(1, Math.floor(n(item?.item_level, 1))));
++    const premiumFactor = PREMIUM_RESALE_CASE500_FACTOR[item?.rarity];
++    if (Number.isFinite(premiumFactor)) {
++      const case500Cost = caseCost(level, 'global') * 500;
++      return Math.max(
++        1,
++        Math.floor(
++          case500Cost
++          * premiumFactor
++          * (1 + equippedPassiveTotal('resale_bonus') / 100)
++        )
++      );
++    }
++
+     const itemCost = Math.max(1, n(item?.gold_cost, n(item?.case_cost, 100)));
+     const rarityFactor = ITEM_VALUE_RARITY_MULTIPLIER[item?.rarity] || 1;
+     return Math.max(1, Math.floor(level * itemCost * rarityFactor * (1 + equippedPassiveTotal('resale_bonus') / 100)));
+   }
+@@
+   async function sellItem(itemId) {
+     if (collectionBusy || !confirm('Vendre un exemplaire de cette pile contre du gold ?')) return;
+     collectionBusy = true; render();
+-    const { data, error } = await CoachingCloud.client.rpc('sell_rpg_item',{p_athlete_slug:cfg.slug,p_item_id:itemId});
++    const item = inventory.find(candidate => String(candidate.id) === String(itemId));
++    const premium = !!PREMIUM_RESALE_CASE500_FACTOR[item?.rarity];
++    const { data, error } = await CoachingCloud.client.rpc(
++      premium ? 'sell_rpg_item_v178' : 'sell_rpg_item',
++      { p_athlete_slug:cfg.slug, p_item_id:itemId }
++    );
+     collectionBusy = false;
+     if (error) { CoachingCloud.toast(`Vente impossible : ${error.message}`,true); render(); return; }
+     const row = Array.isArray(data)?data[0]:data;
+     CoachingCloud.toast(`${row?.item_name || 'Objet'} vendu · +${fr(row?.gold_gained,0)} gold`);
+     await Promise.all([loadProgress(),loadInventory()]);
+   }
+@@
+   async function sellAllItems() {
+     const count = sellAllEligibleQuantity();
+     if (collectionBusy || count <= 0) return;
+     if (!confirm(`Vendre définitivement les ${count} exemplaire${count>1?'s':''} non équipé${count>1?'s':''} de ton inventaire ? Les objets portés et verrouillés ne seront pas vendus.`)) return;
+     collectionBusy = true;
+     render();
+-    const { data, error } = await CoachingCloud.client.rpc('sell_all_rpg_items_v30', {
++    const { data, error } = await CoachingCloud.client.rpc('sell_all_rpg_items_v178', {
+       p_athlete_slug: cfg.slug
+     });

@@ -1,0 +1,43 @@
+PATCH V178 — REVENTE PREMIUM DES OBJETS
+
+RÈGLE APPLIQUÉE
+La valeur d'un objet premium dépend désormais du prix SERVEUR de 500 caisses
+globales au même niveau que l'objet :
+
+- Légendaire : 3 % du prix de 500 caisses
+- Mythique : 33 % du prix de 500 caisses
+- Ultra rare mythique : 3 × le prix de 500 caisses
+- Abyssal : 10 × le prix de 500 caisses
+
+Le bonus équipé Marchandage est ajouté ensuite.
+
+REPÈRE NIVEAU 20
+Si 500 caisses globales coûtent 15 930 500 gold :
+- Légendaire : 477 915 gold
+- Mythique : 5 257 065 gold
+- Ultra rare mythique : 47 791 500 gold
+- Abyssal : 159 305 000 gold
+Ces valeurs sont AVANT Marchandage.
+
+POURQUOI LE PATCH GARDE LES ANCIENS RPC
+V178 réutilise sell_rpg_item et sell_all_rpg_items_v30 pour les mutations
+d'inventaire. Cela évite de casser les piles, références historiques et
+protections existantes. V178 ne corrige ensuite que le montant de gold pour les
+quatre raretés premium.
+
+INSTALLATION
+1. Supabase > SQL Editor.
+2. Copier tout PATCH_SUPABASE_V178_REVENTE_OBJETS.sql.
+3. Run.
+4. Les contrôles de fin doivent afficher les facteurs 0.03 / 0.33 / 3 / 10
+   et les valeurs niveau 20 attendues.
+5. Appliquer PATCH_APP_JS_V178_REVENTE_OBJETS.diff à l'app.js actuellement en
+   production.
+6. Commit GitHub puis Ctrl + F5.
+
+IMPORTANT
+- Ne remplace pas ton app.js actuel par un ancien snapshot : applique seulement
+  le diff V178 sur la version actuellement en production.
+- Aucun reset de gold, XP, inventaire, équipement, codex ou leaderboard.
+- Les objets équipés et verrouillés ne sont pas vendus par la vente globale.
+- Les raretés Simple à Épique conservent la revente actuelle.
