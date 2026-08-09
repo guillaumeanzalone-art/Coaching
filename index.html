@@ -1104,11 +1104,14 @@ function render(list){
       ? `${programPrefix}${weekLabel(a)} · SQ ${a.sq??'—'} · BN ${a.bn??'—'} · DL ${a.dl??'—'}${a.bw?' · '+a.bw+' kg':''}`
       : 'Page HTML introuvable';
     const image=a.profileImage
-      ? `<img src="${esc(assetHref(a.profileImage))}?v=${a.slug==='marvin'?'20260809-v193-marvin':'20260806-v147-toms-separated'}" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
+      ? `<img src="${esc(assetHref(a.profileImage))}?v=${a.slug==='marvin'?'20260809-v195-marvin':'20260806-v147-toms-separated'}" alt="Avatar ${esc(a.name)}" decoding="async" onerror="this.parentElement.classList.remove('has-image');this.remove()">`
       : '';
     const content=`<div class="avatar ${a.profileImage?'has-image':''}"><span>${esc(a.emoji)}</span>${image}</div><div class="info"><div class="name">${esc(displayName)}</div><div class="sub">${esc(sub)}</div></div><div class="arrow">${a.file?'›':'—'}</div>`;
+    const pageHref=a.file
+      ? `${encodeURIComponent(a.file)}${a.slug==='marvin'?'?v=20260809-v195-marvin-program':''}`
+      : '';
     return a.file
-      ? `<a class="card" href="${encodeURIComponent(a.file)}" data-athlete-slug="${esc(a.slug)}" data-program-file="${esc(a.file)}">${content}</a>`
+      ? `<a class="card" href="${pageHref}" data-athlete-slug="${esc(a.slug)}" data-program-file="${esc(a.file)}">${content}</a>`
       : `<div class="card" data-athlete-slug="${esc(a.slug)}" style="opacity:.52;cursor:not-allowed">${content}</div>`;
   }).join('');
   document.getElementById('athleteList').innerHTML=athleteHtml||'<div class="empty">Aucun athlète ne correspond à cette recherche.</div>';

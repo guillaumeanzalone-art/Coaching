@@ -1,0 +1,27 @@
+V195 — MARVIN : PROGRAMME DANS SON PROFIL
+
+CORRECTION
+- Marvin.html contient le nouveau programme 4 semaines / 5 jours.
+- Nouvelle clé programme :
+  marvin_nouveau_programme_4_semaines_v195
+- Le clic depuis index force Marvin.html?v=20260809-v195-marvin-program
+  pour éviter de rouvrir une ancienne version mise en cache.
+- L'initialisation du programme est sécurisée si un ancien stockage local
+  contient un index de semaine/jour invalide.
+- Le fix Louis V194 est conservé dans index.html.
+
+PROFIL
+- 83 kg
+- Squat 270
+- Bench 175
+- Deadlift 270
+- Total 715
+
+INSTALLATION
+Remplace à la racine GitHub :
+- index.html
+- Marvin.html
+- avatar-marvin.png
+
+AUCUN SQL.
+AUCUN app-v171.js.
