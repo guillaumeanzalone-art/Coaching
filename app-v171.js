@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V201';
+window.GA_APP_VERSION = 'V203';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-09-v201-casino-forge-raid-cases';
+window.GA_APP_BUILD = '2026-08-10-v203-series-reps-readable';
 
 
 /* --------------------------------------------------------------------------
@@ -12992,3 +12992,145 @@ function collectionHtml() {
   }
 })();
 
+
+
+/* --------------------------------------------------------------------------
+   V203 — LISIBILITÉ DES SÉRIES
+   - "1" -> "Série 1"
+   - "5 69%" -> "5 reps à 69 %"
+   Le programme et les données enregistrées ne sont pas modifiés.
+---------------------------------------------------------------------------- */
+(() => {
+  'use strict';
+
+  const STYLE_ID = 'ga-set-readability-v203';
+
+  function installStyleV203() {
+    if (document.getElementById(STYLE_ID)) return;
+    const style = document.createElement('style');
+    style.id = STYLE_ID;
+    style.textContent = `
+      .set-row > .set-num.ga-set-readable-v203{
+        width:auto!important;
+        min-width:52px!important;
+        height:28px!important;
+        padding:0 7px!important;
+        border-radius:7px!important;
+        white-space:nowrap!important;
+        font-size:9px!important;
+        font-weight:900!important;
+        letter-spacing:-.01em!important;
+        line-height:1!important;
+      }
+      .set-row > .set-info.ga-set-info-readable-v203{
+        min-width:72px!important;
+        line-height:1.35!important;
+      }
+      .set-row > .set-info.ga-set-info-readable-v203 > strong:first-child{
+        font-size:11px!important;
+        font-weight:900!important;
+        white-space:nowrap!important;
+      }
+      .set-row > .set-info.ga-set-info-readable-v203 .pct-label.ga-percent-readable-v203{
+        display:inline!important;
+        margin-left:2px!important;
+        font-size:9px!important;
+        font-weight:800!important;
+        white-space:nowrap!important;
+      }
+      @media(max-width:370px){
+        .set-row > .set-num.ga-set-readable-v203{
+          min-width:47px!important;
+          padding:0 5px!important;
+          font-size:8px!important;
+        }
+        .set-row > .set-info.ga-set-info-readable-v203{
+          min-width:62px!important;
+          font-size:9px!important;
+        }
+        .set-row > .set-info.ga-set-info-readable-v203 > strong:first-child{
+          font-size:10px!important;
+        }
+        .set-row > .set-info.ga-set-info-readable-v203 .pct-label.ga-percent-readable-v203{
+          font-size:8px!important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function formatSetNumberV203(row) {
+    const node = row.querySelector(':scope > .set-num');
+    if (!node) return;
+
+    let number = Number(node.dataset.gaSetNumberV203);
+    if (!Number.isFinite(number) || number < 1) {
+      const match = String(node.textContent || '').match(/\d+/);
+      number = Math.max(1, Number(match?.[0]) || 1);
+      node.dataset.gaSetNumberV203 = String(number);
+    }
+
+    node.textContent = `Série ${number}`;
+    node.classList.add('ga-set-readable-v203');
+  }
+
+  function formatPrescriptionV203(row) {
+    const info = row.querySelector(':scope > .set-info');
+    if (!info) return;
+
+    info.classList.add('ga-set-info-readable-v203');
+
+    const strong = info.querySelector(':scope > strong:first-child');
+    if (strong) {
+      const raw = String(strong.dataset.gaOriginalRepsV203 || strong.textContent || '').trim();
+      if (!strong.dataset.gaOriginalRepsV203) strong.dataset.gaOriginalRepsV203 = raw;
+
+      // N'altère que les prescriptions de répétitions purement numériques.
+      const repMatch = raw.match(/^(\d{1,3})$/);
+      if (repMatch) {
+        const reps = Math.max(1, Number(repMatch[1]) || 1);
+        strong.textContent = `${reps} ${reps === 1 ? 'rep' : 'reps'}`;
+      }
+    }
+
+    const pct = info.querySelector(':scope > .pct-label');
+    if (pct) {
+      const rawPct = String(pct.dataset.gaOriginalPctV203 || pct.textContent || '').trim();
+      if (!pct.dataset.gaOriginalPctV203) pct.dataset.gaOriginalPctV203 = rawPct;
+
+      // Ex. 69%, 72.5 %, 72,5% -> "à 69 %".
+      const pctMatch = rawPct.match(/^(\d+(?:[.,]\d+)?)\s*%$/);
+      if (pctMatch) {
+        pct.textContent = `à ${pctMatch[1]} %`;
+        pct.classList.add('ga-percent-readable-v203');
+      }
+    }
+  }
+
+  function repairRowsV203(root = document) {
+    installStyleV203();
+    root.querySelectorAll?.('.set-row').forEach(row => {
+      formatSetNumberV203(row);
+      formatPrescriptionV203(row);
+    });
+  }
+
+  let scheduled = false;
+  function scheduleRepairV203() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      repairRowsV203(document);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => repairRowsV203(document), { once:true });
+  } else {
+    repairRowsV203(document);
+  }
+
+  const observer = new MutationObserver(scheduleRepairV203);
+  observer.observe(document.documentElement, { childList:true, subtree:true });
+})();

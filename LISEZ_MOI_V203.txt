@@ -1,0 +1,17 @@
+V203 — AFFICHAGE DES SÉRIES PLUS LISIBLE
+
+Modification globale :
+- 1 devient "Série 1"
+- 2 devient "Série 2"
+- "5 69%" devient "5 reps à 69 %"
+- "1 73%" devient "1 rep à 73 %"
+
+Les charges, RPE, validations et données enregistrées ne changent pas.
+Les intensités non exprimées en pourcentage ne sont pas réécrites.
+
+INSTALLATION
+- Remplacer uniquement app-v171.js sur GitHub.
+- Commit.
+- Recharger complètement la page.
+
+AUCUN SQL.
