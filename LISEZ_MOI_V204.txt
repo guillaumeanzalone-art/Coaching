@@ -1,0 +1,18 @@
+V204 — MARVIN : NOUVELLE PHOTO + PROGRAMME CONSERVÉ
+
+CAUSE
+Le patch photo V202 était reparti de Marvin V195 et avait réintroduit
+l'ancienne faute HTML :
+<div class="day-tabs id="dayTabs"></div>
+
+V204 repart de Marvin V196, où l'affichage du programme est corrigé,
+et conserve la nouvelle photo V202.
+
+INSTALLATION
+Remplace à la racine GitHub :
+- Marvin.html
+- avatar-marvin-v202.png
+
+PAS BESOIN DE REMPLACER index.html si V202 est déjà installé.
+AUCUN SQL.
+AUCUN app-v171.js.
