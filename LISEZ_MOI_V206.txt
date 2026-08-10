@@ -1,0 +1,46 @@
+V206 — KAOUTAR BLOC 2
+
+COMME LOU / JANEL
+- Kaoutar.html = Bloc 1
+- Kaoutar2.html = Bloc 2
+- sélecteur Bloc 1 / Bloc 2 sur les deux pages
+- index.html affiche un seul profil Kaoutar
+- Kaoutar2.html est ignoré comme carte séparée
+
+SOURCE BLOC 2
+- Poids : 60 kg
+- Squat : 107,5 kg
+- Bench : 65 kg
+- Deadlift : 140 kg
+- Total : 312,5 kg
+- Dips : 27,5 kg
+- Tractions : 15 kg
+- Muscle-up : 0 kg
+
+PROGRAMME INTÉGRÉ
+- 4 semaines
+- S1 : Lundi / Mercredi / Vendredi / Samedi-dimanche
+- S2 à S4 : Lundi / Vendredi / Samedi-dimanche
+- 98 lignes d'exercices
+- 262 séries prescrites
+- programKey : kaoutar_nouveau_programme_4_semaines_bloc-2_v206
+
+CHOIX DE PRÉSENTATION
+Les exercices muscle-up / tractions / dips ont été classés "accessoire".
+Le fichier source leur associe parfois des labels SQUAT/BENCH et des
+pourcentages/fourchettes SBD manifestement recopiés. Ces pourcentages et
+fourchettes ne sont pas affichés sur ces mouvements, mais la saisie libre
+de charge réelle reste disponible.
+
+Le mercredi n'est renseigné qu'en S1 dans le fichier source.
+Aucun mercredi S2-S4 n'a été inventé.
+
+INSTALLATION
+Remplacer à la racine GitHub :
+- index.html
+- Kaoutar.html
+- Kaoutar2.html
+
+AUCUN SQL.
+AUCUN app-v171.js.
+Compatible avec V205.
