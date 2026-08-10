@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V210';
+window.GA_APP_VERSION = 'V216';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-10-v210-no-fail-button';
+window.GA_APP_BUILD = '2026-08-10-v216-performance-cleanup';
 
 
 /* --------------------------------------------------------------------------
@@ -985,15 +985,16 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
     if (nav) {
       nav.appendChild(button);
 
-      // Si un ancien script recrée son propre onglet après le chargement,
-      // il est supprimé immédiatement afin de toujours garder un seul PR.
-      const prNavObserver = new MutationObserver(() => {
+      // V216 : plus d'observer permanent sur la navigation.
+      const repairPrNavV216 = () => {
         Array.from(nav.children)
           .filter(entry => entry !== button && isPrNavEntry(entry))
           .forEach(entry => entry.remove());
         if (!button.isConnected) nav.appendChild(button);
-      });
-      prNavObserver.observe(nav, { childList: true });
+      };
+      document.addEventListener('ga:workout-rendered', repairPrNavV216);
+      setTimeout(repairPrNavV216, 150);
+      setTimeout(repairPrNavV216, 900);
     } else {
       button.style.position = 'fixed';
       button.style.left = '12px';
@@ -1373,6 +1374,12 @@ window.GA_PR_SEED = {"guillaume":{"sq":{"1":{"load":320.0,"date":""},"2":{"load"
   let transferRecipients = [];
   let transferModalItemId = null;
   let openingCase = false;
+
+  // V216 — le RPG lourd est chargé à la demande, pas au démarrage
+  // de chaque page d'entraînement.
+  let rpgHeavyReadyV216 = false;
+  let rpgHeavyPromiseV216 = null;
+  let abilityCutinsPreloadedV216 = false;
 
   // V185 — Nain Forgeron + Casino Gold
   let dwarfWorkshopModeV185 = localStorage.getItem(`rpg_dwarf_mode_v185_${cfg.slug}`) || 'forge';
@@ -4090,7 +4097,8 @@ async function armCombatServerTimer(session) {
 
 
   function inject() {
-    preloadAbilityCutins();
+    // V216 : les assets de combat ne sont plus préchargés sur une simple
+    // page de séance. Ils sont amorcés au premier vrai clic sur le RPG.
     if (!chip) {
       chip = document.createElement('button');
       chip.type = 'button';
@@ -4118,11 +4126,18 @@ async function armCombatServerTimer(session) {
       document.body.appendChild(panel);
       chip?.addEventListener('click', () => {
         panel.classList.toggle('show');
-        if (panel.classList.contains('show')) {
+        const openedV216 = panel.classList.contains('show');
+        if (openedV216) {
+          if (!abilityCutinsPreloadedV216) {
+            abilityCutinsPreloadedV216 = true;
+            preloadAbilityCutins();
+          }
+          void ensureRpgHeavyV216();
           unlockRpgAudio();
           // Le clic d'ouverture du RPG autorise le son, mais respecte toujours le choix mémorisé.
           if (musicAllowed()) void playMenuMusic({ userGesture:true });
         } else {
+          setRpgTimersV216(false);
           const audioSettings = document.getElementById('rpgAudioSettings');
           const audioToggle = document.getElementById('rpgAudioToggle');
           if (audioSettings) audioSettings.hidden = true;
@@ -4132,17 +4147,18 @@ async function armCombatServerTimer(session) {
           else stopMenuMusic();
         }
         render();
-        if (panel.classList.contains('show')) {
+        if (openedV216) {
           void loadAdventureProgressV160({ quiet: true }).then(ok => {
             if (ok) render();
           });
         }
-        if (panel.classList.contains('show') && activeTab === 'leaderboard') {
+        if (openedV216 && activeTab === 'leaderboard') {
           void loadRpgLeaderboardV155(true);
         }
       });
       document.getElementById('xpPanelClose')?.addEventListener('click', () => {
         panel.classList.remove('show');
+        setRpgTimersV216(false);
         const audioSettings = document.getElementById('rpgAudioSettings');
         if (audioSettings) audioSettings.hidden = true;
         document.getElementById('rpgAudioToggle')?.setAttribute('aria-expanded', 'false');
@@ -6234,6 +6250,78 @@ function collectionHtml() {
     await Promise.all([loadProgress(), loadInventory(), loadCollections(), loadRaid(), loadTransferRecipients(), loadCasinoStateV185(false), loadBlackjackStateV190(false)]);
     render();
   }
+
+  function subscribeRpgRealtimeV216() {
+    if (channel || !CoachingCloud?.client) return;
+    channel = CoachingCloud.client
+      .channel(`ga-rpg-${cfg.slug}`)
+      .on('postgres_changes', {
+        event: '*', schema: 'public', table: 'athlete_progress', filter: `athlete_slug=eq.${cfg.slug}`
+      }, loadProgress)
+      .on('postgres_changes', {
+        event: '*', schema: 'public', table: 'rpg_inventory', filter: `athlete_slug=eq.${cfg.slug}`
+      }, loadInventory)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rpg_monster_collection', filter: `athlete_slug=eq.${cfg.slug}` }, loadCollections)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rpg_item_collection', filter: `athlete_slug=eq.${cfg.slug}` }, loadCollections)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rpg_raids' }, () => loadRaid())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rpg_raid_participants' }, () => loadRaid())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'rpg_raid_runs' }, () => loadRaid())
+      .subscribe();
+  }
+
+  function setRpgTimersV216(active) {
+    clearInterval(raidPollTimer);
+    clearInterval(raidClockTimer);
+    raidPollTimer = null;
+    raidClockTimer = null;
+    if (!active) return;
+    // Le polling raid n'a de sens que quand le panneau RPG est visible.
+    raidPollTimer = setInterval(() => {
+      if (panel?.classList.contains('show')) void loadRaid();
+    }, 30000);
+    raidClockTimer = setInterval(() => {
+      if (panel?.classList.contains('show')) updateRaidCountdownUi();
+    }, 1000);
+  }
+
+  async function ensureRpgHeavyV216() {
+    if (rpgHeavyReadyV216) {
+      setRpgTimersV216(true);
+      return true;
+    }
+    if (rpgHeavyPromiseV216) return rpgHeavyPromiseV216;
+
+    rpgHeavyPromiseV216 = (async () => {
+      await Promise.all([
+        loadInventory(),
+        loadCollections(),
+        loadRaid(),
+        loadTransferRecipients(),
+        loadCasinoStateV185(false),
+        loadBlackjackStateV190(false)
+      ]);
+      subscribeRpgRealtimeV216();
+      rpgHeavyReadyV216 = true;
+      setRpgTimersV216(true);
+      render();
+      return true;
+    })().catch(error => {
+      console.warn('Chargement RPG différé V216 impossible :', error);
+      return false;
+    }).finally(() => {
+      rpgHeavyPromiseV216 = null;
+    });
+
+    return rpgHeavyPromiseV216;
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      setRpgTimersV216(false);
+    } else if (rpgHeavyReadyV216 && panel?.classList.contains('show')) {
+      setRpgTimersV216(true);
+    }
+  });
 
   async function chooseClass(classKey) {
     const def = CLASS_DEFS[classKey];
@@ -9025,28 +9113,11 @@ function collectionHtml() {
 
   if (window.CoachingCloud?.onReady) {
     CoachingCloud.onReady(async () => {
-      await loadAll();
+      // V216 : au chargement d'une séance, on récupère seulement ce qui est
+      // nécessaire au badge XP/GL. Inventaire, collections, casino, blackjack,
+      // raid, realtime RPG et polling sont différés jusqu'à l'ouverture du RPG.
+      await loadProgress();
       await syncCurrentProgramGlV171();
-      if (!channel) {
-        channel = CoachingCloud.client
-          .channel(`ga-rpg-${cfg.slug}`)
-          .on('postgres_changes', {
-            event: '*', schema: 'public', table: 'athlete_progress', filter: `athlete_slug=eq.${cfg.slug}`
-          }, loadProgress)
-          .on('postgres_changes', {
-            event: '*', schema: 'public', table: 'rpg_inventory', filter: `athlete_slug=eq.${cfg.slug}`
-          }, loadInventory)
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'rpg_monster_collection', filter: `athlete_slug=eq.${cfg.slug}` }, loadCollections)
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'rpg_item_collection', filter: `athlete_slug=eq.${cfg.slug}` }, loadCollections)
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'rpg_raids' }, () => loadRaid())
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'rpg_raid_participants' }, () => loadRaid())
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'rpg_raid_runs' }, () => loadRaid())
-          .subscribe();
-      }
-      clearInterval(raidPollTimer);
-      raidPollTimer = setInterval(() => loadRaid(), 15000);
-      clearInterval(raidClockTimer);
-      raidClockTimer = setInterval(updateRaidCountdownUi, 1000);
     });
   }
 })();
@@ -9083,6 +9154,27 @@ function collectionHtml() {
   let fallbackRestInterval = null;
   let fallbackRestRemaining = 180;
   let fallbackRestTotal = 180;
+  let activityFeedsMountedV216 = false;
+  let activityFeedsPromiseV216 = null;
+
+  async function ensureActivityFeedsV216() {
+    if (activityFeedsMountedV216) return true;
+    if (!cloudReady || !CoachingCloud?.session?.user) return false;
+    if (activityFeedsPromiseV216) return activityFeedsPromiseV216;
+    activityFeedsPromiseV216 = Promise.all([
+      CoachingCloud.mountActivityFeed('cloudAthleteFeedLift', 60, { category: 'lift' }),
+      CoachingCloud.mountActivityFeed('cloudAthleteFeedAdventure', 60, { category: 'adventure' })
+    ]).then(() => {
+      activityFeedsMountedV216 = true;
+      return true;
+    }).catch(error => {
+      console.warn('Fil activité V216 indisponible :', error);
+      return false;
+    }).finally(() => {
+      activityFeedsPromiseV216 = null;
+    });
+    return activityFeedsPromiseV216;
+  }
 
   const cacheKey = `ga-cloud-inputs:${cfg.slug}:${cfg.programKey}`;
   let inputCache = readCache();
@@ -9234,20 +9326,14 @@ function collectionHtml() {
     try { localStorage.setItem(cacheKey, JSON.stringify(inputCache)); } catch (_) {}
   }
 
-  const decimalLoadObserverV158 = new MutationObserver(mutations => {
-    for (const mutation of mutations) {
-      mutation.addedNodes.forEach(node => {
-        if (node?.nodeType !== 1) return;
-        if (isStableLoadInputV158(node)) upgradeStableLoadInputV158(node);
-        upgradeVisibleStableLoadsV158(node);
-      });
-    }
-  });
-  decimalLoadObserverV158.observe(document.documentElement, {
-    childList: true,
-    subtree: true
-  });
-  queueMicrotask(() => upgradeVisibleStableLoadsV158(document));
+  // V216 : plus de MutationObserver global pour les champs de charge.
+  // Le moteur de rendu V216 émet un évènement après chaque vrai render().
+  const refreshStableLoadsV216 = () => {
+    const root = exerciseContainer?.() || document;
+    upgradeVisibleStableLoadsV158(root);
+  };
+  document.addEventListener('ga:workout-rendered', refreshStableLoadsV216);
+  queueMicrotask(refreshStableLoadsV216);
 
   function parseNumber(value) {
     const normalized = String(value ?? '').trim().replace(',', '.');
@@ -10377,7 +10463,9 @@ function collectionHtml() {
       event.preventDefault();
       event.stopPropagation();
       panel.classList.toggle('show');
-      button.classList.toggle('active', panel.classList.contains('show'));
+      const opened = panel.classList.contains('show');
+      button.classList.toggle('active', opened);
+      if (opened) void ensureActivityFeedsV216();
     });
     document.getElementById('cloudActivityClose').addEventListener('click', close);
     panel.querySelector('.cloud-feed-switch')?.addEventListener('click', event => {
@@ -11194,10 +11282,12 @@ function collectionHtml() {
   }
 
   function observeRenders() {
-    const container = exerciseContainer();
-    if (!container) return;
-    mutationObserver = new MutationObserver(() => { scheduleReconcile(); renderDayDurations(); });
-    mutationObserver.observe(container, { childList: true, subtree: true });
+    // V216 : le DOM n'est plus surveillé en permanence.
+    // Une réconciliation ne part qu'après un vrai rendu de séance.
+    document.addEventListener('ga:workout-rendered', () => {
+      scheduleReconcile();
+      renderDayDurations();
+    });
     scheduleReconcile();
   }
 
@@ -11222,18 +11312,25 @@ function collectionHtml() {
   observeRenders();
   renderDayDurations();
   clearInterval(dayDurationTimer);
-  dayDurationTimer = setInterval(renderDayDurations, 1000);
+  dayDurationTimer = setInterval(() => {
+    if (!document.hidden) renderDayDurations();
+  }, 5000);
   clearInterval(chronoGuardTimer);
-  // Les pages historiques ont parfois leur propre chrono global. On réécrit
-  // régulièrement l'affichage avec le chrono de la journée active afin qu'une
-  // ancienne séance ne puisse plus afficher des centaines d'heures.
-  chronoGuardTimer = setInterval(renderCurrentSessionChrono, 250);
+  // V216 : une mise à jour par seconde suffit à un chrono HH:MM/SS.
+  // L'ancien garde-fou à 250 ms recalculait toute la journée 4 fois/s.
+  chronoGuardTimer = setInterval(() => {
+    if (!document.hidden) renderCurrentSessionChrono();
+  }, 1000);
 
   CoachingCloud.onReady(async () => {
     cloudReady = true;
     await loadCloudState();
     subscribe();
-    await Promise.all([CoachingCloud.mountActivityFeed('cloudAthleteFeedLift', 60, { category: 'lift' }), CoachingCloud.mountActivityFeed('cloudAthleteFeedAdventure', 60, { category: 'adventure' })]);
+    // V216 : les deux fils de 60 activités ne sont chargés que quand
+    // l'utilisateur ouvre réellement le panneau Activité.
+    if (document.getElementById('cloudAthleteActivity')?.classList.contains('show')) {
+      void ensureActivityFeedsV216();
+    }
   });
   CoachingCloud.boot();
 })();
@@ -11875,8 +11972,8 @@ function collectionHtml() {
     setTimeout(enrich, 40);
   }, true);
 
-  const container = document.getElementById('exerciseList') || document.getElementById('exercises');
-  if (container) new MutationObserver(enrich).observe(container, { childList: true, subtree: true });
+  // V216 : enrichissement uniquement après un vrai render(), sans observer.
+  document.addEventListener('ga:workout-rendered', enrich);
 
   ensurePanel();
   enrich();
@@ -12052,11 +12149,13 @@ function collectionHtml() {
     repair();
   }
 
-  const observer = new MutationObserver(() => repair());
-  observer.observe(document.documentElement, {
-    childList: true,
-    subtree: true
-  });
+  // V216 : aucun observer global. Le panneau est réparé après les rendus
+  // et lors des interactions susceptibles de l'afficher.
+  document.addEventListener('ga:workout-rendered', repair);
+  document.addEventListener('click', event => {
+    if (!event.target.closest('.set-check,.check-btn,[data-cloud-checkbox],.nav-item,.nav-tab,button')) return;
+    setTimeout(repair, 0);
+  }, true);
 
   window.addEventListener('resize', repair, { passive: true });
 })();
@@ -12701,7 +12800,8 @@ function collectionHtml() {
     if (event.target.closest('.week-btn,.day-tab')) scheduleRefresh(false, 180);
   }, true);
 
-  const observer = new MutationObserver(() => {
+  // V216 : le suivi de bloc ne surveille plus toutes les classes du body.
+  document.addEventListener('ga:workout-rendered', () => {
     ensurePanel();
     ensureSkippedBanner();
     const key = dayKey(currentIndices().w, currentIndices().d);
@@ -12710,7 +12810,6 @@ function collectionHtml() {
       scheduleRefresh(false, 120);
     }
   });
-  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
 
   ensurePanel();
   render();
@@ -13213,307 +13312,139 @@ function collectionHtml() {
 
 
 /* --------------------------------------------------------------------------
-   V203 — LISIBILITÉ DES SÉRIES
+   V216 — MOTEUR DE RENDU LÉGER DES SÉRIES
+   Remplace les doubles moteurs V203/V205 et leurs MutationObserver globaux.
    - "1" -> "Série 1"
    - "5 69%" -> "5 reps à 69 %"
-   Le programme et les données enregistrées ne sont pas modifiés.
+   - aucun scan permanent du document
+   - un seul passage après le render natif de la page
 ---------------------------------------------------------------------------- */
 (() => {
   'use strict';
 
-  const STYLE_ID = 'ga-set-readability-v203';
+  const STYLE_ID = 'ga-series-performance-v216';
+  const RENDER_EVENT = 'ga:workout-rendered';
 
-  function installStyleV203() {
+  function installStyleV216() {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-      .set-row > .set-num.ga-set-readable-v203{
-        width:auto!important;
-        min-width:52px!important;
-        height:28px!important;
-        padding:0 7px!important;
-        border-radius:7px!important;
-        white-space:nowrap!important;
-        font-size:9px!important;
-        font-weight:900!important;
-        letter-spacing:-.01em!important;
-        line-height:1!important;
+      .set-row{gap:6px!important}
+      .set-row>.set-num.ga-series-v216{
+        width:auto!important;min-width:54px!important;max-width:none!important;
+        height:28px!important;padding:0 7px!important;border-radius:7px!important;
+        flex:0 0 auto!important;font-size:9px!important;font-weight:900!important;
+        letter-spacing:-.02em!important;white-space:nowrap!important
       }
-      .set-row > .set-info.ga-set-info-readable-v203{
-        min-width:72px!important;
-        line-height:1.35!important;
+      .set-row>.set-info.ga-info-v216{
+        flex:1 1 auto!important;min-width:84px!important;line-height:1.25!important
       }
-      .set-row > .set-info.ga-set-info-readable-v203 > strong:first-child{
-        font-size:11px!important;
-        font-weight:900!important;
-        white-space:nowrap!important;
+      .set-row>.set-info.ga-info-v216>strong:first-child{
+        display:inline!important;font-size:10px!important;font-weight:900!important;
+        white-space:nowrap!important
       }
-      .set-row > .set-info.ga-set-info-readable-v203 .pct-label.ga-percent-readable-v203{
-        display:inline!important;
-        margin-left:2px!important;
-        font-size:9px!important;
-        font-weight:800!important;
-        white-space:nowrap!important;
+      .set-row>.set-info.ga-info-v216>.pct-label.ga-pct-v216{
+        display:inline!important;margin-left:2px!important;font-size:9px!important;
+        font-weight:800!important;white-space:nowrap!important
       }
-      @media(max-width:370px){
-        .set-row > .set-num.ga-set-readable-v203{
-          min-width:47px!important;
-          padding:0 5px!important;
-          font-size:8px!important;
-        }
-        .set-row > .set-info.ga-set-info-readable-v203{
-          min-width:62px!important;
-          font-size:9px!important;
-        }
-        .set-row > .set-info.ga-set-info-readable-v203 > strong:first-child{
-          font-size:10px!important;
-        }
-        .set-row > .set-info.ga-set-info-readable-v203 .pct-label.ga-percent-readable-v203{
-          font-size:8px!important;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
-  function formatSetNumberV203(row) {
-    const node = row.querySelector(':scope > .set-num');
-    if (!node) return;
-
-    let number = Number(node.dataset.gaSetNumberV203);
-    if (!Number.isFinite(number) || number < 1) {
-      const match = String(node.textContent || '').match(/\d+/);
-      number = Math.max(1, Number(match?.[0]) || 1);
-      node.dataset.gaSetNumberV203 = String(number);
-    }
-
-    node.textContent = `Série ${number}`;
-    node.classList.add('ga-set-readable-v203');
-  }
-
-  function formatPrescriptionV203(row) {
-    const info = row.querySelector(':scope > .set-info');
-    if (!info) return;
-
-    info.classList.add('ga-set-info-readable-v203');
-
-    const strong = info.querySelector(':scope > strong:first-child');
-    if (strong) {
-      const raw = String(strong.dataset.gaOriginalRepsV203 || strong.textContent || '').trim();
-      if (!strong.dataset.gaOriginalRepsV203) strong.dataset.gaOriginalRepsV203 = raw;
-
-      // N'altère que les prescriptions de répétitions purement numériques.
-      const repMatch = raw.match(/^(\d{1,3})$/);
-      if (repMatch) {
-        const reps = Math.max(1, Number(repMatch[1]) || 1);
-        strong.textContent = `${reps} ${reps === 1 ? 'rep' : 'reps'}`;
-      }
-    }
-
-    const pct = info.querySelector(':scope > .pct-label');
-    if (pct) {
-      const rawPct = String(pct.dataset.gaOriginalPctV203 || pct.textContent || '').trim();
-      if (!pct.dataset.gaOriginalPctV203) pct.dataset.gaOriginalPctV203 = rawPct;
-
-      // Ex. 69%, 72.5 %, 72,5% -> "à 69 %".
-      const pctMatch = rawPct.match(/^(\d+(?:[.,]\d+)?)\s*%$/);
-      if (pctMatch) {
-        pct.textContent = `à ${pctMatch[1]} %`;
-        pct.classList.add('ga-percent-readable-v203');
-      }
-    }
-  }
-
-  function repairRowsV203(root = document) {
-    installStyleV203();
-    root.querySelectorAll?.('.set-row').forEach(row => {
-      formatSetNumberV203(row);
-      formatPrescriptionV203(row);
-    });
-  }
-
-  let scheduled = false;
-  function scheduleRepairV203() {
-    if (scheduled) return;
-    scheduled = true;
-    requestAnimationFrame(() => {
-      scheduled = false;
-      repairRowsV203(document);
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => repairRowsV203(document), { once:true });
-  } else {
-    repairRowsV203(document);
-  }
-
-  const observer = new MutationObserver(scheduleRepairV203);
-  observer.observe(document.documentElement, { childList:true, subtree:true });
-})();
-
-
-/* --------------------------------------------------------------------------
-   V205 — SÉRIES / REPS : MODE FORCÉ
-   Les pages athlètes construisent leurs lignes dans leur fonction globale
-   render(). V205 encapsule cette fonction et reformate les lignes après
-   CHAQUE rendu, en plus d'un premier passage immédiat.
----------------------------------------------------------------------------- */
-(() => {
-  'use strict';
-
-  const FORCE_STYLE_ID = 'ga-series-force-v205';
-
-  function installForceStyleV205() {
-    if (document.getElementById(FORCE_STYLE_ID)) return;
-    const style = document.createElement('style');
-    style.id = FORCE_STYLE_ID;
-    style.textContent = `
-      .set-row{
-        gap:6px!important;
-      }
-      .set-row .set-num.ga-series-label-v205{
-        width:auto!important;
-        min-width:54px!important;
-        max-width:none!important;
-        height:28px!important;
-        padding:0 7px!important;
-        border-radius:7px!important;
-        flex:0 0 auto!important;
-        font-size:9px!important;
-        font-weight:900!important;
-        letter-spacing:-.02em!important;
-        white-space:nowrap!important;
-      }
-      .set-row .set-info.ga-reps-label-v205{
-        flex:1 1 auto!important;
-        min-width:84px!important;
-        line-height:1.25!important;
-      }
-      .set-row .set-info.ga-reps-label-v205 > strong:first-child{
-        display:inline!important;
-        font-size:10px!important;
-        font-weight:900!important;
-        white-space:nowrap!important;
-      }
-      .set-row .set-info.ga-reps-label-v205 > .pct-label.ga-pct-label-v205{
-        display:inline!important;
-        margin-left:2px!important;
-        font-size:9px!important;
-        font-weight:800!important;
-        white-space:nowrap!important;
-      }
-      .set-row .set-info.ga-reps-label-v205 > .load-range{
-        display:block!important;
-        margin-top:2px!important;
-      }
+      .set-row>.set-info.ga-info-v216>.load-range{display:block!important;margin-top:2px!important}
       @media(max-width:390px){
-        .set-row .set-num.ga-series-label-v205{
-          min-width:50px!important;
-          padding:0 5px!important;
-          font-size:8px!important;
-        }
-        .set-row .set-info.ga-reps-label-v205{
-          min-width:72px!important;
-        }
-        .set-row .set-info.ga-reps-label-v205 > strong:first-child{
-          font-size:9px!important;
-        }
-        .set-row .set-info.ga-reps-label-v205 > .pct-label.ga-pct-label-v205{
-          font-size:8px!important;
-        }
+        .set-row>.set-num.ga-series-v216{min-width:50px!important;padding:0 5px!important;font-size:8px!important}
+        .set-row>.set-info.ga-info-v216{min-width:72px!important}
+        .set-row>.set-info.ga-info-v216>strong:first-child{font-size:9px!important}
+        .set-row>.set-info.ga-info-v216>.pct-label.ga-pct-v216{font-size:8px!important}
       }
     `;
     document.head.appendChild(style);
   }
 
-  function formatRowsV205() {
-    installForceStyleV205();
+  function workoutRootV216() {
+    return document.getElementById('exerciseList')
+      || document.getElementById('exercises')
+      || document.querySelector('.exercise-list')
+      || document;
+  }
 
-    document.querySelectorAll('.set-row').forEach((row, rowIndex) => {
-      const num = row.querySelector('.set-num');
+  function formatRowsV216(root = workoutRootV216()) {
+    installStyleV216();
+    const rows = root?.querySelectorAll?.('.set-row') || [];
+    rows.forEach((row, rowIndex) => {
+      const num = row.querySelector(':scope > .set-num') || row.querySelector('.set-num');
       if (num) {
-        const stored = Number(num.dataset.gaSeriesNumberV205);
-        const parsed = Number((String(num.textContent || '').match(/\d+/) || [])[0]);
-        const seriesNumber = Number.isFinite(stored) && stored > 0
-          ? stored
-          : (Number.isFinite(parsed) && parsed > 0 ? parsed : rowIndex + 1);
-
-        num.dataset.gaSeriesNumberV205 = String(seriesNumber);
-        num.textContent = `Série ${seriesNumber}`;
-        num.classList.add('ga-series-label-v205');
+        const match = String(num.textContent || '').match(/\d+/);
+        const number = Math.max(1, Number(match?.[0]) || rowIndex + 1);
+        if (num.textContent !== `Série ${number}`) num.textContent = `Série ${number}`;
+        num.classList.add('ga-series-v216');
       }
 
-      const info = row.querySelector('.set-info');
+      const info = row.querySelector(':scope > .set-info') || row.querySelector('.set-info');
       if (!info) return;
-      info.classList.add('ga-reps-label-v205');
+      info.classList.add('ga-info-v216');
 
-      const repsNode = info.querySelector('strong');
+      const repsNode = info.querySelector(':scope > strong:first-child') || info.querySelector('strong');
       if (repsNode) {
-        const original = repsNode.dataset.gaRepsRawV205 || String(repsNode.textContent || '').trim();
-        if (!repsNode.dataset.gaRepsRawV205) repsNode.dataset.gaRepsRawV205 = original;
-
-        // 5 -> "5 reps", 1 -> "1 rep". Ranges / seconds / AMRAP remain unchanged.
-        if (/^\d+$/.test(original)) {
-          const reps = Number(original);
-          repsNode.textContent = `${reps} ${reps === 1 ? 'rep' : 'reps'}`;
+        const text = String(repsNode.textContent || '').trim();
+        const match = text.match(/^(\d{1,3})(?:\s+reps?)?$/i);
+        if (match) {
+          const reps = Math.max(1, Number(match[1]) || 1);
+          const target = `${reps} ${reps === 1 ? 'rep' : 'reps'}`;
+          if (text !== target) repsNode.textContent = target;
         }
       }
 
-      const pct = info.querySelector('.pct-label');
+      const pct = info.querySelector(':scope > .pct-label') || info.querySelector('.pct-label');
       if (pct) {
-        const originalPct = pct.dataset.gaPctRawV205 || String(pct.textContent || '').trim();
-        if (!pct.dataset.gaPctRawV205) pct.dataset.gaPctRawV205 = originalPct;
-
-        const match = originalPct.match(/^(\d+(?:[.,]\d+)?)\s*%$/);
+        const text = String(pct.textContent || '').trim();
+        const match = text.match(/^(?:à\s*)?(\d+(?:[.,]\d+)?)\s*%$/i);
         if (match) {
-          pct.textContent = `à ${match[1]} %`;
-          pct.classList.add('ga-pct-label-v205');
+          const target = `à ${match[1]} %`;
+          if (text !== target) pct.textContent = target;
+          pct.classList.add('ga-pct-v216');
         }
       }
     });
   }
 
-  function wrapRenderV205() {
-    const current = window.render;
-    if (typeof current !== 'function') {
-      formatRowsV205();
-      return false;
-    }
-    if (current.__gaSeriesV205Wrapped) {
-      formatRowsV205();
-      return true;
-    }
+  let renderEventQueuedV216 = false;
+  function afterRenderV216() {
+    if (renderEventQueuedV216) return;
+    renderEventQueuedV216 = true;
+    requestAnimationFrame(() => {
+      renderEventQueuedV216 = false;
+      formatRowsV216();
+      document.dispatchEvent(new CustomEvent(RENDER_EVENT));
+    });
+  }
 
+  function wrapRenderFunctionV216(name) {
+    const current = window[name];
+    if (typeof current !== 'function' || current.__gaPerformanceV216Wrapped) return;
     const wrapped = function(...args) {
       const result = current.apply(this, args);
-      formatRowsV205();
-      requestAnimationFrame(formatRowsV205);
+      afterRenderV216();
       return result;
     };
-    wrapped.__gaSeriesV205Wrapped = true;
-    wrapped.__gaSeriesV205Original = current;
-    window.render = wrapped;
-
-    formatRowsV205();
-    requestAnimationFrame(formatRowsV205);
-    return true;
+    wrapped.__gaPerformanceV216Wrapped = true;
+    wrapped.__gaPerformanceV216Original = current;
+    window[name] = wrapped;
   }
 
-  // app-v171.js is normally loaded after the profile's inline render(),
-  // so this succeeds immediately. Retries cover any exceptional page order.
-  if (!wrapRenderV205()) {
-    let tries = 0;
-    const timer = setInterval(() => {
-      tries++;
-      if (wrapRenderV205() || tries >= 20) clearInterval(timer);
-    }, 50);
-  }
+  installStyleV216();
+  formatRowsV216();
+  wrapRenderFunctionV216('render');
+  wrapRenderFunctionV216('renderWorkout');
 
-  // Final safety for changes made by harmonizer/session tools.
-  const observer = new MutationObserver(() => requestAnimationFrame(formatRowsV205));
-  observer.observe(document.documentElement, { childList:true, subtree:true });
+  // Les outils chargés après app-v171.js peuvent finaliser quelques éléments
+  // au chargement. Deux passages bornés suffisent, sans observer permanent.
+  window.addEventListener('load', afterRenderV216, { once:true });
+  setTimeout(afterRenderV216, 120);
+  setTimeout(afterRenderV216, 700);
+
+  window.GAPerformanceV216 = {
+    formatRows: formatRowsV216,
+    notifyRender: afterRenderV216
+  };
 })();
 
 

@@ -1,0 +1,110 @@
+V216 — PERFORMANCE / NETTOYAGE GLOBAL
+
+CHANGEMENTS DE PERFORMANCE
+
+1. MUTATION OBSERVERS
+V210 : 8 observers.
+V216 : 0 observer permanent.
+
+2. RENDU DES SÉRIES
+- suppression complète de V203 ;
+- suppression complète de V205 ;
+- un seul moteur V216 ;
+- "Série 1" et "5 reps à XX %" conservés ;
+- plus aucun scan permanent du document.
+
+3. CLOUD / SÉRIES
+- plus d'observer sur exerciseList ;
+- réconciliation uniquement après un vrai render() ;
+- les modifications DOM internes ne déclenchent plus de cascade.
+
+4. ACCESSOIRES
+- enrichissement après render() uniquement ;
+- observer supprimé.
+
+5. CHARGES
+- observer global document.documentElement supprimé ;
+- mise à niveau des champs après render() uniquement.
+
+6. BILAN DE SÉANCE
+- observer global supprimé ;
+- réparation uniquement lors des rendus/interactions utiles.
+
+7. COMPTE RENDU DE BLOC
+- observer body + attributes class supprimé ;
+- rafraîchissement sur les vrais changements de séance/rendu.
+
+8. CHRONOS
+- garde-fou chrono : 250 ms -> 1000 ms ;
+- durée des journées : 1000 ms -> 5000 ms ;
+- pas de rafraîchissement visuel inutile lorsque l'onglet est caché.
+
+9. RPG
+Au chargement de la page :
+- seulement progression XP/GL nécessaire.
+
+Au premier clic sur le RPG :
+- inventaire ;
+- collections ;
+- raid ;
+- destinataires ;
+- casino ;
+- blackjack ;
+- realtime RPG ;
+- polling raid.
+
+Les timers raid s'arrêtent quand le panneau RPG est fermé
+ou lorsque l'onglet navigateur est masqué.
+
+10. ACTIVITÉ
+- les 2 fils de 60 événements ne sont plus chargés au démarrage ;
+- chargement uniquement à l'ouverture du panneau Activité.
+
+FONCTIONS CONSERVÉES
+- plein écran ;
+- éditeur complet de programmation ;
+- sauvegarde cloud des programmes ;
+- RPE -> ECHEC ;
+- ligne rouge pour série échouée ;
+- aucun bouton échec ;
+- PR ;
+- accessoires ;
+- RPG ;
+- raid ;
+- casino ;
+- blackjack ;
+- forge ;
+- inventaire / bestiaire.
+
+NON-RÉGRESSION CONTRÔLÉE
+- Alexandre Bloc 1 V208 ;
+- Kaoutar Bloc 2 V206 ;
+- Killian Bloc 2 V197 ;
+- Marvin photo + programme corrigé ;
+- Gibertini 2 blocs ;
+- Gibertini Bloc 2 V215 audité ;
+- une seule carte Gibertini dans index.html.
+
+VALIDATION
+- app-v171.js : syntaxe OK ;
+- 45 pages athlètes vérifiées ;
+- 97 scripts inline vérifiés ;
+- toutes les vraies balises script chargent V216 ;
+- 0 MutationObserver permanent.
+
+TAILLE
+V210 : 732.0 Ko
+V216 : 730.3 Ko
+
+La grosse amélioration vient de la réduction du travail permanent,
+pas d'une simple minification.
+
+INSTALLATION
+Remplacer à la racine GitHub :
+- app-v171.js
+- toutes les pages HTML du ZIP
+- index.html
+
+Puis commit et faire un rechargement complet une fois.
+
+AUCUN SQL.

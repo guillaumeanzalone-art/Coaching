@@ -85,7 +85,7 @@ function startR(){rL=rT;document.getElementById("timerOverlay").classList.add("v
 function endSession(){if(cR){cR=false;cE+=(Date.now()-cS);cS=null;clearInterval(cI)}const exs=P.weeks[W].days[D].exercises;let tS=0,dS=0,ton=0;exs.forEach((ex,ei)=>{ex.blocks.forEach((b,bi)=>{for(let si=0;si<b.s;si++){const k=`${W}_${D}_${ei}_${bi}_${si}`;const lk=k+"_ld";tS++;if(sets[k]){dS++;const lv=parseFloat(loads[lk]);const reps=parseInt(b.r)||1;if(!isNaN(lv))ton+=lv*reps}}})});const pct=tS>0?Math.round(dS/tS*100):0;let t=cE;const m=Math.floor(t/60000),s=Math.floor((t%60000)/1000);document.getElementById("endPct").textContent=pct+"%";document.getElementById("endTime").textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;document.getElementById("endSets").textContent=dS+"/"+tS;document.getElementById("endTonnage").textContent=ton>0?(ton/1000).toFixed(1)+"t":"—";document.getElementById("endOverlay").classList.add("visible");save();uC()}function closeEnd(){document.getElementById("endOverlay").classList.remove("visible")}
 function showV(v){document.getElementById("workoutView").classList.toggle("hidden",v!=="workout");document.getElementById("notesView").classList.toggle("visible",v==="notes");document.querySelectorAll(".nav-item").forEach((n,i)=>n.classList.toggle("active",i===(v==="workout"?0:1)))}
 
-// V207 — pont sécurisé entre la page de programmation et app-v171.js?build=20260810-v210-no-fail-button.
+// V207 — pont sécurisé entre la page de programmation et app-v171.js?build=20260810-v216-performance
 window.GA_WORKOUT_PAGE={
   getProgram:()=>P,
   getWeek:()=>typeof W==='number'?W:((typeof S!=='undefined'&&Number.isFinite(Number(S.w)))?Number(S.w):0),
@@ -117,7 +117,7 @@ window.COACHING_ATHLETE={slug:"saya",name:"Saya",emoji:"🌋",profileImage:"avat
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app-v171.js?build=20260810-v210-no-fail-button"></script>
+<script src="app-v171.js?build=20260810-v216-performance"></script>
 <script src="session-tools.js?v=20260804-profils-athletes-v98"></script>
 <script src="program-harmonizer-v23.js?v=20260804-profils-athletes-v98"></script>
 </body>

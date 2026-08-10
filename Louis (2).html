@@ -398,7 +398,7 @@ document.getElementById("endOverlay").classList.add("visible");save();uC()}
 function closeEnd(){document.getElementById("endOverlay").classList.remove("visible")}
 function showV(v){document.getElementById("workoutView").classList.toggle("hidden",v!=="workout");document.getElementById("notesView").classList.toggle("visible",v==="notes");document.querySelectorAll(".nav-item").forEach((n,i)=>n.classList.toggle("active",i===(v==="workout"?0:1)))}
 
-// V207 — pont sécurisé entre la page de programmation et app-v171.js?build=20260810-v210-no-fail-button.
+// V207 — pont sécurisé entre la page de programmation et app-v171.js?build=20260810-v216-performance
 window.GA_WORKOUT_PAGE={
   getProgram:()=>P,
   getWeek:()=>typeof W==='number'?W:((typeof S!=='undefined'&&Number.isFinite(Number(S.w)))?Number(S.w):0),
@@ -436,7 +436,7 @@ window.COACHING_ATHLETE = {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app-v171.js?build=20260810-v210-no-fail-button"></script>
+<script src="app-v171.js?build=20260810-v216-performance"></script>
 <script src="session-tools.js?v=20260801-harmonisation-v23"></script>
 <script src="program-harmonizer-v23.js?v=20260801-harmonisation-v23"></script>
 </body>
