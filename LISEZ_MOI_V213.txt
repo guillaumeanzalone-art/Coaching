@@ -1,0 +1,36 @@
+V213 — GIBERTINI BLOC 2 : NOUVELLE PROGRAMMATION
+
+À REMPLACER SUR GITHUB
+- gibertini2.html uniquement
+
+INCHANGÉ
+- gibertini.html reste le Bloc 1
+- sélecteur Bloc 1 / Bloc 2 conservé
+- thème Burger King / N-word censuré conservé
+- V210 conservée
+- aucun changement index.html
+
+NOUVEAU BLOC 2
+- PDC : 80 kg
+- Squat : 255 kg
+- Bench : 160 kg
+- Deadlift : 305 kg
+- Total : 720 kg
+- 4 semaines
+- 5 séances par semaine
+- Jour 1
+- Jour 2
+- Mercredi
+- Jour 3
+- Jour 4
+- 176 lignes d'exercices
+- 316 séries prescrites
+
+NOUVELLE CLÉ
+gibertini_bloc2_nouvelle_prog_v213
+
+Cette nouvelle clé empêche l'ancien Bloc 2 V211 de se recharger
+depuis le cache local/cloud.
+
+AUCUN SQL.
+AUCUN app-v171.js.
