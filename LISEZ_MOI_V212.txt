@@ -1,0 +1,39 @@
+V212 — GIBERTINI 2 BLOCS
+
+CORRECTION
+Le programme Burger King fourni en V211 ne remplace plus le Bloc 1.
+
+STRUCTURE
+- gibertini.html = Bloc 1 d'origine
+- gibertini2.html = nouveau Bloc 2
+- les deux pages ont le sélecteur Bloc 1 / Bloc 2
+- index.html n'affiche qu'une seule carte Gibertini
+- gibertini2.html est ignoré comme carte séparée
+
+THÈME
+Le thème Burger King / Whopper / couronne / "N-word" censuré est appliqué
+au profil Gibertini sur les deux blocs.
+
+BLOC 2
+- PDC 80 kg
+- Squat 255 kg
+- Bench 160 kg
+- Deadlift 305 kg
+- Total 720 kg
+- clé : gibertini_burger_king_nword_v211
+
+V210 CONSERVÉE
+- plein écran
+- éditeur de programme
+- RPE -> ECHEC
+- ligne rouge en cas d'échec
+- aucun bouton d'échec
+
+INSTALLATION
+Remplacer à la racine GitHub :
+- gibertini.html
+- gibertini2.html
+- index.html
+
+AUCUN SQL.
+AUCUN app-v171.js.
