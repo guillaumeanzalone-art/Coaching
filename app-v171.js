@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V203';
+window.GA_APP_VERSION = 'V205';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-10-v203-series-reps-readable';
+window.GA_APP_BUILD = '2026-08-10-v205-series-reps-force';
 
 
 /* --------------------------------------------------------------------------
@@ -13132,5 +13132,168 @@ function collectionHtml() {
   }
 
   const observer = new MutationObserver(scheduleRepairV203);
+  observer.observe(document.documentElement, { childList:true, subtree:true });
+})();
+
+
+/* --------------------------------------------------------------------------
+   V205 — SÉRIES / REPS : MODE FORCÉ
+   Les pages athlètes construisent leurs lignes dans leur fonction globale
+   render(). V205 encapsule cette fonction et reformate les lignes après
+   CHAQUE rendu, en plus d'un premier passage immédiat.
+---------------------------------------------------------------------------- */
+(() => {
+  'use strict';
+
+  const FORCE_STYLE_ID = 'ga-series-force-v205';
+
+  function installForceStyleV205() {
+    if (document.getElementById(FORCE_STYLE_ID)) return;
+    const style = document.createElement('style');
+    style.id = FORCE_STYLE_ID;
+    style.textContent = `
+      .set-row{
+        gap:6px!important;
+      }
+      .set-row .set-num.ga-series-label-v205{
+        width:auto!important;
+        min-width:54px!important;
+        max-width:none!important;
+        height:28px!important;
+        padding:0 7px!important;
+        border-radius:7px!important;
+        flex:0 0 auto!important;
+        font-size:9px!important;
+        font-weight:900!important;
+        letter-spacing:-.02em!important;
+        white-space:nowrap!important;
+      }
+      .set-row .set-info.ga-reps-label-v205{
+        flex:1 1 auto!important;
+        min-width:84px!important;
+        line-height:1.25!important;
+      }
+      .set-row .set-info.ga-reps-label-v205 > strong:first-child{
+        display:inline!important;
+        font-size:10px!important;
+        font-weight:900!important;
+        white-space:nowrap!important;
+      }
+      .set-row .set-info.ga-reps-label-v205 > .pct-label.ga-pct-label-v205{
+        display:inline!important;
+        margin-left:2px!important;
+        font-size:9px!important;
+        font-weight:800!important;
+        white-space:nowrap!important;
+      }
+      .set-row .set-info.ga-reps-label-v205 > .load-range{
+        display:block!important;
+        margin-top:2px!important;
+      }
+      @media(max-width:390px){
+        .set-row .set-num.ga-series-label-v205{
+          min-width:50px!important;
+          padding:0 5px!important;
+          font-size:8px!important;
+        }
+        .set-row .set-info.ga-reps-label-v205{
+          min-width:72px!important;
+        }
+        .set-row .set-info.ga-reps-label-v205 > strong:first-child{
+          font-size:9px!important;
+        }
+        .set-row .set-info.ga-reps-label-v205 > .pct-label.ga-pct-label-v205{
+          font-size:8px!important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function formatRowsV205() {
+    installForceStyleV205();
+
+    document.querySelectorAll('.set-row').forEach((row, rowIndex) => {
+      const num = row.querySelector('.set-num');
+      if (num) {
+        const stored = Number(num.dataset.gaSeriesNumberV205);
+        const parsed = Number((String(num.textContent || '').match(/\d+/) || [])[0]);
+        const seriesNumber = Number.isFinite(stored) && stored > 0
+          ? stored
+          : (Number.isFinite(parsed) && parsed > 0 ? parsed : rowIndex + 1);
+
+        num.dataset.gaSeriesNumberV205 = String(seriesNumber);
+        num.textContent = `Série ${seriesNumber}`;
+        num.classList.add('ga-series-label-v205');
+      }
+
+      const info = row.querySelector('.set-info');
+      if (!info) return;
+      info.classList.add('ga-reps-label-v205');
+
+      const repsNode = info.querySelector('strong');
+      if (repsNode) {
+        const original = repsNode.dataset.gaRepsRawV205 || String(repsNode.textContent || '').trim();
+        if (!repsNode.dataset.gaRepsRawV205) repsNode.dataset.gaRepsRawV205 = original;
+
+        // 5 -> "5 reps", 1 -> "1 rep". Ranges / seconds / AMRAP remain unchanged.
+        if (/^\d+$/.test(original)) {
+          const reps = Number(original);
+          repsNode.textContent = `${reps} ${reps === 1 ? 'rep' : 'reps'}`;
+        }
+      }
+
+      const pct = info.querySelector('.pct-label');
+      if (pct) {
+        const originalPct = pct.dataset.gaPctRawV205 || String(pct.textContent || '').trim();
+        if (!pct.dataset.gaPctRawV205) pct.dataset.gaPctRawV205 = originalPct;
+
+        const match = originalPct.match(/^(\d+(?:[.,]\d+)?)\s*%$/);
+        if (match) {
+          pct.textContent = `à ${match[1]} %`;
+          pct.classList.add('ga-pct-label-v205');
+        }
+      }
+    });
+  }
+
+  function wrapRenderV205() {
+    const current = window.render;
+    if (typeof current !== 'function') {
+      formatRowsV205();
+      return false;
+    }
+    if (current.__gaSeriesV205Wrapped) {
+      formatRowsV205();
+      return true;
+    }
+
+    const wrapped = function(...args) {
+      const result = current.apply(this, args);
+      formatRowsV205();
+      requestAnimationFrame(formatRowsV205);
+      return result;
+    };
+    wrapped.__gaSeriesV205Wrapped = true;
+    wrapped.__gaSeriesV205Original = current;
+    window.render = wrapped;
+
+    formatRowsV205();
+    requestAnimationFrame(formatRowsV205);
+    return true;
+  }
+
+  // app-v171.js is normally loaded after the profile's inline render(),
+  // so this succeeds immediately. Retries cover any exceptional page order.
+  if (!wrapRenderV205()) {
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries++;
+      if (wrapRenderV205() || tries >= 20) clearInterval(timer);
+    }, 50);
+  }
+
+  // Final safety for changes made by harmonizer/session tools.
+  const observer = new MutationObserver(() => requestAnimationFrame(formatRowsV205));
   observer.observe(document.documentElement, { childList:true, subtree:true });
 })();

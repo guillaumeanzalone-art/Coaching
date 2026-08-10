@@ -1,0 +1,29 @@
+V205 — SÉRIE / REPS FORCÉS
+
+OBJECTIF
+Ancien :
+[1]  5 69%
+     180 - 192 kg
+
+Nouveau :
+[Série 1]  5 reps à 69 %
+           180 - 192 kg
+
+CORRECTION
+- app-v171.js encapsule directement la fonction render() des pages athlètes.
+- le format est réappliqué après chaque changement de semaine/jour/série.
+- toutes les pages athlètes du patch chargent désormais :
+  app-v171.js?build=20260810-v205-series-reps
+  afin d'empêcher le navigateur mobile de garder l'ancien V190/V203 en cache.
+
+INSTALLATION
+1. Décompresser le ZIP.
+2. Remplacer app-v171.js ET toutes les pages HTML présentes dans le ZIP.
+3. Commit GitHub.
+4. Attendre le déploiement puis recharger.
+
+AUCUN SQL.
+
+Pages HTML cache-bustées : 43
+Les versions récentes de Marvin, Killian Bloc 2, Janel/Lou/Metaknight Bloc 2
+ont été conservées.
