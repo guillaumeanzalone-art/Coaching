@@ -250,7 +250,7 @@ function startChrono(){chronoInt=setInterval(()=>{if(!S.sessionStart){document.g
 function switchView(v){document.querySelectorAll('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.view===v));document.getElementById('workoutView').classList.toggle('hidden',v!=='workout');document.getElementById('notesView').classList.toggle('visible',v==='notes');}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)save();});
 
-// V207 — pont sécurisé entre la page de programmation et app-v171.js?build=20260810-v207-tools.
+// V207 — pont sécurisé entre la page de programmation et app-v171.js?build=20260810-v210-no-fail-button.
 window.GA_WORKOUT_PAGE={
   getProgram:()=>P,
   getWeek:()=>typeof W==='number'?W:((typeof S!=='undefined'&&Number.isFinite(Number(S.w)))?Number(S.w):0),
@@ -290,7 +290,7 @@ window.COACHING_ATHLETE = {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app-v171.js?build=20260810-v207-tools"></script>
+<script src="app-v171.js?build=20260810-v210-no-fail-button"></script>
 <script src="session-tools.js?v=20260731-session-v2"></script>
 </body>
 </html>

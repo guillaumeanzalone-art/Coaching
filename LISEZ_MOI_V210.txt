@@ -1,0 +1,33 @@
+V210 — SUPPRESSION COMPLÈTE DU BOUTON ÉCHEC
+
+CHANGEMENT
+- Le bouton rouge ✕ est supprimé partout.
+- Aucun bouton d'échec sur les accessoires.
+- Aucun bouton d'échec sur Squat / Bench / Deadlift.
+
+DÉSORMAIS
+Pour Squat / Bench / Deadlift :
+RPE -> ECHEC
+
+Quand ECHEC est sélectionné :
+- toute la série devient rouge ;
+- la série est enregistrée comme échouée ;
+- pas de XP / PR / publication performance.
+
+Si un RPE numérique est remis ensuite :
+- la série redevient une réussite.
+
+ACCESSOIRES
+- aucun champ RPE ;
+- aucune option ECHEC ;
+- aucun bouton ✕.
+
+INSTALLATION
+Remplacer :
+- app-v171.js
+- toutes les pages HTML présentes dans le ZIP
+
+AUCUN NOUVEAU SQL.
+Le SQL V207 déjà installé reste utilisé.
+
+Pages HTML cache-bustées : 44

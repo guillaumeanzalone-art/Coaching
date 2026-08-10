@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V207';
+window.GA_APP_VERSION = 'V210';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-10-v207-fullscreen-program-editor-failed-set';
+window.GA_APP_BUILD = '2026-08-10-v210-no-fail-button';
 
 
 /* --------------------------------------------------------------------------
@@ -9109,21 +9109,57 @@ function collectionHtml() {
     if (failed) failedSetKeysV207.add(key); else failedSetKeysV207.delete(key);
     writeFailedSetCacheV207();
   }
+  function rpeSelectV209(row) {
+    return row?.querySelector('select.rpe-select,select.set-rpe,select[data-rpe],select[name*="rpe" i],select[aria-label*="rpe" i]') || null;
+  }
+
+  function removeLegacyFailButtonsV210(root = document) {
+    root?.querySelectorAll?.('.ga-set-fail-v207').forEach(button => button.remove());
+  }
+
+  function ensureRpeFailureOptionV209(row, w, d, idx) {
+    const select = rpeSelectV209(row);
+    if (!select || detectRowCode(row) === 'ac') return;
+
+    let option = [...select.options].find(item => item.value === '__FAILED__');
+    if (!option) {
+      option = document.createElement('option');
+      option.value = '__FAILED__';
+      option.textContent = 'ECHEC';
+      select.appendChild(option);
+    }
+
+    select.dataset.gaFailureOptionV209 = '1';
+    const failed = isSetFailedV207(w, d, idx);
+    select.classList.toggle('ga-rpe-failed-v209', failed);
+
+    if (failed) {
+      select.value = '__FAILED__';
+      select.setAttribute('aria-label', 'RPE — série en échec');
+      select.title = 'ECHEC — choisir un RPE numérique pour transformer la série en réussite.';
+    } else {
+      if (select.value === '__FAILED__') select.value = '';
+      select.setAttribute('aria-label', 'RPE ou ECHEC');
+      select.title = 'Choisis le RPE ou ECHEC si la série est ratée.';
+    }
+  }
+
   function decorateFailedRowV207(row, w, d, idx) {
     if (!row) return;
     const failed = isSetFailedV207(w, d, idx);
     row.classList.toggle('ga-set-failed-v207', failed);
+    row.dataset.setOutcome = failed ? 'failed' : 'success';
+
     const box = checkboxFor(row);
     if (failed && box) {
       box.classList.remove('checked');
       box.setAttribute('aria-checked', 'false');
     }
-    const fail = row.querySelector('.ga-set-fail-v207');
-    if (fail) {
-      fail.classList.toggle('active', failed);
-      fail.setAttribute('aria-pressed', failed ? 'true' : 'false');
-      fail.title = failed ? 'Série marquée échouée — toucher pour annuler' : 'Marquer la série comme échouée';
-    }
+
+    // V210 — aucun bouton ✕ : uniquement RPE -> ECHEC.
+    row.querySelectorAll('.ga-set-fail-v207').forEach(button => button.remove());
+
+    ensureRpeFailureOptionV209(row, w, d, idx);
   }
 
   const style = document.createElement('style');
@@ -9135,7 +9171,39 @@ function collectionHtml() {
     .ga-stable-load-v158.ga-load-error-v158{border-color:#ff6d6d!important;box-shadow:0 0 0 2px rgba(255,109,109,.12)!important}
     .set-check,.check-btn,[data-cloud-checkbox]{min-width:40px!important;width:40px!important;min-height:40px!important;height:40px!important;flex:0 0 40px!important;touch-action:manipulation;user-select:none;-webkit-user-select:none}
     .set-check:focus-visible,.check-btn:focus-visible,[data-cloud-checkbox]:focus-visible{outline:2px solid var(--accent,#f0c44d)!important;outline-offset:2px}
-    .ga-set-fail-v207{min-width:40px;width:40px;height:40px;flex:0 0 40px;border-radius:10px;border:1px solid rgba(255,88,88,.28);background:rgba(255,70,70,.08);color:#ff8c8c;font:950 15px Inter,system-ui,sans-serif;cursor:pointer;touch-action:manipulation}.ga-set-fail-v207.active{background:#b82f3b;border-color:#e95c67;color:#fff;box-shadow:0 0 0 2px rgba(232,69,83,.12)}.set-row.ga-set-failed-v207{background:rgba(155,35,47,.15)!important;border:1px solid rgba(235,73,87,.33)!important}.set-row.ga-set-failed-v207 .set-num{background:#a92e39!important;color:#fff!important}.set-row.ga-set-failed-v207 .set-info strong{color:#ffb0b7!important}
+    .set-row.ga-set-failed-v207{
+      background:linear-gradient(135deg,rgba(178,34,49,.82),rgba(95,15,26,.88))!important;
+      border:2px solid #ff5967!important;
+      box-shadow:0 0 0 2px rgba(255,70,86,.12),0 8px 24px rgba(120,0,14,.24)!important;
+    }
+    .set-row.ga-set-failed-v207 .set-num{
+      background:#ff5967!important;color:#fff!important;border-color:#ff98a1!important;
+    }
+    .set-row.ga-set-failed-v207 .set-info,
+    .set-row.ga-set-failed-v207 .set-info strong,
+    .set-row.ga-set-failed-v207 .set-info span{
+      color:#fff!important;
+    }
+    .set-row.ga-set-failed-v207 .load-input,
+    .set-row.ga-set-failed-v207 .set-load,
+    .set-row.ga-set-failed-v207 .cloud-athlete-load,
+    .set-row.ga-set-failed-v207 .load-select,
+    .set-row.ga-set-failed-v207 .rpe-select,
+    .set-row.ga-set-failed-v207 .rpe-input,
+    .set-row.ga-set-failed-v207 .set-rpe{
+      background:#671720!important;
+      border-color:#ff8290!important;
+      color:#fff!important;
+    }
+    .rpe-select.ga-rpe-failed-v209{
+      min-width:76px!important;
+      background:#b82f3b!important;
+      border-color:#ff7f8b!important;
+      color:#fff!important;
+      font-weight:950!important;
+    }
+    .rpe-select option[value="__FAILED__"]{font-weight:900;}
+
     @media (max-width:370px){.ga-stable-load-v158{width:72px!important;min-width:72px!important;font-size:13px!important}}
 
     .cloud-athlete-rpe:focus,.cloud-athlete-load:focus{border-color:var(--accent,#55b9e6)}
@@ -10100,15 +10168,9 @@ function collectionHtml() {
     if (!box) return;
     box.dataset.cloudCheckbox = '1';
 
-    let failButtonV207 = row.querySelector('.ga-set-fail-v207');
-    if (!failButtonV207) {
-      failButtonV207 = document.createElement('button');
-      failButtonV207.type = 'button';
-      failButtonV207.className = 'ga-set-fail-v207';
-      failButtonV207.textContent = '✕';
-      failButtonV207.setAttribute('aria-label', 'Marquer la série comme échouée');
-      box.before(failButtonV207);
-    }
+    // V210 — plus aucun bouton d'échec.
+    // L'échec SBD passe uniquement par la liste RPE -> ECHEC.
+    row.querySelectorAll('.ga-set-fail-v207').forEach(button => button.remove());
     decorateFailedRowV207(row, w, d, idx);
 
     const code = detectRowCode(row);
@@ -10164,6 +10226,7 @@ function collectionHtml() {
       setOriginalRpe(w, d, idx, cachedRpe, row);
       writeControlValue(rpeInput || rpeControl, cachedRpe, 'rpe');
     }
+    ensureRpeFailureOptionV209(row, w, d, idx);
     improveLoadChoiceV125(row, idx, w, d);
   }
 
@@ -10840,50 +10903,6 @@ function collectionHtml() {
     }, true);
 
     document.addEventListener('click', event => {
-      const failButton = event.target.closest('.ga-set-fail-v207');
-      const row = failButton?.closest('.set-row');
-      if (!failButton || !row || !exerciseContainer()?.contains(row)) return;
-
-      event.preventDefault();
-      event.stopImmediatePropagation();
-
-      const idx = Number(row.dataset.cloudSetIndex);
-      if (!Number.isInteger(idx)) return;
-      const { w, d } = currentIndices();
-      if (cloudReady && !CoachingCloud.canEditAthlete(cfg.slug)) {
-        CoachingCloud.toast(`Ce compte ne peut pas modifier la programmation de ${cfg.name}.`, true);
-        return;
-      }
-
-      const nextFailed = !isSetFailedV207(w, d, idx);
-      const meta = durableSetMeta(rowMeta(row, idx, w, d), row);
-      persistSetValues(meta, row, { dirty: true });
-      setFailedStateV207(w, d, idx, nextFailed);
-
-      // Une série échouée compte comme tentée/terminée dans la séance,
-      // mais n'accorde ni XP, ni PR, ni activité de performance.
-      setOriginalLoad(w, d, idx, meta.load, row);
-      if (meta.code === 'ac') setOriginalRpe(w, d, idx, '', row);
-      else setOriginalRpe(w, d, idx, meta.rpe, row);
-      setOriginalCompleted(w, d, idx, nextFailed, row);
-      rememberLocalCompletion(meta, nextFailed);
-      cacheInputs(meta, { dirty: true });
-      persistOriginal();
-      renderOriginal();
-
-      setTimeout(() => {
-        const currentRow = rows()[idx] || row;
-        decorateFailedRowV207(currentRow, w, d, idx);
-        renderDayDurations();
-        syncSet({ ...meta }, nextFailed, {
-          checkPr: false,
-          awardXp: false,
-          failed: nextFailed
-        });
-      }, 90);
-    }, true);
-
-    document.addEventListener('click', event => {
       const checkbox = event.target.closest('[data-cloud-checkbox],.set-check,.check-btn');
       const row = checkbox?.closest('.set-row');
       if (!checkbox || !row || !exerciseContainer()?.contains(row)) return;
@@ -11041,6 +11060,95 @@ function collectionHtml() {
 
     document.addEventListener('change', event => {
       const input = event.target.closest('[data-cloud-load],.cloud-athlete-rpe,.cloud-athlete-load,.load-select,.load-input,.set-load,.rpe-select,.rpe-input,.set-rpe,.accessory-time-v22');
+
+      // V209 — "ECHEC" fait partie de la liste RPE.
+      // On intercepte cette valeur avant le onchange natif sRPE(), qui n'accepte
+      // que des nombres.
+      const failureSelectV209 = input?.matches?.('select.rpe-select,select.set-rpe,select[data-rpe],select[name*="rpe" i],select[aria-label*="rpe" i"]')
+        ? input
+        : null;
+      const failureRowV209 = failureSelectV209?.closest('.set-row');
+
+      if (failureSelectV209 && failureRowV209 && exerciseContainer()?.contains(failureRowV209)) {
+        const idxV209 = Number(failureRowV209.dataset.cloudSetIndex);
+        const indicesV209 = currentIndices();
+
+        if (Number.isInteger(idxV209)) {
+          const wasFailedV209 = isSetFailedV207(indicesV209.w, indicesV209.d, idxV209);
+
+          if (failureSelectV209.value === '__FAILED__') {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+
+            if (cloudReady && !CoachingCloud.canEditAthlete(cfg.slug)) {
+              CoachingCloud.toast(`Ce compte ne peut pas modifier la programmation de ${cfg.name}.`, true);
+              ensureRpeFailureOptionV209(failureRowV209, indicesV209.w, indicesV209.d, idxV209);
+              return;
+            }
+
+            const metaV209 = durableSetMeta(
+              rowMeta(failureRowV209, idxV209, indicesV209.w, indicesV209.d),
+              failureRowV209
+            );
+
+            // Un échec n'a pas de RPE numérique.
+            metaV209.rpe = null;
+            setFailedStateV207(indicesV209.w, indicesV209.d, idxV209, true);
+            setOriginalRpe(indicesV209.w, indicesV209.d, idxV209, '', failureRowV209);
+            setOriginalCompleted(indicesV209.w, indicesV209.d, idxV209, true, failureRowV209);
+            rememberLocalCompletion(metaV209, true);
+            cacheInputs(metaV209, { dirty: true, allowRpeClear: true });
+            persistOriginal();
+
+            decorateFailedRowV207(failureRowV209, indicesV209.w, indicesV209.d, idxV209);
+            renderDayDurations();
+
+            syncSet(metaV209, true, {
+              checkPr: false,
+              awardXp: false,
+              failed: true
+            });
+
+            return;
+          }
+
+          // La série était en ECHEC et l'athlète choisit ensuite un RPE numérique :
+          // on transforme la série en réussite sans demander de recliquer sur ✓.
+          if (wasFailedV209 && failureSelectV209.value !== '__FAILED__') {
+            event.stopPropagation();
+
+            const numericRpeV209 = normalizeRpeValue(failureSelectV209.value);
+            if (numericRpeV209 !== null) {
+              setFailedStateV207(indicesV209.w, indicesV209.d, idxV209, false);
+              setOriginalRpe(indicesV209.w, indicesV209.d, idxV209, numericRpeV209, failureRowV209);
+              setOriginalCompleted(indicesV209.w, indicesV209.d, idxV209, true, failureRowV209);
+
+              const metaV209 = durableSetMeta(
+                rowMeta(failureRowV209, idxV209, indicesV209.w, indicesV209.d),
+                failureRowV209
+              );
+              metaV209.rpe = numericRpeV209;
+
+              cacheInputs(metaV209, { dirty: true });
+              rememberLocalCompletion(metaV209, true);
+              persistOriginal();
+
+              failureRowV209.classList.add('completed', 'done');
+              decorateFailedRowV207(failureRowV209, indicesV209.w, indicesV209.d, idxV209);
+              checkboxFor(failureRowV209)?.classList.add('checked');
+              checkboxFor(failureRowV209)?.setAttribute('aria-checked', 'true');
+
+              syncSet(metaV209, true, {
+                checkPr: true,
+                awardXp: true,
+                failed: false
+              });
+              renderDayDurations();
+            }
+          }
+        }
+      }
+
       const stableLoadV186 = isStableLoadInputV158(input);
       if (stableLoadV186) commitStableLoadInputV158(input, { restorePreviousWhenEmpty: true });
       const row = input?.closest('.set-row');
