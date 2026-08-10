@@ -1,0 +1,34 @@
+V208 — ALEXANDRE BLOC 1 CORRIGÉ
+
+À REMPLACER SUR GITHUB
+- Alexandre.html uniquement
+
+BLOC 1
+- Poids : 74 kg
+- Squat : 222,5 kg
+- Bench : 145 kg
+- Deadlift : 255 kg
+- Total : 622,5 kg
+- 4 semaines
+- 5 séances par semaine
+- 176 lignes d'exercices
+- 428 séries prescrites
+
+CORRECTION DE L'ANCIEN BUG
+L'ancien programme Alexandre utilisait la propriété "name" pour ses semaines,
+alors que la page affiche P.weeks[i].label.
+Le nouveau programme utilise correctement :
+S1 / S2 / S3 / S4.
+
+NOUVELLE CLÉ
+alexandre_bloc1_corrige_4_semaines_v208
+
+Elle évite qu'un ancien état local/cloud du Bloc 1 buggué se recharge.
+
+V207 CONSERVÉ
+- plein écran
+- modification de programme
+- bouton série échouée
+
+AUCUN SQL.
+AUCUN app-v171.js.
