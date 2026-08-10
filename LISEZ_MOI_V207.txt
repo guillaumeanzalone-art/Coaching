@@ -1,0 +1,21 @@
+V207 — PLEIN ECRAN / EDITEUR DE PROG / SERIE ECHOUEE
+
+NOUVEAU
+- Bouton ⛶ : plein écran. Sur iPhone, fallback plein écran interne si Safari refuse l'API Fullscreen.
+- Bouton ✏️ : modification complète du programme autorisé sur son propre profil / coach.
+- Modification : semaines, jours, nom/emoji, exercices, type, intention, blocs, séries, reps, %, intensité, plage de charge.
+- Ajout/suppression : semaine, jour, exercice, bloc de séries.
+- Sauvegarde locale immédiate + sauvegarde Supabase si le SQL V207 est installé.
+- Bouton ✕ rouge sur chaque série : série échouée.
+- Une série échouée compte comme tentée/terminée mais ne donne pas XP, PR ni publication de performance.
+- Cliquer sur la coche verte d'une série échouée la convertit en réussite.
+- Le compte rendu PDF affiche ECHOUEE pour ces séries.
+
+INSTALLATION
+1. Exécuter séparément PATCH_SUPABASE_V207_PROGRAM_EDITOR_FAILED_SET.sql dans Supabase.
+2. Décompresser ce ZIP.
+3. Remplacer app-v171.js ET toutes les pages HTML présentes dans le ZIP.
+4. Commit GitHub puis recharger.
+
+AUCUN SQL DANS LE ZIP.
+Pages HTML mises à jour : 44

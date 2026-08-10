@@ -1,10 +1,10 @@
 window.GA_VALIDATION_SERIES_BUILD = 'V113';
-window.GA_APP_VERSION = 'V205';
+window.GA_APP_VERSION = 'V207';
 /* GA Coaching — bundle unifié
    Build: 2026-07-31-session-v2
    Contient: cloud-common, données PR, PR manuels/automatiques, RPG/XP et synchronisation athlète.
 */
-window.GA_APP_BUILD = '2026-08-10-v205-series-reps-force';
+window.GA_APP_BUILD = '2026-08-10-v207-fullscreen-program-editor-failed-set';
 
 
 /* --------------------------------------------------------------------------
@@ -9087,6 +9087,45 @@ function collectionHtml() {
   const cacheKey = `ga-cloud-inputs:${cfg.slug}:${cfg.programKey}`;
   let inputCache = readCache();
 
+  // V207 — résultat de série : réussite / échec.
+  const failedSetCacheKeyV207 = `ga-failed-sets-v207:${cfg.slug}:${cfg.programKey}`;
+  let failedSetKeysV207 = new Set(readFailedSetCacheV207());
+
+  function failedSetKeyV207(w, d, idx) { return `${w}|${d}|${idx}`; }
+  function readFailedSetCacheV207() {
+    try {
+      const rows = JSON.parse(localStorage.getItem(failedSetCacheKeyV207) || '[]');
+      return Array.isArray(rows) ? rows.map(String) : [];
+    } catch (_) { return []; }
+  }
+  function writeFailedSetCacheV207() {
+    try { localStorage.setItem(failedSetCacheKeyV207, JSON.stringify([...failedSetKeysV207])); } catch (_) {}
+  }
+  function isSetFailedV207(w, d, idx) {
+    return failedSetKeysV207.has(failedSetKeyV207(w, d, idx));
+  }
+  function setFailedStateV207(w, d, idx, failed) {
+    const key = failedSetKeyV207(w, d, idx);
+    if (failed) failedSetKeysV207.add(key); else failedSetKeysV207.delete(key);
+    writeFailedSetCacheV207();
+  }
+  function decorateFailedRowV207(row, w, d, idx) {
+    if (!row) return;
+    const failed = isSetFailedV207(w, d, idx);
+    row.classList.toggle('ga-set-failed-v207', failed);
+    const box = checkboxFor(row);
+    if (failed && box) {
+      box.classList.remove('checked');
+      box.setAttribute('aria-checked', 'false');
+    }
+    const fail = row.querySelector('.ga-set-fail-v207');
+    if (fail) {
+      fail.classList.toggle('active', failed);
+      fail.setAttribute('aria-pressed', failed ? 'true' : 'false');
+      fail.title = failed ? 'Série marquée échouée — toucher pour annuler' : 'Marquer la série comme échouée';
+    }
+  }
+
   const style = document.createElement('style');
   style.textContent = `
     .cloud-athlete-rpe,.cloud-athlete-load{width:58px;min-width:0;padding:5px 5px;border-radius:7px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:inherit;font:700 11px Inter,system-ui,sans-serif;text-align:center;outline:none}
@@ -9096,6 +9135,7 @@ function collectionHtml() {
     .ga-stable-load-v158.ga-load-error-v158{border-color:#ff6d6d!important;box-shadow:0 0 0 2px rgba(255,109,109,.12)!important}
     .set-check,.check-btn,[data-cloud-checkbox]{min-width:40px!important;width:40px!important;min-height:40px!important;height:40px!important;flex:0 0 40px!important;touch-action:manipulation;user-select:none;-webkit-user-select:none}
     .set-check:focus-visible,.check-btn:focus-visible,[data-cloud-checkbox]:focus-visible{outline:2px solid var(--accent,#f0c44d)!important;outline-offset:2px}
+    .ga-set-fail-v207{min-width:40px;width:40px;height:40px;flex:0 0 40px;border-radius:10px;border:1px solid rgba(255,88,88,.28);background:rgba(255,70,70,.08);color:#ff8c8c;font:950 15px Inter,system-ui,sans-serif;cursor:pointer;touch-action:manipulation}.ga-set-fail-v207.active{background:#b82f3b;border-color:#e95c67;color:#fff;box-shadow:0 0 0 2px rgba(232,69,83,.12)}.set-row.ga-set-failed-v207{background:rgba(155,35,47,.15)!important;border:1px solid rgba(235,73,87,.33)!important}.set-row.ga-set-failed-v207 .set-num{background:#a92e39!important;color:#fff!important}.set-row.ga-set-failed-v207 .set-info strong{color:#ffb0b7!important}
     @media (max-width:370px){.ga-stable-load-v158{width:72px!important;min-width:72px!important;font-size:13px!important}}
 
     .cloud-athlete-rpe:focus,.cloud-athlete-load:focus{border-color:var(--accent,#55b9e6)}
@@ -10060,6 +10100,17 @@ function collectionHtml() {
     if (!box) return;
     box.dataset.cloudCheckbox = '1';
 
+    let failButtonV207 = row.querySelector('.ga-set-fail-v207');
+    if (!failButtonV207) {
+      failButtonV207 = document.createElement('button');
+      failButtonV207.type = 'button';
+      failButtonV207.className = 'ga-set-fail-v207';
+      failButtonV207.textContent = '✕';
+      failButtonV207.setAttribute('aria-label', 'Marquer la série comme échouée');
+      box.before(failButtonV207);
+    }
+    decorateFailedRowV207(row, w, d, idx);
+
     const code = detectRowCode(row);
     const isAccessoryRow = code === 'ac';
     removeLegacyDuplicateControls(row, code);
@@ -10371,10 +10422,10 @@ function collectionHtml() {
     if (!cloudReady) return;
     let result = await CoachingCloud.client
       .from('workout_sets')
-      .select('week_index,day_index,set_index,load_kg,rpe,completed,completed_at,updated_at,prescribed_load_min_kg,prescribed_load_max_kg')
+      .select('week_index,day_index,set_index,load_kg,rpe,completed,set_outcome,completed_at,updated_at,prescribed_load_min_kg,prescribed_load_max_kg')
       .eq('athlete_slug', cfg.slug)
       .eq('program_key', cfg.programKey);
-    if (result.error && /completed_at|updated_at/i.test(result.error.message || '')) {
+    if (result.error && /set_outcome|completed_at|updated_at/i.test(result.error.message || '')) {
       result = await CoachingCloud.client
         .from('workout_sets')
         .select('week_index,day_index,set_index,load_kg,rpe,completed,prescribed_load_min_kg,prescribed_load_max_kg')
@@ -10387,6 +10438,12 @@ function collectionHtml() {
       return;
     }
     remoteRows = new Map((result.data || []).map(row => [remoteKey(row.week_index, row.day_index, row.set_index), row]));
+    if ((result.data || []).some(row => Object.prototype.hasOwnProperty.call(row, 'set_outcome'))) {
+      failedSetKeysV207 = new Set((result.data || [])
+        .filter(row => row.completed && row.set_outcome === 'failed')
+        .map(row => failedSetKeyV207(Number(row.week_index), Number(row.day_index), Number(row.set_index))));
+      writeFailedSetCacheV207();
+    }
     scheduleReconcile();
     renderDayDurations();
   }
@@ -10414,6 +10471,7 @@ function collectionHtml() {
       reps: strictSmallInt(meta.reps, 1, 1),
       load_kg: normalizeLoadValue(meta.load),
       completed: !!completed,
+      set_outcome: completed && isSetFailedV207(meta.w, meta.d, meta.idx) ? 'failed' : 'success',
       completed_by: CoachingCloud.session.user.id,
       completed_at: completed ? now : null
     };
@@ -10430,6 +10488,7 @@ function collectionHtml() {
     const client = CoachingCloud.client;
     const updatePayload = {
       completed: !!payload.completed,
+      set_outcome: payload.set_outcome || 'success',
       completed_by: payload.completed_by,
       completed_at: payload.completed_at
     };
@@ -10472,6 +10531,7 @@ function collectionHtml() {
         reps: strictSmallInt(cleanPayload.reps, 1, 1),
         load_kg: normalizeLoadValue(cleanPayload.load_kg),
         completed: !!cleanPayload.completed,
+        set_outcome: cleanPayload.set_outcome || 'success',
         completed_by: cleanPayload.completed_by,
         completed_at: cleanPayload.completed_at
       };
@@ -10547,6 +10607,8 @@ function collectionHtml() {
 
     const setKey = activitySetKey(meta.w, meta.d, meta.idx);
     const publishActivity = completed
+      && !options.failed
+      && !isSetFailedV207(meta.w, meta.d, meta.idx)
       && meta.load !== null
       && (meta.code === 'ac' || meta.rpe !== null);
     let prResult = null;
@@ -10554,7 +10616,7 @@ function collectionHtml() {
       prResult = await CoachingPR.registerIfBetter(meta, now);
     }
     let xpResult = null;
-    if (completed && options.awardXp && window.CoachingXP) {
+    if (completed && !options.failed && !isSetFailedV207(meta.w, meta.d, meta.idx) && options.awardXp && window.CoachingXP) {
       xpResult = await CoachingXP.awardForSet(meta, prResult, sessionStructure());
     }
     if (publishActivity) {
@@ -10778,6 +10840,50 @@ function collectionHtml() {
     }, true);
 
     document.addEventListener('click', event => {
+      const failButton = event.target.closest('.ga-set-fail-v207');
+      const row = failButton?.closest('.set-row');
+      if (!failButton || !row || !exerciseContainer()?.contains(row)) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      const idx = Number(row.dataset.cloudSetIndex);
+      if (!Number.isInteger(idx)) return;
+      const { w, d } = currentIndices();
+      if (cloudReady && !CoachingCloud.canEditAthlete(cfg.slug)) {
+        CoachingCloud.toast(`Ce compte ne peut pas modifier la programmation de ${cfg.name}.`, true);
+        return;
+      }
+
+      const nextFailed = !isSetFailedV207(w, d, idx);
+      const meta = durableSetMeta(rowMeta(row, idx, w, d), row);
+      persistSetValues(meta, row, { dirty: true });
+      setFailedStateV207(w, d, idx, nextFailed);
+
+      // Une série échouée compte comme tentée/terminée dans la séance,
+      // mais n'accorde ni XP, ni PR, ni activité de performance.
+      setOriginalLoad(w, d, idx, meta.load, row);
+      if (meta.code === 'ac') setOriginalRpe(w, d, idx, '', row);
+      else setOriginalRpe(w, d, idx, meta.rpe, row);
+      setOriginalCompleted(w, d, idx, nextFailed, row);
+      rememberLocalCompletion(meta, nextFailed);
+      cacheInputs(meta, { dirty: true });
+      persistOriginal();
+      renderOriginal();
+
+      setTimeout(() => {
+        const currentRow = rows()[idx] || row;
+        decorateFailedRowV207(currentRow, w, d, idx);
+        renderDayDurations();
+        syncSet({ ...meta }, nextFailed, {
+          checkPr: false,
+          awardXp: false,
+          failed: nextFailed
+        });
+      }, 90);
+    }, true);
+
+    document.addEventListener('click', event => {
       const checkbox = event.target.closest('[data-cloud-checkbox],.set-check,.check-btn');
       const row = checkbox?.closest('.set-row');
       if (!checkbox || !row || !exerciseContainer()?.contains(row)) return;
@@ -10786,6 +10892,7 @@ function collectionHtml() {
       if (!Number.isInteger(idx)) return;
       const { w, d } = currentIndices();
       const wasCompleted = originalCompleted(w, d, idx, row);
+      const wasFailedV207 = isSetFailedV207(w, d, idx);
       const meta = rowMeta(row, idx, w, d);
 
       if (cloudReady && !CoachingCloud.canEditAthlete(cfg.slug)) {
@@ -10804,7 +10911,8 @@ function collectionHtml() {
 
       persistSetValues(meta, row, { dirty: true });
       const preClickMeta = durableSetMeta(meta, row);
-      const nextCompleted = !wasCompleted;
+      const nextCompleted = wasFailedV207 ? true : !wasCompleted;
+      if (wasFailedV207) setFailedStateV207(w, d, idx, false);
 
       if (nextCompleted && ['sq', 'bn', 'dl'].includes(preClickMeta.code) && preClickMeta.load === null) {
         const loadSelect = row.querySelector('.load-select');
@@ -10816,11 +10924,11 @@ function collectionHtml() {
         }
       }
       const booleanKey = extractBooleanSetKey(row);
-      const visibleSetNumber = Math.max(1, Number(row.querySelector('.set-num')?.textContent) || (idx + 1));
+      const visibleSetNumber = Math.max(1, Number(String(row.querySelector('.set-num')?.textContent || '').match(/\d+/)?.[0]) || (idx + 1));
       const loadForTimer = preClickMeta.load === null ? '' : String(preClickMeta.load);
       let nativeToggleRan = false;
 
-      if (cfg.adapter === 'boolean' && booleanKey && typeof window.tog === 'function') {
+      if (!wasFailedV207 && cfg.adapter === 'boolean' && booleanKey && typeof window.tog === 'function') {
         try {
           window.tog(
             booleanKey,
@@ -10884,9 +10992,11 @@ function collectionHtml() {
         confirmedBox?.setAttribute('aria-checked', nextCompleted ? 'true' : 'false');
 
         renderDayDurations();
+        decorateFailedRowV207(confirmedRow, w, d, idx);
         syncSet(finalMeta, nextCompleted, {
-          checkPr: !wasCompleted && nextCompleted,
-          awardXp: !wasCompleted && nextCompleted
+          checkPr: !wasCompleted && nextCompleted && !wasFailedV207,
+          awardXp: !wasCompleted && nextCompleted && !wasFailedV207,
+          failed: false
         });
       }, 90);
     }, true);
@@ -12138,7 +12248,7 @@ function collectionHtml() {
     const client = CoachingCloud.client;
     const base = query => query.eq('athlete_slug', cfg.slug).eq('program_key', String(cfg.programKey));
     const [setsResult, statusResult, sessionsResult] = await Promise.all([
-      base(client.from('workout_sets').select('week_index,day_index,set_index,exercise_code,exercise_name,reps,load_kg,rpe,completed,completed_at,prescribed_load_min_kg,prescribed_load_max_kg')),
+      base(client.from('workout_sets').select('week_index,day_index,set_index,exercise_code,exercise_name,reps,load_kg,rpe,completed,set_outcome,completed_at,prescribed_load_min_kg,prescribed_load_max_kg')),
       base(client.from('workout_day_status').select('athlete_slug,program_key,week_index,day_index,status,duration_seconds,total_sets,completed_sets,xp_penalty,resolved_at,updated_at')),
       base(client.from('workout_sessions').select('week_index,day_index,total_sets,sbd_sets,accessory_sets,started_at,completed_at,actual_seconds,speed_multiplier,speed_bonus'))
     ]);
@@ -12308,7 +12418,7 @@ function collectionHtml() {
     const client = CoachingCloud.client;
     const base = query => query.eq('athlete_slug', cfg.slug).eq('program_key', String(cfg.programKey));
     const [setsResult, checkinsResult, statusResult, sessionsResult] = await Promise.all([
-      base(client.from('workout_sets').select('week_index,day_index,set_index,exercise_code,exercise_name,reps,load_kg,rpe,completed,completed_at,prescribed_load_min_kg,prescribed_load_max_kg')),
+      base(client.from('workout_sets').select('week_index,day_index,set_index,exercise_code,exercise_name,reps,load_kg,rpe,completed,set_outcome,completed_at,prescribed_load_min_kg,prescribed_load_max_kg')),
       base(client.from('workout_checkins').select('week_index,day_index,hydration_liters,upper_pain,lower_pain,sleep_hours,steps,notes,updated_at')),
       base(client.from('workout_day_status').select('week_index,day_index,status,duration_seconds,total_sets,completed_sets,xp_penalty,resolved_at,updated_at')),
       base(client.from('workout_sessions').select('week_index,day_index,total_sets,sbd_sets,accessory_sets,started_at,completed_at,actual_seconds,speed_multiplier,speed_bonus'))
@@ -12408,7 +12518,7 @@ function collectionHtml() {
       addHeading('Détail des séries');
       day.performedSets.forEach((set, index) => {
         const remote = set.remote || {};
-        const done = remote.completed ? 'OK' : day.status === 'skipped' ? 'NON FAITE' : 'INCOMPLÈTE';
+        const done = remote.completed ? (remote.set_outcome === 'failed' ? 'ÉCHEC' : 'OK') : day.status === 'skipped' ? 'NON FAITE' : 'INCOMPLÈTE';
         const variant = set.variant ? ` - ${set.variant}` : '';
         const prescribed = [set.reps ? `${set.reps} reps` : '', set.percent !== null ? `${set.percent} %` : '', set.prescribedLoad ? `cible ${set.prescribedLoad}` : ''].filter(Boolean).join(' - ');
         const actual = [remote.load_kg !== null && remote.load_kg !== undefined ? `${remote.load_kg} kg` : '', remote.rpe !== null && remote.rpe !== undefined ? `RPE ${remote.rpe}` : ''].filter(Boolean).join(' - ') || 'aucune donnée';
@@ -13296,4 +13406,158 @@ function collectionHtml() {
   // Final safety for changes made by harmonizer/session tools.
   const observer = new MutationObserver(() => requestAnimationFrame(formatRowsV205));
   observer.observe(document.documentElement, { childList:true, subtree:true });
+})();
+
+
+/* ========================================================================== 
+   V207 — PLEIN ÉCRAN + ÉDITEUR COMPLET DE PROGRAMMATION
+   ========================================================================== */
+(() => {
+  'use strict';
+  const cfg = window.COACHING_ATHLETE || {};
+  const page = window.GA_WORKOUT_PAGE;
+  if (!cfg.slug || !cfg.programKey || !page?.getProgram) return;
+
+  const deepClone = value => JSON.parse(JSON.stringify(value));
+  const originalProgramV207 = deepClone(page.getProgram());
+  const localKeyV207 = `ga-program-override-v207:${cfg.slug}:${cfg.programKey}`;
+  let draftV207 = deepClone(originalProgramV207);
+  let selectedWeekV207 = 0;
+  let selectedDayV207 = 0;
+  let editorOpenV207 = false;
+
+  const css = document.createElement('style');
+  css.textContent = `
+    .ga-app-tools-v207{position:fixed;right:max(10px,env(safe-area-inset-right));bottom:calc(78px + env(safe-area-inset-bottom));z-index:7600;display:flex;flex-direction:column;gap:7px}.ga-app-tools-v207 button{width:44px;height:44px;border:1px solid rgba(255,255,255,.11);border-radius:13px;background:rgba(18,18,24,.92);color:#fff;font-size:18px;font-weight:900;box-shadow:0 7px 22px rgba(0,0,0,.28);backdrop-filter:blur(12px)}.ga-app-tools-v207 button.active{background:var(--accent,#f0c44d);color:#111}
+    html.ga-pseudo-fullscreen-v207,html.ga-pseudo-fullscreen-v207 body{height:100%;min-height:100%;overflow:auto;background:#050608}html.ga-pseudo-fullscreen-v207 .app{max-width:680px!important;min-height:100dvh!important}
+    .ga-program-editor-v207{display:none;position:fixed;inset:0;z-index:9100;background:rgba(3,5,9,.97);color:var(--text,#fff);overflow:auto;padding:calc(10px + env(safe-area-inset-top)) 10px calc(24px + env(safe-area-inset-bottom));font-family:Inter,system-ui,sans-serif}.ga-program-editor-v207.open{display:block}.ga-pe-shell{max-width:720px;margin:auto}.ga-pe-head{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:8px;padding:8px 0 10px;background:rgba(3,5,9,.96)}.ga-pe-head h2{font-size:17px;flex:1}.ga-pe-head button,.ga-pe-btn{border:0;border-radius:10px;padding:9px 11px;background:#202532;color:#fff;font-weight:850}.ga-pe-save{background:var(--accent,#f0c44d)!important;color:#111!important}.ga-pe-reset{background:#51232a!important;color:#ffc2c7!important}.ga-pe-tabs{display:flex;gap:5px;overflow:auto;margin:6px 0 9px}.ga-pe-tabs button{white-space:nowrap;border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:8px 10px;background:#141923;color:#aeb8c8;font-weight:800}.ga-pe-tabs button.active{background:var(--accent,#f0c44d);color:#111}.ga-pe-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0}.ga-pe-field{display:flex;flex-direction:column;gap:4px}.ga-pe-field label{font-size:9px;color:#8896aa;font-weight:800;text-transform:uppercase}.ga-pe-field input,.ga-pe-field select{width:100%;min-width:0;border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:9px;background:#10151e;color:#fff;font:700 12px Inter,system-ui}.ga-pe-card{padding:10px;margin:9px 0;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:#0d1118}.ga-pe-card-head{display:flex;gap:6px;align-items:center;margin-bottom:8px}.ga-pe-card-head strong{flex:1;font-size:12px}.ga-pe-danger{background:#55232a!important;color:#ffc1c7!important}.ga-pe-block{padding:8px;margin-top:7px;border-radius:10px;background:#171d28}.ga-pe-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.ga-pe-actions{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.ga-pe-note{padding:9px;border-radius:10px;background:rgba(240,196,77,.08);border:1px solid rgba(240,196,77,.16);font-size:9px;line-height:1.45;color:#d8c99b}.ga-pe-status{font-size:9px;color:#8fa0b8;margin:5px 0 10px}
+    @media(max-width:500px){.ga-pe-row,.ga-pe-grid{grid-template-columns:1fr 1fr}.ga-program-editor-v207{padding-left:8px;padding-right:8px}}
+  `;
+  document.head.appendChild(css);
+
+  function validProgramV207(program) {
+    return !!program && Array.isArray(program.weeks) && program.weeks.length > 0 && program.weeks.every(w => Array.isArray(w.days) && w.days.length > 0);
+  }
+  function applyProgramV207(program, persistLocal = true) {
+    if (!validProgramV207(program)) throw new Error('Programme invalide.');
+    const clean = deepClone(program);
+    page.applyProgram(clean);
+    if (persistLocal) localStorage.setItem(localKeyV207, JSON.stringify(clean));
+    draftV207 = deepClone(clean);
+  }
+  function loadLocalV207() {
+    try {
+      const local = JSON.parse(localStorage.getItem(localKeyV207) || 'null');
+      if (validProgramV207(local)) applyProgramV207(local, false);
+    } catch (_) {}
+  }
+  loadLocalV207();
+
+  const toolbar = document.createElement('div');
+  toolbar.className = 'ga-app-tools-v207';
+  toolbar.innerHTML = `<button type="button" data-ga-fullscreen-v207 title="Plein écran" aria-label="Plein écran">⛶</button><button type="button" data-ga-edit-program-v207 title="Modifier la programmation" aria-label="Modifier la programmation">✏️</button>`;
+  document.body.appendChild(toolbar);
+
+  const modal = document.createElement('div');
+  modal.className = 'ga-program-editor-v207';
+  modal.innerHTML = `<div class="ga-pe-shell"><div class="ga-pe-head"><h2>✏️ Modifier la programmation</h2><button type="button" data-ga-pe-close>Fermer</button><button type="button" class="ga-pe-save" data-ga-pe-save>Enregistrer</button></div><div id="gaProgramEditorBodyV207"></div></div>`;
+  document.body.appendChild(modal);
+
+  async function toggleFullscreenV207() {
+    const button = toolbar.querySelector('[data-ga-fullscreen-v207]');
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+        document.documentElement.classList.remove('ga-pseudo-fullscreen-v207');
+        button.classList.remove('active');
+        return;
+      }
+      if (document.documentElement.requestFullscreen) {
+        await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
+        button.classList.add('active');
+        return;
+      }
+    } catch (_) {}
+    document.documentElement.classList.toggle('ga-pseudo-fullscreen-v207');
+    button.classList.toggle('active', document.documentElement.classList.contains('ga-pseudo-fullscreen-v207'));
+  }
+  document.addEventListener('fullscreenchange', () => toolbar.querySelector('[data-ga-fullscreen-v207]')?.classList.toggle('active', !!document.fullscreenElement));
+
+  function escV207(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function currentWeekV207() { return draftV207.weeks[Math.min(selectedWeekV207, draftV207.weeks.length - 1)]; }
+  function currentDayV207() { const week=currentWeekV207(); return week?.days[Math.min(selectedDayV207, week.days.length - 1)]; }
+
+  function fieldV207(label, value, attrs='') { return `<div class="ga-pe-field"><label>${escV207(label)}</label><input ${attrs} value="${escV207(value)}"></div>`; }
+
+  function renderEditorV207() {
+    selectedWeekV207 = Math.max(0, Math.min(selectedWeekV207, draftV207.weeks.length - 1));
+    const week = currentWeekV207();
+    selectedDayV207 = Math.max(0, Math.min(selectedDayV207, week.days.length - 1));
+    const day = currentDayV207();
+    const canEdit = !!window.CoachingCloud?.canEditAthlete?.(cfg.slug);
+    const body = modal.querySelector('#gaProgramEditorBodyV207');
+    body.innerHTML = `
+      <div class="ga-pe-note">Tu peux modifier tout le contenu du bloc. Changer le nombre ou l’ordre des séries peut déplacer les anciennes données déjà enregistrées : fais de préférence les grosses modifications avant de commencer la séance concernée.</div>
+      <div class="ga-pe-status">${canEdit ? '☁️ Sauvegarde cloud autorisée sur ce profil.' : '🔒 Lecture seule tant que ce compte n’est pas rattaché à cet athlète.'}</div>
+      <div class="ga-pe-tabs">${draftV207.weeks.map((w,i)=>`<button type="button" data-ga-pe-week="${i}" class="${i===selectedWeekV207?'active':''}">${escV207(w.label||`S${i+1}`)}</button>`).join('')}</div>
+      <div class="ga-pe-actions"><button class="ga-pe-btn" data-ga-pe-add-week>+ Semaine</button>${draftV207.weeks.length>1?'<button class="ga-pe-btn ga-pe-danger" data-ga-pe-del-week>Supprimer semaine</button>':''}</div>
+      <div class="ga-pe-row">${fieldV207('Nom de la semaine',week.label||'',`data-ga-pe-week-field="label"`)}</div>
+      <div class="ga-pe-tabs">${week.days.map((d,i)=>`<button type="button" data-ga-pe-day="${i}" class="${i===selectedDayV207?'active':''}">${escV207(d.emoji||'🏋️')} ${escV207(d.name||`Jour ${i+1}`)}</button>`).join('')}</div>
+      <div class="ga-pe-actions"><button class="ga-pe-btn" data-ga-pe-add-day>+ Jour</button>${week.days.length>1?'<button class="ga-pe-btn ga-pe-danger" data-ga-pe-del-day>Supprimer jour</button>':''}</div>
+      <div class="ga-pe-row">${fieldV207('Nom du jour',day.name||'',`data-ga-pe-day-field="name"`)}${fieldV207('Emoji',day.emoji||'🏋️',`data-ga-pe-day-field="emoji"`)}</div>
+      <div>${day.exercises.map((ex,ei)=>`
+        <div class="ga-pe-card" data-ga-pe-ex="${ei}">
+          <div class="ga-pe-card-head"><strong>Exercice ${ei+1}</strong><button class="ga-pe-btn ga-pe-danger" data-ga-pe-del-ex="${ei}">Supprimer</button></div>
+          <div class="ga-pe-row"><div class="ga-pe-field"><label>Type</label><select data-ga-pe-ex-field="l" data-ei="${ei}">${[['sq','Squat'],['bn','Bench'],['dl','Deadlift'],['ac','Accessoire']].map(([v,t])=>`<option value="${v}" ${ex.l===v?'selected':''}>${t}</option>`).join('')}</select></div>${fieldV207('Nom',ex.n||'',`data-ga-pe-ex-field="n" data-ei="${ei}"`)}</div>
+          ${fieldV207('Intention / variante',ex.v||'',`data-ga-pe-ex-field="v" data-ei="${ei}"`)}
+          ${(ex.blocks||[]).map((b,bi)=>`<div class="ga-pe-block" data-ei="${ei}" data-bi="${bi}"><div class="ga-pe-card-head"><strong>Bloc ${bi+1}</strong>${(ex.blocks||[]).length>1?`<button class="ga-pe-btn ga-pe-danger" data-ga-pe-del-block data-ei="${ei}" data-bi="${bi}">Supprimer</button>`:''}</div><div class="ga-pe-grid">${fieldV207('Séries',b.s??1,`type="number" min="1" max="50" data-ga-pe-block-field="s" data-ei="${ei}" data-bi="${bi}"`)}${fieldV207('Reps',b.r??'1',`data-ga-pe-block-field="r" data-ei="${ei}" data-bi="${bi}"`)}${fieldV207('%',b.pct??'',`inputmode="decimal" data-ga-pe-block-field="pct" data-ei="${ei}" data-bi="${bi}"`)}${fieldV207('Intensité libre',b.intensity??'',`data-ga-pe-block-field="intensity" data-ei="${ei}" data-bi="${bi}"`)}${fieldV207('Charge / plage',b.ld??'',`data-ga-pe-block-field="ld" data-ei="${ei}" data-bi="${bi}"`)}</div></div>`).join('')}
+          <div class="ga-pe-actions"><button class="ga-pe-btn" data-ga-pe-add-block="${ei}">+ Bloc de séries</button></div>
+        </div>`).join('')}</div>
+      <div class="ga-pe-actions"><button class="ga-pe-btn" data-ga-pe-add-ex>+ Exercice</button><button class="ga-pe-btn ga-pe-reset" data-ga-pe-reset>Réinitialiser à la prog d’origine</button></div>`;
+    modal.querySelector('[data-ga-pe-save]').disabled = !canEdit;
+  }
+
+  function openEditorV207() { if (!window.CoachingCloud?.canEditAthlete?.(cfg.slug)) { window.CoachingCloud?.toast?.('Ce compte ne peut pas modifier cette programmation.', true); return; } draftV207=deepClone(page.getProgram()); selectedWeekV207=Math.max(0,page.getWeek?.()||0); selectedDayV207=Math.max(0,page.getDay?.()||0); editorOpenV207=true; modal.classList.add('open'); renderEditorV207(); }
+  function closeEditorV207(){editorOpenV207=false;modal.classList.remove('open');}
+
+  async function saveCloudV207(program) {
+    if (!window.CoachingCloud?.client || !window.CoachingCloud?.session?.user) return false;
+    const { error } = await window.CoachingCloud.client.rpc('save_workout_program_override_v207', { p_athlete_slug:cfg.slug, p_program_key:String(cfg.programKey), p_program_json:program });
+    if (error) { console.warn(error); window.CoachingCloud.toast?.(`Programme sauvegardé localement. Cloud V207 : ${error.message}`, true); return false; }
+    return true;
+  }
+  async function resetCloudV207() { if (!window.CoachingCloud?.client) return; await window.CoachingCloud.client.rpc('reset_workout_program_override_v207',{p_athlete_slug:cfg.slug,p_program_key:String(cfg.programKey)}); }
+
+  async function loadCloudOverrideV207() {
+    if (!window.CoachingCloud?.client) return;
+    const { data, error } = await window.CoachingCloud.client.rpc('get_workout_program_override_v207',{p_athlete_slug:cfg.slug,p_program_key:String(cfg.programKey)});
+    if (error) { console.warn('Override programme V207 indisponible :', error.message); return; }
+    if (validProgramV207(data)) { applyProgramV207(data,true); }
+  }
+  window.CoachingCloud?.onReady?.(() => loadCloudOverrideV207());
+
+  toolbar.addEventListener('click', e => { if(e.target.closest('[data-ga-fullscreen-v207]')) toggleFullscreenV207(); if(e.target.closest('[data-ga-edit-program-v207]')) openEditorV207(); });
+  modal.addEventListener('click', async e => {
+    if(e.target.closest('[data-ga-pe-close]')) return closeEditorV207();
+    const w=e.target.closest('[data-ga-pe-week]'); if(w){selectedWeekV207=Number(w.dataset.gaPeWeek)||0;selectedDayV207=0;return renderEditorV207();}
+    const d=e.target.closest('[data-ga-pe-day]'); if(d){selectedDayV207=Number(d.dataset.gaPeDay)||0;return renderEditorV207();}
+    if(e.target.closest('[data-ga-pe-add-week]')){draftV207.weeks.push({label:`S${draftV207.weeks.length+1}`,days:[{name:'Nouveau jour',emoji:'🏋️',exercises:[]}]});selectedWeekV207=draftV207.weeks.length-1;selectedDayV207=0;return renderEditorV207();}
+    if(e.target.closest('[data-ga-pe-del-week]')){draftV207.weeks.splice(selectedWeekV207,1);selectedWeekV207=Math.max(0,selectedWeekV207-1);selectedDayV207=0;return renderEditorV207();}
+    if(e.target.closest('[data-ga-pe-add-day]')){currentWeekV207().days.push({name:'Nouveau jour',emoji:'🏋️',exercises:[]});selectedDayV207=currentWeekV207().days.length-1;return renderEditorV207();}
+    if(e.target.closest('[data-ga-pe-del-day]')){currentWeekV207().days.splice(selectedDayV207,1);selectedDayV207=Math.max(0,selectedDayV207-1);return renderEditorV207();}
+    const delEx=e.target.closest('[data-ga-pe-del-ex]'); if(delEx){currentDayV207().exercises.splice(Number(delEx.dataset.gaPeDelEx),1);return renderEditorV207();}
+    if(e.target.closest('[data-ga-pe-add-ex]')){currentDayV207().exercises.push({l:'ac',n:'Nouvel exercice',v:'',blocks:[{s:3,r:'10',pct:null,intensity:'',ld:''}]});return renderEditorV207();}
+    const addBlock=e.target.closest('[data-ga-pe-add-block]'); if(addBlock){currentDayV207().exercises[Number(addBlock.dataset.gaPeAddBlock)].blocks.push({s:1,r:'1',pct:null,intensity:'',ld:''});return renderEditorV207();}
+    const delBlock=e.target.closest('[data-ga-pe-del-block]'); if(delBlock){currentDayV207().exercises[Number(delBlock.dataset.ei)].blocks.splice(Number(delBlock.dataset.bi),1);return renderEditorV207();}
+    if(e.target.closest('[data-ga-pe-reset]')){if(!confirm('Revenir à la programmation d’origine de cette page ?'))return;draftV207=deepClone(originalProgramV207);applyProgramV207(draftV207,true);localStorage.removeItem(localKeyV207);await resetCloudV207();selectedWeekV207=0;selectedDayV207=0;renderEditorV207();window.CoachingCloud?.toast?.('Programmation d’origine restaurée.');return;}
+    if(e.target.closest('[data-ga-pe-save]')){try{applyProgramV207(draftV207,true);const cloud=await saveCloudV207(draftV207);closeEditorV207();window.CoachingCloud?.toast?.(cloud?'Programmation modifiée et synchronisée.':'Programmation modifiée localement.');}catch(err){window.CoachingCloud?.toast?.(err.message||String(err),true);}return;}
+  });
+  modal.addEventListener('input', e => {
+    const week=currentWeekV207(),day=currentDayV207();
+    if(e.target.dataset.gaPeWeekField==='label') week.label=e.target.value;
+    if(e.target.dataset.gaPeDayField==='name') day.name=e.target.value;
+    if(e.target.dataset.gaPeDayField==='emoji') day.emoji=e.target.value;
+    const ef=e.target.dataset.gaPeExField; if(ef){const ex=day.exercises[Number(e.target.dataset.ei)];if(ex)ex[ef]=e.target.value;}
+    const bf=e.target.dataset.gaPeBlockField; if(bf){const b=day.exercises[Number(e.target.dataset.ei)]?.blocks?.[Number(e.target.dataset.bi)];if(!b)return;if(bf==='s')b.s=Math.max(1,Math.min(50,Number(e.target.value)||1));else if(bf==='pct'){const raw=e.target.value.trim().replace(',','.');b.pct=raw===''?null:(Number.isFinite(Number(raw))?Number(raw):null);}else b[bf]=e.target.value;}
+  });
 })();

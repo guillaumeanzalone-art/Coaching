@@ -397,6 +397,32 @@ document.getElementById("endTonnage").textContent=ton>0?(ton/1000).toFixed(1)+"t
 document.getElementById("endOverlay").classList.add("visible");save();uC()}
 function closeEnd(){document.getElementById("endOverlay").classList.remove("visible")}
 function showV(v){document.getElementById("workoutView").classList.toggle("hidden",v!=="workout");document.getElementById("notesView").classList.toggle("visible",v==="notes");document.querySelectorAll(".nav-item").forEach((n,i)=>n.classList.toggle("active",i===(v==="workout"?0:1)))}
+
+// V207 — pont sécurisé entre la page de programmation et app-v171.js?build=20260810-v207-tools.
+window.GA_WORKOUT_PAGE={
+  getProgram:()=>P,
+  getWeek:()=>typeof W==='number'?W:((typeof S!=='undefined'&&Number.isFinite(Number(S.w)))?Number(S.w):0),
+  getDay:()=>typeof D==='number'?D:((typeof S!=='undefined'&&Number.isFinite(Number(S.d)))?Number(S.d):0),
+  applyProgram:(next)=>{
+    if(!next||!Array.isArray(next.weeks)||!next.weeks.length)return false;
+    P.weeks=JSON.parse(JSON.stringify(next.weeks));
+    if(typeof W==='number'){
+      W=Math.max(0,Math.min(W,P.weeks.length-1));
+      if(typeof D==='number'){const days=P.weeks[W]?.days||[];D=Math.max(0,Math.min(D,Math.max(0,days.length-1)));}
+    }else if(typeof S!=='undefined'){
+      S.w=Math.max(0,Math.min(Number(S.w)||0,P.weeks.length-1));
+      const days=P.weeks[S.w]?.days||[];
+      S.d=Math.max(0,Math.min(Number(S.d)||0,Math.max(0,days.length-1)));
+    }
+    if(typeof rW==='function')rW(); else if(typeof renderWeeks==='function')renderWeeks();
+    if(typeof rD==='function')rD(); else if(typeof renderDays==='function')renderDays();
+    if(typeof render==='function')render(); else if(typeof renderWorkout==='function')renderWorkout();
+    if(typeof save==='function')save(); else if(typeof saveState==='function')saveState();
+    return true;
+  }
+};
+window.GA_PROGRAM=P;
+
 init();
 </script>
 <script>
@@ -410,7 +436,7 @@ window.COACHING_ATHLETE = {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
-<script src="app-v171.js?build=20260810-v205-series-reps"></script>
+<script src="app-v171.js?build=20260810-v207-tools"></script>
 <script src="session-tools.js?v=20260801-harmonisation-v23"></script>
 <script src="program-harmonizer-v23.js?v=20260801-harmonisation-v23"></script>
 </body>
