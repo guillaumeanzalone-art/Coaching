@@ -1,2 +1,25 @@
-Extraire directement dans le dossier Coaching\v2 puis accepter le remplacement de src\program.js et src\training.js.
+GA COACHING V2 — AUTHENTIFICATION SUPABASE
+
+Remplacer dans v2/src :
+- main.js
+- auth.js
+- style.css
+
+Ne pas remplacer :
+- supabase.js (déjà créé)
+- program.js
+- training.js
+- athletes.js
+- programs/
+
 Aucun SQL.
+
+Test attendu :
+1. ouvrir localhost
+2. écran Connexion
+3. utiliser un compte existant de l'ancienne application
+4. coach -> accueil + liste des athlètes
+5. athlete -> ouverture automatique de son profil
+6. pending -> écran Accès à valider
+
+Aucune sauvegarde de série Supabase n'est encore activée.
