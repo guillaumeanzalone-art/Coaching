@@ -171,3 +171,396 @@ body {
     padding-bottom: max(60px, env(safe-area-inset-bottom));
   }
 }
+
+
+/* ATHLETE CARD POLISH V3 */
+
+.athlete-list .athlete-card {
+  display: grid !important;
+  grid-template-columns: 78px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 114px;
+  padding: 16px 18px;
+  text-align: left;
+}
+
+.athlete-list .athlete-choice-avatar {
+  width: 78px;
+  height: 78px;
+  min-width: 78px;
+  border-radius: 18px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.athlete-list .athlete-choice-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.athlete-card-copy {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.athlete-card-copy > strong {
+  display: block;
+  width: 100%;
+  font-size: clamp(18px, 2.3vw, 23px);
+  line-height: 1.08;
+  font-weight: 850;
+  color: #f4f6fb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.athlete-card-program {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  color: #d6dbe6;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.athlete-card-total {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  color: #8994a8;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+.athlete-list .athlete-card .arrow {
+  justify-self: end;
+  align-self: center;
+  font-size: 28px;
+}
+
+@media (max-width: 620px) {
+  .athlete-list .athlete-card {
+    grid-template-columns: 68px minmax(0, 1fr) 22px;
+    gap: 12px;
+    min-height: 102px;
+    padding: 14px;
+  }
+
+  .athlete-list .athlete-choice-avatar {
+    width: 68px;
+    height: 68px;
+    min-width: 68px;
+    border-radius: 15px;
+  }
+
+  .athlete-card-copy > strong {
+    font-size: 18px;
+  }
+
+  .athlete-card-program {
+    font-size: 12px;
+  }
+
+  .athlete-card-total {
+    font-size: 11px;
+  }
+}
+
+
+/* RPG COMBAT SPIDER POLISH V2 */
+
+.rpg-combat-panel-v2 {
+  position: relative;
+  overflow: hidden;
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid rgba(238, 190, 72, 0.28);
+  border-radius: 20px;
+  background:
+    radial-gradient(
+      circle at 85% -20%,
+      rgba(107, 49, 91, 0.25),
+      transparent 42%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(9, 14, 24, 0.98),
+      rgba(15, 17, 29, 0.98)
+    );
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+.rpg-combat-panel-v2::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    rgba(245, 198, 74, 0.95),
+    rgba(245, 198, 74, 0)
+  );
+  pointer-events: none;
+}
+
+.rpg-combat-title-v2 {
+  display: block;
+  margin-bottom: 5px;
+  color: #f5c64a;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+}
+
+.rpg-combat-difficulty-v2 {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(122, 137, 164, 0.15);
+  border-radius: 14px;
+  background: rgba(15, 22, 36, 0.72);
+}
+
+.rpg-combat-range-v2 {
+  width: min(100%, 480px);
+  height: 5px;
+  margin: 9px 0 5px;
+  appearance: none;
+  border-radius: 999px;
+  outline: none;
+  background: linear-gradient(
+    90deg,
+    rgba(49, 155, 177, 0.92),
+    rgba(35, 91, 126, 0.92)
+  );
+  cursor: pointer;
+}
+
+.rpg-combat-range-v2::-webkit-slider-thumb {
+  width: 19px;
+  height: 19px;
+  appearance: none;
+  border: 3px solid #101827;
+  border-radius: 50%;
+  background: #f5c64a;
+  box-shadow:
+    0 0 0 2px rgba(245, 198, 74, 0.28),
+    0 4px 12px rgba(0, 0, 0, 0.34);
+}
+
+.rpg-combat-range-v2::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 3px solid #101827;
+  border-radius: 50%;
+  background: #f5c64a;
+  box-shadow:
+    0 0 0 2px rgba(245, 198, 74, 0.28),
+    0 4px 12px rgba(0, 0, 0, 0.34);
+}
+
+.rpg-combat-primary-v2,
+.rpg-combat-boss-v2 {
+  min-height: 48px;
+  margin-top: 14px;
+  padding: 0 20px;
+  border-radius: 14px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    filter 150ms ease;
+}
+
+.rpg-combat-primary-v2 {
+  border: 1px solid rgba(255, 224, 135, 0.74);
+  color: #14100a;
+  background:
+    linear-gradient(
+      180deg,
+      #f8d96d,
+      #e2aa31
+    );
+  box-shadow:
+    0 8px 22px rgba(224, 169, 46, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.48);
+}
+
+.rpg-combat-primary-v2:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow:
+    0 11px 28px rgba(224, 169, 46, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.rpg-combat-boss-v2 {
+  margin-left: 8px;
+  border: 1px solid rgba(199, 81, 90, 0.52);
+  color: #f7e8e8;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(64, 24, 31, 0.98),
+      rgba(33, 17, 25, 0.98)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 24px rgba(100, 21, 36, 0.12);
+}
+
+.rpg-combat-boss-v2:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: rgba(230, 113, 121, 0.8);
+  box-shadow:
+    0 10px 26px rgba(111, 26, 43, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.rpg-combat-primary-v2:active:not(:disabled),
+.rpg-combat-boss-v2:active:not(:disabled) {
+  transform: translateY(0) scale(0.985);
+}
+
+.rpg-combat-primary-v2:disabled,
+.rpg-combat-boss-v2:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  filter: grayscale(0.18);
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .rpg-combat-panel-v2 {
+    padding: 15px;
+    border-radius: 17px;
+  }
+
+  .rpg-combat-primary-v2,
+  .rpg-combat-boss-v2 {
+    width: 100%;
+    min-height: 50px;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .rpg-combat-range-v2 {
+    width: 100%;
+  }
+}
+
+
+/* RPG BESTIARY SPRITES POLISH V2 */
+
+.rpg-bestiary-visual-v2 {
+  position: relative !important;
+  overflow: hidden;
+  display: grid !important;
+  place-items: center !important;
+  min-width: 74px;
+  min-height: 74px;
+  border-radius: 16px;
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      rgba(245, 198, 74, 0.12),
+      transparent 62%
+    ),
+    rgba(10, 15, 26, 0.82);
+  border:
+    1px solid
+    rgba(245, 198, 74, 0.16);
+}
+
+.rpg-bestiary-sprite-v2 {
+  position: relative;
+  z-index: 3;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 118px;
+  max-height: 118px;
+  object-fit: contain;
+  object-position: center;
+  padding: 4px;
+  filter:
+    drop-shadow(
+      0 10px 16px
+      rgba(0, 0, 0, 0.44)
+    );
+}
+
+.rpg-bestiary-has-sprite-v2
+.rpg-bestiary-visual-v2 {
+  box-shadow:
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.035),
+    0 10px 28px
+      rgba(0, 0, 0, 0.2);
+}
+
+.rpg-bestiary-emoji-hidden-v2 {
+  display: none !important;
+}
+
+.monster-card,
+.rpg-monster-card,
+.rpg-bestiary-card,
+.rpg-collection-monster {
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.monster-card:hover,
+.rpg-monster-card:hover,
+.rpg-bestiary-card:hover,
+.rpg-collection-monster:hover {
+  transform:
+    translateY(-2px);
+  border-color:
+    rgba(245, 198, 74, 0.26) !important;
+  box-shadow:
+    0 14px 30px
+    rgba(0, 0, 0, 0.22);
+}
+
+.monster-card .monster-name,
+.rpg-monster-card .rpg-monster-name,
+.rpg-bestiary-card .rpg-bestiary-name {
+  font-weight: 850;
+  color: #f3f5fa;
+}
+
+@media (max-width: 640px) {
+  .rpg-bestiary-visual-v2 {
+    min-width: 64px;
+    min-height: 64px;
+    border-radius: 14px;
+  }
+
+  .rpg-bestiary-sprite-v2 {
+    max-width: 96px;
+    max-height: 96px;
+  }
+}

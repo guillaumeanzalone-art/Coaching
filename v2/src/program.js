@@ -1,3 +1,5 @@
+import { getProgramWithCloudFallback } from './program-cloud.js'
+
 const PROGRAM_LOADERS = {
   "alexandre": () => import('./programs/alexandre.js'),
   "benoit": () => import('./programs/benoit.js'),
@@ -32,7 +34,7 @@ const PROGRAM_LOADERS = {
   "yann": () => import('./programs/yann.js')
 }
 
-export async function getProgramForAthlete(athleteId) {
+export async function getLocalProgramForAthlete(athleteId) {
   const loader = PROGRAM_LOADERS[athleteId]
 
   if (!loader) {
@@ -41,4 +43,21 @@ export async function getProgramForAthlete(athleteId) {
 
   const module = await loader()
   return module.default ?? null
+}
+
+
+/* PROGRAM CLOUD V1 */
+
+export async function getProgramForAthlete(
+  athleteId
+) {
+  return getProgramWithCloudFallback({
+    athleteId,
+
+    localLoader:
+      () =>
+        getLocalProgramForAthlete(
+          athleteId
+        ),
+  })
 }

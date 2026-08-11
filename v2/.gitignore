@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# GA Coaching local development artifacts
+backup-v2/
+patch-*.cjs
+PRE_RELEASE_AUDIT_V1.txt
+PROGRAM_CLOUD_INSTALL_V1.sql
+PROGRAM_CLOUD_SCHEMA_V1.sql
+PROGRAM_CLOUD_SEED_V1.sql

@@ -60,16 +60,6 @@ export const athletes = [
     "cloudSlug": "magicarpe"
   },
   {
-    "id": "clara",
-    "name": "Clara Patapim",
-    "emoji": "🐱",
-    "bodyWeight": null,
-    "profileImage": null,
-    "programKey": "clara",
-    "blockCount": 1,
-    "cloudSlug": "clara"
-  },
-  {
     "id": "clemosaurus",
     "name": "Clemosaurus",
     "emoji": "🦖",

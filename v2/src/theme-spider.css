@@ -2143,3 +2143,383 @@ h1,
   font-size:8px;
   text-align:center;
 }
+
+
+/* RPG FORGE V2 */
+
+.rpg-dwarf-workshop-v2{
+  margin-top:16px;
+  overflow:hidden;
+  border:1px solid rgba(240,196,77,.18);
+  border-radius:17px;
+  background:
+    radial-gradient(
+      circle at 0 0,
+      rgba(137,78,19,.15),
+      transparent 38%
+    ),
+    linear-gradient(
+      145deg,
+      #111827,
+      #080b12
+    );
+  box-shadow:
+    0 14px 35px rgba(0,0,0,.25);
+}
+
+.rpg-dwarf-head-v2{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:13px;
+  border-bottom:
+    1px solid rgba(240,196,77,.12);
+}
+
+.rpg-dwarf-avatar-v2{
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  width:58px;
+  height:58px;
+  border-radius:15px;
+  background:
+    radial-gradient(
+      circle,
+      #4d3316,
+      #18120b
+    );
+  border:
+    1px solid rgba(240,196,77,.20);
+  font-size:28px;
+}
+
+.rpg-dwarf-head-v2 strong{
+  display:block;
+  color:#f2ca60;
+  font-size:13px;
+}
+
+.rpg-dwarf-head-v2 p{
+  margin:4px 0 0;
+  color:#8994a9;
+  font-size:8px;
+  line-height:1.45;
+}
+
+.rpg-dwarf-tabs-v2{
+  display:grid;
+  grid-template-columns:
+    1fr 1fr;
+  gap:6px;
+  padding:9px;
+}
+
+.rpg-dwarf-tabs-v2 button{
+  padding:9px 6px;
+  border-radius:10px;
+  border:
+    1px solid rgba(255,255,255,.07);
+  background:#121a2a;
+  color:#8995aa;
+  font-size:8px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.rpg-dwarf-tabs-v2 button.active{
+  border-color:
+    rgba(240,196,77,.32);
+  background:
+    rgba(240,196,77,.10);
+  color:#f5d67c;
+}
+
+.rpg-dwarf-body-v2{
+  padding:0 10px 11px;
+}
+
+.rpg-forge-rules-v2{
+  display:grid;
+  grid-template-columns:
+    repeat(3,1fr);
+  gap:6px;
+}
+
+.rpg-forge-rules-v2 > div{
+  padding:9px 5px;
+  border-radius:10px;
+  background:
+    rgba(255,255,255,.035);
+  text-align:center;
+}
+
+.rpg-forge-rules-v2 strong{
+  display:block;
+  color:#f3ce6c;
+  font-size:15px;
+}
+
+.rpg-forge-rules-v2 span{
+  display:block;
+  margin-top:3px;
+  font-size:7px;
+  line-height:1.35;
+  color:#8e99ad;
+}
+
+.rpg-forge-warning-v2{
+  margin-top:8px;
+  padding:8px;
+  border-radius:9px;
+  background:
+    rgba(216,130,45,.06);
+  color:#b9a88c;
+  font-size:7px;
+  line-height:1.5;
+}
+
+.rpg-forge-groups-v2{
+  display:grid;
+  gap:7px;
+  margin-top:9px;
+}
+
+.rpg-forge-group-v2{
+  display:flex;
+  align-items:center;
+  justify-content:
+    space-between;
+  gap:10px;
+  padding:9px;
+  border-radius:11px;
+  background:
+    rgba(255,255,255,.035);
+  border:
+    1px solid rgba(255,255,255,.055);
+}
+
+.rpg-forge-group-v2 strong,
+.rpg-forge-group-v2 span,
+.rpg-forge-group-v2 small{
+  display:block;
+}
+
+.rpg-forge-group-v2 strong{
+  font-size:9px;
+}
+
+.rpg-forge-group-v2 span{
+  margin-top:3px;
+  color:#adb6c7;
+  font-size:8px;
+}
+
+.rpg-forge-group-v2 small{
+  margin-top:2px;
+  color:#707b90;
+  font-size:7px;
+}
+
+.rpg-forge-group-v2 button{
+  flex:0 0 auto;
+  padding:8px;
+  border:0;
+  border-radius:9px;
+  background:
+    linear-gradient(
+      135deg,
+      #8b6120,
+      #d1a43b
+    );
+  color:#171006;
+  font-size:8px;
+  font-weight:1000;
+  cursor:pointer;
+}
+
+.rpg-forge-group-v2 button:disabled{
+  opacity:.3;
+  cursor:not-allowed;
+}
+
+.rpg-forge-empty-v2{
+  padding:14px 8px;
+  color:#7f8a9e;
+  text-align:center;
+  font-size:8px;
+}
+
+.rpg-forge-result-v2{
+  margin-top:9px;
+  padding:10px;
+  border-radius:10px;
+  text-align:center;
+  font-size:9px;
+}
+
+.rpg-forge-result-v2.success{
+  background:
+    rgba(72,199,125,.08);
+  color:#8ce9b3;
+}
+
+.rpg-forge-result-v2.fail{
+  background:
+    rgba(221,72,82,.08);
+  color:#f08d93;
+}
+
+.rpg-casino-machine-v2{
+  padding:11px;
+  border-radius:13px;
+  background:
+    radial-gradient(
+      circle at 50% 0,
+      rgba(240,196,77,.10),
+      transparent 42%
+    ),
+    #080b12;
+  border:
+    1px solid rgba(240,196,77,.12);
+}
+
+.rpg-casino-head-v2{
+  display:flex;
+  align-items:center;
+  justify-content:
+    space-between;
+  gap:8px;
+}
+
+.rpg-casino-head-v2 strong{
+  color:#f3ce6b;
+  font-size:11px;
+}
+
+.rpg-casino-head-v2 span{
+  color:#a0aabc;
+  font-size:8px;
+}
+
+.rpg-casino-free-v2{
+  margin-top:8px;
+  padding:6px;
+  border-radius:8px;
+  background:
+    rgba(230,78,44,.08);
+  color:#ff9d76;
+  font-size:8px;
+  text-align:center;
+  font-weight:900;
+}
+
+.rpg-casino-reels-v2{
+  display:grid;
+  grid-template-columns:
+    repeat(3,1fr);
+  gap:7px;
+  margin-top:11px;
+}
+
+.rpg-casino-reel-v2{
+  display:grid;
+  place-items:center;
+  min-height:72px;
+  border-radius:12px;
+  background:
+    linear-gradient(
+      #161e2d,
+      #0b1019
+    );
+  border:
+    1px solid rgba(255,255,255,.07);
+  font-size:30px;
+  box-shadow:
+    inset 0 0 18px rgba(0,0,0,.4);
+}
+
+.rpg-casino-result-v2{
+  min-height:17px;
+  margin-top:8px;
+  text-align:center;
+  color:#c3ccda;
+  font-size:8px;
+}
+
+.rpg-casino-bet-v2{
+  display:grid;
+  grid-template-columns:
+    1fr auto;
+  gap:6px;
+  margin-top:9px;
+}
+
+.rpg-casino-bet-v2 input{
+  min-width:0;
+  padding:9px;
+  border-radius:9px;
+  border:
+    1px solid rgba(255,255,255,.08);
+  background:#0f1521;
+  color:#fff;
+}
+
+.rpg-casino-bet-v2 button{
+  padding:9px 13px;
+  border:0;
+  border-radius:9px;
+  background:
+    linear-gradient(
+      135deg,
+      #a8791d,
+      #e0b844
+    );
+  color:#171006;
+  font-weight:1000;
+  cursor:pointer;
+}
+
+.rpg-casino-bet-v2 button:disabled{
+  opacity:.35;
+}
+
+.rpg-casino-presets-v2{
+  display:grid;
+  grid-template-columns:
+    repeat(4,1fr);
+  gap:5px;
+  margin-top:7px;
+}
+
+.rpg-casino-presets-v2 button{
+  padding:6px 3px;
+  border-radius:8px;
+  border:
+    1px solid rgba(255,255,255,.06);
+  background:#121927;
+  color:#98a4b7;
+  font-size:7px;
+  cursor:pointer;
+}
+
+.rpg-casino-error-v2{
+  margin-top:8px;
+  padding:7px;
+  border-radius:8px;
+  background:
+    rgba(225,65,72,.07);
+  color:#e58e93;
+  font-size:7px;
+}
+
+@media(max-width:430px){
+  .rpg-forge-rules-v2{
+    grid-template-columns:1fr;
+  }
+
+  .rpg-casino-presets-v2{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+}

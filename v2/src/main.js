@@ -1,3 +1,4 @@
+import { mountProgramEditor } from './program-editor.js'
 import { mountRpg } from './rpg.js'
 import { getAthleteProgress, xpProgressFromTotal } from './xp.js'
 import './style.css'
@@ -755,8 +756,37 @@ function renderHome() {
           </span>
         </button>
 
+                ${
+          currentMember?.role === 'coach'
+            ? `
         <button
-          class="card disabled"
+          class="card"
+          data-action="program-editor"
+          type="button"
+        >
+          <span class="card-icon">
+            🕷️
+          </span>
+
+          <div>
+            <strong>
+              Éditeur Coach
+            </strong>
+
+            <span>
+              Créer, modifier et publier les programmations
+            </span>
+          </div>
+
+          <span class="arrow">
+            ›
+          </span>
+        </button>
+              `
+            : ''
+        }
+<button
+          class="card"
           data-action="rpg"
         >
           <span class="card-icon">
@@ -769,7 +799,7 @@ function renderHome() {
             </strong>
 
             <span>
-              On le remettra plus tard
+              Ouvrir le hub RPG
             </span>
           </div>
 
@@ -813,6 +843,15 @@ function renderHome() {
       'athletes'
     ) {
       renderAthletes()
+    }
+
+
+    if (
+      action.dataset.action ===
+      'program-editor'
+    ) {
+      renderProgramEditorScreen()
+      return
     }
 
     if (
@@ -918,6 +957,34 @@ function formatActivityDate(value) {
       minute: '2-digit'
     }
   ).format(date)
+}
+
+
+/* PROGRAM EDITOR V1 */
+
+function renderProgramEditorScreen() {
+  if (
+    currentMember?.role !==
+    'coach'
+  ) {
+    renderHome()
+    return
+  }
+
+  clearAppHandlers()
+
+  mountProgramEditor(
+    app,
+    {
+      athletes:
+        visibleAthletes(),
+
+      onBack:
+        () => {
+          renderHome()
+        },
+    }
+  )
 }
 
 async function renderActivities() {
@@ -1192,11 +1259,155 @@ function athleteChoiceAvatarHtml(
   `
 }
 
-function renderAthletes() {
+
+/* ATHLETE PROGRAM CARD META V3 */
+
+function normalizeArray(value) {
+  return Array.isArray(value) ? value : []
+}
+
+function countExerciseSets(exercise) {
+  if (Array.isArray(exercise?.sets)) {
+    return exercise.sets.length
+  }
+
+  if (Array.isArray(exercise?.series)) {
+    return exercise.series.length
+  }
+
+  const numericSets = Number(
+    exercise?.setCount ??
+    exercise?.setsCount ??
+    exercise?.numberOfSets
+  )
+
+  return Number.isFinite(numericSets)
+    ? numericSets
+    : 0
+}
+
+function summarizeAthleteProgram(program) {
+  const directBlocks = normalizeArray(program?.blocks)
+
+  const blocks = directBlocks.length
+    ? directBlocks
+    : [{
+        weeks: normalizeArray(program?.weeks),
+      }]
+
+  const lastBlock = blocks[blocks.length - 1] || {}
+  const weeks = normalizeArray(lastBlock?.weeks)
+
+  let totalSets = 0
+  let totalDays = 0
+
+  for (const week of weeks) {
+    const days = normalizeArray(
+      week?.days ??
+      week?.sessions
+    )
+
+    totalDays += days.length
+
+    for (const day of days) {
+      const exercises = normalizeArray(
+        day?.exercises ??
+        day?.items
+      )
+
+      for (const exercise of exercises) {
+        totalSets += countExerciseSets(exercise)
+      }
+    }
+  }
+
+  const blockNumber = blocks.length
+  const weekCount = weeks.length
+
+  const declaredCurrentWeek = Number(
+    program?.currentWeek ??
+    program?.current_week ??
+    lastBlock?.currentWeek ??
+    lastBlock?.current_week
+  )
+
+  const currentWeek =
+    Number.isFinite(declaredCurrentWeek) &&
+    declaredCurrentWeek > 0
+      ? Math.min(declaredCurrentWeek, Math.max(weekCount, 1))
+      : null
+
+  return {
+    primary: currentWeek
+      ? 'Bloc ' +
+        blockNumber +
+        ' · Semaine ' +
+        currentWeek +
+        '/' +
+        Math.max(weekCount, currentWeek)
+      : 'Dernier bloc ' +
+        blockNumber +
+        ' · ' +
+        weekCount +
+        ' semaine' +
+        (weekCount === 1 ? '' : 's'),
+
+    secondary:
+      'Total bloc : ' +
+      totalSets +
+      ' series · ' +
+      totalDays +
+      ' seance' +
+      (totalDays === 1 ? '' : 's'),
+  }
+}
+
+async function buildAthleteCardMeta(list) {
+  const entries = await Promise.all(
+    list.map(async athlete => {
+      try {
+        const program =
+          await getProgramForAthlete(
+            athlete.id
+          )
+
+        return [
+          athlete.id,
+          summarizeAthleteProgram(program),
+        ]
+      } catch (error) {
+        console.warn(
+          'Resume programme indisponible :',
+          athlete.id,
+          error
+        )
+
+        return [
+          athlete.id,
+          {
+            primary: 'Programme indisponible',
+            secondary: 'Aucun total',
+          },
+        ]
+      }
+    })
+  )
+
+  return new Map(entries)
+}
+
+async function renderAthletes() {
   clearAppHandlers()
 
   const list =
     visibleAthletes()
+
+  
+
+  const athleteCardMeta =
+    await buildAthleteCardMeta(
+      list
+    )
 
   app.innerHTML = `
     <main class="app-shell">
@@ -1253,23 +1464,28 @@ function renderAthletes() {
                 )}
               </span>
 
-              <div>
+              <div class="athlete-card-copy">
                 <strong>
                   ${athlete.name}
                 </strong>
 
-                <span>
+                <span class="athlete-card-program">
                   ${
-                    athlete.bodyWeight
-                      ? `${athlete.bodyWeight} kg`
-                      : 'Poids non renseigné'
-                  }
-                  ${
-                    athlete.blockCount > 1
-                      ? ` · ${athlete.blockCount} blocs`
-                      : ''
+                    athleteCardMeta.get(
+                      athlete.id
+                    )?.primary ||
+                    'Programme'
                   }
                 </span>
+
+                <small class="athlete-card-total">
+                  ${
+                    athleteCardMeta.get(
+                      athlete.id
+                    )?.secondary ||
+                    'Aucun total'
+                  }
+                </small>
               </div>
 
               <span class="arrow">

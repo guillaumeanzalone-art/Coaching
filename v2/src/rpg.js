@@ -1,9 +1,38 @@
+import {
+  createRpgLeaderboardState,
+  loadRpgLeaderboard,
+  renderRpgLeaderboard,
+  handleRpgLeaderboardAction,
+} from './rpg-leaderboard.js'
+
+import {
+  createRpgRaidState,
+  loadRpgRaidState,
+  renderRpgRaid,
+  handleRpgRaidAction,
+  startRpgRaidFight,
+} from './rpg-raid.js'
+
 ﻿import { supabase } from './supabase.js'
 import { xpProgressFromTotal } from './xp.js'
 import { loadRpgInventory, renderRpgEquipment, handleRpgEquipmentAction } from './rpg-equipment.js'
 import { createRpgCaseState, setRpgCaseLevel, loadRpgCasePrices, renderRpgCases, handleRpgCaseAction } from './rpg-cases.js'
 import { createRpgCollectionState, loadRpgCollections, renderRpgCollection, updateRpgCollectionFilter, handleRpgCollectionAction } from './rpg-collection.js'
 import { installRpgAudioControls, playRpgMenuMusic } from './rpg-audio.js'
+import {
+  createRpgCombatState,
+  renderRpgCombatLauncher,
+  setRpgCombatDifficulty,
+  startRpgCombat
+} from './rpg-combat.js'
+import {
+  createRpgForgeState,
+  loadRpgCasinoState,
+  renderRpgForge,
+  setRpgCasinoBet,
+  handleRpgForgeAction
+} from './rpg-forge.js'
+import { installRpgBestiarySpriteEnhancer } from './rpg-bestiary-sprites.js'
 
 export const CLASS_DEFS = {
   warrior: {
@@ -604,6 +633,13 @@ export async function mountRpg(
   options = {}
 ) {
   installRpgAudioControls()
+  installRpgBestiarySpriteEnhancer(root)
+  const combatState =
+    createRpgCombatState()
+
+  const forgeState =
+    createRpgForgeState()
+
 
   document.addEventListener(
     'pointerdown',
@@ -634,6 +670,13 @@ export async function mountRpg(
     'progression'
   const caseState = createRpgCaseState()
   const collectionState = createRpgCollectionState()
+
+  /* RPG 6F RAID + LEADERBOARD V2 */
+  const raidState =
+    createRpgRaidState()
+
+  const leaderboardState =
+    createRpgLeaderboardState()
 
   function selectedAthlete() {
     return athletes.find(
@@ -747,24 +790,65 @@ export async function mountRpg(
       activeTab ===
       'progression'
     ) {
-      content =
-        progressionHtml(
+      content = `
+        ${progressionHtml(
           progress,
           canEdit()
-        )
+        )}
+
+        ${renderRpgCombatLauncher({
+          athleteSlug:
+            selectedSlug,
+
+          progress,
+
+          canEdit:
+            canEdit(),
+
+          state:
+            combatState,
+        })}
+
+        ${renderRpgRaid({
+          progress,
+          canEdit:
+            canEdit(),
+          state:
+            raidState,
+        })}
+      `
     }
 
     if (
       activeTab ===
       'equipment'
     ) {
-      content =
-        renderRpgEquipment({
+      /* FORGE EQUIPMENT UI V2 */
+
+      content = `
+        ${renderRpgEquipment({
           progress,
           inventory,
+
           canEdit:
             canEdit(),
-        })
+        })}
+
+        ${renderRpgForge({
+          athleteSlug:
+            selectedSlug,
+
+          progress,
+
+          inventory,
+
+          canEdit:
+            canEdit(),
+
+          state:
+            forgeState,
+        })}
+      `
     }
 
     if (
@@ -809,11 +893,11 @@ export async function mountRpg(
       'leaderboard'
     ) {
       content =
-        placeholderHtml(
-          '🏆',
-          'Classement',
-          'Le classement RPG collectif sera reconnecté après les combats.'
-        )
+        renderRpgLeaderboard({
+          state:
+            leaderboardState,
+          selectedSlug,
+        })
     }
 
     root.innerHTML = `
@@ -960,6 +1044,14 @@ export async function mountRpg(
       inventory =
         nextInventory
 
+      /* RPG RAID INITIAL LOAD V2 */
+      await loadRpgRaidState({
+        athleteSlug:
+          selectedSlug,
+        state:
+          raidState,
+      })
+
       renderProfile()
     } catch (error) {
       console.error(
@@ -992,6 +1084,57 @@ export async function mountRpg(
 
   root.onchange =
     async (event) => {
+
+      /* CASINO BET CHANGE V2 */
+
+      const casinoBetInput =
+        event.target.closest(
+          '[data-rpg-casino-bet-v2]'
+        )
+
+      if (
+        casinoBetInput &&
+        selectedSlug
+      ) {
+        setRpgCasinoBet({
+          athleteSlug:
+            selectedSlug,
+
+          state:
+            forgeState,
+
+          value:
+            casinoBetInput.value,
+        })
+
+        renderProfile()
+        return
+      }
+
+
+      /* COMBAT DIFFICULTY HANDLER V2 */
+
+      const combatDifficulty =
+        event.target.closest(
+          '[data-rpg-combat-difficulty-v2]'
+        )
+
+      if (
+        combatDifficulty &&
+        selectedSlug &&
+        progress
+      ) {
+        setRpgCombatDifficulty(
+          combatState,
+          selectedSlug,
+          combatDifficulty.value,
+          progress
+        )
+
+        renderProfile()
+        return
+      }
+
       const collectionFilter =
         event.target.closest(
           '[data-rpg-collection-filter]'
@@ -1049,6 +1192,333 @@ export async function mountRpg(
 
   root.onclick =
     async (event) => {
+
+      /* RPG 6F CLICK HANDLERS V2 */
+
+      const leaderboardTabV2 =
+        event.target.closest(
+          '[data-rpg-tab="leaderboard"]'
+        )
+
+      if (
+        leaderboardTabV2 &&
+        !leaderboardState.rows.length &&
+        !leaderboardState.busy
+      ) {
+        void loadRpgLeaderboard({
+          state:
+            leaderboardState,
+        }).then(() => {
+          if (
+            activeTab ===
+            'leaderboard'
+          ) {
+            renderProfile()
+          }
+        })
+      }
+
+      const leaderboardActionV2 =
+        event.target.closest(
+          '[data-rpg-leaderboard-refresh-v2], [data-rpg-leaderboard-sort-v2]'
+        )
+
+      if (leaderboardActionV2) {
+        try {
+          await handleRpgLeaderboardAction({
+            element:
+              leaderboardActionV2,
+            state:
+              leaderboardState,
+          })
+        } catch (error) {
+          console.error(
+            'RPG LEADERBOARD ACTION ERROR',
+            error
+          )
+        }
+
+        renderProfile()
+        return
+      }
+
+      const raidActionV2 =
+        event.target.closest(
+          '[data-rpg-raid-refresh-v2], [data-rpg-raid-join-v2], [data-rpg-raid-start-v2]'
+        )
+
+      if (
+        raidActionV2 &&
+        selectedSlug &&
+        progress
+      ) {
+        try {
+          const result =
+            await handleRpgRaidAction({
+              element:
+                raidActionV2,
+              athleteSlug:
+                selectedSlug,
+              state:
+                raidState,
+              canEdit:
+                canEdit(),
+            })
+
+          if (
+            result?.startFight
+          ) {
+            const athlete =
+              selectedAthlete()
+
+            await startRpgRaidFight({
+              athleteSlug:
+                selectedSlug,
+              athleteName:
+                athlete?.name ||
+                selectedSlug,
+              athleteEmoji:
+                athlete?.emoji ||
+                '🏋️',
+              state:
+                raidState,
+              onFinished:
+                async () => {
+                  const [
+                    nextProgress,
+                    nextInventory,
+                  ] =
+                    await Promise.all([
+                      fetchProgress(
+                        selectedSlug
+                      ),
+                      loadRpgInventory(
+                        selectedSlug
+                      ),
+                    ])
+
+                  progress =
+                    nextProgress
+
+                  inventory =
+                    nextInventory
+
+                  await Promise.all([
+                    loadRpgRaidState({
+                      athleteSlug:
+                        selectedSlug,
+                      state:
+                        raidState,
+                    }),
+                    loadRpgCollections(
+                      selectedSlug,
+                      collectionState,
+                      inventory
+                    ),
+                  ])
+
+                  renderProfile()
+                },
+            })
+
+            return
+          }
+
+          if (
+            result?.handled ||
+            result?.refresh ||
+            result?.joined
+          ) {
+            progress =
+              await fetchProgress(
+                selectedSlug
+              )
+
+            renderProfile()
+            return
+          }
+        } catch (error) {
+          console.error(
+            'RPG RAID ACTION ERROR',
+            error
+          )
+
+          window.alert(
+            error?.message ||
+            'Action Raid impossible.'
+          )
+
+          renderProfile()
+          return
+        }
+      }
+
+      /* FORGE CLICK HANDLER V2 */
+
+      const forgeTarget =
+        event.target.closest(
+          '[data-rpg-dwarf-mode-v2], [data-rpg-forge-v2], [data-rpg-casino-preset-v2], [data-rpg-casino-spin-v2]'
+        )
+
+      if (
+        forgeTarget &&
+        selectedSlug &&
+        progress
+      ) {
+        try {
+          const result =
+            await handleRpgForgeAction({
+              target:
+                forgeTarget,
+
+              athleteSlug:
+                selectedSlug,
+
+              state:
+                forgeState,
+
+              canEdit:
+                canEdit(),
+            })
+
+          if (
+            result?.refresh
+          ) {
+            const [
+              nextProgress,
+              nextInventory,
+            ] =
+              await Promise.all([
+                fetchProgress(
+                  selectedSlug
+                ),
+
+                loadRpgInventory(
+                  selectedSlug
+                ),
+              ])
+
+            progress =
+              nextProgress
+
+            inventory =
+              nextInventory
+
+            await loadRpgCollections(
+              selectedSlug,
+              collectionState,
+              inventory
+            )
+          }
+
+          if (
+            result?.handled
+          ) {
+            renderProfile()
+            return
+          }
+        } catch (error) {
+          console.error(
+            'RPG FORGE ERROR',
+            error
+          )
+
+          window.alert(
+            error?.message ||
+            'Erreur du Nain Forgeron.'
+          )
+
+          renderProfile()
+          return
+        }
+      }
+
+
+      /* COMBAT CLICK HANDLER V2 */
+
+      const combatStartButton =
+        event.target.closest(
+          '[data-rpg-combat-start-v2]'
+        )
+
+      const bossStartButton =
+        event.target.closest(
+          '[data-rpg-boss-start-v2]'
+        )
+
+      if (
+        combatStartButton ||
+        bossStartButton
+      ) {
+        if (
+          !selectedSlug ||
+          !progress ||
+          !canEdit()
+        ) {
+          return
+        }
+
+        const isBoss =
+          !!bossStartButton
+
+        try {
+          await startRpgCombat({
+            athleteSlug:
+              selectedSlug,
+
+            progress,
+
+            state:
+              combatState,
+
+            isBoss,
+
+            onFinished:
+              async () => {
+                const [
+                  nextProgress,
+                  nextInventory,
+                ] =
+                  await Promise.all([
+                    fetchProgress(
+                      selectedSlug
+                    ),
+
+                    loadRpgInventory(
+                      selectedSlug
+                    ),
+                  ])
+
+                progress =
+                  nextProgress
+
+                inventory =
+                  nextInventory
+
+                await loadRpgCollections(
+                  selectedSlug,
+                  collectionState,
+                  inventory
+                )
+
+                renderProfile()
+              },
+          })
+        } catch (error) {
+          console.error(
+            'RPG COMBAT START ERROR',
+            error
+          )
+
+          window.alert(
+            error?.message ||
+            'Impossible de lancer le combat.'
+          )
+        }
+
+        return
+      }
+
       if (
         event.target.closest(
           '[data-rpg-back]'
@@ -1079,6 +1549,9 @@ export async function mountRpg(
         selectedSlug =
           athleteButton.dataset
             .rpgAthlete
+
+        combatState.selectedDifficulty =
+          null
 
         await loadSelected()
         return
@@ -1187,6 +1660,24 @@ export async function mountRpg(
       if (tab) {
         activeTab =
           tab.dataset.rpgTab
+
+        /* LOAD CASINO ON EQUIPMENT TAB V2 */
+
+        if (
+          activeTab ===
+            'equipment' &&
+          forgeState.mode ===
+            'casino' &&
+          selectedSlug
+        ) {
+          await loadRpgCasinoState({
+            athleteSlug:
+              selectedSlug,
+
+            state:
+              forgeState,
+          })
+        }
 
         if (
           activeTab ===
