@@ -1,3 +1,4 @@
+import { awardSetXp, flushXpOutbox } from './xp.js'
 /* GA V2 SYNC HOTFIX OUTBOX 2026-08-11 */
 import {
   buildWorkoutSetPayload,
@@ -438,6 +439,14 @@ export function mountTraining(
   program,
   options = {}
 ) {
+  const canEdit =
+    options.canEdit !== false
+
+  // XP INITIAL OUTBOX FLUSH
+  if (navigator.onLine !== false) {
+    void flushXpOutbox()
+  }
+
   const blocks =
     getBlocks(program)
 
@@ -649,6 +658,11 @@ export function mountTraining(
     sourceSet,
     changes
   ) {
+    // READ ONLY UPDATE GUARD
+    if (!canEdit) {
+      return
+    }
+
     const current =
       getSetState(
         state,
@@ -691,6 +705,11 @@ export function mountTraining(
     value,
     syncCloud = false
   ) {
+    // READ ONLY LOAD GUARD
+    if (!canEdit) {
+      return
+    }
+
     const current =
       getSetState(
         state,
@@ -1196,6 +1215,7 @@ export function mountTraining(
     return `
       <select
         class="set-rpe"
+        ${canEdit ? '' : 'disabled'}
         data-action="rpe"
         data-set-id="${escapeHtml(sourceSet.id)}"
         aria-label="RPE série ${index + 1}"
@@ -1342,6 +1362,7 @@ export function mountTraining(
           autocomplete="off"
           value="${escapeHtml(set.load)}"
           placeholder="${escapeHtml(placeholder)}"
+          ${canEdit ? '' : 'readonly'}
           data-action="load"
           data-set-id="${escapeHtml(sourceSet.id)}"
           aria-label="Charge série ${index + 1}"
@@ -1363,6 +1384,7 @@ export function mountTraining(
                 : ''
             }
           "
+          ${canEdit ? '' : 'disabled'}
           data-action="toggle"
           data-set-id="${escapeHtml(sourceSet.id)}"
           aria-label="Valider série ${index + 1}"
@@ -1506,6 +1528,7 @@ export function mountTraining(
 
           <button
             class="reset-button"
+            ${canEdit ? '' : 'disabled'}
             data-action="reset"
           >
             Réinitialiser
@@ -1577,6 +1600,17 @@ export function mountTraining(
 
     const actionName =
       action.dataset.action
+
+    // READ ONLY CLICK GUARD
+    if (
+      !canEdit &&
+      (
+        actionName === 'reset' ||
+        actionName === 'toggle'
+      )
+    ) {
+      return
+    }
 
     if (
       actionName === 'back'
@@ -1726,12 +1760,123 @@ export function mountTraining(
               : '',
         }
       )
+
+      const xpPayload =
+        payloadForFound(found)
+
+      const exerciseCode =
+        String(
+          xpPayload[
+            'exercise' + '_' + 'code'
+          ] || ''
+        ).toLowerCase()
+
+      const dayRows =
+        listDaySets(found.day)
+
+      const sbdSets =
+        dayRows.filter((row) => {
+          const rowPayload =
+            payloadForFound({
+              ...row,
+              weekIndex:
+                found.weekIndex,
+              dayIndex:
+                found.dayIndex,
+            })
+
+          const code =
+            String(
+              rowPayload[
+                'exercise' + '_' + 'code'
+              ] || ''
+            ).toLowerCase()
+
+          return [
+            'sq',
+            'bn',
+            'dl',
+          ].includes(code)
+        }).length
+
+      const totalSets =
+        dayRows.length
+
+      const accessorySets =
+        Math.max(
+          0,
+          totalSets - sbdSets
+        )
+
+      void awardSetXp({
+        athleteSlug:
+          cloudAthleteSlug,
+
+        programKey:
+          programKey(),
+
+        weekIndex:
+          found.weekIndex,
+
+        dayIndex:
+          found.dayIndex,
+
+        setIndex:
+          found.setIndex,
+
+        exerciseCode,
+
+        isPr:
+          false,
+
+        previousPrKg:
+          null,
+
+        totalSets,
+        sbdSets,
+        accessorySets,
+      })
+        .then((result) => {
+          if (
+            !result ||
+            result.offline
+          ) {
+            return
+          }
+
+          console.log(
+            'XP RESULT',
+            {
+              duplicate:
+                result.duplicate,
+              setPoints:
+                result.setPoints,
+              totalXp:
+                result.totalXp,
+              level:
+                result.level,
+              packEarned:
+                result.packEarned,
+            }
+          )
+        })
+        .catch((error) => {
+          console.error(
+            'XP ERROR',
+            error
+          )
+        })
     }
   }
 
   root.oninput = (
     event
   ) => {
+
+    // READ ONLY INPUT GUARD
+    if (!canEdit) {
+      return
+    }
     const input =
       event.target
 
@@ -1863,6 +2008,11 @@ export function mountTraining(
   root.onchange = (
     event
   ) => {
+
+    // READ ONLY CHANGE GUARD
+    if (!canEdit) {
+      return
+    }
     const input =
       event.target
 
@@ -1965,6 +2115,24 @@ export function mountTraining(
       void flushWorkoutOutbox(
         setSyncStatus
       )
+
+      void flushXpOutbox()
+        .then((result) => {
+          if (
+            result?.flushed > 0
+          ) {
+            console.log(
+              'XP OUTBOX FLUSHED',
+              result
+            )
+          }
+        })
+        .catch((error) => {
+          console.error(
+            'XP OUTBOX FLUSH ERROR',
+            error
+          )
+        })
 
       void hydrateFromCloud()
     },

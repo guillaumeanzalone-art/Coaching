@@ -3,7 +3,6 @@ const PROGRAM_LOADERS = {
   "benoit": () => import('./programs/benoit.js'),
   "celia": () => import('./programs/celia.js'),
   "charles": () => import('./programs/charles.js'),
-  "clara": () => import('./programs/clara.js'),
   "clemosaurus": () => import('./programs/clemosaurus.js'),
   "dorian": () => import('./programs/dorian.js'),
   "duane": () => import('./programs/duane.js'),

@@ -1,0 +1,515 @@
+[
+  {
+    "name": "Le père de Noé",
+    "rarity": "Abyssal",
+    "key": "le pere de noe",
+    "file": "sprites/monsters/le-pere-de-noe.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 124992
+  },
+  {
+    "name": "Barre protéinée goût béton",
+    "rarity": "Commun",
+    "key": "barre proteinee gout beton",
+    "file": "sprites/monsters/barre-proteinee-gout-beton.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 106466
+  },
+  {
+    "name": "Bouteille d’eau tiède consciente",
+    "rarity": "Commun",
+    "key": "bouteille d eau tiede consciente",
+    "file": "sprites/monsters/bouteille-d-eau-tiede-consciente.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 67338
+  },
+  {
+    "name": "Chaussette de gym sauvage",
+    "rarity": "Commun",
+    "key": "chaussette de gym sauvage",
+    "file": "sprites/monsters/chaussette-de-gym-sauvage.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 72322
+  },
+  {
+    "name": "Donut malicieux",
+    "rarity": "Commun",
+    "key": "donut malicieux",
+    "file": "sprites/monsters/donut-malicieux.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 117906
+  },
+  {
+    "name": "Le Banc Toujours Pris",
+    "rarity": "Commun",
+    "key": "le banc toujours pris",
+    "file": "sprites/monsters/le-banc-toujours-pris.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 115226
+  },
+  {
+    "name": "Le Bro aux Trois Serviettes",
+    "rarity": "Commun",
+    "key": "le bro aux trois serviettes",
+    "file": "sprites/monsters/le-bro-aux-trois-serviettes.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 145836
+  },
+  {
+    "name": "Le Cadenas Sans Code",
+    "rarity": "Commun",
+    "key": "le cadenas sans code",
+    "file": "sprites/monsters/le-cadenas-sans-code.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 167602
+  },
+  {
+    "name": "Le DJ Bluetooth Interdit",
+    "rarity": "Commun",
+    "key": "le dj bluetooth interdit",
+    "file": "sprites/monsters/le-dj-bluetooth-interdit.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 153152
+  },
+  {
+    "name": "Le Gérant du Vestiaire Oublié",
+    "rarity": "Commun",
+    "key": "le gerant du vestiaire oublie",
+    "file": "sprites/monsters/le-gerant-du-vestiaire-oublie.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 152988
+  },
+  {
+    "name": "Le Nettoyeur de Banc Sec",
+    "rarity": "Commun",
+    "key": "le nettoyeur de banc sec",
+    "file": "sprites/monsters/le-nettoyeur-de-banc-sec.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 83210
+  },
+  {
+    "name": "Le Squatteur de Poulie",
+    "rarity": "Commun",
+    "key": "le squatteur de poulie",
+    "file": "sprites/monsters/le-squatteur-de-poulie.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 65786
+  },
+  {
+    "name": "Le Tapis de Course Possédé",
+    "rarity": "Commun",
+    "key": "le tapis de course possede",
+    "file": "sprites/monsters/le-tapis-de-course-possede.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 95814
+  },
+  {
+    "name": "L’Abonné Fantôme de Février",
+    "rarity": "Commun",
+    "key": "l abonne fantome de fevrier",
+    "file": "sprites/monsters/l-abonne-fantome-de-fevrier.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 116832
+  },
+  {
+    "name": "L’Influenceur du Miroir",
+    "rarity": "Commun",
+    "key": "l influenceur du miroir",
+    "file": "sprites/monsters/l-influenceur-du-miroir.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 176612
+  },
+  {
+    "name": "Omelette fantôme",
+    "rarity": "Commun",
+    "key": "omelette fantome",
+    "file": "sprites/monsters/omelette-fantome.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 105074
+  },
+  {
+    "name": "Slime des ténèbres",
+    "rarity": "Commun",
+    "key": "slime des tenebres",
+    "file": "sprites/monsters/slime-des-tenebres.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 82054
+  },
+  {
+    "name": "Arnold Schwarzeneggerie, le Chêne en Plastique",
+    "rarity": "Epique",
+    "key": "arnold schwarzeneggerie le chene en plastique",
+    "file": "sprites/monsters/arnold-schwarzeneggerie-le-chene-en-plastique.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 70738
+  },
+  {
+    "name": "Avatar du RPE 10 permanent",
+    "rarity": "Epique",
+    "key": "avatar du rpe 10 permanent",
+    "file": "sprites/monsters/avatar-du-rpe-10-permanent.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 107212
+  },
+  {
+    "name": "Chicken Broccoli Rice final form",
+    "rarity": "Epique",
+    "key": "chicken broccoli rice final form",
+    "file": "sprites/monsters/chicken-broccoli-rice-final-form.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 123688
+  },
+  {
+    "name": "Clara Métaknight, Lame de la Tempo",
+    "rarity": "Epique",
+    "key": "clara metaknight lame de la tempo",
+    "file": "sprites/monsters/clara-metaknight-lame-de-la-tempo.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 108692
+  },
+  {
+    "name": "Contrôleur URSSAF dimensionnel",
+    "rarity": "Epique",
+    "key": "controleur urssaf dimensionnel",
+    "file": "sprites/monsters/controleur-urssaf-dimensionnel.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 133252
+  },
+  {
+    "name": "Célia Céleste, Reine du Challenge Abdo",
+    "rarity": "Epique",
+    "key": "celia celeste reine du challenge abdo",
+    "file": "sprites/monsters/celia-celeste-reine-du-challenge-abdo.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 61034
+  },
+  {
+    "name": "Fantôme du mock meet annulé",
+    "rarity": "Epique",
+    "key": "fantome du mock meet annule",
+    "file": "sprites/monsters/fantome-du-mock-meet-annule.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 96946
+  },
+  {
+    "name": "Guillaume Glorieux, Seigneur du GL",
+    "rarity": "Epique",
+    "key": "guillaume glorieux seigneur du gl",
+    "file": "sprites/monsters/guillaume-glorieux-seigneur-du-gl.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 105390
+  },
+  {
+    "name": "Hydre du deload refusé",
+    "rarity": "Epique",
+    "key": "hydre du deload refuse",
+    "file": "sprites/monsters/hydre-du-deload-refuse.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 119504
+  },
+  {
+    "name": "Janel Janvier, Reine du Cycle",
+    "rarity": "Epique",
+    "key": "janel janvier reine du cycle",
+    "file": "sprites/monsters/janel-janvier-reine-du-cycle.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 112952
+  },
+  {
+    "name": "Jolan Joliment Faux",
+    "rarity": "Epique",
+    "key": "jolan joliment faux",
+    "file": "sprites/monsters/jolan-joliment-faux.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 84340
+  },
+  {
+    "name": "Kaoutar Counter, Paradeuse de Bench",
+    "rarity": "Epique",
+    "key": "kaoutar counter paradeuse de bench",
+    "file": "sprites/monsters/kaoutar-counter-paradeuse-de-bench.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 81564
+  },
+  {
+    "name": "Killian Kill-Ton-PR",
+    "rarity": "Epique",
+    "key": "killian kill ton pr",
+    "file": "sprites/monsters/killian-kill-ton-pr.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 89412
+  },
+  {
+    "name": "L'Orteil de Noé",
+    "rarity": "Epique",
+    "key": "l orteil de noe",
+    "file": "sprites/monsters/l-orteil-de-noe.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 88338
+  },
+  {
+    "name": "La Manager Basic-Fit, Reine du Bip Rouge",
+    "rarity": "Epique",
+    "key": "la manager basic fit reine du bip rouge",
+    "file": "sprites/monsters/la-manager-basic-fit-reine-du-bip-rouge.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 102320
+  },
+  {
+    "name": "Le Donut Malicieux Suprême",
+    "rarity": "Epique",
+    "key": "le donut malicieux supreme",
+    "file": "sprites/monsters/le-donut-malicieux-supreme.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 130716
+  },
+  {
+    "name": "Le Manager ESN Ultime",
+    "rarity": "Epique",
+    "key": "le manager esn ultime",
+    "file": "sprites/monsters/le-manager-esn-ultime.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 171516
+  },
+  {
+    "name": "Lou Dragonne, Souffle de Magnésie",
+    "rarity": "Epique",
+    "key": "lou dragonne souffle de magnesie",
+    "file": "sprites/monsters/lou-dragonne-souffle-de-magnesie.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 83860
+  },
+  {
+    "name": "Lucine Lumière, Caméra Critique",
+    "rarity": "Epique",
+    "key": "lucine lumiere camera critique",
+    "file": "sprites/monsters/lucine-lumiere-camera-critique.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 90626
+  },
+  {
+    "name": "Machine à adducteurs cosmique",
+    "rarity": "Epique",
+    "key": "machine a adducteurs cosmique",
+    "file": "sprites/monsters/machine-a-adducteurs-cosmique.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 114900
+  },
+  {
+    "name": "Malo Malosse, Petit Boss du Rack",
+    "rarity": "Epique",
+    "key": "malo malosse petit boss du rack",
+    "file": "sprites/monsters/malo-malosse-petit-boss-du-rack.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 102372
+  },
+  {
+    "name": "Matthieu Pêcheur, Maître de la Canne à Tirage",
+    "rarity": "Epique",
+    "key": "matthieu pecheur maitre de la canne a tirage",
+    "file": "sprites/monsters/matthieu-pecheur-maitre-de-la-canne-a-tirage.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 95272
+  },
+  {
+    "name": "Mike O’Hearnia, l’Éternel Naturellement Mystérieux",
+    "rarity": "Epique",
+    "key": "mike o hearnia l eternel naturellement mysterieux",
+    "file": "sprites/monsters/mike-o-hearnia-l-eternel-naturellement-mysterieux.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 97026
+  },
+  {
+    "name": "Noel Deyzel Diesel, le Père Noël du Bulk",
+    "rarity": "Epique",
+    "key": "noel deyzel diesel le pere noel du bulk",
+    "file": "sprites/monsters/noel-deyzel-diesel-le-pere-noel-du-bulk.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 112572
+  },
+  {
+    "name": "Noé Faux-Noé, Copie Conforme",
+    "rarity": "Epique",
+    "key": "noe faux noe copie conforme",
+    "file": "sprites/monsters/noe-faux-noe-copie-conforme.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 64028
+  },
+  {
+    "name": "Phil Heath Ledger, le Cadeau Maudit",
+    "rarity": "Epique",
+    "key": "phil heath ledger le cadeau maudit",
+    "file": "sprites/monsters/phil-heath-ledger-le-cadeau-maudit.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 83556
+  },
+  {
+    "name": "Roi de la Funk Synthétique",
+    "rarity": "Epique",
+    "key": "roi de la funk synthetique",
+    "file": "sprites/monsters/roi-de-la-funk-synthetique.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 164144
+  },
+  {
+    "name": "Roi de la Phonk",
+    "rarity": "Epique",
+    "key": "roi de la phonk",
+    "file": "sprites/monsters/roi-de-la-phonk.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 177168
+  },
+  {
+    "name": "Roi du rest timer infini",
+    "rarity": "Epique",
+    "key": "roi du rest timer infini",
+    "file": "sprites/monsters/roi-du-rest-timer-infini.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 118946
+  },
+  {
+    "name": "Saya Réunion, Foudre Créole",
+    "rarity": "Epique",
+    "key": "saya reunion foudre creole",
+    "file": "sprites/monsters/saya-reunion-foudre-creole.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 126070
+  },
+  {
+    "name": "Seigneur du superset infini",
+    "rarity": "Epique",
+    "key": "seigneur du superset infini",
+    "file": "sprites/monsters/seigneur-du-superset-infini.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 130998
+  },
+  {
+    "name": "Serena Sérénité, Calme Avant le Top Set",
+    "rarity": "Epique",
+    "key": "serena serenite calme avant le top set",
+    "file": "sprites/monsters/serena-serenite-calme-avant-le-top-set.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 105690
+  },
+  {
+    "name": "Titan du total",
+    "rarity": "Epique",
+    "key": "titan du total",
+    "file": "sprites/monsters/titan-du-total.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 131646
+  },
+  {
+    "name": "Jo Lindnergarten, le Jardinier Veineux",
+    "rarity": "Légendaire",
+    "key": "jo lindnergarten le jardinier veineux",
+    "file": "sprites/monsters/jo-lindnergarten-le-jardinier-veineux.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 80168
+  },
+  {
+    "name": "Val, aka Kazuto, aka the Shadow, the Lonely Shadow Cowboy",
+    "rarity": "Légendaire",
+    "key": "val aka kazuto aka the shadow the lonely shadow cowboy",
+    "file": "sprites/monsters/val-aka-kazuto-aka-the-shadow-the-lonely-shadow-cowboy.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 174644
+  },
+  {
+    "name": "Greg Doucette de Porc, le Crieur Hypocalorique",
+    "rarity": "Mythique",
+    "key": "greg doucette de porc le crieur hypocalorique",
+    "file": "sprites/monsters/greg-doucette-de-porc-le-crieur-hypocalorique.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 219390
+  },
+  {
+    "name": "Kali Muscleton, le Prisonnier Protéiné",
+    "rarity": "Mythique",
+    "key": "kali muscleton le prisonnier proteine",
+    "file": "sprites/monsters/kali-muscleton-le-prisonnier-proteine.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 124754
+  },
+  {
+    "name": "Noah le nain furtif",
+    "rarity": "Mythique",
+    "key": "noah le nain furtif",
+    "file": "sprites/monsters/noah-le-nain-furtif.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 170310
+  },
+  {
+    "name": "Rich Piano-Bar, le Musicien à Huit Repas",
+    "rarity": "Mythique",
+    "key": "rich piano bar le musicien a huit repas",
+    "file": "sprites/monsters/rich-piano-bar-le-musicien-a-huit-repas.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 131256
+  },
+  {
+    "name": "Hanzalone, la version maléfique",
+    "rarity": "Ultra Mythique",
+    "key": "hanzalone la version malefique",
+    "file": "sprites/monsters/hanzalone-la-version-malefique.webp",
+    "width": 427,
+    "height": 640,
+    "bytes": 138788
+  }
+]
