@@ -1,25 +1,17 @@
-GA COACHING V2 — AUTHENTIFICATION SUPABASE
+GA COACHING V2 — HOTFIX OUTBOX
 
-Remplacer dans v2/src :
-- main.js
-- auth.js
-- style.css
+À remplacer :
+v2/src/training.js
 
-Ne pas remplacer :
-- supabase.js (déjà créé)
-- program.js
-- training.js
-- athletes.js
-- programs/
-
+Aucun autre fichier.
 Aucun SQL.
 
-Test attendu :
-1. ouvrir localhost
-2. écran Connexion
-3. utiliser un compte existant de l'ancienne application
-4. coach -> accueil + liste des athlètes
-5. athlete -> ouverture automatique de son profil
-6. pending -> écran Accès à valider
+Correction :
+- la modification est mise dans l'outbox AVANT le render ;
+- la charge est mise dans l'outbox dès la frappe ;
+- le RPE est pris en charge sur input ET change ;
+- le test hors ligne doit maintenant afficher un JSON dans :
+  ga-v2-workout-outbox-v1
 
-Aucune sauvegarde de série Supabase n'est encore activée.
+Vérification rapide dans training.js :
+chercher "GA V2 SYNC HOTFIX OUTBOX".

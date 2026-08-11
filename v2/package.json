@@ -9,9 +9,16 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "vite": "^8.2.0"
   },
   "dependencies": {
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/ios": "^8.5.0",
     "@supabase/supabase-js": "^2.112.2"
+  },
+  "allowScripts": {
+    "sharp@0.32.6": true
   }
 }

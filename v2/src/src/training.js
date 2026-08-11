@@ -1,4 +1,3 @@
-/* GA V2 SYNC HOTFIX OUTBOX 2026-08-11 */
 import {
   buildWorkoutSetPayload,
   flushWorkoutOutbox,
@@ -662,14 +661,8 @@ export function mountTraining(
       ...changes,
     }
 
-    /*
-     * IMPORTANT :
-     * on place d'abord la modification dans l'outbox,
-     * AVANT de rerendre l'interface.
-     * Ainsi une série ne peut pas perdre son événement
-     * de synchronisation lors d'un render().
-     */
     persist()
+    render()
 
     const found =
       findSourceSet(
@@ -682,8 +675,6 @@ export function mountTraining(
         found
       )
     }
-
-    render()
   }
 
   function saveLoadWithoutRender(
@@ -1735,15 +1726,9 @@ export function mountTraining(
     const input =
       event.target
 
-    const actionName =
-      input.dataset.action
-
-    const setId =
-      input.dataset.setId
-
     if (
-      !actionName ||
-      !setId
+      input.dataset.action !==
+        'load'
     ) {
       return
     }
@@ -1751,7 +1736,7 @@ export function mountTraining(
     const found =
       findSourceSet(
         block,
-        setId
+        input.dataset.setId
       )
 
     if (!found) {
@@ -1759,105 +1744,15 @@ export function mountTraining(
     }
 
     /*
-     * CHARGE :
-     * - sauvegarde locale à chaque frappe ;
-     * - mise en outbox immédiate, même avant le blur ;
-     * - l'envoi réseau reste déclenché au change/blur.
-     *
-     * Résultat : même si l'app est fermée juste après
-     * la saisie ou si Internet coupe, la modification
-     * attend bien dans ga-v2-workout-outbox-v1.
+     * Sauvegarde locale à chaque frappe.
+     * Le cloud attend le change/blur pour ne pas
+     * envoyer une requête à chaque caractère.
      */
-    if (
-      actionName ===
-        'load'
-    ) {
-      saveLoadWithoutRender(
-        found.sourceSet,
-        input.value,
-        false
-      )
-
-      queueWorkoutSet(
-        payloadForFound(
-          found
-        )
-      )
-
-      setSyncStatus(
-        navigator.onLine === false
-          ? 'offline'
-          : 'local',
-
-        navigator.onLine === false
-          ? 'Hors ligne · sauvegardé localement'
-          : 'Modification locale…'
-      )
-
-      return
-    }
-
-    /*
-     * Certains navigateurs mobiles déclenchent
-     * input sur un <select> avant change.
-     * On traite donc aussi le RPE ici afin que
-     * l'état ne dépende pas d'un seul événement.
-     */
-    if (
-      actionName ===
-        'rpe'
-    ) {
-      const {
-        exercise,
-        sourceSet,
-      } =
-        found
-
-      if (
-        !exercise.usesRpe
-      ) {
-        return
-      }
-
-      if (
-        input.value ===
-          'failed'
-      ) {
-        updateSet(
-          sourceSet,
-          {
-            rpe: '',
-            status:
-              'failed',
-          }
-        )
-        return
-      }
-
-      if (
-        input.value === ''
-      ) {
-        updateSet(
-          sourceSet,
-          {
-            rpe: '',
-            status:
-              'pending',
-          }
-        )
-        return
-      }
-
-      updateSet(
-        sourceSet,
-        {
-          rpe:
-            input.value,
-          status:
-            'done',
-        }
-      )
-    }
+    saveLoadWithoutRender(
+      found.sourceSet,
+      input.value,
+      false
+    )
   }
 
   root.onchange = (

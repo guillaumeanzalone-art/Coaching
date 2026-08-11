@@ -139,35 +139,3 @@
   border-color: rgba(239, 82, 82, 0.48);
   color: #ff8d8d;
 }
-
-/* iOS / mobile safe areas */
-body {
-  min-height: 100dvh;
-}
-
-.app-shell {
-  padding-top: max(24px, env(safe-area-inset-top));
-  padding-left: max(18px, env(safe-area-inset-left));
-  padding-right: max(18px, env(safe-area-inset-right));
-  padding-bottom: max(60px, env(safe-area-inset-bottom));
-}
-
-.training-page {
-  padding-top: max(22px, env(safe-area-inset-top));
-  padding-left: max(18px, env(safe-area-inset-left));
-  padding-right: max(18px, env(safe-area-inset-right));
-  padding-bottom: max(70px, env(safe-area-inset-bottom));
-}
-
-@media (max-width: 650px) {
-  .app-shell {
-    padding-top: max(18px, env(safe-area-inset-top));
-  }
-
-  .training-page {
-    padding-top: max(14px, env(safe-area-inset-top));
-    padding-left: max(10px, env(safe-area-inset-left));
-    padding-right: max(10px, env(safe-area-inset-right));
-    padding-bottom: max(60px, env(safe-area-inset-bottom));
-  }
-}
