@@ -1,11 +1,8 @@
-import { demoProgram } from './program.js'
+function createStorageKey(program) {
+  return `ga-v2-training-progress:${program.id}`
+}
 
-const program = demoProgram
-
-const STORAGE_KEY =
-  `ga-v2-training-progress:${program.id}`
-
-function createDefaultState() {
+function createDefaultState(program) {
   return {
     selectedWeekId:
       program.weeks[0]?.id ?? null,
@@ -17,43 +14,66 @@ function createDefaultState() {
   }
 }
 
-function loadState() {
+function loadState(
+  storageKey,
+  program
+) {
   try {
     const saved =
-      localStorage.getItem(STORAGE_KEY)
+      localStorage.getItem(
+        storageKey
+      )
 
     if (!saved) {
-      return createDefaultState()
+      return createDefaultState(
+        program
+      )
     }
 
     const parsed =
       JSON.parse(saved)
 
     return {
-      ...createDefaultState(),
+      ...createDefaultState(
+        program
+      ),
+
       ...parsed,
-      sets: parsed.sets || {},
+
+      sets:
+        parsed.sets || {},
     }
   } catch {
-    return createDefaultState()
+    return createDefaultState(
+      program
+    )
   }
 }
 
-function saveState(state) {
+function saveState(
+  storageKey,
+  state
+) {
   localStorage.setItem(
-    STORAGE_KEY,
+    storageKey,
     JSON.stringify(state)
   )
 }
 
-function findWeek(weekId) {
+function findWeek(
+  program,
+  weekId
+) {
   return program.weeks.find(
     (week) =>
       week.id === weekId
   )
 }
 
-function findDay(week, dayId) {
+function findDay(
+  week,
+  dayId
+) {
   if (!week) {
     return null
   }
@@ -178,16 +198,85 @@ function countWeekProgress(
   }
 }
 
+function findSourceSet(
+  program,
+  setId
+) {
+  for (
+    const week
+    of program.weeks
+  ) {
+    for (
+      const day
+      of week.days
+    ) {
+      for (
+        const exercise
+        of day.exercises
+      ) {
+        const sourceSet =
+          exercise.sets.find(
+            (set) =>
+              set.id === setId
+          )
+
+        if (sourceSet) {
+          return {
+            week,
+            day,
+            exercise,
+            sourceSet,
+          }
+        }
+      }
+    }
+  }
+
+  return null
+}
+
 export function mountTraining(
   root,
-  onBack
+  onBack,
+  program
 ) {
+  if (
+    !program ||
+    !Array.isArray(program.weeks)
+  ) {
+    root.innerHTML = `
+      <main class="training-page">
+        <p>
+          Programme introuvable.
+        </p>
+      </main>
+    `
+
+    return
+  }
+
+  const STORAGE_KEY =
+    createStorageKey(
+      program
+    )
+
   let state =
-    loadState()
+    loadState(
+      STORAGE_KEY,
+      program
+    )
+
+  function persist() {
+    saveState(
+      STORAGE_KEY,
+      state
+    )
+  }
 
   function normalizeSelection() {
     let week =
       findWeek(
+        program,
         state.selectedWeekId
       )
 
@@ -213,7 +302,7 @@ export function mountTraining(
         day?.id ?? null
     }
 
-    saveState(state)
+    persist()
 
     return {
       week,
@@ -236,7 +325,7 @@ export function mountTraining(
       ...changes,
     }
 
-    saveState(state)
+    persist()
     render()
   }
 
@@ -253,16 +342,16 @@ export function mountTraining(
     day.exercises.forEach(
       (exercise) => {
         exercise.sets.forEach(
-          (set) => {
+          (sourceSet) => {
             delete state.sets[
-              set.id
+              sourceSet.id
             ]
           }
         )
       }
     )
 
-    saveState(state)
+    persist()
     render()
   }
 
@@ -298,6 +387,7 @@ export function mountTraining(
                   data-action="week"
                   data-week-id="${week.id}"
                 >
+
                   <strong>
                     ${week.label}
                   </strong>
@@ -305,6 +395,7 @@ export function mountTraining(
                   <span>
                     ${progress.completed}/${progress.total}
                   </span>
+
                 </button>
               `
             }
@@ -352,6 +443,7 @@ export function mountTraining(
                   data-action="day"
                   data-day-id="${day.id}"
                 >
+
                   <strong>
                     ${day.name}
                   </strong>
@@ -359,6 +451,7 @@ export function mountTraining(
                   <span>
                     ${progress.completed}/${progress.total}
                   </span>
+
                 </button>
               `
             }
@@ -608,43 +701,6 @@ export function mountTraining(
     `
   }
 
-  function findSourceSet(
-    setId
-  ) {
-    for (
-      const week
-      of program.weeks
-    ) {
-      for (
-        const day
-        of week.days
-      ) {
-        for (
-          const exercise
-          of day.exercises
-        ) {
-          const sourceSet =
-            exercise.sets.find(
-              (set) =>
-                set.id ===
-                setId
-            )
-
-          if (sourceSet) {
-            return {
-              week,
-              day,
-              exercise,
-              sourceSet,
-            }
-          }
-        }
-      }
-    }
-
-    return null
-  }
-
   function render() {
     const {
       week,
@@ -806,6 +862,7 @@ export function mountTraining(
 
       const week =
         findWeek(
+          program,
           weekId
         )
 
@@ -820,7 +877,7 @@ export function mountTraining(
         week.days[0]?.id ??
         null
 
-      saveState(state)
+      persist()
       render()
 
       return
@@ -850,7 +907,7 @@ export function mountTraining(
       state.selectedDayId =
         day.id
 
-      saveState(state)
+      persist()
       render()
 
       return
@@ -865,6 +922,7 @@ export function mountTraining(
 
     const found =
       findSourceSet(
+        program,
         setId
       )
 
@@ -939,6 +997,7 @@ export function mountTraining(
 
     const found =
       findSourceSet(
+        program,
         setId
       )
 
