@@ -1,132 +1,100 @@
-function createStorageKey(program) {
-  return `ga-v2-training-progress:${program.id}`
+function getBlocks(program) {
+  if (Array.isArray(program.blocks) && program.blocks.length) {
+    return program.blocks
+  }
+
+  if (Array.isArray(program.weeks)) {
+    return [
+      {
+        id: 'default',
+        label: 'Programme',
+        kicker: '',
+        weeks: program.weeks,
+      },
+    ]
+  }
+
+  return []
 }
 
-function createDefaultState(program) {
+function createBlockSelectionKey(program) {
+  return `ga-v2-selected-block:${program.id}`
+}
+
+function createStorageKey(program, block) {
+  return `ga-v2-training-progress:${program.id}:${block.id}`
+}
+
+function createDefaultState(block) {
   return {
-    selectedWeekId:
-      program.weeks[0]?.id ?? null,
-
-    selectedDayId:
-      program.weeks[0]?.days[0]?.id ?? null,
-
+    selectedWeekId: block.weeks[0]?.id ?? null,
+    selectedDayId: block.weeks[0]?.days[0]?.id ?? null,
     sets: {},
   }
 }
 
-function loadState(
-  storageKey,
-  program
-) {
+function loadState(storageKey, block) {
   try {
-    const saved =
-      localStorage.getItem(
-        storageKey
-      )
+    const saved = localStorage.getItem(storageKey)
 
     if (!saved) {
-      return createDefaultState(
-        program
-      )
+      return createDefaultState(block)
     }
 
-    const parsed =
-      JSON.parse(saved)
+    const parsed = JSON.parse(saved)
 
     return {
-      ...createDefaultState(
-        program
-      ),
-
+      ...createDefaultState(block),
       ...parsed,
-
-      sets:
-        parsed.sets || {},
+      sets: parsed.sets || {},
     }
   } catch {
-    return createDefaultState(
-      program
-    )
+    return createDefaultState(block)
   }
 }
 
-function saveState(
-  storageKey,
-  state
-) {
+function saveState(storageKey, state) {
   localStorage.setItem(
     storageKey,
     JSON.stringify(state)
   )
 }
 
-function findWeek(
-  program,
-  weekId
-) {
-  return program.weeks.find(
-    (week) =>
-      week.id === weekId
+function findWeek(block, weekId) {
+  return block.weeks.find(
+    (week) => week.id === weekId
   )
 }
 
-function findDay(
-  week,
-  dayId
-) {
+function findDay(week, dayId) {
   if (!week) {
     return null
   }
 
   return week.days.find(
-    (day) =>
-      day.id === dayId
+    (day) => day.id === dayId
   )
 }
 
-function getSetState(
-  state,
-  sourceSet
-) {
-  const saved =
-    state.sets[sourceSet.id]
+function getSetState(state, sourceSet) {
+  const saved = state.sets[sourceSet.id]
 
   if (!saved) {
     return {
-      load:
-        sourceSet.load ??
-        sourceSet.targetLoad ??
-        0,
-
-      rpe:
-        sourceSet.rpe ?? '',
-
-      status:
-        sourceSet.status ??
-        'pending',
+      load: sourceSet.load ?? '',
+      rpe: sourceSet.rpe ?? '',
+      status: sourceSet.status ?? 'pending',
     }
   }
 
   return {
-    load:
-      saved.load ??
-      sourceSet.load ??
-      sourceSet.targetLoad ??
-      0,
-
-    rpe:
-      saved.rpe ?? '',
-
-    status:
-      saved.status ??
-      'pending',
+    load: saved.load ?? sourceSet.load ?? '',
+    rpe: saved.rpe ?? '',
+    status: saved.status ?? 'pending',
   }
 }
 
-function countDayProgress(
-  state,
-  day
-) {
+function countDayProgress(state, day) {
   if (!day) {
     return {
       completed: 0,
@@ -134,27 +102,23 @@ function countDayProgress(
     }
   }
 
-  const sets =
-    day.exercises.flatMap(
-      (exercise) =>
-        exercise.sets
-    )
+  const sets = day.exercises.flatMap(
+    (exercise) => exercise.sets
+  )
 
-  const completed =
-    sets.filter(
-      (sourceSet) => {
-        const set =
-          getSetState(
-            state,
-            sourceSet
-          )
+  const completed = sets.filter(
+    (sourceSet) => {
+      const set = getSetState(
+        state,
+        sourceSet
+      )
 
-        return (
-          set.status === 'done' ||
-          set.status === 'failed'
-        )
-      }
-    ).length
+      return (
+        set.status === 'done' ||
+        set.status === 'failed'
+      )
+    }
+  ).length
 
   return {
     completed,
@@ -162,10 +126,7 @@ function countDayProgress(
   }
 }
 
-function countWeekProgress(
-  state,
-  week
-) {
+function countWeekProgress(state, week) {
   if (!week) {
     return {
       completed: 0,
@@ -176,21 +137,13 @@ function countWeekProgress(
   let completed = 0
   let total = 0
 
-  week.days.forEach(
-    (day) => {
-      const progress =
-        countDayProgress(
-          state,
-          day
-        )
+  week.days.forEach((day) => {
+    const progress =
+      countDayProgress(state, day)
 
-      completed +=
-        progress.completed
-
-      total +=
-        progress.total
-    }
-  )
+    completed += progress.completed
+    total += progress.total
+  })
 
   return {
     completed,
@@ -198,26 +151,13 @@ function countWeekProgress(
   }
 }
 
-function findSourceSet(
-  program,
-  setId
-) {
-  for (
-    const week
-    of program.weeks
-  ) {
-    for (
-      const day
-      of week.days
-    ) {
-      for (
-        const exercise
-        of day.exercises
-      ) {
+function findSourceSet(block, setId) {
+  for (const week of block.weeks) {
+    for (const day of week.days) {
+      for (const exercise of day.exercises) {
         const sourceSet =
           exercise.sets.find(
-            (set) =>
-              set.id === setId
+            (set) => set.id === setId
           )
 
         if (sourceSet) {
@@ -235,35 +175,84 @@ function findSourceSet(
   return null
 }
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+}
+
+function formatReps(value) {
+  const text = String(value ?? '').trim()
+
+  if (!text) {
+    return '—'
+  }
+
+  if (/^\d+(?:[.,]\d+)?(?:\s*-\s*\d+(?:[.,]\d+)?)?$/.test(text)) {
+    return `${text} reps`
+  }
+
+  return text
+}
+
+function formatLoadRange(value) {
+  if (value === null || value === undefined || value === '') {
+    return ''
+  }
+
+  return String(value)
+    .replace(/\s*-\s*/g, ' – ')
+    .trim()
+}
+
 export function mountTraining(
   root,
   onBack,
   program
 ) {
-  if (
-    !program ||
-    !Array.isArray(program.weeks)
-  ) {
+  const blocks = getBlocks(program)
+
+  if (!program || !blocks.length) {
     root.innerHTML = `
       <main class="training-page">
-        <p>
-          Programme introuvable.
-        </p>
+        <p>Programme introuvable.</p>
       </main>
     `
-
     return
   }
 
-  const STORAGE_KEY =
+  const BLOCK_SELECTION_KEY =
+    createBlockSelectionKey(program)
+
+  let selectedBlockId =
+    localStorage.getItem(
+      BLOCK_SELECTION_KEY
+    ) ||
+    program.defaultBlockId ||
+    blocks[0].id
+
+  let block =
+    blocks.find(
+      (item) =>
+        item.id === selectedBlockId
+    ) ||
+    blocks[0]
+
+  selectedBlockId = block.id
+
+  let STORAGE_KEY =
     createStorageKey(
-      program
+      program,
+      block
     )
 
   let state =
     loadState(
       STORAGE_KEY,
-      program
+      block
     )
 
   function persist() {
@@ -273,17 +262,53 @@ export function mountTraining(
     )
   }
 
+  function selectBlock(blockId) {
+    const nextBlock =
+      blocks.find(
+        (item) =>
+          item.id === blockId
+      )
+
+    if (!nextBlock) {
+      return
+    }
+
+    selectedBlockId =
+      nextBlock.id
+
+    block =
+      nextBlock
+
+    localStorage.setItem(
+      BLOCK_SELECTION_KEY,
+      selectedBlockId
+    )
+
+    STORAGE_KEY =
+      createStorageKey(
+        program,
+        block
+      )
+
+    state =
+      loadState(
+        STORAGE_KEY,
+        block
+      )
+
+    normalizeSelection()
+    render()
+  }
+
   function normalizeSelection() {
     let week =
       findWeek(
-        program,
+        block,
         state.selectedWeekId
       )
 
     if (!week) {
-      week =
-        program.weeks[0]
-
+      week = block.weeks[0]
       state.selectedWeekId =
         week?.id ?? null
     }
@@ -295,9 +320,7 @@ export function mountTraining(
       )
 
     if (!day) {
-      day =
-        week?.days[0]
-
+      day = week?.days[0]
       state.selectedDayId =
         day?.id ?? null
     }
@@ -329,10 +352,26 @@ export function mountTraining(
     render()
   }
 
+  function saveLoadWithoutRender(
+    sourceSet,
+    value
+  ) {
+    const current =
+      getSetState(
+        state,
+        sourceSet
+      )
+
+    state.sets[sourceSet.id] = {
+      ...current,
+      load: String(value ?? ''),
+    }
+
+    persist()
+  }
+
   function resetCurrentDay() {
-    const {
-      day,
-    } =
+    const { day } =
       normalizeSelection()
 
     if (!day) {
@@ -355,53 +394,84 @@ export function mountTraining(
     render()
   }
 
+  function renderBlocks() {
+    if (blocks.length <= 1) {
+      return ''
+    }
+
+    return `
+      <div
+        class="week-tabs"
+        style="grid-template-columns: repeat(${blocks.length}, minmax(0, 1fr));"
+      >
+        ${blocks.map((item) => {
+          const active =
+            item.id === block.id
+
+          return `
+            <button
+              class="
+                week-tab
+                ${active
+                  ? 'week-tab--active'
+                  : ''}
+              "
+              data-action="block"
+              data-block-id="${escapeHtml(item.id)}"
+            >
+              <strong>
+                ${escapeHtml(item.label)}
+              </strong>
+
+              <span>
+                ${escapeHtml(item.kicker || '')}
+              </span>
+            </button>
+          `
+        }).join('')}
+      </div>
+    `
+  }
+
   function renderWeeks(
     currentWeek
   ) {
     return `
       <div class="week-tabs">
+        ${block.weeks.map(
+          (week) => {
+            const progress =
+              countWeekProgress(
+                state,
+                week
+              )
 
-        ${program.weeks
-          .map(
-            (week) => {
-              const progress =
-                countWeekProgress(
-                  state,
-                  week
-                )
+            const active =
+              week.id ===
+              currentWeek?.id
 
-              const active =
-                week.id ===
-                currentWeek?.id
+            return `
+              <button
+                class="
+                  week-tab
+                  ${active
+                    ? 'week-tab--active'
+                    : ''}
+                "
+                data-action="week"
+                data-week-id="${escapeHtml(week.id)}"
+              >
+                <strong>
+                  ${escapeHtml(week.label)}
+                </strong>
 
-              return `
-                <button
-                  class="
-                    week-tab
-                    ${
-                      active
-                        ? 'week-tab--active'
-                        : ''
-                    }
-                  "
-                  data-action="week"
-                  data-week-id="${week.id}"
-                >
-
-                  <strong>
-                    ${week.label}
-                  </strong>
-
-                  <span>
-                    ${progress.completed}/${progress.total}
-                  </span>
-
-                </button>
-              `
-            }
-          )
-          .join('')}
-
+                <span>
+                  ${progress.completed}/${progress.total}
+                </span>
+              </button>
+            `
+          }
+        ).join('')}
       </div>
     `
   }
@@ -414,50 +484,56 @@ export function mountTraining(
       return ''
     }
 
+    const columnCount =
+      Math.min(
+        Math.max(
+          currentWeek.days.length,
+          1
+        ),
+        5
+      )
+
     return `
-      <div class="day-tabs-v2">
+      <div
+        class="day-tabs-v2"
+        style="grid-template-columns: repeat(${columnCount}, minmax(0, 1fr));"
+      >
+        ${currentWeek.days.map(
+          (day) => {
+            const progress =
+              countDayProgress(
+                state,
+                day
+              )
 
-        ${currentWeek.days
-          .map(
-            (day) => {
-              const progress =
-                countDayProgress(
-                  state,
-                  day
-                )
+            const active =
+              day.id ===
+              currentDay?.id
 
-              const active =
-                day.id ===
-                currentDay?.id
+            return `
+              <button
+                class="
+                  day-tab-v2
+                  ${active
+                    ? 'day-tab-v2--active'
+                    : ''}
+                "
+                data-action="day"
+                data-day-id="${escapeHtml(day.id)}"
+              >
+                <strong>
+                  ${day.emoji
+                    ? `${escapeHtml(day.emoji)} `
+                    : ''}${escapeHtml(day.name)}
+                </strong>
 
-              return `
-                <button
-                  class="
-                    day-tab-v2
-                    ${
-                      active
-                        ? 'day-tab-v2--active'
-                        : ''
-                    }
-                  "
-                  data-action="day"
-                  data-day-id="${day.id}"
-                >
-
-                  <strong>
-                    ${day.name}
-                  </strong>
-
-                  <span>
-                    ${progress.completed}/${progress.total}
-                  </span>
-
-                </button>
-              `
-            }
-          )
-          .join('')}
-
+                <span>
+                  ${progress.completed}/${progress.total}
+                </span>
+              </button>
+            `
+          }
+        ).join('')}
       </div>
     `
   }
@@ -493,44 +569,36 @@ export function mountTraining(
       <select
         class="set-rpe"
         data-action="rpe"
-        data-set-id="${sourceSet.id}"
+        data-set-id="${escapeHtml(sourceSet.id)}"
         aria-label="RPE série ${index + 1}"
       >
-
         <option value="">
           RPE
         </option>
 
-        ${values
-          .map(
-            (value) => `
-              <option
-                value="${value}"
-                ${
-                  String(set.rpe) ===
-                  String(value)
-                    ? 'selected'
-                    : ''
-                }
-              >
-                ${value}
-              </option>
-            `
-          )
-          .join('')}
+        ${values.map(
+          (value) => `
+            <option
+              value="${value}"
+              ${String(set.rpe) ===
+                String(value)
+                  ? 'selected'
+                  : ''}
+            >
+              ${value}
+            </option>
+          `
+        ).join('')}
 
         <option
           value="failed"
-          ${
-            set.status ===
+          ${set.status ===
             'failed'
               ? 'selected'
-              : ''
-          }
+              : ''}
         >
           ECHEC
         </option>
-
       </select>
     `
   }
@@ -552,48 +620,85 @@ export function mountTraining(
     const isFailed =
       set.status === 'failed'
 
+    const meta = []
+
+    if (
+      sourceSet.percent !== null &&
+      sourceSet.percent !== undefined &&
+      sourceSet.percent !== ''
+    ) {
+      meta.push(
+        `${sourceSet.percent} %`
+      )
+    }
+
+    const loadRange =
+      formatLoadRange(
+        sourceSet.loadRange
+      )
+
+    if (loadRange) {
+      meta.push(
+        `${loadRange} kg`
+      )
+    }
+
+    if (sourceSet.intensity) {
+      meta.push(
+        String(
+          sourceSet.intensity
+        )
+      )
+    }
+
+    const placeholder =
+      loadRange ||
+      'kg'
+
     return `
       <div
         class="
           training-set
-          ${
-            isDone
-              ? 'training-set--done'
-              : ''
-          }
-          ${
-            isFailed
-              ? 'training-set--failed'
-              : ''
-          }
+          ${isDone
+            ? 'training-set--done'
+            : ''}
+          ${isFailed
+            ? 'training-set--failed'
+            : ''}
         "
-        data-set-id="${sourceSet.id}"
+        data-set-id="${escapeHtml(sourceSet.id)}"
       >
-
         <div class="set-number">
           Série ${index + 1}
         </div>
 
         <div class="set-prescription">
-
           <strong>
-            ${sourceSet.reps} reps
+            ${escapeHtml(
+              formatReps(
+                sourceSet.reps
+              )
+            )}
           </strong>
 
           <span>
-            ${sourceSet.targetLoad} kg prévu
+            ${meta.length
+              ? escapeHtml(
+                  meta.join(' · ')
+                )
+              : 'Charge libre'}
           </span>
-
         </div>
 
         <input
           class="set-load"
-          type="number"
+          type="text"
           inputmode="decimal"
-          step="0.5"
-          value="${set.load}"
+          autocomplete="off"
+          value="${escapeHtml(set.load)}"
+          placeholder="${escapeHtml(placeholder)}"
           data-action="load"
-          data-set-id="${sourceSet.id}"
+          data-set-id="${escapeHtml(sourceSet.id)}"
           aria-label="Charge série ${index + 1}"
         >
 
@@ -607,23 +712,18 @@ export function mountTraining(
         <button
           class="
             set-check
-            ${
-              isDone
-                ? 'set-check--active'
-                : ''
-            }
+            ${isDone
+              ? 'set-check--active'
+              : ''}
           "
           data-action="toggle"
-          data-set-id="${sourceSet.id}"
+          data-set-id="${escapeHtml(sourceSet.id)}"
           aria-label="Valider série ${index + 1}"
         >
-          ${
-            isDone
-              ? '✓'
-              : ''
-          }
+          ${isDone
+            ? '✓'
+            : ''}
         </button>
-
       </div>
     `
   }
@@ -647,27 +747,28 @@ export function mountTraining(
         }
       ).length
 
+    const displayName =
+      exercise.variant
+        ? `${exercise.name} · ${exercise.variant}`
+        : exercise.name
+
     return `
       <section
         class="training-exercise"
       >
-
         <header
           class="exercise-header"
         >
-
           <div>
-
             <span
               class="exercise-type"
             >
-              ${exercise.type}
+              ${escapeHtml(exercise.type)}
             </span>
 
             <h2>
-              ${exercise.name}
+              ${escapeHtml(displayName)}
             </h2>
-
           </div>
 
           <span
@@ -677,26 +778,20 @@ export function mountTraining(
             /
             ${exercise.sets.length}
           </span>
-
         </header>
 
         <div
           class="training-sets"
         >
-
-          ${exercise.sets
-            .map(
-              (sourceSet, index) =>
-                renderSet(
-                  exercise,
-                  sourceSet,
-                  index
-                )
-            )
-            .join('')}
-
+          ${exercise.sets.map(
+            (sourceSet, index) =>
+              renderSet(
+                exercise,
+                sourceSet,
+                index
+              )
+          ).join('')}
         </div>
-
       </section>
     `
   }
@@ -718,7 +813,6 @@ export function mountTraining(
           </p>
         </main>
       `
-
       return
     }
 
@@ -732,20 +826,17 @@ export function mountTraining(
       <main
         class="training-page"
       >
-
         <header
           class="training-topbar"
         >
-
           <button
             class="back-button"
             data-action="back"
           >
-            ← Accueil
+            ← Athlètes
           </button>
 
           <div>
-
             <span
               class="training-kicker"
             >
@@ -753,9 +844,10 @@ export function mountTraining(
             </span>
 
             <h1>
-              ${program.athlete.name}
+              ${escapeHtml(
+                program.athlete.name
+              )}
             </h1>
-
           </div>
 
           <button
@@ -764,8 +856,9 @@ export function mountTraining(
           >
             Réinitialiser
           </button>
-
         </header>
+
+        ${renderBlocks()}
 
         ${renderWeeks(
           week
@@ -779,11 +872,12 @@ export function mountTraining(
         <section
           class="training-summary"
         >
-
           <span>
-            ${week.label}
+            ${escapeHtml(block.label)}
             ·
-            ${day.name}
+            ${escapeHtml(week.label)}
+            ·
+            ${escapeHtml(day.name)}
           </span>
 
           <strong>
@@ -792,31 +886,23 @@ export function mountTraining(
             ${progress.total}
             séries
           </strong>
-
         </section>
 
         <div
           class="training-exercises"
         >
-
-          ${day.exercises
-            .map(
-              (exercise) =>
-                renderExercise(
-                  exercise
-                )
-            )
-            .join('')}
-
+          ${day.exercises.map(
+            (exercise) =>
+              renderExercise(
+                exercise
+              )
+          ).join('')}
         </div>
-
       </main>
     `
   }
 
-  root.onclick = (
-    event
-  ) => {
+  root.onclick = (event) => {
     const action =
       event.target.closest(
         '[data-action]'
@@ -829,19 +915,16 @@ export function mountTraining(
     const actionName =
       action.dataset.action
 
-    if (
-      actionName === 'back'
-    ) {
+    if (actionName === 'back') {
       root.onclick = null
       root.onchange = null
+      root.oninput = null
 
       onBack()
       return
     }
 
-    if (
-      actionName === 'reset'
-    ) {
+    if (actionName === 'reset') {
       const confirmed =
         window.confirm(
           'Réinitialiser uniquement cette séance ?'
@@ -854,16 +937,18 @@ export function mountTraining(
       return
     }
 
-    if (
-      actionName === 'week'
-    ) {
-      const weekId =
-        action.dataset.weekId
+    if (actionName === 'block') {
+      selectBlock(
+        action.dataset.blockId
+      )
+      return
+    }
 
+    if (actionName === 'week') {
       const week =
         findWeek(
-          program,
-          weekId
+          block,
+          action.dataset.weekId
         )
 
       if (!week) {
@@ -879,25 +964,17 @@ export function mountTraining(
 
       persist()
       render()
-
       return
     }
 
-    if (
-      actionName === 'day'
-    ) {
-      const {
-        week,
-      } =
+    if (actionName === 'day') {
+      const { week } =
         normalizeSelection()
-
-      const dayId =
-        action.dataset.dayId
 
       const day =
         findDay(
           week,
-          dayId
+          action.dataset.dayId
         )
 
       if (!day) {
@@ -909,7 +986,6 @@ export function mountTraining(
 
       persist()
       render()
-
       return
     }
 
@@ -922,7 +998,7 @@ export function mountTraining(
 
     const found =
       findSourceSet(
-        program,
+        block,
         setId
       )
 
@@ -942,31 +1018,21 @@ export function mountTraining(
         sourceSet
       )
 
-    if (
-      actionName ===
-      'toggle'
-    ) {
-      if (
-        set.status ===
-        'done'
-      ) {
+    if (actionName === 'toggle') {
+      if (set.status === 'done') {
         updateSet(
           sourceSet,
           {
-            status:
-              'pending',
+            status: 'pending',
           }
         )
-
         return
       }
 
       updateSet(
         sourceSet,
         {
-          status:
-            'done',
-
+          status: 'done',
           rpe:
             exercise.usesRpe
               ? set.rpe
@@ -976,9 +1042,34 @@ export function mountTraining(
     }
   }
 
-  root.onchange = (
-    event
-  ) => {
+  root.oninput = (event) => {
+    const input =
+      event.target
+
+    if (
+      input.dataset.action !==
+      'load'
+    ) {
+      return
+    }
+
+    const found =
+      findSourceSet(
+        block,
+        input.dataset.setId
+      )
+
+    if (!found) {
+      return
+    }
+
+    saveLoadWithoutRender(
+      found.sourceSet,
+      input.value
+    )
+  }
+
+  root.onchange = (event) => {
     const input =
       event.target
 
@@ -997,7 +1088,7 @@ export function mountTraining(
 
     const found =
       findSourceSet(
-        program,
+        block,
         setId
       )
 
@@ -1011,77 +1102,46 @@ export function mountTraining(
     } =
       found
 
-    if (
-      actionName ===
-      'load'
-    ) {
-      const load =
-        Number(
-          input.value
-        )
-
-      updateSet(
+    if (actionName === 'load') {
+      saveLoadWithoutRender(
         sourceSet,
-        {
-          load:
-            Number.isFinite(load)
-              ? load
-              : 0,
-        }
+        input.value
       )
-
       return
     }
 
-    if (
-      actionName ===
-      'rpe'
-    ) {
-      if (
-        !exercise.usesRpe
-      ) {
+    if (actionName === 'rpe') {
+      if (!exercise.usesRpe) {
         return
       }
 
-      if (
-        input.value ===
-        'failed'
-      ) {
+      if (input.value === 'failed') {
         updateSet(
           sourceSet,
           {
             rpe: '',
-            status:
-              'failed',
+            status: 'failed',
           }
         )
-
         return
       }
 
-      if (
-        input.value === ''
-      ) {
+      if (input.value === '') {
         updateSet(
           sourceSet,
           {
             rpe: '',
-            status:
-              'pending',
+            status: 'pending',
           }
         )
-
         return
       }
 
       updateSet(
         sourceSet,
         {
-          rpe:
-            input.value,
-
-          status:
-            'done',
+          rpe: input.value,
+          status: 'done',
         }
       )
     }
