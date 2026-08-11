@@ -1,5 +1,12 @@
 function getBlocks(program) {
-  if (Array.isArray(program.blocks) && program.blocks.length) {
+  if (!program) {
+    return []
+  }
+
+  if (
+    Array.isArray(program.blocks) &&
+    program.blocks.length
+  ) {
     return program.blocks
   }
 
@@ -27,74 +34,120 @@ function createStorageKey(program, block) {
 
 function createDefaultState(block) {
   return {
-    selectedWeekId: block.weeks[0]?.id ?? null,
-    selectedDayId: block.weeks[0]?.days[0]?.id ?? null,
+    selectedWeekId:
+      block.weeks[0]?.id ?? null,
+
+    selectedDayId:
+      block.weeks[0]?.days[0]?.id ?? null,
+
     sets: {},
   }
 }
 
-function loadState(storageKey, block) {
+function loadState(
+  storageKey,
+  block
+) {
   try {
-    const saved = localStorage.getItem(storageKey)
+    const saved =
+      localStorage.getItem(
+        storageKey
+      )
 
     if (!saved) {
-      return createDefaultState(block)
+      return createDefaultState(
+        block
+      )
     }
 
-    const parsed = JSON.parse(saved)
+    const parsed =
+      JSON.parse(saved)
 
     return {
-      ...createDefaultState(block),
+      ...createDefaultState(
+        block
+      ),
       ...parsed,
-      sets: parsed.sets || {},
+      sets:
+        parsed.sets || {},
     }
   } catch {
-    return createDefaultState(block)
+    return createDefaultState(
+      block
+    )
   }
 }
 
-function saveState(storageKey, state) {
+function saveState(
+  storageKey,
+  state
+) {
   localStorage.setItem(
     storageKey,
     JSON.stringify(state)
   )
 }
 
-function findWeek(block, weekId) {
+function findWeek(
+  block,
+  weekId
+) {
   return block.weeks.find(
-    (week) => week.id === weekId
+    (week) =>
+      week.id === weekId
   )
 }
 
-function findDay(week, dayId) {
+function findDay(
+  week,
+  dayId
+) {
   if (!week) {
     return null
   }
 
   return week.days.find(
-    (day) => day.id === dayId
+    (day) =>
+      day.id === dayId
   )
 }
 
-function getSetState(state, sourceSet) {
-  const saved = state.sets[sourceSet.id]
+function getSetState(
+  state,
+  sourceSet
+) {
+  const saved =
+    state.sets[sourceSet.id]
 
   if (!saved) {
     return {
-      load: sourceSet.load ?? '',
-      rpe: sourceSet.rpe ?? '',
-      status: sourceSet.status ?? 'pending',
+      load:
+        sourceSet.load ?? '',
+      rpe:
+        sourceSet.rpe ?? '',
+      status:
+        sourceSet.status ??
+        'pending',
     }
   }
 
   return {
-    load: saved.load ?? sourceSet.load ?? '',
-    rpe: saved.rpe ?? '',
-    status: saved.status ?? 'pending',
+    load:
+      saved.load ??
+      sourceSet.load ??
+      '',
+    rpe:
+      saved.rpe ?? '',
+    status:
+      saved.status ??
+      'pending',
   }
 }
 
-function countDayProgress(state, day) {
+function countDayProgress(
+  state,
+  day
+) {
   if (!day) {
     return {
       completed: 0,
@@ -102,23 +155,27 @@ function countDayProgress(state, day) {
     }
   }
 
-  const sets = day.exercises.flatMap(
-    (exercise) => exercise.sets
-  )
+  const sets =
+    day.exercises.flatMap(
+      (exercise) =>
+        exercise.sets
+    )
 
-  const completed = sets.filter(
-    (sourceSet) => {
-      const set = getSetState(
-        state,
-        sourceSet
-      )
+  const completed =
+    sets.filter(
+      (sourceSet) => {
+        const set =
+          getSetState(
+            state,
+            sourceSet
+          )
 
-      return (
-        set.status === 'done' ||
-        set.status === 'failed'
-      )
-    }
-  ).length
+        return (
+          set.status === 'done' ||
+          set.status === 'failed'
+        )
+      }
+    ).length
 
   return {
     completed,
@@ -126,7 +183,10 @@ function countDayProgress(state, day) {
   }
 }
 
-function countWeekProgress(state, week) {
+function countWeekProgress(
+  state,
+  week
+) {
   if (!week) {
     return {
       completed: 0,
@@ -137,13 +197,21 @@ function countWeekProgress(state, week) {
   let completed = 0
   let total = 0
 
-  week.days.forEach((day) => {
-    const progress =
-      countDayProgress(state, day)
+  week.days.forEach(
+    (day) => {
+      const progress =
+        countDayProgress(
+          state,
+          day
+        )
 
-    completed += progress.completed
-    total += progress.total
-  })
+      completed +=
+        progress.completed
+
+      total +=
+        progress.total
+    }
+  )
 
   return {
     completed,
@@ -151,13 +219,26 @@ function countWeekProgress(state, week) {
   }
 }
 
-function findSourceSet(block, setId) {
-  for (const week of block.weeks) {
-    for (const day of week.days) {
-      for (const exercise of day.exercises) {
+function findSourceSet(
+  block,
+  setId
+) {
+  for (
+    const week
+    of block.weeks
+  ) {
+    for (
+      const day
+      of week.days
+    ) {
+      for (
+        const exercise
+        of day.exercises
+      ) {
         const sourceSet =
           exercise.sets.find(
-            (set) => set.id === setId
+            (set) =>
+              set.id === setId
           )
 
         if (sourceSet) {
@@ -185,13 +266,16 @@ function escapeHtml(value) {
 }
 
 function formatReps(value) {
-  const text = String(value ?? '').trim()
+  const text =
+    String(value ?? '').trim()
 
   if (!text) {
     return '—'
   }
 
-  if (/^\d+(?:[.,]\d+)?(?:\s*-\s*\d+(?:[.,]\d+)?)?$/.test(text)) {
+  if (
+    /^\d+(?:[.,]\d+)?(?:\s*-\s*\d+(?:[.,]\d+)?)?$/.test(text)
+  ) {
     return `${text} reps`
   }
 
@@ -199,7 +283,11 @@ function formatReps(value) {
 }
 
 function formatLoadRange(value) {
-  if (value === null || value === undefined || value === '') {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ''
+  ) {
     return ''
   }
 
@@ -213,19 +301,24 @@ export function mountTraining(
   onBack,
   program
 ) {
-  const blocks = getBlocks(program)
+  const blocks =
+    getBlocks(program)
 
-  if (!program || !blocks.length) {
+  if (!blocks.length) {
     root.innerHTML = `
       <main class="training-page">
-        <p>Programme introuvable.</p>
+        <p>
+          Programme introuvable.
+        </p>
       </main>
     `
     return
   }
 
   const BLOCK_SELECTION_KEY =
-    createBlockSelectionKey(program)
+    createBlockSelectionKey(
+      program
+    )
 
   let selectedBlockId =
     localStorage.getItem(
@@ -237,11 +330,13 @@ export function mountTraining(
   let block =
     blocks.find(
       (item) =>
-        item.id === selectedBlockId
+        item.id ===
+        selectedBlockId
     ) ||
     blocks[0]
 
-  selectedBlockId = block.id
+  selectedBlockId =
+    block.id
 
   let STORAGE_KEY =
     createStorageKey(
@@ -262,7 +357,9 @@ export function mountTraining(
     )
   }
 
-  function selectBlock(blockId) {
+  function selectBlock(
+    blockId
+  ) {
     const nextBlock =
       blocks.find(
         (item) =>
@@ -308,7 +405,9 @@ export function mountTraining(
       )
 
     if (!week) {
-      week = block.weeks[0]
+      week =
+        block.weeks[0]
+
       state.selectedWeekId =
         week?.id ?? null
     }
@@ -320,7 +419,9 @@ export function mountTraining(
       )
 
     if (!day) {
-      day = week?.days[0]
+      day =
+        week?.days[0]
+
       state.selectedDayId =
         day?.id ?? null
     }
@@ -364,7 +465,8 @@ export function mountTraining(
 
     state.sets[sourceSet.id] = {
       ...current,
-      load: String(value ?? ''),
+      load:
+        String(value ?? ''),
     }
 
     persist()
@@ -402,33 +504,37 @@ export function mountTraining(
     return `
       <div
         class="week-tabs"
-        style="grid-template-columns: repeat(${blocks.length}, minmax(0, 1fr));"
+        style="--tab-count:${blocks.length}"
       >
-        ${blocks.map((item) => {
-          const active =
-            item.id === block.id
+        ${blocks.map(
+          (item) => {
+            const active =
+              item.id === block.id
 
-          return `
-            <button
-              class="
-                week-tab
-                ${active
-                  ? 'week-tab--active'
-                  : ''}
-              "
-              data-action="block"
-              data-block-id="${escapeHtml(item.id)}"
-            >
-              <strong>
-                ${escapeHtml(item.label)}
-              </strong>
+            return `
+              <button
+                class="
+                  week-tab
+                  ${
+                    active
+                      ? 'week-tab--active'
+                      : ''
+                  }
+                "
+                data-action="block"
+                data-block-id="${escapeHtml(item.id)}"
+              >
+                <strong>
+                  ${escapeHtml(item.label)}
+                </strong>
 
-              <span>
-                ${escapeHtml(item.kicker || '')}
-              </span>
-            </button>
-          `
-        }).join('')}
+                <span>
+                  ${escapeHtml(item.kicker || '')}
+                </span>
+              </button>
+            `
+          }
+        ).join('')}
       </div>
     `
   }
@@ -437,7 +543,10 @@ export function mountTraining(
     currentWeek
   ) {
     return `
-      <div class="week-tabs">
+      <div
+        class="week-tabs"
+        style="--tab-count:${Math.max(block.weeks.length, 1)}"
+      >
         ${block.weeks.map(
           (week) => {
             const progress =
@@ -454,9 +563,11 @@ export function mountTraining(
               <button
                 class="
                   week-tab
-                  ${active
-                    ? 'week-tab--active'
-                    : ''}
+                  ${
+                    active
+                      ? 'week-tab--active'
+                      : ''
+                  }
                 "
                 data-action="week"
                 data-week-id="${escapeHtml(week.id)}"
@@ -484,19 +595,10 @@ export function mountTraining(
       return ''
     }
 
-    const columnCount =
-      Math.min(
-        Math.max(
-          currentWeek.days.length,
-          1
-        ),
-        5
-      )
-
     return `
       <div
         class="day-tabs-v2"
-        style="grid-template-columns: repeat(${columnCount}, minmax(0, 1fr));"
+        style="--tab-count:${Math.max(currentWeek.days.length, 1)}"
       >
         ${currentWeek.days.map(
           (day) => {
@@ -514,17 +616,21 @@ export function mountTraining(
               <button
                 class="
                   day-tab-v2
-                  ${active
-                    ? 'day-tab-v2--active'
-                    : ''}
+                  ${
+                    active
+                      ? 'day-tab-v2--active'
+                      : ''
+                  }
                 "
                 data-action="day"
                 data-day-id="${escapeHtml(day.id)}"
               >
                 <strong>
-                  ${day.emoji
-                    ? `${escapeHtml(day.emoji)} `
-                    : ''}${escapeHtml(day.name)}
+                  ${
+                    day.emoji
+                      ? `${escapeHtml(day.emoji)} `
+                      : ''
+                  }${escapeHtml(day.name)}
                 </strong>
 
                 <span>
@@ -580,10 +686,12 @@ export function mountTraining(
           (value) => `
             <option
               value="${value}"
-              ${String(set.rpe) ===
+              ${
+                String(set.rpe) ===
                 String(value)
                   ? 'selected'
-                  : ''}
+                  : ''
+              }
             >
               ${value}
             </option>
@@ -592,10 +700,12 @@ export function mountTraining(
 
         <option
           value="failed"
-          ${set.status ===
+          ${
+            set.status ===
             'failed'
               ? 'selected'
-              : ''}
+              : ''
+          }
         >
           ECHEC
         </option>
@@ -652,19 +762,22 @@ export function mountTraining(
     }
 
     const placeholder =
-      loadRange ||
-      'kg'
+      loadRange || 'kg'
 
     return `
       <div
         class="
           training-set
-          ${isDone
-            ? 'training-set--done'
-            : ''}
-          ${isFailed
-            ? 'training-set--failed'
-            : ''}
+          ${
+            isDone
+              ? 'training-set--done'
+              : ''
+          }
+          ${
+            isFailed
+              ? 'training-set--failed'
+              : ''
+          }
         "
         data-set-id="${escapeHtml(sourceSet.id)}"
       >
@@ -682,11 +795,13 @@ export function mountTraining(
           </strong>
 
           <span>
-            ${meta.length
-              ? escapeHtml(
-                  meta.join(' · ')
-                )
-              : 'Charge libre'}
+            ${
+              meta.length
+                ? escapeHtml(
+                    meta.join(' · ')
+                  )
+                : 'Charge libre'
+            }
           </span>
         </div>
 
@@ -712,17 +827,21 @@ export function mountTraining(
         <button
           class="
             set-check
-            ${isDone
-              ? 'set-check--active'
-              : ''}
+            ${
+              isDone
+                ? 'set-check--active'
+                : ''
+            }
           "
           data-action="toggle"
           data-set-id="${escapeHtml(sourceSet.id)}"
           aria-label="Valider série ${index + 1}"
         >
-          ${isDone
-            ? '✓'
-            : ''}
+          ${
+            isDone
+              ? '✓'
+              : ''
+          }
         </button>
       </div>
     `
@@ -919,7 +1038,6 @@ export function mountTraining(
       root.onclick = null
       root.onchange = null
       root.oninput = null
-
       onBack()
       return
     }
@@ -933,7 +1051,6 @@ export function mountTraining(
       if (confirmed) {
         resetCurrentDay()
       }
-
       return
     }
 
@@ -1019,7 +1136,9 @@ export function mountTraining(
       )
 
     if (actionName === 'toggle') {
-      if (set.status === 'done') {
+      if (
+        set.status === 'done'
+      ) {
         updateSet(
           sourceSet,
           {
@@ -1115,7 +1234,10 @@ export function mountTraining(
         return
       }
 
-      if (input.value === 'failed') {
+      if (
+        input.value ===
+        'failed'
+      ) {
         updateSet(
           sourceSet,
           {
