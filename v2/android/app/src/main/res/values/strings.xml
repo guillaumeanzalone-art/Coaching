@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">L\'araignée Coaching</string>
+    <string name="title_activity_main">L\'araignée Coaching</string>
+    <string name="package_name">com.gacoaching.app</string>
+    <string name="custom_url_scheme">com.gacoaching.app</string>
+</resources>
