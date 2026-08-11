@@ -1,243 +1,380 @@
-const STORAGE_KEY = 'ga-v2-training-v2'
+import { demoProgram } from './program.js'
 
-const defaultSession = {
-  athlete: 'Test',
-  week: 1,
-  day: 'Séance SBD test',
+const program = demoProgram
 
-  exercises: [
-    {
-      id: 'squat-1',
-      name: 'Comp Squat',
-      type: 'SQ',
-      usesRpe: true,
+const STORAGE_KEY =
+  `ga-v2-training-progress:${program.id}`
 
-      sets: [
-        {
-          id: 'squat-1-set-1',
-          reps: 5,
-          targetLoad: 140,
-          load: 140,
-          rpe: '',
-          status: 'pending',
-        },
-        {
-          id: 'squat-1-set-2',
-          reps: 5,
-          targetLoad: 140,
-          load: 140,
-          rpe: '',
-          status: 'pending',
-        },
-        {
-          id: 'squat-1-set-3',
-          reps: 5,
-          targetLoad: 140,
-          load: 140,
-          rpe: '',
-          status: 'pending',
-        },
-      ],
-    },
+function createDefaultState() {
+  return {
+    selectedWeekId:
+      program.weeks[0]?.id ?? null,
 
-    {
-      id: 'bench-1',
-      name: 'Comp Bench',
-      type: 'BN',
-      usesRpe: true,
+    selectedDayId:
+      program.weeks[0]?.days[0]?.id ?? null,
 
-      sets: [
-        {
-          id: 'bench-1-set-1',
-          reps: 4,
-          targetLoad: 100,
-          load: 100,
-          rpe: '',
-          status: 'pending',
-        },
-        {
-          id: 'bench-1-set-2',
-          reps: 4,
-          targetLoad: 100,
-          load: 100,
-          rpe: '',
-          status: 'pending',
-        },
-        {
-          id: 'bench-1-set-3',
-          reps: 4,
-          targetLoad: 100,
-          load: 100,
-          rpe: '',
-          status: 'pending',
-        },
-        {
-          id: 'bench-1-set-4',
-          reps: 4,
-          targetLoad: 100,
-          load: 100,
-          rpe: '',
-          status: 'pending',
-        },
-      ],
-    },
-
-    {
-      id: 'deadlift-1',
-      name: 'Comp Deadlift',
-      type: 'DL',
-      usesRpe: true,
-
-      sets: [
-        {
-          id: 'deadlift-1-set-1',
-          reps: 3,
-          targetLoad: 180,
-          load: 180,
-          rpe: '',
-          status: 'pending',
-        },
-        {
-          id: 'deadlift-1-set-2',
-          reps: 3,
-          targetLoad: 180,
-          load: 180,
-          rpe: '',
-          status: 'pending',
-        },
-        {
-          id: 'deadlift-1-set-3',
-          reps: 3,
-          targetLoad: 180,
-          load: 180,
-          rpe: '',
-          status: 'pending',
-        },
-      ],
-    },
-
-    {
-      id: 'leg-extension-1',
-      name: 'Leg Extension',
-      type: 'AC',
-      usesRpe: false,
-
-      sets: [
-        {
-          id: 'leg-extension-1-set-1',
-          reps: '10-12',
-          targetLoad: 40,
-          load: 40,
-          rpe: '',
-          status: 'pending',
-        },
-        {
-          id: 'leg-extension-1-set-2',
-          reps: '10-12',
-          targetLoad: 40,
-          load: 40,
-          rpe: '',
-          status: 'pending',
-        },
-        {
-          id: 'leg-extension-1-set-3',
-          reps: '10-12',
-          targetLoad: 40,
-          load: 40,
-          rpe: '',
-          status: 'pending',
-        },
-      ],
-    },
-  ],
-}
-
-function cloneDefaultSession() {
-  return JSON.parse(JSON.stringify(defaultSession))
-}
-
-function loadSession() {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-
-    if (!saved) {
-      return cloneDefaultSession()
-    }
-
-    return JSON.parse(saved)
-  } catch {
-    return cloneDefaultSession()
+    sets: {},
   }
 }
 
-function saveSession(session) {
+function loadState() {
+  try {
+    const saved =
+      localStorage.getItem(STORAGE_KEY)
+
+    if (!saved) {
+      return createDefaultState()
+    }
+
+    const parsed =
+      JSON.parse(saved)
+
+    return {
+      ...createDefaultState(),
+      ...parsed,
+      sets: parsed.sets || {},
+    }
+  } catch {
+    return createDefaultState()
+  }
+}
+
+function saveState(state) {
   localStorage.setItem(
     STORAGE_KEY,
-    JSON.stringify(session)
+    JSON.stringify(state)
   )
 }
 
-function getSet(session, exerciseId, setId) {
-  const exercise = session.exercises.find(
-    (item) => item.id === exerciseId
+function findWeek(weekId) {
+  return program.weeks.find(
+    (week) =>
+      week.id === weekId
   )
+}
 
-  if (!exercise) {
+function findDay(week, dayId) {
+  if (!week) {
     return null
   }
 
-  return exercise.sets.find(
-    (item) => item.id === setId
+  return week.days.find(
+    (day) =>
+      day.id === dayId
   )
 }
 
-function getExercise(session, exerciseId) {
-  return session.exercises.find(
-    (item) => item.id === exerciseId
-  )
+function getSetState(
+  state,
+  sourceSet
+) {
+  const saved =
+    state.sets[sourceSet.id]
+
+  if (!saved) {
+    return {
+      load:
+        sourceSet.load ??
+        sourceSet.targetLoad ??
+        0,
+
+      rpe:
+        sourceSet.rpe ?? '',
+
+      status:
+        sourceSet.status ??
+        'pending',
+    }
+  }
+
+  return {
+    load:
+      saved.load ??
+      sourceSet.load ??
+      sourceSet.targetLoad ??
+      0,
+
+    rpe:
+      saved.rpe ?? '',
+
+    status:
+      saved.status ??
+      'pending',
+  }
 }
 
-function getAllSets(session) {
-  return session.exercises.flatMap(
-    (exercise) => exercise.sets
-  )
-}
+function countDayProgress(
+  state,
+  day
+) {
+  if (!day) {
+    return {
+      completed: 0,
+      total: 0,
+    }
+  }
 
-export function mountTraining(root, onBack) {
-  let session = loadSession()
-
-  function updateSet(
-    exerciseId,
-    setId,
-    changes
-  ) {
-    const set = getSet(
-      session,
-      exerciseId,
-      setId
+  const sets =
+    day.exercises.flatMap(
+      (exercise) =>
+        exercise.sets
     )
 
-    if (!set) {
+  const completed =
+    sets.filter(
+      (sourceSet) => {
+        const set =
+          getSetState(
+            state,
+            sourceSet
+          )
+
+        return (
+          set.status === 'done' ||
+          set.status === 'failed'
+        )
+      }
+    ).length
+
+  return {
+    completed,
+    total: sets.length,
+  }
+}
+
+function countWeekProgress(
+  state,
+  week
+) {
+  if (!week) {
+    return {
+      completed: 0,
+      total: 0,
+    }
+  }
+
+  let completed = 0
+  let total = 0
+
+  week.days.forEach(
+    (day) => {
+      const progress =
+        countDayProgress(
+          state,
+          day
+        )
+
+      completed +=
+        progress.completed
+
+      total +=
+        progress.total
+    }
+  )
+
+  return {
+    completed,
+    total,
+  }
+}
+
+export function mountTraining(
+  root,
+  onBack
+) {
+  let state =
+    loadState()
+
+  function normalizeSelection() {
+    let week =
+      findWeek(
+        state.selectedWeekId
+      )
+
+    if (!week) {
+      week =
+        program.weeks[0]
+
+      state.selectedWeekId =
+        week?.id ?? null
+    }
+
+    let day =
+      findDay(
+        week,
+        state.selectedDayId
+      )
+
+    if (!day) {
+      day =
+        week?.days[0]
+
+      state.selectedDayId =
+        day?.id ?? null
+    }
+
+    saveState(state)
+
+    return {
+      week,
+      day,
+    }
+  }
+
+  function updateSet(
+    sourceSet,
+    changes
+  ) {
+    const current =
+      getSetState(
+        state,
+        sourceSet
+      )
+
+    state.sets[sourceSet.id] = {
+      ...current,
+      ...changes,
+    }
+
+    saveState(state)
+    render()
+  }
+
+  function resetCurrentDay() {
+    const {
+      day,
+    } =
+      normalizeSelection()
+
+    if (!day) {
       return
     }
 
-    Object.assign(
-      set,
-      changes
+    day.exercises.forEach(
+      (exercise) => {
+        exercise.sets.forEach(
+          (set) => {
+            delete state.sets[
+              set.id
+            ]
+          }
+        )
+      }
     )
 
-    saveSession(session)
+    saveState(state)
     render()
   }
 
-  function resetSession() {
-    session = cloneDefaultSession()
+  function renderWeeks(
+    currentWeek
+  ) {
+    return `
+      <div class="week-tabs">
 
-    saveSession(session)
-    render()
+        ${program.weeks
+          .map(
+            (week) => {
+              const progress =
+                countWeekProgress(
+                  state,
+                  week
+                )
+
+              const active =
+                week.id ===
+                currentWeek?.id
+
+              return `
+                <button
+                  class="
+                    week-tab
+                    ${
+                      active
+                        ? 'week-tab--active'
+                        : ''
+                    }
+                  "
+                  data-action="week"
+                  data-week-id="${week.id}"
+                >
+                  <strong>
+                    ${week.label}
+                  </strong>
+
+                  <span>
+                    ${progress.completed}/${progress.total}
+                  </span>
+                </button>
+              `
+            }
+          )
+          .join('')}
+
+      </div>
+    `
   }
 
-  function renderRpe(exercise, set, index) {
+  function renderDays(
+    currentWeek,
+    currentDay
+  ) {
+    if (!currentWeek) {
+      return ''
+    }
+
+    return `
+      <div class="day-tabs-v2">
+
+        ${currentWeek.days
+          .map(
+            (day) => {
+              const progress =
+                countDayProgress(
+                  state,
+                  day
+                )
+
+              const active =
+                day.id ===
+                currentDay?.id
+
+              return `
+                <button
+                  class="
+                    day-tab-v2
+                    ${
+                      active
+                        ? 'day-tab-v2--active'
+                        : ''
+                    }
+                  "
+                  data-action="day"
+                  data-day-id="${day.id}"
+                >
+                  <strong>
+                    ${day.name}
+                  </strong>
+
+                  <span>
+                    ${progress.completed}/${progress.total}
+                  </span>
+                </button>
+              `
+            }
+          )
+          .join('')}
+
+      </div>
+    `
+  }
+
+  function renderRpe(
+    exercise,
+    sourceSet,
+    set,
+    index
+  ) {
     if (!exercise.usesRpe) {
       return `
         <div
@@ -247,10 +384,7 @@ export function mountTraining(root, onBack) {
       `
     }
 
-    const isFailed =
-      set.status === 'failed'
-
-    const rpeValues = [
+    const values = [
       6,
       6.5,
       7,
@@ -266,25 +400,27 @@ export function mountTraining(root, onBack) {
       <select
         class="set-rpe"
         data-action="rpe"
+        data-set-id="${sourceSet.id}"
         aria-label="RPE série ${index + 1}"
       >
+
         <option value="">
           RPE
         </option>
 
-        ${rpeValues
+        ${values
           .map(
-            (rpe) => `
+            (value) => `
               <option
-                value="${rpe}"
+                value="${value}"
                 ${
                   String(set.rpe) ===
-                  String(rpe)
+                  String(value)
                     ? 'selected'
                     : ''
                 }
               >
-                ${rpe}
+                ${value}
               </option>
             `
           )
@@ -293,22 +429,30 @@ export function mountTraining(root, onBack) {
         <option
           value="failed"
           ${
-            isFailed
+            set.status ===
+            'failed'
               ? 'selected'
               : ''
           }
         >
           ECHEC
         </option>
+
       </select>
     `
   }
 
   function renderSet(
     exercise,
-    set,
+    sourceSet,
     index
   ) {
+    const set =
+      getSetState(
+        state,
+        sourceSet
+      )
+
     const isDone =
       set.status === 'done'
 
@@ -330,8 +474,7 @@ export function mountTraining(root, onBack) {
               : ''
           }
         "
-        data-exercise-id="${exercise.id}"
-        data-set-id="${set.id}"
+        data-set-id="${sourceSet.id}"
       >
 
         <div class="set-number">
@@ -339,13 +482,15 @@ export function mountTraining(root, onBack) {
         </div>
 
         <div class="set-prescription">
+
           <strong>
-            ${set.reps} reps
+            ${sourceSet.reps} reps
           </strong>
 
           <span>
-            ${set.targetLoad} kg prévu
+            ${sourceSet.targetLoad} kg prévu
           </span>
+
         </div>
 
         <input
@@ -355,11 +500,13 @@ export function mountTraining(root, onBack) {
           step="0.5"
           value="${set.load}"
           data-action="load"
+          data-set-id="${sourceSet.id}"
           aria-label="Charge série ${index + 1}"
         >
 
         ${renderRpe(
           exercise,
+          sourceSet,
           set,
           index
         )}
@@ -374,6 +521,7 @@ export function mountTraining(root, onBack) {
             }
           "
           data-action="toggle"
+          data-set-id="${sourceSet.id}"
           aria-label="Valider série ${index + 1}"
         >
           ${
@@ -387,67 +535,151 @@ export function mountTraining(root, onBack) {
     `
   }
 
-  function renderExercise(exercise) {
-    const completedSets =
+  function renderExercise(
+    exercise
+  ) {
+    const completed =
       exercise.sets.filter(
-        (set) =>
-          set.status !== 'pending'
+        (sourceSet) => {
+          const set =
+            getSetState(
+              state,
+              sourceSet
+            )
+
+          return (
+            set.status === 'done' ||
+            set.status === 'failed'
+          )
+        }
       ).length
 
     return `
-      <section class="training-exercise">
+      <section
+        class="training-exercise"
+      >
 
-        <header class="exercise-header">
+        <header
+          class="exercise-header"
+        >
 
           <div>
-            <span class="exercise-type">
+
+            <span
+              class="exercise-type"
+            >
               ${exercise.type}
             </span>
 
             <h2>
               ${exercise.name}
             </h2>
+
           </div>
 
-          <span class="exercise-progress">
-            ${completedSets}
+          <span
+            class="exercise-progress"
+          >
+            ${completed}
             /
             ${exercise.sets.length}
           </span>
 
         </header>
 
-        <div class="training-sets">
+        <div
+          class="training-sets"
+        >
+
           ${exercise.sets
             .map(
-              (set, index) =>
+              (sourceSet, index) =>
                 renderSet(
                   exercise,
-                  set,
+                  sourceSet,
                   index
                 )
             )
             .join('')}
+
         </div>
 
       </section>
     `
   }
 
-  function render() {
-    const allSets =
-      getAllSets(session)
+  function findSourceSet(
+    setId
+  ) {
+    for (
+      const week
+      of program.weeks
+    ) {
+      for (
+        const day
+        of week.days
+      ) {
+        for (
+          const exercise
+          of day.exercises
+        ) {
+          const sourceSet =
+            exercise.sets.find(
+              (set) =>
+                set.id ===
+                setId
+            )
 
-    const completedSets =
-      allSets.filter(
-        (set) =>
-          set.status !== 'pending'
-      ).length
+          if (sourceSet) {
+            return {
+              week,
+              day,
+              exercise,
+              sourceSet,
+            }
+          }
+        }
+      }
+    }
+
+    return null
+  }
+
+  function render() {
+    const {
+      week,
+      day,
+    } =
+      normalizeSelection()
+
+    if (!week || !day) {
+      root.innerHTML = `
+        <main
+          class="training-page"
+        >
+          <p>
+            Aucun programme disponible.
+          </p>
+        </main>
+      `
+
+      return
+    }
+
+    const progress =
+      countDayProgress(
+        state,
+        day
+      )
 
     root.innerHTML = `
-      <main class="training-page">
+      <main
+        class="training-page"
+      >
 
-        <header class="training-topbar">
+        <header
+          class="training-topbar"
+        >
 
           <button
             class="back-button"
@@ -457,13 +689,17 @@ export function mountTraining(root, onBack) {
           </button>
 
           <div>
-            <span class="training-kicker">
+
+            <span
+              class="training-kicker"
+            >
               GA COACHING · V2
             </span>
 
             <h1>
-              ${session.day}
+              ${program.athlete.name}
             </h1>
+
           </div>
 
           <button
@@ -475,27 +711,44 @@ export function mountTraining(root, onBack) {
 
         </header>
 
-        <section class="training-summary">
+        ${renderWeeks(
+          week
+        )}
+
+        ${renderDays(
+          week,
+          day
+        )}
+
+        <section
+          class="training-summary"
+        >
 
           <span>
-            Semaine ${session.week}
+            ${week.label}
+            ·
+            ${day.name}
           </span>
 
           <strong>
-            ${completedSets}
+            ${progress.completed}
             /
-            ${allSets.length}
+            ${progress.total}
             séries
           </strong>
 
         </section>
 
-        <div class="training-exercises">
+        <div
+          class="training-exercises"
+        >
 
-          ${session.exercises
+          ${day.exercises
             .map(
               (exercise) =>
-                renderExercise(exercise)
+                renderExercise(
+                  exercise
+                )
             )
             .join('')}
 
@@ -505,7 +758,9 @@ export function mountTraining(root, onBack) {
     `
   }
 
-  root.onclick = (event) => {
+  root.onclick = (
+    event
+  ) => {
     const action =
       event.target.closest(
         '[data-action]'
@@ -518,7 +773,9 @@ export function mountTraining(root, onBack) {
     const actionName =
       action.dataset.action
 
-    if (actionName === 'back') {
+    if (
+      actionName === 'back'
+    ) {
       root.onclick = null
       root.onchange = null
 
@@ -526,53 +783,120 @@ export function mountTraining(root, onBack) {
       return
     }
 
-    if (actionName === 'reset') {
-      resetSession()
+    if (
+      actionName === 'reset'
+    ) {
+      const confirmed =
+        window.confirm(
+          'Réinitialiser uniquement cette séance ?'
+        )
+
+      if (confirmed) {
+        resetCurrentDay()
+      }
+
       return
     }
 
-    const row =
-      action.closest(
-        '.training-set'
-      )
+    if (
+      actionName === 'week'
+    ) {
+      const weekId =
+        action.dataset.weekId
 
-    if (!row) {
+      const week =
+        findWeek(
+          weekId
+        )
+
+      if (!week) {
+        return
+      }
+
+      state.selectedWeekId =
+        week.id
+
+      state.selectedDayId =
+        week.days[0]?.id ??
+        null
+
+      saveState(state)
+      render()
+
       return
     }
 
-    const exerciseId =
-      row.dataset.exerciseId
+    if (
+      actionName === 'day'
+    ) {
+      const {
+        week,
+      } =
+        normalizeSelection()
+
+      const dayId =
+        action.dataset.dayId
+
+      const day =
+        findDay(
+          week,
+          dayId
+        )
+
+      if (!day) {
+        return
+      }
+
+      state.selectedDayId =
+        day.id
+
+      saveState(state)
+      render()
+
+      return
+    }
 
     const setId =
-      row.dataset.setId
+      action.dataset.setId
 
-    const set =
-      getSet(
-        session,
-        exerciseId,
+    if (!setId) {
+      return
+    }
+
+    const found =
+      findSourceSet(
         setId
       )
 
-    const exercise =
-      getExercise(
-        session,
-        exerciseId
-      )
-
-    if (!set || !exercise) {
+    if (!found) {
       return
     }
 
-    if (actionName === 'toggle') {
-      if (set.status === 'done') {
+    const {
+      exercise,
+      sourceSet,
+    } =
+      found
+
+    const set =
+      getSetState(
+        state,
+        sourceSet
+      )
+
+    if (
+      actionName ===
+      'toggle'
+    ) {
+      if (
+        set.status ===
+        'done'
+      ) {
         updateSet(
-          exerciseId,
-          setId,
+          sourceSet,
           {
-            status: 'pending',
-            rpe: exercise.usesRpe
-              ? set.rpe
-              : '',
+            status:
+              'pending',
           }
         )
 
@@ -580,64 +904,70 @@ export function mountTraining(root, onBack) {
       }
 
       updateSet(
-        exerciseId,
-        setId,
+        sourceSet,
         {
-          status: 'done',
+          status:
+            'done',
+
+          rpe:
+            exercise.usesRpe
+              ? set.rpe
+              : '',
         }
       )
     }
   }
 
-  root.onchange = (event) => {
-    const input = event.target
+  root.onchange = (
+    event
+  ) => {
+    const input =
+      event.target
 
-    const row =
-      input.closest(
-        '.training-set'
-      )
+    const actionName =
+      input.dataset.action
 
-    if (!row) {
+    const setId =
+      input.dataset.setId
+
+    if (
+      !actionName ||
+      !setId
+    ) {
       return
     }
 
-    const exerciseId =
-      row.dataset.exerciseId
-
-    const setId =
-      row.dataset.setId
-
-    const set =
-      getSet(
-        session,
-        exerciseId,
+    const found =
+      findSourceSet(
         setId
       )
 
-    const exercise =
-      getExercise(
-        session,
-        exerciseId
-      )
-
-    if (!set || !exercise) {
+    if (!found) {
       return
     }
 
+    const {
+      exercise,
+      sourceSet,
+    } =
+      found
+
     if (
-      input.dataset.action ===
+      actionName ===
       'load'
     ) {
-      const newLoad =
-        Number(input.value)
+      const load =
+        Number(
+          input.value
+        )
 
       updateSet(
-        exerciseId,
-        setId,
+        sourceSet,
         {
-          load: Number.isFinite(newLoad)
-            ? newLoad
-            : 0,
+          load:
+            Number.isFinite(load)
+              ? load
+              : 0,
         }
       )
 
@@ -645,10 +975,12 @@ export function mountTraining(root, onBack) {
     }
 
     if (
-      input.dataset.action ===
+      actionName ===
       'rpe'
     ) {
-      if (!exercise.usesRpe) {
+      if (
+        !exercise.usesRpe
+      ) {
         return
       }
 
@@ -657,11 +989,11 @@ export function mountTraining(root, onBack) {
         'failed'
       ) {
         updateSet(
-          exerciseId,
-          setId,
+          sourceSet,
           {
             rpe: '',
-            status: 'failed',
+            status:
+              'failed',
           }
         )
 
@@ -672,11 +1004,11 @@ export function mountTraining(root, onBack) {
         input.value === ''
       ) {
         updateSet(
-          exerciseId,
-          setId,
+          sourceSet,
           {
             rpe: '',
-            status: 'pending',
+            status:
+              'pending',
           }
         )
 
@@ -684,11 +1016,13 @@ export function mountTraining(root, onBack) {
       }
 
       updateSet(
-        exerciseId,
-        setId,
+        sourceSet,
         {
-          rpe: input.value,
-          status: 'done',
+          rpe:
+            input.value,
+
+          status:
+            'done',
         }
       )
     }
