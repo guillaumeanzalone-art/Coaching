@@ -1,0 +1,175 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #090b10;
+  color: #ffffff;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, #182236 0%, #090b10 42%);
+}
+
+button {
+  font: inherit;
+}
+
+.app-shell {
+  width: min(100%, 760px);
+  margin: 0 auto;
+  padding: 24px 18px 60px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 56px;
+}
+
+.version {
+  color: #73829d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+h1 {
+  margin: 5px 0 0;
+  font-size: 22px;
+}
+
+.status {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  padding: 8px 11px;
+  border: 1px solid #273246;
+  border-radius: 999px;
+  color: #9eacc3;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #36d17c;
+}
+
+.hero {
+  margin-bottom: 38px;
+}
+
+.eyebrow {
+  color: #608dff;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.hero h2 {
+  max-width: 520px;
+  margin: 10px 0 14px;
+  font-size: clamp(36px, 8vw, 58px);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.hero p {
+  max-width: 520px;
+  margin: 0;
+  color: #8d9ab0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.cards {
+  display: grid;
+  gap: 12px;
+}
+
+.card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 18px;
+  border: 1px solid #242d3c;
+  border-radius: 18px;
+  background: #111620;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 120ms ease,
+    border-color 120ms ease,
+    background 120ms ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: #425475;
+  background: #151c28;
+}
+
+.card-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  background: #1a2230;
+  font-size: 23px;
+}
+
+.card strong,
+.card span {
+  display: block;
+}
+
+.card div > span {
+  margin-top: 4px;
+  color: #7f8ba0;
+  font-size: 13px;
+}
+
+.arrow {
+  color: #66758e;
+  font-size: 27px;
+}
+
+.card.disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.card.disabled:hover {
+  transform: none;
+  border-color: #242d3c;
+  background: #111620;
+}
+
+@media (max-width: 520px) {
+  .app-shell {
+    padding-top: 18px;
+  }
+
+  .topbar {
+    margin-bottom: 42px;
+  }
+}
