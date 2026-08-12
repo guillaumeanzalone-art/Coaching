@@ -1776,6 +1776,19 @@ function ensureOverlay() {
         closeRpgCombat(
           state
         )
+
+        try {
+          await state
+            .onFinished?.(
+              state.result || {},
+              null
+            )
+        } catch (error) {
+          console.warn(
+            'RPG COMBAT CLOSE REFRESH ERROR',
+            error
+          )
+        }
       }
     }
   )
@@ -4668,6 +4681,10 @@ export async function finishRpgCombat(
     state,
     result
   )
+
+  /* RPG V1.3 COMBAT CHAIN FIX */
+  state.active = null
+
 
   try {
     await state
