@@ -65,19 +65,15 @@ export function stopPresenceHeartbeat() {
     presenceTimer = null
   }
 
-  if (
-    visibilityHandler
-  ) {
+  if (visibilityHandler) {
     document.removeEventListener(
       'visibilitychange',
       visibilityHandler
     )
-    visibilityHandler =
-      null
+    visibilityHandler = null
   }
 
-  currentPresence =
-    null
+  currentPresence = null
 }
 
 export function startPresenceHeartbeat({
@@ -206,6 +202,22 @@ function formatPrDate(value) {
   ).format(date)
 }
 
+function liveWording(count) {
+  const safeCount =
+    Math.max(
+      0,
+      Number(count) || 0
+    )
+
+  return {
+    count: safeCount,
+    people:
+      safeCount === 1
+        ? 'personne'
+        : 'personnes',
+  }
+}
+
 export async function loadHomeLiveDashboard({
   athletes = [],
 } = {}) {
@@ -258,12 +270,10 @@ export async function loadHomeLiveDashboard({
           0
         )
 
-  const presenceText =
-    activeCount === null
-      ? 'Présence live indisponible'
-      : activeCount === 1
-        ? '1 personne utilise cette appli'
-        : `${activeCount} personnes utilisent cette appli`
+  const live =
+    liveWording(
+      activeCount
+    )
 
   const prRows =
     latestPrs
@@ -290,6 +300,7 @@ export async function loadHomeLiveDashboard({
                 <strong>
                   ${escapeHtml(name)}
                 </strong>
+
                 <span>
                   ${escapeHtml(
                     formatPrDate(
@@ -309,23 +320,46 @@ export async function loadHomeLiveDashboard({
       )
       .join('')
 
+  const liveContent =
+    activeCount === null
+      ? `
+        <div class="home-live-presence home-live-presence--error">
+          <strong class="home-live-count">
+            —
+          </strong>
+
+          <span class="home-live-training-text">
+            présence live indisponible
+          </span>
+        </div>
+      `
+      : `
+        <div class="home-live-presence">
+          <span class="home-live-dot"></span>
+
+          <div class="home-live-copy">
+            <strong class="home-live-count">
+              ${escapeHtml(live.count)}
+            </strong>
+
+            <span class="home-live-training-text">
+              ${escapeHtml(live.people)}
+              s'entraînent en ce moment
+            </span>
+          </div>
+        </div>
+      `
+
   container.innerHTML = `
     <section class="home-live-card home-live-card--presence">
       <span class="home-live-kicker">
         GROUPE EN DIRECT
       </span>
 
-      <div class="home-live-presence">
-        <span class="home-live-dot"></span>
-        <strong>
-          ${escapeHtml(
-            presenceText
-          )}
-        </strong>
-      </div>
+      ${liveContent}
 
       <small>
-        Actif dans les 5 dernières minutes
+        Actifs dans les 5 dernières minutes
       </small>
     </section>
 
@@ -335,6 +369,7 @@ export async function loadHomeLiveDashboard({
           <span class="home-live-kicker">
             DERNIERS PR
           </span>
+
           <h2>
             Squat · Bench · Deadlift
           </h2>

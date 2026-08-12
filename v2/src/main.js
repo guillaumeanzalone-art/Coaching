@@ -15,7 +15,7 @@ import {
   stopPresenceHeartbeat,
 } from './home-live.js'
 
-/* GA V1.2 HOME LIVE + SPIDER ICONS */
+/* GA V1.2 HOME LIVE + SPIDER ICONS V7 */
 
 import {
   athletes,
@@ -373,7 +373,6 @@ async function handleLogoutClick(
   }
 
   stopPresenceHeartbeat()
-
   await signOut()
   renderLogin(
     'Tu es déconnecté.'

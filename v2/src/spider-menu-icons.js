@@ -1,49 +1,68 @@
-const ICONS = {
-  athletes: `
-    <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M24 27 13 20M22 32 9 32M24 38 13 46M40 27 51 20M42 32 55 32M40 38 51 46"/>
-        <circle cx="32" cy="25" r="5"/>
-        <ellipse cx="32" cy="38" rx="8" ry="10"/>
-        <circle cx="29" cy="36" r="1.2" fill="currentColor" stroke="none"/>
-        <circle cx="35" cy="36" r="1.2" fill="currentColor" stroke="none"/>
-        <path d="M27 42c3 2 7 2 10 0"/>
-      </g>
-    </svg>
-  `,
-  activity: `
-    <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M24 27 13 20M22 32 9 32M24 38 13 46M40 27 51 20M42 32 55 32M40 38 51 46"/>
-        <circle cx="32" cy="25" r="5"/>
-        <ellipse cx="32" cy="38" rx="8" ry="10"/>
-        <path d="M20 40h6l3-7 5 13 3-8h7"/>
-      </g>
-    </svg>
-  `,
-  editor: `
-    <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M24 27 13 20M22 32 9 32M24 38 13 46M40 27 51 20M42 32 55 32M40 38 51 46"/>
-        <circle cx="32" cy="25" r="5"/>
-        <ellipse cx="32" cy="38" rx="8" ry="10"/>
-        <path d="m26 43 12-12 4 4-12 12-6 2z"/>
-        <path d="m38 31 3-3 4 4-3 3"/>
-      </g>
-    </svg>
-  `,
-  rpg: `
-    <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M24 27 13 20M22 32 9 32M24 38 13 46M40 27 51 20M42 32 55 32M40 38 51 46"/>
-        <circle cx="32" cy="25" r="5"/>
-        <ellipse cx="32" cy="38" rx="8" ry="10"/>
-        <path d="M24 47 43 28M40 27l4 4M21 28l20 20M24 27l-4 4"/>
-      </g>
-    </svg>
-  `,
+const ICON_TONES = {
+  athletes: '#f4c542',
+  activity: '#3fe0d0',
+  editor: '#b67cff',
+  rpg: '#ff6b6b',
 }
 
-export function spiderMenuIcon(kind) {
-  return ICONS[kind] || ICONS.rpg
+export function spiderMenuIcon(
+  kind = 'athletes'
+) {
+  const tone =
+    ICON_TONES[kind] ||
+    ICON_TONES.athletes
+
+  return `
+    <svg
+      class="spider-menu-icon spider-menu-icon--8"
+      viewBox="0 0 64 64"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
+      style="color:${tone}"
+    >
+      <g
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3.1"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M26 24 19 14 11 9"/>
+        <path d="M23 28 13 24 6 25"/>
+        <path d="M23 34 13 39 7 45"/>
+        <path d="M26 39 20 49 14 56"/>
+
+        <path d="M38 24 45 14 53 9"/>
+        <path d="M41 28 51 24 58 25"/>
+        <path d="M41 34 51 39 57 45"/>
+        <path d="M38 39 44 49 50 56"/>
+      </g>
+
+      <circle
+        cx="32"
+        cy="22"
+        r="7"
+        fill="currentColor"
+      />
+
+      <ellipse
+        cx="32"
+        cy="39"
+        rx="12"
+        ry="15"
+        fill="currentColor"
+      />
+
+      <text
+        x="32"
+        y="44"
+        text-anchor="middle"
+        fill="#07101f"
+        font-size="15"
+        font-weight="950"
+        font-family="Avenir Next, SF Pro Display, Inter, system-ui, sans-serif"
+      >8</text>
+    </svg>
+  `
 }

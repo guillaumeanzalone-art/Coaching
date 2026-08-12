@@ -819,3 +819,561 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   GA V1.2 HOME PR THEMES SKIP V7
+   ========================================================= */
+
+.home-live-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0,.85fr) minmax(0,1.6fr);
+  gap: 14px;
+  margin: 4px 0 28px;
+}
+
+.home-live-loading,
+.home-live-card {
+  padding: 20px;
+  border: 1px solid #283448;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(239,183,56,.10), transparent 38%),
+    #101722;
+}
+
+.home-live-card--presence {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 190px;
+}
+
+.home-live-kicker {
+  color: #efb738;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .13em;
+}
+
+.home-live-presence {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.home-live-presence strong {
+  color: #fff;
+  font-size: clamp(22px,5vw,34px);
+  line-height: 1.05;
+  letter-spacing: -.035em;
+}
+
+.home-live-card--presence > small {
+  margin-top: 14px;
+  color: #73829a;
+  font-size: 11px;
+}
+
+.home-live-dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 8px;
+  flex: 0 0 10px;
+  border-radius: 50%;
+  background: #36d17c;
+  box-shadow:
+    0 0 0 5px rgba(54,209,124,.10),
+    0 0 18px rgba(54,209,124,.6);
+}
+
+.home-live-head h2 {
+  margin: 5px 0 0;
+  color: #fff;
+  font-size: 21px;
+}
+
+.home-pr-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.home-pr-row {
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  gap: 11px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 14px;
+  background: rgba(255,255,255,.025);
+}
+
+.home-pr-row div {
+  min-width: 0;
+}
+
+.home-pr-row strong,
+.home-pr-row span {
+  display: block;
+}
+
+.home-pr-row div > strong {
+  overflow: hidden;
+  color: #f6f8fb;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-pr-row div > span {
+  margin-top: 2px;
+  color: #68778f;
+  font-size: 10px;
+}
+
+.home-pr-row > b {
+  color: #fff;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.home-pr-lift {
+  display: grid !important;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.home-pr-lift--squat {
+  color: #ff8b81;
+  background: rgba(225,77,67,.14);
+}
+
+.home-pr-lift--bench {
+  color: #7fb4ff;
+  background: rgba(94,144,216,.14);
+}
+
+.home-pr-lift--deadlift {
+  color: #d3a0ff;
+  background: rgba(177,116,216,.14);
+}
+
+.home-pr-empty {
+  padding: 16px;
+  border: 1px dashed #2f3b50;
+  border-radius: 14px;
+  color: #7e8ba1;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.card-icon--spider {
+  overflow: hidden;
+  color: #efb738;
+  border: 1px solid rgba(239,183,56,.18);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(239,183,56,.12), transparent 58%),
+    #171d29;
+}
+
+.card-icon--spider svg {
+  width: 34px;
+  height: 34px;
+}
+
+.card-icon--athletes { color: #f0cf6a; }
+.card-icon--activity { color: #63d7a0; }
+.card-icon--editor { color: #d69cff; }
+.card-icon--rpg { color: #ff7d73; }
+
+.training-page[data-athlete-theme] {
+  color: var(--athlete-text);
+  background:
+    radial-gradient(circle at 10% 0%, var(--athlete-accent-soft-2), transparent 23%),
+    radial-gradient(circle at 100% 16%, var(--athlete-accent-soft), transparent 26%),
+    linear-gradient(180deg, var(--athlete-bg), #080a0e);
+  border-radius: 0 0 28px 28px;
+}
+
+.training-page[data-athlete-theme] .training-kicker,
+.training-page[data-athlete-theme] .set-number,
+.training-page[data-athlete-theme] .training-session-v11__kicker,
+.training-page[data-athlete-theme] .training-block-report-v11__kicker {
+  color: var(--athlete-accent);
+}
+
+.training-page[data-athlete-theme] .week-tab--active,
+.training-page[data-athlete-theme] .day-tab-v2--active {
+  border-color: var(--athlete-accent);
+  background:
+    linear-gradient(135deg, var(--athlete-accent-soft-2), var(--athlete-accent-soft));
+}
+
+.training-page[data-athlete-theme] .exercise-type {
+  border-color: var(--athlete-accent);
+  color: var(--athlete-accent-light);
+}
+
+.athlete-theme-banner {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 14px;
+  padding: 17px 18px 17px 52px;
+  border: 1px solid var(--athlete-border);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, var(--athlete-accent-soft), rgba(10,13,20,.82));
+}
+
+.athlete-theme-banner__mark {
+  position: absolute;
+  left: 17px;
+  top: 16px;
+  color: var(--athlete-accent);
+  font-size: 21px;
+}
+
+.athlete-theme-banner blockquote {
+  margin: 0;
+  color: var(--athlete-text);
+  font-family: Georgia, serif;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.athlete-theme-banner cite {
+  display: block;
+  margin-top: 7px;
+  color: var(--athlete-accent-light);
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.athlete-pr-panel {
+  margin: 0 0 15px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 18px;
+  background: rgba(12,17,25,.82);
+  backdrop-filter: blur(12px);
+}
+
+.athlete-pr-panel__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+
+.athlete-pr-panel__head div > span {
+  display: block;
+  color: var(--athlete-accent);
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .13em;
+}
+
+.athlete-pr-panel__head div > strong {
+  display: block;
+  margin-top: 4px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.athlete-pr-panel__head > small {
+  color: #6f7b8f;
+  font-size: 9px;
+}
+
+.athlete-pr-grid {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 8px;
+}
+
+.athlete-pr-card {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 14px;
+  background: rgba(255,255,255,.025);
+}
+
+.athlete-pr-card > span {
+  display: block;
+  font-size: 9px;
+  font-weight: 950;
+}
+
+.athlete-pr-card > strong {
+  display: block;
+  margin-top: 6px;
+  color: #fff;
+  font-size: clamp(18px,4vw,25px);
+  line-height: 1;
+}
+
+.athlete-pr-card > strong small {
+  margin-left: 3px;
+  color: #7c899e;
+  font-size: 9px;
+}
+
+.athlete-pr-card > small {
+  display: block;
+  margin-top: 6px;
+  color: #66758b;
+  font-size: 9px;
+}
+
+.athlete-pr-card--squat > span { color: var(--athlete-squat); }
+.athlete-pr-card--bench > span { color: var(--athlete-bench); }
+.athlete-pr-card--deadlift > span { color: var(--athlete-dead); }
+
+.athlete-pr-flash {
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(239,183,56,.45);
+  border-radius: 12px;
+  color: #ffe49a;
+  background: rgba(239,183,56,.10);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.training-set {
+  grid-template-columns:
+    80px
+    minmax(110px,1fr)
+    110px
+    100px
+    48px
+    92px;
+}
+
+.set-skip {
+  min-height: 44px;
+  padding: 5px 7px;
+  border: 1px solid rgba(225,78,78,.34);
+  border-radius: 11px;
+  color: #ff7f7f;
+  background:
+    linear-gradient(180deg, rgba(114,28,28,.24), rgba(58,20,20,.18));
+  cursor: pointer;
+}
+
+.set-skip strong,
+.set-skip small {
+  display: block;
+}
+
+.set-skip strong {
+  font-size: 10px;
+  font-weight: 950;
+}
+
+.set-skip small {
+  margin-top: 2px;
+  color: #a45f64;
+  font-size: 7px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.set-skip:hover {
+  border-color: #ef5252;
+  color: #ffaaaa;
+}
+
+.set-skip--undo {
+  border-color: rgba(239,183,56,.36);
+  color: #efb738;
+  background: rgba(239,183,56,.06);
+}
+
+.set-skip--undo small {
+  color: #9f8955;
+}
+
+.training-set--failed .set-number {
+  color: #ff6c6c;
+  text-decoration: line-through;
+}
+
+@media (max-width: 760px) {
+  .home-live-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .home-live-card--presence {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 650px) {
+  .training-set {
+    grid-template-columns:
+      70px
+      minmax(100px,1fr)
+      48px;
+  }
+
+  .set-skip {
+    grid-column: 3;
+    grid-row: 2;
+  }
+}
+
+/* =========================================================
+   GA V1.3 HOME LOGO 8 + LIVE TYPO
+   ========================================================= */
+
+.spider-menu-icon--8 {
+  display: block;
+  width: 38px;
+  height: 38px;
+  overflow: visible;
+}
+
+.card-icon--spider {
+  display: grid;
+  place-items: center;
+}
+
+.home-live-card {
+  font-family:
+    "Avenir Next",
+    "SF Pro Display",
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.home-live-card--presence {
+  min-width: 0;
+  padding: 18px 16px;
+}
+
+.home-live-presence {
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 14px;
+  min-width: 0;
+}
+
+.home-live-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.home-live-count {
+  display: block;
+  color: #f8f9fd;
+  font-size: clamp(30px, 6vw, 46px) !important;
+  font-weight: 950;
+  line-height: .95 !important;
+  letter-spacing: -.045em;
+}
+
+.home-live-training-text {
+  display: block;
+  max-width: 15ch;
+  color: #f2f5fb;
+  font-size: clamp(12px, 2.1vw, 15px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -.015em;
+  text-wrap: balance;
+}
+
+.home-live-presence--error {
+  display: grid;
+}
+
+.home-live-card--presence > small {
+  margin-top: 14px;
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+.home-live-kicker {
+  font-size: 9px;
+  line-height: 1.3;
+}
+
+@media (max-width: 760px) {
+  .home-live-dashboard {
+    grid-template-columns:
+      minmax(0, .78fr)
+      minmax(0, 1.52fr);
+  }
+
+  .home-live-card--presence {
+    min-height: 0;
+  }
+
+  .home-live-count {
+    font-size: clamp(28px, 8vw, 40px) !important;
+  }
+
+  .home-live-training-text {
+    max-width: 13ch;
+    font-size: clamp(11px, 3vw, 13px);
+  }
+}
+
+@media (max-width: 430px) {
+  .home-live-dashboard {
+    grid-template-columns:
+      minmax(0, .82fr)
+      minmax(0, 1.5fr);
+    gap: 10px;
+  }
+
+  .home-live-card {
+    border-radius: 18px;
+  }
+
+  .home-live-card--presence {
+    padding: 15px 12px;
+  }
+
+  .home-live-presence {
+    gap: 7px;
+  }
+
+  .home-live-dot {
+    width: 8px;
+    height: 8px;
+    flex-basis: 8px;
+    margin-top: 5px;
+  }
+
+  .home-live-count {
+    font-size: 32px !important;
+  }
+
+  .home-live-training-text {
+    max-width: 12ch;
+    font-size: 11px;
+  }
+
+  .home-live-card--presence > small {
+    font-size: 9px;
+  }
+}
