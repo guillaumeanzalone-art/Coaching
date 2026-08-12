@@ -3896,6 +3896,36 @@ function normalizedMonsterRarity(rarity) {
   return value || 'common';
 }
 
+/* WEB MAIN BOSS PROGRESS RARITY V1 */
+const BOSS_PROGRESS_BY_RARITY_WEB_V1 =
+  Object.freeze({
+    normal: 2,
+    common: 3,
+    uncommon: 4,
+    rare: 8,
+    epic: 16,
+    legendary: 30,
+    mythic: 50,
+    ultra_mythic: 50,
+    abyssal: 50,
+  })
+
+function bossProgressForMonsterRarityWebV1(
+  rarity
+) {
+  const key =
+    normalizedMonsterRarity(
+      rarity || 'normal'
+    )
+
+  return (
+    BOSS_PROGRESS_BY_RARITY_WEB_V1[
+      key
+    ] ||
+    2
+  )
+}
+
 function monsterRarityPresentation(rarity) {
   const key = normalizedMonsterRarity(rarity);
   const map = {
@@ -4317,6 +4347,7 @@ async function armCombatServerTimer(session) {
     return `<div class="world-picker">
       <div class="world-picker-head"><b>⚔️ Choisir le palier de difficulté</b><span>Maximum débloqué : ${unlocked}</span></div>
       <div class="world-picker-note">Progression V160 : ligne <strong>${esc(progress?.athlete_slug || cfg.slug)}</strong> · palier SQL <strong>${Math.max(1,Math.floor(n(progress?.adventure_difficulty,1)))}</strong> · compteur boss <strong>${Math.max(0,Math.floor(n(progress?.kills_toward_boss,0)))}/50</strong> · source <strong>${adventureProgressLoadedV160 ? 'lecture directe OK' : `erreur : ${esc(adventureProgressErrorV160 || 'non chargée')}`}</strong>.</div>
+      <div class="world-picker-note"><strong>Progression Boss par rareté :</strong> Simple +2 · Commun +3 · Peu commun +4 · Rare +8 · Épique +16 · Légendaire +30 · Mythique / URM / Abyssal +50.</div>
       ${adventureProgressErrorV160 ? `<div class="world-picker-note" style="color:#ff8b8b"><strong>Erreur Supabase :</strong> ${esc(adventureProgressErrorV160)}. Le jeu ne remplace plus cette erreur par un faux palier 1.</div>` : ''}
       <input id="rpgDifficultyNumber" type="number" inputmode="numeric" min="1" max="${unlocked}" step="1" value="${selected}" aria-label="Palier de difficulté">
       ${unlocked > 1 ? `<input id="rpgDifficultyRange" type="range" min="1" max="${unlocked}" step="1" value="${selected}" aria-label="Réglage rapide du palier">` : ''}
@@ -4366,7 +4397,7 @@ async function armCombatServerTimer(session) {
         <div class="boss-progress"><span style="width:${Math.min(100,n(progress?.kills_toward_boss)/50*100)}%"></span></div>
         <div class="boss-copy"><strong>${n(progress?.kills_toward_boss)}/50 monstres vaincus</strong> avant l’accès au boss. Chaque boss battu débloque le palier suivant, jusqu’au palier ultime 10 000.</div>
         <div class="boss-mults"><span>Puissance conseillée : ${fr(requiredPowerForDifficulty(),1)} · ta Puissance : ${fr(currentCombatPower(),1)} dont ${fr(currentEquipmentPower(),1)} d’équipement</span><span>Équipement conseillé niv. ${requiredEquipmentLevelForDifficulty()} · effectif niv. ${fr(equippedLevelSnapshot().effective,1)} · malus boss ×${fr(progressionGearPenalty(currentAdventureDifficulty(), { boss: true }),3)}</span></div>
-        <button type="button" id="rpgBossLaunch" class="boss-launch" ${!canPlay || n(progress?.kills_toward_boss)<50 ? 'disabled' : ''}>${n(progress?.kills_toward_boss)>=50 ? (currentAdventureDifficulty() >= 10000 ? '👑 Affronter le boss final du palier 10 000' : `👑 Affronter le boss du palier ${currentAdventureDifficulty()}`) : `🔒 Boss verrouillé · ${50-n(progress?.kills_toward_boss)} victoire${50-n(progress?.kills_toward_boss)===1?'':'s'} restante${50-n(progress?.kills_toward_boss)===1?'':'s'}`}</button>
+        <button type="button" id="rpgBossLaunch" class="boss-launch" ${!canPlay || n(progress?.kills_toward_boss)<50 ? 'disabled' : ''}>${n(progress?.kills_toward_boss)>=50 ? (currentAdventureDifficulty() >= 10000 ? '👑 Affronter le boss final du palier 10 000' : `👑 Affronter le boss du palier ${currentAdventureDifficulty()}`) : `🔒 Boss verrouillé · ${50-n(progress?.kills_toward_boss)} point${50-n(progress?.kills_toward_boss)===1?'':'s'} restant${50-n(progress?.kills_toward_boss)===1?'':'s'}`}</button>
         <div class="boss-lock">Boss : calibré pour environ 950 unités au seuil conseillé. Il demande un excellent combat, un sort actif bien placé ou davantage de Puissance. ${currentAdventureDifficulty() >= 10000 ? 'Victoire = palier ultime validé.' : `Victoire = difficulté ${currentAdventureDifficulty()+1} débloquée.`}</div>
       </div>
       ${difficultySelectorHtml()}
@@ -8399,6 +8430,70 @@ function collectionHtml() {
     rememberBattleMusicPosition();
     schedulePostCombatMusicReturn();
     const won = !!result?.won;
+
+    if (
+      won &&
+      !combat.isBoss
+    ) {
+      let bossProgressGain = 1
+
+      const requestedGain =
+        bossProgressForMonsterRarityWebV1(
+          combat.monsterRarity
+        )
+
+      const {
+        data: bossProgressData,
+        error: bossProgressError
+      } =
+        await CoachingCloud.client.rpc(
+          'award_rpg_boss_progress_rarity_web_v1',
+          {
+            p_combat_id:
+              combat.id,
+            p_athlete_slug:
+              cfg.slug,
+            p_rarity:
+              normalizedMonsterRarity(
+                combat.monsterRarity ||
+                'normal'
+              ),
+          }
+        )
+
+      if (bossProgressError) {
+        console.warn(
+          'Progression boss par rarete non appliquee :',
+          bossProgressError.message
+        )
+      }
+      else {
+        const bossProgressRow =
+          Array.isArray(
+            bossProgressData
+          )
+            ? bossProgressData[0]
+            : bossProgressData
+
+        bossProgressGain =
+          n(
+            bossProgressRow
+              ?.total_gain,
+            requestedGain
+          )
+
+        result.kills_toward_boss =
+          n(
+            bossProgressRow
+              ?.kills_toward_boss,
+            result
+              ?.kills_toward_boss
+          )
+      }
+
+      result.boss_progress_gain =
+        bossProgressGain
+    }
     const hasAbyssalDrop = [
       result?.combat_item_rarity,
       result?.elite_raid_drop_rarity,
@@ -8453,6 +8548,28 @@ function collectionHtml() {
         ? `Tu as vaincu <strong>${esc(combat.monsterName)}</strong> avec <strong>${n(result?.successful_actions)} actions réussies</strong> et <strong>${fr(result.damage_dealt,0)} dégâts</strong>.<br>Précision <strong>${fr(result?.accuracy_pct,0)} %</strong> · parfaits <strong>${n(result?.perfect_actions)}</strong> · combo max <strong>×${n(result?.max_combo)}</strong> · perfect streak max <strong>${n(result?.max_perfect_streak)}</strong>.<br><br>Récompense : ${goldRewardHtml}${result?.gold_jackpot ? ' · <strong>🍀 JACKPOT ×10 !</strong>' : ''}${result?.perfect_combat ? ` · <strong>👑 COMBAT PARFAIT ×${fr(result?.perfect_gold_multiplier,3)} GOLD</strong>` : ''} · ${xpRewardHtml} · ${lootComboHtml}.<br>${n(result?.difficulty_unlocked, combat.difficulty) >= 10000 ? '<strong>Palier ultime 10 000 validé !</strong>' : `<strong>Palier ${n(result?.difficulty_unlocked, combat.difficulty + 1)} débloqué !</strong>`} Le compteur repart à 0/50.<br>Critiques de Chance : <strong>${n(result?.crit_count)}</strong>.`
         : `Tu as terrassé <strong>${esc(combat.monsterName)}</strong> avec <strong>${n(result?.successful_actions)} actions réussies</strong> et <strong>${fr(result.damage_dealt, 0)} dégâts</strong>.<br>Précision <strong>${fr(result?.accuracy_pct,0)} %</strong> · parfaits <strong>${n(result?.perfect_actions)}</strong> · combo max <strong>×${n(result?.max_combo)}</strong> · perfect streak max <strong>${n(result?.max_perfect_streak)}</strong>.<br><br>Récompenses : ${goldRewardHtml}${result?.gold_jackpot ? ' · <strong>🍀 JACKPOT ×10 !</strong>' : ''}${result?.perfect_combat ? ` · <strong>👑 COMBAT PARFAIT ×${fr(result?.perfect_gold_multiplier,3)} GOLD</strong>` : ''} · ${xpRewardHtml} · ${lootComboHtml} · difficulté <strong>${n(combat.difficulty,1)}</strong> · critiques de Chance <strong>${n(result?.crit_count)}</strong>.${result?.combat_item_name ? `<span class="combat-loot-line rarity-${esc(result.combat_item_rarity || 'normal')}" style="--loot-color:${esc(RARITY_COLORS[result.combat_item_rarity] || RARITY_COLORS.normal)}"><strong>🎁 Objet de combat garanti :</strong> ${esc(result.combat_item_name)} · <span class="loot-rarity">${RARITY_DEFS[result.combat_item_rarity]?.label || esc(result.combat_item_rarity)}</span> · niveau ${n(result.combat_item_level,1)} · dégâts +${fr(result.combat_item_damage_bonus_pct,2)} %${n(result.combat_item_quantity_after,1)>1?` · pile ×${n(result.combat_item_quantity_after)}`:''}</span>` : ''}${eliteRaidDropHtml}${result?.discovered_new ? `<br><br><strong>📖 NOUVELLE DÉCOUVERTE :</strong> ${esc(monsterDisplayName(result.discovered_monster_name))}<br>Bonus permanent : <strong>+${fr(result.discovery_xp_bonus,0)} % XP</strong> · total bestiaire : +${fr(result.collection_xp_bonus,1)} %.` : ''}${result?.special_drop_name ? `<br><br><strong>Drop spécial :</strong> ${esc(result.special_drop_name)}${result?.special_drop_note ? ` · ${esc(result.special_drop_note)}` : ''}` : ''}`)
       : `<strong>${esc(combat.monsterName)}</strong> avait encore ${fr(Math.max(0, n(result.monster_hp) - n(result.damage_dealt)), 0)} PV. Tu as infligé <strong>${fr(result.damage_dealt, 0)} dégâts</strong> avec ${n(result?.successful_actions)} actions réussies · précision ${fr(result?.accuracy_pct,0)} %.${perfectActionGold>0 ? `<br><strong>🎯 Bonus des perfects : +${fr(perfectActionGold,0)} gold</strong>` : ''}`;
+    if (
+      won &&
+      !combat.isBoss &&
+      n(result?.boss_progress_gain) > 0
+    ) {
+      const resultText =
+        document.getElementById(
+          'rpgResultText'
+        )
+
+      resultText
+        ?.insertAdjacentHTML(
+          'beforeend',
+          `<br><br><strong>🔥 Progression boss : +${n(
+            result.boss_progress_gain
+          )} points · ${n(
+            result.kills_toward_boss,
+            progress?.kills_toward_boss
+          )}/50</strong>`
+        )
+    }
+
     progress = {
       ...progress,
       combat_wins: n(result.combat_wins, progress?.combat_wins),
