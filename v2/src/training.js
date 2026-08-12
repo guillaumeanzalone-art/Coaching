@@ -11,6 +11,22 @@ import {
   remoteRowToLocalState,
 } from './workout-sync.js'
 
+import {
+  buildTrainingSessionPayload,
+  flushTrainingSessionOutbox,
+  isTrainingSessionPending,
+  loadRemoteTrainingSessions,
+  queueTrainingSession,
+  remoteTrainingSessionToLocalState,
+  trainingSessionIdentity,
+} from './training-session-sync.js'
+
+import {
+  exportBlockReportPdf,
+} from './block-report-pdf.js'
+
+/* GA V1.1 SESSION CLOUD + PDF V3 */
+
 function getBlocks(program) {
   if (!program) {
     return []
@@ -85,6 +101,7 @@ function createDefaultState(
       null,
 
     sets: {},
+    sessions: {},
   }
 }
 
@@ -114,6 +131,8 @@ function loadState(
       ...parsed,
       sets:
         parsed.sets || {},
+      sessions:
+        parsed.sessions || {},
     }
   } catch {
     return createDefaultState(
@@ -505,6 +524,9 @@ export function mountTraining(
     )
 
   let cloudLoadToken = 0
+  let sessionTimerInterval = null
+  let sessionNoteFlushTimer = null
+  let showBlockReport = false
 
   let syncStatus = {
     kind: 'local',
@@ -547,6 +569,960 @@ export function mountTraining(
       program,
       block
     )
+  }
+
+/* GA V1.1 SESSION TRACKING CORE V2 */
+
+  function sessionKey(
+    weekIndex,
+    dayIndex
+  ) {
+    return `${weekIndex}:${dayIndex}`
+  }
+
+  function emptySessionState() {
+    return {
+      startedAt: null,
+      completedAt: null,
+      durationSeconds: null,
+      note: '',
+      hydrationLiters: null,
+      sleepHours: null,
+      painUpper: null,
+      painLower: null,
+      steps: null,
+      status: 'pending',
+    }
+  }
+
+  function getSessionState(
+    weekIndex,
+    dayIndex
+  ) {
+    const key =
+      sessionKey(
+        weekIndex,
+        dayIndex
+      )
+
+    return {
+      ...emptySessionState(),
+      ...(
+        state.sessions?.[key] ||
+        {}
+      ),
+    }
+  }
+
+  function setSessionState(
+    weekIndex,
+    dayIndex,
+    next
+  ) {
+    state.sessions =
+      state.sessions || {}
+
+    const key =
+      sessionKey(
+        weekIndex,
+        dayIndex
+      )
+
+    state.sessions[key] = {
+      ...emptySessionState(),
+      ...next,
+    }
+
+    return state.sessions[key]
+  }
+
+  function sessionPayload(
+    weekIndex,
+    dayIndex,
+    overrideSession = null
+  ) {
+    return buildTrainingSessionPayload({
+      athleteSlug:
+        cloudAthleteSlug,
+
+      programKey:
+        programKey(),
+
+      weekIndex,
+      dayIndex,
+
+      session:
+        overrideSession ||
+        getSessionState(
+          weekIndex,
+          dayIndex
+        ),
+    })
+  }
+
+  function queueSessionState(
+    weekIndex,
+    dayIndex,
+    overrideSession = null
+  ) {
+    if (!cloudAthleteSlug) {
+      return
+    }
+
+    queueTrainingSession(
+      sessionPayload(
+        weekIndex,
+        dayIndex,
+        overrideSession
+      )
+    )
+
+    setSyncStatus(
+      navigator.onLine === false
+        ? 'offline'
+        : 'syncing',
+
+      navigator.onLine === false
+        ? 'Hors ligne · sauvegardé localement'
+        : 'Synchronisation…'
+    )
+
+    void flushTrainingSessionOutbox(
+      setSyncStatus
+    )
+  }
+
+  function scheduleSessionFlush(
+    weekIndex,
+    dayIndex
+  ) {
+    if (
+      sessionNoteFlushTimer
+    ) {
+      clearTimeout(
+        sessionNoteFlushTimer
+      )
+    }
+
+    sessionNoteFlushTimer =
+      setTimeout(
+        () => {
+          queueSessionState(
+            weekIndex,
+            dayIndex
+          )
+        },
+        650
+      )
+  }
+
+  async function hydrateSessionsFromCloud() {
+    if (
+      !cloudAthleteSlug ||
+      navigator.onLine === false
+    ) {
+      return
+    }
+
+    const activeBlock =
+      block
+
+    const activeProgramKey =
+      programKey()
+
+    const result =
+      await loadRemoteTrainingSessions({
+        athleteSlug:
+          cloudAthleteSlug,
+
+        programKey:
+          activeProgramKey,
+      })
+
+    if (
+      activeBlock !== block
+    ) {
+      return
+    }
+
+    if (result.error) {
+      console.error(
+        'Chargement training_sessions_v2 impossible :',
+        result.error
+      )
+      return
+    }
+
+    const remoteMap =
+      new Map(
+        (
+          result.data ||
+          []
+        ).map(
+          (row) => [
+            trainingSessionIdentity({
+              athleteSlug:
+                cloudAthleteSlug,
+
+              programKey:
+                activeProgramKey,
+
+              weekIndex:
+                row.week_index,
+
+              dayIndex:
+                row.day_index,
+            }),
+            row,
+          ]
+        )
+      )
+
+    block.weeks.forEach(
+      (
+        week,
+        weekIndex
+      ) => {
+        week.days.forEach(
+          (
+            day,
+            dayIndex
+          ) => {
+            const payload =
+              sessionPayload(
+                weekIndex,
+                dayIndex
+              )
+
+            if (
+              isTrainingSessionPending(
+                payload
+              )
+            ) {
+              return
+            }
+
+            const identity =
+              trainingSessionIdentity({
+                athleteSlug:
+                  cloudAthleteSlug,
+
+                programKey:
+                  activeProgramKey,
+
+                weekIndex,
+                dayIndex,
+              })
+
+            const remote =
+              remoteMap.get(
+                identity
+              )
+
+            if (remote) {
+              setSessionState(
+                weekIndex,
+                dayIndex,
+                remoteTrainingSessionToLocalState(
+                  remote
+                )
+              )
+
+              return
+            }
+
+            const local =
+              getSessionState(
+                weekIndex,
+                dayIndex
+              )
+
+            const meaningful =
+              Boolean(
+                local.startedAt ||
+                local.completedAt ||
+                local.note ||
+                local.hydrationLiters !== null ||
+                local.sleepHours !== null ||
+                local.painUpper !== null ||
+                local.painLower !== null ||
+                local.steps !== null
+              )
+
+            if (meaningful) {
+              queueTrainingSession(
+                payload
+              )
+            }
+          }
+        )
+      }
+    )
+
+    persist()
+    render()
+
+    await flushTrainingSessionOutbox(
+      setSyncStatus
+    )
+  }
+
+  function isTerminalStatus(
+    status
+  ) {
+    return (
+      status === 'done' ||
+      status === 'failed'
+    )
+  }
+
+  function reconcileSessionClock(
+    weekIndex,
+    dayIndex
+  ) {
+    const week =
+      block.weeks[weekIndex]
+
+    const day =
+      week?.days?.[dayIndex]
+
+    if (!day) {
+      return
+    }
+
+    const rows =
+      listDaySets(day)
+
+    const doneCount =
+      rows.filter(
+        ({ sourceSet }) =>
+          isTerminalStatus(
+            getSetState(
+              state,
+              sourceSet
+            ).status
+          )
+      ).length
+
+    const current =
+      getSessionState(
+        weekIndex,
+        dayIndex
+      )
+
+    const next = {
+      ...current,
+    }
+
+    const now =
+      new Date()
+
+    if (
+      doneCount > 0 &&
+      !next.startedAt
+    ) {
+      next.startedAt =
+        now.toISOString()
+
+      next.status =
+        'in_progress'
+    }
+
+    if (
+      rows.length > 0 &&
+      doneCount ===
+        rows.length &&
+      next.startedAt
+    ) {
+      if (
+        !next.completedAt
+      ) {
+        next.completedAt =
+          now.toISOString()
+      }
+
+      next.durationSeconds =
+        Math.max(
+          0,
+          Math.round(
+            (
+              Date.parse(
+                next.completedAt
+              ) -
+              Date.parse(
+                next.startedAt
+              )
+            ) / 1000
+          )
+        )
+
+      next.status =
+        'completed'
+    } else if (
+      next.startedAt
+    ) {
+      next.completedAt =
+        null
+
+      next.durationSeconds =
+        null
+
+      next.status =
+        'in_progress'
+    } else {
+      next.completedAt =
+        null
+      next.durationSeconds =
+        null
+      next.status =
+        'pending'
+    }
+
+    setSessionState(
+      weekIndex,
+      dayIndex,
+      next
+    )
+  }
+
+  function formatDuration(
+    rawSeconds
+  ) {
+    const total =
+      Math.max(
+        0,
+        Math.floor(
+          Number(
+            rawSeconds
+          ) || 0
+        )
+      )
+
+    const hours =
+      Math.floor(
+        total / 3600
+      )
+
+    const minutes =
+      Math.floor(
+        (
+          total % 3600
+        ) / 60
+      )
+
+    const seconds =
+      total % 60
+
+    return [
+      hours,
+      minutes,
+      seconds,
+    ]
+      .map(
+        (value) =>
+          String(value)
+            .padStart(
+              2,
+              '0'
+            )
+      )
+      .join(':')
+  }
+
+  function elapsedSeconds(
+    session
+  ) {
+    if (
+      session.completedAt &&
+      Number.isFinite(
+        Number(
+          session.durationSeconds
+        )
+      )
+    ) {
+      return Math.max(
+        0,
+        Number(
+          session.durationSeconds
+        )
+      )
+    }
+
+    if (!session.startedAt) {
+      return 0
+    }
+
+    return Math.max(
+      0,
+      Math.floor(
+        (
+          Date.now() -
+          Date.parse(
+            session.startedAt
+          )
+        ) / 1000
+      )
+    )
+  }
+
+  function currentSessionContext() {
+    const {
+      week,
+      day,
+    } =
+      normalizeSelection()
+
+    if (!week || !day) {
+      return null
+    }
+
+    const weekIndex =
+      block.weeks.findIndex(
+        (item) =>
+          item.id ===
+          week.id
+      )
+
+    const dayIndex =
+      week.days.findIndex(
+        (item) =>
+          item.id ===
+          day.id
+      )
+
+    if (
+      weekIndex < 0 ||
+      dayIndex < 0
+    ) {
+      return null
+    }
+
+    return {
+      week,
+      day,
+      weekIndex,
+      dayIndex,
+      session:
+        getSessionState(
+          weekIndex,
+          dayIndex
+        ),
+    }
+  }
+
+  function updateDisplayedTimer() {
+    const node =
+      root.querySelector(
+        '#trainingSessionTimer'
+      )
+
+    if (!node) {
+      return
+    }
+
+    const context =
+      currentSessionContext()
+
+    node.textContent =
+      context
+        ? formatDuration(
+            elapsedSeconds(
+              context.session
+            )
+          )
+        : '00:00:00'
+  }
+
+  function renderSessionTracking(
+    week,
+    day
+  ) {
+    const weekIndex =
+      block.weeks.findIndex(
+        (item) =>
+          item.id ===
+          week.id
+      )
+
+    const dayIndex =
+      week.days.findIndex(
+        (item) =>
+          item.id ===
+          day.id
+      )
+
+    const session =
+      getSessionState(
+        weekIndex,
+        dayIndex
+      )
+
+    const statusLabel =
+      session.status ===
+        'completed'
+        ? 'Terminée'
+        : session.status ===
+            'in_progress'
+          ? 'En cours'
+          : 'En attente'
+
+    return `
+      <section class="training-session-v11">
+        <div class="training-session-v11__top">
+          <div>
+            <span class="training-session-v11__kicker">
+              CHRONO DE SÉANCE
+            </span>
+
+            <strong
+              id="trainingSessionTimer"
+              class="training-session-v11__timer"
+            >
+              ${formatDuration(
+                elapsedSeconds(
+                  session
+                )
+              )}
+            </strong>
+          </div>
+
+          <span
+            class="training-session-v11__status training-session-v11__status--${escapeHtml(session.status)}"
+          >
+            ${escapeHtml(
+              statusLabel
+            )}
+          </span>
+        </div>
+
+        <p class="training-session-v11__hint">
+          Démarre à la première série validée et se fige automatiquement à la dernière série terminée.
+        </p>
+
+        <div class="training-session-v11__metrics">
+          <label>
+            <span>Hydratation</span>
+            <div>
+              <input
+                type="number"
+                min="0"
+                max="20"
+                step="0.1"
+                inputmode="decimal"
+                data-action="session-metric"
+                data-field="hydrationLiters"
+                data-week-index="${weekIndex}"
+                data-day-index="${dayIndex}"
+                value="${escapeHtml(
+                  session.hydrationLiters ?? ''
+                )}"
+                ${canEdit ? '' : 'disabled'}
+              >
+              <small>L</small>
+            </div>
+          </label>
+
+          <label>
+            <span>Sommeil</span>
+            <div>
+              <input
+                type="number"
+                min="0"
+                max="24"
+                step="0.1"
+                inputmode="decimal"
+                data-action="session-metric"
+                data-field="sleepHours"
+                data-week-index="${weekIndex}"
+                data-day-index="${dayIndex}"
+                value="${escapeHtml(
+                  session.sleepHours ?? ''
+                )}"
+                ${canEdit ? '' : 'disabled'}
+              >
+              <small>h</small>
+            </div>
+          </label>
+
+          <label>
+            <span>Douleur upper</span>
+            <div>
+              <input
+                type="number"
+                min="0"
+                max="10"
+                step="1"
+                inputmode="numeric"
+                data-action="session-metric"
+                data-field="painUpper"
+                data-week-index="${weekIndex}"
+                data-day-index="${dayIndex}"
+                value="${escapeHtml(
+                  session.painUpper ?? ''
+                )}"
+                ${canEdit ? '' : 'disabled'}
+              >
+              <small>/10</small>
+            </div>
+          </label>
+
+          <label>
+            <span>Douleur lower</span>
+            <div>
+              <input
+                type="number"
+                min="0"
+                max="10"
+                step="1"
+                inputmode="numeric"
+                data-action="session-metric"
+                data-field="painLower"
+                data-week-index="${weekIndex}"
+                data-day-index="${dayIndex}"
+                value="${escapeHtml(
+                  session.painLower ?? ''
+                )}"
+                ${canEdit ? '' : 'disabled'}
+              >
+              <small>/10</small>
+            </div>
+          </label>
+
+          <label class="training-session-v11__metric-wide">
+            <span>Nombre de pas</span>
+            <div>
+              <input
+                type="number"
+                min="0"
+                max="200000"
+                step="1"
+                inputmode="numeric"
+                data-action="session-metric"
+                data-field="steps"
+                data-week-index="${weekIndex}"
+                data-day-index="${dayIndex}"
+                value="${escapeHtml(
+                  session.steps ?? ''
+                )}"
+                ${canEdit ? '' : 'disabled'}
+              >
+              <small>pas</small>
+            </div>
+          </label>
+        </div>
+
+        <label class="training-session-v11__note-label">
+          Notes de la séance
+        </label>
+
+        <textarea
+          class="training-session-v11__note"
+          data-action="session-note"
+          data-week-index="${weekIndex}"
+          data-day-index="${dayIndex}"
+          ${canEdit ? '' : 'disabled'}
+          placeholder="Sensations, douleur, technique, contexte de séance…"
+        >${escapeHtml(session.note)}</textarea>
+      </section>
+    `
+  }
+
+  function buildBlockReport() {
+    const sessions = []
+
+    let totalSets = 0
+    let completedSets = 0
+    let completedDays = 0
+    let totalSeconds = 0
+
+    block.weeks.forEach(
+      (
+        week,
+        weekIndex
+      ) => {
+        week.days.forEach(
+          (
+            day,
+            dayIndex
+          ) => {
+            const progress =
+              countDayProgress(
+                state,
+                day
+              )
+
+            const session =
+              getSessionState(
+                weekIndex,
+                dayIndex
+              )
+
+            const duration =
+              elapsedSeconds(
+                session
+              )
+
+            totalSets +=
+              progress.total
+
+            completedSets +=
+              progress.completed
+
+            if (
+              progress.total > 0 &&
+              progress.completed ===
+                progress.total
+            ) {
+              completedDays += 1
+            }
+
+            totalSeconds +=
+              duration
+
+            sessions.push({
+              weekLabel:
+                week.label,
+              dayName:
+                day.name,
+              completed:
+                progress.completed,
+              total:
+                progress.total,
+              duration,
+              note:
+                session.note,
+              hydrationLiters:
+                session.hydrationLiters,
+              sleepHours:
+                session.sleepHours,
+              painUpper:
+                session.painUpper,
+              painLower:
+                session.painLower,
+              steps:
+                session.steps,
+            })
+          }
+        )
+      }
+    )
+
+    return {
+      sessions,
+      totalDays:
+        sessions.length,
+      completedDays,
+      totalSets,
+      completedSets,
+      totalSeconds,
+    }
+  }
+
+  function renderBlockSummary() {
+    const report =
+      buildBlockReport()
+
+    return `
+      <section class="training-block-report-v11">
+        <div class="training-block-report-v11__head">
+          <div>
+            <span class="training-block-report-v11__kicker">
+              COMPTE RENDU TOTAL DU BLOC
+            </span>
+            <h2>
+              ${escapeHtml(
+                block.label
+              )}
+            </h2>
+          </div>
+
+          <strong>
+            ${report.completedDays}/${report.totalDays}
+            séances
+          </strong>
+        </div>
+
+        <div class="training-block-report-v11__stats">
+          <div>
+            <span>Séries réalisées</span>
+            <strong>
+              ${report.completedSets}/${report.totalSets}
+            </strong>
+          </div>
+
+          <div>
+            <span>Temps cumulé</span>
+            <strong>
+              ${formatDuration(
+                report.totalSeconds
+              )}
+            </strong>
+          </div>
+        </div>
+
+        <div class="training-block-report-v11__actions">
+          <button
+            class="training-block-report-v11__toggle"
+            data-action="block-report"
+          >
+            ${showBlockReport
+              ? 'Masquer le détail'
+              : 'Voir le compte rendu complet'}
+          </button>
+
+          <button
+            class="training-block-report-v11__pdf"
+            data-action="block-report-pdf"
+          >
+            Compte rendu PDF
+          </button>
+        </div>
+
+        ${showBlockReport
+          ? `
+            <div class="training-block-report-v11__list">
+              ${report.sessions.map(
+                (item) => `
+                  <article class="training-block-report-v11__session">
+                    <div class="training-block-report-v11__session-head">
+                      <strong>
+                        ${escapeHtml(
+                          item.weekLabel
+                        )}
+                        ·
+                        ${escapeHtml(
+                          item.dayName
+                        )}
+                      </strong>
+
+                      <span>
+                        ${item.completed}/${item.total}
+                        séries
+                      </span>
+                    </div>
+
+                    <div class="training-block-report-v11__duration">
+                      ⏱
+                      ${formatDuration(
+                        item.duration
+                      )}
+                    </div>
+
+                    <p>
+                      ${item.note
+                        ? escapeHtml(
+                            item.note
+                          )
+                        : 'Aucune note pour cette séance.'}
+                    </p>
+                  </article>
+                `
+              ).join('')}
+            </div>
+          `
+          : ''}
+      </section>
+    `
   }
 
   function payloadForFound(
@@ -658,7 +1634,6 @@ export function mountTraining(
     sourceSet,
     changes
   ) {
-    // READ ONLY UPDATE GUARD
     if (!canEdit) {
       return
     }
@@ -676,15 +1651,6 @@ export function mountTraining(
       ...changes,
     }
 
-    /*
-     * IMPORTANT :
-     * on place d'abord la modification dans l'outbox,
-     * AVANT de rerendre l'interface.
-     * Ainsi une série ne peut pas perdre son événement
-     * de synchronisation lors d'un render().
-     */
-    persist()
-
     const found =
       findSourceSet(
         block,
@@ -692,8 +1658,22 @@ export function mountTraining(
       )
 
     if (found) {
+      reconcileSessionClock(
+        found.weekIndex,
+        found.dayIndex
+      )
+    }
+
+    persist()
+
+    if (found) {
       queueFoundSet(
         found
+      )
+
+      queueSessionState(
+        found.weekIndex,
+        found.dayIndex
       )
     }
 
@@ -743,13 +1723,28 @@ export function mountTraining(
 
   function resetCurrentDay() {
     const {
+      week,
       day,
     } =
       normalizeSelection()
 
-    if (!day) {
+    if (!week || !day) {
       return
     }
+
+    const weekIndex =
+      block.weeks.findIndex(
+        (item) =>
+          item.id ===
+          week.id
+      )
+
+    const dayIndex =
+      week.days.findIndex(
+        (item) =>
+          item.id ===
+          day.id
+      )
 
     const setsToReset =
       listDaySets(day)
@@ -762,8 +1757,23 @@ export function mountTraining(
       }
     )
 
+    const resetSession =
+      emptySessionState()
+
+    setSessionState(
+      weekIndex,
+      dayIndex,
+      resetSession
+    )
+
     persist()
     render()
+
+    queueSessionState(
+      weekIndex,
+      dayIndex,
+      resetSession
+    )
 
     setsToReset.forEach(
       ({ sourceSet }) => {
@@ -1032,6 +2042,7 @@ export function mountTraining(
     normalizeSelection()
     render()
     void hydrateFromCloud()
+    void hydrateSessionsFromCloud()
   }
 
   function renderBlocks() {
@@ -1572,6 +2583,11 @@ export function mountTraining(
           </strong>
         </section>
 
+        ${renderSessionTracking(
+          week,
+          day
+        )}
+
         <div
           class="training-exercises"
         >
@@ -1582,8 +2598,13 @@ export function mountTraining(
               )
           ).join('')}
         </div>
+        ${renderBlockSummary()}
+
       </main>
     `
+
+    updateDisplayedTimer()
+
   }
 
   root.onclick = (
@@ -1619,6 +2640,22 @@ export function mountTraining(
       root.onclick = null
       root.onchange = null
       root.oninput = null
+
+      if (
+        sessionTimerInterval
+      ) {
+        clearInterval(
+          sessionTimerInterval
+        )
+      }
+
+      if (
+        sessionNoteFlushTimer
+      ) {
+        clearTimeout(
+          sessionNoteFlushTimer
+        )
+      }
 
       onBack()
       return
@@ -1698,6 +2735,38 @@ export function mountTraining(
 
       persist()
       render()
+      return
+    }
+
+    if (
+      actionName ===
+        'block-report'
+    ) {
+      showBlockReport =
+        !showBlockReport
+
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'block-report-pdf'
+    ) {
+      exportBlockReportPdf({
+        athleteName:
+          program.athlete?.name ||
+          cloudAthleteSlug ||
+          'Athlète',
+
+        blockLabel:
+          block.label ||
+          'Bloc',
+
+        report:
+          buildBlockReport(),
+      })
+
       return
     }
 
@@ -1883,6 +2952,89 @@ export function mountTraining(
     const actionName =
       input.dataset.action
 
+    if (
+      actionName ===
+        'session-note' ||
+      actionName ===
+        'session-metric'
+    ) {
+      const weekIndex =
+        Number.parseInt(
+          input.dataset.weekIndex,
+          10
+        )
+
+      const dayIndex =
+        Number.parseInt(
+          input.dataset.dayIndex,
+          10
+        )
+
+      if (
+        !Number.isFinite(
+          weekIndex
+        ) ||
+        !Number.isFinite(
+          dayIndex
+        )
+      ) {
+        return
+      }
+
+      const current =
+        getSessionState(
+          weekIndex,
+          dayIndex
+        )
+
+      const next = {
+        ...current,
+      }
+
+      if (
+        actionName ===
+          'session-note'
+      ) {
+        next.note =
+          input.value
+      } else {
+        const field =
+          input.dataset.field
+
+        if (!field) {
+          return
+        }
+
+        next[field] =
+          input.value === ''
+            ? null
+            : Number(
+                String(
+                  input.value
+                )
+                  .replace(
+                    ',',
+                    '.'
+                  )
+              )
+      }
+
+      setSessionState(
+        weekIndex,
+        dayIndex,
+        next
+      )
+
+      persist()
+
+      scheduleSessionFlush(
+        weekIndex,
+        dayIndex
+      )
+
+      return
+    }
+
     const setId =
       input.dataset.setId
 
@@ -2019,6 +3171,41 @@ export function mountTraining(
     const actionName =
       input.dataset.action
 
+    if (
+      actionName ===
+        'session-note' ||
+      actionName ===
+        'session-metric'
+    ) {
+      const weekIndex =
+        Number.parseInt(
+          input.dataset.weekIndex,
+          10
+        )
+
+      const dayIndex =
+        Number.parseInt(
+          input.dataset.dayIndex,
+          10
+        )
+
+      if (
+        Number.isFinite(
+          weekIndex
+        ) &&
+        Number.isFinite(
+          dayIndex
+        )
+      ) {
+        queueSessionState(
+          weekIndex,
+          dayIndex
+        )
+      }
+
+      return
+    }
+
     const setId =
       input.dataset.setId
 
@@ -2135,6 +3322,10 @@ export function mountTraining(
         })
 
       void hydrateFromCloud()
+      void hydrateSessionsFromCloud()
+      void flushTrainingSessionOutbox(
+        setSyncStatus
+      )
     },
     {
       once: false,
@@ -2154,6 +3345,13 @@ export function mountTraining(
     }
   )
 
+  sessionTimerInterval =
+    setInterval(
+      updateDisplayedTimer,
+      1000
+    )
+
   render()
   void hydrateFromCloud()
+  void hydrateSessionsFromCloud()
 }
