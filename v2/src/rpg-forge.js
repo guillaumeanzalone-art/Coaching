@@ -4,9 +4,9 @@ const FORGE_RULES = Object.freeze({
   legendary: {
     required: 10,
     target: 'mythic',
-    sourceLabel: 'L?gendaire',
+    sourceLabel: 'Légendaire',
     targetLabel: 'Mythique',
-    icon: '??',
+    icon: '🔥',
   },
 
   mythic: {
@@ -14,7 +14,7 @@ const FORGE_RULES = Object.freeze({
     target: 'ultra_mythic',
     sourceLabel: 'Mythique',
     targetLabel: 'URM',
-    icon: '??',
+    icon: '🌌',
   },
 
   ultra_mythic: {
@@ -22,7 +22,7 @@ const FORGE_RULES = Object.freeze({
     target: 'abyssal',
     sourceLabel: 'URM',
     targetLabel: 'Abyssal',
-    icon: '??',
+    icon: '🕳️',
   },
 })
 
@@ -355,7 +355,7 @@ function forgeHtml({
                   </span>
 
                   <small>
-                    M?me niveau obligatoire
+                    Même niveau obligatoire
                   </small>
                 </div>
 
@@ -376,8 +376,8 @@ function forgeHtml({
                 >
                   ${
                     state.forgeBusy
-                      ? '?? TING?'
-                      : `Forger ?${rule.required}`
+                      ? '⚒️ EN COURS…'
+                      : `Forger ×${rule.required}`
                   }
                 </button>
               </div>
@@ -400,26 +400,26 @@ function forgeHtml({
       state.forgeResult.success
         ? `
           <div class="rpg-forge-result-v2 success">
-            ? <strong>R?USSITE</strong><br>
+            ✨ <strong>RÉUSSITE</strong><br>
 
             ${esc(
               state.forgeResult
                 .result_item_name ||
               state.forgeResult
                 .target_rarity ||
-              'Objet sup?rieur'
+              'Objet supérieur'
             )}
           </div>
         `
         : `
           <div class="rpg-forge-result-v2 fail">
-            ?? <strong>?CHEC</strong><br>
+            💥 <strong>ÉCHEC</strong><br>
 
             ${formatNumber(
               state.forgeResult
                 .items_consumed
             )}
-            objets d?truits.
+            objets détruits.
           </div>
         `
   }
@@ -429,31 +429,31 @@ function forgeHtml({
       <div>
         <strong>10</strong>
         <span>
-          L?gendaires ? Mythique
+          Légendaires → Mythique
         </span>
       </div>
 
       <div>
         <strong>5</strong>
         <span>
-          Mythiques ? URM
+          Mythiques → URM
         </span>
       </div>
 
       <div>
         <strong>2</strong>
         <span>
-          URM ? Abyssal
+          URM → Abyssal
         </span>
       </div>
     </div>
 
     <div class="rpg-forge-warning-v2">
-      ?? Le r?sultat est d?cid?
+      🔒 Le résultat est décidé
       directement par le serveur.
 
-      En cas d'?chec,
-      les objets sacrifi?s sont perdus.
+      En cas d'échec,
+      les objets sacrifiés sont perdus.
     </div>
 
     <div class="rpg-forge-groups-v2">
@@ -469,25 +469,25 @@ function casinoReels(
 ) {
   const reels = {
     jackpot:
-      ['??', '??', '??'],
+      ['💎', '💎', '💎'],
 
     bonus:
-      ['??', '??', '??'],
+      ['🎁', '🎁', '🎁'],
 
     x10:
-      ['??', '??', '??'],
+      ['👑', '👑', '👑'],
 
     x5:
-      ['??', '??', '??'],
+      ['🔥', '🔥', '🔥'],
 
     x2:
-      ['??', '??', '??'],
+      ['⚡', '⚡', '⚡'],
 
     x1:
-      ['??', '??', '??'],
+      ['🪙', '🪙', '🪙'],
 
     loss:
-      ['??', '7??', '??'],
+      ['🍒', '7️⃣', '💀'],
   }
 
   return (
@@ -496,8 +496,25 @@ function casinoReels(
         outcome || ''
       ).toLowerCase()
     ] ||
-    ['??', '??', '??']
+    ['❔', '❔', '❔']
   )
+}
+
+function setCasinoBusyVisualV13A(
+  busy
+) {
+  const machine =
+    document.querySelector(
+      '.rpg-casino-machine-v2'
+    )
+
+  if (machine) {
+    machine.classList
+      .toggle(
+        'is-spinning',
+        !!busy
+      )
+  }
 }
 
 function casinoHtml({
@@ -572,14 +589,14 @@ function casinoHtml({
       outcome === 'jackpot'
     ) {
       resultText =
-        `?? JACKPOT ? +${formatNumber(
+        `💎 JACKPOT · +${formatNumber(
           result.payout
         )} Gold`
     } else if (
       outcome === 'bonus'
     ) {
       resultText =
-        `?? BONUS ? ${formatNumber(
+        `🎁 BONUS · ${formatNumber(
           result.free_spins_awarded
         )} free spins`
     } else if (
@@ -588,12 +605,12 @@ function casinoHtml({
       ) > 0
     ) {
       resultText =
-        `?? Gain : ${formatNumber(
+        `🪙 Gain : ${formatNumber(
           result.payout
         )} Gold`
     } else {
       resultText =
-        '?? Perdu. Le nain rigole.'
+        '💀 Perdu. Le nain rigole.'
     }
   }
 
@@ -613,13 +630,13 @@ function casinoHtml({
     <div class="rpg-casino-machine-v2">
       <div class="rpg-casino-head-v2">
         <strong>
-          ?? Casino Gold
+          🎰 Casino Gold
         </strong>
 
         <span>
           Solde :
           ${formatNumber(gold)}
-          ??
+          🪙
         </span>
       </div>
 
@@ -627,7 +644,7 @@ function casinoHtml({
         free > 0
           ? `
             <div class="rpg-casino-free-v2">
-              ?? ${free} FREE SPINS
+              🎁 ${free} FREE SPINS
             </div>
           `
           : ''
@@ -675,9 +692,9 @@ function casinoHtml({
         >
           ${
             state.casinoBusy
-              ? 'TING TING?'
+              ? '🎰 EN COURS…'
               : free > 0
-                ? `?? JOUER (${free})`
+                ? `🎁 JOUER (${free})`
                 : 'SPIN'
           }
         </button>
@@ -715,7 +732,7 @@ function casinoHtml({
         state.casinoReady === false
           ? `
             <div class="rpg-casino-error-v2">
-              ?? ${esc(
+              ⚠️ ${esc(
                 state.casinoError
               )}
             </div>
@@ -742,7 +759,50 @@ export function renderRpgForge({
     <section class="rpg-dwarf-workshop-v2">
       <header class="rpg-dwarf-head-v2">
         <div class="rpg-dwarf-avatar-v2">
-          ???????
+          <svg
+            class="rpg-dwarf-svg-v13a"
+            viewBox="0 0 64 64"
+            aria-hidden="true"
+          >
+            <path
+              d="M15 28c1-14 8-21 17-21s16 7 17 21"
+              fill="#9b5e23"
+              stroke="#f0c44d"
+              stroke-width="2"
+            />
+            <path
+              d="M12 28h40l-5 8H17z"
+              fill="#d58a31"
+            />
+            <circle
+              cx="32"
+              cy="34"
+              r="12"
+              fill="#e2a06d"
+            />
+            <circle
+              cx="27"
+              cy="33"
+              r="1.5"
+              fill="#121722"
+            />
+            <circle
+              cx="37"
+              cy="33"
+              r="1.5"
+              fill="#121722"
+            />
+            <path
+              d="M21 39c3 17 19 21 22 0-5 4-17 4-22 0z"
+              fill="#a85b28"
+            />
+            <path
+              d="M46 15l4-4 3 3-4 4 8 8-4 4-8-8-4 4-3-3 4-4z"
+              fill="#c5cedb"
+              stroke="#596579"
+              stroke-width="1"
+            />
+          </svg>
         </div>
 
         <div>
@@ -751,9 +811,9 @@ export function renderRpgForge({
           </strong>
 
           <p>
-            ? Donne-moi tes reliques?
+            « Donne-moi tes reliques…
             ou ton Gold.
-            Le m?tal et la roue d?cideront. ?
+            Le métal et la roue décideront. »
           </p>
         </div>
       </header>
@@ -768,7 +828,7 @@ export function renderRpgForge({
               : ''
           }"
         >
-          ?? Forge d'?quipement
+          ⚒️ Forge d'équipement
         </button>
 
         <button
@@ -780,7 +840,7 @@ export function renderRpgForge({
               : ''
           }"
         >
-          ?? Casino Gold
+          🎰 Casino Gold
         </button>
       </div>
 
@@ -947,9 +1007,9 @@ export async function handleRpgForgeAction({
 
     const confirmed =
       window.confirm(
-        `Sacrifier ${rule.required} objets ${rule.sourceLabel} niveau ${level} pour tenter de cr?er 1 ${rule.targetLabel} niveau ${level} ?
+        `Sacrifier ${rule.required} objets ${rule.sourceLabel} niveau ${level} pour tenter de créer 1 ${rule.targetLabel} niveau ${level} ?
 
-En cas d'?chec, le lot est perdu.`
+En cas d'échec, le lot est perdu.`
       )
 
     if (!confirmed) {
@@ -1015,6 +1075,10 @@ En cas d'?chec, le lot est perdu.`
 
     state.casinoBusy = true
 
+    setCasinoBusyVisualV13A(
+      true
+    )
+
     const free =
       Math.max(
         0,
@@ -1059,6 +1123,10 @@ En cas d'?chec, le lot est perdu.`
       )
 
     state.casinoBusy = false
+
+    setCasinoBusyVisualV13A(
+      false
+    )
 
     if (error) {
       throw error

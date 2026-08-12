@@ -2523,3 +2523,433 @@ h1,
       repeat(2,1fr);
   }
 }
+
+
+/* RPG V1.3A GRAPHICAL UPGRADE */
+
+.rpg-page{
+  font-family:
+    "Avenir Next",
+    "SF Pro Display",
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.rpg-reaction-stage-v2{
+  height:270px !important;
+  border:1px solid
+    rgba(240,196,77,.28) !important;
+  background:
+    linear-gradient(
+      rgba(255,255,255,.018)
+      1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.018)
+      1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(63,224,208,.11),
+      transparent 38%
+    ),
+    rgba(0,0,0,.36) !important;
+  background-size:
+    28px 28px,
+    28px 28px,
+    auto,
+    auto !important;
+  box-shadow:
+    inset 0 0 42px
+      rgba(0,0,0,.48),
+    0 10px 30px
+      rgba(0,0,0,.22);
+}
+
+.rpg-reaction-target-v2{
+  z-index:12;
+  width:74px !important;
+  height:74px !important;
+  border-width:3px !important;
+  font-size:22px !important;
+  box-shadow:
+    0 0 0 7px
+      rgba(233,67,97,.12),
+    0 0 28px
+      rgba(233,67,97,.35),
+    0 12px 24px
+      rgba(0,0,0,.46) !important;
+  animation:
+    rpgTargetPulseV13A
+    .68s ease-in-out
+    infinite alternate;
+}
+
+.rpg-reaction-target-v2::before{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border:
+    1px solid
+    rgba(255,255,255,.48);
+  border-radius:inherit;
+  pointer-events:none;
+}
+
+.rpg-reaction-target-v2 small{
+  top:
+    calc(100% + 7px)
+    !important;
+  padding:3px 6px;
+  border-radius:999px;
+  background:
+    rgba(3,6,12,.88);
+  color:#f4f7fb;
+  font-size:8px !important;
+  font-weight:950;
+  letter-spacing:.08em;
+}
+
+.rpg-reaction-target-v2.golden{
+  box-shadow:
+    0 0 0 7px
+      rgba(255,221,93,.12),
+    0 0 34px
+      rgba(255,208,62,.58),
+    0 12px 24px
+      rgba(0,0,0,.46) !important;
+}
+
+.rpg-reaction-target-v2.danger{
+  box-shadow:
+    0 0 0 7px
+      rgba(243,79,90,.12),
+    0 0 36px
+      rgba(243,79,90,.48),
+    0 12px 24px
+      rgba(0,0,0,.46) !important;
+  animation:
+    rpgDangerPulseV13A
+    .34s ease-in-out
+    infinite alternate;
+}
+
+.rpg-reaction-target-v2.chain{
+  box-shadow:
+    0 0 0 7px
+      rgba(173,149,255,.12),
+    0 0 32px
+      rgba(127,95,255,.45),
+    0 12px 24px
+      rgba(0,0,0,.46) !important;
+}
+
+.rpg-reaction-target-v2.double{
+  box-shadow:
+    0 0 0 7px
+      rgba(98,205,255,.12),
+    0 0 32px
+      rgba(54,180,255,.45),
+    0 12px 24px
+      rgba(0,0,0,.46) !important;
+}
+
+.rpg-combat-feedback-v2{
+  min-height:42px !important;
+  display:grid;
+  place-items:center;
+  font-size:17px !important;
+  letter-spacing:.035em;
+  text-shadow:
+    0 2px 14px
+    rgba(0,0,0,.5);
+}
+
+.rpg-combat-stat-v2:nth-child(1) b{
+  color:#62dda0 !important;
+}
+
+.rpg-combat-stat-v2:nth-child(2) b{
+  color:#f4c542 !important;
+}
+
+.rpg-combat-stat-v2:nth-child(3) b{
+  color:#3fe0d0 !important;
+}
+
+.rpg-combat-stat-v2:nth-child(4) b{
+  color:#ff6b6b !important;
+}
+
+.rpg-damage-burst-v13a{
+  position:absolute;
+  z-index:40;
+  transform:
+    translate(-50%,-50%);
+  pointer-events:none;
+  color:#f8f9fd;
+  font-size:20px;
+  font-weight:1000;
+  letter-spacing:.02em;
+  text-shadow:
+    0 3px 4px
+      rgba(0,0,0,.85),
+    0 0 18px
+      rgba(255,255,255,.18);
+  animation:
+    rpgDamageBurstV13A
+    .72s
+    cubic-bezier(.15,.8,.2,1)
+    forwards;
+}
+
+.rpg-damage-burst-v13a.perfect{
+  color:#76eab4;
+}
+
+.rpg-damage-burst-v13a.crit{
+  color:#ffd86b;
+  font-size:24px;
+}
+
+.rpg-damage-burst-v13a.miss{
+  color:#ff737c;
+}
+
+.rpg-combat-enemy-v2.hit-flash-v13a img{
+  animation:
+    rpgEnemyHitV13A
+    .16s ease-out;
+}
+
+.rpg-dwarf-head-v2{
+  min-height:92px;
+  padding:16px;
+  background:
+    radial-gradient(
+      circle at 12% 0,
+      rgba(240,196,77,.13),
+      transparent 40%
+    );
+}
+
+.rpg-dwarf-avatar-v2{
+  width:72px;
+  height:72px;
+  border-radius:20px;
+  overflow:hidden;
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      rgba(240,196,77,.18),
+      transparent 64%
+    ),
+    #0c111b;
+}
+
+.rpg-dwarf-svg-v13a{
+  width:64px;
+  height:64px;
+  filter:
+    drop-shadow(
+      0 7px 8px
+      rgba(0,0,0,.38)
+    );
+}
+
+.rpg-casino-machine-v2{
+  position:relative;
+  overflow:hidden;
+  padding:16px;
+  border-radius:18px;
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      rgba(240,196,77,.18),
+      transparent 48%
+    ),
+    linear-gradient(
+      180deg,
+      #101827,
+      #070a10
+    );
+  box-shadow:
+    inset 0 1px 0
+      rgba(255,255,255,.04),
+    0 16px 36px
+      rgba(0,0,0,.28);
+}
+
+.rpg-casino-reels-v2{
+  gap:9px;
+  margin-top:14px;
+  padding:10px;
+  border:
+    1px solid
+    rgba(240,196,77,.12);
+  border-radius:16px;
+  background:#05070c;
+}
+
+.rpg-casino-reel-v2{
+  min-height:92px;
+  border-radius:14px;
+  font-size:38px;
+  background:
+    linear-gradient(
+      180deg,
+      #1b2638,
+      #0a0f18 52%,
+      #172033
+    );
+}
+
+.rpg-casino-machine-v2.is-spinning
+.rpg-casino-reel-v2{
+  animation:
+    rpgCasinoSpinV13A
+    .22s linear infinite;
+  filter:blur(.6px);
+}
+
+.rpg-casino-machine-v2.is-spinning
+.rpg-casino-reel-v2:nth-child(2){
+  animation-delay:-.07s;
+}
+
+.rpg-casino-machine-v2.is-spinning
+.rpg-casino-reel-v2:nth-child(3){
+  animation-delay:-.14s;
+}
+
+@keyframes rpgTargetPulseV13A{
+  from{
+    transform:
+      translate(-50%,-50%)
+      scale(.96);
+  }
+  to{
+    transform:
+      translate(-50%,-50%)
+      scale(1.06);
+  }
+}
+
+@keyframes rpgDangerPulseV13A{
+  from{
+    transform:
+      translate(-50%,-50%)
+      scale(.94);
+    filter:brightness(.88);
+  }
+  to{
+    transform:
+      translate(-50%,-50%)
+      scale(1.08);
+    filter:brightness(1.35);
+  }
+}
+
+@keyframes rpgDamageBurstV13A{
+  0%{
+    opacity:0;
+    transform:
+      translate(-50%,-20%)
+      scale(.72);
+  }
+  18%{
+    opacity:1;
+    transform:
+      translate(-50%,-50%)
+      scale(1.12);
+  }
+  100%{
+    opacity:0;
+    transform:
+      translate(-50%,-145%)
+      scale(.94);
+  }
+}
+
+@keyframes rpgEnemyHitV13A{
+  0%{
+    transform:
+      translateX(0)
+      scale(1);
+  }
+  35%{
+    transform:
+      translateX(-6px)
+      scale(.98);
+  }
+  70%{
+    transform:
+      translateX(5px)
+      scale(1.02);
+  }
+  100%{
+    transform:
+      translateX(0)
+      scale(1);
+  }
+}
+
+@keyframes rpgCasinoSpinV13A{
+  0%{
+    transform:
+      translateY(-4px)
+      scale(.98);
+  }
+  50%{
+    transform:
+      translateY(4px)
+      scale(1.03);
+  }
+  100%{
+    transform:
+      translateY(-4px)
+      scale(.98);
+  }
+}
+
+@media(max-width:430px){
+  .rpg-reaction-stage-v2{
+    height:280px !important;
+  }
+
+  .rpg-reaction-target-v2{
+    width:68px !important;
+    height:68px !important;
+    font-size:20px !important;
+  }
+
+  .rpg-combat-feedback-v2{
+    font-size:15px !important;
+  }
+
+  .rpg-dwarf-avatar-v2{
+    width:64px;
+    height:64px;
+  }
+
+  .rpg-dwarf-svg-v13a{
+    width:57px;
+    height:57px;
+  }
+
+  .rpg-casino-machine-v2{
+    padding:12px;
+  }
+
+  .rpg-casino-reel-v2{
+    min-height:78px;
+    font-size:32px;
+  }
+}

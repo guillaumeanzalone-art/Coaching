@@ -12,43 +12,79 @@ const TICK_MS = 50
 const RESULT_TIMEOUT_MS = 15000
 
 const CLASS_DEFS = {
-  warrior: { icon: '???', label: 'Guerrier' },
-  archer: { icon: '??', label: 'Archer' },
-  mage: { icon: '??', label: 'Mage' },
+  warrior: {
+    icon: '⚔️',
+    label: 'Guerrier',
+  },
+  archer: {
+    icon: '🏹',
+    label: 'Archer',
+  },
+  mage: {
+    icon: '🔮',
+    label: 'Mage',
+  },
 }
 
 const RARITY_DEFS = {
-  normal: { icon: '?', label: 'Simple' },
-  common: { icon: '??', label: 'Commun' },
-  uncommon: { icon: '??', label: 'Peu commun' },
-  rare: { icon: '??', label: 'Rare' },
-  epic: { icon: '??', label: '?pique' },
-  legendary: { icon: '??', label: 'L?gendaire' },
-  mythic: { icon: '??', label: 'Mythique' },
-  ultra_mythic: { icon: '??', label: 'Ultra Rare Mythique' },
-  abyssal: { icon: '???', label: 'Abyssal' },
+  normal: {
+    icon: '◽',
+    label: 'Simple',
+  },
+  common: {
+    icon: '🟢',
+    label: 'Commun',
+  },
+  uncommon: {
+    icon: '🔵',
+    label: 'Peu commun',
+  },
+  rare: {
+    icon: '💠',
+    label: 'Rare',
+  },
+  epic: {
+    icon: '🟣',
+    label: 'Épique',
+  },
+  legendary: {
+    icon: '🟡',
+    label: 'Légendaire',
+  },
+  mythic: {
+    icon: '🔴',
+    label: 'Mythique',
+  },
+  ultra_mythic: {
+    icon: '🌌',
+    label: 'Ultra Rare Mythique',
+  },
+  abyssal: {
+    icon: '🕳️',
+    label: 'Abyssal',
+  },
 }
 
 const FIRST_SPELLS = Object.freeze({
   warrior: {
-    icon: '??',
-    name: 'UNBOUND ? Brise-Limites',
+    icon: '⚔️',
+    name: 'UNBOUND · Brise-Limites',
     quote: 'Rien ne peut me retenir.',
     audio: 'sort1-guerrier.mp3',
     cutin: 'skill-cutin-warrior.webp',
   },
 
   archer: {
-    icon: '??',
-    name: 'PIERCING FATE ? Fl?che du Destin',
-    quote: 'Ma fl?che dans ton pied.',
+    icon: '🏹',
+    name: 'PIERCING FATE · Flèche du Destin',
+    quote: 'Ma flèche dans ton pied.',
     audio: 'sort1-archer.mp3',
     cutin: 'skill-cutin-archer.webp',
   },
 
   mage: {
-    icon: '?',
-    name: 'SPARKLING CAT ? ?veil Astral',
+    icon: '✨',
+    name: 'SPARKLING CAT · Éveil Astral',
     quote: 'Sparkling Cat.',
     audio: 'sort1-magicienne.mp3',
     cutin: 'skill-cutin-mage.webp',
@@ -155,6 +191,36 @@ function canonicalRarity(
   return RARITY_DEFS[raw]
     ? raw
     : 'common'
+}
+
+/* WEB RPG BOSS PROGRESS RARITY V2 */
+const BOSS_PROGRESS_BY_RARITY =
+  Object.freeze({
+    normal: 2,
+    common: 3,
+    uncommon: 4,
+    rare: 8,
+    epic: 16,
+    legendary: 30,
+    mythic: 50,
+    ultra_mythic: 50,
+    abyssal: 50,
+  })
+
+function bossProgressForRarity(
+  value
+) {
+  const rarity =
+    canonicalRarity(
+      value
+    )
+
+  return (
+    BOSS_PROGRESS_BY_RARITY[
+      rarity
+    ] ||
+    2
+  )
 }
 
 function progressMaxDifficulty(
@@ -707,11 +773,11 @@ function showFirstSpellCutin(
         </strong>
 
         <span>
-          ?${esc(def.quote)}?
+          « ${esc(def.quote)} »
         </span>
 
         <b>
-          D?G?TS +35 % ? 5 S
+          DÉGÂTS +35 % · 5 S
         </b>
       </div>
     </div>
@@ -768,7 +834,7 @@ function activateRushAbility(
     )
 
   session.feedback =
-    `${def.icon} ${def.name.toUpperCase()} ? +35 % D?G?TS !`
+    `${def.icon} ${def.name.toUpperCase()} · +35 % DÉGÂTS !`
 
   session.feedbackType =
     'perfect'
@@ -1351,6 +1417,121 @@ function installCombatStyles() {
     .appendChild(style)
 }
 
+/* RPG V1.3A DAMAGE BURSTS */
+function showDamageBurstV13A(
+  spec,
+  damage,
+  quality
+) {
+  const stage =
+    document.querySelector(
+      '[data-rpg-reaction-stage-v2]'
+    )
+
+  if (
+    !stage ||
+    !spec
+  ) {
+    return
+  }
+
+  const secondChain =
+    spec.type === 'chain' &&
+    spec.firstPressAt
+
+  const x =
+    secondChain
+      ? n(spec.x2, spec.x)
+      : n(spec.x, 50)
+
+  const y =
+    secondChain
+      ? n(spec.y2, spec.y)
+      : n(spec.y, 50)
+
+  const burst =
+    document.createElement(
+      'div'
+    )
+
+  const crits =
+    n(damage?.crits)
+
+  burst.className =
+    'rpg-damage-burst-v13a' +
+    (
+      quality
+        ? ` ${quality}`
+        : ''
+    ) +
+    (
+      crits > 0
+        ? ' crit'
+        : ''
+    )
+
+  burst.style.left =
+    `${x}%`
+
+  burst.style.top =
+    `${y}%`
+
+  burst.textContent =
+    quality === 'miss'
+      ? 'RATÉ'
+      : `-${formatNumber(
+          damage?.addedDamage
+        )} DÉGÂTS${
+          crits > 0
+            ? ` · ⚡ ${crits} CRIT`
+            : ''
+        }`
+
+  stage.appendChild(
+    burst
+  )
+
+  window.setTimeout(
+    () => {
+      burst.remove()
+    },
+    760
+  )
+
+  if (
+    quality !== 'miss'
+  ) {
+    const enemy =
+      document.querySelector(
+        '[data-rpg-combat-enemy-v2]'
+      )
+
+    if (enemy) {
+      enemy.classList
+        .remove(
+          'hit-flash-v13a'
+        )
+
+      void enemy.offsetWidth
+
+      enemy.classList
+        .add(
+          'hit-flash-v13a'
+        )
+
+      window.setTimeout(
+        () => {
+          enemy.classList
+            .remove(
+              'hit-flash-v13a'
+            )
+        },
+        180
+      )
+    }
+  }
+}
+
 function ensureOverlay() {
   installCombatStyles()
   installFirstSpellStyles()
@@ -1443,7 +1624,7 @@ function ensureOverlay() {
             class="rpg-reaction-hint-v2"
             data-rpg-reaction-hint-v2
           >
-            Les cibles vont appara?tre ici.
+            Les cibles vont apparaître ici.
           </div>
         </div>
 
@@ -1487,7 +1668,7 @@ function ensureOverlay() {
           type="button"
           data-rpg-combat-result-close-v2
         >
-          R?cup?rer et revenir
+          Récupérer et revenir
         </button>
       </div>
     </div>
@@ -1701,28 +1882,28 @@ function targetLabel(
   if (
     spec.type === 'danger'
   ) {
-    return '??<small>?VITE</small>'
+    return '☠<small>ÉVITE</small>'
   }
 
   if (
     spec.type === 'golden'
   ) {
-    return '?<small>PARFAIT</small>'
+    return '★<small>PARFAIT</small>'
   }
 
   if (
     spec.type === 'double'
   ) {
-    return '2?<small>DOUBLE</small>'
+    return '×2<small>DOUBLE</small>'
   }
 
   if (
     spec.type === 'chain'
   ) {
-    return '??<small>1 / 2</small>'
+    return '➊<small>1 / 2</small>'
   }
 
-  return '?<small>TOUCHE</small>'
+  return '●<small>TOUCHE</small>'
 }
 
 function spawnTarget(
@@ -1885,7 +2066,7 @@ function handleTargetPress(
         point
 
       targetElement.innerHTML =
-        '1?<small>ENCORE</small>'
+        '1/2<small>ENCORE</small>'
 
       return
     }
@@ -2179,6 +2360,12 @@ function resolveTarget(
     session.feedbackType = 'miss'
 
     playCombatTone('miss')
+
+    showDamageBurstV13A(
+      spec,
+      null,
+      'miss'
+    )
   } else {
     session.successful += 1
     session.combo += 1
@@ -2261,19 +2448,25 @@ function resolveTarget(
           units
         )
 
+      showDamageBurstV13A(
+        spec,
+        damage,
+        quality
+      )
+
       session.feedback =
         `${
           quality ===
           'perfect'
             ? 'PARFAIT'
             : 'BON'
-        } ? ` +
+        } · ` +
         `${formatNumber(
           damage.addedDamage
         )} dégâts` +
         `${
           damage.crits
-            ? ` ? ${damage.crits} CRIT`
+            ? ` · ⚡ ${damage.crits} CRIT`
             : ''
         }`
 
@@ -2566,7 +2759,7 @@ function spriteHtml(
   if (!sprite) {
     return `
       <div class="rpg-combat-fallback-v2">
-        ??
+        👾
       </div>
     `
   }
@@ -2611,7 +2804,7 @@ function renderTarget(
 
   const label =
     secondChain
-      ? '??<small>2 / 2</small>'
+      ? '➋<small>2 / 2</small>'
       : targetLabel(spec)
 
   return `
@@ -2652,7 +2845,7 @@ function renderFight(
     CLASS_DEFS[
       session.classKey
     ] || {
-      icon: '??',
+      icon: '⚔️',
       label: 'Combattant',
     }
 
@@ -2716,11 +2909,11 @@ function renderFight(
 
   setText(
     '[data-rpg-combat-meta-v2]',
-    `${classDef.icon} ${classDef.label} ? ${
+    `${classDef.icon} ${classDef.label} · ${
       session.isBoss
-        ? 'BOSS ? '
+        ? 'BOSS · '
         : ''
-    }palier ${session.difficulty} ? ${session.world}`
+    }palier ${session.difficulty} · ${session.world}`
   )
 
   setText(
@@ -2760,7 +2953,7 @@ function renderFight(
 
   setText(
     '[data-rpg-combat-combo-v2]',
-    `?${session.combo}`
+    `×${session.combo}`
   )
 
   setText(
@@ -2842,10 +3035,10 @@ function renderFight(
                 'chain'
               ? session.target
                   .firstPressAt
-                ? 'Deuxi?me maillon !'
-                : 'Clique puis suis le deuxi?me maillon.'
+                ? 'Deuxième maillon !'
+                : 'Clique puis suis le deuxième maillon.'
               : 'Vise la cible.'
-        : 'Pr?pare-toi?'
+        : 'Prépare-toi…'
   }
 
   /* RPG RUSH BUTTON RENDER V2 */
@@ -3497,6 +3690,15 @@ function showResult(
       session.maxCombo
     )
 
+  const bossProgressGain =
+    Math.max(
+      0,
+      n(
+        result
+          ?.boss_progress_gain
+      )
+    )
+
   const itemName =
     String(
       result
@@ -3620,6 +3822,20 @@ function showResult(
           }
         `
         : 'Aucune r?compense de victoire.'
+  }
+
+  if (
+    rewardsElement &&
+    won &&
+    bossProgressGain > 0
+  ) {
+    rewardsElement
+      .insertAdjacentHTML(
+        'beforeend',
+        `<br>🔥 Progression Boss : <strong>+${formatNumber(
+          bossProgressGain
+        )} / 50</strong>`
+      )
   }
 
   if (
@@ -4004,7 +4220,7 @@ export function renderRpgCombatLauncher({
         </div>
 
         <span>
-          ?? ${kills}/50
+          🔥 ${kills}/50
         </span>
       </div>
 
@@ -4036,6 +4252,33 @@ export function renderRpgCombatLauncher({
               >
             </div>
 
+            <div
+              class="rpg-boss-rarity-progress-v2"
+              style="
+                margin-top:10px;
+                padding:9px 10px;
+                border:1px solid rgba(240,196,77,.16);
+                border-radius:11px;
+                background:rgba(240,196,77,.045);
+                color:#9ca8bc;
+                font-size:7px;
+                line-height:1.45;
+              "
+            >
+              <strong
+                style="
+                  display:block;
+                  margin-bottom:4px;
+                  color:#f3ce67;
+                  font-size:8px;
+                  letter-spacing:.04em;
+                  text-transform:uppercase;
+                "
+              >
+                Progression Boss par rareté
+              </strong>
+              Simple +2 · Commun +3 · Peu commun +4 · Rare +8 · Épique +16 · Légendaire +30 · Mythique / URM / Abyssal +50
+            </div>
             <div class="rpg-combat-launch-actions-v2">
               <button class="rpg-combat-primary-v2"
                 type="button"
@@ -4060,10 +4303,10 @@ export function renderRpgCombatLauncher({
                     : ''
                 }
               >
-                ?? ${
+                👑 ${
                   bossReady
                     ? 'Affronter le Boss'
-                    : `Boss ? ${kills}/50`
+                    : `Boss · ${kills}/50`
                 }
               </button>
             </div>
@@ -4135,7 +4378,7 @@ export async function startRpgCombat({
     !import.meta.env.DEV
   ) {
     throw new Error(
-      'Le boss se débloque après 50 victoires de palier.'
+      'Le boss se débloque après 50 points de progression.'
     )
   }
 
@@ -4363,6 +4606,60 @@ export async function finishRpgCombat(
     serverRow(
       response.data
     ) || {}
+
+  if (
+    result?.won &&
+    !session.isBoss
+  ) {
+    const bossProgressGain =
+      bossProgressForRarity(
+        session.rarity
+      )
+
+    result.boss_progress_gain =
+      bossProgressGain
+
+    const bonusResponse =
+      await rpcWithTimeout(
+        'award_rpg_boss_progress_rarity_web_v2',
+        {
+          p_combat_id:
+            session.id,
+
+          p_athlete_slug:
+            session.athleteSlug,
+
+          p_rarity:
+            session.rarity,
+        }
+      )
+
+    if (
+      bonusResponse.error
+    ) {
+      console.warn(
+        'RPG BOSS PROGRESS RARITY ERROR',
+        bonusResponse.error
+      )
+    }
+    else {
+      const bonusRow =
+        serverRow(
+          bonusResponse.data
+        )
+
+      if (
+        bonusRow
+          ?.kills_toward_boss != null
+      ) {
+        result.kills_toward_boss =
+          Number(
+            bonusRow
+              .kills_toward_boss
+          )
+      }
+    }
+  }
 
   state.result =
     result
