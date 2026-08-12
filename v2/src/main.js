@@ -6,6 +6,18 @@ import './theme-spider.css'
 import { getRecentActivities, getCurrentActivityUserId, toggleActivityLike } from './activity.js'
 
 import {
+  spiderMenuIcon,
+} from './spider-menu-icons.js'
+
+import {
+  loadHomeLiveDashboard,
+  startPresenceHeartbeat,
+  stopPresenceHeartbeat,
+} from './home-live.js'
+
+/* GA V1.2 HOME LIVE + SPIDER ICONS */
+
+import {
   athletes,
 } from './athletes.js'
 
@@ -360,6 +372,8 @@ async function handleLogoutClick(
     return
   }
 
+  stopPresenceHeartbeat()
+
   await signOut()
   renderLogin(
     'Tu es déconnecté.'
@@ -377,6 +391,13 @@ function routeAuthenticatedUser() {
     renderPending()
     return
   }
+
+  startPresenceHeartbeat({
+    userId:
+      currentUser?.id,
+    member:
+      currentMember,
+  })
 
   if (
     currentMember.role ===
@@ -683,28 +704,12 @@ function renderHome() {
         </button>
       </header>
 
-      <section class="hero">
-        <span class="eyebrow">
-          SESSION CONNECTÉE
-        </span>
-
-        <h2>
-          Une base propre.<br>
-          Un moteur stable.
-        </h2>
-
-        <p>
-          Supabase Auth est maintenant connecté
-          à la nouvelle application.
-        </p>
-      </section>
-
-            <section
-        class="home-xp-card"
-        data-home-xp
+      <section
+        class="home-live-dashboard"
+        data-home-live
       >
-        <div class="home-xp-loading">
-          Chargement de la progression...
+        <div class="home-live-loading">
+          Chargement du groupe…
         </div>
       </section>
 
@@ -713,8 +718,8 @@ function renderHome() {
           class="card"
           data-action="athletes"
         >
-          <span class="card-icon">
-            👤
+          <span class="card-icon card-icon--spider card-icon--athletes">
+            ${spiderMenuIcon('athletes')}
           </span>
 
           <div>
@@ -737,8 +742,8 @@ function renderHome() {
           class="card"
           data-action="activity"
         >
-          <span class="card-icon">
-            📊
+          <span class="card-icon card-icon--spider card-icon--activity">
+            ${spiderMenuIcon('activity')}
           </span>
 
           <div>
@@ -764,8 +769,8 @@ function renderHome() {
           data-action="program-editor"
           type="button"
         >
-          <span class="card-icon">
-            🕷️
+          <span class="card-icon card-icon--spider card-icon--editor">
+            ${spiderMenuIcon('editor')}
           </span>
 
           <div>
@@ -789,8 +794,8 @@ function renderHome() {
           class="card"
           data-action="rpg"
         >
-          <span class="card-icon">
-            ⚔️
+          <span class="card-icon card-icon--spider card-icon--rpg">
+            ${spiderMenuIcon('rpg')}
           </span>
 
           <div>
@@ -811,7 +816,10 @@ function renderHome() {
     </main>
   `
 
-  void loadHomeProgress()
+  void loadHomeLiveDashboard({
+    athletes:
+      visibleAthletes(),
+  })
 
   app.onclick = async (
     event
@@ -829,6 +837,7 @@ function renderHome() {
       action.dataset.action ===
       'logout'
     ) {
+      stopPresenceHeartbeat()
       await signOut()
 
       renderLogin(
