@@ -25,6 +25,19 @@ import {
   exportBlockReportPdf,
 } from './block-report-pdf.js'
 
+import {
+  athleteThemeStyle,
+  getAthleteTheme,
+} from './athlete-themes.js'
+
+import {
+  flushSbdPrOutbox,
+  loadAthleteSbdPrs,
+  recordValidatedSbdSet,
+} from './sbd-pr.js'
+
+/* GA V1.2 HOME PR THEMES SKIP V7 */
+
 /* GA V1.1 SESSION CLOUD + PDF V3 */
 
 function getBlocks(program) {
@@ -488,6 +501,20 @@ export function mountTraining(
       ''
     ).trim()
 
+  const athleteTheme =
+    getAthleteTheme(
+      cloudAthleteSlug
+    )
+
+  let sbdPrs = {
+    squat: null,
+    bench: null,
+    deadlift: null,
+  }
+
+  let prFlash = null
+  let prFlashTimer = null
+
   const BLOCK_SELECTION_KEY =
     createBlockSelectionKey(
       program
@@ -572,6 +599,266 @@ export function mountTraining(
   }
 
 /* GA V1.1 SESSION TRACKING CORE V2 */
+
+  function liftLabel(
+    lift
+  ) {
+    return {
+      squat: 'Squat',
+      bench: 'Bench',
+      deadlift: 'Deadlift',
+    }[lift] || lift
+  }
+
+  function renderAthleteThemeBanner() {
+    const quote =
+      String(
+        athleteTheme?.quote ||
+        athleteTheme?.noteText ||
+        ''
+      ).trim()
+
+    const cite =
+      String(
+        athleteTheme?.cite ||
+        athleteTheme?.noteTitle ||
+        ''
+      ).trim()
+
+    if (!quote) {
+      return ''
+    }
+
+    return `
+      <section class="athlete-theme-banner">
+        <span class="athlete-theme-banner__mark">
+          🕷
+        </span>
+
+        <blockquote>
+          ${escapeHtml(
+            quote
+          )}
+        </blockquote>
+
+        ${cite
+          ? `
+            <cite>
+              ${escapeHtml(
+                cite
+              )}
+            </cite>
+          `
+          : ''}
+      </section>
+    `
+  }
+
+  function renderSbdPrPanel() {
+    const rows = [
+      ['squat', 'SQ'],
+      ['bench', 'BN'],
+      ['deadlift', 'DL'],
+    ]
+
+    return `
+      <section class="athlete-pr-panel">
+        <div class="athlete-pr-panel__head">
+          <div>
+            <span>
+              RECORDS SBD
+            </span>
+
+            <strong>
+              PR de ${escapeHtml(
+                program.athlete?.name ||
+                cloudAthleteSlug
+              )}
+            </strong>
+          </div>
+
+          <small>
+            Mise à jour automatique
+          </small>
+        </div>
+
+        ${prFlash
+          ? `
+            <div class="athlete-pr-flash">
+              🏆 Nouveau PR
+              ${escapeHtml(
+                liftLabel(
+                  prFlash.lift
+                )
+              )}
+              ·
+              ${escapeHtml(
+                prFlash.currentLoad
+              )} kg
+            </div>
+          `
+          : ''}
+
+        <div class="athlete-pr-grid">
+          ${rows.map(
+            ([lift, shortLabel]) => {
+              const row =
+                sbdPrs[lift]
+
+              let dateLabel =
+                'Aucun PR'
+
+              if (row?.achieved_at) {
+                const date =
+                  new Date(
+                    row.achieved_at
+                  )
+
+                if (
+                  !Number.isNaN(
+                    date.getTime()
+                  )
+                ) {
+                  dateLabel =
+                    new Intl.DateTimeFormat(
+                      'fr-FR',
+                      {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: '2-digit',
+                      }
+                    ).format(date)
+                }
+              }
+
+              return `
+                <article class="athlete-pr-card athlete-pr-card--${lift}">
+                  <span>
+                    ${shortLabel}
+                  </span>
+
+                  <strong>
+                    ${row
+                      ? `${escapeHtml(
+                          row.load_kg
+                        )}<small>kg</small>`
+                      : '—'}
+                  </strong>
+
+                  <small>
+                    ${escapeHtml(
+                      dateLabel
+                    )}
+                  </small>
+                </article>
+              `
+            }
+          ).join('')}
+        </div>
+      </section>
+    `
+  }
+
+  async function hydrateSbdPrs(
+    rerender = true
+  ) {
+    sbdPrs =
+      await loadAthleteSbdPrs(
+        cloudAthleteSlug
+      )
+
+    if (rerender) {
+      render()
+    }
+  }
+
+  function capturePrForFound(
+    found
+  ) {
+    if (!found) {
+      return
+    }
+
+    const setState =
+      getSetState(
+        state,
+        found.sourceSet
+      )
+
+    if (
+      setState.status !==
+      'done'
+    ) {
+      return
+    }
+
+    void recordValidatedSbdSet({
+      athleteSlug:
+        cloudAthleteSlug,
+      exercise:
+        found.exercise,
+      load:
+        setState.load,
+      reps:
+        found.sourceSet.reps,
+      programKey:
+        programKey(),
+      weekIndex:
+        found.weekIndex,
+      dayIndex:
+        found.dayIndex,
+      setIndex:
+        found.setIndex,
+    })
+      .then(
+        async (result) => {
+          if (
+            !result ||
+            result.queued ||
+            !result.isPr
+          ) {
+            return
+          }
+
+          sbdPrs =
+            await loadAthleteSbdPrs(
+              cloudAthleteSlug
+            )
+
+          prFlash = {
+            lift:
+              result.lift,
+            currentLoad:
+              result.currentLoad,
+          }
+
+          if (prFlashTimer) {
+            clearTimeout(
+              prFlashTimer
+            )
+          }
+
+          render()
+
+          prFlashTimer =
+            setTimeout(
+              () => {
+                prFlash = null
+                render()
+              },
+              4500
+            )
+        }
+      )
+      .catch(
+        (error) => {
+          console.error(
+            'SBD PR capture error:',
+            error
+          )
+        }
+      )
+  }
 
   function sessionKey(
     weekIndex,
@@ -1675,6 +1962,10 @@ export function mountTraining(
         found.weekIndex,
         found.dayIndex
       )
+
+      capturePrForFound(
+        found
+      )
     }
 
     render()
@@ -1715,6 +2006,10 @@ export function mountTraining(
 
       if (found) {
         queueFoundSet(
+          found
+        )
+
+        capturePrForFound(
           found
         )
       }
@@ -2043,6 +2338,7 @@ export function mountTraining(
     render()
     void hydrateFromCloud()
     void hydrateSessionsFromCloud()
+    void hydrateSbdPrs()
   }
 
   function renderBlocks() {
@@ -2260,7 +2556,7 @@ export function mountTraining(
               : ''
           }
         >
-          ECHEC
+          SKIP / ÉCHEC
         </option>
       </select>
     `
@@ -2406,6 +2702,25 @@ export function mountTraining(
               : ''
           }
         </button>
+        <button
+          class="set-skip ${isFailed ? 'set-skip--undo' : ''}"
+          ${canEdit ? '' : 'disabled'}
+          data-action="skip-set"
+          data-set-id="${escapeHtml(sourceSet.id)}"
+          type="button"
+        >
+          <strong>
+            ${isFailed
+              ? '↩ REVENIR'
+              : '☠ SKIP'}
+          </strong>
+
+          <small>
+            ${isFailed
+              ? 'reprendre ma série'
+              : 'la barre a gagné'}
+          </small>
+        </button>
       </div>
     `
   }
@@ -2512,6 +2827,12 @@ export function mountTraining(
     root.innerHTML = `
       <main
         class="training-page"
+        data-athlete-theme
+        style="${escapeHtml(
+          athleteThemeStyle(
+            athleteTheme
+          )
+        )}"
       >
         <header
           class="training-topbar"
@@ -2545,6 +2866,10 @@ export function mountTraining(
             Réinitialiser
           </button>
         </header>
+
+        ${renderAthleteThemeBanner()}
+        ${renderSbdPrPanel()}
+
 
         <div
           id="trainingSyncStatus"
@@ -2627,7 +2952,8 @@ export function mountTraining(
       !canEdit &&
       (
         actionName === 'reset' ||
-        actionName === 'toggle'
+        actionName === 'toggle' ||
+        actionName === 'skip-set'
       )
     ) {
       return
@@ -2654,6 +2980,14 @@ export function mountTraining(
       ) {
         clearTimeout(
           sessionNoteFlushTimer
+        )
+      }
+
+      if (
+        prFlashTimer
+      ) {
+        clearTimeout(
+          prFlashTimer
         )
       }
 
@@ -2799,7 +3133,37 @@ export function mountTraining(
         sourceSet
       )
 
-    if (
+        if (
+      actionName ===
+        'skip-set'
+    ) {
+      if (
+        set.status ===
+          'failed'
+      ) {
+        updateSet(
+          sourceSet,
+          {
+            rpe: '',
+            status:
+              'pending',
+          }
+        )
+      } else {
+        updateSet(
+          sourceSet,
+          {
+            rpe: '',
+            status:
+              'failed',
+          }
+        )
+      }
+
+      return
+    }
+
+if (
       actionName ===
         'toggle'
     ) {
@@ -3326,6 +3690,17 @@ export function mountTraining(
       void flushTrainingSessionOutbox(
         setSyncStatus
       )
+
+      void flushSbdPrOutbox()
+        .then(
+          (result) => {
+            if (
+              result?.flushed > 0
+            ) {
+              void hydrateSbdPrs()
+            }
+          }
+        )
     },
     {
       once: false,
@@ -3354,4 +3729,6 @@ export function mountTraining(
   render()
   void hydrateFromCloud()
   void hydrateSessionsFromCloud()
+  void hydrateSbdPrs()
+  void flushSbdPrOutbox()
 }
