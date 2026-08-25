@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#090d16">
+<title>Benoît | Bloc Force</title>
+<style>
+:root{--bg:#090d16;--surface:#121927;--surface2:#192337;--surface3:#26344c;--text:#f8f6ef;--dim:#c4c7d0;--muted:#778197;--gold:#e2bc61;--gold2:#f3d78d;--green:#63d6a0;--sq:#e47a6d;--bn:#7699ff;--dl:#bd7be7;--ac:#d9b85d;--radius:15px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Inter,-apple-system,sans-serif;background:radial-gradient(circle at 15% 0%,rgba(226,188,97,.13),transparent 27%),radial-gradient(circle at 100% 8%,rgba(93,115,180,.09),transparent 30%),var(--bg);color:var(--text);min-height:100dvh}
+.app{max-width:430px;margin:auto;padding-bottom:82px}
+.header{position:sticky;top:0;z-index:50;background:rgba(9,13,22,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(226,188,97,.14);padding:13px 16px 11px}
+.head{display:flex;align-items:center;gap:10px}
+.back{width:36px;height:36px;border-radius:10px;background:var(--surface);color:var(--gold2);text-decoration:none;display:grid;place-items:center;font-size:22px}
+.avatar{position:relative;width:40px;height:40px;border-radius:13px;overflow:hidden;background:linear-gradient(145deg,#263149,#101622);border:1px solid rgba(226,188,97,.28);display:grid;place-items:center;font-size:20px}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.title{flex:1}
+.title h1{font-size:1.02rem;font-weight:900}
+.title small{font-size:.58rem;color:var(--gold);font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.weeks{display:flex;gap:5px}
+.week{width:34px;height:34px;border:0;border-radius:9px;background:var(--surface);color:var(--dim);font-size:.7rem;font-weight:900}
+.week.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0a0d13;box-shadow:0 5px 16px rgba(226,188,97,.22)}
+.hero{margin:12px 16px 10px;padding:13px;border-radius:14px;background:linear-gradient(135deg,rgba(226,188,97,.07),rgba(255,255,255,.02));border:1px solid rgba(226,188,97,.18)}
+.hero strong{display:block;color:var(--gold2);font-size:.74rem}
+.hero p{font-size:.63rem;color:var(--dim);line-height:1.5;margin-top:5px}
+.maxes{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:9px}
+.max{text-align:center;background:rgba(0,0,0,.16);border-radius:9px;padding:7px 3px}
+.max b{display:block;font-size:.76rem;color:#fff}.max span{font-size:.51rem;color:var(--muted)}
+.days{display:flex;gap:6px;overflow-x:auto;padding:0 16px 11px;scrollbar-width:none}
+.days::-webkit-scrollbar{display:none}
+.day{min-width:135px;border:1px solid rgba(255,255,255,.04);border-radius:11px;background:var(--surface);color:var(--dim);padding:9px 10px;text-align:left;font-size:.61rem;font-weight:800;line-height:1.25}
+.day b{display:block;color:var(--gold);font-size:.85rem;margin-bottom:2px}
+.day.active{background:var(--surface3);color:#fff;border-color:rgba(226,188,97,.28)}
+.session{margin:0 16px 12px;padding:10px 12px;border-radius:11px;background:var(--surface);display:flex;align-items:center;gap:9px}
+.chrono{min-width:45px;font-size:.7rem;font-weight:900;font-variant-numeric:tabular-nums;cursor:pointer}
+.bar{height:5px;flex:1;background:var(--surface3);border-radius:9px;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2));transition:width .2s}
+.pct{min-width:30px;text-align:right;color:var(--gold);font-size:.68rem;font-weight:900}
+.content{padding:0 16px}
+.exercise{background:linear-gradient(180deg,#121927,#101722);border:1px solid rgba(255,255,255,.035);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.exercise.done{opacity:.52}
+.ex-head{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px}
+.ex-copy{flex:1}.ex-name{font-size:.82rem;font-weight:900}.ex-var{font-size:.57rem;color:var(--muted);margin-top:3px}
+.badge{padding:4px 7px;border-radius:999px;font-size:.52rem;font-weight:900;border:1px solid}
+.b-sq{color:var(--sq);border-color:rgba(228,122,109,.3)}.b-bn{color:var(--bn);border-color:rgba(118,153,255,.3)}.b-dl{color:var(--dl);border-color:rgba(189,123,231,.3)}.b-ac{color:var(--ac);border-color:rgba(217,184,93,.3)}
+.meta{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
+.chip{background:var(--surface2);border-radius:6px;padding:4px 7px;font-size:.59rem;font-weight:800;color:var(--dim)}.chip strong{color:#fff}
+.set{display:flex;align-items:center;gap:7px;background:var(--surface2);border-radius:9px;padding:8px 9px;margin-top:5px}
+.set.ok{background:rgba(99,214,160,.10);border:1px solid rgba(99,214,160,.16)}
+.num{width:24px;height:24px;border-radius:7px;background:var(--surface3);display:grid;place-items:center;font-size:.59rem;font-weight:900;color:var(--dim)}
+.info{flex:1;min-width:0}.target{font-size:.68rem;font-weight:800}.sub{font-size:.54rem;color:var(--muted);margin-top:2px}
+.load{width:60px;border:1px solid rgba(255,255,255,.07);background:var(--surface3);color:#fff;border-radius:7px;padding:6px 4px;text-align:center;font-size:.65rem;font-weight:800;outline:none}
+.check{width:30px;height:30px;border-radius:8px;border:2px solid rgba(255,255,255,.1);background:transparent;cursor:pointer}
+.check.on{background:var(--green);border-color:var(--green)}.check.on:after{content:"";display:block;width:7px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);margin:8px auto 0}
+.notes{display:none;padding:0 16px}.notes.show{display:block}
+.card{background:var(--surface);border-radius:14px;padding:14px;margin-bottom:10px}.card h3{font-size:.74rem;color:var(--gold2);margin-bottom:6px}.card p,.card li{font-size:.66rem;color:var(--dim);line-height:1.5}.card ul{padding-left:18px}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(18,25,39,.98);border-top:1px solid rgba(226,188,97,.12);padding:10px 18px calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:space-around;z-index:60}
+.nav{border:0;background:none;color:var(--muted);font-size:.62rem;font-weight:800;padding:4px 15px}.nav.active{color:var(--gold2)}
+</style>
+</head>
+<body>
+<div style="position:fixed;right:10px;top:8px;z-index:9999;font:700 10px system-ui;color:#888;opacity:.55">VERSION PARTAGE</div>
+<div class="app">
+<header class="header"><div class="head">
+<a class="back" href="javascript:history.back()">‹</a>
+<div class="avatar"><span>✝️</span></div>
+<div class="title"><h1>Benoît</h1><small>Bloc Force · High Bar / Larsen / Pause</small></div>
+<div class="weeks" id="weeks"></div>
+</div></header>
+
+<section class="hero">
+<strong>✝️ BLOC 4 SEMAINES — PRESCRIPTIONS EN POURCENTAGE</strong>
+<p>High Bar sur les séances de semaine · Deadlift pause au Jour 2 · deux Larsen et deux Bench compétition · tous les mouvements principaux restent entre 3 et 5 répétitions.</p>
+<div class="maxes">
+<div class="max"><b>240</b><span>Squat</span></div><div class="max"><b>160</b><span>Bench</span></div><div class="max"><b>280</b><span>Deadlift</span></div><div class="max"><b>107 kg</b><span>PDC</span></div>
+</div>
+</section>
+
+<div class="days" id="days"></div>
+<div class="session"><span class="chrono" id="chrono" onclick="toggleChrono()">00:00</span><div class="bar"><div class="fill" id="fill"></div></div><span class="pct" id="pct">0%</span></div>
+
+<div id="workout"><main class="content" id="list"></main></div>
+<div class="notes" id="notes">
+<div class="card"><h3>📖 Organisation</h3><p><strong>Mercredi :</strong> High Bar + Larsen + Deadlift sanglé.<br><strong>Jeudi :</strong> High Bar + Bench Comp + Deadlift Pause.<br><strong>Vendredi :</strong> optionnel, High Bar technique + Larsen.<br><strong>Samedi :</strong> Comp Squat + Bench Comp + Comp Deadlift.</p></div>
+<div class="card"><h3>⚖️ Progression</h3><p>Les pourcentages montent progressivement de S1 à S4. Les fourchettes de charge sont calculées à partir de SQ 240, BP 160 et DL 280. La charge réalisée peut être renseignée directement sur chaque série.</p></div>
+<div class="card"><h3>🧱 Accessoires conservés</h3><p>Pull over haltères, Deadbug, Cossac Squat, Leg extension et Bird Dog sont repris du tableau fourni.</p></div>
+</div>
+
+<nav class="bottom"><button class="nav active" onclick="showView('workout',this)">🏋️ Séance</button><button class="nav" onclick="showView('notes',this)">📖 Notes</button></nav>
+</div>
+
+<script>
+const P={"weeks":[{"label":"S1","days":[{"name":"Mercredi — High Bar / Larsen / Deadlift sanglé","emoji":"📖","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar","blocks":[{"s":2,"r":"5","pct":68,"ld":"157,5 - 167,5"},{"s":1,"r":"4","pct":71,"ld":"165 - 175"},{"s":1,"r":"3","pct":74,"ld":"172,5 - 182,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Larsen","v":"Larsen","blocks":[{"s":2,"r":"5","pct":66,"ld":"102,5 - 107,5"},{"s":2,"r":"4","pct":69,"ld":"107,5 - 112,5"}]},{"l":"dl","n":"Deadlift sanglé","v":"Sanglé","blocks":[{"s":2,"r":"5","pct":68,"ld":"185 - 195"},{"s":1,"r":"4","pct":71,"ld":"195 - 205"},{"s":1,"r":"3","pct":74,"ld":"202,5 - 212,5"}]}]},{"name":"Jeudi — High Bar / Bench Comp / Deadlift Pause","emoji":"✝️","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar","blocks":[{"s":2,"r":"5","pct":64,"ld":"147,5 - 157,5"},{"s":1,"r":"4","pct":67,"ld":"155 - 165"},{"s":1,"r":"3","pct":70,"ld":"162,5 - 172,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Comp","v":"Compétition","blocks":[{"s":2,"r":"5","pct":70,"ld":"110 - 115"},{"s":1,"r":"4","pct":73,"ld":"115 - 120"},{"s":1,"r":"3","pct":76,"ld":"120 - 125"}]},{"l":"dl","n":"Deadlift Pause","v":"Pause sous le genou","blocks":[{"s":2,"r":"4","pct":65,"ld":"177,5 - 187,5"},{"s":1,"r":"4","pct":68,"ld":"185 - 195"},{"s":1,"r":"3","pct":71,"ld":"195 - 205"}]},{"l":"ac","n":"Deadbug","v":"","blocks":[{"s":3,"r":"15","pct":null,"ld":null}]}]},{"name":"Vendredi — Optionnel / High Bar / Larsen","emoji":"🕯️","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar · technique","blocks":[{"s":2,"r":"5","pct":60,"ld":"140 - 150"},{"s":1,"r":"4","pct":63,"ld":"145 - 155"},{"s":1,"r":"3","pct":66,"ld":"152,5 - 162,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Larsen","v":"Larsen","blocks":[{"s":2,"r":"5","pct":64,"ld":"100 - 105"},{"s":2,"r":"4","pct":67,"ld":"105 - 110"}]},{"l":"ac","n":"Cossac Squat","v":"","blocks":[{"s":2,"r":"15","pct":null,"ld":null}]},{"l":"ac","n":"Leg extension","v":"","blocks":[{"s":2,"r":"20","pct":null,"ld":null}]}]},{"name":"Samedi — Comp SBD","emoji":"⚔️","exercises":[{"l":"sq","n":"Comp Squat","v":"Compétition","blocks":[{"s":2,"r":"5","pct":72,"ld":"167,5 - 177,5"},{"s":1,"r":"4","pct":76,"ld":"177,5 - 187,5"},{"s":1,"r":"3","pct":80,"ld":"187,5 - 197,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Comp","v":"Compétition","blocks":[{"s":2,"r":"5","pct":72,"ld":"112,5 - 117,5"},{"s":1,"r":"4","pct":76,"ld":"120 - 125"},{"s":1,"r":"3","pct":80,"ld":"125 - 130"}]},{"l":"dl","n":"Comp Deadlift","v":"Compétition","blocks":[{"s":2,"r":"5","pct":70,"ld":"190 - 200"},{"s":1,"r":"4","pct":74,"ld":"202,5 - 212,5"},{"s":1,"r":"3","pct":78,"ld":"212,5 - 222,5"}]},{"l":"ac","n":"Bird Dog","v":"","blocks":[{"s":3,"r":"15","pct":null,"ld":null}]}]}]},{"label":"S2","days":[{"name":"Mercredi — High Bar / Larsen / Deadlift sanglé","emoji":"📖","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar","blocks":[{"s":2,"r":"5","pct":71,"ld":"165 - 175"},{"s":1,"r":"4","pct":74,"ld":"172,5 - 182,5"},{"s":1,"r":"3","pct":77,"ld":"180 - 190"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Larsen","v":"Larsen","blocks":[{"s":2,"r":"5","pct":69,"ld":"107,5 - 112,5"},{"s":2,"r":"4","pct":72,"ld":"112,5 - 117,5"}]},{"l":"dl","n":"Deadlift sanglé","v":"Sanglé","blocks":[{"s":2,"r":"5","pct":71,"ld":"195 - 205"},{"s":1,"r":"4","pct":74,"ld":"202,5 - 212,5"},{"s":1,"r":"3","pct":77,"ld":"210 - 220"}]}]},{"name":"Jeudi — High Bar / Bench Comp / Deadlift Pause","emoji":"✝️","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar","blocks":[{"s":2,"r":"5","pct":67,"ld":"155 - 165"},{"s":1,"r":"4","pct":70,"ld":"162,5 - 172,5"},{"s":1,"r":"3","pct":73,"ld":"170 - 180"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Comp","v":"Compétition","blocks":[{"s":2,"r":"5","pct":73,"ld":"115 - 120"},{"s":1,"r":"4","pct":76,"ld":"120 - 125"},{"s":1,"r":"3","pct":79,"ld":"125 - 130"}]},{"l":"dl","n":"Deadlift Pause","v":"Pause sous le genou","blocks":[{"s":2,"r":"4","pct":68,"ld":"185 - 195"},{"s":1,"r":"4","pct":71,"ld":"195 - 205"},{"s":1,"r":"3","pct":74,"ld":"202,5 - 212,5"}]},{"l":"ac","n":"Deadbug","v":"","blocks":[{"s":3,"r":"15","pct":null,"ld":null}]}]},{"name":"Vendredi — Optionnel / High Bar / Larsen","emoji":"🕯️","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar · technique","blocks":[{"s":2,"r":"5","pct":62,"ld":"145 - 155"},{"s":1,"r":"4","pct":65,"ld":"150 - 160"},{"s":1,"r":"3","pct":68,"ld":"157,5 - 167,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Larsen","v":"Larsen","blocks":[{"s":2,"r":"5","pct":67,"ld":"105 - 110"},{"s":2,"r":"4","pct":70,"ld":"110 - 115"}]},{"l":"ac","n":"Cossac Squat","v":"","blocks":[{"s":2,"r":"15","pct":null,"ld":null}]},{"l":"ac","n":"Leg extension","v":"","blocks":[{"s":2,"r":"20","pct":null,"ld":null}]}]},{"name":"Samedi — Comp SBD","emoji":"⚔️","exercises":[{"l":"sq","n":"Comp Squat","v":"Compétition","blocks":[{"s":2,"r":"5","pct":75,"ld":"175 - 185"},{"s":1,"r":"4","pct":79,"ld":"185 - 195"},{"s":1,"r":"3","pct":83,"ld":"195 - 205"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Comp","v":"Compétition","blocks":[{"s":2,"r":"5","pct":75,"ld":"117,5 - 122,5"},{"s":1,"r":"4","pct":79,"ld":"125 - 130"},{"s":1,"r":"3","pct":83,"ld":"130 - 135"}]},{"l":"dl","n":"Comp Deadlift","v":"Compétition","blocks":[{"s":2,"r":"5","pct":73,"ld":"200 - 210"},{"s":1,"r":"4","pct":77,"ld":"210 - 220"},{"s":1,"r":"3","pct":81,"ld":"222,5 - 232,5"}]},{"l":"ac","n":"Bird Dog","v":"","blocks":[{"s":3,"r":"15","pct":null,"ld":null}]}]}]},{"label":"S3","days":[{"name":"Mercredi — High Bar / Larsen / Deadlift sanglé","emoji":"📖","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar","blocks":[{"s":2,"r":"5","pct":74,"ld":"172,5 - 182,5"},{"s":1,"r":"4","pct":77,"ld":"180 - 190"},{"s":1,"r":"3","pct":80,"ld":"187,5 - 197,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Larsen","v":"Larsen","blocks":[{"s":2,"r":"5","pct":72,"ld":"112,5 - 117,5"},{"s":2,"r":"4","pct":75,"ld":"117,5 - 122,5"}]},{"l":"dl","n":"Deadlift sanglé","v":"Sanglé","blocks":[{"s":2,"r":"5","pct":74,"ld":"202,5 - 212,5"},{"s":1,"r":"4","pct":77,"ld":"210 - 220"},{"s":1,"r":"3","pct":80,"ld":"220 - 230"}]}]},{"name":"Jeudi — High Bar / Bench Comp / Deadlift Pause","emoji":"✝️","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar","blocks":[{"s":2,"r":"5","pct":70,"ld":"162,5 - 172,5"},{"s":1,"r":"4","pct":73,"ld":"170 - 180"},{"s":1,"r":"3","pct":76,"ld":"177,5 - 187,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Comp","v":"Compétition","blocks":[{"s":2,"r":"5","pct":76,"ld":"120 - 125"},{"s":1,"r":"4","pct":79,"ld":"125 - 130"},{"s":1,"r":"3","pct":82,"ld":"127,5 - 132,5"}]},{"l":"dl","n":"Deadlift Pause","v":"Pause sous le genou","blocks":[{"s":2,"r":"4","pct":71,"ld":"195 - 205"},{"s":1,"r":"4","pct":74,"ld":"202,5 - 212,5"},{"s":1,"r":"3","pct":77,"ld":"210 - 220"}]},{"l":"ac","n":"Deadbug","v":"","blocks":[{"s":3,"r":"15","pct":null,"ld":null}]}]},{"name":"Vendredi — Optionnel / High Bar / Larsen","emoji":"🕯️","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar · technique","blocks":[{"s":2,"r":"5","pct":64,"ld":"147,5 - 157,5"},{"s":1,"r":"4","pct":67,"ld":"155 - 165"},{"s":1,"r":"3","pct":70,"ld":"162,5 - 172,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Larsen","v":"Larsen","blocks":[{"s":2,"r":"5","pct":70,"ld":"110 - 115"},{"s":2,"r":"4","pct":73,"ld":"115 - 120"}]},{"l":"ac","n":"Cossac Squat","v":"","blocks":[{"s":2,"r":"15","pct":null,"ld":null}]},{"l":"ac","n":"Leg extension","v":"","blocks":[{"s":2,"r":"20","pct":null,"ld":null}]}]},{"name":"Samedi — Comp SBD","emoji":"⚔️","exercises":[{"l":"sq","n":"Comp Squat","v":"Compétition","blocks":[{"s":2,"r":"5","pct":78,"ld":"182,5 - 192,5"},{"s":1,"r":"4","pct":82,"ld":"192,5 - 202,5"},{"s":1,"r":"3","pct":86,"ld":"202,5 - 212,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Comp","v":"Compétition","blocks":[{"s":2,"r":"5","pct":78,"ld":"122,5 - 127,5"},{"s":1,"r":"4","pct":82,"ld":"127,5 - 132,5"},{"s":1,"r":"3","pct":86,"ld":"135 - 140"}]},{"l":"dl","n":"Comp Deadlift","v":"Compétition","blocks":[{"s":2,"r":"5","pct":76,"ld":"207,5 - 217,5"},{"s":1,"r":"4","pct":80,"ld":"220 - 230"},{"s":1,"r":"3","pct":84,"ld":"230 - 240"}]},{"l":"ac","n":"Bird Dog","v":"","blocks":[{"s":3,"r":"15","pct":null,"ld":null}]}]}]},{"label":"S4","days":[{"name":"Mercredi — High Bar / Larsen / Deadlift sanglé","emoji":"📖","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar","blocks":[{"s":2,"r":"5","pct":77,"ld":"180 - 190"},{"s":1,"r":"4","pct":80,"ld":"187,5 - 197,5"},{"s":1,"r":"3","pct":83,"ld":"195 - 205"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Larsen","v":"Larsen","blocks":[{"s":2,"r":"5","pct":75,"ld":"117,5 - 122,5"},{"s":2,"r":"4","pct":78,"ld":"122,5 - 127,5"}]},{"l":"dl","n":"Deadlift sanglé","v":"Sanglé","blocks":[{"s":2,"r":"5","pct":77,"ld":"210 - 220"},{"s":1,"r":"4","pct":80,"ld":"220 - 230"},{"s":1,"r":"3","pct":83,"ld":"227,5 - 237,5"}]}]},{"name":"Jeudi — High Bar / Bench Comp / Deadlift Pause","emoji":"✝️","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar","blocks":[{"s":2,"r":"5","pct":73,"ld":"170 - 180"},{"s":1,"r":"4","pct":76,"ld":"177,5 - 187,5"},{"s":1,"r":"3","pct":79,"ld":"185 - 195"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Comp","v":"Compétition","blocks":[{"s":2,"r":"5","pct":79,"ld":"125 - 130"},{"s":1,"r":"4","pct":82,"ld":"127,5 - 132,5"},{"s":1,"r":"3","pct":85,"ld":"132,5 - 137,5"}]},{"l":"dl","n":"Deadlift Pause","v":"Pause sous le genou","blocks":[{"s":2,"r":"4","pct":74,"ld":"202,5 - 212,5"},{"s":1,"r":"4","pct":77,"ld":"210 - 220"},{"s":1,"r":"3","pct":80,"ld":"220 - 230"}]},{"l":"ac","n":"Deadbug","v":"","blocks":[{"s":3,"r":"15","pct":null,"ld":null}]}]},{"name":"Vendredi — Optionnel / High Bar / Larsen","emoji":"🕯️","exercises":[{"l":"sq","n":"High Bar Squat","v":"High Bar · technique","blocks":[{"s":2,"r":"5","pct":66,"ld":"152,5 - 162,5"},{"s":1,"r":"4","pct":69,"ld":"160 - 170"},{"s":1,"r":"3","pct":72,"ld":"167,5 - 177,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Larsen","v":"Larsen","blocks":[{"s":2,"r":"5","pct":73,"ld":"115 - 120"},{"s":2,"r":"4","pct":76,"ld":"120 - 125"}]},{"l":"ac","n":"Cossac Squat","v":"","blocks":[{"s":2,"r":"15","pct":null,"ld":null}]},{"l":"ac","n":"Leg extension","v":"","blocks":[{"s":2,"r":"20","pct":null,"ld":null}]}]},{"name":"Samedi — Comp SBD","emoji":"⚔️","exercises":[{"l":"sq","n":"Comp Squat","v":"Compétition","blocks":[{"s":2,"r":"5","pct":81,"ld":"190 - 200"},{"s":1,"r":"4","pct":85,"ld":"200 - 210"},{"s":1,"r":"3","pct":89,"ld":"207,5 - 217,5"}]},{"l":"ac","n":"Pull over haltères","v":"Grand dorsal pontage","blocks":[{"s":2,"r":"10-12","pct":null,"ld":null}]},{"l":"bn","n":"Bench Comp","v":"Compétition","blocks":[{"s":2,"r":"5","pct":81,"ld":"127,5 - 132,5"},{"s":1,"r":"4","pct":85,"ld":"132,5 - 137,5"},{"s":1,"r":"3","pct":89,"ld":"140 - 145"}]},{"l":"dl","n":"Comp Deadlift","v":"Compétition","blocks":[{"s":2,"r":"5","pct":79,"ld":"215 - 225"},{"s":1,"r":"4","pct":83,"ld":"227,5 - 237,5"},{"s":1,"r":"3","pct":87,"ld":"237,5 - 247,5"}]},{"l":"ac","n":"Bird Dog","v":"","blocks":[{"s":3,"r":"15","pct":null,"ld":null}]}]}]}]};
+const SK="benoit_highbar_larsen_pause_4_semaines_v2";
+let W=0,D=0,sets={},loads={},start=null,elapsed=0,running=false,intv=null;
+
+function loadState(){
+ try{const x=JSON.parse(localStorage.getItem(SK)||"{}");W=Number(x.W)||0;D=Number(x.D)||0;sets=x.sets||{};loads=x.loads||{};start=x.start||null;elapsed=Number(x.elapsed)||0;running=!!x.running;}catch(_){}
+}
+function save(){localStorage.setItem(SK,JSON.stringify({W,D,sets,loads,start,elapsed,running}))}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+function key(e,b,s){return `${W}_${D}_${e}_${b}_${s}`}
+function renderWeeks(){document.getElementById("weeks").innerHTML=P.weeks.map((w,i)=>`<button class="week ${W===i?"active":""}" onclick="setW(${i})">${w.label}</button>`).join("")}
+function renderDays(){document.getElementById("days").innerHTML=P.weeks[W].days.map((d,i)=>`<button class="day ${D===i?"active":""}" onclick="setD(${i})"><b>${d.emoji}</b>${esc(d.name)}</button>`).join("")}
+function badge(code){return code==="sq"?["b-sq","SQUAT"]:code==="bn"?["b-bn","BENCH"]:code==="dl"?["b-dl","DEADLIFT"]:["b-ac","ACCESSOIRE"]}
+function render(){
+ const exs=P.weeks[W].days[D].exercises;let total=0,done=0,html="";
+ exs.forEach((ex,ei)=>{
+   const [bc,bt]=badge(ex.l);let rows="",all=true,count=0,meta="";
+   ex.blocks.forEach((b,bi)=>{
+     meta+=`<div class="meta"><span class="chip"><strong>${b.s}×${esc(b.r)}</strong></span>${b.pct!=null?`<span class="chip">${b.pct}%</span>`:""}${b.ld?`<span class="chip">${esc(b.ld)} kg</span>`:""}</div>`;
+     for(let si=0;si<b.s;si++){count++;total++;const id=key(ei,bi,si),ok=!!sets[id],lv=loads[id]||"";if(ok)done++;else all=false;
+       rows+=`<div class="set ${ok?"ok":""}"><div class="num">${count}</div><div class="info"><div class="target">${esc(b.r)} reps${b.pct!=null?` · ${b.pct}%`:""}</div><div class="sub">${b.ld?esc(b.ld)+" kg":""}</div></div>${ex.l!=="ac"?`<input class="load" type="text" inputmode="decimal" placeholder="kg" value="${esc(lv)}" oninput="setLoad('${id}',this.value)">`:""}<button class="check ${ok?"on":""}" onclick="toggle('${id}')"></button></div>`;
+     }
+   });
+   html+=`<article class="exercise ${all&&count?"done":""}"><div class="ex-head"><div class="ex-copy"><div class="ex-name">${esc(ex.n)}</div><div class="ex-var">${esc(ex.v)}</div></div><span class="badge ${bc}">${bt}</span></div>${meta}${rows}</article>`;
+ });
+ document.getElementById("list").innerHTML=html;const pc=total?Math.round(done/total*100):0;document.getElementById("fill").style.width=pc+"%";document.getElementById("pct").textContent=pc+"%";
+}
+function setW(i){W=i;D=0;renderWeeks();renderDays();render();save()}
+function setD(i){D=i;renderDays();render();save()}
+function toggle(id){sets[id]=!sets[id];if(sets[id]&&!running){running=true;start=Date.now();startTicker()}save();render()}
+function setLoad(id,v){loads[id]=v;save()}
+function ms(){return elapsed+(running&&start?Date.now()-start:0)}
+function tick(){const s=Math.floor(ms()/1000);document.getElementById("chrono").textContent=`${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`}
+function startTicker(){clearInterval(intv);intv=setInterval(tick,1000);tick()}
+function toggleChrono(){if(running){elapsed=ms();running=false;start=null;clearInterval(intv)}else{running=true;start=Date.now();startTicker()}save();tick()}
+function showView(v,btn){document.getElementById("workout").style.display=v==="workout"?"block":"none";document.getElementById("notes").classList.toggle("show",v==="notes");document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));btn.classList.add("active")}
+
+window.GA_PROGRAM=P;
+window.GA_WORKOUT_PAGE={getProgram:()=>P,getWeek:()=>W,getDay:()=>D,applyProgram:()=>false};
+loadState();W=Math.max(0,Math.min(3,W));D=Math.max(0,Math.min(3,D));renderWeeks();renderDays();render();if(running){start=Date.now();startTicker()}else tick();
+</script>
+
+</body>
+</html>
