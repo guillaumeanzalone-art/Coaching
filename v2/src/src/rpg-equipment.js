@@ -122,119 +122,6 @@ function esc(value) {
     .replaceAll('"', '&quot;')
 }
 
-function normalizeCollectionIdentity(value) {
-  return String(value ?? '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLocaleLowerCase('fr')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .trim()
-}
-
-function itemAlreadyCollected(item, itemCollection = []) {
-  if (!item || !Array.isArray(itemCollection)) {
-    return false
-  }
-
-  const itemKey =
-    normalizeCollectionIdentity(
-      item.catalog_key
-    )
-
-  if (
-    itemKey &&
-    itemCollection.some(
-      row =>
-        normalizeCollectionIdentity(
-          row?.catalog_key
-        ) === itemKey
-    )
-  ) {
-    return true
-  }
-
-  const itemName =
-    normalizeCollectionIdentity(
-      item.item_name
-    )
-
-  const itemSlot =
-    normalizeCollectionIdentity(
-      item.slot
-    )
-
-  if (!itemName) {
-    return false
-  }
-
-  return itemCollection.some(
-    row => {
-      const rowName =
-        normalizeCollectionIdentity(
-          row?.source_item_name ||
-          row?.item_name
-        )
-
-      if (rowName !== itemName) {
-        return false
-      }
-
-      const rowSlot =
-        normalizeCollectionIdentity(
-          row?.slot
-        )
-
-      return (
-        !rowSlot ||
-        !itemSlot ||
-        rowSlot === itemSlot
-      )
-    }
-  )
-}
-
-function eligibleDepositInventoryItems(
-  inventory = [],
-  itemCollection = []
-) {
-  const seen = new Set()
-
-  return inventory.filter(
-    item => {
-      if (
-        !item ||
-        item.is_locked ||
-        itemAlreadyCollected(
-          item,
-          itemCollection
-        ) ||
-        (
-          item.equipped &&
-          n(item.quantity, 1) <= 1
-        )
-      ) {
-        return false
-      }
-
-      const identity =
-        normalizeCollectionIdentity(
-          item.catalog_key
-        ) ||
-        `${normalizeCollectionIdentity(item.item_name)}|${normalizeCollectionIdentity(item.slot)}`
-
-      if (
-        !identity ||
-        seen.has(identity)
-      ) {
-        return false
-      }
-
-      seen.add(identity)
-      return true
-    }
-  )
-}
-
 function fr(value, digits = 1) {
   return n(value).toLocaleString(
     'fr-FR',
@@ -834,7 +721,7 @@ function comparisonHtml(item, inventory, progress) {
   `
 }
 
-function inventoryHtml(progress, inventory, canEdit, itemCollection = []) {
+function inventoryHtml(progress, inventory, canEdit) {
   if (!inventory.length) return `<div class="rpg-eq-empty">Aucun objet dans l'inventaire.</div>`
 
   const filtered = inventory.filter(item => equipmentUiState.rarity === 'all' || item.rarity === equipmentUiState.rarity)
@@ -843,10 +730,7 @@ function inventoryHtml(progress, inventory, canEdit, itemCollection = []) {
     return (RARITY_ORDER[b.rarity]||0)-(RARITY_ORDER[a.rarity]||0) || n(b.item_level)-n(a.item_level)
   })
   const sellable = inventory.filter(item => !item.equipped && !item.is_locked).reduce((sum,item)=>sum+n(item.quantity,1),0)
-  const depositable = eligibleDepositInventoryItems(
-    inventory,
-    itemCollection
-  ).length
+  const depositable = inventory.filter(item => !item.is_locked && (!item.equipped || n(item.quantity,1)>1)).length
   const lockedQty = inventory.filter(item=>item.is_locked).reduce((sum,item)=>sum+n(item.quantity,1),0)
 
   return `
@@ -911,18 +795,13 @@ function inventoryHtml(progress, inventory, canEdit, itemCollection = []) {
         const rarity = RPG_RARITY_DEFS[item.rarity] || RPG_RARITY_DEFS.normal
         const slot = RPG_SLOT_DEFS[item.slot] || { icon:'🎒', label:'Objet' }
         const levelLocked = n(progress?.level,1) < n(item.required_level,1)
-        const collected =
-          itemAlreadyCollected(
-            item,
-            itemCollection
-          )
-        return `<article class="rpg-eq-item rarity-${esc(item.rarity||'normal')} ${item.equipped?'equipped':''} ${item.is_locked?'item-locked':''} ${collected?'already-collected':''}">
+        return `<article class="rpg-eq-item rarity-${esc(item.rarity||'normal')} ${item.equipped?'equipped':''} ${item.is_locked?'item-locked':''}">
           <div class="rpg-eq-item-head"><div><strong>${rarity.icon} ${esc(item.item_name)}</strong><span>${slot.icon} ${esc(slot.label)} · ${esc(rarity.label)} · Niv. ${fr(item.item_level,0)} · ×${fr(item.quantity,0)}</span>${item.is_locked?'<em>🔒 Protégé</em>':''}</div><div class="rpg-eq-status"><button type="button" data-rpg-lock="${esc(item.id)}" data-rpg-locked="${item.is_locked?'true':'false'}" ${!canEdit?'disabled':''}>${item.is_locked?'🔒':'🔓'}</button>${item.equipped?'<b>ÉQUIPÉ</b>':''}</div></div>
           <div class="rpg-eq-item-stats">${esc(itemStatsText(item))}</div>
           ${comparisonHtml(item, inventory, progress)}
           <div class="rpg-eq-actions">
             <button type="button" data-rpg-equip="${esc(item.id)}" ${!canEdit||item.equipped||levelLocked?'disabled':''}>${item.equipped?'Équipé':levelLocked?`Palier ${fr(item.required_level,0)}`:'Équiper'}</button>
-            <button type="button" data-rpg-deposit="${esc(item.id)}" ${!canEdit||item.is_locked||collected?'disabled':''}>${collected?'✓ Déjà collection':'Déposer 1'}</button>
+            <button type="button" data-rpg-deposit="${esc(item.id)}" ${!canEdit||item.is_locked?'disabled':''}>Déposer 1</button>
             <button type="button" data-rpg-sell="${esc(item.id)}" ${!canEdit||item.equipped||item.is_locked?'disabled':''}>Vendre 1</button>
           </div>
         </article>`
@@ -934,7 +813,6 @@ export function renderRpgEquipment({
   progress,
   inventory,
   canEdit,
-  itemCollection = [],
 }) {
   const safeInventory =
     Array.isArray(inventory)
@@ -1048,8 +926,7 @@ export function renderRpgEquipment({
       ${inventoryHtml(
         progress,
         safeInventory,
-        canEdit,
-        itemCollection
+        canEdit
       )}
     </section>
   `
@@ -1059,8 +936,6 @@ export async function handleRpgEquipmentAction({
   element,
   athleteSlug,
   canEdit,
-  inventory = [],
-  itemCollection = [],
 }) {
   if (
     !element ||
@@ -1106,13 +981,13 @@ export async function handleRpgEquipmentAction({
       )
 
     if (error) {
+      window.alert(
+        `Amélioration impossible : ${error.message}`
+      )
+
       return {
         handled: true,
         refresh: false,
-        notice: {
-          tone: 'error',
-          message: `Amélioration impossible : ${error.message}`,
-        },
       }
     }
 
@@ -1143,13 +1018,13 @@ export async function handleRpgEquipmentAction({
       )
 
     if (error) {
+      window.alert(
+        `Équipement impossible : ${error.message}`
+      )
+
       return {
         handled: true,
         refresh: false,
-        notice: {
-          tone: 'error',
-          message: `Équipement impossible : ${error.message}`,
-        },
       }
     }
 
@@ -1192,13 +1067,13 @@ export async function handleRpgEquipmentAction({
       )
 
     if (error) {
+      window.alert(
+        `Vente impossible : ${error.message}`
+      )
+
       return {
         handled: true,
         refresh: false,
-        notice: {
-          tone: 'error',
-          message: `Vente impossible : ${error.message}`,
-        },
       }
     }
 
@@ -1213,142 +1088,33 @@ export async function handleRpgEquipmentAction({
   if (itemToLock) {
     element.disabled = true
     const { error } = await supabase.rpc('set_rpg_item_lock_v30', { p_athlete_slug: athleteSlug, p_item_id: itemToLock, p_locked: element.dataset.rpgLocked !== 'true' })
-    if (error) {
-      return {
-        handled: true,
-        refresh: false,
-        notice: {
-          tone: 'error',
-          message: `Verrouillage impossible : ${error.message}`,
-        },
-      }
-    }
-    return { handled:true, refresh:true }
+    if (error) window.alert(`Verrouillage impossible : ${error.message}`)
+    return { handled:true, refresh:!error }
   }
 
   const itemToDeposit = element.dataset.rpgDeposit
   if (itemToDeposit) {
-    const item =
-      inventory.find(
-        candidate =>
-          String(candidate?.id) ===
-          String(itemToDeposit)
-      )
-
-    if (
-      item &&
-      itemAlreadyCollected(
-        item,
-        itemCollection
-      )
-    ) {
-      return {
-        handled: true,
-        refresh: false,
-        notice: {
-          tone: 'info',
-          message: 'Cet objet est déjà présent dans ta collection. Aucun exemplaire ne sera consommé.',
-        },
-      }
-    }
-
     if (!window.confirm('Déposer un exemplaire dans le codex ?')) return { handled:true, refresh:false }
     element.disabled = true
     const { error } = await supabase.rpc('deposit_rpg_collection_item', { p_athlete_slug:athleteSlug, p_item_id:itemToDeposit })
-    if (error) {
-      return {
-        handled: true,
-        refresh: false,
-        notice: {
-          tone: 'error',
-          message: `Dépôt impossible : ${error.message}`,
-        },
-      }
-    }
-    return { handled:true, refresh:true }
+    if (error) window.alert(`Dépôt impossible : ${error.message}`)
+    return { handled:true, refresh:!error }
   }
 
   if (element.hasAttribute('data-rpg-deposit-all')) {
-    const eligible =
-      eligibleDepositInventoryItems(
-        inventory,
-        itemCollection
-      )
-
-    if (!eligible.length) {
-      return {
-        handled: true,
-        refresh: false,
-        notice: {
-          tone: 'info',
-          message: 'Aucun nouvel objet à déposer : les objets déjà présents dans la collection, verrouillés ou équipés sans doublon sont ignorés.',
-        },
-      }
-    }
-
-    if (!window.confirm(`Déposer ${eligible.length} nouvel${eligible.length>1?'s':''} objet${eligible.length>1?'s':''} dans le codex ? Les doublons déjà collectionnés seront ignorés.`)) return { handled:true, refresh:false }
+    if (!window.confirm('Déposer automatiquement les objets éligibles dans le codex ? Les objets verrouillés sont ignorés.')) return { handled:true, refresh:false }
     element.disabled = true
-
-    const errors = []
-
-    for (const item of eligible) {
-      const { error } =
-        await supabase.rpc(
-          'deposit_rpg_collection_item',
-          {
-            p_athlete_slug: athleteSlug,
-            p_item_id: item.id,
-          }
-        )
-
-      if (error) {
-        errors.push(error.message)
-      }
-    }
-
-    if (errors.length) {
-      return {
-        handled: true,
-        refresh: true,
-        notice: {
-          tone: 'error',
-          message: `Dépôt partiellement terminé : ${errors.join(' · ')}`,
-        },
-      }
-    }
-
-    return {
-      handled:true,
-      refresh:true,
-      notice: {
-        tone: 'success',
-        message: `${eligible.length} nouvel${eligible.length > 1 ? 's' : ''} objet${eligible.length > 1 ? 's' : ''} ajouté${eligible.length > 1 ? 's' : ''} au codex.`,
-      },
-    }
+    const { error } = await supabase.rpc('deposit_all_rpg_collection_items_v30', { p_athlete_slug:athleteSlug })
+    if (error) window.alert(`Dépôt global impossible : ${error.message}`)
+    return { handled:true, refresh:!error }
   }
 
   if (element.hasAttribute('data-rpg-sell-all')) {
     if (!window.confirm('Vendre tous les objets non équipés et non verrouillés ?')) return { handled:true, refresh:false }
     element.disabled = true
     const { error } = await supabase.rpc('sell_all_rpg_items_v30', { p_athlete_slug:athleteSlug })
-    if (error) {
-      return {
-        handled: true,
-        refresh: false,
-        notice: {
-          tone: 'error',
-          message: `Vente globale impossible : ${error.message}`,
-        },
-      }
-    }
-    return {
-      handled: true,
-      refresh: true,
-      notice: {
-        tone: 'success',
-        message: 'Tous les objets vendables ont été vendus.',
-      },
-    }
+    if (error) window.alert(`Vente globale impossible : ${error.message}`)
+    return { handled:true, refresh:!error }
   }
 
   return {

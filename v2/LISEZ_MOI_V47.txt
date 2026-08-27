@@ -1,0 +1,42 @@
+GA COACHING V4.7 — HEALTH STEPS + MOBILITÉ
+
+1) FICHIERS WEB À COPIER DANS v2/src
+- rpg.js
+- rpg-health.js (nouveau)
+- xp.js
+- theme-spider.css
+
+2) SUPABASE — OBLIGATOIRE UNE SEULE FOIS
+Ouvrir SUPABASE_V47_HEALTH_STEPS_MOBILITE.sql dans le SQL Editor Supabase et exécuter tout le fichier.
+Cela crée :
+- athlete_daily_wellness
+- athlete_step_xp_bonus_v247
+- sync_athlete_steps_v247
+- validate_mobility_day_v247
+- apply_step_xp_bonus_v247
+
+Règle XP pas :
+- 0 à 10 000 pas : 100 % XP le lendemain
+- 15 000 pas : 125 % XP le lendemain
+- 20 000 pas et + : 150 % XP le lendemain (cap)
+Le bonus ne génère pas de Gold.
+
+3) HEALTHKIT iPHONE — À COPIER DANS LE PROJET NATIF IOS
+Remplacer :
+- ios/App/App/SceneDelegate.swift
+- ios/App/App/Info.plist
+- ios/App/App.xcodeproj/project.pbxproj
+
+Ajouter :
+- ios/App/App/HealthStepsPlugin.swift
+- ios/App/App/HealthBridgeViewController.swift
+- ios/App/App/App.entitlements
+
+Le patch ajoute la capability HealthKit et demande uniquement la lecture du nombre de pas.
+Sur localhost, Apple Health n'est pas lisible : l'interface affiche la dernière valeur synchronisée côté serveur.
+
+4) MOBILITÉ
+Rotation automatique hebdomadaire :
+Hanche -> Épaule -> Bas du dos -> Cheville -> recommence.
+Chaque routine dure environ 15 à 20 minutes et contient 3 exercices avec séries à cocher.
+La validation mobilité ne donne ni XP ni Gold.

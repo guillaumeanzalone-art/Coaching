@@ -1,17 +1,12 @@
-GA COACHING V2 — HOTFIX OUTBOX
+GA Coaching V2 — Production States V4.5
 
-À remplacer :
-v2/src/training.js
+Remplacer dans v2/src :
+- rpg.js
+- theme-spider.css
 
-Aucun autre fichier.
-Aucun SQL.
-
-Correction :
-- la modification est mise dans l'outbox AVANT le render ;
-- la charge est mise dans l'outbox dès la frappe ;
-- le RPE est pris en charge sur input ET change ;
-- le test hors ligne doit maintenant afficher un JSON dans :
-  ga-v2-workout-outbox-v1
-
-Vérification rapide dans training.js :
-chercher "GA V2 SYNC HOTFIX OUTBOX".
+Changements :
+- écran de chargement RPG remplacé par un skeleton mobile propre ;
+- les erreurs Supabase/techniques ne sont plus exposées directement à l'utilisateur ;
+- écran d'erreur avec Réessayer et message clair ;
+- fallback propre si un onglet RPG ne génère aucun contenu ;
+- aucune règle RPG, RPC, dégât, loot, taux ou économie modifiée.

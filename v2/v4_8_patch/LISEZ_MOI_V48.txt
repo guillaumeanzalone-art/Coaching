@@ -1,0 +1,17 @@
+GA Coaching V4.8 — DAILY Mobility + Steps XP x2 + Coffres DROP x2
+
+Remplacer dans v2/src :
+- rpg-health.js
+- rpg.js
+- rpg-cases.js
+- xp.js
+- theme-spider.css
+
+Puis exécuter une seule fois dans Supabase SQL Editor :
+- SUPABASE_V48_DAILY_MOBILITY_STEPS.sql
+
+Règles :
+- Daily mobilité différente chaque jour.
+- Chaque série : démarrage puis validation impossible avant 30 secondes côté serveur.
+- Daily complète : coffres standards = 2 tirages réels pour le prix d'un jusqu'à minuit.
+- Pas du jour : 10k => XP x1 demain ; 15k => x1,50 ; 20k+ => x2.

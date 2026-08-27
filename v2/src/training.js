@@ -1,3 +1,4 @@
+import { supabase } from './supabase.js'
 import { awardSetXp, flushXpOutbox } from './xp.js'
 /* GA V2 SYNC HOTFIX OUTBOX 2026-08-11 */
 import {
@@ -32,7 +33,7 @@ import {
 
 import {
   flushSbdPrOutbox,
-  loadAthleteSbdPrs,
+  loadAthleteSbdRepPrs,
   recordValidatedSbdSet,
 } from './sbd-pr.js'
 
@@ -506,10 +507,33 @@ export function mountTraining(
       cloudAthleteSlug
     )
 
+  const SBD_REP_SELECTION_KEY =
+    `ga-v2-sbd-rep-selection:${cloudAthleteSlug}`
+
+  let selectedSbdReps =
+    Math.max(
+      1,
+      Math.min(
+        9,
+        Number(
+          localStorage.getItem(
+            SBD_REP_SELECTION_KEY
+          )
+        ) || 1
+      )
+    )
+
   let sbdPrs = {
-    squat: null,
-    bench: null,
-    deadlift: null,
+    squat: {},
+    bench: {},
+    deadlift: {},
+  }
+
+  let athleteSteps = {
+    steps: 0,
+    mobilityCompleted: false,
+    syncedAt: null,
+    loading: true,
   }
 
   let prFlash = null
@@ -654,6 +678,48 @@ export function mountTraining(
     `
   }
 
+  function formatPrDate(row) {
+    if (!row) {
+      return 'Aucun PR'
+    }
+
+    const historical =
+      String(
+        row.achieved_label || ''
+      ).trim()
+
+    if (historical) {
+      return historical
+    }
+
+    if (row.achieved_at) {
+      const date =
+        new Date(
+          row.achieved_at
+        )
+
+      if (
+        !Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return new Intl.DateTimeFormat(
+          'fr-FR',
+          {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit',
+          }
+        ).format(date)
+      }
+    }
+
+    return String(
+      row.source_label ||
+      'Historique'
+    )
+  }
+
   function renderSbdPrPanel() {
     const rows = [
       ['squat', 'SQ'],
@@ -662,7 +728,7 @@ export function mountTraining(
     ]
 
     return `
-      <section class="athlete-pr-panel">
+      <section class="athlete-pr-panel athlete-pr-panel--v249">
         <div class="athlete-pr-panel__head">
           <div>
             <span>
@@ -678,8 +744,26 @@ export function mountTraining(
           </div>
 
           <small>
-            Mise à jour automatique
+            ×${selectedSbdReps} reps · historique + V2
           </small>
+        </div>
+
+        <div class="athlete-pr-reps-v249" role="tablist" aria-label="Nombre de répétitions">
+          ${Array.from(
+            { length: 9 },
+            (_, index) => index + 1
+          ).map(reps => `
+            <button
+              type="button"
+              role="tab"
+              class="${reps === selectedSbdReps ? 'active' : ''}"
+              aria-selected="${reps === selectedSbdReps ? 'true' : 'false'}"
+              data-action="select-sbd-reps"
+              data-reps="${reps}"
+            >
+              ×${reps}
+            </button>
+          `).join('')}
         </div>
 
         ${prFlash
@@ -695,6 +779,9 @@ export function mountTraining(
               ${escapeHtml(
                 prFlash.currentLoad
               )} kg
+              ${prFlash.reps
+                ? `×${escapeHtml(prFlash.reps)}`
+                : ''}
             </div>
           `
           : ''}
@@ -703,33 +790,9 @@ export function mountTraining(
           ${rows.map(
             ([lift, shortLabel]) => {
               const row =
-                sbdPrs[lift]
-
-              let dateLabel =
-                'Aucun PR'
-
-              if (row?.achieved_at) {
-                const date =
-                  new Date(
-                    row.achieved_at
-                  )
-
-                if (
-                  !Number.isNaN(
-                    date.getTime()
-                  )
-                ) {
-                  dateLabel =
-                    new Intl.DateTimeFormat(
-                      'fr-FR',
-                      {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: '2-digit',
-                      }
-                    ).format(date)
-                }
-              }
+                sbdPrs[lift]?.[
+                  selectedSbdReps
+                ] || null
 
               return `
                 <article class="athlete-pr-card athlete-pr-card--${lift}">
@@ -747,7 +810,7 @@ export function mountTraining(
 
                   <small>
                     ${escapeHtml(
-                      dateLabel
+                      formatPrDate(row)
                     )}
                   </small>
                 </article>
@@ -759,11 +822,174 @@ export function mountTraining(
     `
   }
 
+  function stepsXpMultiplierForPanel(
+    value
+  ) {
+    const steps =
+      Math.max(
+        0,
+        Number(value) || 0
+      )
+
+    if (steps <= 10000) {
+      return 1 + steps / 10000
+    }
+
+    return Math.min(
+      2.5,
+      2 +
+        (steps - 10000) /
+        20000
+    )
+  }
+
+  function renderAthleteStepsPanel() {
+    const steps =
+      Math.max(
+        0,
+        Math.floor(
+          Number(
+            athleteSteps.steps
+          ) || 0
+        )
+      )
+
+    const progress =
+      Math.min(
+        100,
+        steps / 20000 * 100
+      )
+
+    const multiplier =
+      stepsXpMultiplierForPanel(
+        steps
+      )
+
+    return `
+      <section class="athlete-steps-panel-v249">
+        <div class="athlete-steps-head-v249">
+          <div>
+            <span>🚶 ACTIVITÉ DU JOUR</span>
+            <strong>
+              ${athleteSteps.loading
+                ? 'Synchronisation…'
+                : `${steps.toLocaleString('fr-FR')} pas`}
+            </strong>
+          </div>
+
+          <div class="athlete-steps-bonus-v249">
+            <small>XP séance demain</small>
+            <strong>
+              ×${multiplier.toLocaleString('fr-FR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </strong>
+          </div>
+        </div>
+
+        <div class="athlete-steps-track-v249">
+          <div
+            class="athlete-steps-fill-v249"
+            style="width:${progress}%"
+          ></div>
+          <i class="athlete-steps-marker-v249" aria-hidden="true"></i>
+        </div>
+
+        <div class="athlete-steps-scale-v249">
+          <span>0</span>
+          <span>10k · XP ×2</span>
+          <span>20k · XP ×2,5</span>
+        </div>
+
+        ${athleteSteps.mobilityCompleted
+          ? `
+            <div class="athlete-steps-daily-v249 done">
+              ✓ Daily mobilité validée · DROP ×2 actif aujourd’hui
+            </div>
+          `
+          : `
+            <div class="athlete-steps-daily-v249">
+              Daily mobilité non validée
+            </div>
+          `}
+      </section>
+    `
+  }
+
+  function localActivityDateKey() {
+    const now = new Date()
+    return [
+      now.getFullYear(),
+      String(now.getMonth() + 1).padStart(2, '0'),
+      String(now.getDate()).padStart(2, '0'),
+    ].join('-')
+  }
+
+  async function hydrateAthleteSteps(
+    rerender = true
+  ) {
+    athleteSteps = {
+      ...athleteSteps,
+      loading: true,
+    }
+
+    try {
+      const { data, error } =
+        await supabase
+          .from(
+            'athlete_daily_wellness'
+          )
+          .select(
+            'steps,step_synced_at,mobility_completed_at'
+          )
+          .eq(
+            'athlete_slug',
+            cloudAthleteSlug
+          )
+          .eq(
+            'activity_date',
+            localActivityDateKey()
+          )
+          .maybeSingle()
+
+      if (error) {
+        throw error
+      }
+
+      athleteSteps = {
+        steps:
+          Number(data?.steps || 0),
+        mobilityCompleted:
+          Boolean(
+            data?.mobility_completed_at
+          ),
+        syncedAt:
+          data?.step_synced_at || null,
+        loading: false,
+      }
+    } catch (error) {
+      console.warn(
+        'ATHLETE STEPS LOAD ERROR',
+        error
+      )
+
+      athleteSteps = {
+        ...athleteSteps,
+        loading: false,
+      }
+    }
+
+    if (rerender) {
+      render()
+    }
+  }
+
   async function hydrateSbdPrs(
     rerender = true
   ) {
     sbdPrs =
-      await loadAthleteSbdPrs(
+      await loadAthleteSbdRepPrs(
         cloudAthleteSlug
       )
 
@@ -821,7 +1047,7 @@ export function mountTraining(
           }
 
           sbdPrs =
-            await loadAthleteSbdPrs(
+            await loadAthleteSbdRepPrs(
               cloudAthleteSlug
             )
 
@@ -830,6 +1056,12 @@ export function mountTraining(
               result.lift,
             currentLoad:
               result.currentLoad,
+            reps:
+              result.reps ||
+              parseInt(
+                String(found.sourceSet.reps || '1'),
+                10
+              ) || 1,
           }
 
           if (prFlashTimer) {
@@ -2339,6 +2571,7 @@ export function mountTraining(
     void hydrateFromCloud()
     void hydrateSessionsFromCloud()
     void hydrateSbdPrs()
+    void hydrateAthleteSteps()
   }
 
   function renderBlocks() {
@@ -2868,8 +3101,10 @@ export function mountTraining(
         </header>
 
         ${renderAthleteThemeBanner()}
-        ${renderSbdPrPanel()}
-
+        <div class="athlete-insights-grid-v249">
+          ${renderSbdPrPanel()}
+          ${renderAthleteStepsPanel()}
+        </div>
 
         <div
           id="trainingSyncStatus"
@@ -2946,6 +3181,33 @@ export function mountTraining(
 
     const actionName =
       action.dataset.action
+
+    if (
+      actionName ===
+        'select-sbd-reps'
+    ) {
+      const nextReps =
+        Math.max(
+          1,
+          Math.min(
+            9,
+            Number(
+              action.dataset.reps
+            ) || 1
+          )
+        )
+
+      selectedSbdReps =
+        nextReps
+
+      localStorage.setItem(
+        SBD_REP_SELECTION_KEY,
+        String(nextReps)
+      )
+
+      render()
+      return
+    }
 
     // READ ONLY CLICK GUARD
     if (
@@ -3698,6 +3960,7 @@ if (
               result?.flushed > 0
             ) {
               void hydrateSbdPrs()
+              void hydrateAthleteSteps()
             }
           }
         )
@@ -3730,5 +3993,6 @@ if (
   void hydrateFromCloud()
   void hydrateSessionsFromCloud()
   void hydrateSbdPrs()
+  void hydrateAthleteSteps()
   void flushSbdPrOutbox()
 }

@@ -1,0 +1,10 @@
+GA Coaching V2 — Coffres TOP 3 V2.4
+
+Remplacer uniquement :
+  v2/src/rpg-cases.js
+
+Changements :
+- Ouvertures x10, x100 et x500 : affiche uniquement les 3 meilleurs objets.
+- Suppression du résumé/liste supplémentaire sur ces ouvertures multiples.
+- Bouton final : « Retour au menu des coffres ».
+- Ouverture x1 inchangée.

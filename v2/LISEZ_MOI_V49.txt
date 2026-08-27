@@ -1,0 +1,12 @@
+GA Coaching V4.9 — Steps athlètes + Records SBD ×1…×9
+
+Remplacer dans v2/src :
+- training.js
+- sbd-pr.js
+- sbd-pr-seed.js (nouveau)
+- style.css
+
+Puis exécuter une fois dans Supabase SQL Editor :
+- SUPABASE_V49_SBD_REP_RECORDS.sql
+
+Le SQL importe 407 records historiques ×1…×9 depuis l'ancien site et crée le suivi futur par reps.

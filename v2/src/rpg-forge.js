@@ -332,30 +332,78 @@ function forgeHtml({
               group.quantity >=
               rule.required
 
+            const pct =
+              Math.max(
+                0,
+                Math.min(
+                  100,
+                  Math.round(
+                    (
+                      group.quantity /
+                      rule.required
+                    ) *
+                    100
+                  )
+                )
+              )
+
             return `
-              <div class="rpg-forge-group-v2">
-                <div>
-                  <strong>
-                    ${rule.icon}
-                    ${esc(
-                      rule.sourceLabel
-                    )}
-                    niv. ${group.level}
-                    ?
-                    ${esc(
-                      rule.targetLabel
-                    )}
-                  </strong>
+              <article class="rpg-forge-group-v2 rarity-${esc(
+                group.rarity
+              )} ${enough ? 'is-ready' : ''}">
+                <div class="rpg-forge-group-main-v31">
+                  <div class="rpg-forge-group-title-v31">
+                    <span class="rpg-forge-rarity-orb-v31"></span>
 
-                  <span>
-                    ${group.quantity}
-                    /
-                    ${rule.required}
-                    objets
-                  </span>
+                    <div>
+                      <strong>
+                        ${rule.icon}
+                        ${esc(
+                          rule.sourceLabel
+                        )}
+                        <span>
+                          niv. ${group.level}
+                        </span>
+                      </strong>
 
-                  <small>
-                    Même niveau obligatoire
+                      <small>
+                        → ${esc(
+                          rule.targetLabel
+                        )}
+                        niv. ${group.level}
+                      </small>
+                    </div>
+
+                    <b class="rpg-forge-ready-v31">
+                      ${
+                        enough
+                          ? 'PRÊT'
+                          : `${group.quantity}/${rule.required}`
+                      }
+                    </b>
+                  </div>
+
+                  <div class="rpg-forge-progress-v31">
+                    <span
+                      style="width:${pct}%"
+                    ></span>
+                  </div>
+
+                  <div class="rpg-forge-group-meta-v31">
+                    <span>
+                      ${group.quantity}
+                      objets disponibles
+                    </span>
+
+                    <span>
+                      ${rule.required}
+                      consommés / tentative
+                    </span>
+                  </div>
+
+                  <small class="rpg-forge-exclusion-v31">
+                    🔒 Équipés et verrouillés exclus ·
+                    même rareté et même niveau obligatoires
                   </small>
                 </div>
 
@@ -376,18 +424,22 @@ function forgeHtml({
                 >
                   ${
                     state.forgeBusy
-                      ? '⚒️ EN COURS…'
-                      : `Forger ×${rule.required}`
+                      ? '⚒️ FORGE…'
+                      : `⚒️ Forger ×${rule.required}`
                   }
                 </button>
-              </div>
+              </article>
             `
           }
         ).join('')
       : `
           <div class="rpg-forge-empty-v2">
-            Aucun lot compatible avec
-            la forge pour le moment.
+            <strong>⚒️ Aucun lot forgeable</strong>
+            <span>
+              Il faut des objets Légendaires,
+              Mythiques ou URM de même niveau,
+              non équipés et non verrouillés.
+            </span>
           </div>
         `
 
@@ -396,71 +448,138 @@ function forgeHtml({
   if (
     state.forgeResult
   ) {
+    const resultLevel =
+      Math.max(
+        1,
+        Math.floor(
+          n(
+            state.forgeResult
+              .item_level,
+            1
+          )
+        )
+      )
+
     result =
       state.forgeResult.success
         ? `
           <div class="rpg-forge-result-v2 success">
-            ✨ <strong>RÉUSSITE</strong><br>
+            <div class="rpg-forge-result-icon-v31">
+              ✨
+            </div>
 
-            ${esc(
-              state.forgeResult
-                .result_item_name ||
-              state.forgeResult
-                .target_rarity ||
-              'Objet supérieur'
-            )}
+            <div>
+              <strong>
+                FORGE RÉUSSIE
+              </strong>
+
+              <span>
+                ${esc(
+                  state.forgeResult
+                    .result_item_name ||
+                  state.forgeResult
+                    .target_rarity ||
+                  'Objet supérieur'
+                )}
+              </span>
+
+              <small>
+                Niveau ${resultLevel} ·
+                objet ajouté à l'inventaire
+              </small>
+            </div>
           </div>
         `
         : `
           <div class="rpg-forge-result-v2 fail">
-            💥 <strong>ÉCHEC</strong><br>
+            <div class="rpg-forge-result-icon-v31">
+              💥
+            </div>
 
-            ${formatNumber(
-              state.forgeResult
-                .items_consumed
-            )}
-            objets détruits.
+            <div>
+              <strong>
+                FORGE ÉCHOUÉE
+              </strong>
+
+              <span>
+                ${formatNumber(
+                  state.forgeResult
+                    .items_consumed
+                )}
+                objets détruits
+              </span>
+
+              <small>
+                Le lot sacrifié est définitivement perdu.
+              </small>
+            </div>
           </div>
         `
   }
 
   return `
     <div class="rpg-forge-rules-v2">
-      <div>
-        <strong>10</strong>
+      <div class="rarity-legendary">
+        <strong>🔥 10</strong>
         <span>
-          Légendaires → Mythique
+          Légendaires
         </span>
+        <b>→ Mythique</b>
       </div>
 
-      <div>
-        <strong>5</strong>
+      <div class="rarity-mythic">
+        <strong>🌌 5</strong>
         <span>
-          Mythiques → URM
+          Mythiques
         </span>
+        <b>→ URM</b>
       </div>
 
-      <div>
-        <strong>2</strong>
+      <div class="rarity-ultra_mythic">
+        <strong>🕳️ 2</strong>
         <span>
-          URM → Abyssal
+          URM
         </span>
+        <b>→ Abyssal</b>
       </div>
     </div>
 
     <div class="rpg-forge-warning-v2">
-      🔒 Le résultat est décidé
-      directement par le serveur.
+      <strong>
+        ⚠️ 1 échec sur 8
+      </strong>
 
-      En cas d'échec,
-      les objets sacrifiés sont perdus.
+      <span>
+        Le serveur décide du résultat.
+        En cas d'échec, tout le lot est détruit.
+        Le niveau obtenu reste identique.
+      </span>
+    </div>
+
+    ${result}
+
+    <div class="rpg-forge-groups-head-v31">
+      <strong>
+        Lots disponibles
+      </strong>
+
+      <span>
+        ${
+          groups.filter(
+            group =>
+              group.quantity >=
+              FORGE_RULES[
+                group.rarity
+              ].required
+          ).length
+        }
+        prêt(s)
+      </span>
     </div>
 
     <div class="rpg-forge-groups-v2">
       ${cards}
     </div>
-
-    ${result}
   `
 }
 
@@ -573,44 +692,87 @@ function casinoHtml({
         ?.outcome
     )
 
-  let resultText =
-    'Mise ton Gold et tente la roue.'
-
   const result =
     state.casinoResult
 
-  if (result) {
-    const outcome =
-      String(
-        result.outcome || ''
-      ).toLowerCase()
+  const outcome =
+    String(
+      result?.outcome || ''
+    ).toLowerCase()
 
+  const payout =
+    Math.max(
+      0,
+      Math.floor(
+        n(
+          result?.payout
+        )
+      )
+    )
+
+  const multiplier =
+    bet > 0 &&
+    payout > 0
+      ? payout / bet
+      : 0
+
+  let resultText =
+    'Mise ton Gold et tente la roue.'
+
+  let resultSub =
+    'Les probabilités sont décidées côté serveur.'
+
+  if (result) {
     if (
       outcome === 'jackpot'
     ) {
       resultText =
         `💎 JACKPOT · +${formatNumber(
-          result.payout
+          payout
         )} Gold`
+
+      resultSub =
+        multiplier > 0
+          ? `Gain ×${Math.round(
+              multiplier
+            ).toLocaleString(
+              'fr-FR'
+            )} la mise`
+          : 'Max Win déclenché'
     } else if (
       outcome === 'bonus'
     ) {
       resultText =
-        `🎁 BONUS · ${formatNumber(
-          result.free_spins_awarded
+        `🔥 BONUS · ${formatNumber(
+          result.free_spins_awarded ||
+          free
         )} free spins`
+
+      resultSub =
+        'La mise reste verrouillée pendant le bonus.'
     } else if (
-      n(
-        result.payout
-      ) > 0
+      payout > 0
     ) {
       resultText =
-        `🪙 Gain : ${formatNumber(
-          result.payout
+        `🪙 +${formatNumber(
+          payout
         )} Gold`
+
+      resultSub =
+        multiplier > 0
+          ? `Retour ×${multiplier.toLocaleString(
+              'fr-FR',
+              {
+                maximumFractionDigits: 2,
+              }
+            )}`
+          : 'Spin gagnant'
     } else {
       resultText =
-        '💀 Perdu. Le nain rigole.'
+        '💀 Aucun gain'
+
+      resultSub =
+        'La prochaine rotation est indépendante.'
     }
   }
 
@@ -626,44 +788,142 @@ function casinoHtml({
       )
     )
 
+  const balanceAfter =
+    result?.gold_after ===
+      undefined
+      ? gold
+      : Math.max(
+          0,
+          Math.floor(
+            n(
+              result.gold_after,
+              gold
+            )
+          )
+        )
+
   return `
-    <div class="rpg-casino-machine-v2">
+    <div class="rpg-casino-machine-v2 ${outcome ? `outcome-${esc(outcome)}` : ''}">
       <div class="rpg-casino-head-v2">
-        <strong>
-          🎰 Casino Gold
-        </strong>
+        <div>
+          <strong>
+            🎰 Gold Slot
+          </strong>
+
+          <small>
+            RTP cible 95 %
+          </small>
+        </div>
 
         <span>
-          Solde :
-          ${formatNumber(gold)}
-          🪙
+          🪙 ${formatNumber(
+            balanceAfter
+          )}
         </span>
+      </div>
+
+      <div class="rpg-casino-math-v31">
+        <div>
+          <span>
+            🎁 Bonus
+          </span>
+          <strong>
+            1 / 400
+          </strong>
+        </div>
+
+        <div>
+          <span>
+            💎 Max Win
+          </span>
+          <strong>
+            1 / 3 000
+          </strong>
+        </div>
+
+        <div>
+          <span>
+            🔥 Max Win bonus
+          </span>
+          <strong>
+            1 / 200
+          </strong>
+        </div>
       </div>
 
       ${
         free > 0
           ? `
             <div class="rpg-casino-free-v2">
-              🎁 ${free} FREE SPINS
+              <strong>
+                🔥 BONUS ACTIF
+              </strong>
+
+              <span>
+                ${free}
+                free spin${free > 1 ? 's' : ''}
+                restant${free > 1 ? 's' : ''}
+                · mise verrouillée :
+                ${formatNumber(
+                  lockedBet
+                )}
+              </span>
             </div>
           `
           : ''
       }
 
-      <div class="rpg-casino-reels-v2">
-        ${reels.map(
-          reel => `
-            <div class="rpg-casino-reel-v2">
-              ${reel}
-            </div>
-          `
-        ).join('')}
+      <div class="rpg-casino-reels-frame-v31">
+        <div class="rpg-casino-payline-v31"></div>
+
+        <div class="rpg-casino-reels-v2">
+          ${reels.map(
+            reel => `
+              <div class="rpg-casino-reel-v2">
+                <span>
+                  ${reel}
+                </span>
+              </div>
+            `
+          ).join('')}
+        </div>
       </div>
 
       <div class="rpg-casino-result-v2">
-        ${esc(
-          resultText
-        )}
+        <strong>
+          ${esc(
+            resultText
+          )}
+        </strong>
+
+        <span>
+          ${esc(
+            resultSub
+          )}
+        </span>
+      </div>
+
+      <div class="rpg-casino-bet-label-v31">
+        <span>
+          Mise
+        </span>
+
+        ${
+          free <= 0 &&
+          bet > gold
+            ? `
+              <b>
+                Gold insuffisant
+              </b>
+            `
+            : `
+              <b>
+                ${formatNumber(
+                  bet
+                )} 🪙
+              </b>
+            `
+        }
       </div>
 
       <div class="rpg-casino-bet-v2">
@@ -692,10 +952,10 @@ function casinoHtml({
         >
           ${
             state.casinoBusy
-              ? '🎰 EN COURS…'
+              ? '🎰 TING TING…'
               : free > 0
-                ? `🎁 JOUER (${free})`
-                : 'SPIN'
+                ? `🔥 FREE SPIN (${free})`
+                : '🎰 SPIN'
           }
         </button>
       </div>
@@ -712,9 +972,16 @@ function casinoHtml({
               <button
                 type="button"
                 data-rpg-casino-preset-v2="${value}"
+                class="${
+                  free <= 0 &&
+                  bet === value
+                    ? 'active'
+                    : ''
+                }"
                 ${
                   free > 0 ||
-                  state.casinoBusy
+                  state.casinoBusy ||
+                  value > gold
                     ? 'disabled'
                     : ''
                 }
@@ -732,9 +999,15 @@ function casinoHtml({
         state.casinoReady === false
           ? `
             <div class="rpg-casino-error-v2">
-              ⚠️ ${esc(
-                state.casinoError
-              )}
+              <strong>
+                ⚠️ Casino indisponible
+              </strong>
+
+              <span>
+                ${esc(
+                  state.casinoError
+                )}
+              </span>
             </div>
           `
           : ''

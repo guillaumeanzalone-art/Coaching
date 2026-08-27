@@ -1190,7 +1190,6 @@ export function renderRpgCases({
   inventory,
   canEdit,
   state,
-  mobilityDropBoost = false,
 }) {
   const maxLevel =
     ensureState(
@@ -1318,14 +1317,6 @@ export function renderRpgCases({
 
   return `
     <div class="rpg-cases-v2">
-
-      ${mobilityDropBoost ? `
-        <div class="rpg-case-daily-boost-v48">
-          <span>🧘 DAILY VALIDÉE</span>
-          <strong>🎁 DROP ×2 ACTIF</strong>
-          <small>Chaque coffre standard effectue 2 tirages réels pour le prix d’un jusqu’à minuit.</small>
-        </div>
-      ` : ''}
 
       <div class="rpg-case-wallet-v2">
         <div>
@@ -1621,12 +1612,19 @@ async function openStandardCases({
       error,
     } =
       await supabase.rpc(
-        'open_rpg_cases_v248',
+        'open_rpg_cases_v20',
         {
-          p_athlete_slug: athleteSlug,
-          p_item_level: level,
-          p_case_type: type,
-          p_quantity: batch,
+          p_athlete_slug:
+            athleteSlug,
+
+          p_item_level:
+            level,
+
+          p_case_type:
+            type,
+
+          p_quantity:
+            batch,
         }
       )
 
@@ -1645,15 +1643,18 @@ async function openStandardCases({
       break
     }
 
-    const payload = Array.isArray(data) ? data[0] : data
-    const rawItems = payload?.items ?? payload
-    const rows = Array.isArray(rawItems)
-      ? rawItems
-      : rawItems
-        ? [rawItems]
-        : []
+    const rows =
+      Array.isArray(data)
+        ? data
+        : data
+          ? [data]
+          : []
 
-    items.push(...rows.map(normalizeItem))
+    items.push(
+      ...rows.map(
+        normalizeItem
+      )
+    )
 
     opened += batch
   }

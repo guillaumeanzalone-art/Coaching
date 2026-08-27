@@ -299,6 +299,7 @@ function canonicalRarity(
     [
       'urm',
       'ultra',
+      'secret',
       'ultra_rare_mythique',
       'ultra_mythique',
     ].includes(raw)

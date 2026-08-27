@@ -1,0 +1,17 @@
+GA Coaching V5.0 — Steps XP
+
+Remplacer dans v2/src :
+- rpg-health.js
+- training.js
+
+Puis exécuter une fois dans Supabase SQL Editor :
+- SUPABASE_V50_STEPS_XP_CURVE.sql
+
+Nouvelle courbe :
+0 pas = XP ×1
+5 000 pas = XP ×1,5
+10 000 pas = XP ×2
+15 000 pas = XP ×2,25
+20 000 pas et plus = XP ×2,5
+
+Le multiplicateur s'applique toujours à l'XP de la séance du lendemain.

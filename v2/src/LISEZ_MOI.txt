@@ -1,54 +1,19 @@
-GA COACHING V2 — SYNCHRONISATION SUPABASE OFFLINE-FIRST
+GA Coaching V2.5 - Equipement + Loot Result Polish
 
-À remplacer dans v2/src :
-- athletes.js
-- main.js
-- training.js
-- style.css
+Remplacer dans v2/src :
+- rpg-equipment.js
+- rpg.js
+- rpg-combat.js
+- theme-spider.css
 
-À ajouter dans v2/src :
-- workout-sync.js
+Inclus :
+- boutons de tri Rareté / Niveau
+- filtres de rareté en pastilles
+- zones Equipé / Inventaire plus lisibles
+- comparaison Equipé / Nouveau / Ecart
+- affinité de classe x1.25 intégrée à la comparaison
+- Tout vendre / Tout déposer / verrouillage conservés
+- drop de fin de combat en carte colorée par rareté
+- détails niveau / dégâts / quantité sur le loot
 
-NE PAS remplacer :
-- supabase.js
-- auth.js
-- program.js
-- programs/
-
-AUCUN SQL.
-
-FONCTIONNEMENT
-1. Une modification est écrite immédiatement dans localStorage.
-2. Elle est placée dans un outbox local persistant.
-3. Supabase workout_sets est synchronisé ensuite.
-4. Si Internet coupe, l'outbox reste sur l'appareil.
-5. Au retour du réseau, l'outbox est renvoyé.
-6. À l'ouverture d'un bloc, workout_sets recharge les données cloud.
-7. Une modification encore en attente localement gagne sur le cloud.
-8. Une ancienne progression locale sans ligne cloud est migrée automatiquement.
-
-COMPATIBILITÉ BASE EXISTANTE
-- PK utilisée :
-  athlete_slug + program_key + week_index + day_index + set_index
-- set_index est global à la séance, dans l'ordre des séries, comme l'ancienne app.
-- program_key reprend le sourceKey exact de chaque bloc.
-- cloudSlug reprend le slug exact des anciennes pages.
-- set_outcome : success / failed.
-- accessoires : RPE null.
-- aucun DELETE nécessaire pour décocher.
-
-TEST CONSEILLÉ
-A. Choisir un athlète.
-B. Sur une série : saisir charge + RPE.
-C. Attendre « Synchronisé ».
-D. F5 : la série doit rester.
-E. DevTools > Application > Local Storage : supprimer uniquement
-   ga-v2-training-progress:* du profil testé, puis F5.
-   La série doit revenir depuis Supabase.
-F. Couper Internet, modifier une série :
-   « Hors ligne · sauvegardé localement ».
-G. Remettre Internet : elle doit passer à « Synchronisé ».
-
-IMPORTANT
-Le premier test d'écriture doit être effectué sur une série de test
-que l'on peut facilement remettre à zéro.
+Le patch ne modifie pas rpg-cases.js : les coffres V2.4 restent intacts.

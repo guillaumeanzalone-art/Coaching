@@ -1377,3 +1377,224 @@ body {
     font-size: 9px;
   }
 }
+
+/* =============================================================
+   GA Coaching V4.9 — Records SBD ×1…×9 + Steps athlète
+   ============================================================= */
+
+.athlete-insights-grid-v249 {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+  gap: 14px;
+  margin: 14px 0 18px;
+}
+
+.athlete-insights-grid-v249 .athlete-pr-panel {
+  margin: 0;
+  min-width: 0;
+}
+
+.athlete-pr-panel--v249 .athlete-pr-panel__head {
+  gap: 12px;
+}
+
+.athlete-pr-reps-v249 {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 6px;
+  margin: 12px 0 10px;
+}
+
+.athlete-pr-reps-v249 button {
+  min-width: 0;
+  height: 34px;
+  padding: 0 4px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, .035);
+  color: rgba(235, 240, 247, .62);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform .14s ease, border-color .14s ease, background .14s ease, color .14s ease;
+}
+
+.athlete-pr-reps-v249 button:hover {
+  border-color: rgba(255, 255, 255, .18);
+  color: #fff;
+}
+
+.athlete-pr-reps-v249 button:active {
+  transform: scale(.96);
+}
+
+.athlete-pr-reps-v249 button.active {
+  border-color: color-mix(in srgb, var(--athlete-accent, #ff554d) 75%, white 8%);
+  background: color-mix(in srgb, var(--athlete-accent, #ff554d) 19%, transparent);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--athlete-accent, #ff554d) 18%, transparent);
+}
+
+.athlete-pr-panel--v249 .athlete-pr-card > small {
+  min-height: 16px;
+  overflow-wrap: anywhere;
+}
+
+.athlete-steps-panel-v249 {
+  position: relative;
+  overflow: hidden;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 92% 10%, rgba(60, 200, 255, .11), transparent 35%),
+    linear-gradient(145deg, rgba(10, 16, 24, .96), rgba(13, 18, 25, .92));
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .18);
+}
+
+.athlete-steps-head-v249 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.athlete-steps-head-v249 > div:first-child {
+  min-width: 0;
+}
+
+.athlete-steps-head-v249 span,
+.athlete-steps-bonus-v249 small {
+  display: block;
+  color: rgba(220, 230, 240, .56);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.athlete-steps-head-v249 > div:first-child strong {
+  display: block;
+  margin-top: 7px;
+  color: #fff;
+  font-size: clamp(22px, 3vw, 31px);
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+
+.athlete-steps-bonus-v249 {
+  flex: 0 0 auto;
+  padding: 9px 10px;
+  border: 1px solid rgba(80, 205, 255, .17);
+  border-radius: 11px;
+  background: rgba(70, 190, 255, .055);
+  text-align: right;
+}
+
+.athlete-steps-bonus-v249 strong {
+  display: block;
+  margin-top: 4px;
+  color: #64d6ff;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.athlete-steps-track-v249 {
+  position: relative;
+  height: 10px;
+  margin-top: 20px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .07);
+}
+
+.athlete-steps-fill-v249 {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #3bbcf5 0%, #55dfc3 52%, #ffd65c 100%);
+  box-shadow: 0 0 18px rgba(73, 204, 234, .28);
+}
+
+.athlete-steps-marker-v249 {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  left: 50%;
+  width: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: 0 0 8px rgba(255, 255, 255, .35);
+}
+
+.athlete-steps-scale-v249 {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 7px;
+  color: rgba(215, 226, 238, .48);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.athlete-steps-scale-v249 span:nth-child(2) {
+  color: rgba(225, 235, 245, .72);
+}
+
+.athlete-steps-daily-v249 {
+  margin-top: 15px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .025);
+  color: rgba(225, 232, 240, .55);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.athlete-steps-daily-v249.done {
+  border-color: rgba(80, 220, 150, .18);
+  background: rgba(80, 220, 150, .055);
+  color: #70e6ae;
+}
+
+@media (max-width: 880px) {
+  .athlete-insights-grid-v249 {
+    grid-template-columns: 1fr;
+  }
+
+  .athlete-pr-reps-v249 {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .athlete-pr-reps-v249::-webkit-scrollbar {
+    display: none;
+  }
+
+  .athlete-pr-reps-v249 button {
+    flex: 0 0 44px;
+    height: 38px;
+  }
+}
+
+@media (max-width: 520px) {
+  .athlete-steps-head-v249 {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .athlete-steps-bonus-v249 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .athlete-steps-bonus-v249 strong {
+    margin: 0;
+  }
+}

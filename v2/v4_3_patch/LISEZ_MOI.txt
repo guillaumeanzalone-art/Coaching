@@ -1,0 +1,21 @@
+GA COACHING V2 — COMBAT RAGNAROK POLISH V4.3
+
+Remplacer dans v2/src :
+- rpg-combat.js
+- rpg-audio.js
+- theme-spider.css
+
+Copier dans v2/public :
+- critical-ragnarok.mp3
+- ragnarok-hit.mp3
+- ragnarok-miss.mp3
+- ragnarok-perfect.mp3
+
+Contenu :
+- suppression visuelle du quadrillage 4x3 (la logique anti-chevauchement reste)
+- toutes les cibles redessinées façon MMORPG old-school
+- chaîne 1 -> 2 reliée visuellement
+- dégâts affichés au-dessus du monstre
+- critique plus massif + impact + shake
+- sons hit/miss/perfect/crit embarqués
+- esquive x2 et toutes les règles de combat inchangées

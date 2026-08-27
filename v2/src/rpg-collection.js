@@ -1,4 +1,4 @@
-﻿import { supabase } from './supabase.js'
+import { supabase } from './supabase.js'
 
 const ITEM_RARITIES = {
   normal: {
@@ -109,6 +109,175 @@ const RARITY_ORDER = [
   'abyssal',
 ]
 
+const MONSTER_RARITY_COLORS = {
+  normal: '#c8ced8',
+  common: '#61d38b',
+  uncommon: '#5ca9ff',
+  rare: '#aa73ff',
+  epic: '#ff8b49',
+  legendary: '#ffd04f',
+  mythic: '#ff5368',
+  ultra_mythic: '#60e8ff',
+  abyssal: '#20e3ff',
+  secret: '#ff79f7',
+}
+
+function equippedMasteryTotal(inventory = []) {
+  return (Array.isArray(inventory) ? inventory : [])
+    .filter(item => item?.equipped)
+    .reduce(
+      (sum, item) =>
+        sum +
+        n(
+          item?.scaled_mastery_bonus,
+          n(item?.mastery_bonus)
+        ),
+      0
+    )
+}
+
+function equippedPassiveTotal(inventory = [], type) {
+  return (Array.isArray(inventory) ? inventory : [])
+    .filter(item => item?.equipped)
+    .reduce((sum, item) => {
+      if (item?.passive_type !== type) {
+        return sum
+      }
+
+      return sum + n(item?.passive_value)
+    }, 0)
+}
+
+function monsterEncounterOdds(progress, inventory = []) {
+  const chance = Math.max(
+    0,
+    n(progress?.stat_mastery) +
+      equippedMasteryTotal(inventory)
+  )
+
+  const hunter = Math.max(
+    0,
+    equippedPassiveTotal(
+      inventory,
+      'epic_hunter'
+    )
+  )
+
+  const uncommonMultiplier =
+    1 + Math.min(1500, chance) / 750
+
+  const eliteMultiplier =
+    1 + Math.min(1500, chance) / 500
+
+  const hunterMultiplier =
+    1 + Math.min(100, hunter) / 100
+
+  const weights = {
+    normal: 33.889,
+    common: 30,
+    uncommon: 20 * uncommonMultiplier,
+    rare:
+      10 * eliteMultiplier * hunterMultiplier,
+    epic:
+      5 * eliteMultiplier * hunterMultiplier,
+    legendary:
+      1 * eliteMultiplier * hunterMultiplier,
+    mythic:
+      0.1 * eliteMultiplier * hunterMultiplier,
+    ultra_mythic:
+      0.01 * eliteMultiplier * hunterMultiplier,
+    abyssal:
+      0.001 * eliteMultiplier * hunterMultiplier,
+  }
+
+  const total =
+    Object.values(weights)
+      .reduce((sum, value) => sum + value, 0) || 1
+
+  return {
+    chance,
+    hunter,
+    uncommonMultiplier,
+    eliteMultiplier,
+    hunterMultiplier,
+    odds: Object.fromEntries(
+      Object.entries(weights)
+        .map(([key, value]) => [
+          key,
+          value / total * 100,
+        ])
+    ),
+  }
+}
+
+function monsterEncounterOddsHtml(
+  progress,
+  inventory = []
+) {
+  const snapshot =
+    monsterEncounterOdds(
+      progress,
+      inventory
+    )
+
+  return `
+    <section class="rpg-bestiary-odds-v2">
+      <div class="rpg-bestiary-odds-head-v2">
+        <div>
+          <strong>
+            🎲 Taux d’apparition du pool
+          </strong>
+          <small>
+            Probabilités actuelles avec tes statistiques et ton équipement.
+          </small>
+        </div>
+
+        <div class="rpg-bestiary-odds-meta-v2">
+          <span>
+            Chance <b>${fr(snapshot.chance, 1)}</b>
+          </span>
+          <span>
+            Peu commun <b>×${fr(snapshot.uncommonMultiplier, 2)}</b>
+          </span>
+          <span>
+            Rare+ <b>×${fr(snapshot.eliteMultiplier, 2)}</b>
+          </span>
+          <span>
+            Chasseur <b>×${fr(snapshot.hunterMultiplier, 2)}</b>
+          </span>
+        </div>
+      </div>
+
+      <div class="rpg-bestiary-odds-grid-v2">
+        ${RARITY_ORDER.map(key => {
+          const rarity =
+            MONSTER_RARITIES[key] ||
+            MONSTER_RARITIES.common
+
+          const color =
+            MONSTER_RARITY_COLORS[key] ||
+            MONSTER_RARITY_COLORS.common
+
+          return `
+            <div
+              class="rpg-bestiary-odds-card-v2 rarity-${esc(key)}"
+              style="--monster-rarity-color:${esc(color)}"
+            >
+              <span>
+                ${rarity.icon}
+                ${esc(rarity.label)}
+              </span>
+              <strong>
+                ${fr(snapshot.odds[key], 3)} %
+              </strong>
+            </div>
+          `
+        }).join('')}
+      </div>
+    </section>
+  `
+}
+
 function n(value, fallback = 0) {
   const number =
     Number(value)
@@ -125,6 +294,77 @@ function esc(value) {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;')
+}
+
+function normalizeCollectionIdentity(value) {
+  return String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('fr')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+}
+
+function itemAlreadyCollected(item, itemCollection = []) {
+  if (!item || !Array.isArray(itemCollection)) {
+    return false
+  }
+
+  const itemKey =
+    normalizeCollectionIdentity(
+      item.catalog_key
+    )
+
+  if (
+    itemKey &&
+    itemCollection.some(
+      row =>
+        normalizeCollectionIdentity(
+          row?.catalog_key
+        ) === itemKey
+    )
+  ) {
+    return true
+  }
+
+  const itemName =
+    normalizeCollectionIdentity(
+      item.item_name
+    )
+
+  const itemSlot =
+    normalizeCollectionIdentity(
+      item.slot
+    )
+
+  if (!itemName) {
+    return false
+  }
+
+  return itemCollection.some(
+    row => {
+      const rowName =
+        normalizeCollectionIdentity(
+          row?.source_item_name ||
+          row?.item_name
+        )
+
+      if (rowName !== itemName) {
+        return false
+      }
+
+      const rowSlot =
+        normalizeCollectionIdentity(
+          row?.slot
+        )
+
+      return (
+        !rowSlot ||
+        !itemSlot ||
+        rowSlot === itemSlot
+      )
+    }
+  )
 }
 
 function fr(value, digits = 1) {
@@ -382,20 +622,16 @@ function eligibleDepositItems(
   inventory,
   itemCollection
 ) {
-  const deposited =
-    new Set(
-      itemCollection.map(
-        row =>
-          row.catalog_key
-      )
-    )
+  const seen = new Set()
 
   return inventory.filter(
     item => {
       if (
-        !item.catalog_key ||
-        deposited.has(
-          item.catalog_key
+        !item?.catalog_key ||
+        item.is_locked ||
+        itemAlreadyCollected(
+          item,
+          itemCollection
         )
       ) {
         return false
@@ -417,10 +653,22 @@ function eligibleDepositItems(
         return false
       }
 
+      const identity =
+        normalizeCollectionIdentity(
+          item.catalog_key
+        ) ||
+        `${normalizeCollectionIdentity(item.item_name)}|${normalizeCollectionIdentity(item.slot)}`
+
+      if (seen.has(identity)) {
+        return false
+      }
+
+      seen.add(identity)
       return true
     }
   )
 }
+
 
 export function createRpgCollectionState() {
   return {
@@ -658,7 +906,8 @@ export async function loadRpgCollections(
 
 function bestiaryHtml(
   progress,
-  state
+  state,
+  inventory = []
 ) {
   const discovered =
     new Map(
@@ -813,6 +1062,11 @@ function bestiaryHtml(
         </span>
       </div>
     </div>
+
+    ${monsterEncounterOddsHtml(
+      progress,
+      inventory
+    )}
 
     <div class="rpg-bestiary-tools">
       <input
@@ -985,6 +1239,12 @@ function bestiaryHtml(
                       : monster.icon ||
                         '👾'
 
+                  const rarityColor =
+                    MONSTER_RARITY_COLORS[
+                      rarityKey
+                    ] ||
+                    MONSTER_RARITY_COLORS.common
+
                   return `
                     <article
                       class="rpg-monster-card rarity-${esc(
@@ -993,7 +1253,14 @@ function bestiaryHtml(
                         entry
                           ? 'discovered'
                           : 'undiscovered'
+                      } ${
+                        hidden
+                          ? 'hidden-rarity'
+                          : ''
                       }"
+                      style="--monster-rarity-color:${esc(
+                        rarityColor
+                      )}"
                     >
                       ${
                         entry
@@ -1643,7 +1910,8 @@ export function renderRpgCollection({
           'bestiary'
             ? bestiaryHtml(
                 progress,
-                state
+                state,
+                inventory
               )
             : codexHtml(
                 inventory,
@@ -1739,6 +2007,30 @@ export async function handleRpgCollectionAction({
       ?.rpgDepositItem
 
   if (itemId) {
+    const item =
+      inventory.find(
+        candidate =>
+          String(candidate?.id) ===
+          String(itemId)
+      )
+
+    if (
+      item &&
+      itemAlreadyCollected(
+        item,
+        state.itemCollection
+      )
+    ) {
+      return {
+        handled: true,
+        refresh: false,
+        notice: {
+          tone: 'info',
+          message: 'Cet objet est déjà présent dans ta collection. Aucun exemplaire ne sera consommé.',
+        },
+      }
+    }
+
     const confirmed =
       window.confirm(
         'Déposer un exemplaire dans le codex ? Un seul objet sera consommé et le bonus restera permanent.'
@@ -1766,13 +2058,13 @@ export async function handleRpgCollectionAction({
       )
 
     if (error) {
-      window.alert(
-        `Dépôt impossible : ${error.message}`
-      )
-
       return {
         handled: true,
         refresh: false,
+        notice: {
+          tone: 'error',
+          message: `Dépôt impossible : ${error.message}`,
+        },
       }
     }
 
@@ -1821,27 +2113,37 @@ export async function handleRpgCollectionAction({
       }
     }
 
-    const {
-      error,
-    } =
-      await supabase.rpc(
-        'deposit_all_rpg_collection_items',
-        {
-          p_athlete_slug:
-            athleteSlug,
-        }
-      )
+    const errors = []
 
-    if (error) {
-      window.alert(
-        `Dépôt global impossible : ${error.message}`
-      )
+    for (const item of eligible) {
+      const { error } =
+        await supabase.rpc(
+          'deposit_rpg_collection_item',
+          {
+            p_athlete_slug:
+              athleteSlug,
+            p_item_id:
+              item.id,
+          }
+        )
 
-      return {
-        handled: true,
-        refresh: false,
+      if (error) {
+        errors.push(
+          error.message
+        )
       }
     }
+
+    const notice =
+      errors.length
+        ? {
+            tone: 'error',
+            message: `Dépôt partiellement terminé : ${errors.join(' · ')}`,
+          }
+        : {
+            tone: 'success',
+            message: `${eligible.length} objet${eligible.length > 1 ? 's' : ''} unique${eligible.length > 1 ? 's' : ''} ajouté${eligible.length > 1 ? 's' : ''} au codex.`,
+          }
 
     state.subTab =
       'items'
@@ -1855,6 +2157,7 @@ export async function handleRpgCollectionAction({
     return {
       handled: true,
       refresh: true,
+      notice,
     }
   }
 

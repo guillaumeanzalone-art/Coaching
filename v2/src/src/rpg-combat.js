@@ -6,8 +6,6 @@ import {
   playRpgEventMusic,
   rpgSfxAllowed,
   rpgSfxVolume,
-  playRpgCriticalSfx,
-  preloadRpgCriticalSfx,
 } from './rpg-audio.js'
 
 const TICK_MS = 50
@@ -121,70 +119,8 @@ const firstSpellAudioCache =
 
 let activeState = null
 let audioContext = null
-
-const COMBAT_SFX_FILES_V43 = {
-  hit: 'ragnarok-hit.mp3',
-  miss: 'ragnarok-miss.mp3',
-  perfect: 'ragnarok-perfect.mp3',
-}
-
-const combatSfxPoolsV43 = new Map()
-const combatSfxUnavailableV43 = new Set()
-
-function combatSfxUrlV43(file) {
-  const base =
-    String(
-      import.meta.env?.BASE_URL || '/'
-    ).replace(/\/?$/, '/')
-
-  return `${base}${file}`
-}
-
-function playCombatFileSfxV43(kind) {
-  if (
-    !rpgSfxAllowed() ||
-    combatSfxUnavailableV43.has(kind)
-  ) {
-    return false
-  }
-
-  const file = COMBAT_SFX_FILES_V43[kind]
-  if (!file) return false
-
-  let pool = combatSfxPoolsV43.get(kind)
-
-  if (!pool) {
-    pool = Array.from({ length: 4 }, () => {
-      const audio = new Audio(combatSfxUrlV43(file))
-      audio.preload = 'auto'
-      audio.setAttribute('playsinline', '')
-      audio.addEventListener('error', () => {
-        combatSfxUnavailableV43.add(kind)
-      }, { once: true })
-      return audio
-    })
-    pool.cursor = 0
-    combatSfxPoolsV43.set(kind, pool)
-  }
-
-  const index = pool.cursor % pool.length
-  const audio = pool[index]
-  pool.cursor = (pool.cursor + 1) % pool.length
-
-  try {
-    audio.pause()
-    audio.currentTime = 0
-    audio.volume = Math.max(0, Math.min(1, rpgSfxVolume() * 0.72))
-    const attempt = audio.play()
-    attempt?.catch?.(() => {
-      combatSfxUnavailableV43.add(kind)
-    })
-    return true
-  } catch {
-    combatSfxUnavailableV43.add(kind)
-    return false
-  }
-}
+let criticalAudio = null
+let criticalAudioUnavailable = false
 
 function n(value, fallback = 0) {
   const number = Number(value)
@@ -1000,6 +936,50 @@ function activateRushAbility(
   return true
 }
 
+function playCriticalRagnarokSfx() {
+  if (!rpgSfxAllowed()) {
+    return
+  }
+
+  if (criticalAudioUnavailable) {
+    playCombatTone('crit')
+    return
+  }
+
+  try {
+    criticalAudio ||= new Audio(
+      '/critical-ragnarok.mp3'
+    )
+
+    criticalAudio.volume =
+      Math.max(
+        0,
+        Math.min(
+          1,
+          rpgSfxVolume()
+        )
+      )
+
+    criticalAudio.currentTime = 0
+
+    const attempt =
+      criticalAudio.play()
+
+    if (
+      attempt &&
+      typeof attempt.catch === 'function'
+    ) {
+      attempt.catch(() => {
+        criticalAudioUnavailable = true
+        playCombatTone('crit')
+      })
+    }
+  } catch (_) {
+    criticalAudioUnavailable = true
+    playCombatTone('crit')
+  }
+}
+
 function playCombatTone(
   kind = 'hit'
 ) {
@@ -1009,54 +989,86 @@ function playCombatTone(
     return
   }
 
-  // V4.3: vrais impacts courts inspirés des MMORPG old-school.
-  // Le WebAudio ci-dessous reste uniquement en secours si le fichier
-  // audio ne peut pas être chargé par le navigateur.
-  if (
-    kind !== 'crit' &&
-    playCombatFileSfxV43(kind)
-  ) {
-    return
-  }
-
   try {
     const AudioContextClass =
       window.AudioContext ||
       window.webkitAudioContext
 
-    if (!AudioContextClass) return
+    if (
+      !AudioContextClass
+    ) {
+      return
+    }
 
-    audioContext ||= new AudioContextClass()
+    audioContext ||=
+      new AudioContextClass()
 
-    const oscillator = audioContext.createOscillator()
-    const gain = audioContext.createGain()
-    const now = audioContext.currentTime
-    const volume = Math.max(0.001, rpgSfxVolume() * 0.055)
+    const oscillator =
+      audioContext
+        .createOscillator()
 
-    oscillator.type = kind === 'miss' ? 'sawtooth' : 'square'
-    oscillator.frequency.setValueAtTime(
-      kind === 'perfect' ? 860 : kind === 'miss' ? 125 : 470,
-      now
+    const gain =
+      audioContext
+        .createGain()
+
+    const now =
+      audioContext.currentTime
+
+    const volume =
+      Math.max(
+        0.001,
+        rpgSfxVolume() *
+          0.08
+      )
+
+    oscillator.type =
+      kind === 'miss'
+        ? 'sawtooth'
+        : 'sine'
+
+    oscillator.frequency
+      .setValueAtTime(
+        kind === 'perfect'
+          ? 720
+          : kind === 'miss'
+            ? 145
+            : kind === 'crit'
+              ? 930
+              : 420,
+        now
+      )
+
+    gain.gain
+      .setValueAtTime(
+        volume,
+        now
+      )
+
+    gain.gain
+      .exponentialRampToValueAtTime(
+        0.001,
+        now + 0.12
+      )
+
+    oscillator.connect(
+      gain
     )
-    oscillator.frequency.exponentialRampToValueAtTime(
-      kind === 'perfect' ? 1220 : kind === 'miss' ? 78 : 250,
-      now + 0.085
+
+    gain.connect(
+      audioContext.destination
     )
 
-    gain.gain.setValueAtTime(volume, now)
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.10)
-
-    oscillator.connect(gain)
-    gain.connect(audioContext.destination)
     oscillator.start(now)
-    oscillator.stop(now + 0.11)
+    oscillator.stop(
+      now + 0.13
+    )
   } catch (_) {
-    // Le combat reste jouable sans audio.
+    // Le combat reste jouable
+    // sans WebAudio.
   }
 }
 
 function installCombatStyles() {
-  preloadRpgCriticalSfx()
   if (
     document.getElementById(
       'rpgCombatV2Styles'
@@ -1473,34 +1485,15 @@ function installCombatStyles() {
   border:0;
   border-radius:11px;
   padding:11px 16px;
-  background:rgba(255,255,255,.07);
-  color:#e8edf6;
-  font-size:9px;
-  font-weight:1000;
-  cursor:pointer;
-}
-
-.rpg-combat-result-actions-v30{
-  display:grid;
-  grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);
-  gap:9px;
-  margin-top:14px;
-}
-
-.rpg-combat-result-actions-v30 .primary{
   background:linear-gradient(
     135deg,
     #a8761e,
     #e0b746
   );
   color:#171006;
-  box-shadow:0 8px 24px rgba(224,183,70,.18);
-}
-
-@media(max-width:430px){
-  .rpg-combat-result-actions-v30{
-    grid-template-columns:1fr;
-  }
+  font-size:9px;
+  font-weight:1000;
+  cursor:pointer;
 }
 
 @media(max-width:430px){
@@ -1533,64 +1526,107 @@ function showDamageBurstV13A(
       '[data-rpg-reaction-stage-v2]'
     )
 
-  const enemy =
-    document.querySelector(
-      '[data-rpg-combat-enemy-v2]'
+  if (
+    !stage ||
+    !spec
+  ) {
+    return
+  }
+
+  const secondChain =
+    spec.type === 'chain' &&
+    spec.firstPressAt
+
+  const x =
+    secondChain
+      ? n(spec.x2, spec.x)
+      : n(spec.x, 50)
+
+  const y =
+    secondChain
+      ? n(spec.y2, spec.y)
+      : n(spec.y, 50)
+
+  const burst =
+    document.createElement(
+      'div'
     )
 
-  const host = enemy || stage
-
-  if (!host || !spec) return
-
-  const burst = document.createElement('div')
-  const crits = n(damage?.crits)
-  const isMiss = quality === 'miss'
-  const dodgeBoosted = n(damage?.dodgeBoost, 1) > 1
+  const crits =
+    n(damage?.crits)
 
   burst.className =
-    'rpg-damage-burst-v13a rpg-ro-damage-v43' +
-    (quality ? ` ${quality}` : '') +
-    (crits > 0 ? ' crit' : '') +
-    (dodgeBoosted ? ' dodge-boosted-v28' : '')
+    'rpg-damage-burst-v13a' +
+    (
+      quality
+        ? ` ${quality}`
+        : ''
+    ) +
+    (
+      crits > 0
+        ? ' crit'
+        : ''
+    )
 
-  // Ragnarok-like: les dégâts appartiennent au monstre, pas à la cible UI.
-  const offsetX = (Math.random() * 14) - 7
-  const offsetY = (Math.random() * 8) - 4
-  burst.style.left = `${50 + offsetX}%`
-  burst.style.top = `${34 + offsetY}%`
+  burst.style.left =
+    `${x}%`
 
-  if (isMiss) {
-    burst.innerHTML = '<strong class="rpg-ro-miss-v43">MISS</strong>'
-  } else {
-    const amount = esc(formatNumber(damage?.addedDamage))
-    const critLabel = crits > 0
-      ? `<span class="rpg-ro-critical-label-v43">CRITICAL${crits > 1 ? ` ×${crits}` : ''}</span>`
-      : ''
-    const boost = dodgeBoosted
-      ? '<span class="rpg-ro-boost-v43">DODGE ×2</span>'
-      : ''
+  burst.style.top =
+    `${y}%`
 
-    burst.innerHTML = `${critLabel}<strong class="rpg-ro-number-v43">${amount}</strong>${boost}`
-  }
+  burst.textContent =
+    quality === 'miss'
+      ? 'RATÉ'
+      : `-${formatNumber(
+          damage?.addedDamage
+        )} DÉGÂTS${
+          crits > 0
+            ? ` · ⚡ ${crits} CRIT`
+            : ''
+        }`
 
-  host.appendChild(burst)
+  stage.appendChild(
+    burst
+  )
 
-  if (!isMiss) {
-    const impact = document.createElement('span')
-    impact.className = 'rpg-ro-impact-v43' + (crits > 0 ? ' crit' : '')
-    impact.style.left = `${50 + ((Math.random() * 10) - 5)}%`
-    impact.style.top = `${45 + ((Math.random() * 8) - 4)}%`
-    host.appendChild(impact)
-    window.setTimeout(() => impact.remove(), 340)
-  }
+  window.setTimeout(
+    () => {
+      burst.remove()
+    },
+    760
+  )
 
-  window.setTimeout(() => burst.remove(), crits > 0 ? 880 : 680)
+  if (
+    quality !== 'miss'
+  ) {
+    const enemy =
+      document.querySelector(
+        '[data-rpg-combat-enemy-v2]'
+      )
 
-  if (!isMiss && enemy) {
-    enemy.classList.remove('hit-flash-v13a')
-    void enemy.offsetWidth
-    enemy.classList.add('hit-flash-v13a')
-    window.setTimeout(() => enemy.classList.remove('hit-flash-v13a'), 160)
+    if (enemy) {
+      enemy.classList
+        .remove(
+          'hit-flash-v13a'
+        )
+
+      void enemy.offsetWidth
+
+      enemy.classList
+        .add(
+          'hit-flash-v13a'
+        )
+
+      window.setTimeout(
+        () => {
+          enemy.classList
+            .remove(
+              'hit-flash-v13a'
+            )
+        },
+        180
+      )
+    }
   }
 }
 
@@ -1663,15 +1699,6 @@ function ensureOverlay() {
           <span>COMBO</span>
           <b>×1</b>
           <small>Drop Rare+ ×1</small>
-        </div>
-
-        <div
-          class="rpg-combat-dodge-buff-v28"
-          data-rpg-combat-dodge-buff-v28
-          hidden
-        >
-          <span>💨 ESQUIVE PARFAITE</span>
-          <b>PROCHAIN COUP ×2</b>
         </div>
 
         <div class="rpg-combat-stats-v2">
@@ -1747,22 +1774,12 @@ function ensureOverlay() {
           data-rpg-combat-result-rewards-v2
         ></div>
 
-        <div class="rpg-combat-result-actions-v30">
-          <button
-            type="button"
-            class="primary"
-            data-rpg-combat-result-replay-v30
-          >
-            ⚔️ Combat suivant
-          </button>
-
-          <button
-            type="button"
-            data-rpg-combat-result-close-v2
-          >
-            ← Retour progression
-          </button>
-        </div>
+        <button
+          type="button"
+          data-rpg-combat-result-close-v2
+        >
+          Récupérer et revenir
+        </button>
       </div>
     </div>
   `
@@ -1863,23 +1880,25 @@ function ensureOverlay() {
 
       if (
         event.target.closest(
-          '[data-rpg-combat-result-replay-v30]'
-        )
-      ) {
-        await replayRpgCombat(
-          state
-        )
-        return
-      }
-
-      if (
-        event.target.closest(
           '[data-rpg-combat-result-close-v2]'
         )
       ) {
         closeRpgCombat(
           state
         )
+
+        try {
+          await state
+            .onFinished?.(
+              state.result || {},
+              null
+            )
+        } catch (error) {
+          console.warn(
+            'RPG COMBAT CLOSE REFRESH ERROR',
+            error
+          )
+        }
       }
     }
   )
@@ -1991,11 +2010,31 @@ function targetSpec(
 function targetLabel(
   spec
 ) {
-  if (spec.type === 'danger') return 'ESQUIVE'
-  if (spec.type === 'golden') return 'PARFAIT'
-  if (spec.type === 'double') return 'DOUBLE TAP'
-  if (spec.type === 'chain') return 'CHAÎNE'
-  return 'TOUCHE'
+  if (
+    spec.type === 'danger'
+  ) {
+    return '☠<small>ÉVITE</small>'
+  }
+
+  if (
+    spec.type === 'golden'
+  ) {
+    return '★<small>PARFAIT</small>'
+  }
+
+  if (
+    spec.type === 'double'
+  ) {
+    return '×2<small>DOUBLE</small>'
+  }
+
+  if (
+    spec.type === 'chain'
+  ) {
+    return '➊<small>1 / 2</small>'
+  }
+
+  return '●<small>TOUCHE</small>'
 }
 
 function spawnTarget(
@@ -2412,26 +2451,7 @@ function addDamageUnits(
     )
 
   if (crits > 0) {
-    playRpgCriticalSfx()
-
-    const shell =
-      document.querySelector(
-        '.rpg-combat-shell-v2'
-      )
-
-    if (shell) {
-      shell.classList.remove(
-        'crit-shake-v28'
-      )
-      void shell.offsetWidth
-      shell.classList.add(
-        'crit-shake-v28'
-      )
-      window.setTimeout(
-        () => shell.classList.remove('crit-shake-v28'),
-        220
-      )
-    }
+    playCriticalRagnarokSfx()
   } else {
     playCombatTone('hit')
   }
@@ -2896,73 +2916,45 @@ function spriteHtml(
 function renderTarget(
   session
 ) {
-  const spec = session.target
-  if (!spec) return ''
+  const spec =
+    session.target
+
+  if (!spec) {
+    return ''
+  }
 
   const secondChain =
     spec.type === 'chain' &&
     spec.firstPressAt
 
-  const x = secondChain ? spec.x2 : spec.x
-  const y = secondChain ? spec.y2 : spec.y
-  const className = spec.type === 'normal' ? '' : ` ${spec.type}`
+  const x =
+    secondChain
+      ? spec.x2
+      : spec.x
 
-  const ariaLabel =
-    spec.type === 'danger'
-      ? 'Esquive : ne pas toucher'
-      : spec.type === 'golden'
-        ? 'Cible parfaite'
-        : spec.type === 'double'
-          ? 'Cible double : toucher deux fois'
-          : spec.type === 'chain'
-            ? `Chaîne : maillon ${secondChain ? 2 : 1}`
-            : 'Cible normale'
+  const y =
+    secondChain
+      ? spec.y2
+      : spec.y
 
-  let glyph = '<span class="rpg-target-rune-v43"><i></i></span>'
+  const className =
+    spec.type === 'normal'
+      ? ''
+      : ` ${spec.type}`
 
-  if (spec.type === 'golden') {
-    glyph = '<span class="rpg-target-star-v43">✦</span>'
-  } else if (spec.type === 'danger') {
-    glyph = '<span class="rpg-target-danger-v43">×</span>'
-  } else if (spec.type === 'double') {
-    glyph = '<span class="rpg-target-double-v43">×2</span>'
-  } else if (spec.type === 'chain') {
-    glyph = `<span class="rpg-target-chain-v43">${secondChain ? 2 : 1}</span>`
-  }
-
-  const chainGuide =
-    spec.type === 'chain' && !secondChain
-      ? `
-        <svg
-          class="rpg-chain-link-v43"
-          data-rpg-reaction-decoration-v43
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <line x1="${spec.x}" y1="${spec.y}" x2="${spec.x2}" y2="${spec.y2}"></line>
-        </svg>
-        <span
-          class="rpg-chain-ghost-v43"
-          data-rpg-reaction-decoration-v43
-          style="left:${spec.x2}%;top:${spec.y2}%"
-          aria-hidden="true"
-        >2</span>
-      `
-      : ''
+  const label =
+    secondChain
+      ? '➋<small>2 / 2</small>'
+      : targetLabel(spec)
 
   return `
-    ${chainGuide}
     <button
       type="button"
       class="rpg-reaction-target-v2${className}"
       data-rpg-reaction-target-v2
-      data-target-kind-v43="${esc(spec.type)}"
-      aria-label="${esc(ariaLabel)}"
       style="left:${x}%;top:${y}%"
     >
-      <span class="rpg-target-aura-v43" aria-hidden="true"></span>
-      ${glyph}
+      ${label}
     </button>
   `
 }
@@ -3141,22 +3133,6 @@ function renderFight(
       : 'Combo'
   )
 
-  const dodgeBuff =
-    overlay.querySelector(
-      '[data-rpg-combat-dodge-buff-v28]'
-    )
-
-  if (dodgeBuff) {
-    const armed =
-      Math.max(1, n(session.dodgeBoost, 1)) > 1
-
-    dodgeBuff.hidden = !armed
-    dodgeBuff.classList.toggle(
-      'armed',
-      armed
-    )
-  }
-
   const lootStreak =
     overlay.querySelector(
       '[data-rpg-combat-loot-streak-v2]'
@@ -3222,7 +3198,7 @@ function renderFight(
     ) {
       stage
         .querySelectorAll(
-          '[data-rpg-reaction-target-v2], [data-rpg-reaction-decoration-v43]'
+          '[data-rpg-reaction-target-v2]'
         )
         .forEach(
           target =>
@@ -3250,18 +3226,20 @@ function renderFight(
   if (hint) {
     hint.textContent =
       session.target
-        ? session.target.type === 'danger'
-          ? 'ESQUIVE — NE TOUCHE PAS'
-          : session.target.type === 'double'
-            ? 'DOUBLE TAP'
-            : session.target.type === 'chain'
-              ? session.target.firstPressAt
-                ? 'CHAÎNE — MAILLON 2'
-                : 'CHAÎNE — 1 → 2'
-              : session.target.type === 'golden'
-                ? 'PARFAIT'
-                : 'TOUCHE'
-        : 'PRÊT'
+        ? session.target.type ===
+            'danger'
+          ? 'Ne clique pas la t?te de mort.'
+          : session.target.type ===
+              'double'
+            ? 'Double clic rapide sur la cible.'
+            : session.target.type ===
+                'chain'
+              ? session.target
+                  .firstPressAt
+                ? 'Deuxième maillon !'
+                : 'Clique puis suis le deuxième maillon.'
+              : 'Vise la cible.'
+        : 'Prépare-toi…'
   }
 
   /* RPG RUSH BUTTON RENDER V2 */
@@ -3287,10 +3265,10 @@ function renderFight(
         <small>
           ${
             active
-              ? 'ACTIF · +35 % dégâts'
+              ? 'ACTIF ? +35 % dégâts'
               : session.rushAbilityUsed
-                ? 'Déjà utilisé'
-                : '+35 % dégâts · 5 s · 1 utilisation'
+                ? 'D?j? utilis?'
+                : '+35 % dégâts ? 5 s ? 1 utilisation'
           }
         </small>
       `
@@ -3753,7 +3731,7 @@ function showPerfectCombatAnimationV2(
         <div
           class="rpg-perfect-crown-v2"
         >
-          👑
+          ??
         </div>
 
         <div
@@ -3765,7 +3743,7 @@ function showPerfectCombatAnimationV2(
         <div
           class="rpg-perfect-gold-v2"
         >
-          🪙 GOLD ×${multiplier}
+          ?? GOLD ?${multiplier}
         </div>
 
         <div
@@ -3811,8 +3789,8 @@ function showPerfectCombatAnimationV2(
         <div
           class="rpg-perfect-sub-v2"
         >
-          Zéro erreur.
-          Récompense parfaite validée
+          Z?ro erreur.
+          R?compense parfaite valid?e
           par le serveur.
         </div>
       </div>
@@ -3985,23 +3963,6 @@ function showResult(
     overlay.querySelector(
       '[data-rpg-combat-result-rewards-v2]'
     )
-
-  const replayButton =
-    overlay.querySelector(
-      '[data-rpg-combat-result-replay-v30]'
-    )
-
-  if (replayButton) {
-    replayButton.style.display =
-      session.isBoss
-        ? 'none'
-        : ''
-
-    replayButton.textContent =
-      won
-        ? '⚔️ Combat suivant'
-        : '↻ Recombattre ce palier'
-  }
 
   if (titleElement) {
     titleElement.textContent =
@@ -4210,7 +4171,7 @@ async function rpcWithTimeout(
               data: null,
               error: {
                 message:
-                  'Le serveur met trop de temps à répondre.',
+                  'Le serveur met trop de temps ? r?pondre.',
               },
             })
           },
@@ -4277,7 +4238,7 @@ function sessionFromRow({
     baseDamage <= 0
   ) {
     throw new Error(
-      'Réponse de combat invalide : identifiant, monstre, PV ou dégâts manquants.'
+      'R?ponse de combat invalide : identifiant, monstre, PV ou dégâts manquants.'
     )
   }
 
@@ -4465,8 +4426,6 @@ export function createRpgCombatState() {
     busy: false,
     selectedDifficulty: null,
     active: null,
-    lastSession: null,
-    startContext: null,
     timer: null,
     result: null,
     error: '',
@@ -4584,6 +4543,8 @@ export function renderRpgCombatLauncher({
 
           <small>
             Combat dynamique : précision, dégâts, Gold, XP, loot et Bestiaire synchronisés avec Supabase.
+            dégâts, Gold, XP, loot et Bestiaire
+            valid?s par Supabase.
           </small>
         </div>
 
@@ -4682,8 +4643,8 @@ export function renderRpgCombatLauncher({
           `
           : `
             <div class="rpg-combat-difficulty-v2">
-              Choisis d’abord ta classe RPG
-              pour débloquer les combats.
+              Choisis d?abord ta classe RPG
+              pour d?bloquer les combats.
             </div>
           `
       }
@@ -4698,8 +4659,8 @@ export function renderRpgCombatLauncher({
                 color:#7f8aa2
               "
             >
-              Profil visible en lecture seule —
-              le combat est réservé à cet athlète
+              Profil visible en lecture seule ?
+              le combat est r?serv? ? cet athl?te
               et au coach.
             </small>
           `
@@ -4726,7 +4687,7 @@ export async function startRpgCombat({
 
   if (!athleteSlug) {
     throw new Error(
-      'Athlète RPG manquant.'
+      'Athl?te RPG manquant.'
     )
   }
 
@@ -4762,16 +4723,6 @@ export async function startRpgCombat({
   state.error = ''
   state.onFinished =
     onFinished || null
-
-  state.startContext = {
-    athleteSlug,
-    progress: {
-      ...(progress || {}),
-    },
-    isBoss: !!isBoss,
-    onFinished:
-      onFinished || null,
-  }
 
   activeState =
     state
@@ -4810,7 +4761,7 @@ export async function startRpgCombat({
 
     if (!row) {
       throw new Error(
-        'Supabase n’a renvoyé aucun combat.'
+        'Supabase n?a renvoy? aucun combat.'
       )
     }
 
@@ -4825,7 +4776,7 @@ export async function startRpgCombat({
       difficulty
     ) {
       throw new Error(
-        'Le serveur a renvoyé un palier différent de celui demandé.'
+        'Le serveur a renvoy? un palier diff?rent de celui demand?.'
       )
     }
 
@@ -5073,52 +5024,9 @@ export async function finishRpgCombat(
     result
   )
 
-  /* RPG V3.0 COMBAT LOOP */
-  state.lastSession = session
-
-  if (state.startContext) {
-    const nextUnlocked =
-      Math.max(
-        n(
-          state.startContext
-            .progress
-            ?.adventure_difficulty,
-          1
-        ),
-        n(
-          result?.difficulty_unlocked,
-          0
-        )
-      )
-
-    state.startContext.progress = {
-      ...(state.startContext.progress || {}),
-      adventure_difficulty:
-        nextUnlocked,
-      combat_drop_combo:
-        n(
-          result?.combat_drop_combo,
-          state.startContext
-            .progress
-            ?.combat_drop_combo
-        ),
-      perfect_combat_streak:
-        n(
-          result?.perfect_combat_streak,
-          state.startContext
-            .progress
-            ?.perfect_combat_streak
-        ),
-      rpg_class:
-        state.startContext
-          .progress
-          ?.rpg_class ||
-        session.rpgClass ||
-        'warrior',
-    }
-  }
-
+  /* RPG V1.3 COMBAT CHAIN FIX */
   state.active = null
+
 
   try {
     await state
@@ -5205,43 +5113,33 @@ export async function abandonRpgCombat(
     throw response.error
   }
 
-  const abandonResult = {
-    won: false,
-
-    damage_dealt:
-      session.damage,
-
-    successful_actions:
-      session.successful,
-
-    accuracy_pct:
-      session.processed
-        ? (
-            session.successful /
-            session.processed
-          ) *
-          100
-        : 0,
-
-    perfect_actions:
-      session.perfect,
-
-    max_combo:
-      session.maxCombo,
-  }
-
-  state.result =
-    abandonResult
-
   showResult(
     state,
-    abandonResult
+    {
+      won: false,
+
+      damage_dealt:
+        session.damage,
+
+      successful_actions:
+        session.successful,
+
+      accuracy_pct:
+        session.processed
+          ? (
+              session.successful /
+              session.processed
+            ) *
+            100
+          : 0,
+
+      perfect_actions:
+        session.perfect,
+
+      max_combo:
+        session.maxCombo,
+    }
   )
-
-  state.lastSession =
-    session
-
-  state.active = null
 
   try {
     await state
@@ -5259,109 +5157,8 @@ export async function abandonRpgCombat(
   }
 }
 
-async function replayRpgCombat(
-  state
-) {
-  if (
-    !state ||
-    state.busy ||
-    state.active
-  ) {
-    return false
-  }
-
-  const context =
-    state.startContext
-
-  const session =
-    state.lastSession
-
-  const result =
-    state.result || {}
-
-  if (
-    !context ||
-    !session
-  ) {
-    closeRpgCombat(state)
-    return false
-  }
-
-  const replayProgress = {
-    ...(context.progress || {}),
-  }
-
-  if (
-    !session.isBoss &&
-    result?.won
-  ) {
-    const maxUnlocked =
-      Math.max(
-        1,
-        Math.floor(
-          n(
-            replayProgress
-              .adventure_difficulty,
-            session.difficulty + 1
-          )
-        )
-      )
-
-    const nextDifficulty =
-      clamp(
-        Math.max(
-          session.difficulty + 1,
-          Math.floor(
-            n(
-              result
-                ?.difficulty_unlocked,
-              session.difficulty + 1
-            )
-          )
-        ),
-        1,
-        maxUnlocked
-      )
-
-    state.selectedDifficulty =
-      nextDifficulty
-
-    localStorage.setItem(
-      difficultyStorageKey(
-        context.athleteSlug
-      ),
-      String(nextDifficulty)
-    )
-  } else if (!session.isBoss) {
-    state.selectedDifficulty =
-      session.difficulty
-  }
-
-  const onFinished =
-    context.onFinished ||
-    state.onFinished ||
-    null
-
-  closeRpgCombat(
-    state,
-    { preserveLoop: true }
-  )
-
-  return startRpgCombat({
-    athleteSlug:
-      context.athleteSlug,
-    progress:
-      replayProgress,
-    state,
-    isBoss:
-      !!session.isBoss,
-    onFinished,
-  })
-}
-
 export function closeRpgCombat(
-  state,
-  options = {}
+  state
 ) {
   if (!state) {
     return
@@ -5375,12 +5172,6 @@ export function closeRpgCombat(
   state.active = null
   state.result = null
   state.busy = false
-
-  if (!options.preserveLoop) {
-    state.lastSession = null
-    state.startContext = null
-    state.onFinished = null
-  }
 
   document
     .getElementById(
