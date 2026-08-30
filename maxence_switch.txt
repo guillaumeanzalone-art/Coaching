@@ -1,0 +1,5 @@
+<!-- COLLE JUSTE APRES </header> DANS Maxence.html -->
+<nav style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 16px 8px;padding:6px;border:1px solid rgba(240,199,104,.2);border-radius:16px;background:rgba(12,14,20,.78)">
+<a href="Maxence.html" style="min-height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:11px;text-decoration:none;color:#0c0e14;background:linear-gradient(135deg,#f0c768,#ffe4a0);font-weight:900;font-size:.8rem"><span>Bloc 1</span><span style="font-size:.56rem;text-transform:uppercase;opacity:.72">precedent</span></a>
+<a href="Maxence2.html" style="min-height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:11px;text-decoration:none;color:#bfc5d2;background:#141820;font-weight:900;font-size:.8rem"><span>Bloc 2</span><span style="font-size:.56rem;text-transform:uppercase;opacity:.72">specialisation</span></a>
+</nav>
