@@ -452,3 +452,124 @@ export async function getProgramWithCloudFallback({
 
   return local
 }
+
+
+/* ================================================================
+   GA COACHING V3 — BLOCS + OVERVIEW SUPABASE
+   Ces fonctions sont additives : le système V2 actuel reste intact.
+   ================================================================ */
+
+function resolveAthleteSlugV3(
+  athleteIdOrSlug
+) {
+  const athlete =
+    getAthlete(
+      athleteIdOrSlug
+    )
+
+  return String(
+    athlete?.cloudSlug ||
+    athlete?.slug ||
+    athlete?.id ||
+    athleteIdOrSlug ||
+    ''
+  )
+    .trim()
+    .toLowerCase()
+}
+
+export async function getAthleteBlocksV3(
+  athleteIdOrSlug
+) {
+  const athleteSlug =
+    resolveAthleteSlugV3(
+      athleteIdOrSlug
+    )
+
+  if (!athleteSlug) {
+    throw new Error(
+      'Athlète V3 introuvable.'
+    )
+  }
+
+  const {
+    data,
+    error,
+  } =
+    await supabase.rpc(
+      'list_athlete_program_blocks_v3',
+      {
+        p_athlete_slug:
+          athleteSlug,
+      }
+    )
+
+  if (error) {
+    console.error(
+      'Liste des blocs V3 indisponible :',
+      athleteSlug,
+      error
+    )
+
+    throw error
+  }
+
+  return Array.isArray(data)
+    ? data
+    : []
+}
+
+export async function getAthleteBlockV3(
+  athleteIdOrSlug,
+  blockKey
+) {
+  const athleteSlug =
+    resolveAthleteSlugV3(
+      athleteIdOrSlug
+    )
+
+  const cleanBlockKey =
+    String(
+      blockKey ||
+      ''
+    ).trim()
+
+  if (!athleteSlug) {
+    throw new Error(
+      'Athlète V3 introuvable.'
+    )
+  }
+
+  if (!cleanBlockKey) {
+    throw new Error(
+      'Bloc V3 introuvable.'
+    )
+  }
+
+  const {
+    data,
+    error,
+  } =
+    await supabase.rpc(
+      'get_athlete_program_block_v3',
+      {
+        p_athlete_slug:
+          athleteSlug,
+        p_block_key:
+          cleanBlockKey,
+      }
+    )
+
+  if (error) {
+    console.error(
+      'Bloc V3 indisponible :',
+      athleteSlug,
+      cleanBlockKey,
+      error
+    )
+
+    throw error
+  }
+
+  return data ?? null
+}

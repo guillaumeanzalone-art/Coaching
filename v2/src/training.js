@@ -1,4 +1,10 @@
 import { supabase } from './supabase.js'
+
+import {
+  getAthleteBlocksV3,
+  getAthleteBlockV3,
+} from './program-cloud.js'
+
 import { awardSetXp, flushXpOutbox } from './xp.js'
 /* GA V2 SYNC HOTFIX OUTBOX 2026-08-11 */
 import {
@@ -472,15 +478,18 @@ export function mountTraining(
   program,
   options = {}
 ) {
-  const canEdit =
+  const baseCanEdit =
     options.canEdit !== false
+
+  let canEdit =
+    baseCanEdit
 
   // XP INITIAL OUTBOX FLUSH
   if (navigator.onLine !== false) {
     void flushXpOutbox()
   }
 
-  const blocks =
+  let blocks =
     getBlocks(program)
 
   if (!blocks.length) {
@@ -562,6 +571,43 @@ export function mountTraining(
   selectedBlockId =
     block.id
 
+  /*
+   * GA V3 MIGRATION :
+   * conserve la programmation réellement chargée au démarrage.
+   * Le snapshot program_json de la table V3 peut être plus ancien
+   * pendant la migration et ne doit jamais écraser le bloc courant.
+   */
+  const v3LiveCurrentProgram =
+    program
+
+  const v3LiveCurrentBlockId =
+    block.id
+
+
+  /* ================================================================
+     GA V3 — HISTORIQUE DES BLOCS SUPABASE
+     ================================================================ */
+
+  let v3ProgramBlocks = []
+
+  let v3BlocksLoading = true
+
+  let v3BlocksError = ''
+
+  let v3SelectedBlockKey =
+    block?.id || ''
+
+  let v3SwitchingBlock = false
+
+  let v3OverviewPayload = null
+
+  let v3OverviewLoading = false
+
+  let v3OverviewError = ''
+
+  let showV3Overview = false
+
+
   let STORAGE_KEY =
     createStorageKey(
       program,
@@ -621,6 +667,3166 @@ export function mountTraining(
       block
     )
   }
+
+  /* ================================================================
+     GA V3 — CHARGEMENT HISTORIQUE BLOCS SUPABASE
+     ================================================================ */
+
+  async function hydrateProgramBlocksV3(
+    rerender = true
+  ) {
+    if (!cloudAthleteSlug) {
+      v3ProgramBlocks = []
+      v3BlocksLoading = false
+      v3BlocksError =
+        'Profil cloud introuvable.'
+
+      if (rerender) {
+        render()
+      }
+
+      return
+    }
+
+    v3BlocksLoading = true
+    v3BlocksError = ''
+
+    try {
+      v3ProgramBlocks =
+        await getAthleteBlocksV3(
+          cloudAthleteSlug
+        )
+
+      const currentBlock =
+        v3ProgramBlocks.find(
+          item =>
+            item.status ===
+            'current'
+        )
+
+      if (currentBlock) {
+        v3SelectedBlockKey =
+          currentBlock.block_key
+      }
+
+      console.log(
+        'V3 BLOCS SUPABASE',
+        v3ProgramBlocks
+      )
+
+      /*
+       * Précharge le payload complet du bloc courant.
+       * Cela rend l'Overview instantané à l'ouverture.
+       */
+      await loadV3OverviewPayload({
+        rerender: false,
+        force: false,
+      })
+    } catch (error) {
+      console.error(
+        'V3 BLOCK HISTORY ERROR',
+        error
+      )
+
+      v3ProgramBlocks = []
+
+      v3BlocksError =
+        error?.message ||
+        'Historique indisponible.'
+    }
+
+    v3BlocksLoading = false
+
+    if (rerender) {
+      render()
+    }
+  }
+
+
+  function restoreV3LiveCurrentProgram(
+    blockKey
+  ) {
+    cloudLoadToken += 1
+
+    program =
+      v3LiveCurrentProgram
+
+    blocks =
+      getBlocks(
+        program
+      )
+
+    const nextBlock =
+      blocks.find(
+        item =>
+          item.id ===
+          v3LiveCurrentBlockId
+      ) ||
+      blocks.find(
+        item =>
+          item.id ===
+          program.defaultBlockId
+      ) ||
+      blocks[0]
+
+    if (!nextBlock) {
+      throw new Error(
+        'Bloc courant introuvable.'
+      )
+    }
+
+    block =
+      nextBlock
+
+    selectedBlockId =
+      nextBlock.id
+
+    v3SelectedBlockKey =
+      blockKey ||
+      nextBlock.id
+
+    canEdit =
+      baseCanEdit
+
+    STORAGE_KEY =
+      createStorageKey(
+        program,
+        block
+      )
+
+    state =
+      loadState(
+        STORAGE_KEY,
+        block
+      )
+
+    normalizeSelection()
+  }
+
+
+  async function selectV3ProgramBlock(
+    blockKey
+  ) {
+    const cleanBlockKey =
+      String(
+        blockKey || ''
+      ).trim()
+
+    if (
+      !cleanBlockKey ||
+      v3SwitchingBlock
+    ) {
+      return
+    }
+
+    const meta =
+      v3ProgramBlocks.find(
+        item =>
+          item.block_key ===
+          cleanBlockKey
+      )
+
+    /*
+     * IMPORTANT :
+     * le bouton "bloc actuel" ne recharge PAS program_json.
+     * Il revient au programme vivant déjà chargé par l'app.
+     */
+    if (
+      meta?.status ===
+        'current'
+    ) {
+      v3SwitchingBlock = true
+      v3BlocksError = ''
+
+      try {
+        restoreV3LiveCurrentProgram(
+          cleanBlockKey
+        )
+
+        /*
+         * On peut tout de même récupérer overview_json,
+         * sans remplacer le programme d'entraînement.
+         */
+        try {
+          const payload =
+            await getAthleteBlockV3(
+              cloudAthleteSlug,
+              cleanBlockKey
+            )
+
+          v3OverviewPayload =
+            payload || null
+
+          v3OverviewError = ''
+        } catch (overviewError) {
+          console.warn(
+            'V3 CURRENT OVERVIEW LOAD ERROR',
+            overviewError
+          )
+        }
+
+      } catch (error) {
+        console.error(
+          'V3 CURRENT BLOCK RESTORE ERROR',
+          error
+        )
+
+        v3BlocksError =
+          error?.message ||
+          'Impossible de revenir au bloc actuel.'
+      } finally {
+        v3SwitchingBlock = false
+      }
+
+      render()
+
+      if (!v3BlocksError) {
+        void hydrateFromCloud()
+        void hydrateSessionsFromCloud()
+        void hydrateSbdPrs()
+        void hydrateAthleteSteps()
+      }
+
+      return
+    }
+
+    v3SwitchingBlock = true
+    v3BlocksError = ''
+
+    render()
+
+    try {
+      const payload =
+        await getAthleteBlockV3(
+          cloudAthleteSlug,
+          cleanBlockKey
+        )
+
+      const nextProgram =
+        payload?.program
+
+      if (
+        !nextProgram ||
+        typeof nextProgram !==
+          'object'
+      ) {
+        throw new Error(
+          'Programme du bloc introuvable.'
+        )
+      }
+
+      const nextBlocks =
+        getBlocks(
+          nextProgram
+        )
+
+      if (!nextBlocks.length) {
+        throw new Error(
+          'Ce bloc ne contient aucune semaine.'
+        )
+      }
+
+      cloudLoadToken += 1
+
+      program =
+        nextProgram
+
+      blocks =
+        nextBlocks
+
+      const nextBlock =
+        blocks.find(
+          item =>
+            item.id ===
+            cleanBlockKey
+        ) ||
+        blocks.find(
+          item =>
+            item.id ===
+            nextProgram.defaultBlockId
+        ) ||
+        blocks[0]
+
+      block =
+        nextBlock
+
+      selectedBlockId =
+        nextBlock.id
+
+      v3SelectedBlockKey =
+        cleanBlockKey
+
+      /*
+       * Le même RPC renvoie aussi overview_json :
+       * on le garde en cache pour éviter un second appel.
+       */
+      v3OverviewPayload =
+        payload
+
+      v3OverviewLoading =
+        false
+
+      v3OverviewError =
+        ''
+
+      /*
+       * Bloc courant = modifiable selon les droits normaux.
+       * Bloc archivé = consultation uniquement.
+       */
+      canEdit =
+        baseCanEdit &&
+        (
+          meta?.status ===
+            'current' ||
+          payload?.status ===
+            'current'
+        )
+
+      STORAGE_KEY =
+        createStorageKey(
+          program,
+          block
+        )
+
+      state =
+        loadState(
+          STORAGE_KEY,
+          block
+        )
+
+      normalizeSelection()
+
+    } catch (error) {
+      console.error(
+        'V3 BLOCK SWITCH ERROR',
+        error
+      )
+
+      v3BlocksError =
+        error?.message ||
+        'Impossible de charger ce bloc.'
+    } finally {
+      v3SwitchingBlock =
+        false
+    }
+
+    render()
+
+    if (!v3BlocksError) {
+      void hydrateFromCloud()
+      void hydrateSessionsFromCloud()
+      void hydrateSbdPrs()
+      void hydrateAthleteSteps()
+    }
+  }
+
+
+  function selectedV3Meta() {
+    return (
+      v3ProgramBlocks.find(
+        item =>
+          item.block_key ===
+          v3SelectedBlockKey
+      ) ||
+      v3ProgramBlocks.find(
+        item =>
+          item.status ===
+          'current'
+      ) ||
+      null
+    )
+  }
+
+
+  async function loadV3OverviewPayload({
+    rerender = true,
+    force = false,
+  } = {}) {
+    const blockKey =
+      String(
+        v3SelectedBlockKey ||
+        block?.id ||
+        ''
+      ).trim()
+
+    if (
+      !cloudAthleteSlug ||
+      !blockKey
+    ) {
+      v3OverviewPayload = null
+      v3OverviewLoading = false
+      v3OverviewError =
+        'Overview indisponible.'
+
+      if (rerender) {
+        render()
+      }
+
+      return null
+    }
+
+    if (
+      !force &&
+      v3OverviewPayload?.blockKey ===
+        blockKey
+    ) {
+      return v3OverviewPayload
+    }
+
+    v3OverviewLoading = true
+    v3OverviewError = ''
+
+    if (rerender) {
+      render()
+    }
+
+    try {
+      const payload =
+        await getAthleteBlockV3(
+          cloudAthleteSlug,
+          blockKey
+        )
+
+      v3OverviewPayload =
+        payload || null
+
+      return v3OverviewPayload
+
+    } catch (error) {
+      console.error(
+        'V3 OVERVIEW LOAD ERROR',
+        error
+      )
+
+      v3OverviewPayload = null
+
+      v3OverviewError =
+        error?.message ||
+        'Impossible de charger l’Overview.'
+
+      return null
+
+    } finally {
+      v3OverviewLoading = false
+
+      if (rerender) {
+        render()
+      }
+    }
+  }
+
+
+  function exactNumber(
+    value
+  ) {
+    const text =
+      String(
+        value ?? ''
+      )
+        .trim()
+        .replace(',', '.')
+
+    if (
+      !text ||
+      !/^-?\d+(?:\.\d+)?$/.test(
+        text
+      )
+    ) {
+      return null
+    }
+
+    const number =
+      Number(text)
+
+    return Number.isFinite(number)
+      ? number
+      : null
+  }
+
+
+  function formatOverviewNumber(
+    value,
+    maximumFractionDigits = 0
+  ) {
+    const number =
+      Number(value)
+
+    if (
+      !Number.isFinite(number)
+    ) {
+      return '—'
+    }
+
+    return number.toLocaleString(
+      'fr-FR',
+      {
+        maximumFractionDigits,
+      }
+    )
+  }
+
+
+  function formatOverviewTonnage(
+    kilograms
+  ) {
+    const value =
+      Number(kilograms)
+
+    if (
+      !Number.isFinite(value) ||
+      value <= 0
+    ) {
+      return '—'
+    }
+
+    if (value >= 1000) {
+      return `${
+        (value / 1000)
+          .toLocaleString(
+            'fr-FR',
+            {
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 1,
+            }
+          )
+      } t`
+    }
+
+    return `${
+      value.toLocaleString(
+        'fr-FR',
+        {
+          maximumFractionDigits: 0,
+        }
+      )
+    } kg`
+  }
+
+
+  function formatOverviewPercent(
+    value
+  ) {
+    const number =
+      Number(value)
+
+    if (!Number.isFinite(number)) {
+      return '—'
+    }
+
+    return `${
+      number.toLocaleString(
+        'fr-FR',
+        {
+          maximumFractionDigits: 1,
+        }
+      )
+    } %`
+  }
+
+
+  function formatOverviewDate(
+    value
+  ) {
+    if (!value) {
+      return ''
+    }
+
+    const date =
+      new Date(value)
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      return String(value)
+    }
+
+    return new Intl.DateTimeFormat(
+      'fr-FR',
+      {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }
+    ).format(date)
+  }
+
+
+  function buildV3OverviewActuals() {
+    const movement = {
+      SQ: {
+        planned: 0,
+        done: 0,
+        tonnageKg: 0,
+      },
+      BN: {
+        planned: 0,
+        done: 0,
+        tonnageKg: 0,
+      },
+      DL: {
+        planned: 0,
+        done: 0,
+        tonnageKg: 0,
+      },
+    }
+
+    const weeks = []
+
+    let totalSessions = 0
+    let completedSessions = 0
+    let startedSessions = 0
+
+    let plannedSets = 0
+    let treatedSets = 0
+    let doneSets = 0
+    let failedSets = 0
+
+    let totalSeconds = 0
+    let tonnageKg = 0
+    let tonnageSetCount = 0
+
+    const rpes = []
+
+    block.weeks.forEach(
+      (
+        week,
+        weekIndex
+      ) => {
+        let weekPlannedSets = 0
+        let weekTreatedSets = 0
+        let weekDoneSets = 0
+        let weekFailedSets = 0
+        let weekTonnageKg = 0
+        let weekCompletedSessions = 0
+
+        week.days.forEach(
+          (
+            day,
+            dayIndex
+          ) => {
+            totalSessions += 1
+
+            const progress =
+              countDayProgress(
+                state,
+                day
+              )
+
+            const session =
+              getSessionState(
+                weekIndex,
+                dayIndex
+              )
+
+            if (session.startedAt) {
+              startedSessions += 1
+            }
+
+            if (
+              progress.total > 0 &&
+              progress.completed ===
+                progress.total
+            ) {
+              completedSessions += 1
+              weekCompletedSessions += 1
+            }
+
+            totalSeconds +=
+              elapsedSeconds(
+                session
+              )
+
+            listDaySets(day)
+              .forEach(
+                ({
+                  exercise,
+                  sourceSet,
+                }) => {
+                  plannedSets += 1
+                  weekPlannedSets += 1
+
+                  const type =
+                    String(
+                      exercise?.type ||
+                      ''
+                    )
+                      .trim()
+                      .toUpperCase()
+
+                  if (
+                    movement[type]
+                  ) {
+                    movement[
+                      type
+                    ].planned += 1
+                  }
+
+                  const set =
+                    getSetState(
+                      state,
+                      sourceSet
+                    )
+
+                  const terminal =
+                    set.status ===
+                      'done' ||
+                    set.status ===
+                      'failed'
+
+                  if (terminal) {
+                    treatedSets += 1
+                    weekTreatedSets += 1
+                  }
+
+                  if (
+                    set.status ===
+                      'failed'
+                  ) {
+                    failedSets += 1
+                    weekFailedSets += 1
+                    return
+                  }
+
+                  if (
+                    set.status !==
+                      'done'
+                  ) {
+                    return
+                  }
+
+                  doneSets += 1
+                  weekDoneSets += 1
+
+                  if (
+                    movement[type]
+                  ) {
+                    movement[
+                      type
+                    ].done += 1
+                  }
+
+                  const rpe =
+                    exactNumber(
+                      set.rpe
+                    )
+
+                  if (
+                    rpe !== null
+                  ) {
+                    rpes.push(rpe)
+                  }
+
+                  const load =
+                    exactNumber(
+                      set.load
+                    )
+
+                  const reps =
+                    exactNumber(
+                      sourceSet.reps
+                    )
+
+                  /*
+                   * On ne devine jamais les reps d'une fourchette.
+                   * Le tonnage n'utilise que les séries dont charge
+                   * ET répétitions sont des valeurs exactes.
+                   */
+                  if (
+                    load === null ||
+                    reps === null ||
+                    load <= 0 ||
+                    reps <= 0
+                  ) {
+                    return
+                  }
+
+                  const setTonnage =
+                    load * reps
+
+                  tonnageKg +=
+                    setTonnage
+
+                  weekTonnageKg +=
+                    setTonnage
+
+                  tonnageSetCount += 1
+
+                  if (
+                    movement[type]
+                  ) {
+                    movement[
+                      type
+                    ].tonnageKg +=
+                      setTonnage
+                  }
+                }
+              )
+          }
+        )
+
+        weeks.push({
+          id:
+            week.id,
+          label:
+            week.label,
+          sessions:
+            week.days.length,
+          completedSessions:
+            weekCompletedSessions,
+          plannedSets:
+            weekPlannedSets,
+          treatedSets:
+            weekTreatedSets,
+          doneSets:
+            weekDoneSets,
+          failedSets:
+            weekFailedSets,
+          tonnageKg:
+            weekTonnageKg,
+        })
+      }
+    )
+
+    const averageRpe =
+      rpes.length
+        ? (
+            rpes.reduce(
+              (
+                sum,
+                value
+              ) =>
+                sum + value,
+              0
+            ) /
+            rpes.length
+          )
+        : null
+
+    return {
+      weeks,
+      movement,
+      totalSessions,
+      completedSessions,
+      startedSessions,
+      plannedSets,
+      treatedSets,
+      doneSets,
+      failedSets,
+      totalSeconds,
+      tonnageKg,
+      tonnageSetCount,
+      averageRpe,
+      adherence:
+        plannedSets > 0
+          ? (
+              doneSets /
+              plannedSets *
+              100
+            )
+          : 0,
+      completion:
+        plannedSets > 0
+          ? (
+              treatedSets /
+              plannedSets *
+              100
+            )
+          : 0,
+    }
+  }
+
+
+  function renderV3OverviewLauncher() {
+    const meta =
+      selectedV3Meta()
+
+    const title =
+      meta?.title ||
+      block?.label ||
+      'Bloc'
+
+    return `
+      <section
+        class="training-v3-overview-launcher"
+        style="
+          margin:0 0 14px;
+          padding:14px;
+          border:
+            1px solid
+            rgba(255,159,67,.46);
+          border-radius:16px;
+          background:
+            linear-gradient(
+              135deg,
+              rgba(118,61,12,.34),
+              rgba(24,18,12,.78)
+            );
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:14px;
+          flex-wrap:wrap;
+        "
+      >
+        <div>
+          <span
+            style="
+              display:block;
+              color:#ffb45f;
+              font-size:11px;
+              font-weight:900;
+              letter-spacing:.12em;
+              text-transform:uppercase;
+            "
+          >
+            ◈ OVERVIEW DU BLOC
+          </span>
+
+          <strong
+            style="
+              display:block;
+              margin-top:4px;
+              color:#fff6e9;
+              font-size:15px;
+            "
+          >
+            ${escapeHtml(title)}
+          </strong>
+
+          <small
+            style="
+              display:block;
+              margin-top:4px;
+              color:#aa9b89;
+              font-size:11px;
+            "
+          >
+            Planification, volume et réalisation réelle.
+          </small>
+        </div>
+
+        <button
+          type="button"
+          data-action="${
+            showV3Overview
+              ? 'v3-overview-close'
+              : 'v3-overview-open'
+          }"
+          style="
+            cursor:pointer;
+            min-width:150px;
+            padding:10px 14px;
+            border-radius:12px;
+            border:
+              1px solid
+              rgba(255,177,91,.65);
+            background:
+              rgba(205,105,26,.20);
+            color:#ffd39d;
+            font-size:12px;
+            font-weight:900;
+            letter-spacing:.04em;
+          "
+        >
+          ${
+            showV3Overview
+              ? '← RETOUR SÉANCE'
+              : 'OUVRIR L’OVERVIEW →'
+          }
+        </button>
+      </section>
+    `
+  }
+
+
+  function overviewSetPrescription(
+    sourceSet
+  ) {
+    const parts = []
+
+    const reps =
+      String(
+        sourceSet?.reps ?? ''
+      ).trim()
+
+    if (reps) {
+      parts.push(
+        `${escapeHtml(reps)} rep${
+          reps === '1'
+            ? ''
+            : 's'
+        }`
+      )
+    }
+
+    if (
+      sourceSet?.percent !== null &&
+      sourceSet?.percent !== undefined &&
+      sourceSet?.percent !== ''
+    ) {
+      parts.push(
+        `${escapeHtml(
+          sourceSet.percent
+        )}%`
+      )
+    }
+
+    const range =
+      formatLoadRange(
+        sourceSet?.loadRange
+      )
+
+    if (range) {
+      parts.push(
+        `${escapeHtml(
+          range
+        )} kg`
+      )
+    }
+
+    if (sourceSet?.intensity) {
+      parts.push(
+        escapeHtml(
+          sourceSet.intensity
+        )
+      )
+    }
+
+    return (
+      parts.join(' · ') ||
+      'Charge libre'
+    )
+  }
+
+
+  function overviewExerciseLines(
+    day
+  ) {
+    const rows = []
+
+    const exercises =
+      Array.isArray(
+        day?.exercises
+      )
+        ? day.exercises
+        : []
+
+    exercises.forEach(
+      exercise => {
+        const name =
+          exercise?.variant
+            ? `${
+                exercise.name
+              } · ${
+                exercise.variant
+              }`
+            : exercise?.name ||
+              'Exercice'
+
+        const type =
+          String(
+            exercise?.type ||
+            'AC'
+          )
+            .trim()
+            .toUpperCase()
+
+        const sets =
+          Array.isArray(
+            exercise?.sets
+          )
+            ? exercise.sets
+            : []
+
+        const prescriptions =
+          sets.map(
+            sourceSet =>
+              overviewSetPrescription(
+                sourceSet
+              )
+          )
+
+        rows.push({
+          name,
+          type,
+          sets:
+            sets.length,
+          prescriptions,
+        })
+      }
+    )
+
+    return rows
+  }
+
+
+  function renderV3GlobalBlockPlan() {
+    return `
+      <section
+        style="
+          margin-bottom:24px;
+        "
+      >
+        <div
+          style="
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-end;
+            gap:14px;
+            flex-wrap:wrap;
+          "
+        >
+          <div>
+            <span
+              style="
+                color:#ff9f43;
+                font-size:10px;
+                font-weight:900;
+                letter-spacing:.14em;
+                text-transform:uppercase;
+              "
+            >
+              VISION GLOBALE DU BLOC
+            </span>
+
+            <h3
+              style="
+                margin:5px 0 0;
+                color:#fff4e8;
+                font-size:20px;
+                letter-spacing:-.025em;
+              "
+            >
+              Toutes les séances, sans ouvrir les semaines une par une
+            </h3>
+
+            <p
+              style="
+                margin:6px 0 0;
+                color:#8f857a;
+                font-size:11px;
+                line-height:1.55;
+              "
+            >
+              Chaque jour du bloc est visible directement avec ses exercices
+              et ses prescriptions prévues.
+            </p>
+          </div>
+
+          <span
+            style="
+              padding:7px 10px;
+              border-radius:999px;
+              background:rgba(255,159,67,.08);
+              border:1px solid rgba(255,159,67,.20);
+              color:#bca58c;
+              font-size:10px;
+              font-weight:800;
+            "
+          >
+            ${block.weeks.reduce(
+              (
+                total,
+                week
+              ) =>
+                total +
+                (
+                  Array.isArray(
+                    week?.days
+                  )
+                    ? week.days.length
+                    : 0
+                ),
+              0
+            )} séances
+          </span>
+        </div>
+
+        <div
+          style="
+            display:grid;
+            gap:16px;
+            margin-top:14px;
+          "
+        >
+          ${block.weeks.map(
+            (
+              week,
+              weekIndex
+            ) => `
+              <section
+                style="
+                  padding:14px;
+                  border-radius:16px;
+                  border:
+                    1px solid
+                    rgba(255,255,255,.075);
+                  background:
+                    rgba(255,255,255,.022);
+                "
+              >
+                <div
+                  style="
+                    display:flex;
+                    align-items:center;
+                    justify-content:space-between;
+                    gap:12px;
+                    margin-bottom:11px;
+                  "
+                >
+                  <div>
+                    <span
+                      style="
+                        color:#c67b3b;
+                        font-size:9px;
+                        font-weight:900;
+                        letter-spacing:.13em;
+                        text-transform:uppercase;
+                      "
+                    >
+                      SEMAINE ${
+                        week.number ||
+                        weekIndex + 1
+                      }
+                    </span>
+
+                    <strong
+                      style="
+                        display:block;
+                        margin-top:2px;
+                        color:#f5eadf;
+                        font-size:17px;
+                      "
+                    >
+                      ${escapeHtml(
+                        week.label ||
+                        `S${weekIndex + 1}`
+                      )}
+                    </strong>
+                  </div>
+
+                  <span
+                    style="
+                      color:#7e756c;
+                      font-size:10px;
+                    "
+                  >
+                    ${
+                      Array.isArray(
+                        week.days
+                      )
+                        ? week.days.length
+                        : 0
+                    } jours
+                  </span>
+                </div>
+
+                <div
+                  style="
+                    display:grid;
+                    grid-template-columns:
+                      repeat(
+                        auto-fit,
+                        minmax(210px,1fr)
+                      );
+                    gap:10px;
+                  "
+                >
+                  ${(week.days || []).map(
+                    (
+                      day,
+                      dayIndex
+                    ) => {
+                      const lines =
+                        overviewExerciseLines(
+                          day
+                        )
+
+                      const totalSets =
+                        lines.reduce(
+                          (
+                            sum,
+                            row
+                          ) =>
+                            sum +
+                            row.sets,
+                          0
+                        )
+
+                      const liftCounts =
+                        {
+                          SQ: 0,
+                          BN: 0,
+                          DL: 0,
+                          AC: 0,
+                        }
+
+                      lines.forEach(
+                        row => {
+                          if (
+                            Object.prototype
+                              .hasOwnProperty
+                              .call(
+                                liftCounts,
+                                row.type
+                              )
+                          ) {
+                            liftCounts[
+                              row.type
+                            ] +=
+                              row.sets
+                          } else {
+                            liftCounts.AC +=
+                              row.sets
+                          }
+                        }
+                      )
+
+                      return `
+                        <article
+                          style="
+                            min-width:0;
+                            padding:13px;
+                            border-radius:14px;
+                            border:
+                              1px solid
+                              rgba(255,255,255,.08);
+                            background:
+                              linear-gradient(
+                                145deg,
+                                rgba(255,255,255,.035),
+                                rgba(0,0,0,.10)
+                              );
+                          "
+                        >
+                          <div
+                            style="
+                              display:flex;
+                              justify-content:space-between;
+                              align-items:flex-start;
+                              gap:10px;
+                            "
+                          >
+                            <div
+                              style="
+                                min-width:0;
+                              "
+                            >
+                              <span
+                                style="
+                                  color:#806f61;
+                                  font-size:9px;
+                                  font-weight:900;
+                                  text-transform:uppercase;
+                                  letter-spacing:.10em;
+                                "
+                              >
+                                ${
+                                  escapeHtml(
+                                    week.label ||
+                                    `S${weekIndex + 1}`
+                                  )
+                                }
+                                · JOUR ${
+                                  dayIndex + 1
+                                }
+                              </span>
+
+                              <strong
+                                style="
+                                  display:block;
+                                  margin-top:4px;
+                                  color:#fff3e5;
+                                  font-size:13px;
+                                  line-height:1.35;
+                                "
+                              >
+                                ${
+                                  day.emoji
+                                    ? `${
+                                        escapeHtml(
+                                          day.emoji
+                                        )
+                                      } `
+                                    : ''
+                                }${escapeHtml(
+                                  day.name ||
+                                  `Jour ${dayIndex + 1}`
+                                )}
+                              </strong>
+                            </div>
+
+                            <span
+                              style="
+                                flex:0 0 auto;
+                                padding:5px 7px;
+                                border-radius:9px;
+                                background:
+                                  rgba(255,159,67,.08);
+                                color:#c79b70;
+                                font-size:9px;
+                                font-weight:850;
+                              "
+                            >
+                              ${totalSets} séries
+                            </span>
+                          </div>
+
+                          <div
+                            style="
+                              display:flex;
+                              flex-wrap:wrap;
+                              gap:5px;
+                              margin-top:9px;
+                            "
+                          >
+                            ${[
+                              ['SQ', liftCounts.SQ],
+                              ['BN', liftCounts.BN],
+                              ['DL', liftCounts.DL],
+                              ['AC', liftCounts.AC],
+                            ]
+                              .filter(
+                                (
+                                  [
+                                    ,
+                                    count,
+                                  ]
+                                ) =>
+                                  count > 0
+                              )
+                              .map(
+                                (
+                                  [
+                                    code,
+                                    count,
+                                  ]
+                                ) => `
+                                  <span
+                                    style="
+                                      padding:4px 6px;
+                                      border-radius:8px;
+                                      border:
+                                        1px solid
+                                        rgba(255,255,255,.07);
+                                      background:
+                                        rgba(255,255,255,.025);
+                                      color:#958a7f;
+                                      font-size:8px;
+                                      font-weight:850;
+                                    "
+                                  >
+                                    ${code}
+                                    ·
+                                    ${count}
+                                  </span>
+                                `
+                              )
+                              .join('')}
+                          </div>
+
+                          <div
+                            style="
+                              display:grid;
+                              gap:7px;
+                              margin-top:11px;
+                            "
+                          >
+                            ${lines.map(
+                              row => `
+                                <div
+                                  style="
+                                    padding-top:7px;
+                                    border-top:
+                                      1px solid
+                                      rgba(255,255,255,.05);
+                                  "
+                                >
+                                  <div
+                                    style="
+                                      display:flex;
+                                      justify-content:space-between;
+                                      gap:8px;
+                                      align-items:flex-start;
+                                    "
+                                  >
+                                    <strong
+                                      style="
+                                        min-width:0;
+                                        color:#dcd1c5;
+                                        font-size:10px;
+                                        line-height:1.35;
+                                      "
+                                    >
+                                      ${escapeHtml(
+                                        row.name
+                                      )}
+                                    </strong>
+
+                                    <span
+                                      style="
+                                        flex:0 0 auto;
+                                        color:#b37742;
+                                        font-size:8px;
+                                        font-weight:900;
+                                      "
+                                    >
+                                      ${escapeHtml(
+                                        row.type
+                                      )}
+                                    </span>
+                                  </div>
+
+                                  <div
+                                    style="
+                                      display:grid;
+                                      gap:3px;
+                                      margin-top:4px;
+                                    "
+                                  >
+                                    ${row.prescriptions.map(
+                                      (
+                                        prescription,
+                                        setIndex
+                                      ) => `
+                                        <small
+                                          style="
+                                            color:#77716b;
+                                            font-size:8px;
+                                            line-height:1.35;
+                                          "
+                                        >
+                                          S${setIndex + 1}
+                                          ·
+                                          ${prescription}
+                                        </small>
+                                      `
+                                    ).join('')}
+                                  </div>
+                                </div>
+                              `
+                            ).join('')}
+                          </div>
+                        </article>
+                      `
+                    }
+                  ).join('')}
+                </div>
+              </section>
+            `
+          ).join('')}
+        </div>
+      </section>
+    `
+  }
+
+
+  function renderV3OverviewNarrative(
+    overview
+  ) {
+    const sections =
+      Array.isArray(
+        overview?.sections
+      )
+        ? overview.sections
+        : []
+
+    const notes =
+      Array.isArray(
+        overview?.notes
+      )
+        ? overview.notes
+        : []
+
+    const instructions =
+      Array.isArray(
+        overview?.instructions
+      )
+        ? overview.instructions
+        : Array.isArray(
+            overview?.coachInstructions
+          )
+          ? overview.coachInstructions
+          : []
+
+    const tiers =
+      Array.isArray(
+        overview?.tiers
+      )
+        ? overview.tiers
+        : []
+
+    const parts = []
+
+    if (sections.length) {
+      parts.push(`
+        <section
+          style="
+            display:grid;
+            gap:10px;
+          "
+        >
+          ${sections.map(
+            section => `
+              <article
+                style="
+                  padding:15px;
+                  border-radius:14px;
+                  border:
+                    1px solid
+                    rgba(255,255,255,.08);
+                  background:
+                    rgba(255,255,255,.035);
+                "
+              >
+                ${section?.title
+                  ? `
+                    <strong
+                      style="
+                        color:#fff4e6;
+                        font-size:14px;
+                      "
+                    >
+                      ${escapeHtml(
+                        section.title
+                      )}
+                    </strong>
+                  `
+                  : ''}
+
+                ${section?.text
+                  ? `
+                    <p
+                      style="
+                        margin:7px 0 0;
+                        color:#b9afa3;
+                        font-size:12px;
+                        line-height:1.65;
+                      "
+                    >
+                      ${escapeHtml(
+                        section.text
+                      )}
+                    </p>
+                  `
+                  : ''}
+
+                ${Array.isArray(
+                    section?.items
+                  ) &&
+                  section.items.length
+                  ? `
+                    <ul
+                      style="
+                        margin:9px 0 0;
+                        padding-left:18px;
+                        color:#c9bdb0;
+                        font-size:12px;
+                        line-height:1.65;
+                      "
+                    >
+                      ${section.items.map(
+                        item => `
+                          <li>
+                            ${escapeHtml(
+                              typeof item ===
+                                'string'
+                                ? item
+                                : item?.text ||
+                                  item?.label ||
+                                  JSON.stringify(
+                                    item
+                                  )
+                            )}
+                          </li>
+                        `
+                      ).join('')}
+                    </ul>
+                  `
+                  : ''}
+              </article>
+            `
+          ).join('')}
+        </section>
+      `)
+    }
+
+    if (tiers.length) {
+      parts.push(`
+        <section
+          style="
+            margin-top:14px;
+          "
+        >
+          <span
+            style="
+              color:#ffb45f;
+              font-size:10px;
+              font-weight:900;
+              letter-spacing:.12em;
+              text-transform:uppercase;
+            "
+          >
+            ARCHITECTURE DU BLOC
+          </span>
+
+          <div
+            style="
+              display:grid;
+              gap:8px;
+              margin-top:8px;
+            "
+          >
+            ${tiers.map(
+              tier => `
+                <article
+                  style="
+                    display:grid;
+                    grid-template-columns:
+                      minmax(44px,70px)
+                      minmax(0,1fr);
+                    gap:12px;
+                    padding:12px;
+                    border-radius:12px;
+                    border:
+                      1px solid
+                      rgba(255,255,255,.08);
+                    background:
+                      rgba(255,255,255,.03);
+                  "
+                >
+                  <strong
+                    style="
+                      color:#ffb45f;
+                      font-size:24px;
+                    "
+                  >
+                    ${escapeHtml(
+                      tier?.code ||
+                      tier?.name ||
+                      '—'
+                    )}
+                  </strong>
+
+                  <div>
+                    <strong
+                      style="
+                        color:#f5eee6;
+                        font-size:12px;
+                      "
+                    >
+                      ${escapeHtml(
+                        tier?.title ||
+                        tier?.days ||
+                        tier?.label ||
+                        ''
+                      )}
+                    </strong>
+
+                    <p
+                      style="
+                        margin:4px 0 0;
+                        color:#a99d90;
+                        font-size:11px;
+                        line-height:1.55;
+                      "
+                    >
+                      ${escapeHtml(
+                        tier?.role ||
+                        tier?.text ||
+                        ''
+                      )}
+                    </p>
+                  </div>
+                </article>
+              `
+            ).join('')}
+          </div>
+        </section>
+      `)
+    }
+
+    if (
+      instructions.length ||
+      notes.length
+    ) {
+      const lines = [
+        ...instructions,
+        ...notes,
+      ]
+
+      parts.push(`
+        <section
+          style="
+            margin-top:14px;
+            padding:14px;
+            border-radius:14px;
+            border:
+              1px solid
+              rgba(255,177,91,.18);
+            background:
+              rgba(205,105,26,.055);
+          "
+        >
+          <span
+            style="
+              color:#ffb45f;
+              font-size:10px;
+              font-weight:900;
+              letter-spacing:.12em;
+              text-transform:uppercase;
+            "
+          >
+            CONSIGNES DU BLOC
+          </span>
+
+          <ul
+            style="
+              margin:9px 0 0;
+              padding-left:18px;
+              color:#c4b8aa;
+              font-size:12px;
+              line-height:1.65;
+            "
+          >
+            ${lines.map(
+              item => `
+                <li>
+                  ${escapeHtml(
+                    typeof item ===
+                      'string'
+                      ? item
+                      : item?.text ||
+                        item?.label ||
+                        JSON.stringify(
+                          item
+                        )
+                  )}
+                </li>
+              `
+            ).join('')}
+          </ul>
+        </section>
+      `)
+    }
+
+    return parts.join('')
+  }
+
+
+  function renderV3Overview() {
+    if (v3OverviewLoading) {
+      return `
+        <section
+          style="
+            padding:26px;
+            border-radius:18px;
+            border:
+              1px solid
+              rgba(255,159,67,.35);
+            background:#10100f;
+            color:#cbbdac;
+          "
+        >
+          Chargement de l’Overview Supabase…
+        </section>
+      `
+    }
+
+    if (v3OverviewError) {
+      return `
+        <section
+          style="
+            padding:20px;
+            border-radius:18px;
+            border:
+              1px solid
+              rgba(255,110,110,.35);
+            background:
+              rgba(55,15,15,.32);
+          "
+        >
+          <strong
+            style="
+              color:#ff9f91;
+            "
+          >
+            Overview indisponible
+          </strong>
+
+          <p
+            style="
+              color:#c9a39d;
+              font-size:12px;
+            "
+          >
+            ${escapeHtml(
+              v3OverviewError
+            )}
+          </p>
+
+          <button
+            type="button"
+            data-action="v3-overview-retry"
+            style="
+              cursor:pointer;
+              padding:9px 12px;
+              border-radius:10px;
+              border:
+                1px solid
+                rgba(255,159,67,.45);
+              background:
+                rgba(205,105,26,.16);
+              color:#ffd19b;
+              font-weight:800;
+            "
+          >
+            Réessayer
+          </button>
+        </section>
+      `
+    }
+
+    const payload =
+      v3OverviewPayload || {}
+
+    const overview =
+      payload.overview || {}
+
+    const hero =
+      overview.hero || {}
+
+    const planned =
+      overview.planned || {}
+
+    const source =
+      overview.source || {}
+
+    const meta =
+      selectedV3Meta()
+
+    const actual =
+      buildV3OverviewActuals()
+
+    const plannedTotalSets =
+      Number.isFinite(
+        Number(
+          planned.totalSets
+        )
+      )
+        ? Number(
+            planned.totalSets
+          )
+        : actual.plannedSets
+
+    const plannedMovement =
+      planned.movementSets ||
+      {}
+
+    const plannedWeeks =
+      Array.isArray(
+        planned.setsPerWeek
+      )
+        ? planned.setsPerWeek
+        : []
+
+    const maxWeekTonnage =
+      Math.max(
+        1,
+        ...actual.weeks.map(
+          item =>
+            item.tonnageKg
+        )
+      )
+
+    const statusLabel =
+      meta?.status ===
+        'archived'
+        ? 'ARCHIVÉ'
+        : 'BLOC ACTUEL'
+
+    const dateText =
+      [
+        meta?.starts_on
+          ? `Début ${formatOverviewDate(
+              meta.starts_on
+            )}`
+          : '',
+        meta?.ends_on
+          ? `Fin ${formatOverviewDate(
+              meta.ends_on
+            )}`
+          : '',
+      ]
+        .filter(Boolean)
+        .join(' · ')
+
+    return `
+      <section
+        class="training-v3-overview"
+        style="
+          border-radius:20px;
+          overflow:hidden;
+          border:
+            1px solid
+            rgba(255,159,67,.30);
+          background:
+            radial-gradient(
+              circle at top right,
+              rgba(177,78,13,.17),
+              transparent 34%
+            ),
+            #0e0f0f;
+          box-shadow:
+            0 18px 60px
+            rgba(0,0,0,.22);
+        "
+      >
+        <header
+          style="
+            padding:
+              clamp(20px,4vw,34px);
+            border-bottom:
+              1px solid
+              rgba(255,255,255,.07);
+            background:
+              linear-gradient(
+                135deg,
+                rgba(118,61,12,.23),
+                rgba(8,10,10,.1)
+              );
+          "
+        >
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              gap:18px;
+              flex-wrap:wrap;
+              align-items:flex-start;
+            "
+          >
+            <div>
+              <span
+                style="
+                  color:#ff9f43;
+                  font-size:10px;
+                  font-weight:900;
+                  letter-spacing:.18em;
+                  text-transform:uppercase;
+                "
+              >
+                GA COACHING · BLOCK OVERVIEW
+              </span>
+
+              <h2
+                style="
+                  margin:8px 0 0;
+                  color:#fff7ed;
+                  font-size:
+                    clamp(28px,5vw,50px);
+                  line-height:.95;
+                  letter-spacing:-.035em;
+                "
+              >
+                ${escapeHtml(
+                  payload.title ||
+                  hero.title ||
+                  meta?.title ||
+                  block.label ||
+                  'Bloc'
+                )}
+              </h2>
+
+              <p
+                style="
+                  margin:10px 0 0;
+                  color:#a99d90;
+                  font-size:12px;
+                "
+              >
+                ${escapeHtml(
+                  payload.subtitle ||
+                  hero.subtitle ||
+                  meta?.subtitle ||
+                  ''
+                )}
+              </p>
+
+              ${dateText
+                ? `
+                  <small
+                    style="
+                      display:block;
+                      margin-top:7px;
+                      color:#766f67;
+                      font-size:10px;
+                    "
+                  >
+                    ${escapeHtml(
+                      dateText
+                    )}
+                  </small>
+                `
+                : ''}
+            </div>
+
+            <span
+              style="
+                padding:7px 10px;
+                border-radius:999px;
+                border:
+                  1px solid
+                  rgba(255,159,67,.38);
+                background:
+                  rgba(205,105,26,.12);
+                color:#ffb45f;
+                font-size:10px;
+                font-weight:900;
+                letter-spacing:.09em;
+              "
+            >
+              ${statusLabel}
+            </span>
+          </div>
+
+          <div
+            style="
+              display:grid;
+              grid-template-columns:
+                repeat(
+                  auto-fit,
+                  minmax(120px,1fr)
+                );
+              gap:9px;
+              margin-top:22px;
+            "
+          >
+            ${[
+              [
+                'Semaines',
+                hero.weeks ??
+                  block.weeks.length,
+              ],
+              [
+                'Séances',
+                hero.sessions ??
+                  actual.totalSessions,
+              ],
+              [
+                'Séances / sem.',
+                hero.sessionsPerWeek ??
+                  (
+                    block.weeks.length
+                      ? (
+                          actual.totalSessions /
+                          block.weeks.length
+                        ).toLocaleString(
+                          'fr-FR',
+                          {
+                            maximumFractionDigits: 1,
+                          }
+                        )
+                      : '—'
+                  ),
+              ],
+              [
+                'Séries prévues',
+                plannedTotalSets,
+              ],
+            ].map(
+              ([label, value]) => `
+                <div
+                  style="
+                    padding:12px;
+                    border-radius:12px;
+                    background:
+                      rgba(255,255,255,.035);
+                    border:
+                      1px solid
+                      rgba(255,255,255,.07);
+                  "
+                >
+                  <span
+                    style="
+                      color:#766f67;
+                      font-size:9px;
+                      font-weight:800;
+                      letter-spacing:.10em;
+                      text-transform:uppercase;
+                    "
+                  >
+                    ${escapeHtml(label)}
+                  </span>
+
+                  <strong
+                    style="
+                      display:block;
+                      margin-top:4px;
+                      color:#f6eee5;
+                      font-size:22px;
+                    "
+                  >
+                    ${escapeHtml(value)}
+                  </strong>
+                </div>
+              `
+            ).join('')}
+          </div>
+        </header>
+
+
+        <div
+          style="
+            padding:
+              clamp(16px,3vw,26px);
+          "
+        >
+          ${renderV3GlobalBlockPlan()}
+
+          <section>
+            <span
+              style="
+                color:#ff9f43;
+                font-size:10px;
+                font-weight:900;
+                letter-spacing:.14em;
+                text-transform:uppercase;
+              "
+            >
+              PLANIFIÉ VS RÉALISÉ
+            </span>
+
+            <div
+              style="
+                display:grid;
+                grid-template-columns:
+                  repeat(
+                    auto-fit,
+                    minmax(145px,1fr)
+                  );
+                gap:10px;
+                margin-top:9px;
+              "
+            >
+              ${[
+                [
+                  'Séries réalisées',
+                  `${actual.doneSets}/${plannedTotalSets}`,
+                  formatOverviewPercent(
+                    actual.adherence
+                  ),
+                ],
+                [
+                  'Séries traitées',
+                  `${actual.treatedSets}/${plannedTotalSets}`,
+                  actual.failedSets
+                    ? `${actual.failedSets} skip/échec`
+                    : 'aucun échec',
+                ],
+                [
+                  'Séances terminées',
+                  `${actual.completedSessions}/${actual.totalSessions}`,
+                  `${actual.startedSessions} démarrée${
+                    actual.startedSessions > 1
+                      ? 's'
+                      : ''
+                  }`,
+                ],
+                [
+                  'RPE moyen',
+                  actual.averageRpe ===
+                    null
+                    ? '—'
+                    : actual.averageRpe
+                        .toLocaleString(
+                          'fr-FR',
+                          {
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 2,
+                          }
+                        ),
+                  actual.averageRpe ===
+                    null
+                    ? 'pas encore de RPE'
+                    : `${actual.doneSets} séries validées`,
+                ],
+                [
+                  'Tonnage réel',
+                  formatOverviewTonnage(
+                    actual.tonnageKg
+                  ),
+                  actual.tonnageSetCount
+                    ? `${actual.tonnageSetCount} séries calculables`
+                    : 'charges non renseignées',
+                ],
+                [
+                  'Temps cumulé',
+                  actual.totalSeconds
+                    ? formatDuration(
+                        actual.totalSeconds
+                      )
+                    : '—',
+                  'temps de séance',
+                ],
+              ].map(
+                (
+                  [
+                    label,
+                    value,
+                    sub,
+                  ]
+                ) => `
+                  <article
+                    style="
+                      padding:14px;
+                      border-radius:14px;
+                      border:
+                        1px solid
+                        rgba(255,255,255,.07);
+                      background:
+                        rgba(255,255,255,.028);
+                    "
+                  >
+                    <span
+                      style="
+                        color:#82786e;
+                        font-size:9px;
+                        font-weight:800;
+                        letter-spacing:.10em;
+                        text-transform:uppercase;
+                      "
+                    >
+                      ${escapeHtml(label)}
+                    </span>
+
+                    <strong
+                      style="
+                        display:block;
+                        margin-top:5px;
+                        color:#fff3e5;
+                        font-size:25px;
+                        letter-spacing:-.035em;
+                      "
+                    >
+                      ${escapeHtml(value)}
+                    </strong>
+
+                    <small
+                      style="
+                        display:block;
+                        margin-top:4px;
+                        color:#8f8479;
+                        font-size:10px;
+                      "
+                    >
+                      ${escapeHtml(sub)}
+                    </small>
+                  </article>
+                `
+              ).join('')}
+            </div>
+          </section>
+
+
+          <section
+            style="
+              margin-top:22px;
+            "
+          >
+            <span
+              style="
+                color:#ff9f43;
+                font-size:10px;
+                font-weight:900;
+                letter-spacing:.14em;
+                text-transform:uppercase;
+              "
+            >
+              RÉPARTITION SBD
+            </span>
+
+            <div
+              style="
+                display:grid;
+                grid-template-columns:
+                  repeat(
+                    3,
+                    minmax(0,1fr)
+                  );
+                gap:9px;
+                margin-top:9px;
+              "
+            >
+              ${[
+                ['SQ', 'Squat'],
+                ['BN', 'Bench'],
+                ['DL', 'Deadlift'],
+              ].map(
+                ([code, label]) => {
+                  const plannedValue =
+                    Number(
+                      plannedMovement[
+                        code
+                      ]
+                    )
+
+                  const plan =
+                    Number.isFinite(
+                      plannedValue
+                    )
+                      ? plannedValue
+                      : actual
+                          .movement[
+                            code
+                          ].planned
+
+                  const done =
+                    actual
+                      .movement[
+                        code
+                      ].done
+
+                  const pct =
+                    plan > 0
+                      ? (
+                          done /
+                          plan *
+                          100
+                        )
+                      : 0
+
+                  return `
+                    <article
+                      style="
+                        padding:13px;
+                        border-radius:13px;
+                        border:
+                          1px solid
+                          rgba(255,255,255,.07);
+                        background:
+                          rgba(255,255,255,.026);
+                      "
+                    >
+                      <span
+                        style="
+                          color:#a28f7b;
+                          font-size:9px;
+                          font-weight:900;
+                        "
+                      >
+                        ${code}
+                      </span>
+
+                      <strong
+                        style="
+                          display:block;
+                          margin-top:3px;
+                          color:#f8eee3;
+                          font-size:15px;
+                        "
+                      >
+                        ${label}
+                      </strong>
+
+                      <div
+                        style="
+                          margin-top:9px;
+                          height:5px;
+                          border-radius:999px;
+                          overflow:hidden;
+                          background:
+                            rgba(255,255,255,.07);
+                        "
+                      >
+                        <div
+                          style="
+                            width:${
+                              Math.min(
+                                100,
+                                Math.max(
+                                  0,
+                                  pct
+                                )
+                              )
+                            }%;
+                            height:100%;
+                            background:#d67a2d;
+                          "
+                        ></div>
+                      </div>
+
+                      <small
+                        style="
+                          display:block;
+                          margin-top:7px;
+                          color:#8d8379;
+                          font-size:10px;
+                        "
+                      >
+                        ${done}/${plan}
+                        séries ·
+                        ${formatOverviewTonnage(
+                          actual
+                            .movement[
+                              code
+                            ].tonnageKg
+                        )}
+                      </small>
+                    </article>
+                  `
+                }
+              ).join('')}
+            </div>
+
+            ${
+              (
+                planned.percentMin !==
+                  undefined ||
+                planned.percentMax !==
+                  undefined ||
+                planned.percentAverage !==
+                  undefined
+              )
+                ? `
+                  <div
+                    style="
+                      display:flex;
+                      gap:16px;
+                      flex-wrap:wrap;
+                      margin-top:10px;
+                      padding:10px 12px;
+                      border-radius:11px;
+                      background:
+                        rgba(255,159,67,.055);
+                      color:#9f9387;
+                      font-size:10px;
+                    "
+                  >
+                    <span>
+                      Intensité min :
+                      <strong
+                        style="
+                          color:#d6c7b6;
+                        "
+                      >
+                        ${formatOverviewPercent(
+                          planned.percentMin
+                        )}
+                      </strong>
+                    </span>
+
+                    <span>
+                      moyenne :
+                      <strong
+                        style="
+                          color:#d6c7b6;
+                        "
+                      >
+                        ${formatOverviewPercent(
+                          planned.percentAverage
+                        )}
+                      </strong>
+                    </span>
+
+                    <span>
+                      max :
+                      <strong
+                        style="
+                          color:#d6c7b6;
+                        "
+                      >
+                        ${formatOverviewPercent(
+                          planned.percentMax
+                        )}
+                      </strong>
+                    </span>
+                  </div>
+                `
+                : ''
+            }
+          </section>
+
+
+          <section
+            style="
+              margin-top:22px;
+            "
+          >
+            <span
+              style="
+                color:#ff9f43;
+                font-size:10px;
+                font-weight:900;
+                letter-spacing:.14em;
+                text-transform:uppercase;
+              "
+            >
+              PROGRESSION PAR SEMAINE
+            </span>
+
+            <div
+              style="
+                display:grid;
+                gap:9px;
+                margin-top:9px;
+              "
+            >
+              ${actual.weeks.map(
+                (
+                  week,
+                  index
+                ) => {
+                  const plannedWeekSets =
+                    Number(
+                      plannedWeeks[
+                        index
+                      ]
+                    )
+
+                  const plan =
+                    Number.isFinite(
+                      plannedWeekSets
+                    )
+                      ? plannedWeekSets
+                      : week.plannedSets
+
+                  const setPct =
+                    plan > 0
+                      ? (
+                          week.doneSets /
+                          plan *
+                          100
+                        )
+                      : 0
+
+                  const tonnagePct =
+                    week.tonnageKg > 0
+                      ? (
+                          week.tonnageKg /
+                          maxWeekTonnage *
+                          100
+                        )
+                      : 0
+
+                  return `
+                    <article
+                      style="
+                        padding:12px 13px;
+                        border-radius:13px;
+                        border:
+                          1px solid
+                          rgba(255,255,255,.07);
+                        background:
+                          rgba(255,255,255,.026);
+                      "
+                    >
+                      <div
+                        style="
+                          display:flex;
+                          justify-content:space-between;
+                          gap:12px;
+                          align-items:baseline;
+                        "
+                      >
+                        <strong
+                          style="
+                            color:#f3e9dd;
+                            font-size:13px;
+                          "
+                        >
+                          ${escapeHtml(
+                            week.label
+                          )}
+                        </strong>
+
+                        <span
+                          style="
+                            color:#958a7f;
+                            font-size:10px;
+                          "
+                        >
+                          ${week.completedSessions}/${week.sessions}
+                          séances ·
+                          ${week.doneSets}/${plan}
+                          séries
+                        </span>
+                      </div>
+
+                      <div
+                        style="
+                          margin-top:8px;
+                          height:6px;
+                          border-radius:999px;
+                          overflow:hidden;
+                          background:
+                            rgba(255,255,255,.06);
+                        "
+                      >
+                        <div
+                          style="
+                            width:${
+                              Math.min(
+                                100,
+                                Math.max(
+                                  0,
+                                  setPct
+                                )
+                              )
+                            }%;
+                            height:100%;
+                            background:#cf7125;
+                          "
+                        ></div>
+                      </div>
+
+                      <div
+                        style="
+                          display:flex;
+                          justify-content:space-between;
+                          gap:12px;
+                          margin-top:7px;
+                          color:#7f776f;
+                          font-size:9px;
+                        "
+                      >
+                        <span>
+                          ${
+                            formatOverviewPercent(
+                              setPct
+                            )
+                          }
+                          réalisé
+                        </span>
+
+                        <span>
+                          Tonnage :
+                          ${formatOverviewTonnage(
+                            week.tonnageKg
+                          )}
+                        </span>
+                      </div>
+
+                      ${
+                        week.tonnageKg > 0
+                          ? `
+                            <div
+                              style="
+                                margin-top:5px;
+                                height:3px;
+                                border-radius:999px;
+                                overflow:hidden;
+                                background:
+                                  rgba(255,255,255,.04);
+                              "
+                            >
+                              <div
+                                style="
+                                  width:${
+                                    Math.min(
+                                      100,
+                                      Math.max(
+                                        0,
+                                        tonnagePct
+                                      )
+                                    )
+                                  }%;
+                                  height:100%;
+                                  background:
+                                    rgba(
+                                      255,
+                                      181,
+                                      95,
+                                      .55
+                                    );
+                                "
+                              ></div>
+                            </div>
+                          `
+                          : ''
+                      }
+                    </article>
+                  `
+                }
+              ).join('')}
+            </div>
+          </section>
+
+
+          ${renderV3OverviewNarrative(
+            overview
+          )}
+
+
+          ${
+            source?.sourceFile ||
+            source?.sourceKey
+              ? `
+                <footer
+                  style="
+                    margin-top:18px;
+                    padding-top:12px;
+                    border-top:
+                      1px solid
+                      rgba(255,255,255,.055);
+                    color:#5f5b56;
+                    font-size:9px;
+                    line-height:1.55;
+                  "
+                >
+                  Source programme :
+                  ${escapeHtml(
+                    source.sourceFile ||
+                    'Supabase'
+                  )}
+                  ${
+                    source.sourceKey
+                      ? ` · ${escapeHtml(
+                          source.sourceKey
+                        )}`
+                      : ''
+                  }
+                </footer>
+              `
+              : ''
+          }
+        </div>
+      </section>
+    `
+  }
+
+
+  function renderV3BlockHistory() {
+    if (v3BlocksLoading) {
+      return `
+        <section
+          class="training-v3-history"
+          style="
+            margin:14px 0 12px;
+            padding:14px;
+            border:1px solid rgba(58,210,128,.35);
+            border-radius:16px;
+            background:linear-gradient(
+              135deg,
+              rgba(16,82,54,.26),
+              rgba(10,22,19,.72)
+            );
+          "
+        >
+          <span
+            style="
+              display:block;
+              color:#61e7a2;
+              font-size:11px;
+              font-weight:900;
+              letter-spacing:.12em;
+              text-transform:uppercase;
+            "
+          >
+            🗂 ANTÉCÉDENTS DE BLOCS
+          </span>
+
+          <div
+            style="
+              margin-top:8px;
+              color:#9db2a7;
+              font-size:12px;
+            "
+          >
+            Chargement des blocs Supabase…
+          </div>
+        </section>
+      `
+    }
+
+    if (v3BlocksError) {
+      return `
+        <section
+          class="training-v3-history"
+          style="
+            margin:14px 0 12px;
+            padding:14px;
+            border:1px solid rgba(255,110,110,.35);
+            border-radius:16px;
+            background:rgba(55,15,15,.35);
+          "
+        >
+          <span
+            style="
+              display:block;
+              color:#ff9f91;
+              font-size:11px;
+              font-weight:900;
+              letter-spacing:.12em;
+              text-transform:uppercase;
+            "
+          >
+            🗂 ANTÉCÉDENTS DE BLOCS
+          </span>
+
+          <div
+            style="
+              margin-top:8px;
+              color:#ffb6ab;
+              font-size:12px;
+            "
+          >
+            ${escapeHtml(v3BlocksError)}
+          </div>
+        </section>
+      `
+    }
+
+    const current =
+      v3ProgramBlocks.find(
+        item =>
+          item.status ===
+          'current'
+      )
+
+    const archived =
+      v3ProgramBlocks.filter(
+        item =>
+          item.status ===
+          'archived'
+      )
+
+    const selectedMeta =
+      v3ProgramBlocks.find(
+        item =>
+          item.block_key ===
+          v3SelectedBlockKey
+      )
+
+    const displayedTitle =
+      selectedMeta?.title ||
+      current?.title ||
+      'Historique des programmations'
+
+    return `
+      <section
+        class="training-v3-history"
+        style="
+          margin:14px 0 12px;
+          padding:14px;
+          border:1px solid rgba(58,210,128,.45);
+          border-radius:16px;
+          background:linear-gradient(
+            135deg,
+            rgba(16,82,54,.32),
+            rgba(10,22,19,.72)
+          );
+          box-shadow:
+            inset 0 0 0 1px rgba(110,255,177,.04);
+        "
+      >
+        <div
+          style="
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:12px;
+            margin-bottom:10px;
+          "
+        >
+          <div>
+            <span
+              style="
+                display:block;
+                color:#61e7a2;
+                font-size:11px;
+                font-weight:900;
+                letter-spacing:.12em;
+                text-transform:uppercase;
+              "
+            >
+              🗂 ANTÉCÉDENTS DE BLOCS
+            </span>
+
+            <strong
+              style="
+                display:block;
+                margin-top:4px;
+                color:#f3fff8;
+                font-size:15px;
+              "
+            >
+              ${escapeHtml(displayedTitle)}
+            </strong>
+          </div>
+
+          ${selectedMeta?.status === 'archived'
+            ? `
+              <span
+                style="
+                  padding:5px 8px;
+                  border-radius:999px;
+                  background:rgba(255,255,255,.08);
+                  color:#bfc9c3;
+                  font-size:10px;
+                  font-weight:800;
+                  text-transform:uppercase;
+                  letter-spacing:.08em;
+                  white-space:nowrap;
+                "
+              >
+                CONSULTATION
+              </span>
+            `
+            : current
+              ? `
+                <span
+                  style="
+                    padding:5px 8px;
+                    border-radius:999px;
+                    background:rgba(39,210,120,.14);
+                    color:#65eca7;
+                    font-size:10px;
+                    font-weight:800;
+                    text-transform:uppercase;
+                    letter-spacing:.08em;
+                    white-space:nowrap;
+                  "
+                >
+                  BLOC ACTUEL
+                </span>
+              `
+              : ''}
+        </div>
+
+        <div
+          style="
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            align-items:center;
+          "
+        >
+          ${current
+            ? `
+              <button
+                type="button"
+                data-action="v3-history-block"
+                data-v3-block-key="${escapeHtml(current.block_key)}"
+                ${
+                  v3SwitchingBlock ||
+                  (
+                    v3SelectedBlockKey ===
+                    current.block_key
+                  )
+                    ? 'disabled'
+                    : ''
+                }
+                style="
+                  cursor:${
+                    v3SelectedBlockKey ===
+                    current.block_key
+                      ? 'default'
+                      : 'pointer'
+                  };
+                  padding:9px 12px;
+                  border-radius:12px;
+                  border:${
+                    v3SelectedBlockKey === current.block_key
+                      ? '1px solid rgba(87,223,155,.80)'
+                      : '1px solid rgba(87,223,155,.35)'
+                  };
+                  background:${
+                    v3SelectedBlockKey === current.block_key
+                      ? 'rgba(43,175,108,.28)'
+                      : 'rgba(43,175,108,.13)'
+                  };
+                  color:#eafff2;
+                  font-size:12px;
+                  font-weight:800;
+                "
+              >
+                ${escapeHtml(current.title)} · actuel
+              </button>
+            `
+            : ''}
+
+          ${archived.length
+            ? archived.map(
+                item => `
+                  <button
+                    type="button"
+                    data-action="v3-history-block"
+                    data-v3-block-key="${escapeHtml(item.block_key)}"
+                    ${v3SwitchingBlock ? 'disabled' : ''}
+                    style="
+                      cursor:pointer;
+                      padding:9px 12px;
+                      border-radius:12px;
+                      border:${
+                        v3SelectedBlockKey === item.block_key
+                          ? '1px solid rgba(87,223,155,.70)'
+                          : '1px solid rgba(255,255,255,.12)'
+                      };
+                      background:${
+                        v3SelectedBlockKey === item.block_key
+                          ? 'rgba(43,175,108,.20)'
+                          : 'rgba(0,0,0,.18)'
+                      };
+                      color:#d9e8e0;
+                      font-size:12px;
+                      font-weight:750;
+                    "
+                  >
+                    ${escapeHtml(item.title)}
+                  </button>
+                `
+              ).join('')
+            : `
+              <span
+                style="
+                  color:#90a39a;
+                  font-size:12px;
+                  padding:8px 2px;
+                "
+              >
+                Aucun bloc précédent pour le moment.
+              </span>
+            `}
+        </div>
+
+        ${v3SwitchingBlock
+          ? `
+            <div
+              style="
+                margin-top:9px;
+                color:#75e4aa;
+                font-size:11px;
+                font-weight:700;
+              "
+            >
+              Chargement du bloc…
+            </div>
+          `
+          : ''}
+
+        ${selectedMeta?.status === 'archived'
+          ? `
+            <div
+              style="
+                margin-top:10px;
+                padding:8px 10px;
+                border-radius:10px;
+                background:rgba(255,255,255,.05);
+                color:#aebbb4;
+                font-size:11px;
+              "
+            >
+              Ancien bloc en lecture seule · aucune série ne peut être modifiée.
+            </div>
+          `
+          : ''}
+      </section>
+    `
+  }
+
 
 /* GA V1.1 SESSION TRACKING CORE V2 */
 
@@ -3057,6 +6263,59 @@ export function mountTraining(
         day
       )
 
+    const trainingBody =
+      showV3Overview
+        ? renderV3Overview()
+        : `
+          ${renderBlocks()}
+
+          ${renderWeeks(
+            week
+          )}
+
+          ${renderDays(
+            week,
+            day
+          )}
+
+          <section
+            class="training-summary"
+          >
+            <span>
+              ${escapeHtml(block.label)}
+              ·
+              ${escapeHtml(week.label)}
+              ·
+              ${escapeHtml(day.name)}
+            </span>
+
+            <strong>
+              ${progress.completed}
+              /
+              ${progress.total}
+              séries
+            </strong>
+          </section>
+
+          ${renderSessionTracking(
+            week,
+            day
+          )}
+
+          <div
+            class="training-exercises"
+          >
+            ${day.exercises.map(
+              (exercise) =>
+                renderExercise(
+                  exercise
+                )
+            ).join('')}
+          </div>
+
+          ${renderBlockSummary()}
+        `
+
     root.innerHTML = `
       <main
         class="training-page"
@@ -3081,7 +6340,7 @@ export function mountTraining(
             <span
               class="training-kicker"
             >
-              GA COACHING · V2
+              GA COACHING · V3
             </span>
 
             <h1>
@@ -3113,52 +6372,11 @@ export function mountTraining(
           ${escapeHtml(syncStatus.label)}
         </div>
 
-        ${renderBlocks()}
+        ${renderV3BlockHistory()}
 
-        ${renderWeeks(
-          week
-        )}
+        ${renderV3OverviewLauncher()}
 
-        ${renderDays(
-          week,
-          day
-        )}
-
-        <section
-          class="training-summary"
-        >
-          <span>
-            ${escapeHtml(block.label)}
-            ·
-            ${escapeHtml(week.label)}
-            ·
-            ${escapeHtml(day.name)}
-          </span>
-
-          <strong>
-            ${progress.completed}
-            /
-            ${progress.total}
-            séries
-          </strong>
-        </section>
-
-        ${renderSessionTracking(
-          week,
-          day
-        )}
-
-        <div
-          class="training-exercises"
-        >
-          ${day.exercises.map(
-            (exercise) =>
-              renderExercise(
-                exercise
-              )
-          ).join('')}
-        </div>
-        ${renderBlockSummary()}
+        ${trainingBody}
 
       </main>
     `
@@ -3270,6 +6488,51 @@ export function mountTraining(
         resetCurrentDay()
       }
 
+      return
+    }
+
+    if (
+      actionName ===
+        'v3-overview-open'
+    ) {
+      showV3Overview = true
+      render()
+
+      void loadV3OverviewPayload({
+        rerender: true,
+        force: false,
+      })
+
+      return
+    }
+
+    if (
+      actionName ===
+        'v3-overview-close'
+    ) {
+      showV3Overview = false
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'v3-overview-retry'
+    ) {
+      void loadV3OverviewPayload({
+        rerender: true,
+        force: true,
+      })
+      return
+    }
+
+    if (
+      actionName ===
+        'v3-history-block'
+    ) {
+      void selectV3ProgramBlock(
+        action.dataset.v3BlockKey
+      )
       return
     }
 
@@ -3990,6 +7253,9 @@ if (
     )
 
   render()
+
+  void hydrateProgramBlocksV3()
+
   void hydrateFromCloud()
   void hydrateSessionsFromCloud()
   void hydrateSbdPrs()
