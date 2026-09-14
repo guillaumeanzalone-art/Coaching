@@ -3855,6 +3855,99 @@ export function mountTraining(
         ''
       ).trim()
 
+    if (
+      athleteTheme?.variant ===
+      'north-strength'
+    ) {
+      const logoImage =
+        String(
+          athleteTheme.logoImage ||
+          ''
+        ).trim()
+
+      const mascotImage =
+        String(
+          athleteTheme.mascotImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Tom Deneuville'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--north"
+          aria-label="Univers The North Strength"
+        >
+          <div
+            class="north-strength-snow"
+            aria-hidden="true"
+          ></div>
+
+          <div class="north-strength-logo-wrap">
+            ${
+              logoImage
+                ? `
+                  <img
+                    class="north-strength-logo"
+                    src="${escapeHtml(logoImage)}"
+                    alt="The North Strength"
+                    width="560"
+                    height="543"
+                  >
+                `
+                : ''
+            }
+          </div>
+
+          <div class="north-strength-copy">
+            <span class="north-strength-eyebrow">
+              Programme polaire
+            </span>
+
+            <h2>
+              ${escapeHtml(athleteName)}
+            </h2>
+
+            <blockquote>
+              ${escapeHtml(quote)}
+            </blockquote>
+
+            ${
+              cite
+                ? `
+                  <cite>
+                    ${escapeHtml(cite)}
+                  </cite>
+                `
+                : ''
+            }
+          </div>
+
+          ${
+            mascotImage
+              ? `
+                <img
+                  class="north-strength-mascot"
+                  src="${escapeHtml(mascotImage)}"
+                  alt="Ours polaire du thème de Tom"
+                  width="250"
+                  height="251"
+                >
+              `
+              : ''
+          }
+
+          <div
+            class="north-strength-ridge"
+            aria-hidden="true"
+          ></div>
+        </section>
+      `
+    }
     if (!quote) {
       return ''
     }
@@ -6319,7 +6412,7 @@ export function mountTraining(
     root.innerHTML = `
       <main
         class="training-page"
-        data-athlete-theme
+        data-athlete-theme="${escapeHtml(cloudAthleteSlug)}"
         style="${escapeHtml(
           athleteThemeStyle(
             athleteTheme
@@ -6340,7 +6433,10 @@ export function mountTraining(
             <span
               class="training-kicker"
             >
-              GA COACHING · V3
+              ${escapeHtml(
+                athleteTheme?.headerKicker ||
+                'GA COACHING · V3'
+              )}
             </span>
 
             <h1>
