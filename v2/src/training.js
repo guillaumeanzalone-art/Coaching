@@ -4052,6 +4052,143 @@ export function mountTraining(
       `
     }
 
+    if (
+      athleteTheme?.variant ===
+      'storm-king'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const rivalImage =
+        String(
+          athleteTheme.rivalImage ||
+          ''
+        ).trim()
+
+      const legacyImage =
+        String(
+          athleteTheme.legacyImage ||
+          ''
+        ).trim()
+
+      const crestImage =
+        String(
+          athleteTheme.crestImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Jolan'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--jolan"
+          aria-label="Univers du Roi des Tempêtes de Jolan"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="jolan-storm-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Guerrier du royaume des tempêtes"
+                  width="1200"
+                  height="675"
+                >
+              `
+              : ''
+          }
+
+          <div class="jolan-storm-overlay" aria-hidden="true"></div>
+          <div class="jolan-storm-lightning" aria-hidden="true"></div>
+
+          <div class="jolan-storm-copy">
+            <span class="jolan-storm-eyebrow">
+              Royaume des Tempêtes
+            </span>
+
+            <h2>
+              ${escapeHtml(athleteName)}
+            </h2>
+
+            <blockquote>
+              ${escapeHtml(quote)}
+            </blockquote>
+
+            ${
+              cite
+                ? `
+                  <cite>
+                    ${escapeHtml(cite)}
+                  </cite>
+                `
+                : ''
+            }
+
+            <div class="jolan-storm-pillars" aria-label="Valeurs du thème">
+              <span>Liberté</span>
+              <span>Maîtrise</span>
+              <span>Héritage</span>
+            </div>
+          </div>
+
+          ${
+            rivalImage
+              ? `
+                <figure class="jolan-rival-card">
+                  <img
+                    src="${escapeHtml(rivalImage)}"
+                    alt="Épéiste du vent"
+                    width="474"
+                    height="842"
+                  >
+                  <figcaption>La lame du vent</figcaption>
+                </figure>
+              `
+              : ''
+          }
+
+          ${
+            legacyImage
+              ? `
+                <figure class="jolan-legacy-card">
+                  <img
+                    src="${escapeHtml(legacyImage)}"
+                    alt="Héritage royal dans la savane"
+                    width="1200"
+                    height="686"
+                  >
+                  <figcaption>L’héritage du royaume</figcaption>
+                </figure>
+              `
+              : ''
+          }
+
+          ${
+            crestImage
+              ? `
+                <div class="jolan-crest-card">
+                  <img
+                    src="${escapeHtml(crestImage)}"
+                    alt="Signature Foncia"
+                    width="400"
+                    height="400"
+                  >
+                  <span>Signature du royaume</span>
+                </div>
+              `
+              : ''
+          }
+        </section>
+      `
+    }
+
     if (!quote) {
       return ''
     }

@@ -2540,3 +2540,518 @@ body {
     animation: none;
   }
 }
+
+
+/* JOLAN STORM KING THEME V1 */
+.training-page[data-athlete-theme="jolan"] {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(3, 5, 22, .50) 0%, rgba(4, 9, 30, .91) 520px, #06091a 1050px),
+    var(--athlete-theme-background-image) right top / auto 820px no-repeat,
+    #06091a;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 30px 80px rgba(0, 0, 0, .45);
+}
+
+.training-page[data-athlete-theme="jolan"]::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  opacity: .34;
+  background:
+    radial-gradient(circle at 84% 9%, rgba(127, 229, 255, .40), transparent 23%),
+    radial-gradient(circle at 12% 34%, rgba(138, 91, 255, .27), transparent 28%),
+    linear-gradient(118deg, transparent 0 49.6%, rgba(114, 225, 255, .40) 49.8% 50%, transparent 50.2%) 0 0 / 220px 340px,
+    radial-gradient(circle, rgba(214, 243, 255, .76) 0 1px, transparent 1.6px) 0 0 / 57px 57px;
+  mask-image: linear-gradient(180deg, #000 0, rgba(0, 0, 0, .68) 680px, transparent 1220px);
+}
+
+.training-page[data-athlete-theme="jolan"] .training-topbar {
+  position: relative;
+  z-index: 3;
+  padding: 14px 16px;
+  border: 1px solid rgba(116, 218, 255, .34);
+  border-radius: 18px;
+  background: linear-gradient(125deg, rgba(7, 12, 36, .94), rgba(22, 34, 78, .84));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 18px 46px rgba(0, 2, 15, .43);
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="jolan"] .training-topbar h1 {
+  color: #fff;
+  text-shadow: 0 0 22px rgba(92, 211, 255, .38), 0 3px 11px rgba(0, 0, 0, .45);
+}
+
+.training-page[data-athlete-theme="jolan"] .training-kicker {
+  color: #86e4ff;
+}
+
+.training-page[data-athlete-theme="jolan"] .back-button,
+.training-page[data-athlete-theme="jolan"] .reset-button {
+  min-height: 44px;
+  border-color: rgba(115, 218, 255, .30);
+  background: rgba(10, 19, 51, .88);
+  color: #e6f8ff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.training-page[data-athlete-theme="jolan"] .back-button:hover,
+.training-page[data-athlete-theme="jolan"] .reset-button:hover {
+  border-color: rgba(238, 210, 112, .66);
+  background: rgba(27, 42, 91, .94);
+  color: #fff4bd;
+}
+
+.athlete-theme-banner--jolan {
+  position: relative;
+  min-height: 344px;
+  margin: 0 0 18px;
+  overflow: hidden;
+  border: 1px solid rgba(115, 224, 255, .46);
+  border-radius: 26px;
+  background: #080d27;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .13),
+    0 26px 65px rgba(0, 1, 14, .54),
+    0 0 42px rgba(60, 135, 255, .11);
+}
+
+.jolan-storm-hero {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 37%;
+  filter: saturate(.93) contrast(1.05) brightness(.78);
+}
+
+.jolan-storm-overlay {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(3, 6, 24, .98) 0%, rgba(5, 10, 31, .92) 34%, rgba(7, 11, 34, .42) 65%, rgba(3, 6, 20, .16) 100%),
+    linear-gradient(0deg, rgba(3, 6, 21, .92) 0%, transparent 46%);
+}
+
+.jolan-storm-lightning {
+  position: absolute;
+  z-index: 2;
+  inset: -30% 38% -30% auto;
+  width: 5px;
+  pointer-events: none;
+  opacity: .70;
+  background: linear-gradient(180deg, transparent, #efffff 18%, #67ddff 31%, transparent 45%, #fff 61%, #a277ff 74%, transparent);
+  box-shadow: 0 0 8px #fff, 0 0 24px #59cfff, 0 0 52px rgba(120, 82, 255, .72);
+  transform: rotate(21deg);
+  clip-path: polygon(45% 0, 100% 0, 62% 43%, 100% 43%, 0 100%, 34% 54%, 0 54%);
+  animation: jolan-lightning-pulse 5s ease-in-out infinite;
+}
+
+.jolan-storm-copy {
+  position: relative;
+  z-index: 4;
+  width: min(56%, 530px);
+  padding: 50px 32px 28px;
+}
+
+.jolan-storm-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 11px;
+  color: #87e7ff;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.jolan-storm-eyebrow::before {
+  content: "";
+  width: 27px;
+  height: 1px;
+  background: #f4d96d;
+  box-shadow: 0 0 8px rgba(244, 217, 109, .72);
+}
+
+.jolan-storm-copy h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(33px, 5.3vw, 58px);
+  font-weight: 950;
+  line-height: .88;
+  letter-spacing: -.06em;
+  text-transform: uppercase;
+  text-shadow: 0 0 26px rgba(83, 206, 255, .25), 0 5px 18px rgba(0, 0, 0, .58);
+}
+
+.jolan-storm-copy blockquote {
+  max-width: 440px;
+  margin: 17px 0 0;
+  color: #e9f6ff;
+  font-family: inherit;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 680;
+  line-height: 1.48;
+}
+
+.jolan-storm-copy cite {
+  display: block;
+  margin-top: 9px;
+  color: #f2d874;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.jolan-storm-pillars {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 18px;
+}
+
+.jolan-storm-pillars span {
+  padding: 6px 10px;
+  border: 1px solid rgba(113, 221, 255, .34);
+  border-radius: 999px;
+  background: rgba(15, 30, 72, .76);
+  color: #dff8ff;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.jolan-rival-card,
+.jolan-legacy-card {
+  position: absolute;
+  z-index: 5;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(132, 223, 255, .50);
+  background: #0a1230;
+  box-shadow: 0 14px 34px rgba(0, 0, 12, .58), inset 0 1px 0 rgba(255, 255, 255, .11);
+}
+
+.jolan-rival-card {
+  top: 22px;
+  right: 24px;
+  width: 118px;
+  border-radius: 18px 18px 7px 18px;
+  transform: rotate(2deg);
+}
+
+.jolan-rival-card img {
+  display: block;
+  width: 100%;
+  height: 154px;
+  object-fit: cover;
+  object-position: center 24%;
+}
+
+.jolan-legacy-card {
+  right: 37px;
+  bottom: 18px;
+  width: 226px;
+  border-color: rgba(245, 210, 102, .48);
+  border-radius: 7px 18px 18px 18px;
+  transform: rotate(-1deg);
+}
+
+.jolan-legacy-card img {
+  display: block;
+  width: 100%;
+  height: 92px;
+  object-fit: cover;
+  object-position: center 46%;
+}
+
+.jolan-rival-card figcaption,
+.jolan-legacy-card figcaption {
+  padding: 6px 8px 7px;
+  color: #dff7ff;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .11em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.jolan-legacy-card figcaption {
+  color: #f5de86;
+}
+
+.jolan-crest-card {
+  position: absolute;
+  z-index: 6;
+  right: 157px;
+  top: 24px;
+  display: grid;
+  grid-template-columns: 39px auto;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 9px 5px 5px;
+  border: 1px solid rgba(132, 219, 255, .46);
+  border-radius: 999px;
+  background: rgba(248, 252, 255, .94);
+  box-shadow: 0 8px 22px rgba(0, 0, 13, .38);
+}
+
+.jolan-crest-card img {
+  display: block;
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.jolan-crest-card span {
+  max-width: 62px;
+  color: #0b4274;
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.training-page[data-athlete-theme="jolan"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="jolan"] .training-v3-history,
+.training-page[data-athlete-theme="jolan"] .training-v3-overview,
+.training-page[data-athlete-theme="jolan"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="jolan"] .training-session-v11,
+.training-page[data-athlete-theme="jolan"] .training-block-report-v11,
+.training-page[data-athlete-theme="jolan"] .training-summary {
+  border-color: rgba(112, 211, 255, .20) !important;
+  background: linear-gradient(145deg, rgba(9, 16, 43, .95), rgba(15, 26, 63, .90)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 16px 42px rgba(0, 1, 15, .37);
+  -webkit-backdrop-filter: blur(11px);
+  backdrop-filter: blur(11px);
+}
+
+.training-page[data-athlete-theme="jolan"] .week-tab,
+.training-page[data-athlete-theme="jolan"] .day-tab-v2 {
+  border-color: rgba(103, 204, 244, .20);
+  background: rgba(8, 16, 44, .88);
+  color: #adbad9;
+}
+
+.training-page[data-athlete-theme="jolan"] .week-tab strong,
+.training-page[data-athlete-theme="jolan"] .day-tab-v2 strong {
+  color: #e8f6ff;
+}
+
+.training-page[data-athlete-theme="jolan"] .week-tab--active,
+.training-page[data-athlete-theme="jolan"] .day-tab-v2--active {
+  border-color: #70defe;
+  background: linear-gradient(135deg, rgba(60, 153, 232, .43), rgba(78, 50, 156, .46));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 7px 22px rgba(0, 11, 34, .40), 0 0 22px rgba(82, 202, 255, .11);
+}
+
+.training-page[data-athlete-theme="jolan"] .training-exercise {
+  border-color: rgba(105, 207, 247, .20);
+  background: rgba(7, 13, 37, .95);
+  box-shadow: 0 20px 50px rgba(0, 1, 15, .40);
+}
+
+.training-page[data-athlete-theme="jolan"] .exercise-header {
+  border-bottom-color: rgba(106, 211, 251, .17);
+  background: linear-gradient(110deg, rgba(21, 38, 88, .96), rgba(9, 18, 48, .98));
+}
+
+.training-page[data-athlete-theme="jolan"] .exercise-type {
+  border-color: rgba(117, 222, 255, .57);
+  background: rgba(85, 207, 255, .11);
+  color: #bcefff;
+  box-shadow: 0 0 14px rgba(80, 201, 255, .09);
+}
+
+.training-page[data-athlete-theme="jolan"] .training-set {
+  border-color: rgba(108, 211, 251, .13);
+  background: rgba(16, 28, 66, .72);
+}
+
+.training-page[data-athlete-theme="jolan"] .set-load,
+.training-page[data-athlete-theme="jolan"] .set-rpe,
+.training-page[data-athlete-theme="jolan"] .training-session-v11__note,
+.training-page[data-athlete-theme="jolan"] .training-session-v11__metrics label > div {
+  border-color: rgba(111, 215, 255, .22);
+  background: rgba(7, 15, 41, .88);
+  color: #f7fcff;
+}
+
+.training-page[data-athlete-theme="jolan"] .set-load:focus,
+.training-page[data-athlete-theme="jolan"] .set-rpe:focus,
+.training-page[data-athlete-theme="jolan"] .training-session-v11__note:focus {
+  border-color: #78e2ff;
+  box-shadow: 0 0 0 3px rgba(101, 221, 255, .11);
+}
+
+.training-page[data-athlete-theme="jolan"] .training-sync {
+  border-color: rgba(111, 217, 255, .20);
+  background: rgba(7, 16, 43, .89);
+}
+
+@keyframes jolan-lightning-pulse {
+  0%, 45%, 100% { opacity: .25; filter: brightness(.85); }
+  48% { opacity: .95; filter: brightness(1.55); }
+  51% { opacity: .42; filter: brightness(1); }
+  54% { opacity: .82; filter: brightness(1.34); }
+}
+
+@media (max-width: 760px) {
+  .training-page[data-athlete-theme="jolan"] {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 22, .55) 0%, rgba(4, 9, 30, .94) 480px, #06091a 850px),
+      var(--athlete-theme-background-image) 80% top / auto 690px no-repeat,
+      #06091a;
+  }
+
+  .athlete-theme-banner--jolan {
+    min-height: 324px;
+  }
+
+  .jolan-storm-copy {
+    width: 62%;
+    padding: 48px 22px 24px;
+  }
+
+  .jolan-storm-copy h2 {
+    font-size: clamp(31px, 7vw, 46px);
+  }
+
+  .jolan-rival-card {
+    right: 14px;
+    width: 99px;
+  }
+
+  .jolan-rival-card img {
+    height: 132px;
+  }
+
+  .jolan-legacy-card {
+    right: 18px;
+    width: 185px;
+  }
+
+  .jolan-legacy-card img {
+    height: 76px;
+  }
+
+  .jolan-crest-card {
+    right: 124px;
+  }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="jolan"] .training-topbar {
+    padding: 12px;
+  }
+
+  .athlete-theme-banner--jolan {
+    min-height: 430px;
+    border-radius: 21px;
+  }
+
+  .jolan-storm-hero {
+    object-position: 58% center;
+  }
+
+  .jolan-storm-overlay {
+    background:
+      linear-gradient(180deg, rgba(3, 6, 23, .93) 0%, rgba(4, 8, 28, .74) 52%, rgba(3, 6, 21, .97) 100%),
+      linear-gradient(90deg, rgba(3, 6, 24, .76), transparent 84%);
+  }
+
+  .jolan-storm-copy {
+    width: 100%;
+    padding: 47px 18px 20px;
+  }
+
+  .jolan-storm-copy blockquote {
+    max-width: 285px;
+    font-size: 11px;
+  }
+
+  .jolan-storm-pillars {
+    margin-top: 13px;
+  }
+
+  .jolan-rival-card {
+    top: 188px;
+    right: 12px;
+    width: 86px;
+  }
+
+  .jolan-rival-card img {
+    height: 111px;
+  }
+
+  .jolan-legacy-card {
+    right: 65px;
+    bottom: 12px;
+    left: 15px;
+    width: auto;
+  }
+
+  .jolan-legacy-card img {
+    height: 78px;
+  }
+
+  .jolan-crest-card {
+    top: auto;
+    right: 10px;
+    bottom: 18px;
+    grid-template-columns: 34px;
+    padding: 4px;
+  }
+
+  .jolan-crest-card img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .jolan-crest-card span {
+    display: none;
+  }
+
+  .jolan-storm-lightning {
+    right: 27%;
+  }
+}
+
+@media (max-width: 380px) {
+  .jolan-storm-copy h2 {
+    font-size: 34px;
+  }
+
+  .jolan-storm-pillars span {
+    padding: 5px 7px;
+    font-size: 7px;
+  }
+
+  .jolan-rival-card {
+    top: 205px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jolan-storm-lightning {
+    animation: none;
+  }
+}
