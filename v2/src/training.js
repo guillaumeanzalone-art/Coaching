@@ -4189,6 +4189,81 @@ export function mountTraining(
       `
     }
 
+    if (
+      athleteTheme?.variant ===
+      'mew-dream'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Flop'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--flop-mew"
+          aria-label="Univers kawaii de Mew pour Flop"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="flop-mew-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Flop et son équipe réunis dans le royaume de Mew"
+                  width="1599"
+                  height="900"
+                >
+              `
+              : ''
+          }
+
+          <div class="flop-mew-vignette" aria-hidden="true"></div>
+
+          <div class="flop-mew-sparkles" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <div class="flop-mew-copy">
+            <span class="flop-mew-eyebrow">
+              Le Royaume de Mew
+            </span>
+
+            <h2>
+              ${escapeHtml(athleteName)}
+              <small>& son équipe</small>
+            </h2>
+
+            <blockquote>
+              ${escapeHtml(quote)}
+            </blockquote>
+
+            ${
+              cite
+                ? `
+                  <cite>
+                    ${escapeHtml(cite)}
+                  </cite>
+                `
+                : ''
+            }
+
+            <div class="flop-mew-badges" aria-label="Valeurs du thème">
+              <span>Amitié</span>
+              <span>Focus</span>
+              <span>Évolution</span>
+            </div>
+          </div>
+        </section>
+      `
+    }
+
     if (!quote) {
       return ''
     }

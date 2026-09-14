@@ -3055,3 +3055,414 @@ body {
     animation: none;
   }
 }
+
+
+/* FLOP MEW DREAM THEME V1 */
+.training-page[data-athlete-theme="flop"] {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(21, 25, 72, .44) 0%, rgba(25, 30, 83, .88) 580px, #151a43 1120px),
+    var(--athlete-theme-background-image) center top / 1320px auto no-repeat,
+    #151a43;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 30px 80px rgba(8, 7, 35, .38);
+}
+
+.training-page[data-athlete-theme="flop"]::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  opacity: .48;
+  background-image:
+    radial-gradient(circle at center, rgba(255, 255, 255, .92) 0 1px, transparent 1.8px),
+    radial-gradient(circle at center, rgba(255, 205, 241, .82) 0 1.3px, transparent 2px),
+    radial-gradient(circle at center, rgba(176, 228, 255, .78) 0 2px, transparent 2.8px);
+  background-position: 0 0, 31px 44px, 71px 19px;
+  background-size: 73px 73px, 107px 107px, 149px 149px;
+  mask-image: linear-gradient(180deg, #000 0, rgba(0, 0, 0, .66) 760px, transparent 1350px);
+}
+
+.training-page[data-athlete-theme="flop"] .training-topbar {
+  position: relative;
+  z-index: 3;
+  padding: 14px 16px;
+  border: 1px solid rgba(245, 219, 255, .49);
+  border-radius: 24px;
+  background: linear-gradient(128deg, rgba(50, 55, 127, .82), rgba(123, 102, 177, .57));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24), 0 18px 45px rgba(14, 10, 55, .32);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.training-page[data-athlete-theme="flop"] .training-topbar h1 {
+  color: #fff;
+  text-shadow: 0 3px 16px rgba(34, 25, 89, .42), 0 0 22px rgba(255, 189, 233, .21);
+}
+
+.training-page[data-athlete-theme="flop"] .training-kicker {
+  color: #ffd6f2;
+}
+
+.training-page[data-athlete-theme="flop"] .back-button,
+.training-page[data-athlete-theme="flop"] .reset-button {
+  min-height: 44px;
+  border-color: rgba(250, 219, 255, .52);
+  border-radius: 15px;
+  background: rgba(56, 61, 137, .74);
+  color: #fff7fd;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 7px 18px rgba(20, 13, 67, .21);
+}
+
+.training-page[data-athlete-theme="flop"] .back-button:hover,
+.training-page[data-athlete-theme="flop"] .reset-button:hover {
+  border-color: rgba(255, 239, 250, .82);
+  background: rgba(181, 117, 194, .72);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.athlete-theme-banner--flop-mew {
+  position: relative;
+  min-height: 478px;
+  margin: 0 0 20px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 226, 252, .70);
+  border-radius: 34px;
+  background: #b9c8fa;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .52),
+    0 28px 68px rgba(15, 10, 67, .40),
+    0 0 48px rgba(246, 165, 224, .16);
+}
+
+.flop-mew-hero {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: saturate(.98) contrast(1.01);
+}
+
+.flop-mew-vignette {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(31, 28, 87, .67) 0%, rgba(40, 34, 96, .28) 36%, transparent 58%),
+    linear-gradient(0deg, rgba(28, 24, 80, .70) 0%, transparent 43%),
+    radial-gradient(circle at 50% 20%, transparent 25%, rgba(36, 25, 86, .09) 100%);
+}
+
+.flop-mew-copy {
+  position: absolute;
+  z-index: 4;
+  left: 24px;
+  bottom: 24px;
+  width: min(42%, 405px);
+  padding: 19px 21px 18px;
+  border: 1px solid rgba(255, 237, 253, .67);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(42, 43, 112, .84), rgba(112, 79, 151, .63));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24), 0 16px 40px rgba(24, 15, 73, .31);
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+}
+
+.flop-mew-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  color: #ffd9f2;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .19em;
+  text-transform: uppercase;
+}
+
+.flop-mew-eyebrow::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffb8e4;
+  box-shadow: 0 0 0 4px rgba(255, 184, 228, .13), 0 0 15px rgba(255, 200, 236, .76);
+}
+
+.flop-mew-copy h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(31px, 5vw, 49px);
+  font-weight: 950;
+  line-height: .88;
+  letter-spacing: -.055em;
+  text-shadow: 0 4px 18px rgba(29, 20, 78, .48);
+}
+
+.flop-mew-copy h2 small {
+  display: block;
+  margin-top: 8px;
+  color: #ffe3f6;
+  font-size: .38em;
+  font-weight: 850;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+.flop-mew-copy blockquote {
+  margin: 13px 0 0;
+  color: #f8f2ff;
+  font-family: inherit;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 660;
+  line-height: 1.46;
+}
+
+.flop-mew-copy cite {
+  display: block;
+  margin-top: 8px;
+  color: #fff0ad;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.flop-mew-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 13px;
+}
+
+.flop-mew-badges span {
+  padding: 5px 9px;
+  border: 1px solid rgba(255, 232, 250, .54);
+  border-radius: 999px;
+  background: rgba(234, 171, 224, .22);
+  color: #fff8fe;
+  font-size: 7px;
+  font-weight: 950;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.flop-mew-sparkles {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+}
+
+.flop-mew-sparkles span {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: #fff;
+  box-shadow: 0 0 14px #fff, 0 0 24px rgba(255, 190, 232, .78);
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+  animation: flop-mew-twinkle 3.8s ease-in-out infinite;
+}
+
+.flop-mew-sparkles span:nth-child(1) { top: 10%; left: 11%; animation-delay: 0s; }
+.flop-mew-sparkles span:nth-child(2) { top: 19%; right: 12%; width: 13px; height: 13px; animation-delay: .7s; }
+.flop-mew-sparkles span:nth-child(3) { top: 42%; left: 48%; width: 7px; height: 7px; animation-delay: 1.3s; }
+.flop-mew-sparkles span:nth-child(4) { right: 28%; bottom: 17%; animation-delay: 2s; }
+.flop-mew-sparkles span:nth-child(5) { left: 34%; bottom: 9%; width: 6px; height: 6px; animation-delay: 2.8s; }
+
+.training-page[data-athlete-theme="flop"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="flop"] .training-v3-history,
+.training-page[data-athlete-theme="flop"] .training-v3-overview,
+.training-page[data-athlete-theme="flop"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="flop"] .training-session-v11,
+.training-page[data-athlete-theme="flop"] .training-block-report-v11,
+.training-page[data-athlete-theme="flop"] .training-summary {
+  border-color: rgba(239, 216, 255, .30) !important;
+  border-radius: 22px !important;
+  background: linear-gradient(145deg, rgba(42, 50, 115, .91), rgba(62, 61, 130, .82)) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 16px 40px rgba(11, 10, 51, .27);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.training-page[data-athlete-theme="flop"] .week-tab,
+.training-page[data-athlete-theme="flop"] .day-tab-v2 {
+  border-color: rgba(235, 211, 255, .25);
+  border-radius: 15px;
+  background: rgba(37, 44, 106, .82);
+  color: #d3cfeb;
+}
+
+.training-page[data-athlete-theme="flop"] .week-tab strong,
+.training-page[data-athlete-theme="flop"] .day-tab-v2 strong {
+  color: #fff7ff;
+}
+
+.training-page[data-athlete-theme="flop"] .week-tab--active,
+.training-page[data-athlete-theme="flop"] .day-tab-v2--active {
+  border-color: rgba(255, 220, 247, .78);
+  background: linear-gradient(135deg, rgba(246, 157, 214, .64), rgba(135, 146, 236, .62));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 9px 24px rgba(25, 17, 77, .30), 0 0 22px rgba(247, 168, 223, .14);
+}
+
+.training-page[data-athlete-theme="flop"] .training-exercise {
+  border-color: rgba(239, 213, 255, .26);
+  border-radius: 22px;
+  background: rgba(32, 39, 96, .92);
+  box-shadow: 0 19px 46px rgba(12, 10, 52, .30);
+}
+
+.training-page[data-athlete-theme="flop"] .exercise-header {
+  border-bottom-color: rgba(243, 217, 255, .20);
+  border-radius: 21px 21px 0 0;
+  background: linear-gradient(110deg, rgba(96, 88, 170, .91), rgba(50, 54, 126, .95));
+}
+
+.training-page[data-athlete-theme="flop"] .exercise-type {
+  border-color: rgba(255, 220, 247, .69);
+  background: rgba(247, 164, 218, .16);
+  color: #ffe1f5;
+}
+
+.training-page[data-athlete-theme="flop"] .training-set {
+  border-color: rgba(237, 215, 255, .16);
+  border-radius: 16px;
+  background: rgba(64, 68, 139, .58);
+}
+
+.training-page[data-athlete-theme="flop"] .set-load,
+.training-page[data-athlete-theme="flop"] .set-rpe,
+.training-page[data-athlete-theme="flop"] .training-session-v11__note,
+.training-page[data-athlete-theme="flop"] .training-session-v11__metrics label > div {
+  border-color: rgba(244, 217, 255, .28);
+  border-radius: 13px;
+  background: rgba(31, 38, 94, .80);
+  color: #fffaff;
+}
+
+.training-page[data-athlete-theme="flop"] .set-load:focus,
+.training-page[data-athlete-theme="flop"] .set-rpe:focus,
+.training-page[data-athlete-theme="flop"] .training-session-v11__note:focus {
+  border-color: #f6b4df;
+  box-shadow: 0 0 0 3px rgba(245, 169, 221, .14);
+}
+
+.training-page[data-athlete-theme="flop"] .training-sync {
+  border-color: rgba(240, 214, 255, .27);
+  border-radius: 13px;
+  background: rgba(33, 42, 101, .81);
+}
+
+@keyframes flop-mew-twinkle {
+  0%, 100% { opacity: .30; transform: scale(.65) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.18) rotate(45deg); }
+}
+
+@media (max-width: 760px) {
+  .training-page[data-athlete-theme="flop"] {
+    background:
+      linear-gradient(180deg, rgba(21, 25, 72, .43) 0%, rgba(25, 30, 83, .91) 520px, #151a43 900px),
+      var(--athlete-theme-background-image) center top / auto 690px no-repeat,
+      #151a43;
+  }
+
+  .athlete-theme-banner--flop-mew {
+    min-height: 420px;
+  }
+
+  .flop-mew-copy {
+    left: 16px;
+    bottom: 16px;
+    width: min(48%, 350px);
+    padding: 16px;
+  }
+
+  .flop-mew-copy blockquote {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="flop"] .training-topbar {
+    padding: 12px;
+  }
+
+  .athlete-theme-banner--flop-mew {
+    min-height: 430px;
+    border-radius: 25px;
+  }
+
+  .flop-mew-hero {
+    object-position: 50% center;
+  }
+
+  .flop-mew-vignette {
+    background:
+      linear-gradient(0deg, rgba(31, 25, 86, .88) 0%, rgba(36, 28, 94, .26) 54%, transparent 77%),
+      radial-gradient(circle at 50% 19%, transparent 24%, rgba(35, 26, 87, .10) 100%);
+  }
+
+  .flop-mew-copy {
+    right: 13px;
+    bottom: 13px;
+    left: 13px;
+    width: auto;
+    padding: 14px 15px;
+    border-radius: 19px;
+  }
+
+  .flop-mew-copy h2 {
+    font-size: 32px;
+  }
+
+  .flop-mew-copy h2 small {
+    display: inline;
+    margin: 0 0 0 5px;
+    font-size: 12px;
+  }
+
+  .flop-mew-copy blockquote {
+    max-width: 310px;
+    margin-top: 9px;
+  }
+
+  .flop-mew-badges {
+    margin-top: 9px;
+  }
+
+  .flop-mew-badges span {
+    padding: 4px 7px;
+    font-size: 6px;
+  }
+}
+
+@media (max-width: 380px) {
+  .athlete-theme-banner--flop-mew {
+    min-height: 404px;
+  }
+
+  .flop-mew-copy blockquote {
+    display: none;
+  }
+
+  .flop-mew-copy cite {
+    margin-top: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flop-mew-sparkles span {
+    animation: none;
+  }
+}
