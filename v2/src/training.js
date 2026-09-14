@@ -3948,6 +3948,110 @@ export function mountTraining(
         </section>
       `
     }
+
+    if (
+      athleteTheme?.variant ===
+      'lego-magicarpe'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const sceneImage =
+        String(
+          athleteTheme.sceneImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Clara Magiclarpe'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--magicarpe"
+          aria-label="Univers LEGO et Magicarpe de Clara"
+        >
+          <div
+            class="magicarpe-bubbles"
+            aria-hidden="true"
+          >
+            <span></span><span></span><span></span><span></span>
+          </div>
+
+          <div class="magicarpe-lego-bricks" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <div class="magicarpe-theme-copy">
+            <span class="magicarpe-theme-eyebrow">
+              Brick Splash Training
+            </span>
+
+            <h2>
+              ${escapeHtml(athleteName)}
+            </h2>
+
+            <blockquote>
+              ${escapeHtml(quote)}
+            </blockquote>
+
+            ${
+              cite
+                ? `
+                  <cite>
+                    ${escapeHtml(cite)}
+                  </cite>
+                `
+                : ''
+            }
+
+            <div class="magicarpe-theme-badges" aria-label="Objectifs du thème">
+              <span>Construire</span>
+              <span>Progresser</span>
+              <span>Évoluer</span>
+            </div>
+          </div>
+
+          ${
+            heroImage
+              ? `
+                <div class="magicarpe-hero-wrap">
+                  <img
+                    class="magicarpe-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Magicarpe, mascotte du programme de Clara"
+                    width="960"
+                    height="540"
+                  >
+                </div>
+              `
+              : ''
+          }
+
+          ${
+            sceneImage
+              ? `
+                <figure class="magicarpe-fishing-card">
+                  <img
+                    src="${escapeHtml(sceneImage)}"
+                    alt="Scène de pêche Pokémon au bord de l’eau"
+                    width="474"
+                    height="266"
+                  >
+                  <figcaption>Quête du jour</figcaption>
+                </figure>
+              `
+              : ''
+          }
+        </section>
+      `
+    }
+
     if (!quote) {
       return ''
     }

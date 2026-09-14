@@ -1966,3 +1966,577 @@ body {
     animation: none;
   }
 }
+
+
+/* CLARA MAGICLARPE LEGO SPLASH THEME V1 */
+.training-page[data-athlete-theme="magicarpe"] {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(3, 31, 52, .52) 0%, rgba(4, 42, 66, .89) 430px, #061e31 980px),
+    var(--athlete-theme-background-image) center top / cover fixed no-repeat,
+    #061e31;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .12),
+    0 30px 80px rgba(0, 0, 0, .38);
+}
+
+.training-page[data-athlete-theme="magicarpe"]::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  opacity: .20;
+  background-image:
+    radial-gradient(circle at center, rgba(255, 255, 255, .78) 0 4px, rgba(4, 68, 102, .42) 4.5px 7px, transparent 7.5px),
+    linear-gradient(rgba(21, 176, 224, .18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(21, 176, 224, .18) 1px, transparent 1px);
+  background-position: 0 0, 0 0, 0 0;
+  background-size: 44px 44px, 88px 44px, 44px 44px;
+  mask-image: linear-gradient(180deg, #000 0, rgba(0, 0, 0, .58) 700px, transparent 1200px);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .training-topbar {
+  position: relative;
+  z-index: 3;
+  padding: 14px 16px;
+  border: 3px solid #092c43;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #15b9ec, #087bab);
+  box-shadow:
+    inset 0 3px 0 rgba(255, 255, 255, .32),
+    6px 7px 0 rgba(2, 20, 34, .62);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .training-topbar::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  right: 96px;
+  left: 96px;
+  height: 9px;
+  pointer-events: none;
+  background: radial-gradient(circle at center, #ffd637 0 4px, #ab7800 4.5px 6px, transparent 6.5px) 0 0 / 30px 9px repeat-x;
+}
+
+.training-page[data-athlete-theme="magicarpe"] .training-topbar h1 {
+  color: #fff;
+  letter-spacing: -.025em;
+  text-shadow: 0 3px 0 #075275, 0 6px 14px rgba(0, 0, 0, .22);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .training-kicker {
+  color: #ffed87;
+  text-shadow: 0 2px 0 rgba(111, 70, 0, .54);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .back-button,
+.training-page[data-athlete-theme="magicarpe"] .reset-button {
+  min-height: 44px;
+  border: 2px solid #6c310c;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #ff8b35, #ef5315);
+  color: #fffbea;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .30), 3px 4px 0 rgba(80, 30, 4, .46);
+  text-shadow: 0 2px 0 rgba(110, 43, 5, .55);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .back-button:hover,
+.training-page[data-athlete-theme="magicarpe"] .reset-button:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(180deg, #ff9e4e, #ff6420);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .38), 4px 5px 0 rgba(80, 30, 4, .50);
+}
+
+.athlete-theme-banner--magicarpe {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(290px, 42%);
+  align-items: stretch;
+  min-height: 292px;
+  margin: 0 0 18px;
+  padding: 28px;
+  overflow: hidden;
+  border: 4px solid #082c43;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 78% 28%, rgba(255, 229, 74, .33), transparent 27%),
+    linear-gradient(125deg, rgba(5, 97, 139, .98), rgba(7, 174, 221, .94) 52%, rgba(255, 106, 26, .91));
+  box-shadow:
+    inset 0 4px 0 rgba(255, 255, 255, .25),
+    8px 10px 0 rgba(1, 19, 33, .57),
+    0 24px 55px rgba(0, 10, 20, .32);
+}
+
+.athlete-theme-banner--magicarpe::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .48;
+  background:
+    linear-gradient(135deg, transparent 0 48%, rgba(255, 255, 255, .10) 48% 50%, transparent 50%) 0 0 / 42px 42px,
+    radial-gradient(ellipse at 50% 115%, rgba(0, 62, 100, .76), transparent 58%);
+}
+
+.magicarpe-theme-copy {
+  position: relative;
+  z-index: 3;
+  align-self: center;
+  max-width: 510px;
+  padding: 22px 22px 20px;
+  border: 3px solid #072b43;
+  border-radius: 9px;
+  background: rgba(4, 43, 68, .88);
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .12), 6px 7px 0 rgba(3, 25, 39, .42);
+}
+
+.magicarpe-theme-eyebrow {
+  display: inline-block;
+  margin-bottom: 9px;
+  padding: 6px 9px;
+  border: 2px solid #8d6200;
+  border-radius: 5px;
+  background: #ffd637;
+  color: #443000;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .15em;
+  line-height: 1;
+  text-transform: uppercase;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .50), 3px 3px 0 rgba(56, 39, 0, .36);
+}
+
+.magicarpe-theme-copy h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(27px, 4.5vw, 46px);
+  font-weight: 950;
+  line-height: .94;
+  letter-spacing: -.055em;
+  text-transform: uppercase;
+  text-shadow: 0 4px 0 #06334c, 0 9px 18px rgba(0, 0, 0, .31);
+}
+
+.magicarpe-theme-copy blockquote {
+  max-width: 440px;
+  margin: 15px 0 0;
+  color: #e8f9ff;
+  font-family: inherit;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 720;
+  line-height: 1.48;
+}
+
+.magicarpe-theme-copy cite {
+  display: block;
+  margin-top: 8px;
+  color: #ffdf55;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 950;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.magicarpe-theme-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 17px;
+}
+
+.magicarpe-theme-badges span {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 29px;
+  padding: 5px 10px 5px 22px;
+  border: 2px solid rgba(3, 28, 44, .84);
+  border-radius: 5px;
+  background: #ff6a1a;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .28), 3px 3px 0 rgba(2, 25, 40, .45);
+}
+
+.magicarpe-theme-badges span::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid rgba(105, 40, 4, .55);
+  border-radius: 50%;
+  background: #ff9b57;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45);
+}
+
+.magicarpe-hero-wrap {
+  position: relative;
+  z-index: 2;
+  align-self: center;
+  min-height: 230px;
+  margin: 10px -52px 0 -34px;
+  overflow: hidden;
+  border: 4px solid #07304a;
+  border-radius: 10px;
+  background: #13aee2;
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, .23), 7px 8px 0 rgba(2, 24, 39, .49);
+  transform: rotate(2deg);
+}
+
+.magicarpe-hero {
+  display: block;
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  object-position: 52% center;
+}
+
+.magicarpe-fishing-card {
+  position: absolute;
+  z-index: 4;
+  right: 18px;
+  bottom: 16px;
+  width: 148px;
+  margin: 0;
+  overflow: hidden;
+  border: 3px solid #6d3906;
+  border-radius: 7px;
+  background: #ffd637;
+  box-shadow: 5px 6px 0 rgba(2, 23, 37, .54);
+  transform: rotate(-3deg);
+}
+
+.magicarpe-fishing-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.magicarpe-fishing-card figcaption {
+  padding: 5px 7px 6px;
+  color: #503500;
+  font-size: 8px;
+  font-weight: 950;
+  letter-spacing: .1em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.magicarpe-lego-bricks {
+  position: absolute;
+  z-index: 5;
+  top: 12px;
+  left: 14px;
+  display: flex;
+  gap: 5px;
+}
+
+.magicarpe-lego-bricks span {
+  position: relative;
+  width: 34px;
+  height: 16px;
+  border: 2px solid #6d3307;
+  border-radius: 3px;
+  background: #ff6a1a;
+  box-shadow: 2px 3px 0 rgba(4, 37, 56, .48);
+}
+
+.magicarpe-lego-bricks span:nth-child(even) {
+  border-color: #806000;
+  background: #ffd637;
+}
+
+.magicarpe-lego-bricks span::before,
+.magicarpe-lego-bricks span::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  width: 8px;
+  height: 6px;
+  border: 1px solid currentColor;
+  border-radius: 3px 3px 0 0;
+  background: inherit;
+}
+
+.magicarpe-lego-bricks span::before {
+  left: 5px;
+}
+
+.magicarpe-lego-bricks span::after {
+  right: 5px;
+}
+
+.magicarpe-bubbles {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+}
+
+.magicarpe-bubbles span {
+  position: absolute;
+  bottom: -30px;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(225, 249, 255, .65);
+  border-radius: 50%;
+  box-shadow: inset 3px 3px 0 rgba(255, 255, 255, .22);
+  animation: magicarpe-bubble-rise 9s ease-in infinite;
+}
+
+.magicarpe-bubbles span:nth-child(1) { left: 46%; animation-delay: 0s; }
+.magicarpe-bubbles span:nth-child(2) { left: 58%; width: 12px; height: 12px; animation-delay: 2s; }
+.magicarpe-bubbles span:nth-child(3) { left: 84%; width: 28px; height: 28px; animation-delay: 4s; }
+.magicarpe-bubbles span:nth-child(4) { left: 72%; width: 16px; height: 16px; animation-delay: 6s; }
+
+.training-page[data-athlete-theme="magicarpe"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="magicarpe"] .training-v3-history,
+.training-page[data-athlete-theme="magicarpe"] .training-v3-overview,
+.training-page[data-athlete-theme="magicarpe"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="magicarpe"] .training-session-v11,
+.training-page[data-athlete-theme="magicarpe"] .training-block-report-v11,
+.training-page[data-athlete-theme="magicarpe"] .training-summary {
+  border: 3px solid rgba(5, 48, 72, .88) !important;
+  border-radius: 10px !important;
+  background: linear-gradient(145deg, rgba(8, 60, 86, .95), rgba(6, 41, 65, .94)) !important;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .07), 5px 6px 0 rgba(1, 19, 31, .40);
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .week-tab,
+.training-page[data-athlete-theme="magicarpe"] .day-tab-v2 {
+  border: 2px solid #06334e;
+  border-radius: 7px;
+  background: rgba(5, 49, 74, .93);
+  color: #c6e8f4;
+  box-shadow: 3px 4px 0 rgba(1, 20, 32, .34);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .week-tab strong,
+.training-page[data-athlete-theme="magicarpe"] .day-tab-v2 strong {
+  color: #f3fcff;
+}
+
+.training-page[data-athlete-theme="magicarpe"] .week-tab--active,
+.training-page[data-athlete-theme="magicarpe"] .day-tab-v2--active {
+  border-color: #7e3d0c;
+  background: linear-gradient(180deg, #ff8c39, #f35a16);
+  color: #fff;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .28), 4px 5px 0 rgba(79, 30, 3, .42);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .training-exercise {
+  border: 3px solid rgba(4, 48, 73, .96);
+  border-radius: 10px;
+  background: rgba(5, 40, 63, .96);
+  box-shadow: 6px 7px 0 rgba(1, 18, 29, .40);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .exercise-header {
+  border-bottom: 3px solid rgba(4, 50, 76, .94);
+  background: linear-gradient(110deg, rgba(10, 128, 170, .96), rgba(7, 76, 108, .98));
+}
+
+.training-page[data-athlete-theme="magicarpe"] .exercise-type {
+  border: 2px solid #8c6500;
+  border-radius: 5px;
+  background: #ffd637;
+  color: #473200;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, .48), 2px 3px 0 rgba(43, 30, 0, .28);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .training-set {
+  border-color: rgba(29, 179, 224, .22);
+  background: rgba(9, 70, 98, .68);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .set-load,
+.training-page[data-athlete-theme="magicarpe"] .set-rpe,
+.training-page[data-athlete-theme="magicarpe"] .training-session-v11__note,
+.training-page[data-athlete-theme="magicarpe"] .training-session-v11__metrics label > div {
+  border: 2px solid rgba(27, 173, 217, .38);
+  border-radius: 6px;
+  background: rgba(4, 43, 67, .90);
+  color: #fff;
+}
+
+.training-page[data-athlete-theme="magicarpe"] .set-load:focus,
+.training-page[data-athlete-theme="magicarpe"] .set-rpe:focus,
+.training-page[data-athlete-theme="magicarpe"] .training-session-v11__note:focus {
+  border-color: #ffd637;
+  box-shadow: 0 0 0 3px rgba(255, 214, 55, .17);
+}
+
+.training-page[data-athlete-theme="magicarpe"] .training-sync {
+  border: 2px solid rgba(42, 194, 232, .28);
+  border-radius: 6px;
+  background: rgba(4, 47, 72, .90);
+}
+
+@keyframes magicarpe-bubble-rise {
+  0% {
+    transform: translate3d(0, 0, 0) scale(.55);
+    opacity: 0;
+  }
+
+  18% {
+    opacity: .72;
+  }
+
+  100% {
+    transform: translate3d(28px, -350px, 0) scale(1.2);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .training-page[data-athlete-theme="magicarpe"] {
+    background:
+      linear-gradient(180deg, rgba(3, 31, 52, .50) 0%, rgba(4, 42, 66, .94) 430px, #061e31 820px),
+      var(--athlete-theme-background-image) center top / auto 720px no-repeat,
+      #061e31;
+  }
+
+  .athlete-theme-banner--magicarpe {
+    grid-template-columns: minmax(0, 1fr) minmax(210px, 40%);
+    min-height: 250px;
+    padding: 22px 18px;
+  }
+
+  .magicarpe-theme-copy {
+    padding: 18px 16px;
+  }
+
+  .magicarpe-theme-copy blockquote {
+    font-size: 11px;
+  }
+
+  .magicarpe-theme-badges span {
+    padding-left: 19px;
+    font-size: 8px;
+  }
+
+  .magicarpe-hero-wrap {
+    min-height: 190px;
+    margin-right: -42px;
+  }
+
+  .magicarpe-hero {
+    height: 190px;
+  }
+
+  .magicarpe-fishing-card {
+    width: 118px;
+  }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="magicarpe"] .training-topbar {
+    padding: 12px;
+  }
+
+  .training-page[data-athlete-theme="magicarpe"] .training-topbar::after {
+    right: 70px;
+    left: 70px;
+  }
+
+  .athlete-theme-banner--magicarpe {
+    display: block;
+    min-height: 430px;
+    padding: 44px 14px 14px;
+    border-width: 3px;
+    box-shadow: inset 0 3px 0 rgba(255, 255, 255, .23), 5px 7px 0 rgba(1, 19, 33, .55);
+  }
+
+  .magicarpe-theme-copy {
+    z-index: 4;
+    width: calc(100% - 24px);
+    padding: 15px;
+  }
+
+  .magicarpe-theme-copy h2 {
+    font-size: clamp(25px, 9vw, 37px);
+  }
+
+  .magicarpe-theme-copy blockquote {
+    max-width: 260px;
+    margin-top: 10px;
+  }
+
+  .magicarpe-theme-badges {
+    gap: 5px;
+    margin-top: 12px;
+  }
+
+  .magicarpe-theme-badges span {
+    min-height: 25px;
+    padding: 4px 7px 4px 18px;
+    font-size: 7px;
+  }
+
+  .magicarpe-theme-badges span::before {
+    left: 6px;
+    width: 7px;
+    height: 7px;
+  }
+
+  .magicarpe-hero-wrap {
+    position: absolute;
+    right: -22px;
+    bottom: 13px;
+    left: 42px;
+    min-height: 188px;
+    margin: 0;
+    transform: rotate(1deg);
+  }
+
+  .magicarpe-hero {
+    height: 188px;
+  }
+
+  .magicarpe-fishing-card {
+    right: 9px;
+    bottom: 8px;
+    width: 106px;
+  }
+
+  .magicarpe-lego-bricks span {
+    width: 27px;
+  }
+}
+
+@media (max-width: 380px) {
+  .magicarpe-theme-copy {
+    width: calc(100% - 10px);
+  }
+
+  .magicarpe-theme-copy blockquote {
+    max-width: 225px;
+  }
+
+  .magicarpe-theme-badges span:last-child {
+    display: none;
+  }
+
+  .magicarpe-hero-wrap {
+    left: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magicarpe-bubbles span {
+    animation: none;
+  }
+}
