@@ -14,7 +14,46 @@ const PROGRAM_LOADERS = {
   "hugo": () => import('./programs/hugo.js'),
   "janel": () => import('./programs/janel.js'),
   "jolan": () => import('./programs/jolan.js'),
-  "jonathan": () => import('./programs/jonathan.js'),
+  "jonathan": async () => {
+    const [
+      baseModule,
+      block2Module,
+    ] = await Promise.all([
+      import('./programs/jonathan.js'),
+      import('./programs/jonathan-block2.js'),
+    ])
+
+    const baseProgram =
+      baseModule.default ?? null
+
+    const block2 =
+      block2Module.default ?? null
+
+    if (!baseProgram || !block2) {
+      return {
+        default: baseProgram,
+      }
+    }
+
+    const previousBlocks =
+      Array.isArray(baseProgram.blocks)
+        ? baseProgram.blocks.filter(
+            (item) =>
+              item?.id !== block2.id
+          )
+        : []
+
+    return {
+      default: {
+        ...baseProgram,
+        defaultBlockId: block2.id,
+        blocks: [
+          ...previousBlocks,
+          block2,
+        ],
+      },
+    }
+  },
   "kaoutar": () => import('./programs/kaoutar.js'),
   "killian": () => import('./programs/killian.js'),
   "lou": () => import('./programs/lou.js'),
