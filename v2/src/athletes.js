@@ -60,6 +60,16 @@ export const athletes = [
     "cloudSlug": "magicarpe"
   },
   {
+    "id": "clemence",
+    "name": "Clémence Camilli",
+    "emoji": "✨",
+    "bodyWeight": 69.0,
+    "profileImage": "avatar-clemence.png",
+    "programKey": "clemence",
+    "blockCount": 1,
+    "cloudSlug": "clemence"
+  },
+  {
     "id": "clemosaurus",
     "name": "Clemosaurus",
     "emoji": "🦖",
