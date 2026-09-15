@@ -4,8 +4,73 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <link rel="stylesheet" href="/theme-ls-native.css?v=4" />
+    <link rel="stylesheet" href="/theme-ls-native.css?v=16" />
     <title>L'araignée Coaching</title>
+
+    <style id="ga-ls-v16-critical">
+      /*
+       * V16 — couche critique Louis / Sarah.
+       * On neutralise les anciens pseudo-elements et toutes les anciennes
+       * regles qui pouvaient masquer les enfants de la bannière.
+       * La spécificité est volontairement très forte.
+       */
+      html body .training-page[data-athlete-theme="louis"] .athlete-theme-banner::before,
+      html body .training-page[data-athlete-theme="louis"] .athlete-theme-banner::after,
+      html body .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::before,
+      html body .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::after {
+        content: none !important;
+        display: none !important;
+        background: none !important;
+        opacity: 0 !important;
+      }
+
+      html body .training-page[data-athlete-theme="louis"] .athlete-theme-banner > .ga-ls-hero-image,
+      html body .training-page[data-athlete-theme="sarah"] .athlete-theme-banner > .ga-ls-hero-image {
+        display: block !important;
+        position: absolute !important;
+        z-index: 1000 !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        max-height: none !important;
+        object-fit: cover !important;
+        object-position: center center !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        mix-blend-mode: normal !important;
+        pointer-events: none !important;
+        border: 0 !important;
+        border-radius: inherit !important;
+      }
+
+      html body .training-page[data-athlete-theme="louis"] .athlete-theme-banner > .ga-ls-overlay,
+      html body .training-page[data-athlete-theme="sarah"] .athlete-theme-banner > .ga-ls-overlay {
+        display: block !important;
+        position: absolute !important;
+        z-index: 1001 !important;
+        inset: 0 !important;
+        pointer-events: none !important;
+        border-radius: inherit !important;
+      }
+
+      html body .training-page[data-athlete-theme="louis"] .athlete-theme-banner > .ga-ls-light,
+      html body .training-page[data-athlete-theme="sarah"] .athlete-theme-banner > .ga-ls-light {
+        display: block !important;
+        position: absolute !important;
+        z-index: 1002 !important;
+        pointer-events: none !important;
+      }
+
+      html body .training-page[data-athlete-theme="louis"] .athlete-theme-banner > .ga-ls-name,
+      html body .training-page[data-athlete-theme="sarah"] .athlete-theme-banner > .ga-ls-name {
+        display: block !important;
+        position: absolute !important;
+        z-index: 1003 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>
@@ -14,34 +79,39 @@
     <script>
       (() => {
         /*
-         * HERO LOADER V15 — Louis + Sarah
+         * HERO LOADER V16 — Louis + Sarah
          *
-         * On ne donne plus directement le chemin du fichier a <img>.
-         * Le navigateur recupere d'abord les octets avec fetch(), verifie
-         * leur vrai format, puis construit une source affichable.
+         * V15 a prouvé dans la console que Louis est bien téléchargé et
+         * décodé en 1800x720. Le problème restant est donc le rendu / stacking,
+         * pas le chemin du fichier.
          *
-         * Cela couvre les deux cas presents dans le repo :
-         * - Louis : vrai fichier WEBP binaire ;
-         * - Sarah : JPEG stocke sous forme de texte base64 (/9j/...).
-         *
-         * L'URL est d'abord resolue depuis theme-ls-native.css, dont on sait
-         * qu'il est charge, afin que localhost, GitHub Pages et Capacitor
-         * utilisent tous la meme base publique.
+         * V16 force le rendu à deux niveaux :
+         * 1) vraie balise <img> au-dessus de toutes les anciennes couches ;
+         * 2) la même source est aussi appliquée comme background inline
+         *    !important de la bannière. Même si une vieille règle cache l'img,
+         *    l'art reste visible.
          */
+
         const HEROES = {
           louis: {
             name: 'LOUIS',
-            asset: 'themes/louis/louis-fusion.webp?v=15',
+            asset: 'themes/louis/louis-fusion.webp?v=16',
             alt: 'Univers personnalisé de Louis',
+            filter: 'brightness(1.34) saturate(1.16) contrast(1.06)',
           },
           sarah: {
             name: 'SARAH',
-            asset: 'themes/sarah/sarah-fusion.jpg?v=15',
+            asset: 'themes/sarah/sarah-fusion.jpg?v=16',
             alt: 'Univers personnalisé de Sarah',
+            filter: 'brightness(1.28) saturate(1.12) contrast(1.05)',
           },
         };
 
         const objectUrls = new WeakMap();
+
+        function forceStyle(node, property, value) {
+          node.style.setProperty(property, value, 'important');
+        }
 
         function unique(values) {
           return [...new Set(values.filter(Boolean))];
@@ -54,8 +124,6 @@
           const themeLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
             .find((link) => String(link.href || '').includes('theme-ls-native.css'));
 
-          /* Le CSS est visible sur la page : sa base est donc notre source
-             de verite pour retrouver public/. */
           if (themeLink?.href) {
             try {
               candidates.push(new URL(clean, themeLink.href).href);
@@ -70,7 +138,6 @@
             candidates.push(new URL(clean, document.baseURI).href);
           } catch {}
 
-          /* GitHub Pages / sous-dossier projet. */
           try {
             const firstPathPart = window.location.pathname
               .split('/')
@@ -91,12 +158,7 @@
         }
 
         function bytesAreJpeg(bytes) {
-          return (
-            bytes.length >= 3 &&
-            bytes[0] === 0xff &&
-            bytes[1] === 0xd8 &&
-            bytes[2] === 0xff
-          );
+          return bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
         }
 
         function bytesArePng(bytes) {
@@ -116,9 +178,7 @@
         }
 
         async function fetchRenderableSource(url) {
-          const response = await fetch(url, {
-            cache: 'no-store',
-          });
+          const response = await fetch(url, { cache: 'no-store' });
 
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}`);
@@ -133,9 +193,7 @@
 
           if (bytesAreWebp(bytes)) {
             return {
-              src: URL.createObjectURL(
-                new Blob([buffer], { type: 'image/webp' })
-              ),
+              src: URL.createObjectURL(new Blob([buffer], { type: 'image/webp' })),
               objectUrl: true,
               format: 'webp-binary',
             };
@@ -143,9 +201,7 @@
 
           if (bytesAreJpeg(bytes)) {
             return {
-              src: URL.createObjectURL(
-                new Blob([buffer], { type: 'image/jpeg' })
-              ),
+              src: URL.createObjectURL(new Blob([buffer], { type: 'image/jpeg' })),
               objectUrl: true,
               format: 'jpeg-binary',
             };
@@ -153,16 +209,12 @@
 
           if (bytesArePng(bytes)) {
             return {
-              src: URL.createObjectURL(
-                new Blob([buffer], { type: 'image/png' })
-              ),
+              src: URL.createObjectURL(new Blob([buffer], { type: 'image/png' })),
               objectUrl: true,
               format: 'png-binary',
             };
           }
 
-          /* Certains assets historiques ont ete commits comme texte base64
-             au lieu de vrais fichiers binaires. Sarah est dans ce cas. */
           const text = new TextDecoder()
             .decode(buffer)
             .replace(/\s+/g, '')
@@ -192,32 +244,28 @@
             };
           }
 
-          throw new Error(
-            `format inconnu (${response.headers.get('content-type') || 'sans content-type'})`
-          );
+          throw new Error('format image inconnu');
         }
 
-        function displaySource(image, source) {
+        function decodeIntoImage(image, source) {
           return new Promise((resolve, reject) => {
+            const cleanup = () => {
+              image.removeEventListener('load', onLoad);
+              image.removeEventListener('error', onError);
+            };
+
             const onLoad = () => {
               cleanup();
-
               if (!image.naturalWidth || !image.naturalHeight) {
-                reject(new Error('image chargee sans dimensions'));
+                reject(new Error('image sans dimensions'));
                 return;
               }
-
               resolve();
             };
 
             const onError = () => {
               cleanup();
-              reject(new Error('le decodeur image du navigateur a refuse la source'));
-            };
-
-            const cleanup = () => {
-              image.removeEventListener('load', onLoad);
-              image.removeEventListener('error', onError);
+              reject(new Error('decodeur navigateur: erreur image'));
             };
 
             image.addEventListener('load', onLoad);
@@ -226,81 +274,33 @@
           });
         }
 
-        async function loadHeroImage(image, page, slug, config) {
-          const candidates = assetCandidates(config.asset);
-          const failures = [];
-
-          for (const candidate of candidates) {
-            let source = null;
-
-            try {
-              source = await fetchRenderableSource(candidate);
-              await displaySource(image, source);
-
-              const previousObjectUrl = objectUrls.get(image);
-              if (previousObjectUrl && previousObjectUrl !== source.src) {
-                URL.revokeObjectURL(previousObjectUrl);
-              }
-
-              if (source.objectUrl) {
-                objectUrls.set(image, source.src);
-              } else {
-                objectUrls.delete(image);
-              }
-
-              page.dataset.gaHeroLoaded = slug;
-              page.dataset.gaHeroFormat = source.format;
-              page.removeAttribute('data-ga-hero-error');
-
-              console.info(
-                `[GA HERO V15] ${slug} OK`,
-                `${image.naturalWidth}x${image.naturalHeight}`,
-                source.format,
-                candidate
-              );
-
-              return true;
-            } catch (error) {
-              if (source?.objectUrl && source.src) {
-                URL.revokeObjectURL(source.src);
-              }
-
-              failures.push(`${candidate} -> ${error?.message || error}`);
-              console.warn(
-                `[GA HERO V15] ${slug} candidat refuse`,
-                candidate,
-                error
-              );
-            }
-          }
-
-          page.dataset.gaHeroError = slug;
-          console.error(
-            `[GA HERO V15] ${slug}: aucun candidat n'a pu etre affiche`,
-            failures
-          );
-
-          return false;
+        function forceBannerGeometry(banner) {
+          forceStyle(banner, 'position', 'relative');
+          forceStyle(banner, 'isolation', 'isolate');
+          forceStyle(banner, 'overflow', 'hidden');
+          forceStyle(banner, 'padding', '0');
         }
 
-        async function mountHero(page, slug, config) {
-          const banner = page.querySelector('.athlete-theme-banner');
-          if (!banner) return;
+        function forceImageGeometry(image, config) {
+          forceStyle(image, 'display', 'block');
+          forceStyle(image, 'position', 'absolute');
+          forceStyle(image, 'z-index', '1000');
+          forceStyle(image, 'inset', '0');
+          forceStyle(image, 'width', '100%');
+          forceStyle(image, 'height', '100%');
+          forceStyle(image, 'max-width', 'none');
+          forceStyle(image, 'max-height', 'none');
+          forceStyle(image, 'object-fit', 'cover');
+          forceStyle(image, 'object-position', 'center center');
+          forceStyle(image, 'opacity', '1');
+          forceStyle(image, 'visibility', 'visible');
+          forceStyle(image, 'mix-blend-mode', 'normal');
+          forceStyle(image, 'filter', config.filter);
+          forceStyle(image, 'pointer-events', 'none');
+          forceStyle(image, 'border-radius', 'inherit');
+        }
 
-          if (banner.dataset.gaNativeHero === slug) return;
-          if (banner.dataset.gaHeroMounting === slug) return;
-
-          banner.dataset.gaHeroMounting = slug;
-          banner.classList.add('athlete-theme-banner--ga-native');
-          banner.innerHTML = '';
-
-          const image = document.createElement('img');
-          image.className = 'ga-ls-hero-image';
-          image.alt = config.alt;
-          image.decoding = 'async';
-          image.loading = 'eager';
-          image.draggable = false;
-
+        function installVisualLayers(banner, config) {
           const overlay = document.createElement('div');
           overlay.className = 'ga-ls-overlay';
           overlay.setAttribute('aria-hidden', 'true');
@@ -313,25 +313,144 @@
           name.className = 'ga-ls-name';
           name.textContent = config.name;
 
-          banner.append(image, overlay, light, name);
+          banner.append(overlay, light, name);
+        }
 
-          const success = await loadHeroImage(
-            image,
-            page,
-            slug,
-            config
-          );
+        function imageStats(image) {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = 48;
+            canvas.height = 20;
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+            let sum = 0;
+            let count = 0;
+            let min = 255;
+            let max = 0;
+
+            for (let i = 0; i < pixels.length; i += 4) {
+              const luminance = 0.2126 * pixels[i] + 0.7152 * pixels[i + 1] + 0.0722 * pixels[i + 2];
+              sum += luminance;
+              min = Math.min(min, luminance);
+              max = Math.max(max, luminance);
+              count += 1;
+            }
+
+            return {
+              average: Math.round(sum / Math.max(1, count)),
+              min: Math.round(min),
+              max: Math.round(max),
+            };
+          } catch {
+            return null;
+          }
+        }
+
+        async function loadHeroImage(image, banner, page, slug, config) {
+          const failures = [];
+
+          for (const candidate of assetCandidates(config.asset)) {
+            let source = null;
+
+            try {
+              source = await fetchRenderableSource(candidate);
+              await decodeIntoImage(image, source);
+
+              const previousObjectUrl = objectUrls.get(image);
+              if (previousObjectUrl && previousObjectUrl !== source.src) {
+                URL.revokeObjectURL(previousObjectUrl);
+              }
+
+              if (source.objectUrl) {
+                objectUrls.set(image, source.src);
+              } else {
+                objectUrls.delete(image);
+              }
+
+              /*
+               * DOUBLE RENDU : la même image est aussi posée comme background
+               * inline !important. Cela contourne définitivement un éventuel
+               * display:none/z-index hérité d'un ancien thème.
+               */
+              forceStyle(banner, 'background-image', `url("${source.src}")`);
+              forceStyle(banner, 'background-size', 'cover');
+              forceStyle(banner, 'background-position', 'center center');
+              forceStyle(banner, 'background-repeat', 'no-repeat');
+
+              forceImageGeometry(image, config);
+
+              page.dataset.gaHeroLoaded = slug;
+              page.dataset.gaHeroFormat = source.format;
+              page.removeAttribute('data-ga-hero-error');
+
+              const computed = getComputedStyle(image);
+              const rect = image.getBoundingClientRect();
+              const stats = imageStats(image);
+
+              console.info(
+                `[GA HERO V16] ${slug} OK`,
+                `${image.naturalWidth}x${image.naturalHeight}`,
+                source.format,
+                `display=${computed.display}`,
+                `opacity=${computed.opacity}`,
+                `z=${computed.zIndex}`,
+                `box=${Math.round(rect.width)}x${Math.round(rect.height)}`,
+                stats ? `lum=${stats.average} (${stats.min}-${stats.max})` : 'lum=n/a',
+                candidate
+              );
+
+              return true;
+            } catch (error) {
+              if (source?.objectUrl && source.src) {
+                URL.revokeObjectURL(source.src);
+              }
+
+              failures.push(`${candidate} -> ${error?.message || error}`);
+            }
+          }
+
+          page.dataset.gaHeroError = slug;
+          console.error(`[GA HERO V16] ${slug} ECHEC`, failures);
+          return false;
+        }
+
+        async function mountHero(page, slug, config) {
+          const banner = page.querySelector('.athlete-theme-banner');
+          if (!banner) return;
+
+          if (banner.dataset.gaNativeHero === slug) {
+            const existingImage = banner.querySelector('.ga-ls-hero-image');
+            if (existingImage) {
+              forceBannerGeometry(banner);
+              forceImageGeometry(existingImage, config);
+            }
+            return;
+          }
+
+          if (banner.dataset.gaHeroMounting === slug) return;
+          banner.dataset.gaHeroMounting = slug;
+
+          forceBannerGeometry(banner);
+          banner.classList.add('athlete-theme-banner--ga-native');
+          banner.innerHTML = '';
+
+          const image = document.createElement('img');
+          image.className = 'ga-ls-hero-image';
+          image.alt = config.alt;
+          image.decoding = 'async';
+          image.loading = 'eager';
+          image.draggable = false;
+
+          forceImageGeometry(image, config);
+          banner.append(image);
+          installVisualLayers(banner, config);
+
+          const success = await loadHeroImage(image, banner, page, slug, config);
 
           if (success) {
             banner.dataset.gaNativeHero = slug;
-            banner.removeAttribute('data-ga-hero-retry');
-          } else {
-            const retry = Number(banner.dataset.gaHeroRetry || 0) + 1;
-            banner.dataset.gaHeroRetry = String(retry);
-
-            if (retry <= 2) {
-              window.setTimeout(scheduleMount, retry * 900);
-            }
           }
 
           banner.removeAttribute('data-ga-hero-mounting');
