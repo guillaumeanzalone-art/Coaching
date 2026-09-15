@@ -1,0 +1,252 @@
+/* =========================================================
+   LOUIS + SARAH — NATIVE HERO THEMES V1
+   Same principle as Jolan / Clara: a REAL <img> child lives
+   inside .athlete-theme-banner. No background-image asset,
+   no base64 loader, no pseudo-element used as the photo.
+   ========================================================= */
+
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner,
+.training-page[data-athlete-theme="sarah"] .athlete-theme-banner {
+  position: relative !important;
+  isolation: isolate !important;
+  display: block !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  height: auto !important;
+  aspect-ratio: 5 / 2 !important;
+  margin: 0 0 20px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  outline: 0 !important;
+  border-radius: 28px !important;
+  background: #07141b !important;
+  box-shadow:
+    0 28px 72px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+
+/* Cancel generic quote banner content only for these two themes. */
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner > *,
+.training-page[data-athlete-theme="sarah"] .athlete-theme-banner > * {
+  box-sizing: border-box;
+}
+
+/* ---------------------------------------------------------
+   REAL IMAGE — exactly like the working Jolan structure
+   --------------------------------------------------------- */
+.training-page[data-athlete-theme="louis"] .ga-ls-hero-image,
+.training-page[data-athlete-theme="sarah"] .ga-ls-hero-image {
+  position: absolute !important;
+  z-index: 1 !important;
+  inset: -3% !important;
+  display: block !important;
+  width: 106% !important;
+  height: 106% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  border: 0 !important;
+  border-radius: inherit !important;
+  transform-origin: 50% 50%;
+  will-change: transform, filter;
+}
+
+.training-page[data-athlete-theme="louis"] .ga-ls-hero-image {
+  filter: saturate(1.08) contrast(1.035) brightness(1.02);
+  animation: ga-louis-image-drift 12s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="sarah"] .ga-ls-hero-image {
+  filter: saturate(1.07) contrast(1.03) brightness(1.02);
+  animation: ga-sarah-image-drift 12.5s ease-in-out infinite alternate;
+}
+
+/* ---------------------------------------------------------
+   CINEMATIC OVERLAY
+   --------------------------------------------------------- */
+.ga-ls-overlay {
+  position: absolute !important;
+  z-index: 2 !important;
+  inset: 0 !important;
+  display: block !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+}
+
+.training-page[data-athlete-theme="louis"] .ga-ls-overlay {
+  background:
+    linear-gradient(180deg, rgba(2,9,12,.04) 0%, transparent 48%, rgba(2,10,13,.22) 100%),
+    radial-gradient(circle at 52% 48%, rgba(158,255,82,.10), transparent 42%);
+}
+
+.training-page[data-athlete-theme="sarah"] .ga-ls-overlay {
+  background:
+    linear-gradient(180deg, rgba(4,6,17,.03) 0%, transparent 48%, rgba(4,6,17,.26) 100%),
+    radial-gradient(circle at 46% 48%, rgba(89,193,255,.10), transparent 38%),
+    radial-gradient(circle at 72% 48%, rgba(255,66,103,.10), transparent 42%);
+}
+
+/* ---------------------------------------------------------
+   MOVING LIGHT
+   --------------------------------------------------------- */
+.ga-ls-light {
+  position: absolute !important;
+  z-index: 3 !important;
+  top: -18% !important;
+  bottom: -18% !important;
+  left: -42% !important;
+  width: 28% !important;
+  display: block !important;
+  pointer-events: none !important;
+  transform: skewX(-18deg);
+  opacity: .72;
+}
+
+.training-page[data-athlete-theme="louis"] .ga-ls-light {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(191,255,128,.08),
+    rgba(229,255,198,.34),
+    rgba(103,235,255,.18),
+    transparent
+  );
+  filter: blur(8px);
+  animation: ga-louis-light 5.8s ease-in-out infinite;
+}
+
+.training-page[data-athlete-theme="sarah"] .ga-ls-light {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(87,194,255,.10),
+    rgba(255,239,205,.34),
+    rgba(255,73,112,.19),
+    transparent
+  );
+  filter: blur(8px);
+  animation: ga-sarah-light 6.1s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------
+   NAME — only the athlete name, like requested
+   --------------------------------------------------------- */
+.ga-ls-name {
+  position: absolute !important;
+  z-index: 5 !important;
+  left: 50% !important;
+  bottom: 5.2% !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: translateX(-50%);
+  pointer-events: none !important;
+  white-space: nowrap;
+  font-family: "Arial Black", "Trebuchet MS", system-ui, sans-serif;
+  font-size: clamp(48px, 8.7vw, 88px) !important;
+  font-weight: 950 !important;
+  line-height: .88 !important;
+  letter-spacing: -.065em !important;
+  text-transform: uppercase;
+}
+
+.training-page[data-athlete-theme="louis"] .ga-ls-name {
+  color: #f8fff2 !important;
+  -webkit-text-stroke: 1px rgba(47,92,28,.82);
+  text-shadow:
+    2px 3px 0 #8bdf37,
+    5px 6px 0 #235e26,
+    0 0 12px rgba(255,255,255,.82),
+    0 0 26px rgba(158,255,77,.78),
+    0 0 48px rgba(76,255,126,.34),
+    0 12px 22px rgba(0,10,22,.60);
+  animation: ga-ls-name-float 4.5s ease-in-out infinite;
+}
+
+.training-page[data-athlete-theme="sarah"] .ga-ls-name {
+  color: #fffafd !important;
+  -webkit-text-stroke: 1px rgba(63,51,145,.88);
+  text-shadow:
+    2px 3px 0 #ff496d,
+    5px 6px 0 #2e3eaa,
+    0 0 12px rgba(255,255,255,.86),
+    0 0 27px rgba(87,201,255,.72),
+    0 0 46px rgba(255,70,107,.48),
+    0 12px 24px rgba(0,6,22,.66);
+  animation: ga-ls-name-float 4.3s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------
+   PAGE COLORS
+   --------------------------------------------------------- */
+.training-page[data-athlete-theme="louis"] {
+  --athlete-accent: #a6ff48;
+  --athlete-accent-light: #e9ffb3;
+  --athlete-border: rgba(145,255,104,.20);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(139,255,73,.15), transparent 28%),
+    radial-gradient(circle at 94% 18%, rgba(71,214,255,.12), transparent 28%),
+    linear-gradient(180deg,#071119 0%,#071c21 520px,#061118 100%) !important;
+}
+
+.training-page[data-athlete-theme="sarah"] {
+  --athlete-accent: #ff4d70;
+  --athlete-accent-light: #ffd86c;
+  --athlete-border: rgba(117,203,255,.22);
+  background:
+    radial-gradient(circle at 12% 0%,rgba(55,115,255,.20),transparent 30%),
+    radial-gradient(circle at 88% 8%,rgba(255,55,86,.20),transparent 32%),
+    radial-gradient(circle at 52% 19%,rgba(180,91,255,.11),transparent 25%),
+    linear-gradient(180deg,#050814 0%,#10091a 520px,#060812 100%) !important;
+}
+
+/* ---------------------------------------------------------
+   ANIMATIONS
+   --------------------------------------------------------- */
+@keyframes ga-louis-image-drift {
+  0%   { transform: scale(1.01) translate3d(0,0,0); }
+  50%  { transform: scale(1.055) translate3d(-.55%,-.30%,0); }
+  100% { transform: scale(1.075) translate3d(.45%,-.15%,0); }
+}
+
+@keyframes ga-sarah-image-drift {
+  0%   { transform: scale(1.01) translate3d(0,0,0); }
+  50%  { transform: scale(1.05) translate3d(-.45%,-.35%,0); }
+  100% { transform: scale(1.07) translate3d(.55%,-.20%,0); }
+}
+
+@keyframes ga-louis-light {
+  0%, 12% { left:-42%; opacity:.18; }
+  50%     { left:58%;  opacity:.92; }
+  88%,100%{ left:118%; opacity:.16; }
+}
+
+@keyframes ga-sarah-light {
+  0%, 12% { left:-42%; opacity:.16; }
+  50%     { left:58%;  opacity:.90; }
+  88%,100%{ left:118%; opacity:.14; }
+}
+
+@keyframes ga-ls-name-float {
+  0%,100% { transform:translateX(-50%) translateY(0); }
+  50%     { transform:translateX(-50%) translateY(-8px); }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="louis"] .athlete-theme-banner,
+  .training-page[data-athlete-theme="sarah"] .athlete-theme-banner {
+    aspect-ratio: 1.72 / 1 !important;
+    border-radius: 22px !important;
+  }
+
+  .ga-ls-name {
+    bottom: 5% !important;
+    font-size: clamp(36px, 12vw, 54px) !important;
+  }
+}
