@@ -1,0 +1,203 @@
+/* =========================================================
+   GA COACHING — LOUIS + SARAH DIRECT HERO V17
+   Standalone hero element: NOT .athlete-theme-banner.
+   This avoids every legacy selector used by the generic/Jolan/Clara banners.
+   ========================================================= */
+
+.ga-direct-hero {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 5 / 2;
+  margin: 0 0 20px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  outline: 0;
+  border-radius: 28px;
+  background: #07141b;
+  box-shadow:
+    0 28px 72px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.ga-direct-hero__image {
+  position: absolute;
+  z-index: 1;
+  inset: -3%;
+  display: block;
+  width: 106%;
+  height: 106%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none;
+  user-select: none;
+  border: 0;
+  transform-origin: 50% 50%;
+  will-change: transform, filter;
+}
+
+.ga-direct-hero--louis .ga-direct-hero__image {
+  filter: saturate(1.08) contrast(1.035) brightness(1.04);
+  animation: ga-direct-louis-drift 12s ease-in-out infinite alternate;
+}
+
+.ga-direct-hero--sarah .ga-direct-hero__image {
+  filter: saturate(1.08) contrast(1.035) brightness(1.04);
+  animation: ga-direct-sarah-drift 12.5s ease-in-out infinite alternate;
+}
+
+.ga-direct-hero__overlay {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.ga-direct-hero--louis .ga-direct-hero__overlay {
+  background:
+    linear-gradient(180deg, rgba(2,9,12,.02) 0%, transparent 54%, rgba(2,10,13,.20) 100%),
+    radial-gradient(circle at 52% 48%, rgba(158,255,82,.08), transparent 42%);
+}
+
+.ga-direct-hero--sarah .ga-direct-hero__overlay {
+  background:
+    linear-gradient(180deg, rgba(4,6,17,.02) 0%, transparent 54%, rgba(4,6,17,.20) 100%),
+    radial-gradient(circle at 42% 46%, rgba(89,193,255,.08), transparent 40%),
+    radial-gradient(circle at 72% 48%, rgba(255,66,103,.08), transparent 42%);
+}
+
+.ga-direct-hero__light {
+  position: absolute;
+  z-index: 3;
+  top: -18%;
+  bottom: -18%;
+  left: -42%;
+  width: 28%;
+  display: block;
+  pointer-events: none;
+  transform: skewX(-18deg);
+  filter: blur(8px);
+}
+
+.ga-direct-hero--louis .ga-direct-hero__light {
+  background: linear-gradient(90deg, transparent, rgba(191,255,128,.08), rgba(229,255,198,.34), rgba(103,235,255,.18), transparent);
+  animation: ga-direct-louis-light 5.8s ease-in-out infinite;
+}
+
+.ga-direct-hero--sarah .ga-direct-hero__light {
+  background: linear-gradient(90deg, transparent, rgba(87,194,255,.10), rgba(255,239,205,.34), rgba(255,73,112,.19), transparent);
+  animation: ga-direct-sarah-light 6.1s ease-in-out infinite;
+}
+
+.ga-direct-hero__name {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 5.2%;
+  display: block;
+  margin: 0;
+  padding: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+  white-space: nowrap;
+  font-family: "Arial Black", "Trebuchet MS", system-ui, sans-serif;
+  font-size: clamp(48px,8.7vw,88px);
+  font-weight: 950;
+  line-height: .88;
+  letter-spacing: -.065em;
+  text-transform: uppercase;
+  animation: ga-direct-name-float 4.5s ease-in-out infinite;
+}
+
+.ga-direct-hero--louis .ga-direct-hero__name {
+  color: #f8fff2;
+  -webkit-text-stroke: 1px rgba(47,92,28,.82);
+  text-shadow:
+    2px 3px 0 #8bdf37,
+    5px 6px 0 #235e26,
+    0 0 12px rgba(255,255,255,.82),
+    0 0 26px rgba(158,255,77,.78),
+    0 0 48px rgba(76,255,126,.34),
+    0 12px 22px rgba(0,10,22,.60);
+}
+
+.ga-direct-hero--sarah .ga-direct-hero__name {
+  color: #fffafd;
+  -webkit-text-stroke: 1px rgba(63,51,145,.88);
+  text-shadow:
+    2px 3px 0 #ff496d,
+    5px 6px 0 #2e3eaa,
+    0 0 12px rgba(255,255,255,.86),
+    0 0 27px rgba(87,201,255,.72),
+    0 0 46px rgba(255,70,107,.48),
+    0 12px 24px rgba(0,6,22,.66);
+}
+
+/* Page colours stay themed, but the hero itself is completely independent. */
+.training-page[data-athlete-theme="louis"] {
+  --athlete-accent: #a6ff48;
+  --athlete-accent-light: #e9ffb3;
+  --athlete-border: rgba(145,255,104,.20);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(139,255,73,.15), transparent 28%),
+    radial-gradient(circle at 94% 18%, rgba(71,214,255,.12), transparent 28%),
+    linear-gradient(180deg,#071119 0%,#071c21 520px,#061118 100%) !important;
+}
+
+.training-page[data-athlete-theme="sarah"] {
+  --athlete-accent: #ff4d70;
+  --athlete-accent-light: #ffd86c;
+  --athlete-border: rgba(117,203,255,.22);
+  background:
+    radial-gradient(circle at 12% 0%,rgba(55,115,255,.20),transparent 30%),
+    radial-gradient(circle at 88% 8%,rgba(255,55,86,.20),transparent 32%),
+    radial-gradient(circle at 52% 19%,rgba(180,91,255,.11),transparent 25%),
+    linear-gradient(180deg,#050814 0%,#10091a 520px,#060812 100%) !important;
+}
+
+@keyframes ga-direct-louis-drift {
+  0%   { transform: scale(1.01) translate3d(0,0,0); }
+  50%  { transform: scale(1.055) translate3d(-.55%,-.30%,0); }
+  100% { transform: scale(1.075) translate3d(.45%,-.15%,0); }
+}
+
+@keyframes ga-direct-sarah-drift {
+  0%   { transform: scale(1.01) translate3d(0,0,0); }
+  50%  { transform: scale(1.05) translate3d(-.45%,-.35%,0); }
+  100% { transform: scale(1.07) translate3d(.55%,-.20%,0); }
+}
+
+@keyframes ga-direct-louis-light {
+  0%,12% { left:-42%; opacity:.18; }
+  50% { left:58%; opacity:.92; }
+  88%,100% { left:118%; opacity:.16; }
+}
+
+@keyframes ga-direct-sarah-light {
+  0%,12% { left:-42%; opacity:.16; }
+  50% { left:58%; opacity:.90; }
+  88%,100% { left:118%; opacity:.14; }
+}
+
+@keyframes ga-direct-name-float {
+  0%,100% { transform:translateX(-50%) translateY(0); }
+  50% { transform:translateX(-50%) translateY(-8px); }
+}
+
+@media (max-width:560px) {
+  .ga-direct-hero {
+    aspect-ratio:1.72 / 1;
+    border-radius:22px;
+  }
+
+  .ga-direct-hero__name {
+    bottom:5%;
+    font-size:clamp(36px,12vw,54px);
+  }
+}
