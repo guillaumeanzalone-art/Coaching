@@ -1,25 +1,22 @@
-/* GA COACHING — HERO MEDIA RUNTIME V10
+/* GA COACHING — HERO MEDIA RUNTIME V11
    Robust image mounting for Louis + Sarah.
-   Why this exists:
-   - the app is a SPA and banners are re-rendered dynamically;
-   - theme CSS can be loaded before Vite's main stylesheet;
-   - public asset URLs may differ between localhost and a sub-path deploy.
 
-   We therefore mount a REAL <img> inside the banner, resolve its URL from
-   the already-loaded theme stylesheet, force visibility with inline
-   !important declarations, and animate the image with the Web Animations API.
+   This deliberately does NOT rely on CSS background-image for the actual art.
+   It mounts a real <img>, resolves its URL from the theme stylesheet that is
+   already loaded, forces it visible above the banner background, then keeps
+   the existing ::before energy layer and ::after athlete name above it.
 */
 
 const HERO_THEMES = {
   louis: {
     cssHint: 'theme-louis',
-    asset: 'themes/louis/louis-fusion-fixed.jpg?v=10',
+    asset: 'themes/louis/louis-fusion-fixed.jpg?v=11',
     className: 'ga-runtime-hero ga-runtime-hero--louis',
     duration: 12000,
   },
   sarah: {
     cssHint: 'theme-sarah',
-    asset: 'themes/sarah/sarah-fusion.jpg?v=10',
+    asset: 'themes/sarah/sarah-fusion.jpg?v=11',
     className: 'ga-runtime-hero ga-runtime-hero--sarah',
     duration: 12500,
   },
@@ -33,32 +30,33 @@ function resolveCandidates(config) {
   const cleanAsset = config.asset.replace(/^\/+/, '')
   const candidates = []
 
-  // Best candidate: resolve next to the stylesheet that is already working.
   const themeLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
     .find((link) => String(link.href || '').includes(config.cssHint))
 
+  // Most reliable: same public base as the theme CSS that already loaded.
   if (themeLink?.href) {
     try {
       candidates.push(new URL(cleanAsset, themeLink.href).href)
     } catch {}
   }
 
-  // Vite/local root.
+  // Vite localhost root.
   try {
     candidates.push(new URL(`/${cleanAsset}`, window.location.origin).href)
   } catch {}
 
-  // Current document base (useful when hosted under /Coaching/ or another base path).
+  // Current document base.
   try {
     candidates.push(new URL(cleanAsset, document.baseURI).href)
   } catch {}
 
-  // Explicit GitHub Pages style fallback when pathname contains a project folder.
+  // GitHub Pages / project-folder fallback.
   try {
     const parts = window.location.pathname.split('/').filter(Boolean)
     if (parts.length) {
-      const projectBase = `/${parts[0]}/`
-      candidates.push(new URL(`${projectBase}${cleanAsset}`, window.location.origin).href)
+      candidates.push(
+        new URL(`/${parts[0]}/${cleanAsset}`, window.location.origin).href
+      )
     }
   } catch {}
 
@@ -72,7 +70,7 @@ function forceStyle(element, property, value) {
 function styleHeroImage(image, slug) {
   forceStyle(image, 'display', 'block')
   forceStyle(image, 'position', 'absolute')
-  forceStyle(image, 'z-index', '1')
+  forceStyle(image, 'z-index', '0')
   forceStyle(image, 'inset', '-2%')
   forceStyle(image, 'width', '104%')
   forceStyle(image, 'height', '104%')
@@ -87,9 +85,13 @@ function styleHeroImage(image, slug) {
   forceStyle(image, 'border', '0')
   forceStyle(image, 'border-radius', 'inherit')
   forceStyle(image, 'transform-origin', '50% 50%')
-  forceStyle(image, 'filter', slug === 'louis'
-    ? 'saturate(1.08) contrast(1.03) brightness(1.03)'
-    : 'saturate(1.06) contrast(1.025) brightness(1.025)')
+  forceStyle(
+    image,
+    'filter',
+    slug === 'louis'
+      ? 'saturate(1.08) contrast(1.03) brightness(1.03)'
+      : 'saturate(1.06) contrast(1.025) brightness(1.025)'
+  )
 }
 
 function animateHeroImage(image, config, slug) {
@@ -117,11 +119,11 @@ function animateHeroImage(image, config, slug) {
       easing: 'ease-in-out',
     })
   } catch {
-    // Old WebView fallback: image remains visible even without animation.
+    // Older WebViews still keep the static image visible.
   }
 }
 
-function loadWithFallback(image, candidates, page, slug, config) {
+function loadWithFallback(image, candidates, page, banner, slug, config) {
   let index = 0
 
   const tryNext = () => {
@@ -140,9 +142,14 @@ function loadWithFallback(image, candidates, page, slug, config) {
         return
       }
 
+      // The real <img> is now authoritative. Remove any CSS background-art
+      // attempt so there is no stale/failed image layer underneath it.
+      forceStyle(banner, 'background-image', 'none')
+
       page.dataset.heroMediaReady = slug
       delete page.dataset.heroMediaError
       image.dataset.loadedUrl = candidate
+      image.dataset.naturalSize = `${image.naturalWidth}x${image.naturalHeight}`
       animateHeroImage(image, config, slug)
     }
 
@@ -164,7 +171,6 @@ function mountThemeHero(page, slug, config) {
   let image = banner.querySelector(`.ga-runtime-hero--${slug}`)
 
   if (!image) {
-    // Remove stale runtime hero from another render/theme if present.
     banner.querySelectorAll('.ga-runtime-hero').forEach((node) => node.remove())
 
     image = document.createElement('img')
@@ -176,10 +182,19 @@ function mountThemeHero(page, slug, config) {
 
     styleHeroImage(image, slug)
     banner.prepend(image)
-    loadWithFallback(image, resolveCandidates(config), page, slug, config)
+    loadWithFallback(
+      image,
+      resolveCandidates(config),
+      page,
+      banner,
+      slug,
+      config
+    )
   } else {
     styleHeroImage(image, slug)
+
     if (image.complete && image.naturalWidth > 0) {
+      forceStyle(banner, 'background-image', 'none')
       animateHeroImage(image, config, slug)
       page.dataset.heroMediaReady = slug
     }
@@ -198,6 +213,7 @@ let scheduled = false
 function scheduleMount() {
   if (scheduled) return
   scheduled = true
+
   requestAnimationFrame(() => {
     scheduled = false
     mountAllThemeHeroes()
