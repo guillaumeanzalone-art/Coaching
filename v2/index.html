@@ -4,14 +4,108 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <link rel="stylesheet" href="./theme-louis.css" />
-    <link rel="stylesheet" href="./theme-sarah.css" />
-    <link rel="stylesheet" href="./theme-louis-fix.css" />
+    <link rel="stylesheet" href="./theme-ls-native.css?v=1" />
     <title>L'araignée Coaching</title>
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
-    <script type="module" src="./theme-hero-runtime.js?v=11"></script>
+
+    <script>
+      (() => {
+        const HEROES = {
+          louis: {
+            name: 'LOUIS',
+            asset: 'themes/louis/louis-fusion-fixed.jpg?v=12',
+            alt: 'Univers personnalisé de Louis',
+          },
+          sarah: {
+            name: 'SARAH',
+            asset: 'themes/sarah/sarah-fusion.jpg?v=12',
+            alt: 'Univers personnalisé de Sarah',
+          },
+        };
+
+        function assetUrl(path) {
+          try {
+            return new URL(path, document.baseURI).href;
+          } catch {
+            return `/${String(path).replace(/^\/+/, '')}`;
+          }
+        }
+
+        function mountHero(page, slug, config) {
+          const banner = page.querySelector('.athlete-theme-banner');
+          if (!banner) return;
+
+          if (banner.dataset.gaNativeHero === slug) return;
+
+          banner.dataset.gaNativeHero = slug;
+          banner.classList.add('athlete-theme-banner--ga-native');
+
+          banner.innerHTML = '';
+
+          const image = document.createElement('img');
+          image.className = 'ga-ls-hero-image';
+          image.alt = config.alt;
+          image.decoding = 'async';
+          image.draggable = false;
+          image.src = assetUrl(config.asset);
+
+          image.addEventListener('load', () => {
+            page.dataset.gaHeroLoaded = slug;
+            page.removeAttribute('data-ga-hero-error');
+          }, { once: true });
+
+          image.addEventListener('error', () => {
+            page.dataset.gaHeroError = slug;
+            console.error(`[GA THEME] Image ${slug} introuvable :`, image.src);
+          }, { once: true });
+
+          const overlay = document.createElement('div');
+          overlay.className = 'ga-ls-overlay';
+          overlay.setAttribute('aria-hidden', 'true');
+
+          const light = document.createElement('div');
+          light.className = 'ga-ls-light';
+          light.setAttribute('aria-hidden', 'true');
+
+          const name = document.createElement('h2');
+          name.className = 'ga-ls-name';
+          name.textContent = config.name;
+
+          banner.append(image, overlay, light, name);
+        }
+
+        function mountAll() {
+          Object.entries(HEROES).forEach(([slug, config]) => {
+            document
+              .querySelectorAll(`.training-page[data-athlete-theme="${slug}"]`)
+              .forEach((page) => mountHero(page, slug, config));
+          });
+        }
+
+        let scheduled = false;
+        function scheduleMount() {
+          if (scheduled) return;
+          scheduled = true;
+          requestAnimationFrame(() => {
+            scheduled = false;
+            mountAll();
+          });
+        }
+
+        const observer = new MutationObserver(scheduleMount);
+        observer.observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+        });
+
+        window.addEventListener('DOMContentLoaded', scheduleMount);
+        window.addEventListener('hashchange', scheduleMount);
+        window.addEventListener('popstate', scheduleMount);
+        scheduleMount();
+      })();
+    </script>
   </body>
 </html>
