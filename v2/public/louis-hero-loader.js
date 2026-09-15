@@ -1,12 +1,16 @@
-let louisHeroDataUrl = null
-let louisHeroPromise = null
+/* LOUIS HERO LOADER V7
+   /themes/louis/louis-fusion-fixed.jpg is BASE64 TEXT in the repository,
+   not a binary JPEG. We read that text and inject a real <img> using a
+   data:image/jpeg;base64 URL. This avoids the previous CSS/Blob issues.
+*/
 
-async function buildLouisHeroDataUrl() {
-  if (louisHeroDataUrl) return louisHeroDataUrl
-  if (louisHeroPromise) return louisHeroPromise
+let louisHeroDataUrlPromise = null
 
-  louisHeroPromise = (async () => {
-    const response = await fetch('/themes/louis/louis-fusion-fixed.jpg?v=6', {
+async function getLouisHeroDataUrl() {
+  if (louisHeroDataUrlPromise) return louisHeroDataUrlPromise
+
+  louisHeroDataUrlPromise = (async () => {
+    const response = await fetch('/themes/louis/louis-fusion-fixed.jpg?v=7', {
       cache: 'no-store',
     })
 
@@ -17,14 +21,13 @@ async function buildLouisHeroDataUrl() {
     const base64 = (await response.text()).replace(/\s+/g, '').trim()
 
     if (!base64.startsWith('/9j/')) {
-      throw new Error('Louis hero payload is not a JPEG base64 payload')
+      throw new Error('Louis hero payload is not JPEG base64 text')
     }
 
-    louisHeroDataUrl = `data:image/jpeg;base64,${base64}`
-    return louisHeroDataUrl
+    return `data:image/jpeg;base64,${base64}`
   })()
 
-  return louisHeroPromise
+  return louisHeroDataUrlPromise
 }
 
 async function applyLouisHero() {
@@ -35,35 +38,65 @@ async function applyLouisHero() {
   if (!pages.length) return
 
   try {
-    const dataUrl = await buildLouisHeroDataUrl()
+    const dataUrl = await getLouisHeroDataUrl()
 
     pages.forEach((page) => {
-      page.dataset.louisHeroReady = '1'
+      const banner = page.querySelector('.athlete-theme-banner')
+      if (!banner) return
 
-      page.querySelectorAll('.athlete-theme-banner').forEach((banner) => {
-        banner.style.setProperty(
-          'background-image',
-          `linear-gradient(180deg, rgba(2,10,14,.02) 0%, rgba(2,10,14,.02) 62%, rgba(2,10,14,.20) 100%), url("${dataUrl}")`,
-          'important'
-        )
-        banner.style.setProperty('background-size', 'cover', 'important')
-        banner.style.setProperty('background-repeat', 'no-repeat', 'important')
-        banner.style.setProperty('background-position', 'center center', 'important')
-      })
+      let image = banner.querySelector('.louis-hero-image')
+
+      if (!image) {
+        image = document.createElement('img')
+        image.className = 'louis-hero-image'
+        image.alt = ''
+        image.setAttribute('aria-hidden', 'true')
+        image.decoding = 'async'
+        image.draggable = false
+        banner.prepend(image)
+      }
+
+      if (image.src !== dataUrl) image.src = dataUrl
+
+      image.onload = () => {
+        page.dataset.louisHeroReady = '1'
+        delete page.dataset.louisHeroError
+      }
+
+      image.onerror = () => {
+        page.dataset.louisHeroError = '1'
+        console.error('[Louis hero] decoded image could not be displayed')
+      }
+
+      if (image.complete && image.naturalWidth > 0) {
+        page.dataset.louisHeroReady = '1'
+      }
     })
   } catch (error) {
+    pages.forEach((page) => {
+      page.dataset.louisHeroError = '1'
+    })
     console.error('[Louis hero]', error)
   }
 }
 
-const observer = new MutationObserver(() => {
-  applyLouisHero()
-})
+let scheduled = false
+function scheduleLouisHero() {
+  if (scheduled) return
+  scheduled = true
 
+  requestAnimationFrame(() => {
+    scheduled = false
+    applyLouisHero()
+  })
+}
+
+const observer = new MutationObserver(scheduleLouisHero)
 observer.observe(document.documentElement, {
   childList: true,
   subtree: true,
 })
 
-window.addEventListener('DOMContentLoaded', applyLouisHero)
-applyLouisHero()
+window.addEventListener('DOMContentLoaded', scheduleLouisHero)
+window.addEventListener('popstate', scheduleLouisHero)
+scheduleLouisHero()
