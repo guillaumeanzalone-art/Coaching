@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <link rel="stylesheet" href="/theme-ls-native.css?v=2" />
+    <link rel="stylesheet" href="/theme-ls-native.css?v=3" />
     <title>L'araignée Coaching</title>
   </head>
   <body>
@@ -16,19 +16,23 @@
         /*
          * Louis + Sarah : même principe que Jolan / Clara.
          * Une vraie balise <img> est injectée dans la bannière.
-         * Les assets sont servis directement par le dossier public de Vite.
-         * IMPORTANT : chemins absolus /themes/... pour ne jamais dépendre
-         * de document.baseURI ou de la route SPA courante.
+         * AUCUN background-image n'est utilisé pour la photo principale.
+         * Les assets sont servis directement par public/ de Vite.
          */
         const HEROES = {
           louis: {
             name: 'LOUIS',
-            asset: '/themes/louis/louis-fusion-fixed.jpg?v=13',
+            /*
+             * Le JPG louis-fusion-fixed.jpg est tronqué/corrompu.
+             * Le WEBP original est un vrai fichier valide 1800x720.
+             */
+            asset: '/themes/louis/louis-fusion.webp?v=14',
             alt: 'Univers personnalisé de Louis',
           },
           sarah: {
             name: 'SARAH',
-            asset: '/themes/sarah/sarah-fusion.jpg?v=13',
+            /* JPEG valide 400x200. */
+            asset: '/themes/sarah/sarah-fusion.jpg?v=14',
             alt: 'Univers personnalisé de Sarah',
           },
         };
@@ -54,12 +58,12 @@
           image.addEventListener('load', () => {
             page.dataset.gaHeroLoaded = slug;
             page.removeAttribute('data-ga-hero-error');
-            console.info(`[GA THEME] ${slug} chargé`, image.naturalWidth, image.naturalHeight);
+            console.info(`[GA THEME] ${slug} chargé`, image.naturalWidth, image.naturalHeight, image.currentSrc);
           }, { once: true });
 
           image.addEventListener('error', () => {
             page.dataset.gaHeroError = slug;
-            console.error(`[GA THEME] Image ${slug} introuvable :`, image.src);
+            console.error(`[GA THEME] Image ${slug} introuvable ou illisible :`, image.currentSrc || image.src);
           }, { once: true });
 
           const overlay = document.createElement('div');
