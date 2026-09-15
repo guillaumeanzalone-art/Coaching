@@ -1,0 +1,459 @@
+/* =========================================================
+   LOUIS — MULTIVERSE GAME / GREEN DRAGON THEME V1
+   Asset: /themes/louis/louis-fusion.webp
+   ========================================================= */
+
+.training-page[data-athlete-theme="louis"] {
+  --louis-green:#b8ff4b;
+  --louis-green-2:#4eff77;
+  --louis-cyan:#6ae7ff;
+  --louis-gold:#ffd34f;
+  --louis-red:#ff5a3f;
+  --athlete-bg:#061016;
+  --athlete-text:#f7fff8;
+  --athlete-accent:#a6ff48;
+  --athlete-accent-light:#e9ffb3;
+  --athlete-accent-soft:rgba(126,255,67,.18);
+  --athlete-accent-soft-2:rgba(80,215,255,.13);
+  --athlete-border:rgba(145,255,104,.20);
+
+  position:relative;
+  isolation:isolate;
+  min-height:100vh;
+  overflow:hidden;
+  color:var(--athlete-text);
+
+  background:
+    radial-gradient(circle at 52% 0%,rgba(139,255,73,.16),transparent 27%),
+    radial-gradient(circle at 95% 18%,rgba(71,214,255,.13),transparent 28%),
+    radial-gradient(circle at 3% 24%,rgba(255,195,60,.10),transparent 24%),
+    linear-gradient(180deg,#071119 0%,#071c21 520px,#061118 100%);
+}
+
+.training-page[data-athlete-theme="louis"]::before {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:-100px;
+  pointer-events:none;
+  opacity:.26;
+  background-image:
+    radial-gradient(circle,rgba(219,255,183,.92) 0 1px,transparent 1.8px),
+    radial-gradient(circle,rgba(85,231,255,.85) 0 1.2px,transparent 2px),
+    radial-gradient(circle,rgba(255,216,88,.78) 0 1px,transparent 1.9px);
+  background-position:0 0,31px 44px,77px 19px;
+  background-size:63px 63px,101px 101px,151px 151px;
+  mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.74) 740px,transparent 1450px);
+  animation:louis-particles 22s linear infinite;
+}
+
+.training-page[data-athlete-theme="louis"]::after {
+  content:"";
+  position:absolute;
+  z-index:-1;
+  left:-20%;
+  right:-20%;
+  top:300px;
+  height:520px;
+  pointer-events:none;
+  opacity:.42;
+  background:
+    radial-gradient(ellipse at 50% 36%,rgba(111,255,58,.24),transparent 36%),
+    radial-gradient(ellipse at 65% 55%,rgba(61,214,255,.18),transparent 48%);
+  filter:blur(34px);
+  animation:louis-page-aura 8s ease-in-out infinite alternate;
+}
+
+/* HEADER */
+.training-page[data-athlete-theme="louis"] .training-topbar {
+  position:relative;
+  z-index:10;
+  padding:14px 16px;
+  border:1px solid rgba(151,255,97,.26);
+  border-radius:20px;
+  background:
+    linear-gradient(135deg,rgba(6,25,27,.94),rgba(16,64,49,.74));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 18px 45px rgba(0,8,15,.32),
+    0 0 28px rgba(100,255,76,.07);
+  backdrop-filter:blur(13px);
+}
+
+.training-page[data-athlete-theme="louis"] .training-topbar h1 {
+  color:#fbfff5;
+  text-shadow:
+    0 0 18px rgba(151,255,84,.24),
+    0 3px 12px rgba(0,0,0,.40);
+}
+
+.training-page[data-athlete-theme="louis"] .training-kicker,
+.training-page[data-athlete-theme="louis"] .set-number,
+.training-page[data-athlete-theme="louis"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="louis"] .training-block-report-v11__kicker {
+  color:var(--louis-green);
+}
+
+.training-page[data-athlete-theme="louis"] .back-button,
+.training-page[data-athlete-theme="louis"] .reset-button {
+  min-height:44px;
+  border:1px solid rgba(155,255,105,.25);
+  border-radius:13px;
+  background:rgba(6,29,29,.74);
+  color:#eaffd8;
+}
+
+.training-page[data-athlete-theme="louis"] .back-button:hover,
+.training-page[data-athlete-theme="louis"] .reset-button:hover {
+  border-color:rgba(170,255,110,.67);
+  background:rgba(34,83,47,.88);
+  color:#fff;
+  transform:translateY(-1px);
+}
+
+/* =========================================================
+   HERO — l'image composite remplit tout le cadre.
+   Le contenu générique est masqué.
+   ========================================================= */
+
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner {
+  position:relative;
+  isolation:isolate;
+  width:100%;
+  aspect-ratio:5 / 2;
+  min-height:0 !important;
+  height:auto !important;
+  margin:0 0 20px;
+  padding:0 !important;
+  overflow:hidden;
+  border:0 !important;
+  outline:0 !important;
+  border-radius:28px;
+  background:#07161d;
+  box-shadow:
+    0 28px 72px rgba(0,7,18,.46),
+    0 0 46px rgba(107,255,66,.13),
+    inset 0 1px 0 rgba(255,255,255,.09);
+}
+
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner > * {
+  display:none !important;
+}
+
+/* image animée */
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner::before {
+  content:"";
+  position:absolute;
+  z-index:1;
+  inset:-3%;
+  pointer-events:none;
+  border-radius:inherit;
+
+  background-image:
+    linear-gradient(
+      112deg,
+      transparent 0%,
+      transparent 35%,
+      rgba(255,255,255,0) 41%,
+      rgba(220,255,179,.24) 48%,
+      rgba(121,239,255,.18) 52%,
+      rgba(255,255,255,0) 59%,
+      transparent 65%,
+      transparent 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(3,10,15,.03) 0%,
+      transparent 46%,
+      rgba(4,12,17,.28) 100%
+    ),
+    url("/themes/louis/louis-fusion.webp");
+
+  background-repeat:no-repeat,no-repeat,no-repeat;
+  background-size:32% 185%,100% 100%,cover;
+  background-position:-72% 50%,center center,center center;
+
+  transform:scale(1.015) translate3d(0,0,0);
+  filter:saturate(1.05) contrast(1.02) brightness(1.00);
+
+  will-change:background-position,transform,filter;
+
+  animation:
+    louis-hero-pan 12s ease-in-out infinite,
+    louis-energy-flash 5.5s ease-in-out infinite;
+}
+
+/* NOM */
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner::after {
+  content:"LOUIS";
+  position:absolute;
+  z-index:3;
+  left:50%;
+  bottom:5.2%;
+  transform:translateX(-50%);
+  pointer-events:none;
+  white-space:nowrap;
+
+  color:#f9fff5;
+  font-family:"Arial Black","Trebuchet MS",system-ui,sans-serif;
+  font-size:clamp(50px,8.7vw,88px);
+  font-weight:950;
+  line-height:.86;
+  letter-spacing:-.065em;
+  text-transform:uppercase;
+
+  -webkit-text-stroke:1px rgba(50,92,28,.78);
+
+  text-shadow:
+    2px 3px 0 #8ae036,
+    5px 6px 0 #235f25,
+    0 0 12px rgba(255,255,255,.78),
+    0 0 25px rgba(160,255,79,.70),
+    0 0 48px rgba(68,255,128,.30),
+    0 12px 22px rgba(0,10,22,.62);
+
+  filter:drop-shadow(0 8px 14px rgba(0,14,22,.44));
+
+  animation:
+    louis-name-float 4.4s ease-in-out infinite,
+    louis-name-glow 3.4s ease-in-out infinite;
+}
+
+/* PANELS */
+.training-page[data-athlete-theme="louis"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="louis"] .training-v3-history,
+.training-page[data-athlete-theme="louis"] .training-v3-overview,
+.training-page[data-athlete-theme="louis"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="louis"] .training-session-v11,
+.training-page[data-athlete-theme="louis"] .training-block-report-v11,
+.training-page[data-athlete-theme="louis"] .training-summary,
+.training-page[data-athlete-theme="louis"] .athlete-pr-panel,
+.training-page[data-athlete-theme="louis"] .athlete-steps-panel-v249 {
+  border-color:rgba(131,244,102,.19) !important;
+  border-radius:20px !important;
+  background:
+    linear-gradient(145deg,rgba(7,30,34,.94),rgba(13,48,46,.88)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 16px 40px rgba(0,8,18,.28);
+  backdrop-filter:blur(11px);
+}
+
+.training-page[data-athlete-theme="louis"] .athlete-steps-fill-v249 {
+  background:
+    linear-gradient(90deg,#54ff69 0%,#7cecff 52%,#ffd34f 100%);
+  box-shadow:0 0 20px rgba(91,255,103,.28);
+}
+
+.training-page[data-athlete-theme="louis"] .athlete-steps-bonus-v249 strong {
+  color:#8df3ff;
+}
+
+/* TABS */
+.training-page[data-athlete-theme="louis"] .week-tab,
+.training-page[data-athlete-theme="louis"] .day-tab-v2 {
+  border-color:rgba(130,240,100,.16);
+  background:rgba(7,28,31,.84);
+  color:#bdd8ce;
+}
+
+.training-page[data-athlete-theme="louis"] .week-tab strong,
+.training-page[data-athlete-theme="louis"] .day-tab-v2 strong {
+  color:#f0fff0;
+}
+
+.training-page[data-athlete-theme="louis"] .week-tab:hover,
+.training-page[data-athlete-theme="louis"] .day-tab-v2:hover {
+  border-color:rgba(154,255,103,.38);
+  background:rgba(12,53,47,.90);
+}
+
+.training-page[data-athlete-theme="louis"] .week-tab--active,
+.training-page[data-athlete-theme="louis"] .day-tab-v2--active {
+  border-color:#9fff5f;
+  background:
+    linear-gradient(135deg,rgba(98,221,62,.52),rgba(23,107,83,.46));
+  color:#fff;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 8px 22px rgba(0,20,22,.26),
+    0 0 22px rgba(91,255,90,.12);
+}
+
+/* EXERCISES */
+.training-page[data-athlete-theme="louis"] .training-exercise {
+  border-color:rgba(124,233,93,.18);
+  background:rgba(5,24,29,.95);
+  box-shadow:0 20px 48px rgba(0,7,18,.34);
+}
+
+.training-page[data-athlete-theme="louis"] .exercise-header {
+  border-bottom-color:rgba(120,234,91,.16);
+  background:
+    linear-gradient(110deg,rgba(24,88,58,.95),rgba(6,37,44,.98));
+}
+
+.training-page[data-athlete-theme="louis"] .exercise-header h2 {
+  color:#f7fff5;
+}
+
+.training-page[data-athlete-theme="louis"] .exercise-type {
+  border-color:rgba(160,255,94,.58);
+  background:rgba(116,231,65,.11);
+  color:#d9ff9f;
+  box-shadow:0 0 13px rgba(105,255,81,.07);
+}
+
+.training-page[data-athlete-theme="louis"] .training-set {
+  border-color:rgba(123,231,94,.12);
+  background:rgba(9,38,42,.72);
+}
+
+.training-page[data-athlete-theme="louis"] .set-load,
+.training-page[data-athlete-theme="louis"] .set-rpe,
+.training-page[data-athlete-theme="louis"] .training-session-v11__note,
+.training-page[data-athlete-theme="louis"] .training-session-v11__metrics label > div {
+  border-color:rgba(126,232,98,.19);
+  background:rgba(5,29,34,.84);
+  color:#f7fff5;
+}
+
+.training-page[data-athlete-theme="louis"] .set-load:focus,
+.training-page[data-athlete-theme="louis"] .set-rpe:focus,
+.training-page[data-athlete-theme="louis"] .training-session-v11__note:focus {
+  border-color:#9dff62;
+  box-shadow:0 0 0 3px rgba(157,255,98,.11);
+}
+
+.training-page[data-athlete-theme="louis"] .set-check {
+  border-color:rgba(140,244,106,.23);
+  background:rgba(5,31,34,.55);
+  color:#f1fff0;
+}
+
+.training-page[data-athlete-theme="louis"] .set-check:hover {
+  border-color:#a0ff68;
+  background:rgba(27,85,55,.77);
+}
+
+.training-page[data-athlete-theme="louis"] .training-sync {
+  border-color:rgba(129,235,100,.20);
+  background:rgba(6,30,34,.82);
+  color:#c7ffad;
+}
+
+/* ANIMATIONS */
+@keyframes louis-hero-pan {
+  0% {
+    background-position:-72% 50%,center center,49% 50%;
+    transform:scale(1.015) translate3d(0,0,0);
+    filter:saturate(1.01) contrast(1.015) brightness(.99);
+  }
+  25% {
+    background-position:0% 50%,center center,50% 49%;
+    transform:scale(1.035) translate3d(-.3%,-.15%,0);
+    filter:saturate(1.05) contrast(1.02) brightness(1.015);
+  }
+  50% {
+    background-position:160% 50%,center center,51% 50%;
+    transform:scale(1.055) translate3d(.5%,-.2%,0);
+    filter:saturate(1.10) contrast(1.025) brightness(1.04);
+  }
+  75% {
+    background-position:10% 50%,center center,50% 51%;
+    transform:scale(1.035) translate3d(-.25%,.15%,0);
+    filter:saturate(1.05) contrast(1.02) brightness(1.015);
+  }
+  100% {
+    background-position:-72% 50%,center center,49% 50%;
+    transform:scale(1.015) translate3d(0,0,0);
+    filter:saturate(1.01) contrast(1.015) brightness(.99);
+  }
+}
+
+@keyframes louis-energy-flash {
+  0%,100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0),
+      inset 0 -36px 78px rgba(0,0,0,.03);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(185,255,111,.08),
+      inset 0 -36px 78px rgba(0,0,0,.10),
+      0 0 34px rgba(112,255,77,.13);
+  }
+}
+
+@keyframes louis-name-float {
+  0%,100% { transform:translateX(-50%) translateY(0); }
+  50% { transform:translateX(-50%) translateY(-8px); }
+}
+
+@keyframes louis-name-glow {
+  0%,100% {
+    filter:
+      brightness(.98)
+      drop-shadow(0 8px 14px rgba(0,14,22,.44));
+  }
+  50% {
+    filter:
+      brightness(1.17)
+      drop-shadow(0 0 18px rgba(144,255,85,.52));
+  }
+}
+
+@keyframes louis-particles {
+  from { transform:translate3d(0,0,0); }
+  to { transform:translate3d(28px,42px,0); }
+}
+
+@keyframes louis-page-aura {
+  from {
+    transform:translate3d(-4%,0,0) scale(.95);
+    opacity:.29;
+  }
+  to {
+    transform:translate3d(5%,24px,0) scale(1.08);
+    opacity:.54;
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width:760px) {
+  .training-page[data-athlete-theme="louis"] .athlete-theme-banner {
+    aspect-ratio:2.1 / 1;
+    border-radius:24px;
+  }
+
+  .training-page[data-athlete-theme="louis"] .athlete-theme-banner::after {
+    bottom:4.5%;
+    font-size:clamp(44px,9.5vw,68px);
+  }
+}
+
+@media (max-width:560px) {
+  .training-page[data-athlete-theme="louis"] .training-topbar {
+    padding:12px;
+  }
+
+  .training-page[data-athlete-theme="louis"] .athlete-theme-banner {
+    aspect-ratio:1.72 / 1;
+    border-radius:21px;
+  }
+
+  .training-page[data-athlete-theme="louis"] .athlete-theme-banner::before {
+    background-position:-72% 50%,center center,52% 50%;
+  }
+
+  .training-page[data-athlete-theme="louis"] .athlete-theme-banner::after {
+    bottom:4.5%;
+    font-size:clamp(36px,12vw,52px);
+  }
+}
+
+@media (max-width:380px) {
+  .training-page[data-athlete-theme="louis"] .athlete-theme-banner::after {
+    font-size:38px;
+  }
+}
