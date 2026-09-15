@@ -1,0 +1,35 @@
+/* LOUIS HERO IMAGE HOTFIX V2
+   Replaces the broken/dark WebP asset with the corrected JPG fusion.
+*/
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner::before {
+  background-image:
+    linear-gradient(
+      112deg,
+      transparent 0%,
+      transparent 35%,
+      rgba(255,255,255,0) 41%,
+      rgba(220,255,179,.22) 48%,
+      rgba(121,239,255,.16) 52%,
+      rgba(255,255,255,0) 59%,
+      transparent 65%,
+      transparent 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(3,10,15,.01) 0%,
+      transparent 58%,
+      rgba(4,12,17,.10) 100%
+    ),
+    url("/themes/louis/louis-fusion-fixed.jpg?v=2") !important;
+
+  background-repeat:no-repeat,no-repeat,no-repeat !important;
+  background-size:32% 185%,100% 100%,cover !important;
+  background-position:-72% 50%,center center,center center !important;
+  filter:saturate(1.12) contrast(1.04) brightness(1.08) !important;
+}
+
+/* The corrected artwork already contains the LOUIS title. */
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner::after {
+  content:"" !important;
+  display:none !important;
+}
