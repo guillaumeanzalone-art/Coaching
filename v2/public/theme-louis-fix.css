@@ -1,18 +1,43 @@
-/* LOUIS HERO FIX V6
-   The actual Louis JPEG is now applied directly on .athlete-theme-banner
-   by louis-hero-loader.js as an inline data URI.
-   This stylesheet keeps only the animated light layer on ::before.
+/* LOUIS HERO FIX V7
+   The Louis asset stored in the repo is base64 text, not a binary JPG.
+   louis-hero-loader.js converts it to a real <img class="louis-hero-image">.
+   This CSS makes that image visible and animated above the blank banner.
 */
 
 .training-page[data-athlete-theme="louis"] .athlete-theme-banner {
-  background-color:#07161d !important;
-  background-size:cover !important;
-  background-repeat:no-repeat !important;
-  background-position:center center !important;
-  animation:louis-banner-drift 12s ease-in-out infinite !important;
+  position:relative !important;
+  isolation:isolate !important;
+  overflow:hidden !important;
+  background:#07161d !important;
 }
 
+/* theme-louis.css hides every banner child; explicitly re-enable our image */
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner > .louis-hero-image {
+  display:block !important;
+  position:absolute !important;
+  z-index:1 !important;
+  inset:-2.5% !important;
+  width:105% !important;
+  height:105% !important;
+  max-width:none !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  pointer-events:none !important;
+  user-select:none !important;
+  transform:scale(1.01) translate3d(0,0,0);
+  filter:saturate(1.03) contrast(1.02) brightness(1.01);
+  will-change:transform,filter;
+  animation:louis-real-image-drift 12s ease-in-out infinite !important;
+}
+
+/* animated energy/light layer above the real image */
 .training-page[data-athlete-theme="louis"] .athlete-theme-banner::before {
+  content:"" !important;
+  position:absolute !important;
+  z-index:2 !important;
+  inset:-3% !important;
+  pointer-events:none !important;
+  border-radius:inherit !important;
   background-image:
     linear-gradient(
       112deg,
@@ -29,14 +54,18 @@
       180deg,
       rgba(3,10,15,.02) 0%,
       transparent 58%,
-      rgba(4,12,17,.12) 100%
+      rgba(4,12,17,.16) 100%
     ) !important;
-
   background-repeat:no-repeat,no-repeat !important;
   background-size:32% 185%,100% 100% !important;
   background-position:-72% 50%,center center !important;
   opacity:1 !important;
   animation:louis-energy-sweep 5.5s ease-in-out infinite !important;
+}
+
+/* keep the name above image and light */
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner::after {
+  z-index:3 !important;
 }
 
 .training-page[data-athlete-theme="louis"][data-louis-hero-ready="1"] .athlete-theme-banner {
@@ -46,21 +75,28 @@
     inset 0 1px 0 rgba(255,255,255,.10) !important;
 }
 
-@keyframes louis-banner-drift {
+/* debugging fallback: if decoding fails, show a visible red rim instead of silent black */
+.training-page[data-athlete-theme="louis"][data-louis-hero-error="1"] .athlete-theme-banner {
+  box-shadow:
+    0 0 0 2px rgba(255,80,80,.72),
+    0 0 30px rgba(255,70,70,.18) !important;
+}
+
+@keyframes louis-real-image-drift {
   0%,100% {
-    background-position:center center;
+    transform:scale(1.01) translate3d(0,0,0);
     filter:saturate(1.02) contrast(1.01) brightness(.99);
   }
   50% {
-    background-position:51% 49%;
-    filter:saturate(1.08) contrast(1.03) brightness(1.04);
+    transform:scale(1.065) translate3d(.7%,-.5%,0);
+    filter:saturate(1.09) contrast(1.03) brightness(1.04);
   }
 }
 
 @keyframes louis-energy-sweep {
   0% {
     background-position:-72% 50%,center center;
-    opacity:.65;
+    opacity:.62;
   }
   50% {
     background-position:165% 50%,center center;
@@ -68,6 +104,6 @@
   }
   100% {
     background-position:-72% 50%,center center;
-    opacity:.65;
+    opacity:.62;
   }
 }
