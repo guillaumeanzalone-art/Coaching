@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <link rel="stylesheet" href="./theme-ls-native.css?v=1" />
+    <link rel="stylesheet" href="/theme-ls-native.css?v=2" />
     <title>L'araignée Coaching</title>
   </head>
   <body>
@@ -13,26 +13,25 @@
 
     <script>
       (() => {
+        /*
+         * Louis + Sarah : même principe que Jolan / Clara.
+         * Une vraie balise <img> est injectée dans la bannière.
+         * Les assets sont servis directement par le dossier public de Vite.
+         * IMPORTANT : chemins absolus /themes/... pour ne jamais dépendre
+         * de document.baseURI ou de la route SPA courante.
+         */
         const HEROES = {
           louis: {
             name: 'LOUIS',
-            asset: 'themes/louis/louis-fusion-fixed.jpg?v=12',
+            asset: '/themes/louis/louis-fusion-fixed.jpg?v=13',
             alt: 'Univers personnalisé de Louis',
           },
           sarah: {
             name: 'SARAH',
-            asset: 'themes/sarah/sarah-fusion.jpg?v=12',
+            asset: '/themes/sarah/sarah-fusion.jpg?v=13',
             alt: 'Univers personnalisé de Sarah',
           },
         };
-
-        function assetUrl(path) {
-          try {
-            return new URL(path, document.baseURI).href;
-          } catch {
-            return `/${String(path).replace(/^\/+/, '')}`;
-          }
-        }
 
         function mountHero(page, slug, config) {
           const banner = page.querySelector('.athlete-theme-banner');
@@ -42,19 +41,20 @@
 
           banner.dataset.gaNativeHero = slug;
           banner.classList.add('athlete-theme-banner--ga-native');
-
           banner.innerHTML = '';
 
           const image = document.createElement('img');
           image.className = 'ga-ls-hero-image';
           image.alt = config.alt;
           image.decoding = 'async';
+          image.loading = 'eager';
           image.draggable = false;
-          image.src = assetUrl(config.asset);
+          image.src = config.asset;
 
           image.addEventListener('load', () => {
             page.dataset.gaHeroLoaded = slug;
             page.removeAttribute('data-ga-hero-error');
+            console.info(`[GA THEME] ${slug} chargé`, image.naturalWidth, image.naturalHeight);
           }, { once: true });
 
           image.addEventListener('error', () => {
