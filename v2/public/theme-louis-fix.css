@@ -1,7 +1,16 @@
-/* LOUIS HERO FIX V4
-   The loader decodes the stored base64 payload into a real Blob URL and
-   injects it as --louis-hero-image on the Louis training page.
+/* LOUIS HERO FIX V6
+   The actual Louis JPEG is now applied directly on .athlete-theme-banner
+   by louis-hero-loader.js as an inline data URI.
+   This stylesheet keeps only the animated light layer on ::before.
 */
+
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner {
+  background-color:#07161d !important;
+  background-size:cover !important;
+  background-repeat:no-repeat !important;
+  background-position:center center !important;
+  animation:louis-banner-drift 12s ease-in-out infinite !important;
+}
 
 .training-page[data-athlete-theme="louis"] .athlete-theme-banner::before {
   background-image:
@@ -10,8 +19,8 @@
       transparent 0%,
       transparent 35%,
       rgba(255,255,255,0) 41%,
-      rgba(220,255,179,.22) 48%,
-      rgba(121,239,255,.16) 52%,
+      rgba(220,255,179,.24) 48%,
+      rgba(121,239,255,.18) 52%,
       rgba(255,255,255,0) 59%,
       transparent 65%,
       transparent 100%
@@ -21,14 +30,44 @@
       rgba(3,10,15,.02) 0%,
       transparent 58%,
       rgba(4,12,17,.12) 100%
-    ),
-    var(--louis-hero-image, none) !important;
+    ) !important;
 
-  background-repeat: no-repeat, no-repeat, no-repeat !important;
-  background-size: 32% 185%, 100% 100%, cover !important;
-  background-position: -72% 50%, center center, center center !important;
+  background-repeat:no-repeat,no-repeat !important;
+  background-size:32% 185%,100% 100% !important;
+  background-position:-72% 50%,center center !important;
+  opacity:1 !important;
+  animation:louis-energy-sweep 5.5s ease-in-out infinite !important;
 }
 
-.training-page[data-athlete-theme="louis"][data-louis-hero-ready="1"] .athlete-theme-banner::before {
-  opacity: 1;
+.training-page[data-athlete-theme="louis"][data-louis-hero-ready="1"] .athlete-theme-banner {
+  box-shadow:
+    0 28px 72px rgba(0,7,18,.46),
+    0 0 58px rgba(107,255,66,.18),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+@keyframes louis-banner-drift {
+  0%,100% {
+    background-position:center center;
+    filter:saturate(1.02) contrast(1.01) brightness(.99);
+  }
+  50% {
+    background-position:51% 49%;
+    filter:saturate(1.08) contrast(1.03) brightness(1.04);
+  }
+}
+
+@keyframes louis-energy-sweep {
+  0% {
+    background-position:-72% 50%,center center;
+    opacity:.65;
+  }
+  50% {
+    background-position:165% 50%,center center;
+    opacity:1;
+  }
+  100% {
+    background-position:-72% 50%,center center;
+    opacity:.65;
+  }
 }
