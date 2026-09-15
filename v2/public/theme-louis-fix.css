@@ -1,36 +1,42 @@
-/* LOUIS HERO FIX V7
-   The Louis asset stored in the repo is base64 text, not a binary JPG.
-   louis-hero-loader.js converts it to a real <img class="louis-hero-image">.
-   This CSS makes that image visible and animated above the blank banner.
+/* LOUIS HERO FIX V8
+   The Louis hero is now a REAL binary JPEG in:
+   /themes/louis/louis-fusion-fixed.jpg
+   No runtime base64 decoding is required anymore.
 */
 
 .training-page[data-athlete-theme="louis"] .athlete-theme-banner {
   position:relative !important;
   isolation:isolate !important;
   overflow:hidden !important;
-  background:#07161d !important;
+
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(3,10,15,.03) 0%,
+      rgba(3,10,15,.00) 58%,
+      rgba(4,12,17,.16) 100%
+    ),
+    url("/themes/louis/louis-fusion-fixed.jpg?v=8") !important;
+
+  background-size:100% 100%, cover !important;
+  background-repeat:no-repeat,no-repeat !important;
+  background-position:center center, center center !important;
+  background-color:#07161d !important;
+
+  box-shadow:
+    0 28px 72px rgba(0,7,18,.46),
+    0 0 58px rgba(107,255,66,.18),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+
+  animation:louis-banner-drift-v8 12s ease-in-out infinite !important;
 }
 
-/* theme-louis.css hides every banner child; explicitly re-enable our image */
-.training-page[data-athlete-theme="louis"] .athlete-theme-banner > .louis-hero-image {
-  display:block !important;
-  position:absolute !important;
-  z-index:1 !important;
-  inset:-2.5% !important;
-  width:105% !important;
-  height:105% !important;
-  max-width:none !important;
-  object-fit:cover !important;
-  object-position:center center !important;
-  pointer-events:none !important;
-  user-select:none !important;
-  transform:scale(1.01) translate3d(0,0,0);
-  filter:saturate(1.03) contrast(1.02) brightness(1.01);
-  will-change:transform,filter;
-  animation:louis-real-image-drift 12s ease-in-out infinite !important;
+/* theme-louis.css hides generic children; keep it that way */
+.training-page[data-athlete-theme="louis"] .athlete-theme-banner > * {
+  display:none !important;
 }
 
-/* animated energy/light layer above the real image */
+/* animated energy/light layer above the image */
 .training-page[data-athlete-theme="louis"] .athlete-theme-banner::before {
   content:"" !important;
   position:absolute !important;
@@ -38,6 +44,7 @@
   inset:-3% !important;
   pointer-events:none !important;
   border-radius:inherit !important;
+
   background-image:
     linear-gradient(
       112deg,
@@ -50,58 +57,50 @@
       transparent 65%,
       transparent 100%
     ),
-    linear-gradient(
-      180deg,
-      rgba(3,10,15,.02) 0%,
-      transparent 58%,
-      rgba(4,12,17,.16) 100%
+    radial-gradient(
+      ellipse at 48% 54%,
+      rgba(118,255,78,.10),
+      transparent 46%
     ) !important;
+
   background-repeat:no-repeat,no-repeat !important;
   background-size:32% 185%,100% 100% !important;
   background-position:-72% 50%,center center !important;
   opacity:1 !important;
-  animation:louis-energy-sweep 5.5s ease-in-out infinite !important;
+
+  animation:louis-energy-sweep-v8 5.5s ease-in-out infinite !important;
 }
 
-/* keep the name above image and light */
+/* keep LOUIS above the image and light layer */
 .training-page[data-athlete-theme="louis"] .athlete-theme-banner::after {
   z-index:3 !important;
 }
 
-.training-page[data-athlete-theme="louis"][data-louis-hero-ready="1"] .athlete-theme-banner {
-  box-shadow:
-    0 28px 72px rgba(0,7,18,.46),
-    0 0 58px rgba(107,255,66,.18),
-    inset 0 1px 0 rgba(255,255,255,.10) !important;
-}
-
-/* debugging fallback: if decoding fails, show a visible red rim instead of silent black */
-.training-page[data-athlete-theme="louis"][data-louis-hero-error="1"] .athlete-theme-banner {
-  box-shadow:
-    0 0 0 2px rgba(255,80,80,.72),
-    0 0 30px rgba(255,70,70,.18) !important;
-}
-
-@keyframes louis-real-image-drift {
+@keyframes louis-banner-drift-v8 {
   0%,100% {
-    transform:scale(1.01) translate3d(0,0,0);
+    background-position:center center, 49% 50%;
+    background-size:100% 100%, 101% auto;
     filter:saturate(1.02) contrast(1.01) brightness(.99);
   }
+
   50% {
-    transform:scale(1.065) translate3d(.7%,-.5%,0);
-    filter:saturate(1.09) contrast(1.03) brightness(1.04);
+    background-position:center center, 51% 49%;
+    background-size:100% 100%, 107% auto;
+    filter:saturate(1.08) contrast(1.03) brightness(1.04);
   }
 }
 
-@keyframes louis-energy-sweep {
+@keyframes louis-energy-sweep-v8 {
   0% {
     background-position:-72% 50%,center center;
     opacity:.62;
   }
+
   50% {
     background-position:165% 50%,center center;
     opacity:1;
   }
+
   100% {
     background-position:-72% 50%,center center;
     opacity:.62;
