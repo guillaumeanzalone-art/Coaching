@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <link rel="stylesheet" href="/theme-ls-native.css?v=3" />
+    <link rel="stylesheet" href="/theme-ls-native.css?v=4" />
     <title>L'araignée Coaching</title>
   </head>
   <body>
@@ -14,36 +14,283 @@
     <script>
       (() => {
         /*
-         * Louis + Sarah : même principe que Jolan / Clara.
-         * Une vraie balise <img> est injectée dans la bannière.
-         * AUCUN background-image n'est utilisé pour la photo principale.
-         * Les assets sont servis directement par public/ de Vite.
+         * HERO LOADER V15 — Louis + Sarah
+         *
+         * On ne donne plus directement le chemin du fichier a <img>.
+         * Le navigateur recupere d'abord les octets avec fetch(), verifie
+         * leur vrai format, puis construit une source affichable.
+         *
+         * Cela couvre les deux cas presents dans le repo :
+         * - Louis : vrai fichier WEBP binaire ;
+         * - Sarah : JPEG stocke sous forme de texte base64 (/9j/...).
+         *
+         * L'URL est d'abord resolue depuis theme-ls-native.css, dont on sait
+         * qu'il est charge, afin que localhost, GitHub Pages et Capacitor
+         * utilisent tous la meme base publique.
          */
         const HEROES = {
           louis: {
             name: 'LOUIS',
-            /*
-             * Le JPG louis-fusion-fixed.jpg est tronqué/corrompu.
-             * Le WEBP original est un vrai fichier valide 1800x720.
-             */
-            asset: '/themes/louis/louis-fusion.webp?v=14',
+            asset: 'themes/louis/louis-fusion.webp?v=15',
             alt: 'Univers personnalisé de Louis',
           },
           sarah: {
             name: 'SARAH',
-            /* JPEG valide 400x200. */
-            asset: '/themes/sarah/sarah-fusion.jpg?v=14',
+            asset: 'themes/sarah/sarah-fusion.jpg?v=15',
             alt: 'Univers personnalisé de Sarah',
           },
         };
 
-        function mountHero(page, slug, config) {
+        const objectUrls = new WeakMap();
+
+        function unique(values) {
+          return [...new Set(values.filter(Boolean))];
+        }
+
+        function assetCandidates(asset) {
+          const clean = String(asset || '').replace(/^\/+/, '');
+          const candidates = [];
+
+          const themeLink = [...document.querySelectorAll('link[rel="stylesheet"]')]
+            .find((link) => String(link.href || '').includes('theme-ls-native.css'));
+
+          /* Le CSS est visible sur la page : sa base est donc notre source
+             de verite pour retrouver public/. */
+          if (themeLink?.href) {
+            try {
+              candidates.push(new URL(clean, themeLink.href).href);
+            } catch {}
+          }
+
+          try {
+            candidates.push(new URL(`/${clean}`, window.location.origin).href);
+          } catch {}
+
+          try {
+            candidates.push(new URL(clean, document.baseURI).href);
+          } catch {}
+
+          /* GitHub Pages / sous-dossier projet. */
+          try {
+            const firstPathPart = window.location.pathname
+              .split('/')
+              .filter(Boolean)[0];
+
+            if (firstPathPart) {
+              candidates.push(
+                new URL(`/${firstPathPart}/${clean}`, window.location.origin).href
+              );
+            }
+          } catch {}
+
+          return unique(candidates);
+        }
+
+        function asciiHead(bytes, length = 16) {
+          return String.fromCharCode(...bytes.slice(0, length));
+        }
+
+        function bytesAreJpeg(bytes) {
+          return (
+            bytes.length >= 3 &&
+            bytes[0] === 0xff &&
+            bytes[1] === 0xd8 &&
+            bytes[2] === 0xff
+          );
+        }
+
+        function bytesArePng(bytes) {
+          return (
+            bytes.length >= 8 &&
+            bytes[0] === 0x89 &&
+            bytes[1] === 0x50 &&
+            bytes[2] === 0x4e &&
+            bytes[3] === 0x47
+          );
+        }
+
+        function bytesAreWebp(bytes) {
+          if (bytes.length < 12) return false;
+          const head = asciiHead(bytes, 12);
+          return head.slice(0, 4) === 'RIFF' && head.slice(8, 12) === 'WEBP';
+        }
+
+        async function fetchRenderableSource(url) {
+          const response = await fetch(url, {
+            cache: 'no-store',
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          const buffer = await response.arrayBuffer();
+          const bytes = new Uint8Array(buffer);
+
+          if (!bytes.length) {
+            throw new Error('fichier vide');
+          }
+
+          if (bytesAreWebp(bytes)) {
+            return {
+              src: URL.createObjectURL(
+                new Blob([buffer], { type: 'image/webp' })
+              ),
+              objectUrl: true,
+              format: 'webp-binary',
+            };
+          }
+
+          if (bytesAreJpeg(bytes)) {
+            return {
+              src: URL.createObjectURL(
+                new Blob([buffer], { type: 'image/jpeg' })
+              ),
+              objectUrl: true,
+              format: 'jpeg-binary',
+            };
+          }
+
+          if (bytesArePng(bytes)) {
+            return {
+              src: URL.createObjectURL(
+                new Blob([buffer], { type: 'image/png' })
+              ),
+              objectUrl: true,
+              format: 'png-binary',
+            };
+          }
+
+          /* Certains assets historiques ont ete commits comme texte base64
+             au lieu de vrais fichiers binaires. Sarah est dans ce cas. */
+          const text = new TextDecoder()
+            .decode(buffer)
+            .replace(/\s+/g, '')
+            .trim();
+
+          if (text.startsWith('/9j/')) {
+            return {
+              src: `data:image/jpeg;base64,${text}`,
+              objectUrl: false,
+              format: 'jpeg-base64-text',
+            };
+          }
+
+          if (text.startsWith('UklGR')) {
+            return {
+              src: `data:image/webp;base64,${text}`,
+              objectUrl: false,
+              format: 'webp-base64-text',
+            };
+          }
+
+          if (text.startsWith('iVBOR')) {
+            return {
+              src: `data:image/png;base64,${text}`,
+              objectUrl: false,
+              format: 'png-base64-text',
+            };
+          }
+
+          throw new Error(
+            `format inconnu (${response.headers.get('content-type') || 'sans content-type'})`
+          );
+        }
+
+        function displaySource(image, source) {
+          return new Promise((resolve, reject) => {
+            const onLoad = () => {
+              cleanup();
+
+              if (!image.naturalWidth || !image.naturalHeight) {
+                reject(new Error('image chargee sans dimensions'));
+                return;
+              }
+
+              resolve();
+            };
+
+            const onError = () => {
+              cleanup();
+              reject(new Error('le decodeur image du navigateur a refuse la source'));
+            };
+
+            const cleanup = () => {
+              image.removeEventListener('load', onLoad);
+              image.removeEventListener('error', onError);
+            };
+
+            image.addEventListener('load', onLoad);
+            image.addEventListener('error', onError);
+            image.src = source.src;
+          });
+        }
+
+        async function loadHeroImage(image, page, slug, config) {
+          const candidates = assetCandidates(config.asset);
+          const failures = [];
+
+          for (const candidate of candidates) {
+            let source = null;
+
+            try {
+              source = await fetchRenderableSource(candidate);
+              await displaySource(image, source);
+
+              const previousObjectUrl = objectUrls.get(image);
+              if (previousObjectUrl && previousObjectUrl !== source.src) {
+                URL.revokeObjectURL(previousObjectUrl);
+              }
+
+              if (source.objectUrl) {
+                objectUrls.set(image, source.src);
+              } else {
+                objectUrls.delete(image);
+              }
+
+              page.dataset.gaHeroLoaded = slug;
+              page.dataset.gaHeroFormat = source.format;
+              page.removeAttribute('data-ga-hero-error');
+
+              console.info(
+                `[GA HERO V15] ${slug} OK`,
+                `${image.naturalWidth}x${image.naturalHeight}`,
+                source.format,
+                candidate
+              );
+
+              return true;
+            } catch (error) {
+              if (source?.objectUrl && source.src) {
+                URL.revokeObjectURL(source.src);
+              }
+
+              failures.push(`${candidate} -> ${error?.message || error}`);
+              console.warn(
+                `[GA HERO V15] ${slug} candidat refuse`,
+                candidate,
+                error
+              );
+            }
+          }
+
+          page.dataset.gaHeroError = slug;
+          console.error(
+            `[GA HERO V15] ${slug}: aucun candidat n'a pu etre affiche`,
+            failures
+          );
+
+          return false;
+        }
+
+        async function mountHero(page, slug, config) {
           const banner = page.querySelector('.athlete-theme-banner');
           if (!banner) return;
 
           if (banner.dataset.gaNativeHero === slug) return;
+          if (banner.dataset.gaHeroMounting === slug) return;
 
-          banner.dataset.gaNativeHero = slug;
+          banner.dataset.gaHeroMounting = slug;
           banner.classList.add('athlete-theme-banner--ga-native');
           banner.innerHTML = '';
 
@@ -53,18 +300,6 @@
           image.decoding = 'async';
           image.loading = 'eager';
           image.draggable = false;
-          image.src = config.asset;
-
-          image.addEventListener('load', () => {
-            page.dataset.gaHeroLoaded = slug;
-            page.removeAttribute('data-ga-hero-error');
-            console.info(`[GA THEME] ${slug} chargé`, image.naturalWidth, image.naturalHeight, image.currentSrc);
-          }, { once: true });
-
-          image.addEventListener('error', () => {
-            page.dataset.gaHeroError = slug;
-            console.error(`[GA THEME] Image ${slug} introuvable ou illisible :`, image.currentSrc || image.src);
-          }, { once: true });
 
           const overlay = document.createElement('div');
           overlay.className = 'ga-ls-overlay';
@@ -79,13 +314,36 @@
           name.textContent = config.name;
 
           banner.append(image, overlay, light, name);
+
+          const success = await loadHeroImage(
+            image,
+            page,
+            slug,
+            config
+          );
+
+          if (success) {
+            banner.dataset.gaNativeHero = slug;
+            banner.removeAttribute('data-ga-hero-retry');
+          } else {
+            const retry = Number(banner.dataset.gaHeroRetry || 0) + 1;
+            banner.dataset.gaHeroRetry = String(retry);
+
+            if (retry <= 2) {
+              window.setTimeout(scheduleMount, retry * 900);
+            }
+          }
+
+          banner.removeAttribute('data-ga-hero-mounting');
         }
 
         function mountAll() {
           Object.entries(HEROES).forEach(([slug, config]) => {
             document
               .querySelectorAll(`.training-page[data-athlete-theme="${slug}"]`)
-              .forEach((page) => mountHero(page, slug, config));
+              .forEach((page) => {
+                void mountHero(page, slug, config);
+              });
           });
         }
 
@@ -93,6 +351,7 @@
         function scheduleMount() {
           if (scheduled) return;
           scheduled = true;
+
           requestAnimationFrame(() => {
             scheduled = false;
             mountAll();
