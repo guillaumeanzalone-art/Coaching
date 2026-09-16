@@ -1,9 +1,50 @@
 /* =========================================================
-   GA COACHING — SARAH COSMIC THEME V22
+   GA COACHING — SARAH COSMIC THEME V23
    IMPORTANT: this file is loaded AFTER the Vite module/style.css.
    Sarah uses the existing banner as frame and a dedicated ::before
    image layer, exactly like the visual layering used by working themes.
    ========================================================= */
+
+.training-page[data-athlete-theme="sarah"] {
+  position: relative !important;
+  isolation: isolate !important;
+  background:
+    radial-gradient(circle at 16% 8%, rgba(42, 112, 255, .17), transparent 32%),
+    radial-gradient(circle at 86% 18%, rgba(255, 43, 170, .16), transparent 34%),
+    linear-gradient(180deg, #090b1f 0%, #080817 46%, #05050d 100%) !important;
+}
+
+/* Soft cosmic haze behind Sarah's programme. */
+.training-page[data-athlete-theme="sarah"]::before {
+  content: '' !important;
+  position: fixed !important;
+  z-index: -1 !important;
+  inset: -18% !important;
+  pointer-events: none !important;
+  background:
+    radial-gradient(circle at 24% 30%, rgba(52, 125, 255, .14) 0 2%, transparent 20%),
+    radial-gradient(circle at 72% 24%, rgba(255, 61, 179, .13) 0 2%, transparent 21%),
+    radial-gradient(circle at 56% 74%, rgba(255, 182, 55, .08) 0 1%, transparent 18%) !important;
+  filter: blur(22px) !important;
+  transform: translate3d(0, 0, 0) scale(1.04) !important;
+  animation: ga-sarah-nebula 18s ease-in-out infinite alternate !important;
+}
+
+.training-page[data-athlete-theme="sarah"] .training-topbar {
+  border: 1px solid rgba(115, 125, 255, .20) !important;
+  border-radius: 22px !important;
+  padding: 13px 15px !important;
+  background: linear-gradient(135deg, rgba(16, 22, 58, .88), rgba(39, 13, 53, .72)) !important;
+  box-shadow: 0 14px 42px rgba(0, 0, 0, .26) !important;
+  animation: ga-sarah-topbar-glow 8s ease-in-out infinite !important;
+}
+
+.training-page[data-athlete-theme="sarah"] .training-kicker,
+.training-page[data-athlete-theme="sarah"] .set-number,
+.training-page[data-athlete-theme="sarah"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="sarah"] .training-block-report-v11__kicker {
+  color: #ff8ddb !important;
+}
 
 .training-page[data-athlete-theme="sarah"] .athlete-theme-banner {
   position: relative !important;
@@ -22,6 +63,7 @@
     0 0 42px rgba(255,65,170,.16),
     inset 0 1px 0 rgba(255,255,255,.08) !important;
   isolation: isolate !important;
+  animation: ga-sarah-hero-float 9s ease-in-out infinite !important;
 }
 
 .training-page[data-athlete-theme="sarah"] .athlete-theme-banner > * {
@@ -38,7 +80,7 @@
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: none !important;
-  background: url('/sarah-theme.webp?v=22') 50% 50% / cover no-repeat !important;
+  background: url('/sarah-theme.webp?v=23') 50% 50% / cover no-repeat !important;
   filter: saturate(1.05) contrast(1.035) brightness(1.025) !important;
   transform: scale(1.015) translate3d(0,0,0) !important;
   transform-origin: 50% 50% !important;
@@ -63,10 +105,50 @@
       rgba(255,76,194,.10) 52%,
       transparent 60%,
       transparent 100%),
+    radial-gradient(circle, rgba(255,255,255,.88) 0 1px, transparent 1.7px),
+    radial-gradient(circle, rgba(100,194,255,.72) 0 1px, transparent 1.8px),
     radial-gradient(circle at 50% 44%, transparent 44%, rgba(4,6,18,.05) 78%, rgba(3,5,14,.14) 100%) !important;
-  background-size: 220% 100%, 100% 100% !important;
-  background-position: -115% 0, 0 0 !important;
+  background-size: 220% 100%, 63px 63px, 91px 91px, 100% 100% !important;
+  background-position: -115% 0, 7px 11px, 26px 34px, 0 0 !important;
   animation: ga-sarah-cosmic-sweep 6.2s ease-in-out infinite !important;
+}
+
+.training-page[data-athlete-theme="sarah"] .week-tab,
+.training-page[data-athlete-theme="sarah"] .day-tab-v2,
+.training-page[data-athlete-theme="sarah"] .training-exercise,
+.training-page[data-athlete-theme="sarah"] .training-summary,
+.training-page[data-athlete-theme="sarah"] .training-session-v11,
+.training-page[data-athlete-theme="sarah"] .training-block-report-v11,
+.training-page[data-athlete-theme="sarah"] .training-v3-history,
+.training-page[data-athlete-theme="sarah"] .training-v3-overview,
+.training-page[data-athlete-theme="sarah"] .training-v3-overview-launcher {
+  border-color: rgba(119, 111, 255, .24) !important;
+  background-color: rgba(13, 16, 40, .88) !important;
+  box-shadow: 0 18px 52px rgba(2, 3, 16, .28) !important;
+}
+
+.training-page[data-athlete-theme="sarah"] .week-tab--active,
+.training-page[data-athlete-theme="sarah"] .day-tab-v2--active {
+  border-color: rgba(255, 108, 205, .62) !important;
+  background: linear-gradient(135deg, rgba(50, 87, 194, .54), rgba(142, 42, 154, .42)) !important;
+  box-shadow: 0 0 24px rgba(255, 69, 187, .15) !important;
+  animation: ga-sarah-active-pulse 3.8s ease-in-out infinite !important;
+}
+
+@media (hover: hover) {
+  .training-page[data-athlete-theme="sarah"] .training-exercise,
+  .training-page[data-athlete-theme="sarah"] .week-tab,
+  .training-page[data-athlete-theme="sarah"] .day-tab-v2 {
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease !important;
+  }
+
+  .training-page[data-athlete-theme="sarah"] .training-exercise:hover,
+  .training-page[data-athlete-theme="sarah"] .week-tab:hover,
+  .training-page[data-athlete-theme="sarah"] .day-tab-v2:hover {
+    transform: translateY(-3px) !important;
+    border-color: rgba(255, 112, 211, .48) !important;
+    box-shadow: 0 22px 62px rgba(17, 6, 43, .46), 0 0 24px rgba(89, 112, 255, .10) !important;
+  }
 }
 
 @keyframes ga-sarah-cosmic-drift {
@@ -86,23 +168,55 @@
 
 @keyframes ga-sarah-cosmic-sweep {
   0%, 14% {
-    background-position: -115% 0, 0 0;
+    background-position: -115% 0, 7px 11px, 26px 34px, 0 0;
     opacity: .25;
   }
   50% {
-    background-position: 18% 0, 0 0;
+    background-position: 18% 0, 18px 2px, 14px 46px, 0 0;
     opacity: .9;
   }
   86%, 100% {
-    background-position: 125% 0, 0 0;
+    background-position: 125% 0, 29px -8px, 2px 58px, 0 0;
     opacity: .25;
   }
+}
+
+@keyframes ga-sarah-hero-float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+    box-shadow: 0 28px 72px rgba(0,0,0,.42), 0 0 36px rgba(79,112,255,.13), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  50% {
+    transform: translate3d(0, -5px, 0);
+    box-shadow: 0 35px 82px rgba(0,0,0,.46), 0 0 52px rgba(255,65,170,.22), inset 0 1px 0 rgba(255,255,255,.11);
+  }
+}
+
+@keyframes ga-sarah-nebula {
+  0% { transform: translate3d(-2%, -1%, 0) scale(1.04); opacity: .72; }
+  50% { transform: translate3d(2%, 1.5%, 0) scale(1.10); opacity: 1; }
+  100% { transform: translate3d(-1%, 2%, 0) scale(1.06); opacity: .82; }
+}
+
+@keyframes ga-sarah-topbar-glow {
+  0%, 100% { border-color: rgba(115,125,255,.20); box-shadow: 0 14px 42px rgba(0,0,0,.26); }
+  50% { border-color: rgba(255,94,201,.34); box-shadow: 0 18px 48px rgba(0,0,0,.32), 0 0 24px rgba(255,70,188,.08); }
+}
+
+@keyframes ga-sarah-active-pulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.13); }
 }
 
 @media (max-width: 560px) {
   .training-page[data-athlete-theme="sarah"] .athlete-theme-banner {
     aspect-ratio: 16 / 9 !important;
     border-radius: 22px !important;
+  }
+
+  .training-page[data-athlete-theme="sarah"] .training-topbar {
+    border-radius: 18px !important;
+    padding: 12px !important;
   }
 
   .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::before {
@@ -112,8 +226,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .training-page[data-athlete-theme="sarah"]::before,
+  .training-page[data-athlete-theme="sarah"] .training-topbar,
+  .training-page[data-athlete-theme="sarah"] .athlete-theme-banner,
   .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::before,
-  .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::after {
+  .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::after,
+  .training-page[data-athlete-theme="sarah"] .week-tab--active,
+  .training-page[data-athlete-theme="sarah"] .day-tab-v2--active {
     animation: none !important;
   }
 }

@@ -3096,6 +3096,7 @@ body {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24), 0 18px 45px rgba(14, 10, 55, .32);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
+  animation: flop-mew-topbar-glow 8s ease-in-out infinite;
 }
 
 .training-page[data-athlete-theme="flop"] .training-topbar h1 {
@@ -3139,6 +3140,22 @@ body {
     0 0 48px rgba(246, 165, 224, .16);
 }
 
+.athlete-theme-banner--flop-mew::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: -45%;
+  bottom: -45%;
+  left: -34%;
+  width: 27%;
+  pointer-events: none;
+  opacity: .34;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .48), rgba(255, 207, 242, .32), transparent);
+  filter: blur(18px);
+  transform: rotate(18deg);
+  animation: flop-mew-rainbow-sweep 12s ease-in-out infinite;
+}
+
 .flop-mew-hero {
   position: absolute;
   z-index: 0;
@@ -3149,6 +3166,8 @@ body {
   object-fit: cover;
   object-position: center center;
   filter: saturate(.98) contrast(1.01);
+  will-change: transform, filter;
+  animation: flop-mew-world-breathe 14s ease-in-out infinite alternate;
 }
 
 .flop-mew-vignette {
@@ -3160,6 +3179,34 @@ body {
     linear-gradient(90deg, rgba(31, 28, 87, .67) 0%, rgba(40, 34, 96, .28) 36%, transparent 58%),
     linear-gradient(0deg, rgba(28, 24, 80, .70) 0%, transparent 43%),
     radial-gradient(circle at 50% 20%, transparent 25%, rgba(36, 25, 86, .09) 100%);
+}
+
+.flop-mew-vignette::before,
+.flop-mew-vignette::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  opacity: .26;
+  filter: blur(22px);
+  will-change: transform, opacity;
+}
+
+.flop-mew-vignette::before {
+  top: 7%;
+  left: -12%;
+  width: 48%;
+  height: 27%;
+  background: rgba(178, 226, 255, .66);
+  animation: flop-mew-cloud-drift 16s ease-in-out infinite alternate;
+}
+
+.flop-mew-vignette::after {
+  right: -15%;
+  bottom: 4%;
+  width: 44%;
+  height: 24%;
+  background: rgba(255, 184, 231, .68);
+  animation: flop-mew-cloud-drift-reverse 18s ease-in-out infinite alternate;
 }
 
 .flop-mew-copy {
@@ -3175,6 +3222,8 @@ body {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24), 0 16px 40px rgba(24, 15, 73, .31);
   -webkit-backdrop-filter: blur(13px);
   backdrop-filter: blur(13px);
+  will-change: transform, box-shadow;
+  animation: flop-mew-panel-float 6.5s ease-in-out infinite;
 }
 
 .flop-mew-eyebrow {
@@ -3256,6 +3305,15 @@ body {
   font-weight: 950;
   letter-spacing: .11em;
   text-transform: uppercase;
+  animation: flop-mew-badge-pulse 4.8s ease-in-out infinite;
+}
+
+.flop-mew-badges span:nth-child(2) {
+  animation-delay: .55s;
+}
+
+.flop-mew-badges span:nth-child(3) {
+  animation-delay: 1.1s;
 }
 
 .flop-mew-sparkles {
@@ -3321,6 +3379,15 @@ body {
   border-radius: 22px;
   background: rgba(32, 39, 96, .92);
   box-shadow: 0 19px 46px rgba(12, 10, 52, .30);
+  transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+}
+
+@media (hover: hover) {
+  .training-page[data-athlete-theme="flop"] .training-exercise:hover {
+    border-color: rgba(246, 194, 235, .42);
+    box-shadow: 0 22px 52px rgba(12, 10, 52, .36), 0 0 28px rgba(245, 169, 221, .08);
+    transform: translateY(-2px);
+  }
 }
 
 .training-page[data-athlete-theme="flop"] .exercise-header {
@@ -3367,6 +3434,94 @@ body {
 @keyframes flop-mew-twinkle {
   0%, 100% { opacity: .30; transform: scale(.65) rotate(0deg); }
   50% { opacity: 1; transform: scale(1.18) rotate(45deg); }
+}
+
+@keyframes flop-mew-world-breathe {
+  0% {
+    transform: scale(1.015) translate3d(-4px, 2px, 0);
+    filter: saturate(.95) contrast(1.01) brightness(.98);
+  }
+
+  100% {
+    transform: scale(1.055) translate3d(7px, -5px, 0);
+    filter: saturate(1.06) contrast(1.01) brightness(1.035);
+  }
+}
+
+@keyframes flop-mew-rainbow-sweep {
+  0%, 15% {
+    transform: translate3d(0, 0, 0) rotate(18deg);
+    opacity: 0;
+  }
+
+  32% {
+    opacity: .38;
+  }
+
+  58%, 100% {
+    transform: translate3d(570%, 0, 0) rotate(18deg);
+    opacity: 0;
+  }
+}
+
+@keyframes flop-mew-cloud-drift {
+  from {
+    transform: translate3d(-5%, 0, 0) scale(.95);
+    opacity: .17;
+  }
+
+  to {
+    transform: translate3d(32%, 10%, 0) scale(1.12);
+    opacity: .32;
+  }
+}
+
+@keyframes flop-mew-cloud-drift-reverse {
+  from {
+    transform: translate3d(8%, 5%, 0) scale(.92);
+    opacity: .16;
+  }
+
+  to {
+    transform: translate3d(-34%, -9%, 0) scale(1.15);
+    opacity: .31;
+  }
+}
+
+@keyframes flop-mew-panel-float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24), 0 16px 40px rgba(24, 15, 73, .31);
+  }
+
+  50% {
+    transform: translate3d(0, -5px, 0);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .30), 0 21px 46px rgba(24, 15, 73, .38), 0 0 24px rgba(255, 190, 232, .13);
+  }
+}
+
+@keyframes flop-mew-badge-pulse {
+  0%, 100% {
+    background: rgba(234, 171, 224, .18);
+    box-shadow: 0 0 0 rgba(255, 193, 232, 0);
+  }
+
+  50% {
+    background: rgba(234, 171, 224, .34);
+    box-shadow: 0 0 14px rgba(255, 193, 232, .14);
+  }
+}
+
+@keyframes flop-mew-topbar-glow {
+  0%, 100% {
+    border-color: rgba(245, 219, 255, .42);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24), 0 18px 45px rgba(14, 10, 55, .32);
+  }
+
+  50% {
+    border-color: rgba(255, 228, 249, .68);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .30), 0 19px 48px rgba(14, 10, 55, .36), 0 0 26px rgba(243, 173, 225, .10);
+  }
 }
 
 @media (max-width: 760px) {
@@ -3462,6 +3617,13 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .training-page[data-athlete-theme="flop"] .training-topbar,
+  .athlete-theme-banner--flop-mew::after,
+  .flop-mew-hero,
+  .flop-mew-vignette::before,
+  .flop-mew-vignette::after,
+  .flop-mew-copy,
+  .flop-mew-badges span,
   .flop-mew-sparkles span {
     animation: none;
   }
