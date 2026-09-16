@@ -4301,17 +4301,6 @@ export function mountTraining(
           <div class="sarah-cosmic-stars" aria-hidden="true">
             <span></span><span></span><span></span><span></span><span></span><span></span>
           </div>
-
-          <div class="sarah-cosmic-hud">
-            <span class="sarah-cosmic-kicker">
-              Ascension cosmique
-            </span>
-            <div class="sarah-cosmic-badges" aria-label="Valeurs du thème">
-              <span>Force</span>
-              <span>Maîtrise</span>
-              <span>Évolution</span>
-            </div>
-          </div>
         </section>
       `
     }
