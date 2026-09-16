@@ -1,14 +1,12 @@
 /* =========================================================
-   GA COACHING — LOUIS + SARAH DIRECT HERO V17
+   GA COACHING — LOUIS + SARAH DIRECT HERO V18
    Standalone hero element: NOT .athlete-theme-banner.
-   This avoids every legacy selector used by the generic/Jolan/Clara banners.
    ========================================================= */
 
 .ga-direct-hero {
   position: relative;
   isolation: isolate;
   width: 100%;
-  aspect-ratio: 5 / 2;
   margin: 0 0 20px;
   padding: 0;
   overflow: hidden;
@@ -21,13 +19,24 @@
     inset 0 1px 0 rgba(255,255,255,.08);
 }
 
+.ga-direct-hero--louis {
+  aspect-ratio: 5 / 2;
+}
+
+.ga-direct-hero--sarah {
+  aspect-ratio: 16 / 9;
+  background:#050814;
+  box-shadow:
+    0 30px 78px rgba(0,0,0,.48),
+    0 0 46px rgba(100,83,255,.12),
+    0 0 52px rgba(255,65,125,.09),
+    inset 0 1px 0 rgba(255,255,255,.12);
+}
+
 .ga-direct-hero__image {
   position: absolute;
   z-index: 1;
-  inset: -3%;
   display: block;
-  width: 106%;
-  height: 106%;
   max-width: none;
   max-height: none;
   object-fit: cover;
@@ -42,13 +51,24 @@
 }
 
 .ga-direct-hero--louis .ga-direct-hero__image {
+  inset: -3%;
+  width: 106%;
+  height: 106%;
   filter: saturate(1.08) contrast(1.035) brightness(1.04);
   animation: ga-direct-louis-drift 12s ease-in-out infinite alternate;
 }
 
+/* Sarah: ratio exact 16:9 pour ne plus couper la composition */
 .ga-direct-hero--sarah .ga-direct-hero__image {
-  filter: saturate(1.08) contrast(1.035) brightness(1.04);
-  animation: ga-direct-sarah-drift 12.5s ease-in-out infinite alternate;
+  inset: -1.25%;
+  width: 102.5%;
+  height: 102.5%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  filter: saturate(1.10) contrast(1.045) brightness(1.03);
+  animation:
+    ga-direct-sarah-drift 13s ease-in-out infinite alternate,
+    ga-direct-sarah-pulse 6.5s ease-in-out infinite;
 }
 
 .ga-direct-hero__overlay {
@@ -67,9 +87,11 @@
 
 .ga-direct-hero--sarah .ga-direct-hero__overlay {
   background:
-    linear-gradient(180deg, rgba(4,6,17,.02) 0%, transparent 54%, rgba(4,6,17,.20) 100%),
-    radial-gradient(circle at 42% 46%, rgba(89,193,255,.08), transparent 40%),
-    radial-gradient(circle at 72% 48%, rgba(255,66,103,.08), transparent 42%);
+    radial-gradient(circle at 50% 48%, rgba(255,255,255,.05), transparent 30%),
+    radial-gradient(circle at 20% 38%, rgba(255,184,45,.09), transparent 28%),
+    radial-gradient(circle at 78% 28%, rgba(203,96,255,.10), transparent 30%),
+    linear-gradient(180deg, rgba(2,4,15,.02) 0%, transparent 62%, rgba(3,4,14,.09) 100%);
+  animation: ga-sarah-aura 7s ease-in-out infinite alternate;
 }
 
 .ga-direct-hero__light {
@@ -91,8 +113,9 @@
 }
 
 .ga-direct-hero--sarah .ga-direct-hero__light {
-  background: linear-gradient(90deg, transparent, rgba(87,194,255,.10), rgba(255,239,205,.34), rgba(255,73,112,.19), transparent);
-  animation: ga-direct-sarah-light 6.1s ease-in-out infinite;
+  width: 24%;
+  background: linear-gradient(90deg, transparent, rgba(80,190,255,.06), rgba(255,245,210,.30), rgba(255,83,142,.18), transparent);
+  animation: ga-direct-sarah-light 6.4s ease-in-out infinite;
 }
 
 .ga-direct-hero__name {
@@ -100,7 +123,6 @@
   z-index: 4;
   left: 50%;
   bottom: 5.2%;
-  display: block;
   margin: 0;
   padding: 0;
   transform: translateX(-50%);
@@ -127,19 +149,11 @@
     0 12px 22px rgba(0,10,22,.60);
 }
 
+/* L'image finale contient déjà SARAH : pas de doublon texte. */
 .ga-direct-hero--sarah .ga-direct-hero__name {
-  color: #fffafd;
-  -webkit-text-stroke: 1px rgba(63,51,145,.88);
-  text-shadow:
-    2px 3px 0 #ff496d,
-    5px 6px 0 #2e3eaa,
-    0 0 12px rgba(255,255,255,.86),
-    0 0 27px rgba(87,201,255,.72),
-    0 0 46px rgba(255,70,107,.48),
-    0 12px 24px rgba(0,6,22,.66);
+  display: none;
 }
 
-/* Page colours stay themed, but the hero itself is completely independent. */
 .training-page[data-athlete-theme="louis"] {
   --athlete-accent: #a6ff48;
   --athlete-accent-light: #e9ffb3;
@@ -151,14 +165,49 @@
 }
 
 .training-page[data-athlete-theme="sarah"] {
-  --athlete-accent: #ff4d70;
+  --athlete-accent: #ff4d8d;
   --athlete-accent-light: #ffd86c;
-  --athlete-border: rgba(117,203,255,.22);
+  --athlete-border: rgba(117,203,255,.24);
+  --athlete-squat: #ff617f;
+  --athlete-bench: #5ca7ff;
+  --athlete-dead: #b56cff;
   background:
-    radial-gradient(circle at 12% 0%,rgba(55,115,255,.20),transparent 30%),
-    radial-gradient(circle at 88% 8%,rgba(255,55,86,.20),transparent 32%),
-    radial-gradient(circle at 52% 19%,rgba(180,91,255,.11),transparent 25%),
-    linear-gradient(180deg,#050814 0%,#10091a 520px,#060812 100%) !important;
+    radial-gradient(circle at 10% 0%,rgba(54,116,255,.22),transparent 31%),
+    radial-gradient(circle at 90% 6%,rgba(255,55,118,.21),transparent 32%),
+    radial-gradient(circle at 50% 22%,rgba(179,85,255,.13),transparent 28%),
+    linear-gradient(180deg,#050814 0%,#120a22 560px,#070914 100%) !important;
+}
+
+.training-page[data-athlete-theme="sarah"] .training-topbar,
+.training-page[data-athlete-theme="sarah"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="sarah"] .training-v3-history,
+.training-page[data-athlete-theme="sarah"] .training-v3-overview,
+.training-page[data-athlete-theme="sarah"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="sarah"] .training-session-v11,
+.training-page[data-athlete-theme="sarah"] .training-block-report-v11,
+.training-page[data-athlete-theme="sarah"] .training-summary,
+.training-page[data-athlete-theme="sarah"] .athlete-pr-panel,
+.training-page[data-athlete-theme="sarah"] .athlete-steps-panel-v249 {
+  border-color: rgba(111,184,255,.22) !important;
+  background:
+    linear-gradient(145deg,rgba(11,18,46,.95),rgba(33,15,55,.90)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 16px 40px rgba(0,0,0,.28);
+}
+
+.training-page[data-athlete-theme="sarah"] .training-kicker,
+.training-page[data-athlete-theme="sarah"] .set-number,
+.training-page[data-athlete-theme="sarah"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="sarah"] .training-block-report-v11__kicker {
+  color:#ff73aa;
+}
+
+.training-page[data-athlete-theme="sarah"] .week-tab--active,
+.training-page[data-athlete-theme="sarah"] .day-tab-v2--active {
+  border-color:#ff5f9c;
+  background:linear-gradient(135deg,rgba(255,77,141,.30),rgba(86,112,255,.26));
+  box-shadow:0 0 24px rgba(255,75,149,.12);
 }
 
 @keyframes ga-direct-louis-drift {
@@ -168,9 +217,20 @@
 }
 
 @keyframes ga-direct-sarah-drift {
-  0%   { transform: scale(1.01) translate3d(0,0,0); }
-  50%  { transform: scale(1.05) translate3d(-.45%,-.35%,0); }
-  100% { transform: scale(1.07) translate3d(.55%,-.20%,0); }
+  0%   { transform:scale(1.012) translate3d(0,0,0); }
+  35%  { transform:scale(1.038) translate3d(-.38%,-.24%,0); }
+  70%  { transform:scale(1.055) translate3d(.35%,-.16%,0); }
+  100% { transform:scale(1.028) translate3d(.12%,.18%,0); }
+}
+
+@keyframes ga-direct-sarah-pulse {
+  0%,100% { filter:saturate(1.08) contrast(1.04) brightness(1.01); }
+  50% { filter:saturate(1.18) contrast(1.06) brightness(1.09); }
+}
+
+@keyframes ga-sarah-aura {
+  from { opacity:.70; transform:scale(1); }
+  to { opacity:1; transform:scale(1.025); }
 }
 
 @keyframes ga-direct-louis-light {
@@ -180,9 +240,9 @@
 }
 
 @keyframes ga-direct-sarah-light {
-  0%,12% { left:-42%; opacity:.16; }
-  50% { left:58%; opacity:.90; }
-  88%,100% { left:118%; opacity:.14; }
+  0%,14% { left:-42%; opacity:.10; }
+  50% { left:58%; opacity:.78; }
+  88%,100% { left:118%; opacity:.08; }
 }
 
 @keyframes ga-direct-name-float {
@@ -191,8 +251,13 @@
 }
 
 @media (max-width:560px) {
-  .ga-direct-hero {
+  .ga-direct-hero--louis {
     aspect-ratio:1.72 / 1;
+    border-radius:22px;
+  }
+
+  .ga-direct-hero--sarah {
+    aspect-ratio:16 / 9;
     border-radius:22px;
   }
 
