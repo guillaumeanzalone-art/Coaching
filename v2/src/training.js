@@ -4305,6 +4305,47 @@ export function mountTraining(
       `
     }
 
+    if (
+      athleteTheme?.variant ===
+      'emerald-realm'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--louis-emerald"
+          aria-label="Univers émeraude animé de Louis"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="louis-emerald-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Louis dans son royaume de jeu avec le dragon émeraude"
+                  width="1983"
+                  height="793"
+                >
+              `
+              : ''
+          }
+
+          <div class="louis-emerald-shade" aria-hidden="true"></div>
+          <div class="louis-emerald-dragon-aura" aria-hidden="true"></div>
+          <div class="louis-emerald-blocks" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="louis-emerald-sparks" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </section>
+      `
+    }
+
     if (!quote) {
       return ''
     }

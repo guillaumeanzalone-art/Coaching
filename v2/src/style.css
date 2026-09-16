@@ -4169,3 +4169,430 @@ body {
     animation: none;
   }
 }
+
+/* LOUIS EMERALD REALM — native animated theme */
+.training-page[data-athlete-theme="louis"] {
+  --louis-emerald: #43f178;
+  --louis-lime: #b9ff69;
+  --louis-cyan: #58d8ff;
+  --louis-gold: #ffd565;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #f5fff8;
+  background:
+    radial-gradient(circle at 13% 5%, rgba(55, 204, 255, .20), transparent 31%),
+    radial-gradient(circle at 80% 10%, rgba(77, 255, 117, .24), transparent 35%),
+    radial-gradient(circle at 48% 45%, rgba(62, 204, 102, .13), transparent 38%),
+    linear-gradient(180deg, #04140f 0%, #072019 46%, #03100c 100%);
+}
+
+.training-page[data-athlete-theme="louis"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -18%;
+  pointer-events: none;
+  opacity: .76;
+  background:
+    linear-gradient(90deg, transparent 49.4%, rgba(82, 239, 133, .055) 49.5% 50.5%, transparent 50.6%),
+    linear-gradient(0deg, transparent 49.4%, rgba(82, 239, 133, .045) 49.5% 50.5%, transparent 50.6%),
+    radial-gradient(circle at 22% 29%, rgba(55, 182, 255, .16), transparent 23%),
+    radial-gradient(circle at 76% 21%, rgba(65, 255, 127, .17), transparent 22%);
+  background-size: 92px 92px, 92px 92px, 100% 100%, 100% 100%;
+  filter: blur(.2px);
+  transform: perspective(700px) rotateX(56deg) translate3d(0, -18%, 0) scale(1.35);
+  transform-origin: center top;
+  animation: louis-emerald-grid 18s linear infinite;
+}
+
+.training-page[data-athlete-theme="louis"] .training-topbar {
+  position: relative;
+  z-index: 5;
+  border: 1px solid rgba(82, 240, 137, .30);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(5, 36, 25, .94), rgba(11, 66, 45, .83));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .08),
+    0 18px 48px rgba(0, 12, 7, .38),
+    0 0 34px rgba(75, 239, 126, .10);
+  backdrop-filter: blur(15px);
+  animation: louis-emerald-topbar 8s ease-in-out infinite;
+}
+
+.training-page[data-athlete-theme="louis"] .training-topbar h1 {
+  color: #f6fff8;
+  text-shadow: 0 0 23px rgba(85, 255, 143, .26);
+}
+
+.training-page[data-athlete-theme="louis"] .training-kicker,
+.training-page[data-athlete-theme="louis"] .set-number,
+.training-page[data-athlete-theme="louis"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="louis"] .training-block-report-v11__kicker {
+  color: #7dffa8;
+}
+
+.training-page[data-athlete-theme="louis"] .back-button,
+.training-page[data-athlete-theme="louis"] .reset-button {
+  min-height: 44px;
+  border-color: rgba(84, 239, 137, .29);
+  background: rgba(5, 38, 26, .84);
+  color: #effff4;
+}
+
+.training-page[data-athlete-theme="louis"] .back-button:hover,
+.training-page[data-athlete-theme="louis"] .reset-button:hover {
+  border-color: rgba(185, 255, 105, .68);
+  background: rgba(12, 78, 49, .94);
+  color: #fff;
+}
+
+.athlete-theme-banner--louis-emerald {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(90, 244, 143, .42);
+  border-radius: 30px;
+  background: #04130d;
+  box-shadow:
+    0 30px 82px rgba(0, 15, 8, .57),
+    0 0 50px rgba(75, 239, 125, .18),
+    0 0 66px rgba(73, 203, 255, .10),
+    inset 0 1px 0 rgba(255, 255, 255, .11);
+  animation: louis-emerald-banner-float 9s ease-in-out infinite;
+}
+
+.athlete-theme-banner--louis-emerald::before {
+  content: "";
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    111deg,
+    transparent 0%,
+    transparent 31%,
+    rgba(112, 255, 162, .02) 38%,
+    rgba(239, 255, 226, .26) 47%,
+    rgba(86, 232, 255, .11) 53%,
+    transparent 61%,
+    transparent 100%
+  );
+  background-size: 230% 100%;
+  background-position: -130% 0;
+  mix-blend-mode: screen;
+  animation: louis-emerald-sweep 6.6s ease-in-out infinite;
+}
+
+.athlete-theme-banner--louis-emerald::after {
+  content: "";
+  position: absolute;
+  z-index: 9;
+  inset: 9px;
+  pointer-events: none;
+  border: 1px solid rgba(225, 255, 227, .11);
+  border-radius: 22px;
+  box-shadow:
+    inset 0 0 36px rgba(74, 244, 127, .07),
+    inset 0 -36px 62px rgba(2, 17, 10, .10);
+}
+
+.louis-emerald-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2.5%;
+  display: block;
+  width: 105%;
+  height: 105%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(1.06) contrast(1.035) brightness(1.02);
+  transform-origin: 50% 50%;
+  will-change: transform, filter;
+  animation: louis-emerald-world 13s ease-in-out infinite alternate;
+}
+
+.louis-emerald-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 51% 40%, transparent 18%, rgba(3, 23, 13, .02) 56%, rgba(2, 15, 9, .27) 100%),
+    linear-gradient(180deg, rgba(4, 28, 18, .07), transparent 36%, transparent 69%, rgba(2, 19, 11, .25));
+}
+
+.louis-emerald-dragon-aura {
+  position: absolute;
+  z-index: 2;
+  top: -23%;
+  left: 22%;
+  width: 62%;
+  aspect-ratio: 1 / 1;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: .34;
+  background:
+    conic-gradient(from 20deg, transparent 0 18%, rgba(118, 255, 149, .20) 25%, transparent 34% 62%, rgba(84, 220, 255, .16) 70%, transparent 78%),
+    radial-gradient(circle, transparent 40%, rgba(82, 255, 128, .15) 49%, transparent 65%);
+  mix-blend-mode: screen;
+  filter: blur(4px);
+  animation: louis-emerald-aura 15s linear infinite;
+}
+
+.louis-emerald-dragon-aura::after {
+  content: "";
+  position: absolute;
+  inset: 19%;
+  border: 2px solid rgba(133, 255, 169, .24);
+  border-radius: 50%;
+  box-shadow: 0 0 28px rgba(75, 255, 127, .22), inset 0 0 28px rgba(86, 219, 255, .10);
+  animation: louis-emerald-pulse 4.8s ease-in-out infinite;
+}
+
+.louis-emerald-blocks,
+.louis-emerald-sparks {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.louis-emerald-blocks span {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(188, 255, 203, .45);
+  background: linear-gradient(145deg, rgba(101, 255, 143, .45), rgba(15, 115, 67, .20));
+  box-shadow: 0 0 17px rgba(80, 255, 131, .25), inset 3px 3px 6px rgba(255, 255, 255, .13);
+  transform: rotate(14deg);
+  animation: louis-emerald-block-float 9s ease-in-out infinite;
+}
+
+.louis-emerald-blocks span:nth-child(1) { top: 14%; left: 8%; animation-delay: 0s; }
+.louis-emerald-blocks span:nth-child(2) { top: 18%; right: 9%; width: 13px; height: 13px; animation-delay: 1.4s; }
+.louis-emerald-blocks span:nth-child(3) { bottom: 23%; left: 17%; width: 11px; height: 11px; animation-delay: 2.8s; }
+.louis-emerald-blocks span:nth-child(4) { right: 18%; bottom: 19%; width: 15px; height: 15px; animation-delay: 4.2s; }
+
+.louis-emerald-sparks span {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: #d7ff9b;
+  box-shadow: 0 0 9px #bfff81, 0 0 19px rgba(70, 255, 129, .82);
+  transform: rotate(45deg);
+  animation: louis-emerald-spark 3.7s ease-in-out infinite;
+}
+
+.louis-emerald-sparks span:nth-child(1) { top: 12%; left: 14%; animation-delay: 0s; }
+.louis-emerald-sparks span:nth-child(2) { top: 19%; right: 16%; width: 10px; height: 10px; animation-delay: .7s; }
+.louis-emerald-sparks span:nth-child(3) { top: 43%; left: 7%; width: 5px; height: 5px; animation-delay: 1.3s; }
+.louis-emerald-sparks span:nth-child(4) { top: 40%; right: 8%; animation-delay: 1.9s; }
+.louis-emerald-sparks span:nth-child(5) { bottom: 18%; left: 29%; width: 6px; height: 6px; animation-delay: 2.5s; }
+.louis-emerald-sparks span:nth-child(6) { right: 27%; bottom: 24%; width: 9px; height: 9px; animation-delay: 3.1s; }
+
+.training-page[data-athlete-theme="louis"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="louis"] .training-v3-history,
+.training-page[data-athlete-theme="louis"] .training-v3-overview,
+.training-page[data-athlete-theme="louis"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="louis"] .training-session-v11,
+.training-page[data-athlete-theme="louis"] .training-block-report-v11,
+.training-page[data-athlete-theme="louis"] .training-summary,
+.training-page[data-athlete-theme="louis"] .athlete-pr-panel,
+.training-page[data-athlete-theme="louis"] .athlete-steps-panel-v249 {
+  border-color: rgba(81, 228, 129, .21);
+  background: linear-gradient(145deg, rgba(5, 37, 25, .94), rgba(10, 66, 44, .87));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .06),
+    0 18px 46px rgba(0, 15, 8, .32);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="louis"] .week-tab,
+.training-page[data-athlete-theme="louis"] .day-tab-v2 {
+  border-color: rgba(82, 226, 130, .18);
+  background: rgba(5, 38, 26, .87);
+  color: #c9e5d3;
+}
+
+.training-page[data-athlete-theme="louis"] .week-tab strong,
+.training-page[data-athlete-theme="louis"] .day-tab-v2 strong {
+  color: #f5fff8;
+}
+
+.training-page[data-athlete-theme="louis"] .week-tab--active,
+.training-page[data-athlete-theme="louis"] .day-tab-v2--active {
+  border-color: rgba(150, 255, 113, .70);
+  background: linear-gradient(135deg, rgba(30, 157, 84, .68), rgba(30, 121, 103, .52));
+  color: #fff;
+  box-shadow: 0 0 26px rgba(72, 245, 124, .16);
+}
+
+.training-page[data-athlete-theme="louis"] .training-exercise {
+  border-color: rgba(79, 224, 126, .19);
+  background: rgba(4, 34, 22, .95);
+  box-shadow: 0 20px 50px rgba(0, 14, 7, .35);
+}
+
+.training-page[data-athlete-theme="louis"] .exercise-header {
+  border-bottom-color: rgba(90, 239, 140, .17);
+  background: linear-gradient(110deg, rgba(17, 118, 65, .95), rgba(12, 80, 63, .96));
+}
+
+.training-page[data-athlete-theme="louis"] .exercise-type {
+  border-color: rgba(255, 213, 101, .62);
+  background: rgba(255, 208, 80, .10);
+  color: #ffe29a;
+}
+
+.training-page[data-athlete-theme="louis"] .training-set {
+  border-color: rgba(80, 224, 126, .14);
+  background: rgba(6, 48, 31, .73);
+}
+
+.training-page[data-athlete-theme="louis"] .set-load,
+.training-page[data-athlete-theme="louis"] .set-rpe,
+.training-page[data-athlete-theme="louis"] .training-session-v11__note,
+.training-page[data-athlete-theme="louis"] .training-session-v11__metrics label > div {
+  border-color: rgba(87, 233, 136, .22);
+  background: rgba(4, 38, 25, .89);
+  color: #f5fff8;
+}
+
+.training-page[data-athlete-theme="louis"] .set-load:focus,
+.training-page[data-athlete-theme="louis"] .set-rpe:focus,
+.training-page[data-athlete-theme="louis"] .training-session-v11__note:focus {
+  border-color: #77ff9d;
+  box-shadow: 0 0 0 3px rgba(88, 255, 139, .13);
+}
+
+.training-page[data-athlete-theme="louis"] .training-sync {
+  border-color: rgba(87, 235, 136, .25);
+  background: rgba(4, 38, 25, .86);
+  color: #adffca;
+}
+
+.training-page[data-athlete-theme="louis"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #52dfff 0%, #42ed78 44%, #b9ff69 76%, #ffd565 100%);
+  box-shadow: 0 0 21px rgba(78, 244, 130, .29);
+}
+
+@media (hover: hover) {
+  .training-page[data-athlete-theme="louis"] .training-exercise,
+  .training-page[data-athlete-theme="louis"] .week-tab,
+  .training-page[data-athlete-theme="louis"] .day-tab-v2 {
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .training-page[data-athlete-theme="louis"] .training-exercise:hover,
+  .training-page[data-athlete-theme="louis"] .week-tab:hover,
+  .training-page[data-athlete-theme="louis"] .day-tab-v2:hover {
+    transform: translateY(-3px);
+    border-color: rgba(159, 255, 124, .52);
+    box-shadow: 0 23px 62px rgba(0, 24, 12, .44), 0 0 25px rgba(73, 225, 255, .09);
+  }
+}
+
+@keyframes louis-emerald-world {
+  0% { transform: scale(1.015) translate3d(-.2%, .15%, 0); filter: saturate(1.04) contrast(1.03) brightness(1.01); }
+  50% { transform: scale(1.058) translate3d(.45%, -.30%, 0); filter: saturate(1.13) contrast(1.05) brightness(1.055); }
+  100% { transform: scale(1.035) translate3d(-.12%, -.10%, 0); filter: saturate(1.08) contrast(1.04) brightness(1.025); }
+}
+
+@keyframes louis-emerald-sweep {
+  0%, 16% { background-position: -130% 0; opacity: .18; }
+  51% { background-position: 18% 0; opacity: .92; }
+  86%, 100% { background-position: 130% 0; opacity: .18; }
+}
+
+@keyframes louis-emerald-aura {
+  to { transform: rotate(360deg) scale(1.05); }
+}
+
+@keyframes louis-emerald-pulse {
+  0%, 100% { transform: scale(.88); opacity: .40; }
+  50% { transform: scale(1.10); opacity: .92; }
+}
+
+@keyframes louis-emerald-block-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(14deg); opacity: .42; }
+  50% { transform: translate3d(9px, -18px, 0) rotate(52deg); opacity: .96; }
+}
+
+@keyframes louis-emerald-spark {
+  0%, 100% { opacity: .18; transform: scale(.55) rotate(45deg); }
+  50% { opacity: 1; transform: scale(1.34) rotate(135deg); }
+}
+
+@keyframes louis-emerald-banner-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -5px, 0); }
+}
+
+@keyframes louis-emerald-grid {
+  from { background-position: 0 0, 0 0, 0 0, 0 0; }
+  to { background-position: 92px 0, 0 92px, 0 0, 0 0; }
+}
+
+@keyframes louis-emerald-topbar {
+  0%, 100% { border-color: rgba(82, 240, 137, .30); }
+  50% { border-color: rgba(185, 255, 105, .43); box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 20px 52px rgba(0,12,7,.39), 0 0 29px rgba(76,242,127,.12); }
+}
+
+@media (max-width: 760px) {
+  .athlete-theme-banner--louis-emerald {
+    border-radius: 26px;
+  }
+
+  .louis-emerald-hero {
+    object-position: 50% 50%;
+  }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="louis"] .training-topbar {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .athlete-theme-banner--louis-emerald {
+    aspect-ratio: 16 / 9;
+    border-radius: 23px;
+  }
+
+  .athlete-theme-banner--louis-emerald::after {
+    inset: 7px;
+    border-radius: 17px;
+  }
+
+  .louis-emerald-dragon-aura {
+    top: -9%;
+    left: 13%;
+    width: 76%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .training-page[data-athlete-theme="louis"]::before,
+  .training-page[data-athlete-theme="louis"] .training-topbar,
+  .athlete-theme-banner--louis-emerald,
+  .athlete-theme-banner--louis-emerald::before,
+  .louis-emerald-hero,
+  .louis-emerald-dragon-aura,
+  .louis-emerald-dragon-aura::after,
+  .louis-emerald-blocks span,
+  .louis-emerald-sparks span {
+    animation: none;
+  }
+}
