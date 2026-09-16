@@ -4,11 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <link rel="stylesheet" href="/theme-sarah-simple.css?v=21" />
     <title>L'araignée Coaching</title>
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+
+    <!--
+      Sarah V22: this stylesheet MUST stay after the Vite module.
+      main.js imports style.css dynamically into <head>; placing Sarah's
+      override at the end of <body> makes it later in cascade order,
+      exactly so its ::before image layer cannot be replaced by the
+      generic athlete banner rules from style.css.
+    -->
+    <link rel="stylesheet" href="/theme-sarah-simple.css?v=22" />
   </body>
 </html>
