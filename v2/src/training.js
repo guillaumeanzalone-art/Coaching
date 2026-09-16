@@ -4418,6 +4418,67 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'sun-champion'
+    ) {
+      const heroImage =
+        String(athleteTheme.heroImage || '').trim()
+      const strikeImage =
+        String(athleteTheme.strikeImage || '').trim()
+      const championImage =
+        String(athleteTheme.championImage || '').trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--yann"
+          aria-label="Univers solaire de Yannick"
+        >
+          ${heroImage ? `
+            <img
+              class="yann-sun-hero"
+              src="${escapeHtml(heroImage)}"
+              alt="Guerrier solaire devant l’emblème du lion"
+              width="2048"
+              height="1152"
+            >
+          ` : ''}
+
+          <div class="yann-sun-shade" aria-hidden="true"></div>
+          <div class="yann-sun-orbit" aria-hidden="true"></div>
+
+          ${strikeImage ? `
+            <figure class="yann-sun-card yann-sun-card--strike">
+              <img
+                src="${escapeHtml(strikeImage)}"
+                alt="Guerrier solaire lançant une attaque dorée"
+                width="2048"
+                height="1280"
+              >
+            </figure>
+          ` : ''}
+
+          ${championImage ? `
+            <figure class="yann-sun-card yann-sun-card--champion">
+              <img
+                src="${escapeHtml(championImage)}"
+                alt="Kobe Bryant célébrant son titre de champion"
+                width="1600"
+                height="1066"
+              >
+            </figure>
+          ` : ''}
+
+          <div class="yann-sun-embers" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div class="yann-champion-confetti" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'mew-dream'
     ) {
       const heroImage =
