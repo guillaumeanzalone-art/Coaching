@@ -1,0 +1,214 @@
+/* GA COACHING — Sarah/Louis V19: chemins racine simples et rendu direct */
+.ga-direct-hero {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  margin: 0 0 20px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 28px;
+  background-color: #07141b;
+  box-shadow: 0 28px 72px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.ga-direct-hero--louis { aspect-ratio: 5 / 2; }
+.ga-direct-hero--sarah { aspect-ratio: 16 / 9; }
+
+/* Fallback principal : l'image est aussi directement le background du hero.
+   Donc même si une règle extérieure touche <img>, l'image reste visible. */
+.ga-direct-hero--louis {
+  background-image: url('/louis-theme.webp?v=19') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+.ga-direct-hero--sarah {
+  background-image: url('/sarah-theme.webp?v=19') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  animation: ga-sarah-background 13s ease-in-out infinite alternate;
+}
+
+.ga-direct-hero__image {
+  position: absolute !important;
+  z-index: 1 !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: none;
+  user-select: none;
+  border: 0 !important;
+  transform-origin: 50% 50%;
+  will-change: transform, filter;
+}
+
+.ga-direct-hero--louis .ga-direct-hero__image {
+  filter: saturate(1.08) contrast(1.035) brightness(1.04);
+  animation: ga-louis-drift 12s ease-in-out infinite alternate;
+}
+
+.ga-direct-hero--sarah .ga-direct-hero__image {
+  filter: saturate(1.08) contrast(1.04) brightness(1.04);
+  animation: ga-sarah-drift 13s ease-in-out infinite alternate;
+}
+
+.ga-direct-hero__overlay,
+.ga-direct-hero__glow,
+.ga-direct-hero__light {
+  position: absolute;
+  pointer-events: none;
+}
+
+.ga-direct-hero__overlay {
+  z-index: 2;
+  inset: 0;
+}
+
+.ga-direct-hero--sarah .ga-direct-hero__overlay {
+  background:
+    radial-gradient(circle at 25% 34%, rgba(255,197,49,.13), transparent 24%),
+    radial-gradient(circle at 72% 38%, rgba(255,57,163,.13), transparent 28%),
+    radial-gradient(circle at 51% 48%, rgba(68,174,255,.10), transparent 32%),
+    linear-gradient(180deg, rgba(2,4,18,.00), rgba(2,4,18,.08));
+  animation: ga-sarah-aura 5.5s ease-in-out infinite;
+}
+
+.ga-direct-hero--louis .ga-direct-hero__overlay {
+  background:
+    radial-gradient(circle at 52% 48%, rgba(158,255,82,.08), transparent 42%),
+    linear-gradient(180deg, rgba(2,9,12,.02), transparent 54%, rgba(2,10,13,.20));
+}
+
+.ga-direct-hero__glow {
+  z-index: 3;
+  inset: -18%;
+  opacity: .45;
+  filter: blur(38px);
+}
+
+.ga-direct-hero--sarah .ga-direct-hero__glow {
+  background:
+    conic-gradient(from 20deg at 50% 50%, transparent 0 18%, rgba(255,182,35,.16) 24%, transparent 33%, rgba(255,52,166,.18) 48%, transparent 60%, rgba(54,168,255,.18) 72%, transparent 84%);
+  animation: ga-sarah-glow 10s linear infinite;
+}
+
+.ga-direct-hero__light {
+  z-index: 4;
+  top: -18%;
+  bottom: -18%;
+  left: -42%;
+  width: 28%;
+  transform: skewX(-18deg);
+  filter: blur(8px);
+}
+
+.ga-direct-hero--sarah .ga-direct-hero__light {
+  background: linear-gradient(90deg, transparent, rgba(87,194,255,.10), rgba(255,239,205,.34), rgba(255,73,112,.19), transparent);
+  animation: ga-sarah-light 6.1s ease-in-out infinite;
+}
+
+.ga-direct-hero--louis .ga-direct-hero__light {
+  background: linear-gradient(90deg, transparent, rgba(191,255,128,.08), rgba(229,255,198,.34), rgba(103,235,255,.18), transparent);
+  animation: ga-louis-light 5.8s ease-in-out infinite;
+}
+
+.ga-direct-hero__name {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 5.2%;
+  margin: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+  white-space: nowrap;
+  font-family: "Arial Black", "Trebuchet MS", system-ui, sans-serif;
+  font-size: clamp(48px,8.7vw,88px);
+  font-weight: 950;
+  line-height: .88;
+  letter-spacing: -.065em;
+  text-transform: uppercase;
+  color: #f8fff2;
+  -webkit-text-stroke: 1px rgba(47,92,28,.82);
+  text-shadow: 2px 3px 0 #8bdf37, 5px 6px 0 #235e26, 0 0 12px rgba(255,255,255,.82), 0 0 26px rgba(158,255,77,.78), 0 12px 22px rgba(0,10,22,.60);
+  animation: ga-name-float 4.5s ease-in-out infinite;
+}
+
+.training-page[data-athlete-theme="sarah"] {
+  --athlete-accent: #ff4d70;
+  --athlete-accent-light: #ffd86c;
+  --athlete-border: rgba(117,203,255,.22);
+  background:
+    radial-gradient(circle at 12% 0%,rgba(55,115,255,.20),transparent 30%),
+    radial-gradient(circle at 88% 8%,rgba(255,55,86,.20),transparent 32%),
+    radial-gradient(circle at 52% 19%,rgba(180,91,255,.11),transparent 25%),
+    linear-gradient(180deg,#050814 0%,#10091a 520px,#060812 100%) !important;
+}
+
+.training-page[data-athlete-theme="louis"] {
+  --athlete-accent: #a6ff48;
+  --athlete-accent-light: #e9ffb3;
+  --athlete-border: rgba(145,255,104,.20);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(139,255,73,.15), transparent 28%),
+    radial-gradient(circle at 94% 18%, rgba(71,214,255,.12), transparent 28%),
+    linear-gradient(180deg,#071119 0%,#071c21 520px,#061118 100%) !important;
+}
+
+@keyframes ga-sarah-drift {
+  0% { transform: scale(1.00) translate3d(0,0,0); }
+  50% { transform: scale(1.035) translate3d(-.35%,-.20%,0); }
+  100% { transform: scale(1.055) translate3d(.30%,-.10%,0); }
+}
+
+@keyframes ga-sarah-background {
+  0% { background-size: 100% 100%; background-position: 50% 50%; }
+  100% { background-size: 106% 106%; background-position: 51% 49%; }
+}
+
+@keyframes ga-sarah-aura {
+  0%,100% { opacity: .55; }
+  50% { opacity: .95; }
+}
+
+@keyframes ga-sarah-glow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ga-sarah-light {
+  0%,12% { left:-42%; opacity:.16; }
+  50% { left:58%; opacity:.90; }
+  88%,100% { left:118%; opacity:.14; }
+}
+
+@keyframes ga-louis-drift {
+  0% { transform: scale(1.01); }
+  100% { transform: scale(1.07) translate3d(.45%,-.15%,0); }
+}
+
+@keyframes ga-louis-light {
+  0%,12% { left:-42%; opacity:.18; }
+  50% { left:58%; opacity:.92; }
+  88%,100% { left:118%; opacity:.16; }
+}
+
+@keyframes ga-name-float {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+@media (max-width:560px) {
+  .ga-direct-hero--louis { aspect-ratio: 1.72 / 1; }
+  .ga-direct-hero--sarah { aspect-ratio: 16 / 10; }
+  .ga-direct-hero { border-radius: 22px; }
+  .ga-direct-hero__name { font-size: clamp(36px,12vw,54px); }
+}
