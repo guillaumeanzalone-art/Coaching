@@ -5072,3 +5072,387 @@ body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .athlete-st
     transform: none;
   }
 }
+
+/* BENOIT SACRED EMERALD — faith, training and battle */
+.training-page[data-athlete-theme="benoit"] {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #fff9e8;
+  background:
+    radial-gradient(circle at 50% -4%, rgba(255, 211, 97, .18), transparent 28%),
+    radial-gradient(circle at 12% 12%, rgba(48, 206, 106, .20), transparent 31%),
+    radial-gradient(circle at 86% 18%, rgba(72, 150, 255, .14), transparent 29%),
+    linear-gradient(180deg, #06130d 0%, #0b2518 48%, #06110b 100%);
+}
+
+.training-page[data-athlete-theme="benoit"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -15%;
+  pointer-events: none;
+  opacity: .66;
+  background:
+    linear-gradient(90deg, transparent 49.5%, rgba(88, 231, 133, .05) 49.6% 50.4%, transparent 50.5%),
+    linear-gradient(0deg, transparent 49.5%, rgba(88, 231, 133, .04) 49.6% 50.4%, transparent 50.5%),
+    radial-gradient(circle at 50% 18%, rgba(255, 211, 92, .15), transparent 28%);
+  background-size: 64px 64px, 64px 64px, 100% 100%;
+  transform: perspective(720px) rotateX(58deg) translate3d(0, -15%, 0) scale(1.4);
+  transform-origin: center top;
+  animation: benoit-sacred-grid 20s linear infinite;
+}
+
+.training-page[data-athlete-theme="benoit"] .training-topbar {
+  position: relative;
+  z-index: 5;
+  border: 1px solid rgba(243, 205, 103, .31);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(7, 35, 22, .95), rgba(25, 65, 41, .86));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 18px 48px rgba(0, 10, 5, .38), 0 0 30px rgba(236, 193, 76, .09);
+  backdrop-filter: blur(15px);
+  animation: benoit-sacred-topbar 8s ease-in-out infinite;
+}
+
+.training-page[data-athlete-theme="benoit"] .training-kicker {
+  display: none;
+}
+
+.training-page[data-athlete-theme="benoit"] .training-topbar h1 {
+  color: #fff8db;
+  text-shadow: 0 0 22px rgba(255, 213, 102, .22);
+}
+
+.training-page[data-athlete-theme="benoit"] .back-button,
+.training-page[data-athlete-theme="benoit"] .reset-button {
+  min-height: 44px;
+  border-color: rgba(240, 204, 103, .28);
+  background: rgba(7, 39, 24, .88);
+  color: #fff4d2;
+}
+
+.training-page[data-athlete-theme="benoit"] .back-button:hover,
+.training-page[data-athlete-theme="benoit"] .reset-button:hover {
+  border-color: rgba(255, 225, 139, .58);
+  background: rgba(16, 73, 42, .95);
+  color: #fff;
+}
+
+.athlete-theme-banner--benoit-sacred {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(247, 211, 107, .46);
+  border-radius: 30px;
+  background: #06170e;
+  box-shadow: 0 30px 84px rgba(0, 12, 6, .56), 0 0 50px rgba(241, 194, 66, .14), 0 0 42px rgba(62, 214, 112, .10), inset 0 1px 0 rgba(255, 255, 255, .13);
+  animation: benoit-sacred-banner-float 9s ease-in-out infinite;
+}
+
+.athlete-theme-banner--benoit-sacred::before {
+  content: "";
+  position: absolute;
+  z-index: 8;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(109deg, transparent 0 34%, rgba(255, 238, 172, .02) 40%, rgba(255, 244, 194, .30) 49%, rgba(255, 206, 84, .08) 57%, transparent 64% 100%);
+  background-size: 230% 100%;
+  background-position: -140% 0;
+  mix-blend-mode: screen;
+  animation: benoit-sacred-sweep 7.2s ease-in-out infinite;
+}
+
+.athlete-theme-banner--benoit-sacred::after {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  inset: 9px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 241, 189, .17);
+  border-radius: 22px;
+  box-shadow: inset 0 0 38px rgba(255, 214, 101, .06), inset 0 -34px 64px rgba(1, 14, 7, .12);
+}
+
+.benoit-sacred-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2.5%;
+  display: block;
+  width: 105%;
+  height: 105%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(1.04) contrast(1.035) brightness(.98);
+  transform-origin: 50% 47%;
+  will-change: transform, filter;
+  animation: benoit-sacred-world 14s ease-in-out infinite alternate;
+}
+
+.benoit-sacred-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 51% 40%, transparent 19%, rgba(2, 18, 9, .02) 54%, rgba(1, 10, 5, .30) 100%),
+    linear-gradient(90deg, rgba(2, 14, 8, .35), transparent 37%, transparent 69%, rgba(2, 12, 7, .18));
+}
+
+.benoit-sacred-rays {
+  position: absolute;
+  z-index: 2;
+  top: -54%;
+  left: 34%;
+  width: 34%;
+  height: 145%;
+  pointer-events: none;
+  opacity: .34;
+  background: conic-gradient(from 170deg at 50% 0%, transparent 0 8deg, rgba(255, 238, 165, .42) 12deg, transparent 17deg 24deg, rgba(255, 218, 104, .30) 29deg, transparent 35deg 47deg, rgba(255, 246, 199, .36) 51deg, transparent 57deg);
+  filter: blur(5px);
+  mix-blend-mode: screen;
+  transform-origin: 50% 0;
+  animation: benoit-sacred-rays 7s ease-in-out infinite alternate;
+}
+
+.benoit-sacred-lightning,
+.benoit-sacred-pixels {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.benoit-sacred-lightning span {
+  position: absolute;
+  width: 3px;
+  height: 70px;
+  opacity: 0;
+  background: linear-gradient(#fff7cc, #73c7ff, transparent);
+  clip-path: polygon(45% 0, 100% 0, 65% 42%, 96% 42%, 18% 100%, 39% 55%, 0 55%);
+  filter: drop-shadow(0 0 7px rgba(121, 201, 255, .95));
+  animation: benoit-sacred-flash 6.8s steps(1, end) infinite;
+}
+
+.benoit-sacred-lightning span:nth-child(1) { top: 5%; left: 13%; animation-delay: .5s; }
+.benoit-sacred-lightning span:nth-child(2) { top: 8%; right: 15%; height: 58px; animation-delay: 2.9s; }
+.benoit-sacred-lightning span:nth-child(3) { top: 2%; right: 33%; height: 42px; animation-delay: 5.1s; }
+
+.benoit-sacred-pixels span {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 1px solid rgba(255, 238, 155, .46);
+  background: rgba(75, 230, 125, .34);
+  box-shadow: 0 0 13px rgba(83, 236, 132, .34);
+  transform: rotate(45deg);
+  animation: benoit-sacred-pixel 7.8s ease-in-out infinite;
+}
+
+.benoit-sacred-pixels span:nth-child(1) { top: 13%; left: 7%; animation-delay: 0s; }
+.benoit-sacred-pixels span:nth-child(2) { top: 18%; right: 8%; width: 7px; height: 7px; animation-delay: 1.4s; }
+.benoit-sacred-pixels span:nth-child(3) { bottom: 16%; left: 12%; width: 8px; height: 8px; animation-delay: 2.8s; }
+.benoit-sacred-pixels span:nth-child(4) { right: 14%; bottom: 18%; animation-delay: 4.2s; }
+.benoit-sacred-pixels span:nth-child(5) { top: 8%; left: 72%; width: 6px; height: 6px; animation-delay: 5.6s; }
+
+.benoit-sacred-psalms {
+  position: absolute;
+  z-index: 7;
+  top: 22px;
+  left: 22px;
+  width: min(42%, 390px);
+  min-height: 126px;
+  pointer-events: none;
+}
+
+.benoit-sacred-psalms article {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  padding: 15px 17px 14px;
+  opacity: 0;
+  border: 1px solid rgba(255, 225, 135, .36);
+  border-radius: 17px;
+  background: linear-gradient(135deg, rgba(3, 23, 14, .88), rgba(22, 57, 34, .70));
+  box-shadow: 0 16px 38px rgba(0, 8, 4, .34), inset 0 1px 0 rgba(255, 255, 255, .08);
+  backdrop-filter: blur(12px);
+  transform: translate3d(-8px, 8px, 0);
+  animation: benoit-psalm-cycle 18s ease-in-out infinite;
+}
+
+.benoit-sacred-psalms article:nth-child(2) { animation-delay: 6s; }
+.benoit-sacred-psalms article:nth-child(3) { animation-delay: 12s; }
+
+.benoit-sacred-psalms blockquote {
+  margin: 0;
+  color: #fff9e6;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(12px, 1.45vw, 17px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: .01em;
+  text-shadow: 0 2px 13px rgba(0, 0, 0, .64);
+}
+
+.benoit-sacred-psalms cite {
+  display: block;
+  margin-top: 8px;
+  color: #f7d77c;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.training-page[data-athlete-theme="benoit"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="benoit"] .training-v3-history,
+.training-page[data-athlete-theme="benoit"] .training-v3-overview,
+.training-page[data-athlete-theme="benoit"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="benoit"] .training-session-v11,
+.training-page[data-athlete-theme="benoit"] .training-block-report-v11,
+.training-page[data-athlete-theme="benoit"] .training-summary,
+.training-page[data-athlete-theme="benoit"] .athlete-pr-panel,
+.training-page[data-athlete-theme="benoit"] .athlete-steps-panel-v249 {
+  border-color: rgba(239, 202, 98, .22);
+  background: linear-gradient(145deg, rgba(6, 37, 22, .94), rgba(18, 71, 40, .86));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 18px 46px rgba(0, 11, 5, .33);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="benoit"] .week-tab,
+.training-page[data-athlete-theme="benoit"] .day-tab-v2 {
+  border-color: rgba(235, 199, 96, .18);
+  background: rgba(6, 41, 24, .88);
+  color: #d1dfd2;
+}
+
+.training-page[data-athlete-theme="benoit"] .week-tab--active,
+.training-page[data-athlete-theme="benoit"] .day-tab-v2--active {
+  border-color: rgba(255, 218, 107, .68);
+  background: linear-gradient(135deg, rgba(39, 153, 76, .75), rgba(35, 105, 73, .68));
+  color: #fff;
+  box-shadow: 0 0 25px rgba(239, 195, 69, .12);
+}
+
+.training-page[data-athlete-theme="benoit"] .training-exercise {
+  border-color: rgba(236, 200, 98, .19);
+  background: rgba(5, 34, 20, .95);
+  box-shadow: 0 20px 50px rgba(0, 10, 4, .34);
+}
+
+.training-page[data-athlete-theme="benoit"] .exercise-header {
+  border-bottom-color: rgba(241, 204, 101, .17);
+  background: linear-gradient(110deg, rgba(31, 123, 65, .96), rgba(21, 79, 55, .96));
+}
+
+.training-page[data-athlete-theme="benoit"] .set-number,
+.training-page[data-athlete-theme="benoit"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="benoit"] .training-block-report-v11__kicker {
+  color: #f5d36f;
+}
+
+.training-page[data-athlete-theme="benoit"] .training-set,
+.training-page[data-athlete-theme="benoit"] .set-load,
+.training-page[data-athlete-theme="benoit"] .set-rpe,
+.training-page[data-athlete-theme="benoit"] .training-session-v11__note,
+.training-page[data-athlete-theme="benoit"] .training-session-v11__metrics label > div {
+  border-color: rgba(229, 196, 99, .18);
+  background: rgba(7, 45, 26, .84);
+  color: #fff9e8;
+}
+
+.training-page[data-athlete-theme="benoit"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #4ea4e8 0%, #43da78 39%, #f1cb5c 74%, #fff0a7 100%);
+  box-shadow: 0 0 21px rgba(238, 199, 80, .24);
+}
+
+@keyframes benoit-sacred-world {
+  0% { transform: scale(1.012) translate3d(-.18%, .12%, 0); filter: saturate(1.02) contrast(1.03) brightness(.97); }
+  50% { transform: scale(1.055) translate3d(.34%, -.28%, 0); filter: saturate(1.11) contrast(1.05) brightness(1.045); }
+  100% { transform: scale(1.032) translate3d(-.08%, -.12%, 0); filter: saturate(1.06) contrast(1.04) brightness(1.01); }
+}
+
+@keyframes benoit-sacred-sweep {
+  0%, 16% { background-position: -140% 0; opacity: .16; }
+  52% { background-position: 20% 0; opacity: .92; }
+  87%, 100% { background-position: 140% 0; opacity: .15; }
+}
+
+@keyframes benoit-sacred-rays {
+  from { transform: rotate(-3deg) scale(.96); opacity: .22; }
+  to { transform: rotate(3deg) scale(1.08); opacity: .48; }
+}
+
+@keyframes benoit-sacred-flash {
+  0%, 7%, 9%, 100% { opacity: 0; }
+  7.4%, 8.2% { opacity: .88; }
+}
+
+@keyframes benoit-sacred-pixel {
+  0%, 100% { opacity: .18; transform: translate3d(0, 0, 0) rotate(45deg) scale(.7); }
+  50% { opacity: .82; transform: translate3d(5px, -15px, 0) rotate(135deg) scale(1.16); }
+}
+
+@keyframes benoit-psalm-cycle {
+  0% { opacity: 0; transform: translate3d(-8px, 8px, 0); }
+  6%, 27% { opacity: 1; transform: translate3d(0, 0, 0); }
+  33%, 100% { opacity: 0; transform: translate3d(8px, -5px, 0); }
+}
+
+@keyframes benoit-sacred-banner-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -5px, 0); }
+}
+
+@keyframes benoit-sacred-grid {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to { background-position: 64px 0, 0 64px, 0 0; }
+}
+
+@keyframes benoit-sacred-topbar {
+  0%, 100% { border-color: rgba(243, 205, 103, .31); }
+  50% { border-color: rgba(107, 231, 137, .40); box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 20px 52px rgba(0,10,5,.39), 0 0 29px rgba(239,197,77,.10); }
+}
+
+@media (max-width: 760px) {
+  .athlete-theme-banner--benoit-sacred { border-radius: 26px; }
+  .benoit-sacred-psalms { width: min(48%, 340px); }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="benoit"] .training-topbar { padding: 12px; border-radius: 18px; }
+  .athlete-theme-banner--benoit-sacred { aspect-ratio: 4 / 3; border-radius: 23px; }
+  .athlete-theme-banner--benoit-sacred::after { inset: 7px; border-radius: 17px; }
+  .benoit-sacred-hero { object-position: 50% 50%; }
+  .benoit-sacred-psalms { top: 12px; left: 12px; width: min(72%, 280px); min-height: 104px; }
+  .benoit-sacred-psalms article { padding: 11px 12px 10px; border-radius: 13px; }
+  .benoit-sacred-psalms blockquote { font-size: 10px; line-height: 1.28; }
+  .benoit-sacred-psalms cite { margin-top: 5px; font-size: 7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .training-page[data-athlete-theme="benoit"]::before,
+  .training-page[data-athlete-theme="benoit"] .training-topbar,
+  .athlete-theme-banner--benoit-sacred,
+  .athlete-theme-banner--benoit-sacred::before,
+  .benoit-sacred-hero,
+  .benoit-sacred-rays,
+  .benoit-sacred-lightning span,
+  .benoit-sacred-pixels span,
+  .benoit-sacred-psalms article {
+    animation: none;
+  }
+
+  .benoit-sacred-psalms article:first-child { opacity: 1; transform: none; }
+  .benoit-sacred-psalms article:not(:first-child) { display: none; }
+}

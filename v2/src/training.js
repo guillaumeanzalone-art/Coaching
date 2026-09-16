@@ -4367,7 +4367,7 @@ export function mountTraining(
                 <img
                   class="celia-cats-hero"
                   src="${escapeHtml(heroImage)}"
-                  alt="Célia entourée de nombreux chats dans un camp français kawaii"
+                  alt="Une brigade de chats dans un camp français kawaii"
                   width="1672"
                   height="941"
                 >
@@ -4382,6 +4382,68 @@ export function mountTraining(
           </div>
           <div class="celia-cats-hearts" aria-hidden="true">
             <span></span><span></span><span></span><span></span>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
+      'sacred-emerald'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--benoit-sacred"
+          aria-label="Univers Émeraude sacré animé de Benoît"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="benoit-sacred-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Benoît face au temple Émeraude avec ses compagnons d’entraînement"
+                  width="1672"
+                  height="941"
+                >
+              `
+              : ''
+          }
+
+          <div class="benoit-sacred-shade" aria-hidden="true"></div>
+          <div class="benoit-sacred-rays" aria-hidden="true"></div>
+          <div class="benoit-sacred-lightning" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="benoit-sacred-pixels" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <div class="benoit-sacred-psalms" aria-label="Psaumes de force et de confiance">
+            <article>
+              <blockquote>
+                Béni soit l’Éternel, mon rocher, qui exerce mes mains au combat, mes doigts à la bataille.
+              </blockquote>
+              <cite>Psaume 144:1</cite>
+            </article>
+            <article>
+              <blockquote>
+                Tu me ceins de force pour le combat, tu fais plier sous moi mes adversaires.
+              </blockquote>
+              <cite>Psaume 18:40</cite>
+            </article>
+            <article>
+              <blockquote>
+                Si une armée se campait contre moi, mon cœur n’aurait aucune crainte.
+              </blockquote>
+              <cite>Psaume 27:3</cite>
+            </article>
           </div>
         </section>
       `
