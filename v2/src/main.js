@@ -15,6 +15,14 @@ import {
   stopPresenceHeartbeat,
 } from './home-live.js'
 
+import {
+  createSbdLeaderboardState,
+  isSbdLeaderboardLift,
+  isSbdLeaderboardReps,
+  loadSbdLeaderboard,
+  renderSbdLeaderboard,
+} from './sbd-leaderboard.js'
+
 /* GA V1.2 HOME LIVE + SPIDER ICONS V7 */
 
 import {
@@ -44,6 +52,8 @@ const app =
 
 let currentUser = null
 let currentMember = null
+let sbdLeaderboardState =
+  createSbdLeaderboardState()
 
 function setAppBackdrop(
   athleteSlug = ''
@@ -725,15 +735,6 @@ function renderHome() {
         </button>
       </header>
 
-      <section
-        class="home-live-dashboard"
-        data-home-live
-      >
-        <div class="home-live-loading">
-          Chargement du groupe…
-        </div>
-      </section>
-
       <section class="cards">
         <button
           class="card"
@@ -811,7 +812,7 @@ function renderHome() {
               `
             : ''
         }
-<button
+        <button
           class="card"
           data-action="rpg"
         >
@@ -833,6 +834,39 @@ function renderHome() {
             ›
           </span>
         </button>
+
+        <button
+          class="card"
+          data-action="leaderboard"
+          type="button"
+        >
+          <span class="card-icon card-icon--spider card-icon--leaderboard">
+            ${spiderMenuIcon('leaderboard')}
+          </span>
+
+          <div>
+            <strong>
+              Leaderboard GL
+            </strong>
+
+            <span>
+              Classements SBD ×1 à ×9
+            </span>
+          </div>
+
+          <span class="arrow">
+            ›
+          </span>
+        </button>
+      </section>
+
+      <section
+        class="home-live-dashboard home-live-dashboard--bottom"
+        data-home-live
+      >
+        <div class="home-live-loading">
+          Chargement du groupe…
+        </div>
       </section>
     </main>
   `
@@ -875,6 +909,45 @@ function renderHome() {
       renderAthletes()
     }
 
+    if (
+      action.dataset.action ===
+      'home-live-tab'
+    ) {
+      const tab =
+        action.dataset.tab
+
+      app.querySelectorAll(
+        '[data-action="home-live-tab"]'
+      ).forEach(button => {
+        const active =
+          button.dataset.tab === tab
+
+        button.classList.toggle(
+          'active',
+          active
+        )
+        button.setAttribute(
+          'aria-selected',
+          String(active)
+        )
+      })
+
+      app.querySelectorAll(
+        '[data-home-live-panel]'
+      ).forEach(panel => {
+        const active =
+          panel.dataset.homeLivePanel === tab
+
+        panel.hidden = !active
+        panel.classList.toggle(
+          'active',
+          active
+        )
+      })
+
+      return
+    }
+
 
     if (
       action.dataset.action ===
@@ -892,12 +965,100 @@ function renderHome() {
     }
 
     if (
+      action.dataset.action ===
+      'leaderboard'
+    ) {
+      await renderSbdLeaderboardScreen()
+      return
+    }
+
+    if (
       action.dataset.action === 'activity'
     ) {
       await renderActivities()
       return
     }
   }
+}
+
+
+async function renderSbdLeaderboardScreen() {
+  clearAppHandlers()
+
+  app.innerHTML = `
+    <main class="app-shell leaderboard-shell">
+      <header class="topbar">
+        <button
+          class="back-button"
+          data-action="home"
+          type="button"
+        >
+          ← Accueil
+        </button>
+
+        <div>
+          <span class="version">LA BRIGADE DE L’ARAIGNÉE</span>
+          <h1>Leaderboard</h1>
+        </div>
+      </header>
+
+      <div data-sbd-leaderboard>
+        ${renderSbdLeaderboard({ state: sbdLeaderboardState })}
+      </div>
+    </main>
+  `
+
+  const rerender = () => {
+    const container = app.querySelector('[data-sbd-leaderboard]')
+    if (container) {
+      container.innerHTML = renderSbdLeaderboard({
+        state: sbdLeaderboardState,
+      })
+    }
+  }
+
+  app.onclick = async event => {
+    const action = event.target.closest('[data-action]')
+    if (!action) return
+
+    if (action.dataset.action === 'home') {
+      renderHome()
+      return
+    }
+
+    if (action.dataset.action === 'leaderboard-lift') {
+      if (isSbdLeaderboardLift(action.dataset.lift)) {
+        sbdLeaderboardState.lift = action.dataset.lift
+        rerender()
+      }
+      return
+    }
+
+    if (action.dataset.action === 'leaderboard-reps') {
+      if (isSbdLeaderboardReps(action.dataset.reps)) {
+        sbdLeaderboardState.reps = Number(action.dataset.reps)
+        rerender()
+      }
+      return
+    }
+
+    if (action.dataset.action === 'leaderboard-refresh') {
+      rerender()
+      await loadSbdLeaderboard({
+        state: sbdLeaderboardState,
+        athletes: visibleAthletes(),
+        force: true,
+      })
+      rerender()
+    }
+  }
+
+  await loadSbdLeaderboard({
+    state: sbdLeaderboardState,
+    athletes: visibleAthletes(),
+  })
+
+  rerender()
 }
 
 
@@ -1645,6 +1806,9 @@ async function openAthlete(
       {
         cloudAthleteSlug:
           athleteSlug,
+
+        bodyWeight:
+          athlete.bodyWeight,
 
         canEdit:
           currentMember?.role === 'coach' ||

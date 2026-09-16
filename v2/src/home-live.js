@@ -2,6 +2,7 @@ import { supabase } from './supabase.js'
 import {
   loadLatestGroupSbdPrs,
 } from './sbd-pr.js'
+import { SBD_PR_SEED } from './sbd-pr-seed.js'
 
 let presenceTimer = null
 let visibilityHandler = null
@@ -175,6 +176,122 @@ function liftLabel(lift) {
   }[lift] || 'PR'
 }
 
+function activityLift(row) {
+  const code = String(
+    row?.exercise_code ||
+    row?.lift ||
+    ''
+  ).toLowerCase()
+
+  return {
+    sq: 'squat',
+    squat: 'squat',
+    bn: 'bench',
+    bp: 'bench',
+    bench: 'bench',
+    dl: 'deadlift',
+    deadlift: 'deadlift',
+  }[code] || null
+}
+
+function activityReps(row) {
+  const reps = Number(
+    row?.actual_reps ??
+    row?.reps
+  )
+
+  return Number.isFinite(reps) && reps > 0
+    ? Math.round(reps)
+    : null
+}
+
+function seededPreviousLoad(row) {
+  const lift = {
+    squat: 'sq',
+    bench: 'bn',
+    deadlift: 'dl',
+  }[row?.lift]
+
+  const reps = Number(row?.reps) || 1
+  const seed = SBD_PR_SEED[
+    String(row?.athlete_slug || '')
+      .trim()
+      .toLowerCase()
+  ]
+  const load = Number(seed?.[lift]?.[reps]?.load)
+  const current = Number(row?.load_kg)
+
+  return (
+    Number.isFinite(load) &&
+    load > 0 &&
+    load < current
+  )
+    ? load
+    : null
+}
+
+async function loadLatestPrProgress(limit = 6) {
+  try {
+    const { data, error } = await supabase
+      .from('workout_activities')
+      .select('*')
+      .or('new_pr.eq.true,activity_type.eq.pr')
+      .order('created_at', { ascending: false })
+      .limit(300)
+
+    if (error) {
+      throw error
+    }
+
+    const bestByKey = new Map()
+    const progress = []
+
+    ;(data || [])
+      .slice()
+      .sort((a, b) => (
+        Date.parse(a.created_at || 0) -
+        Date.parse(b.created_at || 0)
+      ))
+      .forEach(row => {
+        const lift = activityLift(row)
+        const reps = activityReps(row)
+        const load = Number(row.load_kg)
+
+        if (!lift || !reps || !Number.isFinite(load) || load <= 0) {
+          return
+        }
+
+        const key = `${row.athlete_slug}::${lift}::${reps}`
+        const previousLoad = bestByKey.get(key) ?? null
+
+        if (previousLoad !== null && load <= previousLoad) {
+          return
+        }
+
+        progress.push({
+          ...row,
+          lift,
+          reps,
+          load_kg: load,
+          previous_load_kg: previousLoad,
+          achieved_at: row.created_at,
+        })
+
+        bestByKey.set(key, load)
+      })
+
+    return progress
+      .sort((a, b) => (
+        Date.parse(b.achieved_at || 0) -
+        Date.parse(a.achieved_at || 0)
+      ))
+      .slice(0, limit)
+  } catch (error) {
+    console.warn('PR progress history unavailable:', error)
+    return []
+  }
+}
+
 function formatPrDate(value) {
   if (!value) {
     return ''
@@ -238,7 +355,8 @@ export async function loadHomeLiveDashboard({
 
   const [
     presenceResult,
-    latestPrs,
+    latestProgress,
+    latestLegacyPrs,
   ] =
     await Promise.all([
       supabase
@@ -246,16 +364,15 @@ export async function loadHomeLiveDashboard({
           'app_presence_v2'
         )
         .select(
-          'user_id',
-          {
-            count: 'exact',
-            head: true,
-          }
+          'user_id,athlete_slug,display_name,last_seen_at'
         )
         .gte(
           'last_seen_at',
           cutoff
-        ),
+        )
+        .order('last_seen_at', { ascending: false }),
+
+      loadLatestPrProgress(6),
 
       loadLatestGroupSbdPrs(
         6
@@ -265,15 +382,38 @@ export async function loadHomeLiveDashboard({
   const activeCount =
     presenceResult.error
       ? null
-      : (
-          presenceResult.count ??
-          0
+      : (presenceResult.data || []).length
+
+  const activePeople =
+    (presenceResult.data || [])
+      .map(row => {
+        const athlete = athleteForSlug(
+          athletes,
+          row.athlete_slug
         )
+
+        return {
+          name: String(
+            row.display_name ||
+            athlete?.name ||
+            row.athlete_slug ||
+            'Membre'
+          ).trim(),
+          athleteName: athlete?.name || '',
+        }
+      })
+      .filter((row, index, list) => (
+        list.findIndex(item => item.name === row.name) === index
+      ))
 
   const live =
     liveWording(
       activeCount
     )
+
+  const latestPrs = latestProgress.length
+    ? latestProgress
+    : latestLegacyPrs
 
   const prRows =
     latestPrs
@@ -287,8 +427,16 @@ export async function loadHomeLiveDashboard({
 
           const name =
             athlete?.name ||
+            row.athlete_name ||
             row.athlete_slug ||
             'Athlète'
+
+          const reps = Number(row.reps) || 1
+          const previous = Number(
+            row.previous_load_kg ??
+            seededPreviousLoad(row)
+          )
+          const hasPrevious = Number.isFinite(previous) && previous > 0
 
           return `
             <article class="home-pr-row">
@@ -302,18 +450,17 @@ export async function loadHomeLiveDashboard({
                 </strong>
 
                 <span>
-                  ${escapeHtml(
-                    formatPrDate(
-                      row.achieved_at
-                    )
-                  )}
+                  ×${escapeHtml(reps)} rep${reps > 1 ? 's' : ''}
+                  ·
+                  ${escapeHtml(formatPrDate(row.achieved_at))}
                 </span>
               </div>
 
-              <b>
-                ${escapeHtml(row.load_kg)}
-                kg
-              </b>
+              <div class="home-pr-change">
+                <small>${hasPrevious ? `${escapeHtml(previous)} kg` : '—'}</small>
+                <span aria-hidden="true">→</span>
+                <b>${escapeHtml(row.load_kg)} kg</b>
+              </div>
             </article>
           `
         }
@@ -348,12 +495,49 @@ export async function loadHomeLiveDashboard({
             </span>
           </div>
         </div>
+
+        <div class="home-live-people">
+          ${activePeople.length
+            ? activePeople.map(person => `
+                <span>
+                  <i aria-hidden="true"></i>
+                  ${escapeHtml(person.name)}
+                </span>
+              `).join('')
+            : '<small>Personne en ligne pour le moment.</small>'}
+        </div>
       `
 
   container.innerHTML = `
-    <section class="home-live-card home-live-card--presence">
+    <div class="home-live-tabs" role="tablist" aria-label="Actualité du groupe">
+      <button
+        type="button"
+        role="tab"
+        class="active"
+        aria-selected="true"
+        data-action="home-live-tab"
+        data-tab="training"
+      >
+        <span class="home-live-dot"></span>
+        Qui s’entraîne
+        <b>${activeCount === null ? '—' : escapeHtml(live.count)}</b>
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        aria-selected="false"
+        data-action="home-live-tab"
+        data-tab="prs"
+      >
+        🏆 Derniers PR
+        <b>${escapeHtml(latestPrs.length)}</b>
+      </button>
+    </div>
+
+    <section class="home-live-card home-live-card--presence active" data-home-live-panel="training">
       <span class="home-live-kicker">
-        GROUPE EN DIRECT
+        QUI S’ENTRAÎNE
       </span>
 
       ${liveContent}
@@ -363,7 +547,7 @@ export async function loadHomeLiveDashboard({
       </small>
     </section>
 
-    <section class="home-live-card home-live-card--prs">
+    <section class="home-live-card home-live-card--prs" data-home-live-panel="prs" hidden>
       <div class="home-live-head">
         <div>
           <span class="home-live-kicker">

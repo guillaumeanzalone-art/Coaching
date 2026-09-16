@@ -5,7 +5,11 @@ import {
   getAthleteBlockV3,
 } from './program-cloud.js'
 
-import { awardSetXp, flushXpOutbox } from './xp.js'
+import {
+  awardSetXp,
+  flushXpOutbox,
+  getAthleteProgress,
+} from './xp.js'
 /* GA V2 SYNC HOTFIX OUTBOX 2026-08-11 */
 import {
   buildWorkoutSetPayload,
@@ -42,6 +46,19 @@ import {
   loadAthleteSbdRepPrs,
   recordValidatedSbdSet,
 } from './sbd-pr.js'
+
+import {
+  createRpgHealthState,
+  handleRpgHealthAction,
+  loadRpgHealth,
+  renderRpgHealth,
+} from './rpg-health.js'
+
+import {
+  analyzeTrainingBlock,
+  formatTonnes,
+  liftLabel as analyticsLiftLabel,
+} from './block-analytics.js'
 
 /* GA V1.2 HOME PR THEMES SKIP V7 */
 
@@ -538,6 +555,19 @@ export function mountTraining(
     deadlift: {},
   }
 
+  const ATHLETE_INSIGHT_KEY =
+    `ga-v2-athlete-insight:${cloudAthleteSlug}`
+
+  let activeAthleteInsight =
+    localStorage.getItem(ATHLETE_INSIGHT_KEY) === 'wellness'
+      ? 'wellness'
+      : 'prs'
+
+  const healthState =
+    createRpgHealthState()
+
+  let athleteGlMultiplier = 1
+
   let athleteSteps = {
     steps: 0,
     mobilityCompleted: false,
@@ -606,6 +636,8 @@ export function mountTraining(
   let v3OverviewError = ''
 
   let showV3Overview = false
+
+  let showBlockDifficulty = false
 
 
   let STORAGE_KEY =
@@ -1581,7 +1613,7 @@ export function mountTraining(
               text-transform:uppercase;
             "
           >
-            ◈ OVERVIEW DU BLOC
+            ◈ DÉTAILS DU BLOC
           </span>
 
           <strong
@@ -1603,39 +1635,136 @@ export function mountTraining(
               font-size:11px;
             "
           >
-            Planification, volume et réalisation réelle.
+            Programme, difficulté et charge totale.
           </small>
         </div>
 
-        <button
-          type="button"
-          data-action="${
-            showV3Overview
-              ? 'v3-overview-close'
-              : 'v3-overview-open'
-          }"
-          style="
-            cursor:pointer;
-            min-width:150px;
-            padding:10px 14px;
-            border-radius:12px;
-            border:
-              1px solid
-              rgba(255,177,91,.65);
-            background:
-              rgba(205,105,26,.20);
-            color:#ffd39d;
-            font-size:12px;
-            font-weight:900;
-            letter-spacing:.04em;
-          "
-        >
-          ${
-            showV3Overview
-              ? '← RETOUR SÉANCE'
-              : 'OUVRIR L’OVERVIEW →'
-          }
-        </button>
+        <div class="training-v3-detail-tabs" role="tablist" aria-label="Détails du bloc">
+          <button
+            type="button"
+            role="tab"
+            aria-selected="${showV3Overview ? 'true' : 'false'}"
+            class="${showV3Overview ? 'active' : ''}"
+            data-action="${showV3Overview ? 'v3-overview-close' : 'v3-overview-open'}"
+          >
+            ${showV3Overview ? '← Séance' : 'Programme'}
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            aria-selected="${showBlockDifficulty ? 'true' : 'false'}"
+            class="${showBlockDifficulty ? 'active' : ''}"
+            data-action="${showBlockDifficulty ? 'block-difficulty-close' : 'block-difficulty-open'}"
+          >
+            ${showBlockDifficulty ? '← Séance' : 'Difficulté'}
+          </button>
+        </div>
+      </section>
+    `
+  }
+
+  function renderBlockDifficulty() {
+    const analytics =
+      analyzeTrainingBlock({
+        block,
+        state,
+        bodyWeight:
+          options.bodyWeight ||
+          program.athlete?.bodyWeight,
+        glMultiplier:
+          athleteGlMultiplier,
+      })
+
+    const percent = value =>
+      Number(value || 0)
+        .toLocaleString('fr-FR', {
+          maximumFractionDigits: 1,
+        })
+
+    const number = value =>
+      Number(value || 0)
+        .toLocaleString('fr-FR', {
+          maximumFractionDigits: 0,
+        })
+
+    const factorRows = [
+      ['Intensité', analytics.factors.intensity, `${percent(analytics.averageIntensity)} % moyen`],
+      ['Volume', analytics.factors.volume, `${number(analytics.averageVolume)} reps SBD / semaine`],
+      ['Fréquence', analytics.factors.frequency, `${percent(analytics.averageFrequency)} séances SBD / semaine`],
+      ['Tonnage', analytics.factors.tonnage, `${formatTonnes(analytics.averageTonnageKg)} t / semaine`],
+      ['GL points', analytics.factors.gl, `${percent(analytics.glPoints)} GL théoriques`],
+    ]
+
+    return `
+      <section class="block-difficulty block-difficulty--${escapeHtml(analytics.tier.key)}">
+        <header class="block-difficulty__hero">
+          <div>
+            <span>DIFFICULTÉ THÉORIQUE DU BLOC</span>
+            <h2>${escapeHtml(analytics.tier.label)}</h2>
+            <p>${escapeHtml(analytics.tier.detail)} · score ${analytics.difficultyScore}/100</p>
+          </div>
+
+          <div class="block-difficulty__score" aria-label="Score de difficulté ${analytics.difficultyScore} sur 100">
+            <strong>${analytics.difficultyScore}</strong>
+            <small>/100</small>
+          </div>
+        </header>
+
+        <p class="block-difficulty__method">
+          Estimation fondée sur les moyennes de chaque intervalle de répétitions et de charges, les max théoriques SBD utilisés dans le programme, puis pondérée par intensité, volume, fréquence, tonnage et coefficient GL du profil.
+        </p>
+
+        <div class="block-difficulty__maxes">
+          ${Object.entries(analytics.theoreticalMaxes).map(([lift, value]) => `
+            <article>
+              <span>${escapeHtml(analyticsLiftLabel(lift))}</span>
+              <strong>${value > 0 ? `${percent(value)} kg` : '—'}</strong>
+              <small>max théorique utilisé</small>
+            </article>
+          `).join('')}
+
+          <article class="block-difficulty__total">
+            <span>Total SBD</span>
+            <strong>${analytics.theoreticalTotal > 0 ? `${percent(analytics.theoreticalTotal)} kg` : '—'}</strong>
+            <small>×${percent(analytics.glMultiplier)} = ${percent(analytics.glPoints)} GL</small>
+          </article>
+        </div>
+
+        <div class="block-difficulty__factors">
+          ${factorRows.map(([label, value, detail]) => `
+            <article>
+              <div>
+                <strong>${escapeHtml(label)}</strong>
+                <span>${escapeHtml(detail)}</span>
+              </div>
+              <b>${Math.round(value)}/100</b>
+              <div class="block-difficulty__track" aria-hidden="true">
+                <span style="width:${Math.min(100, Math.max(0, value))}%"></span>
+              </div>
+            </article>
+          `).join('')}
+        </div>
+
+        <section class="block-difficulty__tonnage">
+          <div>
+            <span>TONNAGE SBD DU BLOC</span>
+            <strong>
+              ${formatTonnes(analytics.completedTonnageKg)} t
+              <small>/ ${formatTonnes(analytics.plannedTonnageKg)} t</small>
+            </strong>
+          </div>
+
+          <div class="block-difficulty__weeks">
+            ${analytics.weeks.map(week => `
+              <article>
+                <strong>${escapeHtml(week.label)}</strong>
+                <span>${formatTonnes(week.completedTonnageKg)} t / ${formatTonnes(week.plannedTonnageKg)} t</span>
+                <small>${week.sets} séries · ${number(week.reps)} reps · ${week.frequency} séance${week.frequency > 1 ? 's' : ''}</small>
+              </article>
+            `).join('')}
+          </div>
+        </section>
       </section>
     `
   }
@@ -3525,7 +3654,7 @@ export function mountTraining(
               text-transform:uppercase;
             "
           >
-            🗂 ANTÉCÉDENTS DE BLOCS
+            🗂 RETROUVE TON BLOC
           </span>
 
           <div
@@ -3563,7 +3692,7 @@ export function mountTraining(
               text-transform:uppercase;
             "
           >
-            🗂 ANTÉCÉDENTS DE BLOCS
+            🗂 RETROUVE TON BLOC
           </span>
 
           <div
@@ -3603,7 +3732,7 @@ export function mountTraining(
     const displayedTitle =
       selectedMeta?.title ||
       current?.title ||
-      'Historique des programmations'
+      'Retrouve ton bloc'
 
     return `
       <section
@@ -3642,7 +3771,7 @@ export function mountTraining(
                 text-transform:uppercase;
               "
             >
-              🗂 ANTÉCÉDENTS DE BLOCS
+              🗂 RETROUVE TON BLOC
             </span>
 
             <strong
@@ -4576,9 +4705,10 @@ export function mountTraining(
                 )
               )}
               ·
-              ${escapeHtml(
-                prFlash.currentLoad
-              )} kg
+              ${prFlash.previousLoad
+                ? `${escapeHtml(prFlash.previousLoad)} kg → `
+                : ''}
+              ${escapeHtml(prFlash.currentLoad)} kg
               ${prFlash.reps
                 ? `×${escapeHtml(prFlash.reps)}`
                 : ''}
@@ -4717,6 +4847,46 @@ export function mountTraining(
     `
   }
 
+  function renderAthleteInsights() {
+    return `
+      <section class="athlete-insights-tabs">
+        <div class="athlete-insights-tabs__nav" role="tablist" aria-label="Statistiques de l’athlète">
+          <button
+            type="button"
+            role="tab"
+            class="${activeAthleteInsight === 'prs' ? 'active' : ''}"
+            aria-selected="${activeAthleteInsight === 'prs' ? 'true' : 'false'}"
+            data-action="athlete-insight-tab"
+            data-insight="prs"
+          >
+            🏆 PR SBD
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            class="${activeAthleteInsight === 'wellness' ? 'active' : ''}"
+            aria-selected="${activeAthleteInsight === 'wellness' ? 'true' : 'false'}"
+            data-action="athlete-insight-tab"
+            data-insight="wellness"
+          >
+            🚶 Steps & mobilité
+            ${healthState.mobilityCompleted ? '<span class="athlete-insights-tabs__done">✓</span>' : ''}
+          </button>
+        </div>
+
+        <div class="athlete-insights-tabs__panel">
+          ${activeAthleteInsight === 'wellness'
+            ? renderRpgHealth({
+                state: healthState,
+                canEdit,
+              })
+            : renderSbdPrPanel()}
+        </div>
+      </section>
+    `
+  }
+
   function localActivityDateKey() {
     const now = new Date()
     return [
@@ -4735,37 +4905,18 @@ export function mountTraining(
     }
 
     try {
-      const { data, error } =
-        await supabase
-          .from(
-            'athlete_daily_wellness'
-          )
-          .select(
-            'steps,step_synced_at,mobility_completed_at'
-          )
-          .eq(
-            'athlete_slug',
-            cloudAthleteSlug
-          )
-          .eq(
-            'activity_date',
-            localActivityDateKey()
-          )
-          .maybeSingle()
-
-      if (error) {
-        throw error
-      }
+      await loadRpgHealth({
+        athleteSlug: cloudAthleteSlug,
+        state: healthState,
+      })
 
       athleteSteps = {
         steps:
-          Number(data?.steps || 0),
+          Number(healthState.steps || 0),
         mobilityCompleted:
-          Boolean(
-            data?.mobility_completed_at
-          ),
+          Boolean(healthState.mobilityCompleted),
         syncedAt:
-          data?.step_synced_at || null,
+          healthState.syncedAt || null,
         loading: false,
       }
     } catch (error) {
@@ -4778,6 +4929,34 @@ export function mountTraining(
         ...athleteSteps,
         loading: false,
       }
+    }
+
+    if (rerender) {
+      render()
+    }
+  }
+
+  async function hydrateAthleteGlMultiplier(
+    rerender = true
+  ) {
+    try {
+      const progress =
+        await getAthleteProgress(
+          cloudAthleteSlug
+        )
+
+      athleteGlMultiplier =
+        Math.max(
+          0.01,
+          Number(
+            progress?.gl_multiplier
+          ) || 1
+        )
+    } catch (error) {
+      console.warn(
+        'ATHLETE GL LOAD ERROR',
+        error
+      )
     }
 
     if (rerender) {
@@ -4854,6 +5033,8 @@ export function mountTraining(
           prFlash = {
             lift:
               result.lift,
+            previousLoad:
+              result.previousLoad,
             currentLoad:
               result.currentLoad,
             reps:
@@ -5607,27 +5788,6 @@ export function mountTraining(
             </div>
           </label>
 
-          <label class="training-session-v11__metric-wide">
-            <span>Nombre de pas</span>
-            <div>
-              <input
-                type="number"
-                min="0"
-                max="200000"
-                step="1"
-                inputmode="numeric"
-                data-action="session-metric"
-                data-field="steps"
-                data-week-index="${weekIndex}"
-                data-day-index="${dayIndex}"
-                value="${escapeHtml(
-                  session.steps ?? ''
-                )}"
-                ${canEdit ? '' : 'disabled'}
-              >
-              <small>pas</small>
-            </div>
-          </label>
         </div>
 
         <label class="training-session-v11__note-label">
@@ -6423,6 +6583,17 @@ export function mountTraining(
   function renderWeeks(
     currentWeek
   ) {
+    const analytics =
+      analyzeTrainingBlock({
+        block,
+        state,
+        bodyWeight:
+          options.bodyWeight ||
+          program.athlete?.bodyWeight,
+        glMultiplier:
+          athleteGlMultiplier,
+      })
+
     return `
       <div
         class="week-tabs"
@@ -6439,6 +6610,11 @@ export function mountTraining(
             const active =
               week.id ===
               currentWeek?.id
+
+            const weekTonnage =
+              analytics.weeks.find(
+                item => item.id === week.id
+              )
 
             return `
               <button
@@ -6460,6 +6636,14 @@ export function mountTraining(
                 <span>
                   ${progress.completed}/${progress.total}
                 </span>
+
+                <small class="week-tab__tonnage">
+                  ${formatTonnes(
+                    weekTonnage?.completedTonnageKg
+                  )} t / ${formatTonnes(
+                    weekTonnage?.plannedTonnageKg
+                  )} t
+                </small>
               </button>
             `
           }
@@ -6482,7 +6666,7 @@ export function mountTraining(
         style="--tab-count:${Math.max(currentWeek.days.length, 1)}"
       >
         ${currentWeek.days.map(
-          (day) => {
+          (day, dayIndex) => {
             const progress =
               countDayProgress(
                 state,
@@ -6492,6 +6676,19 @@ export function mountTraining(
             const active =
               day.id ===
               currentDay?.id
+
+            const weekIndex =
+              block.weeks.findIndex(
+                item => item.id === currentWeek.id
+              )
+
+            const hasNote =
+              String(
+                getSessionState(
+                  weekIndex,
+                  dayIndex
+                )?.note || ''
+              ).trim().length > 0
 
             return `
               <button
@@ -6512,6 +6709,10 @@ export function mountTraining(
                       ? `${escapeHtml(day.emoji)} `
                       : ''
                   }${escapeHtml(day.name)}
+
+                  ${hasNote
+                    ? '<span class="day-note-indicator" title="Notes renseignées" aria-label="Notes renseignées">📝</span>'
+                    : ''}
                 </strong>
 
                 <span>
@@ -6858,7 +7059,9 @@ export function mountTraining(
       )
 
     const trainingBody =
-      showV3Overview
+      showBlockDifficulty
+        ? renderBlockDifficulty()
+        : showV3Overview
         ? renderV3Overview()
         : `
           ${renderBlocks()}
@@ -6957,10 +7160,7 @@ export function mountTraining(
         </header>
 
         ${renderAthleteThemeBanner()}
-        <div class="athlete-insights-grid-v249">
-          ${renderSbdPrPanel()}
-          ${renderAthleteStepsPanel()}
-        </div>
+        ${renderAthleteInsights()}
 
         <div
           id="trainingSyncStatus"
@@ -6982,9 +7182,43 @@ export function mountTraining(
 
   }
 
-  root.onclick = (
+  root.onclick = async (
     event
   ) => {
+    const healthAction =
+      event.target.closest(
+        '[data-rpg-health-sync-v47], [data-rpg-mobility-set-v47], [data-rpg-mobility-validate-v47]'
+      )
+
+    if (healthAction) {
+      const handled =
+        await handleRpgHealthAction({
+          element: healthAction,
+          athleteSlug:
+            cloudAthleteSlug,
+          state: healthState,
+          canEdit,
+        })
+
+      if (handled) {
+        athleteSteps = {
+          steps:
+            Number(
+              healthState.steps || 0
+            ),
+          mobilityCompleted:
+            Boolean(
+              healthState.mobilityCompleted
+            ),
+          syncedAt:
+            healthState.syncedAt || null,
+          loading: false,
+        }
+        render()
+        return
+      }
+    }
+
     const action =
       event.target.closest(
         '[data-action]'
@@ -6996,6 +7230,28 @@ export function mountTraining(
 
     const actionName =
       action.dataset.action
+
+    if (
+      actionName ===
+        'athlete-insight-tab'
+    ) {
+      const next =
+        action.dataset.insight
+
+      if (
+        next === 'prs' ||
+        next === 'wellness'
+      ) {
+        activeAthleteInsight = next
+        localStorage.setItem(
+          ATHLETE_INSIGHT_KEY,
+          next
+        )
+        render()
+      }
+
+      return
+    }
 
     if (
       actionName ===
@@ -7093,6 +7349,7 @@ export function mountTraining(
         'v3-overview-open'
     ) {
       showV3Overview = true
+      showBlockDifficulty = false
       render()
 
       void loadV3OverviewPayload({
@@ -7108,6 +7365,25 @@ export function mountTraining(
         'v3-overview-close'
     ) {
       showV3Overview = false
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'block-difficulty-open'
+    ) {
+      showBlockDifficulty = true
+      showV3Overview = false
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'block-difficulty-close'
+    ) {
+      showBlockDifficulty = false
       render()
       return
     }
@@ -7857,5 +8133,6 @@ if (
   void hydrateSessionsFromCloud()
   void hydrateSbdPrs()
   void hydrateAthleteSteps()
+  void hydrateAthleteGlMultiplier()
   void flushSbdPrOutbox()
 }
