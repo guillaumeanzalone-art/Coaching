@@ -64,7 +64,7 @@ export const athletes = [
     "name": "Clémence Camilli",
     "emoji": "✨",
     "bodyWeight": 69.0,
-    "profileImage": "avatar-clemence.png",
+    "profileImage": "avatar-clemence.png?v=20260916-v251",
     "programKey": "clemence",
     "blockCount": 1,
     "cloudSlug": "clemence"

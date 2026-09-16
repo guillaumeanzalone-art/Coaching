@@ -4344,6 +4344,80 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'goat-meadow'
+    ) {
+      const heroImage =
+        String(athleteTheme.heroImage || '').trim()
+      const herdImage =
+        String(athleteTheme.herdImage || '').trim()
+      const portraitImage =
+        String(athleteTheme.portraitImage || '').trim()
+      const meadowImage =
+        String(athleteTheme.meadowImage || '').trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--clemence"
+          aria-label="Univers champêtre de Clémence"
+        >
+          ${heroImage ? `
+            <img
+              class="clemence-goat-hero"
+              src="${escapeHtml(heroImage)}"
+              alt="Deux chevreaux courant dans une prairie au soleil couchant"
+              width="1800"
+              height="1008"
+            >
+          ` : ''}
+
+          <div class="clemence-goat-shade" aria-hidden="true"></div>
+          <div class="clemence-goat-sun" aria-hidden="true"></div>
+
+          ${meadowImage ? `
+            <figure class="clemence-goat-card clemence-goat-card--meadow">
+              <img
+                src="${escapeHtml(meadowImage)}"
+                alt="Chèvres blanches dans une prairie"
+                width="1920"
+                height="1280"
+              >
+            </figure>
+          ` : ''}
+
+          ${herdImage ? `
+            <figure class="clemence-goat-card clemence-goat-card--herd">
+              <img
+                src="${escapeHtml(herdImage)}"
+                alt="Petit troupeau de chèvres à la ferme"
+                width="1200"
+                height="800"
+              >
+            </figure>
+          ` : ''}
+
+          ${portraitImage ? `
+            <figure class="clemence-goat-card clemence-goat-card--portrait">
+              <img
+                src="${escapeHtml(portraitImage)}"
+                alt="Portrait d’un chevreau"
+                width="1280"
+                height="928"
+              >
+            </figure>
+          ` : ''}
+
+          <div class="clemence-goat-fireflies" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div class="clemence-goat-leaves" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'mew-dream'
     ) {
       const heroImage =

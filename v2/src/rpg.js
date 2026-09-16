@@ -364,6 +364,7 @@ const ATHLETE_AVATARS = {
   benoit: '/avatar-benoit.png',
   celia: '/avatar-celia.png',
   charles: '/avatar-charles.png',
+  clemence: '/avatar-clemence.png?v=20260916-v251',
   clemosaurus: '/avatar-clemosaurus.png',
   dorian: '/avatar-dorian.png',
   duane: '/avatar-duane.png',
