@@ -30,6 +30,10 @@ import {
 } from './training.js'
 
 import {
+  getAthleteTheme,
+} from './athlete-themes.js'
+
+import {
   signIn,
   getCurrentAuth,
   signOut,
@@ -41,7 +45,25 @@ const app =
 let currentUser = null
 let currentMember = null
 
+function setAppBackdrop(
+  athleteSlug = ''
+) {
+  const athleteTheme =
+    athleteSlug
+      ? getAthleteTheme(
+          athleteSlug
+        )
+      : null
+
+  document.body.dataset.appBackdrop =
+    athleteTheme?.variant
+      ? 'custom-athlete'
+      : 'brigade'
+}
+
 function clearAppHandlers() {
+  setAppBackdrop()
+
   app.onclick = null
   app.onchange = null
   app.oninput = null
@@ -1542,6 +1564,12 @@ function renderLoadingAthlete(
 ) {
   clearAppHandlers()
 
+  setAppBackdrop(
+    athlete.cloudSlug ||
+    athlete.slug ||
+    athlete.id
+  )
+
   app.innerHTML = `
     <main class="app-shell">
       <section class="auth-card">
@@ -1599,6 +1627,15 @@ async function openAthlete(
 
     clearAppHandlers()
 
+    const athleteSlug =
+      athlete.cloudSlug ||
+      athlete.slug ||
+      athlete.id
+
+    setAppBackdrop(
+      athleteSlug
+    )
+
     mountTraining(
       app,
       () => {
@@ -1607,9 +1644,7 @@ async function openAthlete(
       program,
       {
         cloudAthleteSlug:
-          athlete.cloudSlug ||
-          athlete.slug ||
-          athlete.id,
+          athleteSlug,
 
         canEdit:
           currentMember?.role === 'coach' ||

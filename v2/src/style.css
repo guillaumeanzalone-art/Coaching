@@ -4918,3 +4918,157 @@ body {
     animation: none;
   }
 }
+
+/* LA BRIGADE DE L'ARAIGNEE — global app backdrop */
+body {
+  position: relative;
+  isolation: isolate;
+  background: #050507;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 320ms ease;
+}
+
+body::before {
+  z-index: -2;
+  background-color: #050507;
+  background-image: url('./assets/brigade-spider-background.webp');
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: cover;
+  filter: saturate(.86) contrast(1.06) brightness(.76);
+  transform: scale(1.025);
+  transform-origin: 50% 44%;
+}
+
+body::after {
+  z-index: -1;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(143, 84, 173, .08), transparent 34%),
+    linear-gradient(90deg, rgba(3, 4, 8, .78) 0%, rgba(4, 5, 9, .28) 26%, rgba(4, 5, 9, .24) 74%, rgba(3, 4, 8, .80) 100%),
+    linear-gradient(180deg, rgba(2, 3, 6, .24) 0%, rgba(4, 5, 9, .52) 66%, rgba(3, 4, 7, .92) 100%);
+}
+
+body[data-app-backdrop="brigade"]::before {
+  opacity: .72;
+  animation: brigade-backdrop-breathe 20s ease-in-out infinite alternate;
+}
+
+body[data-app-backdrop="brigade"]::after {
+  opacity: 1;
+}
+
+body[data-app-backdrop="custom-athlete"]::before,
+body[data-app-backdrop="custom-athlete"]::after {
+  opacity: 0;
+  animation: none;
+}
+
+body[data-app-backdrop="brigade"] .topbar {
+  padding: 14px 16px;
+  border: 1px solid rgba(211, 201, 225, .13);
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(12, 13, 20, .88), rgba(25, 20, 31, .75));
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .045);
+  backdrop-filter: blur(14px);
+}
+
+body[data-app-backdrop="brigade"] .card,
+body[data-app-backdrop="brigade"] .auth-card,
+body[data-app-backdrop="brigade"] .home-live-card,
+body[data-app-backdrop="brigade"] .home-pr-empty {
+  border-color: rgba(210, 198, 224, .15);
+  background: linear-gradient(145deg, rgba(13, 14, 21, .90), rgba(28, 22, 34, .79));
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .24), inset 0 1px 0 rgba(255, 255, 255, .035);
+  backdrop-filter: blur(13px);
+}
+
+body[data-app-backdrop="brigade"] .card:hover {
+  border-color: rgba(211, 151, 230, .38);
+  background: linear-gradient(145deg, rgba(20, 20, 29, .94), rgba(42, 27, 48, .86));
+  box-shadow: 0 22px 56px rgba(0, 0, 0, .32), 0 0 24px rgba(184, 99, 213, .07);
+}
+
+body[data-app-backdrop="brigade"] .card-icon--spider {
+  color: #eadcf2;
+  border-color: rgba(213, 157, 232, .24);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(192, 94, 221, .18), transparent 58%),
+    rgba(18, 17, 26, .92);
+  filter: drop-shadow(0 0 12px rgba(199, 104, 225, .12));
+}
+
+body[data-app-backdrop="brigade"] .eyebrow,
+body[data-app-backdrop="brigade"] .version {
+  color: #d8a9e5;
+}
+
+body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] {
+  background:
+    radial-gradient(circle at 10% 0%, var(--athlete-accent-soft-2), transparent 23%),
+    radial-gradient(circle at 100% 16%, var(--athlete-accent-soft), transparent 26%),
+    linear-gradient(180deg, rgba(8, 9, 14, .90), rgba(6, 7, 11, .94));
+  border: 1px solid rgba(211, 198, 224, .10);
+  border-top: 0;
+  box-shadow: 0 0 80px rgba(0, 0, 0, .36);
+  backdrop-filter: blur(8px);
+}
+
+body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .training-topbar,
+body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .training-summary,
+body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .training-exercise,
+body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .training-v3-history,
+body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .training-v3-overview,
+body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .training-v3-overview-launcher,
+body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .athlete-pr-panel,
+body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .athlete-steps-panel-v249 {
+  background-color: rgba(12, 14, 20, .88);
+  backdrop-filter: blur(12px);
+}
+
+@keyframes brigade-backdrop-breathe {
+  0% {
+    transform: scale(1.025) translate3d(-.25%, 0, 0);
+    filter: saturate(.82) contrast(1.06) brightness(.73);
+  }
+
+  100% {
+    transform: scale(1.065) translate3d(.25%, -.45%, 0);
+    filter: saturate(.94) contrast(1.09) brightness(.82);
+  }
+}
+
+@media (max-width: 650px) {
+  body::before {
+    background-position: 50% 46%;
+  }
+
+  body[data-app-backdrop="brigade"]::before {
+    opacity: .64;
+  }
+
+  body[data-app-backdrop="brigade"]::after {
+    background:
+      linear-gradient(90deg, rgba(3, 4, 8, .42), rgba(4, 5, 9, .24), rgba(3, 4, 8, .42)),
+      linear-gradient(180deg, rgba(2, 3, 6, .30), rgba(4, 5, 9, .68) 64%, rgba(3, 4, 7, .94));
+  }
+
+  body[data-app-backdrop="brigade"] .topbar {
+    padding: 12px;
+    border-radius: 17px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-app-backdrop="brigade"]::before {
+    animation: none;
+    transform: none;
+  }
+}
