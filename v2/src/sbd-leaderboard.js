@@ -64,7 +64,7 @@ function emptyGrid() {
   }
 }
 
-function mergeRecord(grid, lift, reps, row) {
+function mergeRecord(grid, lift, reps, row, force = false) {
   const safeReps = Number(reps)
   const load = Number(row?.load_kg)
 
@@ -78,7 +78,7 @@ function mergeRecord(grid, lift, reps, row) {
   }
 
   const current = grid[lift][safeReps]
-  if (!current || load >= Number(current.load_kg || 0)) {
+  if (force || !current || load >= Number(current.load_kg || 0)) {
     grid[lift][safeReps] = {
       ...row,
       reps: safeReps,
@@ -174,7 +174,7 @@ export async function loadSbdLeaderboard({
       ;(recordsResult.data || []).forEach(row => {
         const key = normalize(row.athlete_slug)
         const grid = grids.get(key) || seededGrid(row.athlete_slug)
-        mergeRecord(grid, row.lift, row.reps, row)
+        mergeRecord(grid, row.lift, row.reps, row, true)
         grids.set(key, grid)
       })
     }

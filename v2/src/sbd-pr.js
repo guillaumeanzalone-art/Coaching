@@ -399,6 +399,60 @@ export async function recordValidatedSbdSet({
   return result
 }
 
+export async function setManualSbdRepPr({
+  athleteSlug,
+  lift,
+  reps,
+  loadKg,
+}) {
+  const safeSlug =
+    String(athleteSlug || '').trim()
+
+  const safeLift =
+    String(lift || '').trim().toLowerCase()
+
+  const safeReps =
+    Number.parseInt(reps, 10)
+
+  const safeLoad =
+    Number(
+      String(loadKg ?? '')
+        .replace(',', '.')
+    )
+
+  if (
+    !safeSlug ||
+    !Object.prototype.hasOwnProperty.call(LIFT_LABELS, safeLift) ||
+    !Number.isInteger(safeReps) ||
+    safeReps < 1 ||
+    safeReps > 9 ||
+    !Number.isFinite(safeLoad) ||
+    safeLoad <= 0 ||
+    safeLoad > 1000
+  ) {
+    throw new Error('PR invalide : saisis une charge comprise entre 0 et 1000 kg.')
+  }
+
+  const { data, error } =
+    await supabase.rpc(
+      'set_sbd_rep_pr_v250',
+      {
+        p_athlete_slug: safeSlug,
+        p_lift: safeLift,
+        p_reps: safeReps,
+        p_load_kg: safeLoad,
+      }
+    )
+
+  if (error) {
+    throw error
+  }
+
+  return Array.isArray(data)
+    ? data[0]
+    : data
+}
+
 export async function flushSbdPrOutbox() {
   if (
     navigator.onLine ===
@@ -479,7 +533,8 @@ function mergeRepRow(
   result,
   lift,
   reps,
-  row
+  row,
+  force = false
 ) {
   if (
     !result[lift] ||
@@ -496,6 +551,7 @@ function mergeRepRow(
     result[lift][reps]
 
   if (
+    force ||
     !current ||
     Number(row.load_kg) >=
       Number(current.load_kg || 0)
@@ -521,6 +577,9 @@ export async function loadAthleteSbdRepPrs(
 
   const seed =
     SBD_PR_SEED[slug]
+
+  const authoritativeRepKeys =
+    new Set()
 
   const seedLiftMap = {
     sq: 'squat',
@@ -597,7 +656,12 @@ export async function loadAthleteSbdRepPrs(
           result,
           row.lift,
           Number(row.reps),
-          row
+          row,
+          true
+        )
+
+        authoritativeRepKeys.add(
+          `${row.lift}:${Number(row.reps)}`
         )
       }
     }
@@ -638,7 +702,10 @@ export async function loadAthleteSbdRepPrs(
 
         if (
           reps < 1 ||
-          reps > 9
+          reps > 9 ||
+          authoritativeRepKeys.has(
+            `${row.lift}:${reps}`
+          )
         ) {
           continue
         }

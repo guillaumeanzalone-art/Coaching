@@ -1967,6 +1967,412 @@ body {
   }
 }
 
+/* =============================================================
+   GA Coaching V2.50 — édition manuelle des PR
+   ============================================================= */
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.athlete-pr-panel__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+  text-align: right;
+}
+
+.athlete-pr-panel__actions > small {
+  color: #6f7b8f;
+  font-size: 9px;
+}
+
+.athlete-pr-panel__actions button,
+.athlete-pr-edit-actions button {
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid color-mix(in srgb, var(--athlete-accent, #efb738) 46%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--athlete-accent, #efb738) 11%, rgba(8, 12, 20, .92));
+  color: var(--athlete-accent-light, #ffe49a);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform .14s ease, border-color .14s ease, background .14s ease;
+}
+
+.athlete-pr-panel__actions button:hover,
+.athlete-pr-edit-actions button:hover {
+  transform: translateY(-1px);
+  border-color: var(--athlete-accent, #efb738);
+  background: color-mix(in srgb, var(--athlete-accent, #efb738) 18%, rgba(8, 12, 20, .92));
+}
+
+.athlete-pr-panel__actions button:disabled,
+.athlete-pr-edit-actions button:disabled {
+  opacity: .55;
+  cursor: wait;
+  transform: none;
+}
+
+.athlete-pr-edit-field {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.athlete-pr-edit-field input {
+  width: min(100%, 116px);
+  min-width: 0;
+  height: 42px;
+  padding: 0 9px;
+  border: 1px solid color-mix(in srgb, var(--athlete-accent, #efb738) 30%, rgba(255,255,255,.08));
+  border-radius: 10px;
+  outline: none;
+  background: rgba(4, 8, 15, .64);
+  color: #fff;
+  font: inherit;
+  font-size: clamp(17px, 3.4vw, 22px);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.athlete-pr-edit-field input:focus {
+  border-color: var(--athlete-accent, #efb738);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--athlete-accent, #efb738) 16%, transparent);
+}
+
+.athlete-pr-edit-field > small {
+  color: #7c899e;
+  font-size: 9px;
+  font-weight: 850;
+}
+
+.athlete-pr-edit-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, .07);
+}
+
+.athlete-pr-edit-actions p {
+  margin: 0;
+  color: #ff9992;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+/* =============================================================
+   CHARLES — KROSMOZ DICE THEME
+   ============================================================= */
+
+.training-page[data-athlete-theme="charles"] {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(3, 29, 35, .48), rgba(5, 20, 31, .94) 650px, #07121d 1160px),
+    var(--athlete-theme-background-image) center top / 1320px auto no-repeat,
+    #07121d;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .10), 0 30px 80px rgba(0, 0, 0, .42);
+}
+
+.training-page[data-athlete-theme="charles"]::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  opacity: .45;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255, 218, 68, .40), transparent 24%),
+    radial-gradient(circle at 83% 22%, rgba(73, 239, 219, .32), transparent 28%),
+    radial-gradient(circle, rgba(221, 255, 249, .52) 0 1px, transparent 1.7px) 0 0 / 56px 56px;
+  mask-image: linear-gradient(#000 0 55%, transparent 92%);
+}
+
+.training-page[data-athlete-theme="charles"] .training-topbar {
+  position: relative;
+  z-index: 8;
+  padding: 14px 16px;
+  border: 1px solid rgba(89, 231, 215, .30);
+  border-radius: 18px;
+  background: linear-gradient(125deg, rgba(5, 31, 38, .94), rgba(20, 42, 65, .86));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 18px 45px rgba(0, 8, 15, .40);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="charles"] .training-kicker {
+  display: none;
+}
+
+.training-page[data-athlete-theme="charles"] .training-topbar h1 {
+  color: #fff9dc;
+  text-shadow: 0 0 22px rgba(255, 217, 69, .28), 0 3px 10px rgba(0,0,0,.38);
+}
+
+.training-page[data-athlete-theme="charles"] .back-button,
+.training-page[data-athlete-theme="charles"] .reset-button {
+  min-height: 44px;
+  border-color: rgba(96, 231, 214, .28);
+  background: rgba(5, 32, 40, .86);
+  color: #e6fffa;
+}
+
+.training-page[data-athlete-theme="charles"] .back-button:hover,
+.training-page[data-athlete-theme="charles"] .reset-button:hover {
+  border-color: rgba(255, 221, 89, .60);
+  background: rgba(25, 58, 65, .92);
+  color: #fff2ae;
+}
+
+.athlete-theme-banner--charles {
+  position: relative;
+  min-height: 360px;
+  margin: 0 0 18px;
+  overflow: hidden;
+  border: 1px solid rgba(92, 238, 219, .42);
+  border-radius: 26px;
+  background: #082832;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.15),
+    0 25px 64px rgba(0, 8, 16, .52),
+    0 0 44px rgba(73, 222, 211, .10);
+}
+
+.charles-krosmoz-hero {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(1.08) contrast(1.04) brightness(.72);
+  transform: scale(1.035);
+  animation: charles-krosmoz-breathe 12s ease-in-out infinite alternate;
+}
+
+.charles-krosmoz-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(3, 25, 29, .74), transparent 38% 64%, rgba(4, 22, 30, .48)),
+    linear-gradient(0deg, rgba(4, 20, 29, .88), transparent 45%);
+}
+
+.charles-krosmoz-portal {
+  position: absolute;
+  z-index: 2;
+  top: 34px;
+  left: 36px;
+  width: 205px;
+  aspect-ratio: 1;
+  border: 3px solid rgba(103, 255, 236, .56);
+  border-radius: 50%;
+  opacity: .76;
+  box-shadow:
+    inset 0 0 24px rgba(62, 247, 227, .46),
+    0 0 15px rgba(98, 255, 234, .62),
+    0 0 52px rgba(53, 208, 211, .40);
+  animation: charles-krosmoz-portal 8s linear infinite;
+}
+
+.charles-krosmoz-portal::before,
+.charles-krosmoz-portal::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 231, 111, .76);
+}
+
+.charles-krosmoz-portal::before { inset: 15px; }
+.charles-krosmoz-portal::after { inset: 34px; border-color: rgba(110, 255, 239, .72); }
+
+.charles-krosmoz-duo {
+  position: absolute;
+  z-index: 4;
+  left: 24px;
+  bottom: 20px;
+  width: 245px;
+  height: 174px;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid rgba(255, 230, 112, .58);
+  border-radius: 22px 8px 22px 8px;
+  box-shadow: 0 18px 38px rgba(0, 8, 12, .52), 0 0 24px rgba(253, 219, 73, .13);
+  transform: rotate(-2deg);
+}
+
+.charles-krosmoz-warrior {
+  position: absolute;
+  z-index: 5;
+  right: 2%;
+  bottom: -18%;
+  width: min(42%, 350px);
+  height: 122%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 18px 24px rgba(0,0,0,.55)) drop-shadow(0 0 18px rgba(73, 235, 220, .28));
+  animation: charles-krosmoz-float 5.8s ease-in-out infinite;
+}
+
+.charles-krosmoz-dice i {
+  position: absolute;
+  z-index: 6;
+  display: block;
+  width: 34px;
+  aspect-ratio: 1;
+  border: 2px solid rgba(248, 255, 252, .66);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle, #183c47 0 2px, transparent 2.8px) 7px 7px / 16px 16px,
+    linear-gradient(145deg, rgba(255,255,255,.96), rgba(159, 255, 237, .80));
+  box-shadow: 0 9px 18px rgba(0,0,0,.34), 0 0 18px rgba(103, 255, 232, .35);
+  animation: charles-krosmoz-die 7s ease-in-out infinite;
+}
+
+.charles-krosmoz-dice i:nth-child(1) { top: 38px; right: 38%; transform: rotate(14deg); }
+.charles-krosmoz-dice i:nth-child(2) { right: 44%; bottom: 37px; width: 25px; animation-delay: -2.4s; }
+.charles-krosmoz-dice i:nth-child(3) { top: 46%; left: 42%; width: 20px; animation-delay: -4.2s; }
+
+.charles-krosmoz-sparks i {
+  position: absolute;
+  z-index: 6;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff0a1;
+  box-shadow: 0 0 11px #ffe66a, 0 0 22px rgba(82, 255, 231, .72);
+  animation: charles-krosmoz-spark 4.8s ease-in-out infinite;
+}
+
+.charles-krosmoz-sparks i:nth-child(1) { top: 18%; left: 33%; }
+.charles-krosmoz-sparks i:nth-child(2) { top: 67%; left: 49%; animation-delay: -1.2s; }
+.charles-krosmoz-sparks i:nth-child(3) { top: 24%; right: 20%; animation-delay: -2.1s; }
+.charles-krosmoz-sparks i:nth-child(4) { bottom: 16%; right: 39%; animation-delay: -.7s; }
+.charles-krosmoz-sparks i:nth-child(5) { top: 45%; left: 27%; animation-delay: -3.4s; }
+.charles-krosmoz-sparks i:nth-child(6) { top: 12%; right: 48%; animation-delay: -4s; }
+
+.training-page[data-athlete-theme="charles"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="charles"] .training-v3-history,
+.training-page[data-athlete-theme="charles"] .training-v3-overview,
+.training-page[data-athlete-theme="charles"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="charles"] .training-session-v11,
+.training-page[data-athlete-theme="charles"] .training-block-report-v11,
+.training-page[data-athlete-theme="charles"] .training-summary {
+  border-color: rgba(91, 223, 211, .20) !important;
+  background: linear-gradient(145deg, rgba(5, 28, 35, .95), rgba(11, 31, 48, .91)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 16px 40px rgba(0, 7, 14, .34);
+  backdrop-filter: blur(11px);
+}
+
+.training-page[data-athlete-theme="charles"] .week-tab,
+.training-page[data-athlete-theme="charles"] .day-tab-v2 {
+  border-color: rgba(91, 224, 211, .18);
+  background: rgba(5, 29, 37, .88);
+  color: #a9c9ca;
+}
+
+.training-page[data-athlete-theme="charles"] .week-tab--active,
+.training-page[data-athlete-theme="charles"] .day-tab-v2--active {
+  border-color: #63ead8;
+  background: linear-gradient(135deg, rgba(32, 164, 154, .40), rgba(228, 175, 44, .25));
+  box-shadow: 0 8px 22px rgba(0, 16, 21, .40), 0 0 20px rgba(94, 234, 217, .10);
+}
+
+.training-page[data-athlete-theme="charles"] .training-exercise {
+  border-color: rgba(93, 224, 212, .18);
+  background: rgba(5, 24, 32, .95);
+}
+
+.training-page[data-athlete-theme="charles"] .exercise-header {
+  border-bottom-color: rgba(102, 231, 218, .16);
+  background: linear-gradient(110deg, rgba(15, 58, 64, .96), rgba(7, 29, 42, .98));
+}
+
+.training-page[data-athlete-theme="charles"] .training-set,
+.training-page[data-athlete-theme="charles"] .set-load,
+.training-page[data-athlete-theme="charles"] .set-rpe,
+.training-page[data-athlete-theme="charles"] .training-session-v11__note,
+.training-page[data-athlete-theme="charles"] .training-session-v11__metrics label > div {
+  border-color: rgba(96, 226, 213, .16);
+  background: rgba(6, 31, 39, .78);
+  color: #f4fffb;
+}
+
+@keyframes charles-krosmoz-breathe {
+  from { transform: scale(1.035); filter: saturate(1.04) contrast(1.04) brightness(.70); }
+  to { transform: scale(1.09); filter: saturate(1.14) contrast(1.06) brightness(.79); }
+}
+
+@keyframes charles-krosmoz-portal {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes charles-krosmoz-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(.5deg); }
+  50% { transform: translate3d(0, -10px, 0) rotate(-.7deg); }
+}
+
+@keyframes charles-krosmoz-die {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50% { translate: 0 -12px; rotate: 18deg; }
+}
+
+@keyframes charles-krosmoz-spark {
+  0%, 100% { opacity: .25; transform: scale(.65); }
+  50% { opacity: 1; transform: scale(1.35); }
+}
+
+@media (max-width: 620px) {
+  .athlete-pr-panel__head { align-items: flex-start; }
+  .athlete-pr-panel__actions { flex: 0 0 auto; }
+  .athlete-pr-grid { grid-template-columns: 1fr; }
+  .athlete-pr-edit-field input { width: 100%; }
+  .athlete-pr-edit-actions { align-items: stretch; flex-direction: column; }
+  .athlete-pr-edit-actions button { width: 100%; min-height: 44px; }
+
+  .athlete-theme-banner--charles {
+    min-height: 410px;
+    border-radius: 21px;
+  }
+
+  .charles-krosmoz-hero { object-position: 48% center; }
+  .charles-krosmoz-portal { top: 26px; left: -35px; width: 175px; }
+  .charles-krosmoz-duo { left: 13px; bottom: 15px; width: 190px; height: 142px; }
+  .charles-krosmoz-warrior { right: -13%; bottom: -9%; width: 68%; height: 102%; }
+  .charles-krosmoz-dice i:nth-child(1) { right: 34%; }
+  .charles-krosmoz-dice i:nth-child(2) { right: 24%; bottom: 30px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .charles-krosmoz-hero,
+  .charles-krosmoz-portal,
+  .charles-krosmoz-warrior,
+  .charles-krosmoz-dice i,
+  .charles-krosmoz-sparks i {
+    animation: none;
+  }
+}
+
 /* CELIA FRENCH CATS — cute animated field theme */
 .training-page[data-athlete-theme="celia"] {
   position: relative;
@@ -6007,4 +6413,22 @@ body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .athlete-st
   .athlete-insights-tabs__panel > .rpg-wellness-v47 {
     animation: none;
   }
+}
+
+/* Final Jolan artwork layout: no decorative copy. */
+.athlete-theme-banner--jolan .jolan-storm-overlay {
+  background:
+    radial-gradient(circle at 48% 45%, transparent 0 28%, rgba(3, 6, 21, .18) 70%),
+    linear-gradient(0deg, rgba(3, 6, 21, .88) 0%, transparent 38%);
+}
+
+.athlete-theme-banner--jolan .jolan-rival-card img { height: 178px; }
+.athlete-theme-banner--jolan .jolan-legacy-card img { height: 108px; }
+.athlete-theme-banner--jolan .jolan-crest-card { grid-template-columns: 45px; padding: 5px; }
+.athlete-theme-banner--jolan .jolan-crest-card img { width: 45px; height: 45px; }
+
+@media (max-width: 620px) {
+  .athlete-theme-banner--jolan { min-height: 350px; }
+  .athlete-theme-banner--jolan .jolan-rival-card { top: 18px; }
+  .athlete-theme-banner--jolan .jolan-legacy-card { right: 54px; bottom: 13px; left: 13px; }
 }

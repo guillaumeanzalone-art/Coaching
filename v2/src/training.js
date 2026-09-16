@@ -45,6 +45,7 @@ import {
   flushSbdPrOutbox,
   loadAthleteSbdRepPrs,
   recordValidatedSbdSet,
+  setManualSbdRepPr,
 } from './sbd-pr.js'
 
 import {
@@ -577,6 +578,9 @@ export function mountTraining(
 
   let prFlash = null
   let prFlashTimer = null
+  let editingSbdPrs = false
+  let sbdPrSaving = false
+  let sbdPrError = ''
 
   const BLOCK_SELECTION_KEY =
     createBlockSelectionKey(
@@ -4209,12 +4213,6 @@ export function mountTraining(
           ''
         ).trim()
 
-      const athleteName =
-        String(
-          program.athlete?.name ||
-          'Jolan'
-        ).trim()
-
       return `
         <section
           class="athlete-theme-banner athlete-theme-banner--jolan"
@@ -4237,36 +4235,6 @@ export function mountTraining(
           <div class="jolan-storm-overlay" aria-hidden="true"></div>
           <div class="jolan-storm-lightning" aria-hidden="true"></div>
 
-          <div class="jolan-storm-copy">
-            <span class="jolan-storm-eyebrow">
-              Royaume des Tempêtes
-            </span>
-
-            <h2>
-              ${escapeHtml(athleteName)}
-            </h2>
-
-            <blockquote>
-              ${escapeHtml(quote)}
-            </blockquote>
-
-            ${
-              cite
-                ? `
-                  <cite>
-                    ${escapeHtml(cite)}
-                  </cite>
-                `
-                : ''
-            }
-
-            <div class="jolan-storm-pillars" aria-label="Valeurs du thème">
-              <span>Liberté</span>
-              <span>Maîtrise</span>
-              <span>Héritage</span>
-            </div>
-          </div>
-
           ${
             rivalImage
               ? `
@@ -4277,7 +4245,6 @@ export function mountTraining(
                     width="474"
                     height="842"
                   >
-                  <figcaption>La lame du vent</figcaption>
                 </figure>
               `
               : ''
@@ -4293,7 +4260,6 @@ export function mountTraining(
                     width="1200"
                     height="686"
                   >
-                  <figcaption>L’héritage du royaume</figcaption>
                 </figure>
               `
               : ''
@@ -4302,18 +4268,76 @@ export function mountTraining(
           ${
             crestImage
               ? `
-                <div class="jolan-crest-card">
+                <div class="jolan-crest-card" aria-hidden="true">
                   <img
                     src="${escapeHtml(crestImage)}"
                     alt="Signature Foncia"
                     width="400"
                     height="400"
                   >
-                  <span>Signature du royaume</span>
                 </div>
               `
               : ''
           }
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
+      'krosmoz-dice'
+    ) {
+      const heroImage =
+        String(athleteTheme.heroImage || '').trim()
+      const duoImage =
+        String(athleteTheme.duoImage || '').trim()
+      const warriorImage =
+        String(athleteTheme.warriorImage || '').trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--charles"
+          aria-label="Univers Krosmoz de Charles"
+        >
+          ${heroImage ? `
+            <img
+              class="charles-krosmoz-hero"
+              src="${escapeHtml(heroImage)}"
+              alt="Gardien félin du Krosmoz"
+              width="600"
+              height="310"
+            >
+          ` : ''}
+
+          <div class="charles-krosmoz-shade" aria-hidden="true"></div>
+          <div class="charles-krosmoz-portal" aria-hidden="true"></div>
+
+          ${duoImage ? `
+            <img
+              class="charles-krosmoz-duo"
+              src="${escapeHtml(duoImage)}"
+              alt="Duo d’aventuriers du Krosmoz"
+              width="474"
+              height="379"
+            >
+          ` : ''}
+
+          ${warriorImage ? `
+            <img
+              class="charles-krosmoz-warrior"
+              src="${escapeHtml(warriorImage)}"
+              alt="Guerrière du Krosmoz"
+              width="680"
+              height="830"
+            >
+          ` : ''}
+
+          <div class="charles-krosmoz-dice" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </div>
+          <div class="charles-krosmoz-sparks" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
         </section>
       `
     }
@@ -4672,9 +4696,21 @@ export function mountTraining(
             </strong>
           </div>
 
-          <small>
-            ×${selectedSbdReps} reps · historique + V2
-          </small>
+          <div class="athlete-pr-panel__actions">
+            <small>
+              ×${selectedSbdReps} reps · historique + V2
+            </small>
+
+            ${baseCanEdit ? `
+              <button
+                type="button"
+                data-action="${editingSbdPrs ? 'cancel-sbd-pr-edit' : 'edit-sbd-prs'}"
+                ${sbdPrSaving ? 'disabled' : ''}
+              >
+                ${editingSbdPrs ? 'Annuler' : 'Modifier'}
+              </button>
+            ` : ''}
+          </div>
         </div>
 
         <div class="athlete-pr-reps-v249" role="tablist" aria-label="Nombre de répétitions">
@@ -4730,13 +4766,34 @@ export function mountTraining(
                     ${shortLabel}
                   </span>
 
-                  <strong>
-                    ${row
-                      ? `${escapeHtml(
-                          row.load_kg
-                        )}<small>kg</small>`
-                      : '—'}
-                  </strong>
+                  ${editingSbdPrs ? `
+                    <label class="athlete-pr-edit-field">
+                      <span class="sr-only">
+                        PR ${escapeHtml(liftLabel(lift))} ×${selectedSbdReps}
+                      </span>
+                      <input
+                        type="number"
+                        min="0.5"
+                        max="1000"
+                        step="0.5"
+                        inputmode="decimal"
+                        value="${row ? escapeHtml(row.load_kg) : ''}"
+                        placeholder="—"
+                        data-sbd-manual-input
+                        data-lift="${lift}"
+                        aria-label="PR ${escapeHtml(liftLabel(lift))} ×${selectedSbdReps} en kilogrammes"
+                      >
+                      <small>kg</small>
+                    </label>
+                  ` : `
+                    <strong>
+                      ${row
+                        ? `${escapeHtml(
+                            row.load_kg
+                          )}<small>kg</small>`
+                        : '—'}
+                    </strong>
+                  `}
 
                   <small>
                     ${escapeHtml(
@@ -4748,6 +4805,21 @@ export function mountTraining(
             }
           ).join('')}
         </div>
+
+        ${editingSbdPrs ? `
+          <div class="athlete-pr-edit-actions">
+            ${sbdPrError ? `
+              <p role="alert">${escapeHtml(sbdPrError)}</p>
+            ` : '<span></span>'}
+            <button
+              type="button"
+              data-action="save-sbd-prs"
+              ${sbdPrSaving ? 'disabled' : ''}
+            >
+              ${sbdPrSaving ? 'Enregistrement…' : 'Enregistrer les PR'}
+            </button>
+          </div>
+        ` : ''}
       </section>
     `
   }
@@ -7137,10 +7209,12 @@ export function mountTraining(
             <span
               class="training-kicker"
             >
-              ${escapeHtml(
-                athleteTheme?.headerKicker ||
-                'GA COACHING · V3'
-              )}
+              ${athleteTheme?.hideHeaderKicker
+                ? ''
+                : escapeHtml(
+                    athleteTheme?.headerKicker ||
+                    'GA COACHING · V3'
+                  )}
             </span>
 
             <h1>
@@ -7277,6 +7351,92 @@ export function mountTraining(
       )
 
       render()
+      return
+    }
+
+    if (actionName === 'edit-sbd-prs') {
+      if (!baseCanEdit) {
+        return
+      }
+
+      editingSbdPrs = true
+      sbdPrError = ''
+      render()
+      return
+    }
+
+    if (actionName === 'cancel-sbd-pr-edit') {
+      editingSbdPrs = false
+      sbdPrError = ''
+      render()
+      return
+    }
+
+    if (actionName === 'save-sbd-prs') {
+      if (!baseCanEdit || sbdPrSaving) {
+        return
+      }
+
+      const inputs = [
+        ...root.querySelectorAll('[data-sbd-manual-input]'),
+      ]
+
+      const changes = inputs
+        .map(input => ({
+          lift: input.dataset.lift,
+          raw: String(input.value || '').trim(),
+        }))
+        .filter(item => item.raw)
+        .map(item => ({
+          ...item,
+          loadKg: Number(item.raw.replace(',', '.')),
+        }))
+        .filter(item => {
+          const previous = Number(
+            sbdPrs[item.lift]?.[selectedSbdReps]?.load_kg
+          )
+          return !Number.isFinite(previous) || previous !== item.loadKg
+        })
+
+      if (!changes.length) {
+        sbdPrError = 'Aucune modification à enregistrer.'
+        render()
+        return
+      }
+
+      if (changes.some(item => (
+        !Number.isFinite(item.loadKg) ||
+        item.loadKg <= 0 ||
+        item.loadKg > 1000
+      ))) {
+        sbdPrError = 'Chaque charge doit être comprise entre 0 et 1000 kg.'
+        render()
+        return
+      }
+
+      sbdPrSaving = true
+      sbdPrError = ''
+      render()
+
+      try {
+        await Promise.all(
+          changes.map(item => setManualSbdRepPr({
+            athleteSlug: cloudAthleteSlug,
+            lift: item.lift,
+            reps: selectedSbdReps,
+            loadKg: item.loadKg,
+          }))
+        )
+
+        sbdPrs = await loadAthleteSbdRepPrs(cloudAthleteSlug)
+        editingSbdPrs = false
+        prFlash = null
+      } catch (error) {
+        sbdPrError = error?.message || 'Impossible d’enregistrer ces PR.'
+      } finally {
+        sbdPrSaving = false
+        render()
+      }
       return
     }
 
