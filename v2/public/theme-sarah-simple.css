@@ -1,6 +1,7 @@
 /* =========================================================
-   GA COACHING — SARAH SIMPLE THEME V20
-   No JS renderer. Reuse the same generic banner already rendered by training.js.
+   GA COACHING — SARAH COSMIC THEME V21
+   Same principle as Flop: the existing banner is the frame,
+   the visual is rendered as a dedicated full-size layer.
    ========================================================= */
 
 .training-page[data-athlete-theme="sarah"] .athlete-theme-banner {
@@ -12,97 +13,109 @@
   margin: 0 0 20px !important;
   padding: 0 !important;
   overflow: hidden !important;
-  border: 0 !important;
+  border: 1px solid rgba(143, 93, 255, .28) !important;
   border-radius: 28px !important;
-  background-color: #070914 !important;
-  background-image: url('/sarah-theme.webp?v=20') !important;
-  background-repeat: no-repeat !important;
-  background-position: 50% 50% !important;
-  background-size: 103% auto !important;
+  background: #070914 !important;
   box-shadow:
     0 28px 72px rgba(0,0,0,.42),
-    0 0 34px rgba(255,65,120,.15),
+    0 0 42px rgba(255,65,170,.14),
     inset 0 1px 0 rgba(255,255,255,.08) !important;
-  animation: ga-sarah-bg-drift 11s ease-in-out infinite alternate !important;
   isolation: isolate !important;
 }
 
-/* Hide the generic quote/cite/mark only for Sarah. */
+/* The generic quote/cite/mark are not used for Sarah. */
 .training-page[data-athlete-theme="sarah"] .athlete-theme-banner > * {
   display: none !important;
 }
 
-/* Soft cinematic overlay. */
+/* REAL IMAGE LAYER — equivalent to .flop-mew-hero */
 .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::before {
   content: '' !important;
   position: absolute !important;
-  inset: 0 !important;
-  z-index: 1 !important;
+  z-index: 0 !important;
+  inset: -2.5% !important;
   display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   pointer-events: none !important;
-  background:
-    radial-gradient(circle at 50% 42%, rgba(255,255,255,.06), transparent 34%),
-    linear-gradient(180deg, rgba(3,5,14,.01), rgba(5,7,18,.08) 72%, rgba(5,7,18,.18));
+  background-image: url('/sarah-theme.webp?v=21') !important;
+  background-repeat: no-repeat !important;
+  background-position: 50% 50% !important;
+  background-size: cover !important;
+  filter: saturate(1.04) contrast(1.03) brightness(1.02) !important;
+  transform: scale(1.015) translate3d(0,0,0) !important;
+  transform-origin: 50% 50% !important;
+  will-change: transform, filter !important;
+  animation: ga-sarah-cosmic-drift 10s ease-in-out infinite alternate !important;
 }
 
-/* Animated cosmic light sweep. */
+/* Light sweep + soft cinematic vignette. */
 .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::after {
   content: '' !important;
   position: absolute !important;
   z-index: 2 !important;
-  top: -25% !important;
-  bottom: -25% !important;
-  left: -38% !important;
-  width: 24% !important;
+  inset: 0 !important;
   display: block !important;
   pointer-events: none !important;
-  transform: skewX(-18deg) !important;
-  filter: blur(10px) !important;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(80,185,255,.08),
-    rgba(255,255,255,.32),
-    rgba(255,66,120,.15),
-    transparent
-  ) !important;
-  animation: ga-sarah-light-sweep 5.8s ease-in-out infinite !important;
+  background:
+    linear-gradient(112deg,
+      transparent 0%,
+      transparent 31%,
+      rgba(103,192,255,.04) 39%,
+      rgba(255,255,255,.20) 46%,
+      rgba(255,76,194,.11) 52%,
+      transparent 60%,
+      transparent 100%),
+    radial-gradient(circle at 50% 44%, transparent 36%, rgba(4,6,18,.11) 84%, rgba(3,5,14,.24) 100%) !important;
+  background-size: 220% 100%, 100% 100% !important;
+  background-position: -115% 0, 0 0 !important;
+  animation: ga-sarah-cosmic-sweep 6.2s ease-in-out infinite !important;
 }
 
-@keyframes ga-sarah-bg-drift {
+@keyframes ga-sarah-cosmic-drift {
   0% {
-    background-size: 103% auto;
-    background-position: 50% 50%;
-    filter: saturate(1.02) contrast(1.01) brightness(1.00);
+    transform: scale(1.015) translate3d(-.35%, .15%, 0);
+    filter: saturate(1.03) contrast(1.025) brightness(1.00);
   }
   50% {
-    background-size: 107% auto;
-    background-position: 48.8% 49.2%;
-    filter: saturate(1.09) contrast(1.035) brightness(1.035);
+    transform: scale(1.055) translate3d(.45%, -.25%, 0);
+    filter: saturate(1.10) contrast(1.045) brightness(1.045);
   }
   100% {
-    background-size: 110% auto;
-    background-position: 51.2% 48.8%;
-    filter: saturate(1.06) contrast(1.025) brightness(1.02);
+    transform: scale(1.035) translate3d(-.15%, -.15%, 0);
+    filter: saturate(1.06) contrast(1.035) brightness(1.02);
   }
 }
 
-@keyframes ga-sarah-light-sweep {
-  0%, 12% { left: -38%; opacity: .05; }
-  50% { left: 58%; opacity: .9; }
-  88%, 100% { left: 116%; opacity: .04; }
+@keyframes ga-sarah-cosmic-sweep {
+  0%, 14% {
+    background-position: -115% 0, 0 0;
+    opacity: .35;
+  }
+  50% {
+    background-position: 18% 0, 0 0;
+    opacity: 1;
+  }
+  86%, 100% {
+    background-position: 125% 0, 0 0;
+    opacity: .35;
+  }
 }
 
 @media (max-width: 560px) {
   .training-page[data-athlete-theme="sarah"] .athlete-theme-banner {
     aspect-ratio: 16 / 9 !important;
     border-radius: 22px !important;
-    background-size: cover !important;
+  }
+
+  .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::before {
+    inset: -4% !important;
+    background-position: 50% 50% !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .training-page[data-athlete-theme="sarah"] .athlete-theme-banner,
+  .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::before,
   .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::after {
     animation: none !important;
   }
