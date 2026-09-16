@@ -1,5 +1,5 @@
 /* =========================================================
-   GA COACHING — SARAH COSMIC THEME V23
+   GA COACHING — SARAH COSMIC THEME V24
    IMPORTANT: this file is loaded AFTER the Vite module/style.css.
    Sarah uses the existing banner as frame and a dedicated ::before
    image layer, exactly like the visual layering used by working themes.
@@ -80,7 +80,7 @@
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: none !important;
-  background: url('/sarah-theme.webp?v=23') 50% 50% / cover no-repeat !important;
+  background: url('/sarah-theme.webp?v=24') 50% 50% / cover no-repeat !important;
   filter: saturate(1.05) contrast(1.035) brightness(1.025) !important;
   transform: scale(1.015) translate3d(0,0,0) !important;
   transform-origin: 50% 50% !important;
