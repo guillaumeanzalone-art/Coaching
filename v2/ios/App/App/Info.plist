@@ -24,6 +24,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>L’araignée Coaching lit uniquement ton nombre de pas quotidien afin de calculer le bonus d’XP d’entraînement du lendemain.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>L’araignée Coaching utilise HealthKit pour synchroniser les données d’activité autorisées liées au suivi d’entraînement.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
