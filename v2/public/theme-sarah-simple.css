@@ -1,0 +1,109 @@
+/* =========================================================
+   GA COACHING — SARAH SIMPLE THEME V20
+   No JS renderer. Reuse the same generic banner already rendered by training.js.
+   ========================================================= */
+
+.training-page[data-athlete-theme="sarah"] .athlete-theme-banner {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  min-height: 0 !important;
+  margin: 0 0 20px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-radius: 28px !important;
+  background-color: #070914 !important;
+  background-image: url('/sarah-theme.webp?v=20') !important;
+  background-repeat: no-repeat !important;
+  background-position: 50% 50% !important;
+  background-size: 103% auto !important;
+  box-shadow:
+    0 28px 72px rgba(0,0,0,.42),
+    0 0 34px rgba(255,65,120,.15),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+  animation: ga-sarah-bg-drift 11s ease-in-out infinite alternate !important;
+  isolation: isolate !important;
+}
+
+/* Hide the generic quote/cite/mark only for Sarah. */
+.training-page[data-athlete-theme="sarah"] .athlete-theme-banner > * {
+  display: none !important;
+}
+
+/* Soft cinematic overlay. */
+.training-page[data-athlete-theme="sarah"] .athlete-theme-banner::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 1 !important;
+  display: block !important;
+  pointer-events: none !important;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255,255,255,.06), transparent 34%),
+    linear-gradient(180deg, rgba(3,5,14,.01), rgba(5,7,18,.08) 72%, rgba(5,7,18,.18));
+}
+
+/* Animated cosmic light sweep. */
+.training-page[data-athlete-theme="sarah"] .athlete-theme-banner::after {
+  content: '' !important;
+  position: absolute !important;
+  z-index: 2 !important;
+  top: -25% !important;
+  bottom: -25% !important;
+  left: -38% !important;
+  width: 24% !important;
+  display: block !important;
+  pointer-events: none !important;
+  transform: skewX(-18deg) !important;
+  filter: blur(10px) !important;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(80,185,255,.08),
+    rgba(255,255,255,.32),
+    rgba(255,66,120,.15),
+    transparent
+  ) !important;
+  animation: ga-sarah-light-sweep 5.8s ease-in-out infinite !important;
+}
+
+@keyframes ga-sarah-bg-drift {
+  0% {
+    background-size: 103% auto;
+    background-position: 50% 50%;
+    filter: saturate(1.02) contrast(1.01) brightness(1.00);
+  }
+  50% {
+    background-size: 107% auto;
+    background-position: 48.8% 49.2%;
+    filter: saturate(1.09) contrast(1.035) brightness(1.035);
+  }
+  100% {
+    background-size: 110% auto;
+    background-position: 51.2% 48.8%;
+    filter: saturate(1.06) contrast(1.025) brightness(1.02);
+  }
+}
+
+@keyframes ga-sarah-light-sweep {
+  0%, 12% { left: -38%; opacity: .05; }
+  50% { left: 58%; opacity: .9; }
+  88%, 100% { left: 116%; opacity: .04; }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="sarah"] .athlete-theme-banner {
+    aspect-ratio: 16 / 9 !important;
+    border-radius: 22px !important;
+    background-size: cover !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .training-page[data-athlete-theme="sarah"] .athlete-theme-banner,
+  .training-page[data-athlete-theme="sarah"] .athlete-theme-banner::after {
+    animation: none !important;
+  }
+}
