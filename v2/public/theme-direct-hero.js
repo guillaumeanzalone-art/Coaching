@@ -1,5 +1,5 @@
 /* =========================================================
-   GA COACHING — LOUIS + SARAH DIRECT HERO V17
+   GA COACHING — LOUIS + SARAH DIRECT HERO V18
 
    IMPORTANT:
    We do NOT style or reuse .athlete-theme-banner.
@@ -11,13 +11,13 @@
   const THEMES = {
     louis: {
       name: 'LOUIS',
-      asset: '/themes/louis/louis-fusion.webp?v=17',
+      asset: '/themes/louis/louis-fusion.webp?v=18',
       alt: 'Univers personnalisé de Louis',
     },
     sarah: {
       name: 'SARAH',
-      asset: '/themes/sarah/sarah-fusion.jpg?v=17',
-      alt: 'Univers personnalisé de Sarah',
+      asset: '/themes/sarah/sarah-cosmic-final.webp?v=18',
+      alt: 'Univers cosmique personnalisé de Sarah',
     },
   }
 
@@ -160,11 +160,6 @@
 
     const { hero, image } = createHero(slug, config)
 
-    /*
-     * This is the key change versus V1-V16:
-     * the old banner disappears from the DOM completely.
-     * No selector targeting .athlete-theme-banner can affect the new hero.
-     */
     genericBanner.replaceWith(hero)
 
     try {
@@ -189,13 +184,13 @@
       hero.dataset.gaHeroFormat = source.format
 
       console.info(
-        `[GA DIRECT HERO V17] ${slug} OK`,
+        `[GA DIRECT HERO V18] ${slug} OK`,
         `${image.naturalWidth}x${image.naturalHeight}`,
         source.format
       )
     } catch (error) {
       hero.dataset.gaHeroError = '1'
-      console.error(`[GA DIRECT HERO V17] ${slug} ECHEC`, error)
+      console.error(`[GA DIRECT HERO V18] ${slug} ECHEC`, error)
     }
   }
 
