@@ -9,14 +9,5 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
-
-    <!--
-      Sarah V24: this stylesheet MUST stay after the Vite module.
-      main.js imports style.css dynamically into <head>; placing Sarah's
-      override at the end of <body> makes it later in cascade order,
-      exactly so its ::before image layer cannot be replaced by the
-      generic athlete banner rules from style.css.
-    -->
-    <link rel="stylesheet" href="/theme-sarah-simple.css?v=24" />
   </body>
 </html>

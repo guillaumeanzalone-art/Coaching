@@ -3628,3 +3628,544 @@ body {
     animation: none;
   }
 }
+
+/* SARAH COSMIC ASCENSION — clean native rebuild */
+.training-page[data-athlete-theme="sarah"] {
+  --sarah-cosmic-blue: #57c7ff;
+  --sarah-cosmic-pink: #ff55c7;
+  --sarah-cosmic-violet: #9a6dff;
+  --sarah-cosmic-gold: #ffd665;
+  --sarah-cosmic-ink: #050817;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #fffaff;
+  background:
+    radial-gradient(circle at 14% 4%, rgba(38, 113, 255, .25), transparent 32%),
+    radial-gradient(circle at 88% 14%, rgba(255, 43, 174, .22), transparent 35%),
+    radial-gradient(circle at 52% 44%, rgba(131, 72, 255, .13), transparent 36%),
+    linear-gradient(180deg, #050819 0%, #0c0920 46%, #040610 100%);
+}
+
+.training-page[data-athlete-theme="sarah"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -20%;
+  pointer-events: none;
+  opacity: .72;
+  background:
+    radial-gradient(circle at 18% 27%, rgba(70, 153, 255, .17) 0 1%, transparent 22%),
+    radial-gradient(circle at 77% 23%, rgba(255, 72, 185, .16) 0 1%, transparent 21%),
+    radial-gradient(circle at 55% 78%, rgba(255, 202, 83, .09) 0 1%, transparent 19%);
+  filter: blur(24px);
+  transform: translate3d(0, 0, 0);
+  animation: sarah-cosmic-nebula 18s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="sarah"] .training-topbar {
+  position: relative;
+  z-index: 5;
+  border: 1px solid rgba(110, 185, 255, .28);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(9, 22, 55, .92), rgba(57, 13, 69, .82));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .08),
+    0 18px 48px rgba(0, 2, 18, .35),
+    0 0 34px rgba(255, 65, 182, .08);
+  backdrop-filter: blur(15px);
+  animation: sarah-cosmic-topbar 8s ease-in-out infinite;
+}
+
+.training-page[data-athlete-theme="sarah"] .training-topbar h1 {
+  color: #fffaff;
+  text-shadow: 0 0 24px rgba(96, 204, 255, .24);
+}
+
+.training-page[data-athlete-theme="sarah"] .training-kicker,
+.training-page[data-athlete-theme="sarah"] .set-number,
+.training-page[data-athlete-theme="sarah"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="sarah"] .training-block-report-v11__kicker {
+  color: #ff84dc;
+}
+
+.training-page[data-athlete-theme="sarah"] .back-button,
+.training-page[data-athlete-theme="sarah"] .reset-button {
+  min-height: 44px;
+  border-color: rgba(100, 190, 255, .28);
+  background: rgba(8, 22, 52, .82);
+  color: #f4f8ff;
+}
+
+.training-page[data-athlete-theme="sarah"] .back-button:hover,
+.training-page[data-athlete-theme="sarah"] .reset-button:hover {
+  border-color: rgba(255, 101, 203, .58);
+  background: rgba(67, 20, 76, .92);
+  color: #fff;
+}
+
+.athlete-theme-banner--sarah-cosmic {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(116, 185, 255, .38);
+  border-radius: 30px;
+  background: #070a1a;
+  box-shadow:
+    0 30px 82px rgba(0, 3, 23, .58),
+    0 0 52px rgba(72, 150, 255, .17),
+    0 0 68px rgba(255, 61, 183, .11),
+    inset 0 1px 0 rgba(255, 255, 255, .10);
+  animation: sarah-cosmic-banner-float 9s ease-in-out infinite;
+}
+
+.athlete-theme-banner--sarah-cosmic::before {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    112deg,
+    transparent 0%,
+    transparent 32%,
+    rgba(103, 197, 255, .02) 39%,
+    rgba(255, 255, 255, .25) 47%,
+    rgba(255, 84, 196, .12) 52%,
+    transparent 61%,
+    transparent 100%
+  );
+  background-size: 230% 100%;
+  background-position: -130% 0;
+  mix-blend-mode: screen;
+  animation: sarah-cosmic-sweep 6.8s ease-in-out infinite;
+}
+
+.athlete-theme-banner--sarah-cosmic::after {
+  content: "";
+  position: absolute;
+  z-index: 9;
+  inset: 9px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, .10);
+  border-radius: 22px;
+  box-shadow: inset 0 0 38px rgba(73, 163, 255, .07);
+}
+
+.sarah-cosmic-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2.5%;
+  display: block;
+  width: 105%;
+  height: 105%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(1.07) contrast(1.035) brightness(1.02);
+  transform-origin: 50% 50%;
+  will-change: transform, filter;
+  animation: sarah-cosmic-world 13s ease-in-out infinite alternate;
+}
+
+.sarah-cosmic-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 46%, transparent 20%, rgba(6, 7, 28, .04) 58%, rgba(4, 5, 19, .32) 100%),
+    linear-gradient(180deg, rgba(5, 8, 28, .10), transparent 32%, transparent 69%, rgba(3, 5, 17, .24));
+}
+
+.sarah-cosmic-shade::before {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  opacity: .34;
+  background: conic-gradient(
+    from 20deg at 50% 48%,
+    transparent 0 11%,
+    rgba(255, 207, 79, .23) 13%,
+    transparent 17% 37%,
+    rgba(67, 170, 255, .18) 40%,
+    transparent 44% 68%,
+    rgba(255, 64, 186, .18) 72%,
+    transparent 77% 100%
+  );
+  mix-blend-mode: screen;
+  animation: sarah-cosmic-aurora 24s linear infinite;
+}
+
+.sarah-cosmic-orbit {
+  position: absolute;
+  z-index: 3;
+  top: 23%;
+  left: 25%;
+  width: 50%;
+  aspect-ratio: 1.78 / 1;
+  pointer-events: none;
+  border: 1px solid rgba(119, 208, 255, .22);
+  border-radius: 50%;
+  box-shadow:
+    0 0 19px rgba(78, 182, 255, .18),
+    inset 0 0 21px rgba(255, 71, 190, .11);
+  transform: rotate(-8deg);
+  animation: sarah-cosmic-orbit 8s ease-in-out infinite alternate;
+}
+
+.sarah-cosmic-orbit::before,
+.sarah-cosmic-orbit::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: #fff9db;
+  box-shadow: 0 0 12px #fff, 0 0 24px #ffcc62, 0 0 38px #ff5fc8;
+  animation: sarah-cosmic-orbit-dot 4.2s ease-in-out infinite alternate;
+}
+
+.sarah-cosmic-orbit::before { left: -5px; }
+.sarah-cosmic-orbit::after { right: -5px; animation-delay: -2.1s; }
+
+.sarah-cosmic-comets,
+.sarah-cosmic-stars {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sarah-cosmic-comets span {
+  position: absolute;
+  width: 112px;
+  height: 2px;
+  border-radius: 100%;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(140, 220, 255, .95));
+  box-shadow: 0 0 10px rgba(101, 202, 255, .65);
+  transform: rotate(-25deg) translate3d(0, 0, 0);
+  animation: sarah-cosmic-comet 8s ease-in infinite;
+}
+
+.sarah-cosmic-comets span:nth-child(1) { top: 16%; left: -16%; animation-delay: .4s; }
+.sarah-cosmic-comets span:nth-child(2) { top: 38%; left: -18%; width: 86px; animation-delay: 3.1s; }
+.sarah-cosmic-comets span:nth-child(3) { top: 9%; left: -22%; width: 68px; animation-delay: 5.8s; }
+
+.sarah-cosmic-stars span {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 9px #fff, 0 0 18px rgba(102, 200, 255, .85);
+  animation: sarah-cosmic-twinkle 3.6s ease-in-out infinite;
+}
+
+.sarah-cosmic-stars span:nth-child(1) { top: 12%; left: 16%; animation-delay: 0s; }
+.sarah-cosmic-stars span:nth-child(2) { top: 18%; right: 17%; width: 11px; height: 11px; animation-delay: .7s; }
+.sarah-cosmic-stars span:nth-child(3) { top: 45%; left: 8%; width: 5px; height: 5px; animation-delay: 1.2s; }
+.sarah-cosmic-stars span:nth-child(4) { top: 39%; right: 9%; animation-delay: 1.8s; }
+.sarah-cosmic-stars span:nth-child(5) { bottom: 19%; left: 28%; width: 6px; height: 6px; animation-delay: 2.4s; }
+.sarah-cosmic-stars span:nth-child(6) { bottom: 25%; right: 26%; width: 9px; height: 9px; animation-delay: 3s; }
+
+.sarah-cosmic-hud {
+  position: absolute;
+  z-index: 7;
+  top: 22px;
+  left: 22px;
+  display: flex;
+  max-width: calc(100% - 44px);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  pointer-events: none;
+}
+
+.sarah-cosmic-kicker {
+  padding: 8px 12px;
+  border: 1px solid rgba(126, 203, 255, .42);
+  border-radius: 999px;
+  background: rgba(7, 17, 50, .60);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  box-shadow: 0 0 22px rgba(84, 179, 255, .16);
+  backdrop-filter: blur(12px);
+  animation: sarah-cosmic-kicker 5s ease-in-out infinite;
+}
+
+.sarah-cosmic-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sarah-cosmic-badges span {
+  padding: 5px 8px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 999px;
+  background: rgba(21, 15, 61, .56);
+  color: #f4eaff;
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  animation: sarah-cosmic-badge 4.8s ease-in-out infinite;
+}
+
+.sarah-cosmic-badges span:nth-child(2) { animation-delay: .8s; }
+.sarah-cosmic-badges span:nth-child(3) { animation-delay: 1.6s; }
+
+.training-page[data-athlete-theme="sarah"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="sarah"] .training-v3-history,
+.training-page[data-athlete-theme="sarah"] .training-v3-overview,
+.training-page[data-athlete-theme="sarah"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="sarah"] .training-session-v11,
+.training-page[data-athlete-theme="sarah"] .training-block-report-v11,
+.training-page[data-athlete-theme="sarah"] .training-summary,
+.training-page[data-athlete-theme="sarah"] .athlete-pr-panel,
+.training-page[data-athlete-theme="sarah"] .athlete-steps-panel-v249 {
+  border-color: rgba(106, 183, 255, .20);
+  background: linear-gradient(145deg, rgba(9, 23, 55, .93), rgba(53, 14, 65, .87));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .06),
+    0 18px 46px rgba(0, 4, 21, .31);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="sarah"] .week-tab,
+.training-page[data-athlete-theme="sarah"] .day-tab-v2 {
+  border-color: rgba(102, 184, 255, .17);
+  background: rgba(8, 22, 51, .86);
+  color: #cddcf0;
+}
+
+.training-page[data-athlete-theme="sarah"] .week-tab strong,
+.training-page[data-athlete-theme="sarah"] .day-tab-v2 strong {
+  color: #fffaff;
+}
+
+.training-page[data-athlete-theme="sarah"] .week-tab--active,
+.training-page[data-athlete-theme="sarah"] .day-tab-v2--active {
+  border-color: rgba(255, 91, 198, .65);
+  background: linear-gradient(135deg, rgba(44, 104, 215, .60), rgba(151, 42, 158, .50));
+  color: #fff;
+  box-shadow: 0 0 26px rgba(255, 70, 190, .15);
+}
+
+.training-page[data-athlete-theme="sarah"] .training-exercise {
+  border-color: rgba(103, 184, 255, .18);
+  background: rgba(6, 18, 43, .94);
+  box-shadow: 0 20px 50px rgba(0, 4, 22, .34);
+}
+
+.training-page[data-athlete-theme="sarah"] .exercise-header {
+  border-bottom-color: rgba(112, 194, 255, .16);
+  background: linear-gradient(110deg, rgba(32, 75, 151, .94), rgba(82, 18, 76, .96));
+}
+
+.training-page[data-athlete-theme="sarah"] .exercise-type {
+  border-color: rgba(255, 214, 101, .57);
+  background: rgba(255, 205, 76, .10);
+  color: #ffe39a;
+}
+
+.training-page[data-athlete-theme="sarah"] .training-set {
+  border-color: rgba(104, 187, 255, .13);
+  background: rgba(10, 27, 58, .72);
+}
+
+.training-page[data-athlete-theme="sarah"] .set-load,
+.training-page[data-athlete-theme="sarah"] .set-rpe,
+.training-page[data-athlete-theme="sarah"] .training-session-v11__note,
+.training-page[data-athlete-theme="sarah"] .training-session-v11__metrics label > div {
+  border-color: rgba(107, 192, 255, .21);
+  background: rgba(7, 23, 52, .88);
+  color: #fffaff;
+}
+
+.training-page[data-athlete-theme="sarah"] .set-load:focus,
+.training-page[data-athlete-theme="sarah"] .set-rpe:focus,
+.training-page[data-athlete-theme="sarah"] .training-session-v11__note:focus {
+  border-color: #ff67cf;
+  box-shadow: 0 0 0 3px rgba(255, 91, 200, .13);
+}
+
+.training-page[data-athlete-theme="sarah"] .training-sync {
+  border-color: rgba(105, 193, 255, .24);
+  background: rgba(7, 23, 50, .85);
+  color: #a9ebff;
+}
+
+.training-page[data-athlete-theme="sarah"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #50c9ff 0%, #9a6dff 48%, #ff55c7 76%, #ffd665 100%);
+  box-shadow: 0 0 21px rgba(95, 199, 255, .28);
+}
+
+@media (hover: hover) {
+  .training-page[data-athlete-theme="sarah"] .training-exercise,
+  .training-page[data-athlete-theme="sarah"] .week-tab,
+  .training-page[data-athlete-theme="sarah"] .day-tab-v2 {
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .training-page[data-athlete-theme="sarah"] .training-exercise:hover,
+  .training-page[data-athlete-theme="sarah"] .week-tab:hover,
+  .training-page[data-athlete-theme="sarah"] .day-tab-v2:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 105, 208, .46);
+    box-shadow: 0 23px 62px rgba(10, 4, 37, .43), 0 0 25px rgba(85, 152, 255, .10);
+  }
+}
+
+@keyframes sarah-cosmic-world {
+  0% { transform: scale(1.015) translate3d(-.25%, .15%, 0); filter: saturate(1.04) contrast(1.03) brightness(1.01); }
+  50% { transform: scale(1.058) translate3d(.45%, -.35%, 0); filter: saturate(1.12) contrast(1.05) brightness(1.055); }
+  100% { transform: scale(1.035) translate3d(-.15%, -.1%, 0); filter: saturate(1.07) contrast(1.04) brightness(1.025); }
+}
+
+@keyframes sarah-cosmic-sweep {
+  0%, 16% { background-position: -130% 0; opacity: .18; }
+  51% { background-position: 18% 0; opacity: .9; }
+  86%, 100% { background-position: 130% 0; opacity: .18; }
+}
+
+@keyframes sarah-cosmic-aurora {
+  to { transform: rotate(360deg) scale(1.06); }
+}
+
+@keyframes sarah-cosmic-orbit {
+  0% { transform: rotate(-10deg) scale(.96); opacity: .34; }
+  100% { transform: rotate(-3deg) scale(1.07); opacity: .8; }
+}
+
+@keyframes sarah-cosmic-orbit-dot {
+  0% { transform: scale(.72); opacity: .52; }
+  100% { transform: scale(1.28); opacity: 1; }
+}
+
+@keyframes sarah-cosmic-comet {
+  0%, 12% { opacity: 0; transform: rotate(-25deg) translate3d(0, 0, 0); }
+  18% { opacity: .95; }
+  42%, 100% { opacity: 0; transform: rotate(-25deg) translate3d(950px, 0, 0); }
+}
+
+@keyframes sarah-cosmic-twinkle {
+  0%, 100% { opacity: .18; transform: scale(.55); }
+  50% { opacity: 1; transform: scale(1.35); }
+}
+
+@keyframes sarah-cosmic-banner-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -5px, 0); }
+}
+
+@keyframes sarah-cosmic-kicker {
+  0%, 100% { border-color: rgba(126, 203, 255, .42); box-shadow: 0 0 20px rgba(84, 179, 255, .13); }
+  50% { border-color: rgba(255, 104, 210, .56); box-shadow: 0 0 28px rgba(255, 73, 193, .20); }
+}
+
+@keyframes sarah-cosmic-badge {
+  0%, 100% { transform: translateY(0); filter: brightness(1); }
+  50% { transform: translateY(-2px); filter: brightness(1.16); }
+}
+
+@keyframes sarah-cosmic-nebula {
+  0% { transform: translate3d(-2%, -1%, 0) scale(1.02); opacity: .58; }
+  50% { transform: translate3d(2%, 1.5%, 0) scale(1.10); opacity: .92; }
+  100% { transform: translate3d(-1%, 2%, 0) scale(1.05); opacity: .72; }
+}
+
+@keyframes sarah-cosmic-topbar {
+  0%, 100% { border-color: rgba(110, 185, 255, .28); }
+  50% { border-color: rgba(255, 101, 206, .38); box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 20px 52px rgba(0,2,18,.37), 0 0 29px rgba(255,72,192,.10); }
+}
+
+@media (max-width: 760px) {
+  .athlete-theme-banner--sarah-cosmic {
+    border-radius: 26px;
+  }
+
+  .sarah-cosmic-hero {
+    object-position: 50% 50%;
+  }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="sarah"] .training-topbar {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .athlete-theme-banner--sarah-cosmic {
+    aspect-ratio: 16 / 9;
+    border-radius: 23px;
+  }
+
+  .athlete-theme-banner--sarah-cosmic::after {
+    inset: 7px;
+    border-radius: 17px;
+  }
+
+  .sarah-cosmic-hud {
+    top: 14px;
+    left: 14px;
+    max-width: calc(100% - 28px);
+  }
+
+  .sarah-cosmic-kicker {
+    padding: 7px 10px;
+    font-size: 8px;
+  }
+
+  .sarah-cosmic-badges span {
+    padding: 4px 7px;
+    font-size: 6px;
+  }
+
+  .sarah-cosmic-orbit {
+    top: 27%;
+    left: 17%;
+    width: 66%;
+  }
+}
+
+@media (max-width: 380px) {
+  .sarah-cosmic-badges span:last-child {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .training-page[data-athlete-theme="sarah"]::before,
+  .training-page[data-athlete-theme="sarah"] .training-topbar,
+  .athlete-theme-banner--sarah-cosmic,
+  .athlete-theme-banner--sarah-cosmic::before,
+  .sarah-cosmic-hero,
+  .sarah-cosmic-shade::before,
+  .sarah-cosmic-orbit,
+  .sarah-cosmic-orbit::before,
+  .sarah-cosmic-orbit::after,
+  .sarah-cosmic-comets span,
+  .sarah-cosmic-stars span,
+  .sarah-cosmic-kicker,
+  .sarah-cosmic-badges span {
+    animation: none;
+  }
+}

@@ -4264,6 +4264,58 @@ export function mountTraining(
       `
     }
 
+    if (
+      athleteTheme?.variant ===
+      'cosmic-ascension'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--sarah-cosmic"
+          aria-label="Univers cosmique animé de Sarah"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="sarah-cosmic-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Sarah au centre de son univers cosmique"
+                  width="1672"
+                  height="941"
+                >
+              `
+              : ''
+          }
+
+          <div class="sarah-cosmic-shade" aria-hidden="true"></div>
+          <div class="sarah-cosmic-orbit" aria-hidden="true"></div>
+          <div class="sarah-cosmic-comets" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="sarah-cosmic-stars" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          <div class="sarah-cosmic-hud">
+            <span class="sarah-cosmic-kicker">
+              Ascension cosmique
+            </span>
+            <div class="sarah-cosmic-badges" aria-label="Valeurs du thème">
+              <span>Force</span>
+              <span>Maîtrise</span>
+              <span>Évolution</span>
+            </div>
+          </div>
+        </section>
+      `
+    }
+
     if (!quote) {
       return ''
     }
