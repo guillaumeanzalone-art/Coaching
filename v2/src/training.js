@@ -4346,6 +4346,47 @@ export function mountTraining(
       `
     }
 
+    if (
+      athleteTheme?.variant ===
+      'french-cats'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--celia-cats"
+          aria-label="Univers animé de Célia et ses chats"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="celia-cats-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Célia entourée de nombreux chats dans un camp français kawaii"
+                  width="1672"
+                  height="941"
+                >
+              `
+              : ''
+          }
+
+          <div class="celia-cats-shade" aria-hidden="true"></div>
+          <div class="celia-cats-sunbeam" aria-hidden="true"></div>
+          <div class="celia-cats-paws" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="celia-cats-hearts" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </section>
+      `
+    }
+
     if (!quote) {
       return ''
     }

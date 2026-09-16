@@ -1967,6 +1967,328 @@ body {
   }
 }
 
+/* CELIA FRENCH CATS — cute animated field theme */
+.training-page[data-athlete-theme="celia"] {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #fff9e9;
+  background:
+    radial-gradient(circle at 12% 7%, rgba(86, 123, 89, .32), transparent 32%),
+    radial-gradient(circle at 84% 12%, rgba(196, 167, 106, .20), transparent 31%),
+    linear-gradient(180deg, #101910 0%, #1b291b 48%, #0d160e 100%);
+}
+
+.training-page[data-athlete-theme="celia"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -12%;
+  pointer-events: none;
+  opacity: .48;
+  background:
+    radial-gradient(ellipse at 23% 25%, rgba(153, 174, 117, .25) 0 9%, transparent 10%),
+    radial-gradient(ellipse at 78% 39%, rgba(102, 127, 84, .22) 0 11%, transparent 12%),
+    radial-gradient(ellipse at 51% 70%, rgba(203, 183, 124, .12) 0 12%, transparent 13%);
+  background-size: 410px 330px, 520px 390px, 470px 360px;
+  filter: blur(8px);
+  animation: celia-camo-drift 22s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="celia"] .training-topbar {
+  position: relative;
+  z-index: 5;
+  border: 1px solid rgba(221, 204, 151, .30);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(26, 39, 25, .94), rgba(52, 66, 43, .88));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 18px 48px rgba(3, 9, 3, .34);
+  backdrop-filter: blur(15px);
+}
+
+.training-page[data-athlete-theme="celia"] .training-kicker {
+  display: none;
+}
+
+.training-page[data-athlete-theme="celia"] .training-topbar h1 {
+  color: #fff7df;
+  text-shadow: 0 2px 18px rgba(247, 218, 150, .20);
+}
+
+.training-page[data-athlete-theme="celia"] .back-button,
+.training-page[data-athlete-theme="celia"] .reset-button {
+  min-height: 44px;
+  border-color: rgba(221, 204, 151, .30);
+  background: rgba(26, 40, 26, .86);
+  color: #fff8e7;
+}
+
+.athlete-theme-banner--celia-cats {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(239, 219, 166, .48);
+  border-radius: 30px;
+  background: #172016;
+  box-shadow: 0 30px 82px rgba(3, 11, 4, .53), 0 0 48px rgba(221, 194, 130, .12), inset 0 1px 0 rgba(255, 255, 255, .16);
+  animation: celia-banner-float 8.5s ease-in-out infinite;
+}
+
+.athlete-theme-banner--celia-cats::before {
+  content: "";
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(108deg, transparent 0 33%, rgba(255, 247, 204, .05) 40%, rgba(255, 248, 217, .32) 49%, rgba(255, 226, 161, .09) 57%, transparent 65% 100%);
+  background-size: 230% 100%;
+  background-position: -140% 0;
+  mix-blend-mode: screen;
+  animation: celia-sun-sweep 7.5s ease-in-out infinite;
+}
+
+.athlete-theme-banner--celia-cats::after {
+  content: "";
+  position: absolute;
+  z-index: 9;
+  inset: 9px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 246, 213, .18);
+  border-radius: 22px;
+  box-shadow: inset 0 0 44px rgba(255, 238, 186, .06), inset 0 -32px 58px rgba(15, 24, 13, .10);
+}
+
+.celia-cats-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2.5%;
+  display: block;
+  width: 105%;
+  height: 105%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(1.02) contrast(1.02) brightness(1.02);
+  transform-origin: 50% 50%;
+  will-change: transform, filter;
+  animation: celia-world-breathe 13s ease-in-out infinite alternate;
+}
+
+.celia-cats-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 52% 42%, transparent 24%, rgba(19, 29, 16, .02) 60%, rgba(10, 18, 9, .25) 100%);
+}
+
+.celia-cats-sunbeam {
+  position: absolute;
+  z-index: 2;
+  top: -46%;
+  left: 38%;
+  width: 28%;
+  height: 170%;
+  pointer-events: none;
+  opacity: .20;
+  background: linear-gradient(90deg, transparent, rgba(255, 242, 188, .72), transparent);
+  filter: blur(22px);
+  transform: rotate(14deg);
+  mix-blend-mode: screen;
+  animation: celia-beam 9s ease-in-out infinite alternate;
+}
+
+.celia-cats-paws,
+.celia-cats-hearts {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.celia-cats-paws span {
+  position: absolute;
+  width: 17px;
+  height: 15px;
+  opacity: .36;
+  border-radius: 52% 52% 46% 46%;
+  background: #fff3ca;
+  box-shadow: -8px -8px 0 -4px #fff3ca, 0 -11px 0 -4px #fff3ca, 8px -8px 0 -4px #fff3ca;
+  filter: drop-shadow(0 0 8px rgba(255, 239, 188, .72));
+  animation: celia-paw-float 8s ease-in-out infinite;
+}
+
+.celia-cats-paws span:nth-child(1) { top: 16%; left: 7%; animation-delay: 0s; }
+.celia-cats-paws span:nth-child(2) { top: 25%; right: 8%; transform: scale(.72) rotate(25deg); animation-delay: 1.2s; }
+.celia-cats-paws span:nth-child(3) { bottom: 20%; left: 13%; transform: scale(.58) rotate(-18deg); animation-delay: 2.4s; }
+.celia-cats-paws span:nth-child(4) { right: 17%; bottom: 17%; transform: scale(.82) rotate(12deg); animation-delay: 3.6s; }
+.celia-cats-paws span:nth-child(5) { top: 9%; left: 30%; transform: scale(.48) rotate(-9deg); animation-delay: 4.8s; }
+.celia-cats-paws span:nth-child(6) { top: 12%; right: 29%; transform: scale(.55) rotate(18deg); animation-delay: 6s; }
+
+.celia-cats-hearts span {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  opacity: .42;
+  background: #f7d9bd;
+  transform: rotate(45deg);
+  border-radius: 2px 5px 2px 5px;
+  box-shadow: 0 0 10px rgba(255, 220, 189, .65);
+  animation: celia-heart-rise 7s ease-in-out infinite;
+}
+
+.celia-cats-hearts span:nth-child(1) { bottom: 9%; left: 27%; animation-delay: 0s; }
+.celia-cats-hearts span:nth-child(2) { bottom: 13%; right: 24%; animation-delay: 1.8s; }
+.celia-cats-hearts span:nth-child(3) { bottom: 7%; left: 44%; width: 7px; height: 7px; animation-delay: 3.5s; }
+.celia-cats-hearts span:nth-child(4) { bottom: 16%; right: 40%; width: 8px; height: 8px; animation-delay: 5.2s; }
+
+.training-page[data-athlete-theme="celia"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="celia"] .training-v3-history,
+.training-page[data-athlete-theme="celia"] .training-v3-overview,
+.training-page[data-athlete-theme="celia"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="celia"] .training-session-v11,
+.training-page[data-athlete-theme="celia"] .training-block-report-v11,
+.training-page[data-athlete-theme="celia"] .training-summary,
+.training-page[data-athlete-theme="celia"] .athlete-pr-panel,
+.training-page[data-athlete-theme="celia"] .athlete-steps-panel-v249 {
+  border-color: rgba(218, 203, 154, .23);
+  background: linear-gradient(145deg, rgba(25, 39, 25, .94), rgba(48, 63, 42, .88));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 18px 46px rgba(3, 10, 3, .30);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="celia"] .week-tab,
+.training-page[data-athlete-theme="celia"] .day-tab-v2 {
+  border-color: rgba(220, 204, 153, .19);
+  background: rgba(28, 43, 28, .88);
+  color: #dce2cd;
+}
+
+.training-page[data-athlete-theme="celia"] .week-tab--active,
+.training-page[data-athlete-theme="celia"] .day-tab-v2--active {
+  border-color: rgba(247, 222, 155, .68);
+  background: linear-gradient(135deg, rgba(109, 132, 76, .79), rgba(68, 99, 68, .70));
+  color: #fffdf3;
+  box-shadow: 0 0 24px rgba(236, 213, 151, .13);
+}
+
+.training-page[data-athlete-theme="celia"] .training-exercise {
+  border-color: rgba(218, 202, 153, .20);
+  background: rgba(23, 37, 23, .95);
+  box-shadow: 0 20px 50px rgba(2, 9, 3, .31);
+}
+
+.training-page[data-athlete-theme="celia"] .exercise-header {
+  border-bottom-color: rgba(230, 211, 158, .17);
+  background: linear-gradient(110deg, rgba(80, 104, 62, .96), rgba(49, 75, 54, .96));
+}
+
+.training-page[data-athlete-theme="celia"] .set-number,
+.training-page[data-athlete-theme="celia"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="celia"] .training-block-report-v11__kicker {
+  color: #f0dda2;
+}
+
+.training-page[data-athlete-theme="celia"] .training-set,
+.training-page[data-athlete-theme="celia"] .set-load,
+.training-page[data-athlete-theme="celia"] .set-rpe,
+.training-page[data-athlete-theme="celia"] .training-session-v11__note,
+.training-page[data-athlete-theme="celia"] .training-session-v11__metrics label > div {
+  border-color: rgba(215, 201, 153, .19);
+  background: rgba(29, 45, 28, .84);
+  color: #fff9e9;
+}
+
+.training-page[data-athlete-theme="celia"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #557e68 0%, #89ba78 38%, #f4dea0 70%, #d06767 100%);
+  box-shadow: 0 0 20px rgba(228, 207, 148, .24);
+}
+
+@media (hover: hover) {
+  .training-page[data-athlete-theme="celia"] .training-exercise,
+  .training-page[data-athlete-theme="celia"] .week-tab,
+  .training-page[data-athlete-theme="celia"] .day-tab-v2 {
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .training-page[data-athlete-theme="celia"] .training-exercise:hover,
+  .training-page[data-athlete-theme="celia"] .week-tab:hover,
+  .training-page[data-athlete-theme="celia"] .day-tab-v2:hover {
+    transform: translateY(-3px);
+    border-color: rgba(243, 221, 163, .46);
+    box-shadow: 0 22px 56px rgba(3, 12, 4, .38), 0 0 22px rgba(235, 210, 148, .08);
+  }
+}
+
+@keyframes celia-world-breathe {
+  0% { transform: scale(1.012) translate3d(-.15%, .12%, 0); filter: saturate(1.01) contrast(1.02) brightness(1.01); }
+  50% { transform: scale(1.055) translate3d(.30%, -.20%, 0); filter: saturate(1.08) contrast(1.035) brightness(1.055); }
+  100% { transform: scale(1.032) translate3d(-.08%, -.10%, 0); filter: saturate(1.04) contrast(1.025) brightness(1.025); }
+}
+
+@keyframes celia-sun-sweep {
+  0%, 16% { background-position: -140% 0; opacity: .15; }
+  52% { background-position: 20% 0; opacity: .90; }
+  87%, 100% { background-position: 140% 0; opacity: .14; }
+}
+
+@keyframes celia-paw-float {
+  0%, 100% { translate: 0 0; opacity: .22; }
+  50% { translate: 4px -15px; opacity: .62; }
+}
+
+@keyframes celia-heart-rise {
+  0%, 100% { translate: 0 4px; scale: .72; opacity: .16; }
+  50% { translate: 2px -22px; scale: 1.18; opacity: .64; }
+}
+
+@keyframes celia-beam {
+  from { transform: translateX(-14%) rotate(14deg); opacity: .11; }
+  to { transform: translateX(20%) rotate(14deg); opacity: .30; }
+}
+
+@keyframes celia-banner-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -5px, 0); }
+}
+
+@keyframes celia-camo-drift {
+  from { transform: translate3d(-1%, -1%, 0) scale(1.02); }
+  to { transform: translate3d(2%, 1.5%, 0) scale(1.08); }
+}
+
+@media (max-width: 760px) {
+  .athlete-theme-banner--celia-cats { border-radius: 26px; }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="celia"] .training-topbar { padding: 12px; border-radius: 18px; }
+  .athlete-theme-banner--celia-cats { aspect-ratio: 16 / 9; border-radius: 23px; }
+  .athlete-theme-banner--celia-cats::after { inset: 7px; border-radius: 17px; }
+  .celia-cats-paws span:nth-child(5),
+  .celia-cats-paws span:nth-child(6) { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .training-page[data-athlete-theme="celia"]::before,
+  .athlete-theme-banner--celia-cats,
+  .athlete-theme-banner--celia-cats::before,
+  .celia-cats-hero,
+  .celia-cats-sunbeam,
+  .celia-cats-paws span,
+  .celia-cats-hearts span {
+    animation: none;
+  }
+}
+
 
 /* CLARA MAGICLARPE LEGO SPLASH THEME V1 */
 .training-page[data-athlete-theme="magicarpe"] {
