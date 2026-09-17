@@ -12,7 +12,7 @@
     "ios:release": "node scripts/ios-release.mjs",
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",
-    "android:bundle": "npm run android:sync && cd android && ./gradlew bundleRelease"
+    "android:bundle": "npm run android:sync && node scripts/android-bundle.mjs"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
