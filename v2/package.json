@@ -9,7 +9,10 @@
     "preview": "vite preview",
     "ios:sync": "npm run build && cap sync ios",
     "ios:open": "cap open ios",
-    "ios:release": "node scripts/ios-release.mjs"
+    "ios:release": "node scripts/ios-release.mjs",
+    "android:sync": "npm run build && cap sync android",
+    "android:open": "cap open android",
+    "android:bundle": "npm run android:sync && cd android && ./gradlew bundleRelease"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
