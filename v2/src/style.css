@@ -7159,3 +7159,146 @@ body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .athlete-st
     animation: none;
   }
 }
+
+
+/* =========================================================
+   TRAINING SET ACTIONS V252
+   SBD: charge + RPE uniquement.
+   Accessoires: deux boutons distincts Valider / Skip.
+   ========================================================= */
+
+.training-set--sbd {
+  grid-template-columns:
+    80px
+    minmax(110px, 1fr)
+    110px
+    120px;
+}
+
+.training-set--accessory {
+  grid-template-columns:
+    80px
+    minmax(110px, 1fr)
+    110px
+    minmax(190px, 220px);
+}
+
+.set-actions {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+}
+
+.set-validate,
+.set-actions .set-skip {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 7px 10px;
+  border-radius: 11px;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 950;
+  line-height: 1.05;
+  cursor: pointer;
+}
+
+.set-validate {
+  border: 1px solid rgba(54, 209, 124, .36);
+  color: #89e8b4;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(31, 119, 73, .22),
+      rgba(20, 64, 43, .18)
+    );
+}
+
+.set-validate:hover {
+  border-color: #36d17c;
+  color: #c7f8dc;
+}
+
+.set-validate--active {
+  border-color: #36d17c;
+  color: #06140d;
+  background: #36d17c;
+}
+
+.training-set--sbd .set-rpe {
+  min-height: 44px;
+}
+
+.training-set--sbd.training-set--done .set-rpe {
+  border-color: rgba(54, 209, 124, .68);
+}
+
+.training-set--sbd.training-set--failed .set-rpe {
+  border-color: #e95353;
+  color: #ff8d8d;
+}
+
+@media (max-width: 650px) {
+  .training-set--sbd {
+    grid-template-columns:
+      70px
+      minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .training-set--sbd .set-number {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .training-set--sbd .set-prescription {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .training-set--sbd .set-load {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .training-set--sbd .set-rpe {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .training-set--accessory {
+    grid-template-columns:
+      70px
+      minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .training-set--accessory .set-number {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .training-set--accessory .set-prescription {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .training-set--accessory .set-load {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .training-set--accessory .set-actions {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .set-actions .set-skip,
+  .set-actions .set-validate {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
