@@ -25,6 +25,8 @@ import {
 
 import {
   createStepsLeaderboardState,
+  isStepsLeaderboardPeriod,
+  isStepsLeaderboardYear,
   loadStepsLeaderboard,
   renderStepsLeaderboard,
 } from './steps-leaderboard.js'
@@ -862,7 +864,7 @@ function renderHome() {
             </strong>
 
             <span>
-              GL SBD · Steps du jour
+              GL SBD · Steps jour / semaine / mois / année
             </span>
           </div>
 
@@ -1217,6 +1219,96 @@ async function renderSbdLeaderboardScreen() {
       })
 
       rerender()
+      return
+    }
+
+    if (
+      action.dataset.action ===
+      'steps-period'
+    ) {
+      const period =
+        action.dataset.period
+
+      if (
+        isStepsLeaderboardPeriod(
+          period
+        ) &&
+        stepsLeaderboardState.period !==
+          period
+      ) {
+        stepsLeaderboardState.period =
+          period
+
+        localStorage.setItem(
+          'ga-steps-period-v2',
+          period
+        )
+
+        stepsLeaderboardState.loaded =
+          false
+        stepsLeaderboardState.rows =
+          []
+
+        rerender()
+
+        await loadStepsLeaderboard({
+          state:
+            stepsLeaderboardState,
+          athletes:
+            visibleAthletes(),
+          force: true,
+        })
+
+        rerender()
+      }
+
+      return
+    }
+
+    if (
+      action.dataset.action ===
+      'steps-year'
+    ) {
+      const year =
+        Number(
+          action.dataset.year
+        )
+
+      if (
+        isStepsLeaderboardYear(
+          year
+        ) &&
+        Number(
+          stepsLeaderboardState.year
+        ) !==
+          year
+      ) {
+        stepsLeaderboardState.year =
+          year
+
+        localStorage.setItem(
+          'ga-steps-year-v2',
+          String(year)
+        )
+
+        stepsLeaderboardState.loaded =
+          false
+        stepsLeaderboardState.rows =
+          []
+
+        rerender()
+
+        await loadStepsLeaderboard({
+          state:
+            stepsLeaderboardState,
+          athletes:
+            visibleAthletes(),
+          force: true,
+        })
+
+        rerender()
+      }
+
       return
     }
 
