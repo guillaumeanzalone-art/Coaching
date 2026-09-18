@@ -8084,7 +8084,6 @@ if (
         }
       )
     }
-    }
   }
 
   root.oninput = (
