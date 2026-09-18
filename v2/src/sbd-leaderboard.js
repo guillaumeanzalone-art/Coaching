@@ -338,39 +338,32 @@ export async function loadSbdLeaderboard({
         LIFTS
       ).flatMap(
         ([lift]) => (
-          REP_OPTIONS.flatMap(
+          REP_OPTIONS.map(
             reps => {
               const record =
-                grid[lift]?.[reps]
-
-              if (
-                !record ||
-                !glProfile
-              ) {
-                return []
-              }
+                grid[lift]?.[reps] ||
+                null
 
               const loadKg =
-                Number(
-                  record.load_kg
-                )
+                record
+                  ? Number(
+                      record.load_kg
+                    )
+                  : null
 
               const glPoints =
-                movementGlPoints(
-                  loadKg,
-                  glProfile.bodyweight,
-                  glProfile.sex
+                (
+                  record &&
+                  glProfile
                 )
+                  ? movementGlPoints(
+                      loadKg,
+                      glProfile.bodyweight,
+                      glProfile.sex
+                    )
+                  : null
 
-              if (
-                !Number.isFinite(
-                  glPoints
-                )
-              ) {
-                return []
-              }
-
-              return [{
+              return {
                 athlete_slug:
                   slug,
                 athlete_name:
@@ -379,29 +372,48 @@ export async function loadSbdLeaderboard({
                 lift,
                 reps,
                 load_kg:
-                  loadKg,
+                  Number.isFinite(loadKg)
+                    ? loadKg
+                    : null,
                 bodyweight:
-                  glProfile.bodyweight,
+                  glProfile?.bodyweight ??
+                  Number(
+                    athlete.bodyWeight
+                  ) ??
+                  null,
                 sex:
-                  glProfile.sex,
+                  glProfile?.sex ||
+                  '',
                 gl_points:
-                  glPoints,
+                  Number.isFinite(
+                    glPoints
+                  )
+                    ? glPoints
+                    : null,
                 achieved_label:
-                  record.achieved_label ||
+                  record?.achieved_label ||
                   '',
                 achieved_at:
-                  record.achieved_at ||
+                  record?.achieved_at ||
                   null,
-              }]
+                has_pr:
+                  Boolean(record),
+                has_gl_profile:
+                  Boolean(glProfile),
+              }
             }
           )
         )
       )
     })
 
-    if (recordsResult.error && !state.rows.length) {
-      throw recordsResult.error
+    if (recordsResult.error) {
+      console.warn(
+        'SBD leaderboard records unavailable:',
+        recordsResult.error
+      )
     }
+
 
     state.loaded = true
   } catch (error) {
@@ -419,10 +431,74 @@ export function renderSbdLeaderboard({ state } = {}) {
       row.lift === state.lift &&
       Number(row.reps) === Number(state.reps)
     ))
-    .sort((a, b) => (
-      Number(b.gl_points) - Number(a.gl_points) ||
-      Number(b.load_kg) - Number(a.load_kg)
-    ))
+    .sort((a, b) => {
+      const aRanked =
+        Number.isFinite(
+          Number(
+            a.gl_points
+          )
+        ) &&
+        a.gl_points !== null
+
+      const bRanked =
+        Number.isFinite(
+          Number(
+            b.gl_points
+          )
+        ) &&
+        b.gl_points !== null
+
+      if (
+        aRanked !==
+        bRanked
+      ) {
+        return bRanked
+          ? 1
+          : -1
+      }
+
+      if (
+        aRanked &&
+        bRanked
+      ) {
+        return (
+          Number(
+            b.gl_points
+          ) -
+            Number(
+              a.gl_points
+            ) ||
+          Number(
+            b.load_kg
+          ) -
+            Number(
+              a.load_kg
+            )
+        )
+      }
+
+      return String(
+        a.athlete_name
+      ).localeCompare(
+        String(
+          b.athlete_name
+        ),
+        'fr'
+      )
+    })
+
+  let rankedIndex = 0
+
+  const rankedCount =
+    rows.filter(
+      row =>
+        row.gl_points !== null &&
+        Number.isFinite(
+          Number(
+            row.gl_points
+          )
+        )
+    ).length
 
   return `
     <section class="sbd-leaderboard">
@@ -430,7 +506,7 @@ export function renderSbdLeaderboard({ state } = {}) {
         <div>
           <span>CLASSEMENT DE LA BRIGADE</span>
           <h2>Leaderboard GL</h2>
-          <p>GL du mouvement calculé avec la formule IPF, le poids de corps et la formule homme/femme du profil.</p>
+          <p>GL du mouvement calculé avec la formule IPF homme/femme · ${rows.length} athlètes affichés · ${rankedCount} classés.</p>
         </div>
 
         <button type="button" data-action="leaderboard-refresh" ${state?.busy ? 'disabled' : ''}>
@@ -471,23 +547,77 @@ export function renderSbdLeaderboard({ state } = {}) {
         <div class="sbd-leaderboard__empty">${esc(state.error)}</div>
       ` : rows.length ? `
         <div class="sbd-leaderboard__table">
-          ${rows.map((row, index) => `
-            <article class="sbd-leaderboard__row${index < 3 ? ` is-podium is-podium--${index + 1}` : ''}">
-              <span class="sbd-leaderboard__rank">${index + 1}</span>
-              <div class="sbd-leaderboard__athlete">
-                <strong>${esc(row.athlete_name)}</strong>
-                <small>${LIFTS[row.lift].label} ×${row.reps}</small>
-              </div>
-              <div class="sbd-leaderboard__load">
-                <strong>${format(row.load_kg)} kg</strong>
-                <small>${row.sex === 'F' ? 'Femme' : 'Homme'} · ${format(row.bodyweight)} kg PDC</small>
-              </div>
-              <div class="sbd-leaderboard__gl">
-                <strong>${format(row.gl_points)}</strong>
-                <small>GL</small>
-              </div>
-            </article>
-          `).join('')}
+          ${rows.map((row) => {
+            const ranked =
+              row.gl_points !== null &&
+              Number.isFinite(
+                Number(
+                  row.gl_points
+                )
+              )
+
+            const rank =
+              ranked
+                ? ++rankedIndex
+                : null
+
+            const missingText =
+              !row.has_pr
+                ? `Aucun PR ×${row.reps}`
+                : !row.has_gl_profile
+                  ? 'Profil GL à compléter'
+                  : 'Non classé'
+
+            return `
+              <article class="sbd-leaderboard__row${rank && rank <= 3 ? ` is-podium is-podium--${rank}` : ''}">
+                <span class="sbd-leaderboard__rank">
+                  ${rank || '—'}
+                </span>
+
+                <div class="sbd-leaderboard__athlete">
+                  <strong>
+                    ${esc(
+                      row.athlete_name
+                    )}
+                  </strong>
+                  <small>
+                    ${LIFTS[row.lift].label}
+                    ×${row.reps}
+                  </small>
+                </div>
+
+                <div class="sbd-leaderboard__load">
+                  <strong>
+                    ${row.has_pr
+                      ? `${format(row.load_kg)} kg`
+                      : '—'}
+                  </strong>
+                  <small>
+                    ${row.has_gl_profile
+                      ? `${row.sex === 'F' ? 'Femme' : 'Homme'} · ${format(row.bodyweight)} kg PDC`
+                      : 'Profil GL incomplet'}
+                  </small>
+                </div>
+
+                <div class="sbd-leaderboard__gl">
+                  <strong>
+                    ${ranked
+                      ? format(
+                          row.gl_points
+                        )
+                      : '—'}
+                  </strong>
+                  <small>
+                    ${ranked
+                      ? 'GL'
+                      : esc(
+                          missingText
+                        )}
+                  </small>
+                </div>
+              </article>
+            `
+          }).join('')}
         </div>
       ` : `
         <div class="sbd-leaderboard__empty">
