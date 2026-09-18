@@ -655,6 +655,7 @@ export function renderStepsLeaderboard({
 
       <div
         class="sbd-leaderboard__reps"
+        style="grid-template-columns:repeat(4,minmax(0,1fr))"
         role="tablist"
         aria-label="Période du classement Steps"
       >
@@ -682,6 +683,7 @@ export function renderStepsLeaderboard({
       ${state?.period === 'yearly' ? `
         <div
           class="sbd-leaderboard__reps"
+          style="grid-template-columns:repeat(auto-fit,minmax(72px,1fr))"
           role="tablist"
           aria-label="Année du classement Steps"
         >
