@@ -31,6 +31,13 @@ import {
   renderStepsLeaderboard,
 } from './steps-leaderboard.js'
 
+import {
+  createDifficultyLeaderboardState,
+  isDifficultyLeaderboardScope,
+  loadDifficultyLeaderboard,
+  renderDifficultyLeaderboard,
+} from './difficulty-leaderboard.js'
+
 /* GA V1.2 HOME LIVE + SPIDER ICONS V7 */
 
 import {
@@ -64,9 +71,23 @@ let sbdLeaderboardState =
   createSbdLeaderboardState()
 let stepsLeaderboardState =
   createStepsLeaderboardState()
+let difficultyLeaderboardState =
+  createDifficultyLeaderboardState()
+
+const savedLeaderboardMode =
+  localStorage.getItem(
+    'ga-leaderboard-mode-v1'
+  )
+
 let leaderboardMode =
-  localStorage.getItem('ga-leaderboard-mode-v1') === 'steps'
-    ? 'steps'
+  [
+    'gl',
+    'steps',
+    'difficulty',
+  ].includes(
+    savedLeaderboardMode
+  )
+    ? savedLeaderboardMode
     : 'gl'
 
 function setAppBackdrop(
@@ -864,7 +885,7 @@ function renderHome() {
             </strong>
 
             <span>
-              GL SBD · Steps jour / semaine / mois / année
+              GL SBD · Steps · Difficulté blocs / semaines
             </span>
           </div>
 
@@ -999,17 +1020,33 @@ function renderHome() {
 async function renderSbdLeaderboardScreen() {
   clearAppHandlers()
 
-  const renderLeaderboardBody = () => (
-    leaderboardMode === 'steps'
-      ? renderStepsLeaderboard({
+  const renderLeaderboardBody =
+    () => {
+      if (
+        leaderboardMode ===
+        'steps'
+      ) {
+        return renderStepsLeaderboard({
           state:
             stepsLeaderboardState,
         })
-      : renderSbdLeaderboard({
+      }
+
+      if (
+        leaderboardMode ===
+        'difficulty'
+      ) {
+        return renderDifficultyLeaderboard({
           state:
-            sbdLeaderboardState,
+            difficultyLeaderboardState,
         })
-  )
+      }
+
+      return renderSbdLeaderboard({
+        state:
+          sbdLeaderboardState,
+      })
+    }
 
   app.innerHTML = `
     <main class="app-shell leaderboard-shell">
@@ -1030,7 +1067,7 @@ async function renderSbdLeaderboardScreen() {
 
       <div
         class="sbd-leaderboard__lifts"
-        style="grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:14px"
+        style="grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:14px"
         role="tablist"
         aria-label="Type de classement"
       >
@@ -1056,6 +1093,18 @@ async function renderSbdLeaderboardScreen() {
         >
           <b>👟 Steps</b>
           <span>Jour · semaine · mois · année</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          class="${leaderboardMode === 'difficulty' ? 'active' : ''}"
+          aria-selected="${leaderboardMode === 'difficulty' ? 'true' : 'false'}"
+          data-action="leaderboard-mode"
+          data-mode="difficulty"
+        >
+          <b>🔥 Difficulté</b>
+          <span>Blocs · semaines actuelles</span>
         </button>
       </div>
 
@@ -1112,15 +1161,30 @@ async function renderSbdLeaderboardScreen() {
             visibleAthletes(),
           force,
         })
-      } else {
-        await loadSbdLeaderboard({
+        return
+      }
+
+      if (
+        leaderboardMode ===
+        'difficulty'
+      ) {
+        await loadDifficultyLeaderboard({
           state:
-            sbdLeaderboardState,
+            difficultyLeaderboardState,
           athletes:
             visibleAthletes(),
           force,
         })
+        return
       }
+
+      await loadSbdLeaderboard({
+        state:
+          sbdLeaderboardState,
+        athletes:
+          visibleAthletes(),
+        force,
+      })
     }
 
   app.onclick = async event => {
@@ -1143,10 +1207,18 @@ async function renderSbdLeaderboardScreen() {
       action.dataset.action ===
       'leaderboard-mode'
     ) {
+      const requested =
+        action.dataset.mode
+
       const nextMode =
-        action.dataset.mode ===
-          'steps'
-          ? 'steps'
+        [
+          'gl',
+          'steps',
+          'difficulty',
+        ].includes(
+          requested
+        )
+          ? requested
           : 'gl'
 
       if (
@@ -1321,6 +1393,52 @@ async function renderSbdLeaderboardScreen() {
       await loadStepsLeaderboard({
         state:
           stepsLeaderboardState,
+        athletes:
+          visibleAthletes(),
+        force: true,
+      })
+
+      rerender()
+      return
+    }
+
+    if (
+      action.dataset.action ===
+      'difficulty-scope'
+    ) {
+      const scope =
+        action.dataset.scope
+
+      if (
+        isDifficultyLeaderboardScope(
+          scope
+        ) &&
+        difficultyLeaderboardState.scope !==
+          scope
+      ) {
+        difficultyLeaderboardState.scope =
+          scope
+
+        localStorage.setItem(
+          'ga-difficulty-leaderboard-scope-v1',
+          scope
+        )
+
+        rerender()
+      }
+
+      return
+    }
+
+    if (
+      action.dataset.action ===
+      'difficulty-leaderboard-refresh'
+    ) {
+      rerender()
+
+      await loadDifficultyLeaderboard({
+        state:
+          difficultyLeaderboardState,
         athletes:
           visibleAthletes(),
         force: true,
