@@ -1694,7 +1694,11 @@ export function mountTraining(
 
     const factorRows = [
       ['Intensité', analytics.factors.intensity, `${percent(analytics.averageIntensity)} % moyen`],
-      ['Volume', analytics.factors.volume, `${number(analytics.averageVolume)} reps SBD / semaine`],
+      [
+        'Volume',
+        analytics.factors.volume,
+        `${number(analytics.averageEffectiveReps)} reps eff. · ${number(analytics.averageSets)} séries · ${number(analytics.averageHardReps)} reps lourdes / semaine`,
+      ],
       ['Fréquence', analytics.factors.frequency, `${percent(analytics.averageFrequency)} séances SBD / semaine`],
       ['Tonnage', analytics.factors.tonnage, `${formatTonnes(analytics.averageTonnageKg)} t / semaine`],
       ['GL points', analytics.factors.gl, `${percent(analytics.glPoints)} GL théoriques`],
@@ -1716,7 +1720,7 @@ export function mountTraining(
         </header>
 
         <p class="block-difficulty__method">
-          Estimation fondée sur les moyennes de chaque intervalle de répétitions et de charges, les max théoriques SBD utilisés dans le programme, puis pondérée par intensité, volume, fréquence, tonnage et coefficient GL du profil.
+          Estimation fondée sur les charges et répétitions prévues, les max théoriques SBD et le profil de l’athlète. Le volume est désormais composite : répétitions effectives pondérées par la charge, nombre de séries, répétitions lourdes au-dessus de 80 %, densité par séance et pics de volume entre les semaines. Le score final combine ensuite intensité, volume, fréquence, tonnage et coefficient GL.
         </p>
 
         <div class="block-difficulty__maxes">
