@@ -7302,3 +7302,36 @@ body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .athlete-st
     grid-row: auto;
   }
 }
+
+
+/* =========================================================
+   DIFFICULTY LEADERBOARD V252
+   ========================================================= */
+
+.sbd-leaderboard__footnote {
+  margin: 12px 2px 0;
+  color: #68758a;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+@media (max-width: 650px) {
+  .leaderboard-shell > .sbd-leaderboard__lifts {
+    gap: 6px;
+  }
+
+  .leaderboard-shell > .sbd-leaderboard__lifts button {
+    min-width: 0;
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .leaderboard-shell > .sbd-leaderboard__lifts button b {
+    font-size: 10px;
+  }
+
+  .leaderboard-shell > .sbd-leaderboard__lifts button span {
+    font-size: 7px;
+    line-height: 1.15;
+  }
+}
