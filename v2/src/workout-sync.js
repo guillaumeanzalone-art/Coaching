@@ -272,7 +272,12 @@ export function buildWorkoutSetPayload({
       ),
 
     rpe:
-      exercise.usesRpe
+      ['sq', 'bn', 'dl']
+        .includes(
+          exerciseCode(
+            exercise.type
+          )
+        )
         ? normalizeNumber(
             setState.rpe
           )
