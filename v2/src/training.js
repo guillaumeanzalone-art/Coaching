@@ -8176,66 +8176,13 @@ if (
     }
 
     /*
-     * Certains navigateurs mobiles déclenchent
-     * input sur un <select> avant change.
-     * On traite donc aussi le RPE ici afin que
-     * l'état ne dépende pas d'un seul événement.
+     * IMPORTANT iOS / Capacitor : on ne rerend plus la page sur
+     * l'evenement input du select RPE. Le rerender pouvait detacher
+     * le <select> avant que l'evenement change soit emis, ce qui
+     * faisait perdre la validation sur certains iPhone.
+     * Le RPE est donc valide uniquement dans root.onchange ci-dessous.
      */
-    if (
-      actionName ===
-        'rpe'
-    ) {
-      const {
-        exercise,
-        sourceSet,
-      } =
-        found
 
-      if (
-        !exercise.usesRpe
-      ) {
-        return
-      }
-
-      if (
-        input.value ===
-          'failed'
-      ) {
-        updateSet(
-          sourceSet,
-          {
-            rpe: '',
-            status:
-              'failed',
-          }
-        )
-        return
-      }
-
-      if (
-        input.value === ''
-      ) {
-        updateSet(
-          sourceSet,
-          {
-            rpe: '',
-            status:
-              'pending',
-          }
-        )
-        return
-      }
-
-      updateSet(
-        sourceSet,
-        {
-          rpe:
-            input.value,
-          status:
-            'done',
-        }
-      )
-    }
   }
 
   root.onchange = (
