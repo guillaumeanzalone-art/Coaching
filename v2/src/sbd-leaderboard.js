@@ -210,6 +210,26 @@ export async function loadSbdLeaderboard({
       .map(athleteSlug)
       .filter(Boolean)
 
+    const querySlugs =
+      Array.from(
+        new Set(
+          slugs.flatMap(
+            slug => [
+              slug,
+              String(slug)
+                .toLowerCase(),
+            ]
+          )
+        )
+      )
+
+    const rosterKeys =
+      new Set(
+        slugs.map(
+          normalize
+        )
+      )
+
     const [
       recordsResult,
       glProfilesResult,
@@ -218,18 +238,18 @@ export async function loadSbdLeaderboard({
       supabase
         .from('athlete_sbd_rep_prs_v249')
         .select('athlete_slug,lift,reps,load_kg,achieved_label,achieved_at,source_label')
-        .in('athlete_slug', slugs),
+        .in('athlete_slug', querySlugs),
 
       supabase
         .from('athlete_program_gl_v171')
-        .select('athlete_slug,bodyweight,sex,is_current')
+        .select('athlete_slug,squat_max,bench_max,deadlift_max,bodyweight,sex,is_current')
         .eq('is_current', true)
-        .in('athlete_slug', slugs),
+        .in('athlete_slug', querySlugs),
 
       supabase
         .from('athlete_progress')
         .select('athlete_slug,gl_bodyweight,gl_sex')
-        .in('athlete_slug', slugs),
+        .in('athlete_slug', querySlugs),
     ])
 
     const glProfilesBySlug =
@@ -291,14 +311,28 @@ export async function loadSbdLeaderboard({
             sex
           )
         ) {
+          const profile = {
+            bodyweight,
+            sex,
+            squat_max:
+              Number(
+                row.squat_max
+              ) || null,
+            bench_max:
+              Number(
+                row.bench_max
+              ) || null,
+            deadlift_max:
+              Number(
+                row.deadlift_max
+              ) || null,
+          }
+
           glProfilesBySlug.set(
             normalize(
               row.athlete_slug
             ),
-            {
-              bodyweight,
-              sex,
-            }
+            profile
           )
         }
       })
@@ -311,12 +345,130 @@ export async function loadSbdLeaderboard({
 
     if (!recordsResult.error) {
       ;(recordsResult.data || []).forEach(row => {
-        const key = normalize(row.athlete_slug)
-        const grid = grids.get(key) || seededGrid(row.athlete_slug)
-        mergeRecord(grid, row.lift, row.reps, row, true)
-        grids.set(key, grid)
+        const key =
+          normalize(
+            row.athlete_slug
+          )
+
+        if (
+          !rosterKeys.has(key)
+        ) {
+          return
+        }
+
+        const grid =
+          grids.get(key) ||
+          seededGrid(
+            row.athlete_slug
+          )
+
+        mergeRecord(
+          grid,
+          row.lift,
+          row.reps,
+          row,
+          true
+        )
+
+        grids.set(
+          key,
+          grid
+        )
       })
     }
+
+    /*
+     * Pour le classement x1, si aucun PR explicite n'existe,
+     * on utilise le max S/B/D du profil GL actif. Cela garantit
+     * qu'un athlète avec un profil GL complet n'apparaisse pas
+     * artificiellement sans performance x1.
+     */
+    athletes.forEach(
+      athlete => {
+        const slug =
+          athleteSlug(
+            athlete
+          )
+
+        const key =
+          normalize(slug)
+
+        const profile =
+          glProfilesBySlug.get(
+            key
+          )
+
+        const grid =
+          grids.get(key) ||
+          seededGrid(slug)
+
+        if (!profile) {
+          return
+        }
+
+        const fallbackMaxes = {
+          squat:
+            profile.squat_max,
+          bench:
+            profile.bench_max,
+          deadlift:
+            profile.deadlift_max,
+        }
+
+        Object.entries(
+          fallbackMaxes
+        ).forEach(
+          ([
+            lift,
+            load,
+          ]) => {
+            if (
+              grid[lift]?.[1]
+            ) {
+              return
+            }
+
+            const numericLoad =
+              Number(load)
+
+            if (
+              !Number.isFinite(
+                numericLoad
+              ) ||
+              numericLoad <= 0
+            ) {
+              return
+            }
+
+            mergeRecord(
+              grid,
+              lift,
+              1,
+              {
+                athlete_slug:
+                  slug,
+                lift,
+                reps: 1,
+                load_kg:
+                  numericLoad,
+                achieved_label:
+                  '',
+                source_label:
+                  'Max profil GL actif',
+                fallback_gl_max:
+                  true,
+              },
+              true
+            )
+          }
+        )
+
+        grids.set(
+          key,
+          grid
+        )
+      }
+    )
 
     state.rows = athletes.flatMap(athlete => {
       const slug =
