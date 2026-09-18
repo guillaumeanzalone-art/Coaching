@@ -178,6 +178,7 @@ export function analyzeTrainingBlock({
   state = {},
   bodyWeight = 0,
   glMultiplier = 1,
+  referenceMaxes = null,
 } = {}) {
   const weeks = Array.isArray(block?.weeks) ? block.weeks : []
   const maxCandidates = {
@@ -199,9 +200,43 @@ export function analyzeTrainingBlock({
     })
   })
 
-  const theoreticalMaxes = Object.fromEntries(
-    Object.entries(maxCandidates).map(([lift, values]) => [lift, median(values)])
-  )
+  const theoreticalMaxes =
+    referenceMaxes &&
+    typeof referenceMaxes ===
+      'object'
+      ? {
+          squat:
+            Math.max(
+              0,
+              Number(
+                referenceMaxes.squat
+              ) || 0
+            ),
+          bench:
+            Math.max(
+              0,
+              Number(
+                referenceMaxes.bench
+              ) || 0
+            ),
+          deadlift:
+            Math.max(
+              0,
+              Number(
+                referenceMaxes.deadlift
+              ) || 0
+            ),
+        }
+      : Object.fromEntries(
+          Object.entries(
+            maxCandidates
+          ).map(
+            ([lift, values]) => [
+              lift,
+              median(values),
+            ]
+          )
+        )
 
   let plannedTonnageKg = 0
   let completedTonnageKg = 0
