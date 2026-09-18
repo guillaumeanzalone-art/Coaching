@@ -6330,11 +6330,35 @@ export function mountTraining(
         sourceSet
       )
 
+    const nextChanges = {
+      ...changes,
+    }
+
+    /*
+     * Une valeur RPE renseignee correspond a une serie realisee.
+     * On force cette regle au niveau central pour que tous les chemins
+     * (input/change, mobile WebView, futures UI) valident la serie.
+     */
+    if (
+      Object.prototype.hasOwnProperty.call(
+        nextChanges,
+        'rpe'
+      ) &&
+      String(
+        nextChanges.rpe ?? ''
+      ).trim() !== '' &&
+      nextChanges.rpe !==
+        'failed'
+    ) {
+      nextChanges.status =
+        'done'
+    }
+
     state.sets[
       sourceSet.id
     ] = {
       ...current,
-      ...changes,
+      ...nextChanges,
     }
 
     const found =
