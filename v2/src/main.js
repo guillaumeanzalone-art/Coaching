@@ -23,6 +23,12 @@ import {
   renderSbdLeaderboard,
 } from './sbd-leaderboard.js'
 
+import {
+  createStepsLeaderboardState,
+  loadStepsLeaderboard,
+  renderStepsLeaderboard,
+} from './steps-leaderboard.js'
+
 /* GA V1.2 HOME LIVE + SPIDER ICONS V7 */
 
 import {
@@ -54,6 +60,12 @@ let currentUser = null
 let currentMember = null
 let sbdLeaderboardState =
   createSbdLeaderboardState()
+let stepsLeaderboardState =
+  createStepsLeaderboardState()
+let leaderboardMode =
+  localStorage.getItem('ga-leaderboard-mode-v1') === 'steps'
+    ? 'steps'
+    : 'gl'
 
 function setAppBackdrop(
   athleteSlug = ''
@@ -846,11 +858,11 @@ function renderHome() {
 
           <div>
             <strong>
-              Leaderboard GL
+              Leaderboards
             </strong>
 
             <span>
-              Classements SBD ×1 à ×9
+              GL SBD · Steps du jour
             </span>
           </div>
 
@@ -985,6 +997,18 @@ function renderHome() {
 async function renderSbdLeaderboardScreen() {
   clearAppHandlers()
 
+  const renderLeaderboardBody = () => (
+    leaderboardMode === 'steps'
+      ? renderStepsLeaderboard({
+          state:
+            stepsLeaderboardState,
+        })
+      : renderSbdLeaderboard({
+          state:
+            sbdLeaderboardState,
+        })
+  )
+
   app.innerHTML = `
     <main class="app-shell leaderboard-shell">
       <header class="topbar">
@@ -998,69 +1022,225 @@ async function renderSbdLeaderboardScreen() {
 
         <div>
           <span class="version">LA BRIGADE DE L’ARAIGNÉE</span>
-          <h1>Leaderboard</h1>
+          <h1>Leaderboards</h1>
         </div>
       </header>
 
-      <div data-sbd-leaderboard>
-        ${renderSbdLeaderboard({ state: sbdLeaderboardState })}
+      <div
+        class="sbd-leaderboard__lifts"
+        style="grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:14px"
+        role="tablist"
+        aria-label="Type de classement"
+      >
+        <button
+          type="button"
+          role="tab"
+          class="${leaderboardMode === 'gl' ? 'active' : ''}"
+          aria-selected="${leaderboardMode === 'gl' ? 'true' : 'false'}"
+          data-action="leaderboard-mode"
+          data-mode="gl"
+        >
+          <b>🏋️ GL</b>
+          <span>SBD par mouvement</span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          class="${leaderboardMode === 'steps' ? 'active' : ''}"
+          aria-selected="${leaderboardMode === 'steps' ? 'true' : 'false'}"
+          data-action="leaderboard-mode"
+          data-mode="steps"
+        >
+          <b>👟 Steps</b>
+          <span>Classement du jour</span>
+        </button>
+      </div>
+
+      <div data-leaderboard-body>
+        ${renderLeaderboardBody()}
       </div>
     </main>
   `
 
   const rerender = () => {
-    const container = app.querySelector('[data-sbd-leaderboard]')
-    if (container) {
-      container.innerHTML = renderSbdLeaderboard({
-        state: sbdLeaderboardState,
+    app
+      .querySelectorAll(
+        '[data-action="leaderboard-mode"]'
+      )
+      .forEach(button => {
+        const active =
+          button.dataset.mode ===
+          leaderboardMode
+
+        button.classList.toggle(
+          'active',
+          active
+        )
+
+        button.setAttribute(
+          'aria-selected',
+          String(active)
+        )
       })
+
+    const container =
+      app.querySelector(
+        '[data-leaderboard-body]'
+      )
+
+    if (container) {
+      container.innerHTML =
+        renderLeaderboardBody()
     }
   }
 
+  const loadActiveLeaderboard =
+    async ({
+      force = false,
+    } = {}) => {
+      if (
+        leaderboardMode ===
+        'steps'
+      ) {
+        await loadStepsLeaderboard({
+          state:
+            stepsLeaderboardState,
+          athletes:
+            visibleAthletes(),
+          force,
+        })
+      } else {
+        await loadSbdLeaderboard({
+          state:
+            sbdLeaderboardState,
+          athletes:
+            visibleAthletes(),
+          force,
+        })
+      }
+    }
+
   app.onclick = async event => {
-    const action = event.target.closest('[data-action]')
+    const action =
+      event.target.closest(
+        '[data-action]'
+      )
+
     if (!action) return
 
-    if (action.dataset.action === 'home') {
+    if (
+      action.dataset.action ===
+      'home'
+    ) {
       renderHome()
       return
     }
 
-    if (action.dataset.action === 'leaderboard-lift') {
-      if (isSbdLeaderboardLift(action.dataset.lift)) {
-        sbdLeaderboardState.lift = action.dataset.lift
-        rerender()
-      }
-      return
-    }
+    if (
+      action.dataset.action ===
+      'leaderboard-mode'
+    ) {
+      const nextMode =
+        action.dataset.mode ===
+          'steps'
+          ? 'steps'
+          : 'gl'
 
-    if (action.dataset.action === 'leaderboard-reps') {
-      if (isSbdLeaderboardReps(action.dataset.reps)) {
-        sbdLeaderboardState.reps = Number(action.dataset.reps)
-        rerender()
+      if (
+        nextMode ===
+        leaderboardMode
+      ) {
+        return
       }
-      return
-    }
 
-    if (action.dataset.action === 'leaderboard-refresh') {
+      leaderboardMode =
+        nextMode
+
+      localStorage.setItem(
+        'ga-leaderboard-mode-v1',
+        leaderboardMode
+      )
+
       rerender()
+      await loadActiveLeaderboard()
+      rerender()
+      return
+    }
+
+    if (
+      action.dataset.action ===
+      'leaderboard-lift'
+    ) {
+      if (
+        isSbdLeaderboardLift(
+          action.dataset.lift
+        )
+      ) {
+        sbdLeaderboardState.lift =
+          action.dataset.lift
+        rerender()
+      }
+      return
+    }
+
+    if (
+      action.dataset.action ===
+      'leaderboard-reps'
+    ) {
+      if (
+        isSbdLeaderboardReps(
+          action.dataset.reps
+        )
+      ) {
+        sbdLeaderboardState.reps =
+          Number(
+            action.dataset.reps
+          )
+        rerender()
+      }
+      return
+    }
+
+    if (
+      action.dataset.action ===
+      'leaderboard-refresh'
+    ) {
+      rerender()
+
       await loadSbdLeaderboard({
-        state: sbdLeaderboardState,
-        athletes: visibleAthletes(),
+        state:
+          sbdLeaderboardState,
+        athletes:
+          visibleAthletes(),
         force: true,
       })
+
+      rerender()
+      return
+    }
+
+    if (
+      action.dataset.action ===
+      'steps-leaderboard-refresh'
+    ) {
+      rerender()
+
+      await loadStepsLeaderboard({
+        state:
+          stepsLeaderboardState,
+        athletes:
+          visibleAthletes(),
+        force: true,
+      })
+
       rerender()
     }
   }
 
-  await loadSbdLeaderboard({
-    state: sbdLeaderboardState,
-    athletes: visibleAthletes(),
-  })
-
+  await loadActiveLeaderboard()
   rerender()
 }
-
 
 
 async function renderRpgScreen() {
