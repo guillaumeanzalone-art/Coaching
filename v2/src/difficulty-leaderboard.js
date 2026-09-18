@@ -509,6 +509,7 @@ export function renderDifficultyLeaderboard({
                 scope
               )
             )}
+            · ${rankedRows.length}/${rows.length} athlètes classés
             · même moteur /100 que l’écran Difficulté.
           </p>
         </div>
