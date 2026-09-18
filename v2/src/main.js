@@ -1055,7 +1055,7 @@ async function renderSbdLeaderboardScreen() {
           data-mode="steps"
         >
           <b>👟 Steps</b>
-          <span>Classement du jour</span>
+          <span>Jour · semaine · mois · année</span>
         </button>
       </div>
 
