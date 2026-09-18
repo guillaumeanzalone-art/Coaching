@@ -6394,6 +6394,159 @@ export function mountTraining(
     render()
   }
 
+  function awardCompletedSetXp(
+    found
+  ) {
+    const xpPayload =
+      payloadForFound(
+        found
+      )
+
+    const exerciseCode =
+      String(
+        xpPayload[
+          'exercise' + '_' + 'code'
+        ] || ''
+      ).toLowerCase()
+
+    const dayRows =
+      listDaySets(
+        found.day
+      )
+
+    const sbdSets =
+      dayRows.filter(
+        (row) => {
+          const rowPayload =
+            payloadForFound({
+              ...row,
+              weekIndex:
+                found.weekIndex,
+              dayIndex:
+                found.dayIndex,
+            })
+
+          const code =
+            String(
+              rowPayload[
+                'exercise' + '_' + 'code'
+              ] || ''
+            ).toLowerCase()
+
+          return [
+            'sq',
+            'bn',
+            'dl',
+          ].includes(code)
+        }
+      ).length
+
+    const totalSets =
+      dayRows.length
+
+    const accessorySets =
+      Math.max(
+        0,
+        totalSets -
+          sbdSets
+      )
+
+    void awardSetXp({
+      athleteSlug:
+        cloudAthleteSlug,
+
+      programKey:
+        programKey(),
+
+      weekIndex:
+        found.weekIndex,
+
+      dayIndex:
+        found.dayIndex,
+
+      setIndex:
+        found.setIndex,
+
+      exerciseCode,
+
+      isPr:
+        false,
+
+      previousPrKg:
+        null,
+
+      totalSets,
+      sbdSets,
+      accessorySets,
+    })
+      .then((result) => {
+        if (
+          !result ||
+          result.offline
+        ) {
+          return
+        }
+
+        console.log(
+          'XP RESULT',
+          {
+            duplicate:
+              result.duplicate,
+            setPoints:
+              result.setPoints,
+            totalXp:
+              result.totalXp,
+            level:
+              result.level,
+            packEarned:
+              result.packEarned,
+          }
+        )
+      })
+      .catch((error) => {
+        console.error(
+          'XP ERROR',
+          error
+        )
+      })
+  }
+
+  function completeFoundSet(
+    found,
+    changes = {}
+  ) {
+    if (
+      !found ||
+      !canEdit
+    ) {
+      return
+    }
+
+    const previous =
+      getSetState(
+        state,
+        found.sourceSet
+      )
+
+    updateSet(
+      found.sourceSet,
+      {
+        ...changes,
+        status:
+          'done',
+      }
+    )
+
+    if (
+      previous.status !==
+        'done'
+    ) {
+      awardCompletedSetXp(
+        found
+      )
+    }
+  }
+
   function saveLoadWithoutRender(
     sourceSet,
     value,
@@ -6957,19 +7110,35 @@ export function mountTraining(
     `
   }
 
+  function isSbdExercise(
+    exercise
+  ) {
+    const code =
+      String(
+        exercise?.type || ''
+      )
+        .trim()
+        .toLowerCase()
+
+    return [
+      'sq',
+      'bn',
+      'dl',
+    ].includes(code)
+  }
+
   function renderRpe(
     exercise,
     sourceSet,
     set,
     index
   ) {
-    if (!exercise.usesRpe) {
-      return `
-        <div
-          class="set-rpe-placeholder"
-          aria-hidden="true"
-        ></div>
-      `
+    if (
+      !isSbdExercise(
+        exercise
+      )
+    ) {
+      return ''
     }
 
     const values = [
@@ -7021,7 +7190,7 @@ export function mountTraining(
               : ''
           }
         >
-          SKIP / ÉCHEC
+          ÉCHEC
         </option>
       </select>
     `
@@ -7045,6 +7214,11 @@ export function mountTraining(
     const isFailed =
       set.status ===
         'failed'
+
+    const isSbd =
+      isSbdExercise(
+        exercise
+      )
 
     const meta = []
 
@@ -7088,6 +7262,9 @@ export function mountTraining(
       <div
         class="
           training-set
+          ${isSbd
+            ? 'training-set--sbd'
+            : 'training-set--accessory'}
           ${
             isDone
               ? 'training-set--done'
@@ -7147,45 +7324,38 @@ export function mountTraining(
           index
         )}
 
-        <button
-          class="
-            set-check
-            ${
-              isDone
-                ? 'set-check--active'
-                : ''
-            }
-          "
-          ${canEdit ? '' : 'disabled'}
-          data-action="toggle"
-          data-set-id="${escapeHtml(sourceSet.id)}"
-          aria-label="Valider série ${index + 1}"
-        >
-          ${
-            isDone
-              ? '✓'
-              : ''
-          }
-        </button>
-        <button
-          class="set-skip ${isFailed ? 'set-skip--undo' : ''}"
-          ${canEdit ? '' : 'disabled'}
-          data-action="skip-set"
-          data-set-id="${escapeHtml(sourceSet.id)}"
-          type="button"
-        >
-          <strong>
-            ${isFailed
-              ? '↩ REVENIR'
-              : '☠ SKIP'}
-          </strong>
+        ${isSbd
+          ? ''
+          : `
+            <div
+              class="set-actions"
+              aria-label="Actions série ${index + 1}"
+            >
+              <button
+                class="set-validate ${isDone ? 'set-validate--active' : ''}"
+                ${canEdit ? '' : 'disabled'}
+                data-action="toggle"
+                data-set-id="${escapeHtml(sourceSet.id)}"
+                type="button"
+              >
+                ${isDone
+                  ? '✓ VALIDÉ'
+                  : 'VALIDER'}
+              </button>
 
-          <small>
-            ${isFailed
-              ? 'reprendre ma série'
-              : 'la barre a gagné'}
-          </small>
-        </button>
+              <button
+                class="set-skip ${isFailed ? 'set-skip--undo' : ''}"
+                ${canEdit ? '' : 'disabled'}
+                data-action="skip-set"
+                data-set-id="${escapeHtml(sourceSet.id)}"
+                type="button"
+              >
+                ${isFailed
+                  ? '↩ REVENIR'
+                  : 'SKIP'}
+              </button>
+            </div>
+          `}
       </div>
     `
   }
@@ -7885,12 +8055,21 @@ if (
         'toggle'
     ) {
       if (
+        isSbdExercise(
+          exercise
+        )
+      ) {
+        return
+      }
+
+      if (
         set.status ===
           'done'
       ) {
         updateSet(
           sourceSet,
           {
+            rpe: '',
             status:
               'pending',
           }
@@ -7898,124 +8077,13 @@ if (
         return
       }
 
-      updateSet(
-        sourceSet,
+      completeFoundSet(
+        found,
         {
-          status:
-            'done',
-
-          rpe:
-            exercise.usesRpe
-              ? set.rpe
-              : '',
+          rpe: '',
         }
       )
-
-      const xpPayload =
-        payloadForFound(found)
-
-      const exerciseCode =
-        String(
-          xpPayload[
-            'exercise' + '_' + 'code'
-          ] || ''
-        ).toLowerCase()
-
-      const dayRows =
-        listDaySets(found.day)
-
-      const sbdSets =
-        dayRows.filter((row) => {
-          const rowPayload =
-            payloadForFound({
-              ...row,
-              weekIndex:
-                found.weekIndex,
-              dayIndex:
-                found.dayIndex,
-            })
-
-          const code =
-            String(
-              rowPayload[
-                'exercise' + '_' + 'code'
-              ] || ''
-            ).toLowerCase()
-
-          return [
-            'sq',
-            'bn',
-            'dl',
-          ].includes(code)
-        }).length
-
-      const totalSets =
-        dayRows.length
-
-      const accessorySets =
-        Math.max(
-          0,
-          totalSets - sbdSets
-        )
-
-      void awardSetXp({
-        athleteSlug:
-          cloudAthleteSlug,
-
-        programKey:
-          programKey(),
-
-        weekIndex:
-          found.weekIndex,
-
-        dayIndex:
-          found.dayIndex,
-
-        setIndex:
-          found.setIndex,
-
-        exerciseCode,
-
-        isPr:
-          false,
-
-        previousPrKg:
-          null,
-
-        totalSets,
-        sbdSets,
-        accessorySets,
-      })
-        .then((result) => {
-          if (
-            !result ||
-            result.offline
-          ) {
-            return
-          }
-
-          console.log(
-            'XP RESULT',
-            {
-              duplicate:
-                result.duplicate,
-              setPoints:
-                result.setPoints,
-              totalXp:
-                result.totalXp,
-              level:
-                result.level,
-              packEarned:
-                result.packEarned,
-            }
-          )
-        })
-        .catch((error) => {
-          console.error(
-            'XP ERROR',
-            error
-          )
-        })
+    }
     }
   }
 
@@ -8277,7 +8345,9 @@ if (
         'rpe'
     ) {
       if (
-        !exercise.usesRpe
+        !isSbdExercise(
+          exercise
+        )
       ) {
         return
       }
@@ -8311,14 +8381,11 @@ if (
         return
       }
 
-      updateSet(
-        sourceSet,
+      completeFoundSet(
+        found,
         {
           rpe:
             input.value,
-
-          status:
-            'done',
         }
       )
     }
