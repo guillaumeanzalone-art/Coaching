@@ -1,7 +1,7 @@
 import { supabase } from './supabase.js'
 import { SBD_PR_SEED } from './sbd-pr-seed.js'
 
-const REP_OPTIONS = [1, 2, 3, 4, 5, 7, 8, 9]
+const REP_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 const LIFTS = {
   squat: {
@@ -118,6 +118,70 @@ function format(value, digits = 1) {
   })
 }
 
+function movementGlPoints(
+  loadKg,
+  bodyweight,
+  sex
+) {
+  const load =
+    Number(loadKg)
+
+  const bw =
+    Number(bodyweight)
+
+  const normalizedSex =
+    String(sex || '')
+      .trim()
+      .toUpperCase()
+
+  if (
+    !Number.isFinite(load) ||
+    load <= 0 ||
+    !Number.isFinite(bw) ||
+    bw <= 0 ||
+    !['M', 'F'].includes(
+      normalizedSex
+    )
+  ) {
+    return null
+  }
+
+  const coefficients =
+    normalizedSex === 'F'
+      ? {
+          a: 610.32796,
+          b: 1045.59282,
+          c: 0.03048,
+        }
+      : {
+          a: 1199.72839,
+          b: 1025.18162,
+          c: 0.00921,
+        }
+
+  const denominator =
+    coefficients.a -
+    coefficients.b *
+      Math.exp(
+        -coefficients.c * bw
+      )
+
+  if (
+    !Number.isFinite(
+      denominator
+    ) ||
+    denominator <= 0
+  ) {
+    return null
+  }
+
+  return (
+    100 *
+    load /
+    denominator
+  )
+}
+
 export function createSbdLeaderboardState() {
   return {
     lift: 'squat',
@@ -146,23 +210,98 @@ export async function loadSbdLeaderboard({
       .map(athleteSlug)
       .filter(Boolean)
 
-    const [recordsResult, progressResult] = await Promise.all([
+    const [
+      recordsResult,
+      glProfilesResult,
+      progressResult,
+    ] = await Promise.all([
       supabase
         .from('athlete_sbd_rep_prs_v249')
         .select('athlete_slug,lift,reps,load_kg,achieved_label,achieved_at,source_label')
         .in('athlete_slug', slugs),
+
+      supabase
+        .from('athlete_program_gl_v171')
+        .select('athlete_slug,bodyweight,sex,is_current')
+        .eq('is_current', true)
+        .in('athlete_slug', slugs),
+
       supabase
         .from('athlete_progress')
-        .select('athlete_slug,gl_multiplier')
+        .select('athlete_slug,gl_bodyweight,gl_sex')
         .in('athlete_slug', slugs),
     ])
 
-    const progressBySlug = new Map(
-      (progressResult.data || []).map(row => [
-        normalize(row.athlete_slug),
-        Math.max(0.01, Number(row.gl_multiplier) || 1),
-      ])
-    )
+    const glProfilesBySlug =
+      new Map()
+
+    ;(progressResult.data || [])
+      .forEach(row => {
+        const bodyweight =
+          Number(
+            row.gl_bodyweight
+          )
+
+        const sex =
+          String(
+            row.gl_sex || ''
+          )
+            .trim()
+            .toUpperCase()
+
+        if (
+          Number.isFinite(
+            bodyweight
+          ) &&
+          bodyweight > 0 &&
+          ['M', 'F'].includes(
+            sex
+          )
+        ) {
+          glProfilesBySlug.set(
+            normalize(
+              row.athlete_slug
+            ),
+            {
+              bodyweight,
+              sex,
+            }
+          )
+        }
+      })
+
+    ;(glProfilesResult.data || [])
+      .forEach(row => {
+        const bodyweight =
+          Number(row.bodyweight)
+
+        const sex =
+          String(
+            row.sex || ''
+          )
+            .trim()
+            .toUpperCase()
+
+        if (
+          Number.isFinite(
+            bodyweight
+          ) &&
+          bodyweight > 0 &&
+          ['M', 'F'].includes(
+            sex
+          )
+        ) {
+          glProfilesBySlug.set(
+            normalize(
+              row.athlete_slug
+            ),
+            {
+              bodyweight,
+              sex,
+            }
+          )
+        }
+      })
 
     const grids = new Map()
     athletes.forEach(athlete => {
@@ -180,29 +319,84 @@ export async function loadSbdLeaderboard({
     }
 
     state.rows = athletes.flatMap(athlete => {
-      const slug = athleteSlug(athlete)
-      const grid = grids.get(normalize(slug)) || emptyGrid()
-      const glMultiplier = progressBySlug.get(normalize(slug)) || 1
+      const slug =
+        athleteSlug(athlete)
 
-      return Object.entries(LIFTS).flatMap(([lift]) => (
-        REP_OPTIONS.flatMap(reps => {
-          const record = grid[lift]?.[reps]
-          if (!record) return []
+      const grid =
+        grids.get(
+          normalize(slug)
+        ) ||
+        emptyGrid()
 
-          const loadKg = Number(record.load_kg)
-          return [{
-            athlete_slug: slug,
-            athlete_name: athlete.name || slug,
-            lift,
-            reps,
-            load_kg: loadKg,
-            gl_multiplier: glMultiplier,
-            gl_points: loadKg * glMultiplier,
-            achieved_label: record.achieved_label || '',
-            achieved_at: record.achieved_at || null,
-          }]
-        })
-      ))
+      const glProfile =
+        glProfilesBySlug.get(
+          normalize(slug)
+        ) ||
+        null
+
+      return Object.entries(
+        LIFTS
+      ).flatMap(
+        ([lift]) => (
+          REP_OPTIONS.flatMap(
+            reps => {
+              const record =
+                grid[lift]?.[reps]
+
+              if (
+                !record ||
+                !glProfile
+              ) {
+                return []
+              }
+
+              const loadKg =
+                Number(
+                  record.load_kg
+                )
+
+              const glPoints =
+                movementGlPoints(
+                  loadKg,
+                  glProfile.bodyweight,
+                  glProfile.sex
+                )
+
+              if (
+                !Number.isFinite(
+                  glPoints
+                )
+              ) {
+                return []
+              }
+
+              return [{
+                athlete_slug:
+                  slug,
+                athlete_name:
+                  athlete.name ||
+                  slug,
+                lift,
+                reps,
+                load_kg:
+                  loadKg,
+                bodyweight:
+                  glProfile.bodyweight,
+                sex:
+                  glProfile.sex,
+                gl_points:
+                  glPoints,
+                achieved_label:
+                  record.achieved_label ||
+                  '',
+                achieved_at:
+                  record.achieved_at ||
+                  null,
+              }]
+            }
+          )
+        )
+      )
     })
 
     if (recordsResult.error && !state.rows.length) {
@@ -236,7 +430,7 @@ export function renderSbdLeaderboard({ state } = {}) {
         <div>
           <span>CLASSEMENT DE LA BRIGADE</span>
           <h2>Leaderboard GL</h2>
-          <p>Calculé avec le coefficient GL de chaque profil et les PR enregistrés.</p>
+          <p>GL du mouvement calculé avec la formule IPF, le poids de corps et la formule homme/femme du profil.</p>
         </div>
 
         <button type="button" data-action="leaderboard-refresh" ${state?.busy ? 'disabled' : ''}>
@@ -286,7 +480,7 @@ export function renderSbdLeaderboard({ state } = {}) {
               </div>
               <div class="sbd-leaderboard__load">
                 <strong>${format(row.load_kg)} kg</strong>
-                <small>Coeff. ×${format(row.gl_multiplier, 2)}</small>
+                <small>${row.sex === 'F' ? 'Femme' : 'Homme'} · ${format(row.bodyweight)} kg PDC</small>
               </div>
               <div class="sbd-leaderboard__gl">
                 <strong>${format(row.gl_points)}</strong>
