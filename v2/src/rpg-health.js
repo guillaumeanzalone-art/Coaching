@@ -148,6 +148,142 @@ const MOBILITY_ROUTINES = [
   },
 ]
 
+const ASI_REHAB_ATHLETES =
+  new Set([
+    'duane',
+    'magicarpe',
+    'noe',
+  ])
+
+const ASI_REHAB_ROUTINE = {
+  key: 'asi_rehab',
+  icon: '🦴',
+  title: 'Rehab ASI quotidienne',
+  subtitle: 'Matin + DMA pré-séance + soir/jours off',
+  fixed: true,
+  painRule:
+    'Douleur : ≤ 2/10 continue · 3/10 modifie · > 3/10 arrête l’exercice.',
+  exercises: [
+    {
+      key: 'iliacus_release',
+      section: 'Matin · non négociable',
+      title: 'Release iliacus',
+      prescription: '90 s par côté · tous les jours',
+      cue: 'Pression soutenue avec un Hip Hook ou une balle dure dans la fosse iliaque.',
+      sets: 2,
+      visual: '9090',
+    },
+    {
+      key: 'glute_med_release',
+      section: 'Avant squat/deadlift · Désensibiliser',
+      title: 'Balle lacrosse · moyen fessier',
+      prescription: '1 min · côté affecté',
+      cue: 'Cherche une pression tolérable et respire sans crisper le bas du dos.',
+      sets: 1,
+      visual: 'sideplank',
+    },
+    {
+      key: 'ql_erectors_roll',
+      section: 'Avant squat/deadlift · Désensibiliser',
+      title: 'Foam roll QL + érecteurs',
+      prescription: '1 min par côté',
+      cue: 'Passe lentement sur les tissus sans rouler directement sur les vertèbres.',
+      sets: 2,
+      visual: 'mcgill',
+    },
+    {
+      key: 'couch_stretch',
+      section: 'Avant squat/deadlift · Mobiliser',
+      title: 'Couch stretch · fléchisseur de hanche',
+      prescription: '2 × 30 s · côté affecté',
+      cue: 'Bassin légèrement rétroversé, buste haut, sans cambrer les lombaires.',
+      sets: 2,
+      visual: 'kneewall',
+    },
+    {
+      key: 'figure_four',
+      section: 'Avant squat/deadlift · Mobiliser',
+      title: 'Figure-four stretch · piriforme',
+      prescription: '2 × 30 s par côté',
+      cue: 'Garde le bassin stable et augmente progressivement la tension.',
+      sets: 4,
+      visual: '9090',
+    },
+    {
+      key: 'asi_bird_dog',
+      section: 'Avant squat/deadlift · Activer',
+      title: 'Bird-dogs',
+      prescription: '2 × 8 par côté · maintien 3 s',
+      cue: 'Lentement, sans rotation du bassin ni extension lombaire.',
+      sets: 2,
+      visual: 'birddog',
+    },
+    {
+      key: 'clamshell',
+      section: 'Avant squat/deadlift · Activer',
+      title: 'Clamshells avec élastique',
+      prescription: '2 × 15 par côté',
+      cue: 'Zéro rotation lombaire : le bassin reste parfaitement empilé.',
+      sets: 2,
+      visual: 'sideplank',
+    },
+    {
+      key: 'band_glute_bridge',
+      section: 'Avant squat/deadlift · Activer',
+      title: 'Glute bridge avec élastique',
+      prescription: '2 × 12 · squeeze 2 s en haut',
+      cue: 'Sens le travail dans les fessiers, pas dans les ischios.',
+      sets: 2,
+      visual: 'mcgill',
+    },
+    {
+      key: 'lower_trunk_rotation',
+      section: 'Soir / jours off',
+      title: 'Lower trunk rotation au sol',
+      prescription: '3 × 30 s par côté',
+      cue: 'Épaules lourdes au sol et rotation lente, sans forcer.',
+      sets: 3,
+      visual: '9090',
+    },
+    {
+      key: 'supine_piriformis',
+      section: 'Soir / jours off',
+      title: 'Étirement piriforme supine',
+      prescription: '3 × 30 s par côté',
+      cue: 'Ramène doucement la jambe vers toi sans décoller le bassin.',
+      sets: 3,
+      visual: '9090',
+    },
+    {
+      key: 'side_hip_abduction',
+      section: 'Soir / jours off',
+      title: 'Hip abduction allongé latéral',
+      prescription: '30 reps par côté',
+      cue: 'Jambe longue, bassin fixe et mouvement contrôlé.',
+      sets: 1,
+      visual: 'sideplank',
+    },
+    {
+      key: 'side_hip_adduction',
+      section: 'Soir / jours off',
+      title: 'Hip adduction allongé latéral',
+      prescription: '30 reps par côté',
+      cue: 'Garde le tronc stable et contrôle toute l’amplitude.',
+      sets: 1,
+      visual: 'sideplank',
+    },
+    {
+      key: 'asi_dead_bug',
+      section: 'Soir / jours off',
+      title: 'Dead bug avec draw-in abdominal',
+      prescription: '2 × 30 s',
+      cue: 'Rentre doucement le ventre et garde les lombaires stables.',
+      sets: 2,
+      visual: 'mcgill',
+    },
+  ],
+}
+
 function esc(value) {
   return String(value ?? '')
     .replaceAll('&', '&amp;')
@@ -200,6 +336,20 @@ function routineForDate(date = new Date()) {
   const serial = daySerial(date)
   const index = ((serial % MOBILITY_ROUTINES.length) + MOBILITY_ROUTINES.length) % MOBILITY_ROUTINES.length
   return MOBILITY_ROUTINES[index]
+}
+
+export function routineForAthleteDate(
+  athleteSlug,
+  date = new Date()
+) {
+  const normalizedSlug =
+    String(athleteSlug || '')
+      .trim()
+      .toLowerCase()
+
+  return ASI_REHAB_ATHLETES.has(normalizedSlug)
+    ? ASI_REHAB_ROUTINE
+    : routineForDate(date)
 }
 
 export function stepsXpMultiplier(
@@ -582,7 +732,7 @@ async function syncFromHealthKit(
 export function createRpgHealthState() {
   const now = new Date()
   const routine =
-    routineForDate(now)
+    routineForAthleteDate('', now)
 
   return {
     athleteSlug: '',
@@ -616,7 +766,10 @@ export async function loadRpgHealth({
   const dateKey =
     localDateKey(now)
   const routine =
-    routineForDate(now)
+    routineForAthleteDate(
+      athleteSlug,
+      now
+    )
 
   state.athleteSlug =
     athleteSlug
@@ -855,7 +1008,7 @@ function renderMobilityPanel(state) {
         <div>
           <span>DAILY MISSION · MOBILITÉ DU JOUR</span>
           <strong>${routine.icon} ${esc(routine.title)}</strong>
-          <small>${esc(routine.subtitle)} · une mobilité différente chaque jour</small>
+          <small>${esc(routine.subtitle)} · ${routine.fixed ? 'protocole fixe quotidien' : 'une mobilité différente chaque jour'}</small>
         </div>
 
         <div class="rpg-mobility-status-v47">
@@ -867,14 +1020,28 @@ function renderMobilityPanel(state) {
 
       <div class="rpg-mobility-list-v47">
         ${routine.exercises
-          .map(exercise =>
-            renderMobilityExercise(
-              state,
-              exercise
-            )
-          )
+          .map((exercise, index) => {
+            const previousSection =
+              routine.exercises[index - 1]?.section
+
+            const section =
+              exercise.section &&
+              exercise.section !== previousSection
+                ? `<h4 class="rpg-mobility-section-v249">${esc(exercise.section)}</h4>`
+                : ''
+
+            return section +
+              renderMobilityExercise(
+                state,
+                exercise
+              )
+          })
           .join('')}
       </div>
+
+      ${routine.painRule
+        ? `<div class="rpg-mobility-pain-rule-v249">⚠️ ${esc(routine.painRule)}</div>`
+        : ''}
 
       <button
         type="button"
@@ -945,7 +1112,7 @@ async function validateMobility(
   try {
     const { data, error } =
       await supabase.rpc(
-        'validate_mobility_day_v248',
+        'validate_mobility_day_v249',
         {
           p_athlete_slug:
             athleteSlug,
@@ -1029,7 +1196,7 @@ export async function handleRpgHealthAction({
     state.busy = true
     try {
       if (values[setIndex] === 'running') {
-        const { error } = await supabase.rpc('complete_mobility_set_v248', {
+        const { error } = await supabase.rpc('complete_mobility_set_v249', {
           p_athlete_slug: athleteSlug,
           p_activity_date: state.dateKey,
           p_mobility_focus: state.routine.key,
@@ -1040,7 +1207,7 @@ export async function handleRpgHealthAction({
         values[setIndex] = 'done'
         state.notice = `✓ Série ${setIndex + 1} validée.`
       } else if (values[setIndex] !== 'done') {
-        const { error } = await supabase.rpc('start_mobility_set_v248', {
+        const { error } = await supabase.rpc('start_mobility_set_v249', {
           p_athlete_slug: athleteSlug,
           p_activity_date: state.dateKey,
           p_mobility_focus: state.routine.key,
