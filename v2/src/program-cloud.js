@@ -7,20 +7,15 @@ const CACHE_PREFIX =
 let lastSourceInfo =
   new Map()
 
-export function normalizeAthleteCloudSlug(value = '') {
-  return String(value || '')
-    .trim()
-    .toLowerCase()
-}
-
 function cacheKey(
   athleteSlug
 ) {
   return (
     CACHE_PREFIX +
-    normalizeAthleteCloudSlug(
-      athleteSlug
-    )
+    String(
+      athleteSlug ||
+      ''
+    ).toLowerCase()
   )
 }
 
@@ -224,12 +219,10 @@ export async function getProgramWithCloudFallback({
     )
 
   const athleteSlug =
-    normalizeAthleteCloudSlug(
-      athlete?.cloudSlug ||
-      athlete?.slug ||
-      athlete?.id ||
-      athleteId
-    )
+    athlete?.cloudSlug ||
+    athlete?.slug ||
+    athlete?.id ||
+    athleteId
 
   const programKey =
     athlete?.programKey ||
@@ -474,12 +467,15 @@ function resolveAthleteSlugV3(
       athleteIdOrSlug
     )
 
-  return normalizeAthleteCloudSlug(
+  return String(
     athlete?.cloudSlug ||
     athlete?.slug ||
     athlete?.id ||
-    athleteIdOrSlug
+    athleteIdOrSlug ||
+    ''
   )
+    .trim()
+    .toLowerCase()
 }
 
 export async function getAthleteBlocksV3(
