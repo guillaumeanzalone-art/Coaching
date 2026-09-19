@@ -227,7 +227,7 @@ export const athletes = [
     "profileImage": "avatar-Matthieu.png",
     "programKey": "matthieu",
     "blockCount": 1,
-    "cloudSlug": "matthieu"
+    "cloudSlug": "Matthieu"
   },
   {
     "id": "maxence",
@@ -257,7 +257,7 @@ export const athletes = [
     "profileImage": "avatar-Noe.png",
     "programKey": "noe",
     "blockCount": 1,
-    "cloudSlug": "noe"
+    "cloudSlug": "Noe"
   },
   {
     "id": "sarah",
