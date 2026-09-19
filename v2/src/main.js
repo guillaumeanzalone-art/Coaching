@@ -818,11 +818,11 @@ function renderHome() {
 
           <div>
             <strong>
-              Éditeur Coach
+              Importateur Coach
             </strong>
 
             <span>
-              Créer, modifier et publier les programmations
+              Coller, vérifier et publier les programmations
             </span>
           </div>
 
@@ -1545,7 +1545,7 @@ function formatActivityDate(value) {
 }
 
 
-/* PROGRAM EDITOR V1 */
+/* PROGRAM IMPORTER V1 */
 
 function renderProgramEditorScreen() {
   if (
