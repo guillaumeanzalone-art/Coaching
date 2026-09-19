@@ -2,6 +2,7 @@ import { supabase } from './supabase.js'
 import {
   clearProgramCloudCache,
   getAthleteBlocksV3,
+  normalizeAthleteCloudSlug,
 } from './program-cloud.js'
 import {
   createImportedProgram,
@@ -141,7 +142,9 @@ export function mountProgramEditor(root, options = {}) {
     statusKind: '',
   }
 
-  const athleteSlug = () => state.athlete?.cloudSlug || state.athlete?.slug || state.athlete?.id || ''
+  const athleteSlug = () => normalizeAthleteCloudSlug(
+    state.athlete?.cloudSlug || state.athlete?.slug || state.athlete?.id || '',
+  )
 
   function setStatus(message, kind = '') {
     state.status = message || ''
