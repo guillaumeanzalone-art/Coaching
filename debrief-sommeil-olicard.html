@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bien dormir, c'est possible — Debrief</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --card: #131929;
+    --card-border: #1e2a45;
+    --accent: #7c5cfc;
+    --accent-glow: rgba(124, 92, 252, 0.25);
+    --text: #e2e8f0;
+    --text-muted: #8896b3;
+    --highlight: #f0c040;
+    --green: #34d399;
+    --red: #f87171;
+    --blue: #60a5fa;
+    --orange: #fb923c;
+    --pink: #f472b6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 60px 20px 40px;
+    background: linear-gradient(180deg, rgba(124,92,252,0.15) 0%, transparent 100%);
+    position: relative;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .hero .emoji-big { font-size: 64px; margin-bottom: 16px; }
+
+  .hero h1 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+
+  .hero .subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .hero .author {
+    margin-top: 12px;
+    display: inline-block;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+  }
+
+  .section {
+    margin-bottom: 32px;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #fff;
+  }
+
+  .section-title .icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+
+  .card p { color: var(--text-muted); margin-bottom: 10px; }
+  .card p:last-child { margin-bottom: 0; }
+  .card strong { color: var(--text); }
+
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .stat-card .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* Chronotype grid */
+  .chrono-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+  }
+
+  .chrono-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .chrono-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px var(--accent-glow);
+  }
+
+  .chrono-card .chrono-emoji { font-size: 40px; margin-bottom: 8px; }
+  .chrono-card .chrono-name { font-weight: 700; font-size: 1.05rem; color: #fff; margin-bottom: 4px; }
+  .chrono-card .chrono-desc { font-size: 0.8rem; color: var(--text-muted); }
+
+  /* Timeline 3-2-1 */
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 14px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--green));
+    border-radius: 2px;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .timeline-item:last-child { margin-bottom: 0; }
+
+  .timeline-item .dot {
+    position: absolute;
+    left: -33px; top: 4px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; color: #fff;
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  .timeline-item h4 { font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .timeline-item p { color: var(--text-muted); font-size: 0.9rem; }
+
+  /* Technique cards */
+  .tech-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 14px;
+    border-left: 4px solid var(--accent);
+  }
+
+  .tech-card .tech-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #fff;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tech-card .tech-steps {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .tech-card .tech-steps ol {
+    padding-left: 18px;
+    margin-top: 8px;
+  }
+
+  .tech-card .tech-steps li {
+    margin-bottom: 6px;
+  }
+
+  .tech-card .tech-steps li strong { color: var(--text); }
+
+  /* Environment pills */
+  .env-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .env-pill {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .env-pill .env-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .env-pill .env-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .env-pill .env-text strong { color: var(--text); }
+
+  /* Quote */
+  .quote-box {
+    background: linear-gradient(135deg, rgba(124,92,252,0.1), rgba(96,165,250,0.1));
+    border: 1px solid rgba(124,92,252,0.3);
+    border-radius: 14px;
+    padding: 24px 28px;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .quote-box::before {
+    content: '"';
+    font-size: 4rem;
+    color: var(--accent);
+    opacity: 0.3;
+    position: absolute;
+    top: -10px; left: 16px;
+    font-style: normal;
+    line-height: 1;
+  }
+
+  /* Takeaway */
+  .takeaway {
+    background: linear-gradient(135deg, rgba(52,211,153,0.1), rgba(124,92,252,0.1));
+    border: 1px solid rgba(52,211,153,0.3);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .takeaway h3 {
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+
+  .takeaway ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .takeaway li {
+    padding: 6px 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .takeaway li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    opacity: 0.6;
+  }
+
+  /* Cause cards */
+  .cause-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+  }
+
+  .cause-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 24px;
+    border-top: 3px solid;
+  }
+
+  .cause-card:nth-child(1) { border-top-color: var(--red); }
+  .cause-card:nth-child(2) { border-top-color: var(--orange); }
+
+  .cause-card .cause-title {
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cause-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 40px 16px 30px; }
+    .container { padding: 20px 16px 40px; }
+    .card, .tech-card { padding: 18px; }
+    .chrono-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="emoji-big">🌙</div>
+  <h1>Bien dormir, c'est possible,<br>même pour vous !</h1>
+  <div class="subtitle">Debrief complet du livre de Fabien Olicard</div>
+  <div class="author">📘 Fabien Olicard — First Éditions, 2026</div>
+</div>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="section">
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">43%</div>
+        <div class="stat-label">des Français dorment mal</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">30</div>
+        <div class="stat-label">jours pour transformer<br>ses nuits</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">4</div>
+        <div class="stat-label">chronotypes à identifier</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">~2min</div>
+        <div class="stat-label">pour s'endormir avec<br>le shuffle cognitif</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONSTAT -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:rgba(248,113,113,0.15);">🔴</div>
+      Le constat
+    </div>
+    <div class="card">
+      <p>On a <strong>normalisé la fatigue</strong>. On se vante de dormir peu comme si c'était un signe de productivité. Résultat : fatigue chronique, stress permanent, mémoire en berne, créativité en baisse, émotions à fleur de peau.</p>
+      <p>Pourtant, pendant le sommeil le cerveau <strong>se nettoie littéralement</strong> (élimination des déchets cellulaires), <strong>consolide les souvenirs</strong>, <strong>régule les émotions</strong>, <strong>renforce l'immunité</strong> et <strong>prépare les performances du lendemain</strong>. C'est le socle de tout.</p>
+    </div>
+  </div>
+
+  <!-- CAUSES -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:rgba(251,146,60,0.15);">⚡</div>
+      Pourquoi on dort mal
+    </div>
+    <div class="cause-grid">
+      <div class="cause-card">
+        <div class="cause-title">📱 Le numérique</div>
+        <p>Téléphone, réseaux sociaux, streaming maintiennent un <strong>taux de cortisol élevé le soir</strong> et repoussent l'endormissement. "Entrer dans la chambre avec son téléphone, c'est faire entrer le loup dans la bergerie."</p>
+      </div>
+      <div class="cause-card">
+        <div class="cause-title">😰 Le climat mental</div>
+        <p>Anxiété du travail, actualité, géopolitique. "Quand on ferme les yeux et qu'on se retrouve seul avec soi-même, c'est là que les <strong>pensées anxieuses</strong> rentrent en jeu."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHRONOTYPES -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:rgba(124,92,252,0.15);">🧬</div>
+      Les 4 chronotypes
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <p>L'idée centrale : <strong>arrête de te battre contre ta biologie</strong>. Identifie ton chronotype et travaille AVEC, pas contre.</p>
+    </div>
+    <div class="chrono-grid">
+      <div class="chrono-card">
+        <div class="chrono-emoji">🧟</div>
+        <div class="chrono-name">Zombie</div>
+        <div class="chrono-desc">Épuisé en permanence, fonctionne en mode survie</div>
+      </div>
+      <div class="chrono-card">
+        <div class="chrono-emoji">🦉</div>
+        <div class="chrono-name">Hibou</div>
+        <div class="chrono-desc">Couche-tard naturel, en guerre contre les matins</div>
+      </div>
+      <div class="chrono-card">
+        <div class="chrono-emoji">🦎</div>
+        <div class="chrono-name">Caméléon</div>
+        <div class="chrono-desc">S'adapte à tout, mais jamais vraiment à son optimum</div>
+      </div>
+      <div class="chrono-card">
+        <div class="chrono-emoji">🐻</div>
+        <div class="chrono-name">Marmotte</div>
+        <div class="chrono-desc">Grand dormeur qui culpabilise de ses besoins naturels</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MÉTHODE 3-2-1 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:rgba(52,211,153,0.15);">⏱️</div>
+      La méthode 3-2-1
+    </div>
+    <div class="card">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="dot">3</div>
+          <h4>3 heures avant de dormir</h4>
+          <p>Plus de nourriture lourde. On laisse le système digestif tranquille.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="dot">2</div>
+          <h4>2 heures avant de dormir</h4>
+          <p>Plus d'écrans ni de travail stimulant. On baisse le cortisol.</p>
+        </div>
+        <div class="timeline-item">
+          <div class="dot">1</div>
+          <h4>1 heure avant de dormir</h4>
+          <p>Plus aucune stimulation. Que du calme : lecture, puzzle, musique douce.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECHNIQUES -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:rgba(96,165,250,0.15);">🧠</div>
+      Techniques d'endormissement
+    </div>
+
+    <div class="tech-card" style="border-left-color: var(--accent);">
+      <div class="tech-name">🔀 Le Shuffle Cognitif (Brassage Mental)</div>
+      <div class="tech-steps">
+        Inventé par Luc Beaudoin (université Simon Fraser). Imite le désordre mental qui précède naturellement le sommeil pour "tromper" le cerveau.
+        <ol>
+          <li>Allongé, yeux fermés, <strong>choisis un mot neutre</strong> (ex: "PORTE")</li>
+          <li>Visualise des images commençant par la 1ère lettre : <strong>P</strong> → porc, pull, pirate, péniche…</li>
+          <li>Passe à la lettre suivante : <strong>O</strong> → oreiller, olivier, oreille…</li>
+          <li>Continue lettre par lettre. <strong>AUCUN lien</strong> entre les images.</li>
+          <li>5-10 secondes par image. Tu t'endors avant la fin du mot.</li>
+        </ol>
+        <p style="margin-top:10px;"><strong>Variante d'Olicard :</strong> compter à rebours de 3 en 3 depuis 300 → 297, 294, 291… Assez dur pour empêcher de ruminer, assez chiant pour décrocher. Rares sont ceux qui descendent sous 200.</p>
+      </div>
+    </div>
+
+    <div class="tech-card" style="border-left-color: var(--blue);">
+      <div class="tech-name">🫁 La Respiration 4-7-8</div>
+      <div class="tech-steps">
+        Stimule le système parasympathique, fait baisser le rythme cardiaque et le cortisol.
+        <ol>
+          <li><strong>Inspire</strong> profondément par le nez pendant <strong>4 secondes</strong></li>
+          <li><strong>Bloque</strong> la respiration pendant <strong>7 secondes</strong></li>
+          <li><strong>Expire</strong> lentement avec un petit filet d'air pendant <strong>8 secondes</strong></li>
+          <li>Répète <strong>5-6 cycles</strong>. C'est tout.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="tech-card" style="border-left-color: var(--green);">
+      <div class="tech-name">✈️ La Technique des Pilotes de Chasse</div>
+      <div class="tech-steps">
+        Relaxation musculaire progressive : relâche chaque muscle du visage, puis épaules, bras, jambes. Vide ton esprit complètement. Endormissement en quelques minutes.
+      </div>
+    </div>
+
+    <div class="tech-card" style="border-left-color: var(--orange);">
+      <div class="tech-name">🛋️ La TCCI (Thérapie Cognitive et Comportementale de l'Insomnie)</div>
+      <div class="tech-steps">
+        Si tu ne dors pas après <strong>20 minutes</strong>, quitte le lit. Va au salon, fais une activité calme en lumière tamisée. Reviens au lit quand le sommeil revient. <strong>Objectif : désassocier le lit de la galère de l'endormissement.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ENVIRONNEMENT -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:rgba(240,192,64,0.15);">🏠</div>
+      L'environnement idéal
+    </div>
+    <div class="env-grid">
+      <div class="env-pill">
+        <div class="env-icon">💡</div>
+        <div class="env-text"><strong>La lumière = chef d'orchestre du sommeil.</strong> Baisse les lumières le soir pour faire chuter le cortisol.</div>
+      </div>
+      <div class="env-pill">
+        <div class="env-icon">🌡️</div>
+        <div class="env-text"><strong>Chambre entre 18-19°C.</strong> La baisse de température interne (~1°C) déclenche l'endormissement.</div>
+      </div>
+      <div class="env-pill">
+        <div class="env-icon">🔇</div>
+        <div class="env-text"><strong>Silence = qualité du sommeil.</strong> Environnement sombre et silencieux pour un sommeil réparateur.</div>
+      </div>
+      <div class="env-pill">
+        <div class="env-icon">📵</div>
+        <div class="env-text"><strong>Bannir le téléphone de la chambre.</strong> Achète un réveil classique. Sérieusement.</div>
+      </div>
+      <div class="env-pill">
+        <div class="env-icon">⏰</div>
+        <div class="env-text"><strong>Heure de lever stable 7j/7.</strong> Même le week-end. Ça évite la dette de sommeil.</div>
+      </div>
+      <div class="env-pill">
+        <div class="env-icon">📖</div>
+        <div class="env-text"><strong>Activités douces avant le coucher.</strong> Lecture, puzzle, musique. Pas de streaming.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRAMME 30 JOURS -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:rgba(244,114,182,0.15);">📅</div>
+      Le programme 30 jours
+    </div>
+    <div class="card">
+      <p>Pas de miracle, pas de transformation overnight. L'approche est <strong>progressive</strong> :</p>
+      <p>👉 <strong>Semaine 1 :</strong> Quick wins immédiats (shuffle cognitif, 3-2-1, environnement chambre)</p>
+      <p>👉 <strong>Semaine 2-3 :</strong> Ancrage des routines, ajustement au chronotype</p>
+      <p>👉 <strong>Semaine 4 :</strong> Consolidation, le sommeil redevient naturel et prioritaire</p>
+      <p style="margin-top:10px;">L'objectif : installer des <strong>habitudes durables</strong>, pas suivre un régime temporaire.</p>
+    </div>
+  </div>
+
+  <!-- CITATION -->
+  <div class="section">
+    <div class="quote-box">
+      Ce livre ne vous promet pas un miracle, mais il vous propose une révolution… Le sommeil n'est pas un luxe, faites-en votre priorité.
+    </div>
+  </div>
+
+  <!-- TAKEAWAYS -->
+  <div class="section">
+    <div class="section-title">
+      <div class="icon" style="background:rgba(52,211,153,0.15);">🎯</div>
+      Les takeaways
+    </div>
+    <div class="takeaway">
+      <h3>À retenir et appliquer dès ce soir</h3>
+      <ul>
+        <li>Identifie ton chronotype et arrête de forcer un rythme qui n'est pas le tien</li>
+        <li>Applique la règle 3-2-1 : pas de bouffe lourde à H-3, pas d'écrans à H-2, zéro stimulation à H-1</li>
+        <li>Teste le shuffle cognitif ce soir : un mot, des images par lettre, pas de lien entre elles</li>
+        <li>Vire ton téléphone de la chambre, achète un réveil à 10€</li>
+        <li>18-19°C, noir complet, silence : c'est non-négociable</li>
+        <li>Si t'arrives pas à dormir après 20 min : lève-toi, activité calme, reviens quand le sommeil revient</li>
+        <li>Respiration 4-7-8 pour couper l'anxiété : 5-6 cycles et c'est calmé</li>
+        <li>Heure de lever fixe 7j/7, même le week-end</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Debrief — "Bien dormir, c'est possible, même pour vous !" — Fabien Olicard — First Éditions, 2026<br>
+  Résumé par GA Coaching
+</div>
+
+</body>
+</html>
