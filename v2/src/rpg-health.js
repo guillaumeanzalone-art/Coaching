@@ -151,7 +151,7 @@ const MOBILITY_ROUTINES = [
 const ASI_REHAB_ATHLETES =
   new Set([
     'duane',
-    'magicarpe',
+    'metaknight',
     'noe',
   ])
 
