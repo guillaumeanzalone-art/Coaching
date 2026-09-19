@@ -74,21 +74,7 @@ let stepsLeaderboardState =
 let difficultyLeaderboardState =
   createDifficultyLeaderboardState()
 
-const savedLeaderboardMode =
-  localStorage.getItem(
-    'ga-leaderboard-mode-v1'
-  )
-
-let leaderboardMode =
-  [
-    'gl',
-    'steps',
-    'difficulty',
-  ].includes(
-    savedLeaderboardMode
-  )
-    ? savedLeaderboardMode
-    : 'gl'
+let leaderboardMode = ''
 
 function setAppBackdrop(
   athleteSlug = ''
@@ -1042,10 +1028,24 @@ async function renderSbdLeaderboardScreen() {
         })
       }
 
-      return renderSbdLeaderboard({
-        state:
-          sbdLeaderboardState,
-      })
+      if (
+        leaderboardMode ===
+        'gl'
+      ) {
+        return renderSbdLeaderboard({
+          state:
+            sbdLeaderboardState,
+        })
+      }
+
+      return `
+        <section class="sbd-leaderboard">
+          <div class="sbd-leaderboard__empty">
+            Choisis GL, Steps ou Difficulté.
+            Les données cloud ne sont chargées qu’à l’ouverture de l’onglet.
+          </div>
+        </section>
+      `
     }
 
   app.innerHTML = `
@@ -1448,7 +1448,11 @@ async function renderSbdLeaderboardScreen() {
     }
   }
 
-  await loadActiveLeaderboard()
+  /*
+   * Aucun leaderboard n'est chargé automatiquement.
+   * Chaque requête Supabase démarre uniquement après
+   * un clic explicite sur GL, Steps ou Difficulté.
+   */
   rerender()
 }
 
