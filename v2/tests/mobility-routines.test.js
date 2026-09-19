@@ -5,7 +5,7 @@ import { routineForAthleteDate } from '../src/rpg-health.js'
 const date = new Date('2026-09-19T12:00:00Z')
 
 test('attribue uniquement la rehab ASI à Duane, Clara et Noé', () => {
-  for (const athleteSlug of ['duane', 'magicarpe', 'Noe']) {
+  for (const athleteSlug of ['duane', 'metaknight', 'Noe']) {
     const routine = routineForAthleteDate(athleteSlug, date)
     assert.equal(routine.key, 'asi_rehab')
     assert.equal(routine.exercises.length, 13)
@@ -18,4 +18,5 @@ test('attribue uniquement la rehab ASI à Duane, Clara et Noé', () => {
 
 test('conserve la rotation quotidienne pour les autres athlètes', () => {
   assert.notEqual(routineForAthleteDate('tom', date).key, 'asi_rehab')
+  assert.notEqual(routineForAthleteDate('magicarpe', date).key, 'asi_rehab')
 })
