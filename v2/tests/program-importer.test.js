@@ -93,3 +93,40 @@ test('regroupe les paliers consécutifs du même exercice dans une seule carte',
   assert.equal(imported.overview.summary.exerciseCount, 2)
   assert.equal(imported.overview.summary.setCount, 6)
 })
+
+test('ignore une seconde séance SBD statique collée à la fin du même jour', () => {
+  const repeatedSbdSheet = [
+    '\tWEEK 1\t\t\t\t\t\t\tWEEK 2',
+    '\tLABEL\tIntention\tJour 5\tSETS\tREPS\tINTENSITE\tCHARGE POTENTIELLE\tLABEL\tIntention\tJour 5\tSETS\tREPS\tINTENSITE\tCHARGE POTENTIELLE',
+    '\tsq\tCompétition\tSquat primaire\t1 x\t2\t75%\t200\tsq\tCompétition\tSquat primaire\t1 x\t2\t65%\t180',
+    '\tbn\tCompétition\tBench primaire\t1 x\t2\t75%\t150\tbn\tCompétition\tBench primaire\t1 x\t2\t65%\t130',
+    '\tdl\tCompétition\tDeadlift primaire\t1 x\t2\t75%\t240\tdl\tCompétition\tDeadlift primaire\t1 x\t2\t65%\t210',
+    '\tsq\tRAW\tSquat tertiaire\t2 x\t6\t67%\t180\tsq\tRAW\tSquat tertiaire\t2 x\t6\t67%\t180',
+    '\tbn\tLéger\tLarsen\t2 x\t6\t68%\t135\tbn\tLéger\tLarsen\t2 x\t6\t68%\t135',
+    '\tdl\tTempo concentrique\tDeadlift tertiaire\t3 x\t2\t58%\t180\tdl\tTempo concentrique\tDeadlift tertiaire\t3 x\t2\t58%\t180',
+  ].join('\n')
+
+  const parsed = parseProgramSheet(repeatedSbdSheet)
+  const imported = createImportedProgram({
+    parsed,
+    athlete: { id: 'noe', name: 'Noé', programKey: 'noe' },
+    blockNumber: 3,
+    blockLabel: 'Bloc 3',
+    blockKey: 'noe-block-3',
+  })
+
+  assert.equal(parsed.warnings.length, 1)
+  assert.equal(parsed.warnings[0].code, 'repeated-sbd-suffix')
+  assert.equal(parsed.summary.sourceExerciseCount, 12)
+  assert.equal(parsed.summary.exerciseCount, 6)
+  assert.equal(parsed.summary.ignoredExerciseCount, 6)
+  assert.deepEqual(
+    imported.block.weeks.map((week) => week.days[0].exercises.map((exercise) => exercise.name)),
+    [
+      ['Squat primaire', 'Bench primaire', 'Deadlift primaire'],
+      ['Squat primaire', 'Bench primaire', 'Deadlift primaire'],
+    ],
+  )
+  assert.equal(imported.overview.summary.setCount, 6)
+  assert.equal(imported.overview.warnings.length, 1)
+})
