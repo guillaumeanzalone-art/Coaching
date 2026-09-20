@@ -54,6 +54,7 @@ function installStyles() {
 .program-importer-source{margin-top:12px;padding:11px;border-radius:12px;color:#abb5c8;background:rgba(255,255,255,.03);font-size:12px;line-height:1.5}.program-importer-source strong{color:#f4c956}
 .program-importer-actions{display:grid;gap:8px;margin-top:14px}.program-importer-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.program-importer-row p{margin:7px 0 0;color:#9aa8bd;font-size:12px;line-height:1.5}
 .program-importer-status{min-height:20px;margin-top:12px;color:#9ba6ba;font-size:12px;line-height:1.45}.program-importer-status.ok{color:#76e8ad}.program-importer-status.error{color:#ff9ba6}
+.program-importer-warning{margin-top:12px;padding:11px 12px;border:1px solid rgba(245,198,74,.28);border-radius:12px;color:#f7d981;background:rgba(245,198,74,.08);font-size:12px;line-height:1.5}
 .program-importer-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:14px}.program-importer-stat{padding:12px;border:1px solid rgba(130,145,170,.14);border-radius:13px;background:rgba(255,255,255,.025)}
 .program-importer-stat span{display:block;color:#8998ad;font-size:10px;font-weight:850;text-transform:uppercase}.program-importer-stat strong{display:block;margin-top:4px;color:#f5cf64;font-size:22px}
 .program-importer-maxes{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.program-importer-max{padding:7px 10px;border-radius:999px;background:rgba(240,195,74,.1);color:#f6d77d;font-size:12px;font-weight:800}
@@ -298,6 +299,7 @@ export function mountProgramEditor(root, options = {}) {
             ${state.imported ? `
               <div class="program-importer-card">
                 <h3>Aperçu détecté</h3>
+                ${(state.imported.overview.warnings || []).map((warning) => `<div class="program-importer-warning">${esc(warning.message)}</div>`).join('')}
                 <div class="program-importer-summary">
                   <div class="program-importer-stat"><span>Semaines</span><strong>${summary.weekCount}</strong></div>
                   <div class="program-importer-stat"><span>Séances</span><strong>${summary.dayCount}</strong></div>
@@ -426,7 +428,8 @@ export function mountProgramEditor(root, options = {}) {
     if (action === 'analyze') {
       try {
         prepareImport()
-        state.status = `${state.parsed.summary.weekCount} semaines et ${state.parsed.summary.exerciseCount} lignes reconnues. Vérifie l’aperçu.`
+        const warningCount = state.parsed.warnings?.length || 0
+        state.status = `${state.parsed.summary.weekCount} semaines et ${state.parsed.summary.exerciseCount} lignes retenues.${warningCount ? ` ${warningCount} doublon SBD ignoré.` : ''} Vérifie l’aperçu.`
         state.statusKind = 'ok'
       } catch (error) {
         state.imported = null
