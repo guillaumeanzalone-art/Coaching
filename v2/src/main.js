@@ -45,6 +45,7 @@ import {
 } from './athletes.js'
 
 import {
+  getCachedProgramForAthlete,
   getProgramForAthlete,
 } from './program.js'
 
@@ -1948,36 +1949,40 @@ function summarizeAthleteProgram(program) {
   }
 }
 
-async function buildAthleteCardMeta(list) {
-  const entries = await Promise.all(
-    list.map(async athlete => {
-      try {
-        const program =
-          await getProgramForAthlete(
-            athlete.id
-          )
+function buildAthleteCardMeta(list) {
+  const entries = list.map(athlete => {
+    const program =
+      getCachedProgramForAthlete(
+        athlete.id
+      )
 
-        return [
-          athlete.id,
-          summarizeAthleteProgram(program),
-        ]
-      } catch (error) {
-        console.warn(
-          'Resume programme indisponible :',
-          athlete.id,
-          error
-        )
+    if (program) {
+      return [
+        athlete.id,
+        summarizeAthleteProgram(program),
+      ]
+    }
 
-        return [
-          athlete.id,
-          {
-            primary: 'Programme indisponible',
-            secondary: 'Aucun total',
-          },
-        ]
-      }
-    })
-  )
+    const blockCount =
+      Math.max(
+        1,
+        Number(
+          athlete.blockCount
+        ) || 1
+      )
+
+    return [
+      athlete.id,
+      {
+        primary:
+          blockCount +
+          ' bloc' +
+          (blockCount === 1 ? '' : 's'),
+        secondary:
+          'Ouvrir pour charger',
+      },
+    ]
+  })
 
   return new Map(entries)
 }
@@ -1991,7 +1996,7 @@ async function renderAthletes() {
   
 
   const athleteCardMeta =
-    await buildAthleteCardMeta(
+    buildAthleteCardMeta(
       list
     )
 
@@ -2200,7 +2205,7 @@ async function openAthlete(
       program,
       {
         cloudAthleteSlug:
-          athleteSlug,
+          athlete.id,
 
         bodyWeight:
           athlete.bodyWeight,

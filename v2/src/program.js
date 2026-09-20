@@ -1,4 +1,7 @@
-import { getProgramWithCloudFallback } from './program-cloud.js'
+import {
+  getCachedProgramForAthlete as getCachedCloudProgramForAthlete,
+  getProgramWithCloudFallback,
+} from './program-cloud.js'
 
 const PROGRAM_LOADERS = {
   "alexandre": () => import('./programs/alexandre.js'),
@@ -99,4 +102,12 @@ export async function getProgramForAthlete(
           athleteId
         ),
   })
+}
+
+export function getCachedProgramForAthlete(
+  athleteId
+) {
+  return getCachedCloudProgramForAthlete(
+    athleteId
+  )
 }
