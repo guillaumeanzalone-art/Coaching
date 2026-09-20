@@ -211,19 +211,41 @@ function createSet(exerciseId, index, exercise) {
   }
 }
 
-function createExercise({ blockId, weekNumber, dayNumber, index, exercise }) {
+function sameExerciseSegment(left, right) {
+  return left?.type === right?.type
+    && normalized(left?.name) === normalized(right?.name)
+    && normalized(left?.intention) === normalized(right?.intention)
+}
+
+function groupExerciseSegments(exercises) {
+  return exercises.reduce((groups, exercise) => {
+    const previous = groups[groups.length - 1]
+    if (previous && sameExerciseSegment(previous[previous.length - 1], exercise)) {
+      previous.push(exercise)
+    } else {
+      groups.push([exercise])
+    }
+    return groups
+  }, [])
+}
+
+function createExercise({ blockId, weekNumber, dayNumber, index, segments }) {
   const exerciseId = `${blockId}-w${weekNumber}-d${dayNumber}-e${index + 1}`
+  const exercise = segments[0]
+  const notes = [...new Set(segments.map((segment) => segment.notes).filter(Boolean))]
+  const sets = segments.flatMap((segment) => Array.from(
+    { length: parseSetCount(segment.setsText) },
+    () => segment,
+  ))
+
   return {
     id: exerciseId,
     name: exercise.name,
     type: exercise.type,
     variant: exercise.intention || '',
-    notes: exercise.notes || '',
+    notes: notes.join(' · '),
     usesRpe: exercise.type !== 'AC',
-    sets: Array.from(
-      { length: parseSetCount(exercise.setsText) },
-      (_, setIndex) => createSet(exerciseId, setIndex, exercise),
-    ),
+    sets: sets.map((segment, setIndex) => createSet(exerciseId, setIndex, segment)),
   }
 }
 
@@ -251,12 +273,12 @@ export function createImportedProgram({ parsed, athlete, blockNumber, blockLabel
         id: `${resolvedBlockKey}-w${week.number}-d${day.number}`,
         name: day.title,
         emoji: DAY_EMOJIS[day.number - 1] || '🏋️',
-        exercises: day.exercises.map((exercise, index) => createExercise({
+        exercises: groupExerciseSegments(day.exercises).map((segments, index) => createExercise({
           blockId: resolvedBlockKey,
           weekNumber: week.number,
           dayNumber: day.number,
           index,
-          exercise,
+          segments,
         })),
       })),
     })),
@@ -281,6 +303,13 @@ export function createImportedProgram({ parsed, athlete, blockNumber, blockLabel
     ),
     0,
   )
+  const exerciseCount = block.weeks.reduce(
+    (total, week) => total + week.days.reduce(
+      (dayTotal, day) => dayTotal + day.exercises.length,
+      0,
+    ),
+    0,
+  )
 
   return {
     program,
@@ -289,7 +318,12 @@ export function createImportedProgram({ parsed, athlete, blockNumber, blockLabel
       source: 'google-sheets-importer',
       importedAt: block.importedAt,
       metrics: parsed.metrics,
-      summary: { ...parsed.summary, setCount },
+      summary: {
+        ...parsed.summary,
+        sourceRowCount: parsed.summary.exerciseCount,
+        exerciseCount,
+        setCount,
+      },
     },
   }
 }
