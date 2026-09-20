@@ -8,6 +8,7 @@
     "build": "vite build",
     "test:importer": "node --test tests/program-importer.test.js",
     "test:mobility": "node --test tests/mobility-routines.test.js",
+    "test:cloud": "node --test tests/program-cloud-cache.test.js",
     "preview": "vite preview",
     "ios:sync": "npm run build && cap sync ios",
     "ios:open": "cap open ios",
