@@ -52,3 +52,44 @@ test('accepte le tableau Markdown utilisé pour les envois', () => {
   assert.equal(parsed.summary.exerciseCount, 2)
   assert.equal(parsed.weeks[0].days[0].exercises[0].name, 'Développé couché')
 })
+
+test('regroupe les paliers consécutifs du même exercice dans une seule carte', () => {
+  const segmentedSheet = [
+    '\tLABEL\tIntention\tJour 2\tSETS\tREPS\tINTENSITE\tCHARGE POTENTIELLE',
+    '\tsq\tCompétition\tComp squat primaire\t2 x\t6\t65%\t189 - 201',
+    '\tsq\tCompétition\tComp squat primaire\t1 x\t6\t67%\t195 - 207',
+    '\tsq\tCompétition\tComp squat primaire\t1 x\t6\t69%\t201 - 213',
+    '\tac\tGrand dorsal\tPull over haltères\t2 x\t10-12\t\t',
+  ].join('\n')
+
+  const parsed = parseProgramSheet(segmentedSheet)
+  const imported = createImportedProgram({
+    parsed,
+    athlete: { id: 'tom', name: 'Tom', programKey: 'tom' },
+    blockNumber: 4,
+    blockLabel: 'Bloc 4',
+    blockKey: 'tom-block-4',
+  })
+  const exercises = imported.block.weeks[0].days[0].exercises
+
+  assert.equal(parsed.summary.exerciseCount, 4)
+  assert.equal(exercises.length, 2)
+  assert.equal(exercises[0].name, 'Comp squat primaire')
+  assert.deepEqual(exercises[0].sets.map((set) => set.percent), [65, 65, 67, 69])
+  assert.deepEqual(
+    exercises[0].sets.map((set) => set.loadRange),
+    ['189 - 201', '189 - 201', '195 - 207', '201 - 213'],
+  )
+  assert.deepEqual(
+    exercises[0].sets.map((set) => set.id),
+    [
+      'tom-block-4-w1-d2-e1-s1',
+      'tom-block-4-w1-d2-e1-s2',
+      'tom-block-4-w1-d2-e1-s3',
+      'tom-block-4-w1-d2-e1-s4',
+    ],
+  )
+  assert.equal(imported.overview.summary.sourceRowCount, 4)
+  assert.equal(imported.overview.summary.exerciseCount, 2)
+  assert.equal(imported.overview.summary.setCount, 6)
+})

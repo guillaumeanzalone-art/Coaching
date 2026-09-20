@@ -91,6 +91,24 @@ function loadText(set) {
   return [intensity, range].filter(Boolean).join(' · ') || 'Charge libre'
 }
 
+function prescriptionHtml(exercise) {
+  const groups = (exercise.sets || []).reduce((result, set) => {
+    const reps = set.reps || '—'
+    const load = loadText(set)
+    const previous = result[result.length - 1]
+    if (previous && previous.reps === reps && previous.load === load) {
+      previous.count += 1
+    } else {
+      result.push({ count: 1, reps, load })
+    }
+    return result
+  }, [])
+
+  return groups
+    .map((group) => `${group.count} × ${esc(group.reps)}<br>${esc(group.load)}`)
+    .join('<br>')
+}
+
 function previewHtml(imported) {
   if (!imported) return '<div class="program-importer-empty">Colle puis analyse une programmation pour afficher l’aperçu.</div>'
 
@@ -108,8 +126,7 @@ function previewHtml(imported) {
                   <small>${esc(exercise.type)}${exercise.variant ? ` · ${esc(exercise.variant)}` : ''}</small>
                 </div>
                 <div class="program-importer-prescription">
-                  ${exercise.sets.length} × ${esc(exercise.sets[0]?.reps || '—')}
-                  <br>${esc(loadText(exercise.sets[0] || {}))}
+                  ${prescriptionHtml(exercise)}
                 </div>
               </div>
             `).join('')}
