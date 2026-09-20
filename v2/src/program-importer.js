@@ -135,6 +135,79 @@ function readExercise(row, labelIndex) {
   }
 }
 
+function compressedLiftGroups(exercises) {
+  return exercises.reduce((groups, exercise, index) => {
+    if (!['SQ', 'BN', 'DL'].includes(exercise.type)) return groups
+    const previous = groups[groups.length - 1]
+    if (previous?.type === exercise.type) return groups
+    groups.push({ type: exercise.type, start: index })
+    return groups
+  }, [])
+}
+
+function repeatedSbdStart(exercises) {
+  const groups = compressedLiftGroups(exercises)
+  for (let index = 0; index <= groups.length - 6; index += 1) {
+    const sequence = groups.slice(index, index + 6).map((group) => group.type).join(',')
+    if (sequence === 'SQ,BN,DL,SQ,BN,DL') return groups[index + 3].start
+  }
+  return null
+}
+
+function exerciseSignature(exercise) {
+  return [
+    exercise.type,
+    normalized(exercise.name),
+    normalized(exercise.intention),
+    normalized(exercise.setsText),
+    normalized(exercise.reps),
+    normalized(exercise.intensity),
+    normalized(exercise.targetLoad),
+  ].join('|')
+}
+
+function removeRepeatedSbdSuffixes(weeks) {
+  const warnings = []
+  const dayNumbers = new Set(
+    weeks.flatMap((week) => week.days.map((day) => day.number)),
+  )
+
+  dayNumbers.forEach((dayNumber) => {
+    const matchingDays = weeks
+      .map((week) => week.days.find((day) => day.number === dayNumber))
+      .filter(Boolean)
+    if (matchingDays.length !== weeks.length || matchingDays.length < 2) return
+
+    const starts = matchingDays.map((day) => repeatedSbdStart(day.exercises))
+    if (starts.some((start) => start === null) || new Set(starts).size !== 1) return
+
+    const suffixes = matchingDays.map((day, index) => day.exercises
+      .slice(starts[index])
+      .map(exerciseSignature)
+      .join('||'))
+    if (new Set(suffixes).size !== 1) return
+
+    const prefixes = matchingDays.map((day, index) => day.exercises
+      .slice(0, starts[index])
+      .map(exerciseSignature)
+      .join('||'))
+    if (new Set(prefixes).size === 1) return
+
+    const removedPerWeek = matchingDays[0].exercises.length - starts[0]
+    matchingDays.forEach((day, index) => {
+      day.exercises = day.exercises.slice(0, starts[index])
+    })
+    warnings.push({
+      code: 'repeated-sbd-suffix',
+      dayNumber,
+      removedExerciseCount: removedPerWeek * matchingDays.length,
+      message: `Deux séances SBD consécutives détectées au Jour ${dayNumber} : la seconde, identique sur toutes les semaines, a été ignorée.`,
+    })
+  })
+
+  return warnings
+}
+
 export function parseProgramSheet(input) {
   const rows = parseRows(input)
   const weekCount = detectWeekCount(rows)
@@ -176,6 +249,15 @@ export function parseProgramSheet(input) {
     })
   })
 
+  const sourceExerciseCount = weeks.reduce(
+    (total, week) => total + week.days.reduce(
+      (dayTotal, day) => dayTotal + day.exercises.length,
+      0,
+    ),
+    0,
+  )
+  const warnings = removeRepeatedSbdSuffixes(weeks)
+
   const dayCount = weeks.reduce((total, week) => total + week.days.length, 0)
   const exerciseCount = weeks.reduce(
     (total, week) => total + week.days.reduce(
@@ -192,7 +274,14 @@ export function parseProgramSheet(input) {
   return {
     weeks,
     metrics,
-    summary: { weekCount, dayCount, exerciseCount },
+    warnings,
+    summary: {
+      weekCount,
+      dayCount,
+      exerciseCount,
+      sourceExerciseCount,
+      ignoredExerciseCount: sourceExerciseCount - exerciseCount,
+    },
   }
 }
 
@@ -320,10 +409,11 @@ export function createImportedProgram({ parsed, athlete, blockNumber, blockLabel
       metrics: parsed.metrics,
       summary: {
         ...parsed.summary,
-        sourceRowCount: parsed.summary.exerciseCount,
+        sourceRowCount: parsed.summary.sourceExerciseCount ?? parsed.summary.exerciseCount,
         exerciseCount,
         setCount,
       },
+      warnings: parsed.warnings || [],
     },
   }
 }
