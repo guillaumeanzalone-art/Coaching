@@ -209,6 +209,50 @@ export function clearProgramCloudCache(
   }
 }
 
+export function getCachedProgramForAthlete(
+  athleteId
+) {
+  const athlete =
+    getAthlete(
+      athleteId
+    )
+
+  const athleteSlug =
+    athlete?.cloudSlug ||
+    athlete?.slug ||
+    athlete?.id ||
+    athleteId
+
+  const programKey =
+    athlete?.programKey ||
+    athlete?.id ||
+    athleteId
+
+  const cached =
+    readCache(
+      athleteSlug
+    )
+
+  if (!cached?.program) {
+    return null
+  }
+
+  return normalizeProgram(
+    {
+      program_key:
+        cached.programKey ||
+        programKey,
+      version:
+        cached.version ||
+        0,
+      published_at:
+        cached.publishedAt ||
+        null,
+    },
+    cached.program
+  )
+}
+
 export async function getProgramWithCloudFallback({
   athleteId,
   localLoader,
