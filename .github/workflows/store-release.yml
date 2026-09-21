@@ -11,7 +11,7 @@ on:
       version:
         description: "Version publique (ex: 1.2.0)"
         required: true
-        default: "1.2.0"
+        default: "1.5"
         type: string
       platform:
         description: "Plateforme à construire"
@@ -205,11 +205,11 @@ jobs:
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
-          APP_STORE_CONNECT_PRIVATE_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY_BASE64 }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
         run: |
           set -euo pipefail
           missing=0
-          for var in APPLE_TEAM_ID APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY_BASE64; do
+          for var in APPLE_TEAM_ID APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY; do
             if [ -z "${!var:-}" ]; then
               echo "::error::Secret GitHub manquant: $var"
               missing=1
@@ -238,27 +238,16 @@ jobs:
         shell: bash
         env:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
-          APP_STORE_CONNECT_PRIVATE_KEY_BASE64: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY_BASE64 }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
         run: |
           set -euo pipefail
           export ASC_KEY_PATH="$RUNNER_TEMP/AuthKey_${APP_STORE_CONNECT_KEY_ID}.p8"
           export ASC_ALTOOL_DIR="$HOME/.appstoreconnect/private_keys"
           mkdir -p "$ASC_ALTOOL_DIR"
 
-          python3 - <<'PY'
-          import base64
-          import os
-          from pathlib import Path
-
-          data = base64.b64decode(os.environ["APP_STORE_CONNECT_PRIVATE_KEY_BASE64"])
-          key_path = Path(os.environ["ASC_KEY_PATH"])
-          key_path.write_bytes(data)
-          key_path.chmod(0o600)
-
-          altool_path = Path(os.environ["ASC_ALTOOL_DIR"]) / f"AuthKey_{os.environ['APP_STORE_CONNECT_KEY_ID']}.p8"
-          altool_path.write_bytes(data)
-          altool_path.chmod(0o600)
-          PY
+          printf '%s' "$APP_STORE_CONNECT_PRIVATE_KEY" > "$ASC_KEY_PATH"
+          chmod 600 "$ASC_KEY_PATH"
+          cp "$ASC_KEY_PATH" "$ASC_ALTOOL_DIR/AuthKey_${APP_STORE_CONNECT_KEY_ID}.p8"
 
           echo "ASC_KEY_PATH=$ASC_KEY_PATH" >> "$GITHUB_ENV"
 
