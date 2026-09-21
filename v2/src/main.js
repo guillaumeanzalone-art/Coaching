@@ -1760,6 +1760,9 @@ async function renderActivities() {
 
 
 const ATHLETE_CHOICE_AVATARS = {
+  rudy: '/avatar-rudy.webp?v=20260921',
+  allan: '/avatar-allan.webp?v=20260921',
+  camille: '/avatar-camille.webp?v=20260921',
   alexandre: '/avatar-alexandre.png',
   benoit: '/avatar-benoit.png',
   celia: '/avatar-celia.png',
@@ -1787,7 +1790,7 @@ const ATHLETE_CHOICE_AVATARS = {
   maxence: '/avatar-Maxence.png',
   metaknight: '/avatar-Metaknight.png',
   noe: '/avatar-Noe.png',
-  sarah: '/avatar-sarah.png',
+  sarah: '/avatar-sarah.webp?v=20260921',
   saya: '/avatar-saya.png',
   serena: '/avatar-serena.png',
   tom: '/avatar-tom.png',

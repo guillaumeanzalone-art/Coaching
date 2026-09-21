@@ -294,7 +294,7 @@ export const athletes = [
     "name": "Sarah",
     "emoji": "🌑",
     "bodyWeight": 57.0,
-    "profileImage": "https://raw.githubusercontent.com/guillaumeanzalone-art/Coaching/37349084502a0de901813900be4fd29f314476c3/v2/public/avatar-sarah.png",
+    "profileImage": "avatar-sarah.webp?v=20260921",
     "programKey": "sarah",
     "blockCount": 1,
     "cloudSlug": "sarah"
