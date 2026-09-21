@@ -9,9 +9,9 @@ on:
         default: "v2-refactor"
         type: string
       marketing_version:
-        description: "Version iOS (ex: 1.3)"
+        description: "Version iOS (ex: 1.5)"
         required: true
-        default: "1.3"
+        default: "1.5"
         type: string
       upload_to_testflight:
         description: "Uploader le .ipa vers App Store Connect/TestFlight"
