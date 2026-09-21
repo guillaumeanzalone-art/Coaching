@@ -2150,6 +2150,66 @@ function renderLoadingAthlete(
   `
 }
 
+function renderNoProgramAthlete(
+  athlete
+) {
+  clearAppHandlers()
+
+  setAppBackdrop(
+    athlete.cloudSlug ||
+    athlete.slug ||
+    athlete.id
+  )
+
+  app.innerHTML = `
+    <main class="app-shell">
+      <header class="topbar">
+        <button
+          class="back-button"
+          data-action="athletes"
+          type="button"
+        >
+          ← Athlètes
+        </button>
+
+        <div>
+          <span class="version">LA BRIGADE DE L’ARAIGNÉE</span>
+          <h1>${athlete.name}</h1>
+        </div>
+      </header>
+
+      <section class="auth-card">
+        <span class="eyebrow">
+          PROFIL CRÉÉ
+        </span>
+
+        <h2>
+          Programmation à venir
+        </h2>
+
+        <p class="auth-copy">
+          Le profil de ${athlete.name} est bien actif.
+          Aucune programmation n’a encore été publiée.
+        </p>
+      </section>
+    </main>
+  `
+
+  app.onclick = (event) => {
+    const action =
+      event.target.closest(
+        '[data-action]'
+      )
+
+    if (
+      action?.dataset.action ===
+      'athletes'
+    ) {
+      renderAthletes()
+    }
+  }
+}
+
 async function openAthlete(
   athleteId
 ) {
@@ -2181,9 +2241,10 @@ async function openAthlete(
       )
 
     if (!program) {
-      throw new Error(
-        'Programme introuvable'
+      renderNoProgramAthlete(
+        athlete
       )
+      return
     }
 
     clearAppHandlers()
