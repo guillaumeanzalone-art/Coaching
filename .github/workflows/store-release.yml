@@ -52,7 +52,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ${{ env.APP_DIR }}
+        working-directory: v2
 
     steps:
       - name: Checkout
@@ -154,7 +154,7 @@ jobs:
       - name: Conserver le AAB
         uses: actions/upload-artifact@v7
         with:
-          name: ga-coaching-android-${{ inputs.version }}-${{ env.ANDROID_VERSION_CODE }}
+          name: ga-coaching-android-${{ inputs.version }}-run-${{ github.run_number }}
           path: v2/android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 30
@@ -177,7 +177,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ${{ env.APP_DIR }}
+        working-directory: v2
 
     steps:
       - name: Checkout
@@ -314,8 +314,8 @@ jobs:
       - name: Conserver l'IPA
         uses: actions/upload-artifact@v7
         with:
-          name: ga-coaching-ios-${{ inputs.version }}-${{ env.IOS_BUILD_NUMBER }}
-          path: ${{ env.IPA_PATH }}
+          name: ga-coaching-ios-${{ inputs.version }}-run-${{ github.run_number }}
+          path: ${{ runner.temp }}/ios-export/*.ipa
           if-no-files-found: error
           retention-days: 30
 
