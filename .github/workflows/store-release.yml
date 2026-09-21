@@ -3,6 +3,11 @@ name: Store Release
 on:
   workflow_dispatch:
     inputs:
+      source_ref:
+        description: "Branche / tag à publier"
+        required: true
+        default: "v2-refactor"
+        type: string
       version:
         description: "Version publique (ex: 1.2.0)"
         required: true
@@ -57,6 +62,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.source_ref }}
 
       - name: Node.js
         uses: actions/setup-node@v7
@@ -182,6 +189,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.source_ref }}
 
       - name: Node.js
         uses: actions/setup-node@v7
