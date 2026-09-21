@@ -70,16 +70,33 @@ function installStyles() {
 async function loadCloudMeta(athleteSlug) {
   const { data, error } = await supabase
     .from('program_versions_v2')
-    .select('id,program_key,version,status,published_at,updated_at')
+    .select('id,program_key,version,status,current_week,published_at,updated_at')
     .eq('athlete_slug', athleteSlug)
     .order('version', { ascending: false })
     .limit(30)
 
   if (error) throw error
+
   const rows = Array.isArray(data) ? data : []
+  const activeMeta =
+    rows.find((row) => row.status === 'active') || null
+
+  let active = activeMeta
+
+  if (activeMeta?.id) {
+    const { data: fullActive, error: activeError } = await supabase
+      .from('program_versions_v2')
+      .select('id,program_key,version,status,current_week,program_json,published_at,updated_at')
+      .eq('id', activeMeta.id)
+      .maybeSingle()
+
+    if (activeError) throw activeError
+    active = fullActive || activeMeta
+  }
+
   return {
     rows,
-    active: rows.find((row) => row.status === 'active') || null,
+    active,
     draft: rows.find((row) => row.status === 'draft') || null,
   }
 }
@@ -155,11 +172,45 @@ export function mountProgramEditor(root, options = {}) {
     blockNumber: 1,
     blockLabel: 'Bloc 1',
     blockKey: '',
+    mode: 'new-block',
+    targetWeek: 4,
     status: '',
     statusKind: '',
   }
 
   const athleteSlug = () => state.athlete?.cloudSlug || state.athlete?.slug || state.athlete?.id || ''
+
+  function currentBlockMeta() {
+    return state.history.find((item) => item.status === 'current') || null
+  }
+
+  function currentProgramBlock() {
+    const program = state.cloudMeta?.active?.program_json
+    const blocks = Array.isArray(program?.blocks) ? program.blocks : []
+    const currentMeta = currentBlockMeta()
+
+    return blocks.find((item) => item?.id === currentMeta?.block_key)
+      || blocks.find((item) => item?.id === program?.defaultBlockId)
+      || blocks[0]
+      || null
+  }
+
+  function targetWeekFromImport(imported) {
+    const index = Math.max(0, Number(state.targetWeek) - 1)
+    return imported?.block?.weeks?.[index] || null
+  }
+
+  function targetWeekPreview(imported) {
+    const week = targetWeekFromImport(imported)
+    if (!week) return null
+    return {
+      ...imported,
+      block: {
+        ...imported.block,
+        weeks: [week],
+      },
+    }
+  }
 
   function setStatus(message, kind = '') {
     state.status = message || ''
@@ -203,6 +254,22 @@ export function mountProgramEditor(root, options = {}) {
         0,
       )
       setBlockDefaults(highest + 1)
+
+      const currentProgram = cloudMeta.active?.program_json
+      const currentMeta = history.find((item) => item.status === 'current')
+      const currentBlock = Array.isArray(currentProgram?.blocks)
+        ? (
+            currentProgram.blocks.find((item) => item?.id === currentMeta?.block_key)
+            || currentProgram.blocks.find((item) => item?.id === currentProgram?.defaultBlockId)
+            || currentProgram.blocks[0]
+          )
+        : null
+
+      const weekCount = Array.isArray(currentBlock?.weeks)
+        ? currentBlock.weeks.length
+        : 0
+
+      state.targetWeek = weekCount > 0 ? weekCount : 1
     } catch (error) {
       console.error(error)
       state.cloudMeta = { rows: [], active: null, draft: null }
@@ -218,14 +285,37 @@ export function mountProgramEditor(root, options = {}) {
 
   function prepareImport() {
     if (!state.athlete) throw new Error('Choisis un athlète.')
+
     state.parsed = parseProgramSheet(state.paste)
+
+    const currentMeta = currentBlockMeta()
+    const currentBlock = currentProgramBlock()
+    const patchMode = state.mode === 'patch-week'
+
+    if (patchMode && (!currentMeta || !currentBlock)) {
+      throw new Error('Aucun bloc actif à modifier pour cet athlète.')
+    }
+
     state.imported = createImportedProgram({
       parsed: state.parsed,
       athlete: state.athlete,
-      blockNumber: state.blockNumber,
-      blockLabel: state.blockLabel,
-      blockKey: state.blockKey,
+      blockNumber: patchMode
+        ? currentMeta.block_number
+        : state.blockNumber,
+      blockLabel: patchMode
+        ? currentMeta.title
+        : state.blockLabel,
+      blockKey: patchMode
+        ? currentBlock.id
+        : state.blockKey,
     })
+
+    if (patchMode && !targetWeekFromImport(state.imported)) {
+      throw new Error(
+        `La semaine ${state.targetWeek} n’existe pas dans le tableau collé.`,
+      )
+    }
+
     return state.imported
   }
 
@@ -234,6 +324,15 @@ export function mountProgramEditor(root, options = {}) {
     const draft = state.cloudMeta?.draft
     const summary = state.imported?.overview?.summary
     const maxes = state.parsed?.metrics?.maxes || {}
+    const currentMeta = currentBlockMeta()
+    const currentBlock = currentProgramBlock()
+    const currentWeeks = Array.isArray(currentBlock?.weeks)
+      ? currentBlock.weeks
+      : []
+    const patchMode = state.mode === 'patch-week'
+    const previewImport = patchMode
+      ? targetWeekPreview(state.imported)
+      : state.imported
 
     root.innerHTML = `
       <main class="program-importer-shell">
@@ -241,7 +340,7 @@ export function mountProgramEditor(root, options = {}) {
           <div>
             <span class="program-importer-kicker">COACH · PROGRAM CLOUD</span>
             <h1 class="program-importer-title">Importateur Google Sheets</h1>
-            <p class="program-importer-subtitle">Copie tout le tableau de programmation, colle-le ici, vérifie l’aperçu puis publie-le directement pour l’athlète.</p>
+            <p class="program-importer-subtitle">Crée un nouveau bloc ou remplace uniquement une semaine du bloc actuel, sans toucher à la progression des autres semaines.</p>
           </div>
           <button class="program-importer-back" type="button" data-import-action="back">← Accueil</button>
         </header>
@@ -264,22 +363,58 @@ export function mountProgramEditor(root, options = {}) {
               </div>
 
               <div class="program-importer-field">
-                <label>Numéro du nouveau bloc</label>
-                <input class="program-importer-input" type="number" min="1" value="${state.blockNumber}" data-import-field="blockNumber">
+                <label>Type de modification</label>
+                <select class="program-importer-select" data-import-mode ${state.busy ? 'disabled' : ''}>
+                  <option value="new-block" ${!patchMode ? 'selected' : ''}>Nouveau bloc complet</option>
+                  <option value="patch-week" ${patchMode ? 'selected' : ''} ${!currentBlock ? 'disabled' : ''}>Modifier une semaine uniquement</option>
+                </select>
               </div>
-              <div class="program-importer-field">
-                <label>Nom du bloc</label>
-                <input class="program-importer-input" value="${esc(state.blockLabel)}" data-import-field="blockLabel">
-              </div>
-              <div class="program-importer-field">
-                <label>Clé technique</label>
-                <input class="program-importer-input" value="${esc(state.blockKey)}" data-import-field="blockKey">
-              </div>
+
+              ${patchMode ? `
+                <div class="program-importer-source">
+                  <strong>Modification ciblée</strong><br>
+                  Bloc actuel : ${esc(currentMeta?.title || currentBlock?.label || '—')}<br>
+                  Clé conservée : ${esc(currentBlock?.sourceKey || currentBlock?.id || '—')}<br>
+                  S1 à S${currentWeeks.length || '—'} restent dans le même bloc.
+                </div>
+
+                <div class="program-importer-field">
+                  <label>Semaine à remplacer</label>
+                  <select class="program-importer-select" data-import-target-week>
+                    ${currentWeeks.map((week, index) => `
+                      <option value="${index + 1}" ${Number(state.targetWeek) === index + 1 ? 'selected' : ''}>
+                        S${index + 1} · ${esc(week.label || `S${index + 1}`)}
+                      </option>
+                    `).join('')}
+                  </select>
+                </div>
+
+                <div class="program-importer-warning">
+                  Seule S${state.targetWeek} sera remplacée. Les séries/RPE des autres semaines restent exactement en place.
+                </div>
+              ` : `
+                <div class="program-importer-field">
+                  <label>Numéro du nouveau bloc</label>
+                  <input class="program-importer-input" type="number" min="1" value="${state.blockNumber}" data-import-field="blockNumber">
+                </div>
+                <div class="program-importer-field">
+                  <label>Nom du bloc</label>
+                  <input class="program-importer-input" value="${esc(state.blockLabel)}" data-import-field="blockLabel">
+                </div>
+                <div class="program-importer-field">
+                  <label>Clé technique</label>
+                  <input class="program-importer-input" value="${esc(state.blockKey)}" data-import-field="blockKey">
+                </div>
+              `}
 
               <div class="program-importer-actions">
                 <button class="program-importer-button" type="button" data-import-action="analyze" ${state.busy ? 'disabled' : ''}>Analyser le tableau</button>
-                <button class="program-importer-button" type="button" data-import-action="draft" ${!state.imported || state.busy ? 'disabled' : ''}>Enregistrer brouillon</button>
-                <button class="program-importer-button primary" type="button" data-import-action="publish" ${!state.imported || state.busy ? 'disabled' : ''}>Publier pour l’athlète</button>
+                ${patchMode ? '' : `
+                  <button class="program-importer-button" type="button" data-import-action="draft" ${!state.imported || state.busy ? 'disabled' : ''}>Enregistrer brouillon</button>
+                `}
+                <button class="program-importer-button primary" type="button" data-import-action="${patchMode ? 'patch-week' : 'publish'}" ${!state.imported || state.busy ? 'disabled' : ''}>
+                  ${patchMode ? `Mettre à jour uniquement S${state.targetWeek}` : 'Publier pour l’athlète'}
+                </button>
               </div>
               <div class="program-importer-status ${state.statusKind}" data-program-import-status>${esc(state.status)}</div>
             `}
@@ -290,7 +425,7 @@ export function mountProgramEditor(root, options = {}) {
               <div class="program-importer-row">
                 <div>
                   <h2>Coller la programmation</h2>
-                  <p>Dans Google Sheets : sélectionne tout le tableau, copie, puis colle ci-dessous sans modifier le contenu.</p>
+                  <p>${patchMode ? `Colle le tableau complet mis à jour : seule S${state.targetWeek} sera appliquée, les autres semaines seront ignorées.` : 'Dans Google Sheets : sélectionne tout le tableau, copie, puis colle ci-dessous sans modifier le contenu.'}</p>
                 </div>
               </div>
               <textarea class="program-importer-paste" data-import-paste placeholder="Clique ici puis Ctrl+V…">${esc(state.paste)}</textarea>
@@ -313,7 +448,8 @@ export function mountProgramEditor(root, options = {}) {
                 </div>
               </div>
               <div class="program-importer-card">
-                ${previewHtml(state.imported)}
+                ${patchMode ? `<div class="program-importer-warning">APERÇU CIBLÉ · seule S${state.targetWeek} sera publiée.</div>` : ''}
+                ${previewHtml(previewImport)}
               </div>
             ` : ''}
           </section>
@@ -391,6 +527,88 @@ export function mountProgramEditor(root, options = {}) {
     }
   }
 
+  async function patchWeek() {
+    const imported = prepareImport()
+    const currentMeta = currentBlockMeta()
+    const currentBlock = currentProgramBlock()
+    const week = targetWeekFromImport(imported)
+
+    if (!currentMeta || !currentBlock || !week) {
+      throw new Error('Bloc ou semaine cible introuvable.')
+    }
+
+    const programKey =
+      currentBlock.sourceKey ||
+      currentBlock.id
+
+    let existingRows = 0
+
+    try {
+      const { count } = await supabase
+        .from('workout_sets')
+        .select('set_index', { count: 'exact', head: true })
+        .eq('athlete_slug', athleteSlug())
+        .eq('program_key', programKey)
+        .eq('week_index', Math.max(0, Number(state.targetWeek) - 1))
+
+      existingRows = Number(count || 0)
+    } catch (_) {
+      existingRows = 0
+    }
+
+    const warning = existingRows > 0
+      ? `\n\nAttention : S${state.targetWeek} contient déjà ${existingRows} série(s) enregistrée(s). Elles ne seront pas supprimées automatiquement.`
+      : ''
+
+    const confirmed = window.confirm(
+      `Remplacer uniquement S${state.targetWeek} de ${currentMeta.title || currentBlock.label} pour ${state.athlete.name} ?\n\nS1 à S${currentWeeksCount(currentBlock)} restent inchangées, sauf S${state.targetWeek}. La progression des autres semaines est conservée.${warning}`,
+    )
+
+    if (!confirmed) return
+
+    state.busy = true
+    setStatus(`Mise à jour ciblée de S${state.targetWeek}…`)
+
+    try {
+      const { data, error } = await supabase.rpc('patch_program_week_v1', {
+        p_athlete_slug: athleteSlug(),
+        p_block_key: currentBlock.id,
+        p_week_number: Math.max(1, Number(state.targetWeek) || 1),
+        p_week_json: week,
+        p_notes: `Modification ciblée S${state.targetWeek} depuis l’importateur Google Sheets`,
+      })
+
+      if (error) throw error
+
+      clearProgramCloudCache(state.athlete.id)
+
+      const [cloudMeta, history] = await Promise.all([
+        loadCloudMeta(athleteSlug()),
+        getAthleteBlocksV3(athleteSlug()),
+      ])
+
+      state.cloudMeta = cloudMeta
+      state.history = history
+
+      setStatus(
+        `S${state.targetWeek} mise à jour · version ${data?.version ?? cloudMeta.active?.version ?? ''} · les autres semaines sont conservées.`,
+        'ok',
+      )
+    } catch (error) {
+      console.error(error)
+      setStatus(error?.message || 'Erreur pendant la mise à jour ciblée.', 'error')
+    } finally {
+      state.busy = false
+      render()
+    }
+  }
+
+  function currentWeeksCount(block) {
+    return Array.isArray(block?.weeks)
+      ? block.weeks.length
+      : 0
+  }
+
   root.oninput = (event) => {
     const target = event.target
     if (target.matches('[data-import-paste]')) {
@@ -409,6 +627,37 @@ export function mountProgramEditor(root, options = {}) {
   root.onchange = async (event) => {
     if (event.target.matches('[data-import-athlete]')) {
       await loadAthlete(event.target.value)
+      return
+    }
+
+    if (event.target.matches('[data-import-mode]')) {
+      state.mode = event.target.value === 'patch-week'
+        ? 'patch-week'
+        : 'new-block'
+      state.imported = null
+      state.parsed = null
+
+      const currentBlock = currentProgramBlock()
+      if (
+        state.mode === 'patch-week' &&
+        Array.isArray(currentBlock?.weeks) &&
+        currentBlock.weeks.length
+      ) {
+        state.targetWeek = Math.min(
+          Math.max(1, Number(state.targetWeek) || currentBlock.weeks.length),
+          currentBlock.weeks.length,
+        )
+      }
+
+      render()
+      return
+    }
+
+    if (event.target.matches('[data-import-target-week]')) {
+      state.targetWeek = Math.max(1, Number(event.target.value) || 1)
+      state.imported = null
+      state.parsed = null
+      render()
     }
   }
 
@@ -429,7 +678,9 @@ export function mountProgramEditor(root, options = {}) {
       try {
         prepareImport()
         const warningCount = state.parsed.warnings?.length || 0
-        state.status = `${state.parsed.summary.weekCount} semaines et ${state.parsed.summary.exerciseCount} lignes retenues.${warningCount ? ` ${warningCount} doublon SBD ignoré.` : ''} Vérifie l’aperçu.`
+        state.status = state.mode === 'patch-week'
+          ? `S${state.targetWeek} prête à remplacer · ${targetWeekFromImport(state.imported)?.days?.length || 0} séance(s). Les autres semaines ne seront pas modifiées.`
+          : `${state.parsed.summary.weekCount} semaines et ${state.parsed.summary.exerciseCount} lignes retenues.${warningCount ? ` ${warningCount} doublon SBD ignoré.` : ''} Vérifie l’aperçu.`
         state.statusKind = 'ok'
       } catch (error) {
         state.imported = null
@@ -443,6 +694,7 @@ export function mountProgramEditor(root, options = {}) {
 
     if (action === 'draft') await saveDraft()
     if (action === 'publish') await publish()
+    if (action === 'patch-week') await patchWeek()
   }
 
   render()
