@@ -5844,6 +5844,93 @@ export function mountTraining(
         : '00:00:00'
   }
 
+  function resetCurrentSessionTimer() {
+    if (!canEdit) {
+      return
+    }
+
+    const context =
+      currentSessionContext()
+
+    if (!context) {
+      return
+    }
+
+    const {
+      week,
+      day,
+      weekIndex,
+      dayIndex,
+      session,
+    } = context
+
+    const rows =
+      listDaySets(day)
+
+    const doneCount =
+      rows.filter(
+        ({ sourceSet }) =>
+          isTerminalStatus(
+            getSetState(
+              state,
+              sourceSet
+            ).status
+          )
+      ).length
+
+    const now =
+      new Date()
+        .toISOString()
+
+    const next = {
+      ...session,
+    }
+
+    /*
+     * Reset chrono uniquement :
+     * séries, RPE, notes et métriques restent intacts.
+     */
+    if (
+      rows.length > 0 &&
+      doneCount === rows.length
+    ) {
+      next.startedAt = now
+      next.completedAt = now
+      next.durationSeconds = 0
+      next.status = 'completed'
+    } else if (
+      doneCount > 0 ||
+      session.startedAt
+    ) {
+      next.startedAt = now
+      next.completedAt = null
+      next.durationSeconds = null
+      next.status = 'in_progress'
+    } else {
+      next.startedAt = null
+      next.completedAt = null
+      next.durationSeconds = null
+      next.status = 'pending'
+    }
+
+    setSessionState(
+      weekIndex,
+      dayIndex,
+      next
+    )
+
+    persist()
+
+    queueSessionState(
+      weekIndex,
+      dayIndex,
+      next
+    )
+
+    render()
+  }
+
+
   function renderSessionTracking(
     week,
     day
@@ -5895,6 +5982,15 @@ export function mountTraining(
                 )
               )}
             </strong>
+
+            <button
+              type="button"
+              class="training-session-v11__timer-reset"
+              data-action="session-timer-reset"
+              ${canEdit ? '' : 'disabled'}
+            >
+              ↻ Reset chrono
+            </button>
           </div>
 
           <span
@@ -7778,6 +7874,7 @@ export function mountTraining(
       !canEdit &&
       (
         actionName === 'reset' ||
+        actionName === 'session-timer-reset' ||
         actionName === 'toggle' ||
         actionName === 'skip-set'
       )
@@ -7818,6 +7915,22 @@ export function mountTraining(
       }
 
       onBack()
+      return
+    }
+
+    if (
+      actionName ===
+        'session-timer-reset'
+    ) {
+      const confirmed =
+        window.confirm(
+          'Réinitialiser uniquement le chrono de cette séance ? Les séries, RPE, notes et métriques resteront inchangés.'
+        )
+
+      if (confirmed) {
+        resetCurrentSessionTimer()
+      }
+
       return
     }
 
