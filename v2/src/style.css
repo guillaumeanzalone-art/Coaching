@@ -607,6 +607,34 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.training-session-v11__timer-reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  margin-top: 9px;
+  padding: 7px 11px;
+  border: 1px solid rgba(239,183,56,.30);
+  border-radius: 10px;
+  color: #efb738;
+  background: rgba(239,183,56,.06);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.training-session-v11__timer-reset:hover {
+  border-color: rgba(239,183,56,.62);
+  background: rgba(239,183,56,.11);
+}
+
+.training-session-v11__timer-reset:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+
 .training-session-v11__status {
   padding: 8px 11px;
   border: 1px solid rgba(255,255,255,.10);
