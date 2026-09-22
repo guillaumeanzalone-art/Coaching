@@ -34,13 +34,13 @@ export const athleteThemes =
     "dead": "#9a65ff",
     "border": "rgba(75,210,255,.42)",
     "variant": "rudy-cosmic-clash",
-    "headerKicker": "RUDY · MODE COMBAT",
+    "hideHeaderKicker": true,
     "backgroundImage": "rudy-cosmic-clash.webp?v=20260922",
     "heroImage": "rudy-cosmic-clash.webp?v=20260922",
-    "quote": "Deux énergies. Une seule direction.",
-    "cite": "RUDY · DUO COSMIQUE",
-    "noteTitle": "Mode combat activé",
-    "noteText": "Puissance, maîtrise et intensité à chaque série.",
+    "quote": "",
+    "cite": "",
+    "noteTitle": "",
+    "noteText": "",
     "sourceFile": "4cf7e889-d301-4c18-926a-ea32b73c9e07.png"
   },
   "allan": {

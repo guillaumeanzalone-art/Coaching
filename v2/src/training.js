@@ -4042,27 +4042,7 @@ export function mountTraining(
           <div class="rudy-clash-shade" aria-hidden="true"></div>
 
           <div class="rudy-clash-copy">
-            <span class="rudy-clash-eyebrow">
-              Mode combat activé
-            </span>
-
             <h2>${escapeHtml(athleteName)}</h2>
-
-            <blockquote>
-              ${escapeHtml(quote)}
-            </blockquote>
-
-            ${
-              cite
-                ? `<cite>${escapeHtml(cite)}</cite>`
-                : ''
-            }
-          </div>
-
-          <div class="rudy-clash-stats" aria-label="Valeurs du thème">
-            <span>Focus</span>
-            <span>Force</span>
-            <span>Impact</span>
           </div>
         </section>
       `
