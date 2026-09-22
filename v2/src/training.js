@@ -3994,6 +3994,82 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'rudy-cosmic-clash'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Rudy'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--rudy-clash"
+          aria-label="Univers combat cosmique de Rudy"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="rudy-clash-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Rudy dans un univers de combat cosmique bleu et rose"
+                  width="1086"
+                  height="609"
+                >
+              `
+              : ''
+          }
+
+          <div class="rudy-clash-energy rudy-clash-energy--blue" aria-hidden="true"></div>
+          <div class="rudy-clash-energy rudy-clash-energy--pink" aria-hidden="true"></div>
+
+          <div class="rudy-clash-lasers" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="rudy-clash-impact" aria-hidden="true">
+            <span></span>
+          </div>
+
+          <div class="rudy-clash-scanlines" aria-hidden="true"></div>
+          <div class="rudy-clash-shade" aria-hidden="true"></div>
+
+          <div class="rudy-clash-copy">
+            <span class="rudy-clash-eyebrow">
+              Mode combat activé
+            </span>
+
+            <h2>${escapeHtml(athleteName)}</h2>
+
+            <blockquote>
+              ${escapeHtml(quote)}
+            </blockquote>
+
+            ${
+              cite
+                ? `<cite>${escapeHtml(cite)}</cite>`
+                : ''
+            }
+          </div>
+
+          <div class="rudy-clash-stats" aria-label="Valeurs du thème">
+            <span>Focus</span>
+            <span>Force</span>
+            <span>Impact</span>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'north-strength'
     ) {
       const logoImage =
