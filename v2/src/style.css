@@ -7363,3 +7363,475 @@ body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .athlete-st
     line-height: 1.15;
   }
 }
+/* RUDY — DEUX FRÈRES / NIGHT MODE */
+.training-page[data-athlete-theme="rudy"] {
+  --rudy-night: #040611;
+  --rudy-indigo: #171d43;
+  --rudy-violet: #9b8cff;
+  --rudy-cyan: #62c5ff;
+  --rudy-gold: #e8bb68;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #f8fbff;
+  background:
+    radial-gradient(circle at 84% 7%, rgba(112, 94, 255, .24), transparent 29%),
+    radial-gradient(circle at 15% 22%, rgba(42, 126, 206, .15), transparent 31%),
+    linear-gradient(180deg, #050816 0%, #090b19 46%, #03050d 100%);
+}
+
+.training-page[data-athlete-theme="rudy"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -18%;
+  pointer-events: none;
+  opacity: .72;
+  background:
+    radial-gradient(circle at 76% 20%, rgba(146, 129, 255, .18), transparent 22%),
+    radial-gradient(circle at 17% 58%, rgba(75, 170, 255, .10), transparent 23%);
+  filter: blur(28px);
+  animation: rudy-night-nebula 17s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="rudy"] .training-topbar {
+  position: relative;
+  z-index: 5;
+  border: 1px solid rgba(151, 139, 255, .25);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(7, 12, 31, .94), rgba(21, 18, 52, .88));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .07),
+    0 18px 46px rgba(0, 2, 14, .40),
+    0 0 38px rgba(109, 92, 255, .08);
+  backdrop-filter: blur(16px);
+}
+
+.training-page[data-athlete-theme="rudy"] .training-topbar h1 {
+  color: #fff;
+  text-shadow: 0 0 24px rgba(131, 171, 255, .20);
+}
+
+.training-page[data-athlete-theme="rudy"] .training-kicker,
+.training-page[data-athlete-theme="rudy"] .set-number,
+.training-page[data-athlete-theme="rudy"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="rudy"] .training-block-report-v11__kicker {
+  color: #b9adff;
+}
+
+.training-page[data-athlete-theme="rudy"] .back-button,
+.training-page[data-athlete-theme="rudy"] .reset-button {
+  min-height: 44px;
+  border-color: rgba(151, 139, 255, .24);
+  background: rgba(9, 15, 36, .86);
+  color: #e7e9f7;
+}
+
+.training-page[data-athlete-theme="rudy"] .back-button:hover,
+.training-page[data-athlete-theme="rudy"] .reset-button:hover {
+  border-color: rgba(108, 194, 255, .52);
+  background: rgba(22, 29, 65, .96);
+  color: #fff;
+}
+
+.athlete-theme-banner--rudy-pnl {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+  min-height: 310px;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(155, 140, 255, .34);
+  border-radius: 30px;
+  background: #050713;
+  box-shadow:
+    0 30px 82px rgba(0, 2, 16, .62),
+    0 0 58px rgba(93, 78, 225, .14),
+    inset 0 1px 0 rgba(255, 255, 255, .09);
+}
+
+.athlete-theme-banner--rudy-pnl::before {
+  content: "";
+  position: absolute;
+  z-index: 6;
+  inset: 9px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 22px;
+  box-shadow: inset 0 0 48px rgba(84, 103, 214, .09);
+}
+
+.athlete-theme-banner--rudy-pnl::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  pointer-events: none;
+  opacity: .15;
+  background-image: radial-gradient(rgba(255,255,255,.72) .55px, transparent .55px);
+  background-size: 4px 4px;
+  mix-blend-mode: soft-light;
+}
+
+.rudy-pnl-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2%;
+  display: block;
+  width: 104%;
+  height: 104%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 53% 50%;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(.96) contrast(1.07) brightness(.87);
+  transform-origin: 58% 48%;
+  will-change: transform;
+  animation: rudy-city-drift 15s ease-in-out infinite alternate;
+}
+
+.rudy-pnl-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(2, 5, 16, .93) 0%, rgba(4, 7, 21, .72) 31%, rgba(5, 8, 22, .18) 62%, rgba(2, 4, 13, .15) 100%),
+    linear-gradient(180deg, rgba(3, 6, 19, .04) 38%, rgba(2, 4, 13, .72) 100%);
+}
+
+.rudy-pnl-moon-aura {
+  position: absolute;
+  z-index: 2;
+  top: 1%;
+  right: 14%;
+  width: 32%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: .26;
+  background: radial-gradient(circle, rgba(235, 232, 255, .30), rgba(133, 113, 255, .10) 38%, transparent 69%);
+  filter: blur(5px);
+  animation: rudy-moon-pulse 7s ease-in-out infinite;
+}
+
+.rudy-pnl-copy {
+  position: absolute;
+  z-index: 5;
+  left: clamp(24px, 4vw, 46px);
+  bottom: clamp(25px, 4vw, 43px);
+  width: min(48%, 430px);
+  pointer-events: none;
+}
+
+.rudy-pnl-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 6px 10px;
+  border: 1px solid rgba(166, 153, 255, .36);
+  border-radius: 999px;
+  background: rgba(8, 12, 31, .61);
+  color: #d8d1ff;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  box-shadow: 0 0 24px rgba(105, 89, 235, .13);
+  backdrop-filter: blur(12px);
+}
+
+.rudy-pnl-copy h2 {
+  margin: 10px 0 8px;
+  color: #fff;
+  font-size: clamp(32px, 5vw, 58px);
+  line-height: .92;
+  letter-spacing: -.055em;
+  text-shadow: 0 6px 24px rgba(0, 0, 0, .50), 0 0 28px rgba(120, 107, 255, .18);
+}
+
+.athlete-theme-banner--rudy-pnl blockquote {
+  max-width: 390px;
+  margin: 0;
+  color: #edf1ff;
+  font-family: inherit;
+  font-size: clamp(12px, 1.5vw, 15px);
+  font-style: normal;
+  font-weight: 650;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+
+.athlete-theme-banner--rudy-pnl cite {
+  margin-top: 7px;
+  color: #aebfff;
+  font-size: 8px;
+  letter-spacing: .14em;
+}
+
+.rudy-pnl-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 13px;
+}
+
+.rudy-pnl-badges span {
+  padding: 5px 8px;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 999px;
+  background: rgba(15, 20, 48, .60);
+  color: #dbe4ff;
+  font-size: 7px;
+  font-weight: 850;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+}
+
+.rudy-pnl-signal {
+  position: absolute;
+  z-index: 3;
+  left: 43%;
+  bottom: 30px;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 28px;
+  opacity: .46;
+  pointer-events: none;
+}
+
+.rudy-pnl-signal i {
+  display: block;
+  width: 3px;
+  height: 8px;
+  border-radius: 99px;
+  background: linear-gradient(180deg, #bfb5ff, #5abfff);
+  box-shadow: 0 0 9px rgba(106, 182, 255, .66);
+  animation: rudy-signal 1.8s ease-in-out infinite alternate;
+}
+
+.rudy-pnl-signal i:nth-child(2) { height: 18px; animation-delay: -.4s; }
+.rudy-pnl-signal i:nth-child(3) { height: 28px; animation-delay: -.8s; }
+.rudy-pnl-signal i:nth-child(4) { height: 14px; animation-delay: -1.1s; }
+.rudy-pnl-signal i:nth-child(5) { height: 22px; animation-delay: -.2s; }
+
+.training-page[data-athlete-theme="rudy"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="rudy"] .training-v3-history,
+.training-page[data-athlete-theme="rudy"] .training-v3-overview,
+.training-page[data-athlete-theme="rudy"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="rudy"] .training-session-v11,
+.training-page[data-athlete-theme="rudy"] .training-block-report-v11,
+.training-page[data-athlete-theme="rudy"] .training-summary,
+.training-page[data-athlete-theme="rudy"] .athlete-pr-panel,
+.training-page[data-athlete-theme="rudy"] .athlete-steps-panel-v249 {
+  border-color: rgba(138, 128, 242, .18);
+  background: linear-gradient(145deg, rgba(8, 14, 34, .94), rgba(19, 18, 45, .90));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .05),
+    0 18px 46px rgba(0, 2, 17, .34);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="rudy"] .week-tab,
+.training-page[data-athlete-theme="rudy"] .day-tab-v2 {
+  border-color: rgba(129, 124, 225, .17);
+  background: rgba(8, 14, 34, .88);
+  color: #c7d0e8;
+}
+
+.training-page[data-athlete-theme="rudy"] .week-tab strong,
+.training-page[data-athlete-theme="rudy"] .day-tab-v2 strong {
+  color: #f8fbff;
+}
+
+.training-page[data-athlete-theme="rudy"] .week-tab--active,
+.training-page[data-athlete-theme="rudy"] .day-tab-v2--active {
+  border-color: rgba(160, 145, 255, .68);
+  background: linear-gradient(135deg, rgba(76, 70, 174, .61), rgba(30, 92, 156, .48));
+  box-shadow: 0 0 25px rgba(110, 94, 232, .13);
+}
+
+.training-page[data-athlete-theme="rudy"] .training-exercise {
+  border-color: rgba(135, 129, 227, .18);
+  background: rgba(7, 13, 31, .95);
+  box-shadow: 0 20px 50px rgba(0, 2, 18, .35);
+}
+
+.training-page[data-athlete-theme="rudy"] .exercise-header {
+  border-bottom-color: rgba(122, 151, 242, .16);
+  background: linear-gradient(110deg, rgba(34, 43, 92, .96), rgba(28, 25, 66, .96));
+}
+
+.training-page[data-athlete-theme="rudy"] .exercise-type {
+  border-color: rgba(232, 187, 104, .50);
+  background: rgba(232, 187, 104, .08);
+  color: #f3d49b;
+}
+
+.training-page[data-athlete-theme="rudy"] .training-set {
+  border-color: rgba(128, 143, 221, .13);
+  background: rgba(10, 18, 40, .78);
+}
+
+.training-page[data-athlete-theme="rudy"] .set-load,
+.training-page[data-athlete-theme="rudy"] .set-rpe,
+.training-page[data-athlete-theme="rudy"] .training-session-v11__note,
+.training-page[data-athlete-theme="rudy"] .training-session-v11__metrics label > div {
+  border-color: rgba(129, 148, 234, .21);
+  background: rgba(8, 16, 38, .90);
+  color: #f8fbff;
+}
+
+.training-page[data-athlete-theme="rudy"] .set-load:focus,
+.training-page[data-athlete-theme="rudy"] .set-rpe:focus,
+.training-page[data-athlete-theme="rudy"] .training-session-v11__note:focus {
+  border-color: #9b8cff;
+  box-shadow: 0 0 0 3px rgba(155, 140, 255, .13);
+}
+
+.training-page[data-athlete-theme="rudy"] .training-sync {
+  border-color: rgba(112, 180, 255, .24);
+  background: rgba(8, 16, 38, .88);
+  color: #a9ddff;
+}
+
+.training-page[data-athlete-theme="rudy"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #5966d9 0%, #9b8cff 48%, #61c5ff 100%);
+  box-shadow: 0 0 20px rgba(106, 164, 255, .24);
+}
+
+@media (hover: hover) {
+  .training-page[data-athlete-theme="rudy"] .training-exercise,
+  .training-page[data-athlete-theme="rudy"] .week-tab,
+  .training-page[data-athlete-theme="rudy"] .day-tab-v2 {
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .training-page[data-athlete-theme="rudy"] .training-exercise:hover,
+  .training-page[data-athlete-theme="rudy"] .week-tab:hover,
+  .training-page[data-athlete-theme="rudy"] .day-tab-v2:hover {
+    transform: translateY(-3px);
+    border-color: rgba(156, 144, 255, .42);
+    box-shadow: 0 23px 58px rgba(0, 3, 24, .43), 0 0 22px rgba(89, 135, 255, .09);
+  }
+}
+
+@keyframes rudy-city-drift {
+  0% { transform: scale(1.015) translate3d(-.35%, .1%, 0); }
+  100% { transform: scale(1.055) translate3d(.45%, -.35%, 0); }
+}
+
+@keyframes rudy-moon-pulse {
+  0%, 100% { transform: scale(.94); opacity: .18; }
+  50% { transform: scale(1.09); opacity: .36; }
+}
+
+@keyframes rudy-night-nebula {
+  0% { transform: translate3d(-2%, -1%, 0) scale(1.02); opacity: .52; }
+  100% { transform: translate3d(2%, 1.5%, 0) scale(1.09); opacity: .82; }
+}
+
+@keyframes rudy-signal {
+  0% { transform: scaleY(.45); opacity: .38; }
+  100% { transform: scaleY(1); opacity: .90; }
+}
+
+@media (max-width: 700px) {
+  .athlete-theme-banner--rudy-pnl {
+    aspect-ratio: 16 / 10;
+    min-height: 320px;
+    border-radius: 25px;
+  }
+
+  .rudy-pnl-hero {
+    object-position: 61% 50%;
+  }
+
+  .rudy-pnl-shade {
+    background:
+      linear-gradient(90deg, rgba(2, 5, 16, .88) 0%, rgba(4, 7, 21, .50) 58%, rgba(2, 4, 13, .14) 100%),
+      linear-gradient(180deg, rgba(3, 6, 19, .03) 29%, rgba(2, 4, 13, .88) 100%);
+  }
+
+  .rudy-pnl-copy {
+    left: 20px;
+    right: 20px;
+    bottom: 22px;
+    width: auto;
+  }
+
+  .rudy-pnl-copy h2 {
+    font-size: clamp(36px, 12vw, 52px);
+  }
+
+  .rudy-pnl-signal {
+    right: 20px;
+    left: auto;
+    bottom: 24px;
+  }
+}
+
+@media (max-width: 440px) {
+  .training-page[data-athlete-theme="rudy"] .training-topbar {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .athlete-theme-banner--rudy-pnl {
+    aspect-ratio: 4 / 5;
+    min-height: 0;
+    border-radius: 22px;
+  }
+
+  .athlete-theme-banner--rudy-pnl::before {
+    inset: 7px;
+    border-radius: 16px;
+  }
+
+  .rudy-pnl-hero {
+    object-position: 64% 50%;
+  }
+
+  .rudy-pnl-copy {
+    left: 17px;
+    right: 17px;
+    bottom: 18px;
+  }
+
+  .rudy-pnl-eyebrow {
+    font-size: 7px;
+    letter-spacing: .13em;
+  }
+
+  .rudy-pnl-copy h2 {
+    margin-top: 8px;
+  }
+
+  .athlete-theme-banner--rudy-pnl blockquote {
+    max-width: 86%;
+    font-size: 12px;
+  }
+
+  .rudy-pnl-badges span {
+    font-size: 6px;
+  }
+
+  .rudy-pnl-signal {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .training-page[data-athlete-theme="rudy"]::before,
+  .rudy-pnl-hero,
+  .rudy-pnl-moon-aura,
+  .rudy-pnl-signal i {
+    animation: none;
+  }
+}

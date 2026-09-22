@@ -3994,6 +3994,74 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'freres-lune'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Rudy'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--rudy-pnl"
+          aria-label="Univers nocturne des deux frères de Rudy"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="rudy-pnl-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Deux frères contemplant une ville sous la lune"
+                  width="1800"
+                  height="771"
+                >
+              `
+              : ''
+          }
+
+          <div class="rudy-pnl-shade" aria-hidden="true"></div>
+          <div class="rudy-pnl-moon-aura" aria-hidden="true"></div>
+          <div class="rudy-pnl-signal" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="rudy-pnl-copy">
+            <span class="rudy-pnl-eyebrow">
+              Deux frères · Night mode
+            </span>
+
+            <h2>${escapeHtml(athleteName)}</h2>
+
+            <blockquote>
+              ${escapeHtml(quote)}
+            </blockquote>
+
+            ${
+              cite
+                ? `<cite>${escapeHtml(cite)}</cite>`
+                : ''
+            }
+
+            <div class="rudy-pnl-badges" aria-label="Valeurs du thème">
+              <span>Vision</span>
+              <span>Fraternité</span>
+              <span>Ascension</span>
+            </div>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'north-strength'
     ) {
       const logoImage =
