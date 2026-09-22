@@ -4050,6 +4050,88 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'allan-crimson-trinity'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Allan'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--allan-inferno"
+          aria-label="Univers de combat rouge et incandescent d’Allan"
+        >
+          ${
+            heroImage
+              ? `
+                <picture class="allan-inferno-picture">
+                  ${
+                    heroMobileImage
+                      ? `
+                        <source
+                          media="(max-width: 650px)"
+                          srcset="${escapeHtml(heroMobileImage)}"
+                        >
+                      `
+                      : ''
+                  }
+
+                  <img
+                    class="allan-inferno-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Trois guerriers dans un univers de feu et d’éclairs rouges"
+                    width="1672"
+                    height="941"
+                  >
+                </picture>
+              `
+              : ''
+          }
+
+          <div class="allan-inferno-energy allan-inferno-energy--crimson" aria-hidden="true"></div>
+          <div class="allan-inferno-energy allan-inferno-energy--ember" aria-hidden="true"></div>
+
+          <div class="allan-inferno-lightning" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="allan-inferno-impact" aria-hidden="true">
+            <span></span>
+          </div>
+
+          <div class="allan-inferno-flames" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="allan-inferno-embers" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="allan-inferno-shade" aria-hidden="true"></div>
+
+          <div class="allan-inferno-copy">
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'north-strength'
     ) {
       const logoImage =
