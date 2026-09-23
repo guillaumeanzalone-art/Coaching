@@ -4232,6 +4232,83 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'alexandre-bankai-warriors'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          athleteTheme.displayName ||
+          program.athlete?.name ||
+          'Alexandre Portier'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--alexandre-bankai"
+          aria-label="Univers Bankai aux pétales roses d’Alexandre Portier"
+        >
+          ${
+            heroImage
+              ? `
+                <picture class="alexandre-bankai-picture">
+                  ${
+                    heroMobileImage
+                      ? `
+                        <source
+                          media="(max-width: 650px)"
+                          srcset="${escapeHtml(heroMobileImage)}"
+                        >
+                      `
+                      : ''
+                  }
+
+                  <img
+                    class="alexandre-bankai-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Quatre guerriers réunis dans un Bankai de lames et de pétales roses"
+                    width="1672"
+                    height="941"
+                  >
+                </picture>
+              `
+              : ''
+          }
+
+          <div class="alexandre-bankai-aura" aria-hidden="true"></div>
+
+          <div class="alexandre-bankai-wind" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </div>
+
+          <div class="alexandre-bankai-petals" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="alexandre-bankai-shade" aria-hidden="true"></div>
+
+          <div class="alexandre-bankai-copy">
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'north-strength'
     ) {
       const logoImage =
