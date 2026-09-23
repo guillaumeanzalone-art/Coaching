@@ -4309,6 +4309,90 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'clemosaurus-pactbound-duel'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          athleteTheme.displayName ||
+          program.athlete?.name ||
+          'Clemosaurus'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--clemosaurus-duel"
+          aria-label="Duel gothique de Clemosaurus"
+        >
+          ${
+            heroImage
+              ? `
+                <picture class="clemosaurus-duel-picture">
+                  ${
+                    heroMobileImage
+                      ? `
+                        <source
+                          media="(max-width: 650px)"
+                          srcset="${escapeHtml(heroMobileImage)}"
+                        >
+                      `
+                      : ''
+                  }
+
+                  <img
+                    class="clemosaurus-duel-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Deux guerriers face à face dans une arène gothique au-dessus des abysses"
+                    width="1672"
+                    height="941"
+                  >
+                </picture>
+              `
+              : ''
+          }
+
+          <div class="clemosaurus-duel-aura clemosaurus-duel-aura--blue" aria-hidden="true"></div>
+          <div class="clemosaurus-duel-aura clemosaurus-duel-aura--red" aria-hidden="true"></div>
+
+          <div class="clemosaurus-duel-lightning clemosaurus-duel-lightning--blue" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="clemosaurus-duel-lightning clemosaurus-duel-lightning--red" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="clemosaurus-duel-vortex" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </div>
+
+          <div class="clemosaurus-duel-particles" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="clemosaurus-duel-shade" aria-hidden="true"></div>
+
+          <div class="clemosaurus-duel-copy">
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'north-strength'
     ) {
       const logoImage =
