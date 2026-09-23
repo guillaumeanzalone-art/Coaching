@@ -4132,6 +4132,106 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'serena-turquoise-sovereign'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          ''
+        ).trim()
+
+      const crownImage =
+        String(
+          athleteTheme.crownImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Serena'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--serena-sovereign"
+          aria-label="Univers royal turquoise de Serena"
+        >
+          ${
+            heroImage
+              ? `
+                <picture class="serena-sovereign-picture">
+                  ${
+                    heroMobileImage
+                      ? `
+                        <source
+                          media="(max-width: 650px)"
+                          srcset="${escapeHtml(heroMobileImage)}"
+                        >
+                      `
+                      : ''
+                  }
+
+                  <img
+                    class="serena-sovereign-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Quatre héroïnes autour d’une couronne dans un palais parcouru d’éclairs turquoise"
+                    width="1672"
+                    height="941"
+                  >
+                </picture>
+              `
+              : ''
+          }
+
+          <div class="serena-sovereign-energy" aria-hidden="true"></div>
+
+          <div class="serena-sovereign-lightning" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="serena-sovereign-rings" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </div>
+
+          ${
+            crownImage
+              ? `
+                <img
+                  class="serena-sovereign-crown"
+                  src="${escapeHtml(crownImage)}"
+                  alt=""
+                  aria-hidden="true"
+                  width="1452"
+                  height="989"
+                >
+              `
+              : ''
+          }
+
+          <div class="serena-sovereign-sparks" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="serena-sovereign-shade" aria-hidden="true"></div>
+
+          <div class="serena-sovereign-copy">
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'north-strength'
     ) {
       const logoImage =
