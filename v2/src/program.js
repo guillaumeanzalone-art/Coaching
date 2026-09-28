@@ -2,6 +2,9 @@ import {
   getCachedProgramForAthlete as getCachedCloudProgramForAthlete,
   getProgramWithCloudFallback,
 } from './program-cloud.js'
+import {
+  enhanceProgramForAthlete,
+} from './program-enhancements.js'
 
 const PROGRAM_LOADERS = {
   "alexandre": () => import('./programs/alexandre.js'),
@@ -84,7 +87,10 @@ export async function getLocalProgramForAthlete(athleteId) {
   }
 
   const module = await loader()
-  return module.default ?? null
+  return enhanceProgramForAthlete(
+    athleteId,
+    module.default ?? null
+  )
 }
 
 
@@ -93,21 +99,30 @@ export async function getLocalProgramForAthlete(athleteId) {
 export async function getProgramForAthlete(
   athleteId
 ) {
-  return getProgramWithCloudFallback({
-    athleteId,
+  const program =
+    await getProgramWithCloudFallback({
+      athleteId,
 
-    localLoader:
-      () =>
-        getLocalProgramForAthlete(
-          athleteId
-        ),
-  })
+      localLoader:
+        () =>
+          getLocalProgramForAthlete(
+            athleteId
+          ),
+    })
+
+  return enhanceProgramForAthlete(
+    athleteId,
+    program
+  )
 }
 
 export function getCachedProgramForAthlete(
   athleteId
 ) {
-  return getCachedCloudProgramForAthlete(
-    athleteId
+  return enhanceProgramForAthlete(
+    athleteId,
+    getCachedCloudProgramForAthlete(
+      athleteId
+    )
   )
 }

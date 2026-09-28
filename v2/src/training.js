@@ -61,6 +61,23 @@ import {
   liftLabel as analyticsLiftLabel,
 } from './block-analytics.js'
 
+import {
+  averageBodyWeightsKg,
+  formatBodyWeightKg,
+  normalizeBodyWeightKg,
+} from './bodyweight.js'
+
+import {
+  applyIpfRecommendation,
+  createIpfMatchState,
+  hasIpfMatchData,
+  loadIpfMatchState,
+  renderIpfMatchTool,
+  saveIpfMatchState,
+  seedIpfMatchFromPrs,
+  updateIpfMatchField,
+} from './ipf-match.js'
+
 /* GA V1.2 HOME PR THEMES SKIP V7 */
 
 /* GA V1.1 SESSION CLOUD + PDF V3 */
@@ -559,6 +576,14 @@ export function mountTraining(
   const ATHLETE_INSIGHT_KEY =
     `ga-v2-athlete-insight:${cloudAthleteSlug}`
 
+  const IPF_MATCH_STORAGE_KEY =
+    `ga-v2-ipf-match:${cloudAthleteSlug}`
+
+  let ipfMatchState =
+    loadIpfMatchState(
+      IPF_MATCH_STORAGE_KEY
+    )
+
   let activeAthleteInsight =
     localStorage.getItem(ATHLETE_INSIGHT_KEY) === 'wellness'
       ? 'wellness'
@@ -643,6 +668,8 @@ export function mountTraining(
 
   let showBlockDifficulty = false
 
+  let showIpfMatch = false
+
 
   let STORAGE_KEY =
     createStorageKey(
@@ -694,6 +721,13 @@ export function mountTraining(
     saveState(
       STORAGE_KEY,
       state
+    )
+  }
+
+  function persistIpfMatch() {
+    saveIpfMatchState(
+      IPF_MATCH_STORAGE_KEY,
+      ipfMatchState
     )
   }
 
@@ -1336,6 +1370,7 @@ export function mountTraining(
         let weekFailedSets = 0
         let weekTonnageKg = 0
         let weekCompletedSessions = 0
+        const weekBodyWeightsKg = []
 
         week.days.forEach(
           (
@@ -1355,6 +1390,19 @@ export function mountTraining(
                 weekIndex,
                 dayIndex
               )
+
+            const bodyWeightKg =
+              normalizeBodyWeightKg(
+                session.bodyWeightKg
+              )
+
+            if (
+              bodyWeightKg !== null
+            ) {
+              weekBodyWeightsKg.push(
+                bodyWeightKg
+              )
+            }
 
             if (session.startedAt) {
               startedSessions += 1
@@ -1521,6 +1569,10 @@ export function mountTraining(
             weekFailedSets,
           tonnageKg:
             weekTonnageKg,
+          averageBodyWeightKg:
+            averageBodyWeightsKg(
+              weekBodyWeightsKg
+            ),
         })
       }
     )
@@ -1643,7 +1695,7 @@ export function mountTraining(
           </small>
         </div>
 
-        <div class="training-v3-detail-tabs" role="tablist" aria-label="Détails du bloc">
+        <div class="training-v3-detail-tabs" role="tablist" aria-label="Détails et outils de l’athlète">
           <button
             type="button"
             role="tab"
@@ -1663,9 +1715,31 @@ export function mountTraining(
           >
             ${showBlockDifficulty ? '← Séance' : 'Difficulté'}
           </button>
+
+          <button
+            type="button"
+            role="tab"
+            aria-selected="${showIpfMatch ? 'true' : 'false'}"
+            class="${showIpfMatch ? 'active' : ''}"
+            data-action="${showIpfMatch ? 'ipf-match-close' : 'ipf-match-open'}"
+          >
+            ${showIpfMatch ? '← Séance' : 'Match IPF'}
+          </button>
         </div>
       </section>
     `
+  }
+
+  function renderIpfMatch() {
+    return renderIpfMatchTool({
+      state:
+        ipfMatchState,
+      sbdPrs,
+      athleteName:
+        program.athlete?.name ||
+        cloudAthleteSlug,
+      canEdit,
+    })
   }
 
   function renderBlockDifficulty() {
@@ -1693,14 +1767,14 @@ export function mountTraining(
         })
 
     const factorRows = [
-      ['Intensité', analytics.factors.intensity, `${percent(analytics.averageIntensity)} % moyen`],
+      ['Intensité', analytics.factors.intensity, `${percent(analytics.averageIntensity)} % moyen sur les mouvements de compétition`],
       [
         'Volume',
         analytics.factors.volume,
         `${number(analytics.averageEffectiveReps)} reps eff. · ${number(analytics.averageSets)} séries · ${number(analytics.averageHardReps)} reps lourdes / semaine`,
       ],
       ['Fréquence', analytics.factors.frequency, `${percent(analytics.averageFrequency)} séances SBD / semaine`],
-      ['Tonnage', analytics.factors.tonnage, `${formatTonnes(analytics.averageTonnageKg)} t / semaine`],
+      ['Tonnage', analytics.factors.tonnage, `${formatTonnes(analytics.averageTonnageKg)} t / semaine · barème relatif au PDC durci`],
       ['GL points', analytics.factors.gl, `${percent(analytics.glPoints)} GL théoriques`],
     ]
 
@@ -1720,7 +1794,7 @@ export function mountTraining(
         </header>
 
         <p class="block-difficulty__method">
-          Estimation fondée sur les charges et répétitions prévues, les max théoriques SBD et le profil de l’athlète. Le volume est désormais composite : répétitions effectives pondérées par la charge, nombre de séries, répétitions lourdes au-dessus de 80 %, densité par séance et pics de volume entre les semaines. Le score final combine ensuite intensité, volume, fréquence, tonnage et coefficient GL.
+          Estimation fondée sur les charges et répétitions prévues, les max théoriques SBD et le profil de l’athlète. L’intensité utilise uniquement les mouvements de compétition : les variations comme le RDL, le pause, le tempo ou le Larsen n’entrent plus dans ce facteur. Le volume reste composite : répétitions effectives pondérées par la charge, nombre de séries, répétitions lourdes au-dessus de 80 %, densité par séance et pics de volume entre les semaines. Le tonnage suit désormais un barème relatif au poids de corps plus exigeant, qui ne plafonne que sur les volumes réellement extrêmes. Le score final combine ensuite intensité, volume, fréquence, tonnage et coefficient GL.
         </p>
 
         <div class="block-difficulty__maxes">
@@ -3547,6 +3621,26 @@ export function mountTraining(
                       </div>
 
                       ${
+                        week.averageBodyWeightKg !== null
+                          ? `
+                            <div
+                              style="
+                                margin-top:7px;
+                                color:#c5a77f;
+                                font-size:10px;
+                                font-weight:800;
+                              "
+                            >
+                              BW moyen :
+                              ${formatBodyWeightKg(
+                                week.averageBodyWeightKg
+                              )} kg
+                            </div>
+                          `
+                          : ''
+                      }
+
+                      ${
                         week.tonnageKg > 0
                           ? `
                             <div
@@ -3991,6 +4085,117 @@ export function mountTraining(
         athleteTheme?.noteTitle ||
         ''
       ).trim()
+
+    if (
+      athleteTheme?.variant ===
+      'metaknight-moonlit-constellation'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const headbandImage =
+        String(
+          athleteTheme.headbandImage ||
+          ''
+        ).trim()
+
+      const mewImage =
+        String(
+          athleteTheme.mewImage ||
+          ''
+        ).trim()
+
+      const ghostImage =
+        String(
+          athleteTheme.ghostImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Clara'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--metaknight-moonlit"
+          aria-label="Forêt lunaire de MetaKnight pour Clara"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="metaknight-moonlit-forest"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Créature rose dans une forêt enchantée éclairée par la lune"
+                  width="736"
+                  height="414"
+                >
+              `
+              : ''
+          }
+
+          <div class="metaknight-moonlit-vignette" aria-hidden="true"></div>
+
+          ${
+            headbandImage
+              ? `
+                <div class="metaknight-moonlit-portal metaknight-moonlit-portal--headband">
+                  <img
+                    src="${escapeHtml(headbandImage)}"
+                    alt="Créature rose portant un bandeau vert"
+                    width="489"
+                    height="408"
+                  >
+                </div>
+              `
+              : ''
+          }
+
+          ${
+            mewImage
+              ? `
+                <img
+                  class="metaknight-moonlit-character metaknight-moonlit-character--mew"
+                  src="${escapeHtml(mewImage)}"
+                  alt="Mew flottant dans la clairière"
+                  width="475"
+                  height="475"
+                >
+              `
+              : ''
+          }
+
+          ${
+            ghostImage
+              ? `
+                <img
+                  class="metaknight-moonlit-character metaknight-moonlit-character--ghost"
+                  src="${escapeHtml(ghostImage)}"
+                  alt="Feuforêve flottant dans la forêt"
+                  width="475"
+                  height="475"
+                >
+              `
+              : ''
+          }
+
+          <div class="metaknight-moonlit-stars" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="metaknight-moonlit-copy">
+            <span>Forêt lunaire</span>
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
 
     if (
       athleteTheme?.variant ===
@@ -4998,6 +5203,80 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'saya-sharingan-macabre'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const helloKittyImage =
+        String(
+          athleteTheme.helloKittyImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Saya'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--saya-macabre"
+          aria-label="Univers macabre du Sharingan de Saya"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="saya-macabre-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Guerriers réunis sous un Sharingan rouge dans un paysage en ruines"
+                  width="1672"
+                  height="941"
+                >
+              `
+              : ''
+          }
+
+          <div class="saya-macabre-vignette" aria-hidden="true"></div>
+          <div class="saya-macabre-sharingan" aria-hidden="true"></div>
+
+          <div class="saya-macabre-storm" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          ${
+            helloKittyImage
+              ? `
+                <img
+                  class="saya-macabre-kitty"
+                  src="${escapeHtml(helloKittyImage)}"
+                  alt="Hello Kitty sombre aux yeux rouges devant un orage"
+                  width="640"
+                  height="640"
+                >
+              `
+              : ''
+          }
+
+          <div class="saya-macabre-crows" aria-hidden="true">
+            <span>🐦‍⬛</span><span>🐦‍⬛</span><span>🐦‍⬛</span>
+            <span>🐦‍⬛</span><span>🐦‍⬛</span><span>🐦‍⬛</span>
+          </div>
+
+          <div class="saya-macabre-copy">
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'emerald-realm'
     ) {
       const heroImage =
@@ -5696,6 +5975,7 @@ export function mountTraining(
       completedAt: null,
       durationSeconds: null,
       note: '',
+      bodyWeightKg: null,
       hydrationLiters: null,
       sleepHours: null,
       painUpper: null,
@@ -5952,6 +6232,7 @@ export function mountTraining(
                 local.startedAt ||
                 local.completedAt ||
                 local.note ||
+                local.bodyWeightKg !== null ||
                 local.hydrationLiters !== null ||
                 local.sleepHours !== null ||
                 local.painUpper !== null ||
@@ -6406,6 +6687,30 @@ export function mountTraining(
         </p>
 
         <div class="training-session-v11__metrics">
+          <label class="training-session-v11__metric-wide training-session-v11__metric-bodyweight">
+            <span>Bodyweight</span>
+            <div>
+              <input
+                type="number"
+                min="20"
+                max="400"
+                step="0.1"
+                inputmode="decimal"
+                data-action="session-metric"
+                data-field="bodyWeightKg"
+                data-week-index="${weekIndex}"
+                data-day-index="${dayIndex}"
+                value="${escapeHtml(
+                  session.bodyWeightKg ?? ''
+                )}"
+                placeholder="Ex. 72,5"
+                aria-label="Bodyweight en kilogrammes"
+                ${canEdit ? '' : 'disabled'}
+              >
+              <small>kg</small>
+            </div>
+          </label>
+
           <label>
             <span>Hydratation</span>
             <div>
@@ -6576,6 +6881,8 @@ export function mountTraining(
               duration,
               note:
                 session.note,
+              bodyWeightKg:
+                session.bodyWeightKg,
               hydrationLiters:
                 session.hydrationLiters,
               sleepHours:
@@ -7483,7 +7790,7 @@ export function mountTraining(
         style="--tab-count:${Math.max(block.weeks.length, 1)}"
       >
         ${block.weeks.map(
-          (week) => {
+          (week, weekIndex) => {
             const progress =
               countWeekProgress(
                 state,
@@ -7497,6 +7804,17 @@ export function mountTraining(
             const weekTonnage =
               analytics.weeks.find(
                 item => item.id === week.id
+              )
+
+            const averageBodyWeightKg =
+              averageBodyWeightsKg(
+                week.days.map(
+                  (day, dayIndex) =>
+                    getSessionState(
+                      weekIndex,
+                      dayIndex
+                    ).bodyWeightKg
+                )
               )
 
             return `
@@ -7527,6 +7845,18 @@ export function mountTraining(
                     weekTonnage?.plannedTonnageKg
                   )} t
                 </small>
+
+                ${
+                  averageBodyWeightKg !== null
+                    ? `
+                      <small class="week-tab__bodyweight">
+                        BW moy. ${formatBodyWeightKg(
+                          averageBodyWeightKg
+                        )} kg
+                      </small>
+                    `
+                    : ''
+                }
               </button>
             `
           }
@@ -7565,13 +7895,21 @@ export function mountTraining(
                 item => item.id === currentWeek.id
               )
 
+            const session =
+              getSessionState(
+                weekIndex,
+                dayIndex
+              )
+
             const hasNote =
               String(
-                getSessionState(
-                  weekIndex,
-                  dayIndex
-                )?.note || ''
+                session.note || ''
               ).trim().length > 0
+
+            const bodyWeightKg =
+              normalizeBodyWeightKg(
+                session.bodyWeightKg
+              )
 
             return `
               <button
@@ -7601,6 +7939,18 @@ export function mountTraining(
                 <span>
                   ${progress.completed}/${progress.total}
                 </span>
+
+                ${
+                  bodyWeightKg !== null
+                    ? `
+                      <small class="day-tab-v2__bodyweight">
+                        BW ${formatBodyWeightKg(
+                          bodyWeightKg
+                        )} kg
+                      </small>
+                    `
+                    : ''
+                }
               </button>
             `
           }
@@ -7892,16 +8242,34 @@ export function mountTraining(
         <header
           class="exercise-header"
         >
-          <div>
+          <div
+            class="exercise-heading"
+          >
             <span
               class="exercise-type"
             >
               ${escapeHtml(exercise.type)}
             </span>
 
-            <h2>
-              ${escapeHtml(displayName)}
-            </h2>
+            <div
+              class="exercise-heading__copy"
+            >
+              <h2>
+                ${escapeHtml(displayName)}
+              </h2>
+
+              ${exercise.description
+                ? `
+                  <p
+                    class="exercise-description"
+                  >
+                    ${escapeHtml(
+                      exercise.description
+                    )}
+                  </p>
+                `
+                : ''}
+            </div>
           </div>
 
           <span
@@ -7959,7 +8327,9 @@ export function mountTraining(
       )
 
     const trainingBody =
-      showBlockDifficulty
+      showIpfMatch
+        ? renderIpfMatch()
+        : showBlockDifficulty
         ? renderBlockDifficulty()
         : showV3Overview
         ? renderV3Overview()
@@ -8355,6 +8725,7 @@ export function mountTraining(
     ) {
       showV3Overview = true
       showBlockDifficulty = false
+      showIpfMatch = false
       render()
 
       void loadV3OverviewPayload({
@@ -8380,6 +8751,7 @@ export function mountTraining(
     ) {
       showBlockDifficulty = true
       showV3Overview = false
+      showIpfMatch = false
       render()
       return
     }
@@ -8390,6 +8762,95 @@ export function mountTraining(
     ) {
       showBlockDifficulty = false
       render()
+      return
+    }
+
+    if (
+      actionName ===
+        'ipf-match-open'
+    ) {
+      if (
+        !hasIpfMatchData(
+          ipfMatchState
+        )
+      ) {
+        ipfMatchState =
+          seedIpfMatchFromPrs(
+            ipfMatchState,
+            sbdPrs
+          )
+        persistIpfMatch()
+      }
+
+      showIpfMatch = true
+      showV3Overview = false
+      showBlockDifficulty = false
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'ipf-match-close'
+    ) {
+      showIpfMatch = false
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'ipf-match-seed'
+    ) {
+      if (!canEdit) return
+
+      ipfMatchState =
+        seedIpfMatchFromPrs(
+          ipfMatchState,
+          sbdPrs
+        )
+      persistIpfMatch()
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'ipf-match-apply'
+    ) {
+      if (!canEdit) return
+
+      ipfMatchState =
+        applyIpfRecommendation(
+          ipfMatchState,
+          action.dataset.ipfLift,
+          Number(
+            action.dataset.ipfAttempt
+          )
+        )
+      persistIpfMatch()
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'ipf-match-reset'
+    ) {
+      if (!canEdit) return
+
+      const confirmed =
+        window.confirm(
+          'Effacer toutes les barres et tous les résultats de ce match IPF ?'
+        )
+
+      if (confirmed) {
+        ipfMatchState =
+          createIpfMatchState()
+        persistIpfMatch()
+        render()
+      }
+
       return
     }
 
@@ -8784,6 +9245,37 @@ if (
 
     if (
       actionName ===
+        'ipf-match-field'
+    ) {
+      const field =
+        input.dataset.ipfField
+
+      ipfMatchState =
+        updateIpfMatchField(
+          ipfMatchState,
+          {
+            field,
+            lift:
+              input.dataset.ipfLift,
+            attemptIndex:
+              Number(
+                input.dataset.ipfAttempt
+              ),
+            value:
+              field ===
+                'targetEnabled'
+                ? input.checked
+                : input.value,
+          }
+        )
+
+      persistIpfMatch()
+      render()
+      return
+    }
+
+    if (
+      actionName ===
         'session-note' ||
       actionName ===
         'session-metric'
@@ -8808,10 +9300,46 @@ if (
           dayIndex
         )
       ) {
+        if (
+          actionName ===
+            'session-metric' &&
+          input.dataset.field ===
+            'bodyWeightKg'
+        ) {
+          const current =
+            getSessionState(
+              weekIndex,
+              dayIndex
+            )
+
+          setSessionState(
+            weekIndex,
+            dayIndex,
+            {
+              ...current,
+              bodyWeightKg:
+                normalizeBodyWeightKg(
+                  current.bodyWeightKg
+                ),
+            }
+          )
+
+          persist()
+        }
+
         queueSessionState(
           weekIndex,
           dayIndex
         )
+
+        if (
+          actionName ===
+            'session-metric' &&
+          input.dataset.field ===
+            'bodyWeightKg'
+        ) {
+          render()
+        }
       }
 
       return

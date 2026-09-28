@@ -125,6 +125,21 @@ function safeDuration(value) {
   )
 }
 
+function safeBodyWeightKg(value) {
+  const number =
+    safeNumber(value)
+
+  if (
+    number === null ||
+    number < 20 ||
+    number > 400
+  ) {
+    return null
+  }
+
+  return number
+}
+
 export function trainingSessionIdentity({
   athleteSlug,
   programKey,
@@ -222,6 +237,11 @@ export function buildTrainingSessionPayload({
     session_note:
       String(
         session?.note ?? ''
+      ),
+
+    bodyweight_kg:
+      safeBodyWeightKg(
+        session?.bodyWeightKg
       ),
 
     hydration_liters:
@@ -554,6 +574,7 @@ export async function loadRemoteTrainingSessions({
         'completed_at',
         'duration_seconds',
         'session_note',
+        'bodyweight_kg',
         'hydration_liters',
         'sleep_hours',
         'pain_upper',
@@ -594,6 +615,11 @@ export function remoteTrainingSessionToLocalState(
       String(
         row?.session_note ??
         ''
+      ),
+
+    bodyWeightKg:
+      safeBodyWeightKg(
+        row?.bodyweight_kg
       ),
 
     hydrationLiters:

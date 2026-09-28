@@ -10,6 +10,89 @@ const LIFT_LABELS = {
   deadlift: 'Deadlift',
 }
 
+const COMPETITION_VARIATION_PATTERN = new RegExp(
+  [
+    'rdl',
+    'pause',
+    'tempo',
+    'temo',
+    'larsen',
+    'glass',
+    'halt',
+    'close grip',
+    '(^|\\s)cg($|\\s)',
+    '2ct',
+    '2 count',
+    '3s',
+    'cale',
+    'belt squat',
+    'high bar',
+    '(^|\\s)hb($|\\s)',
+    'talonette',
+    'deep squat',
+    'focus depth',
+    'over head',
+    'overhead',
+    'zercher',
+    'anzercher',
+    'sissy',
+    'stance',
+    'pieds parallele',
+    'mid ouvert',
+    'mid stance',
+    'squat parallele',
+    'squat vitesse',
+    'sangle',
+  ].join('|'),
+  'i'
+)
+
+function normalizedExerciseText(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9@%]+/gi, ' ')
+    .trim()
+    .toLowerCase()
+}
+
+function isCompetitionLift(exercise) {
+  const lift =
+    SBD_TYPES[
+      String(
+        exercise?.type || ''
+      ).toUpperCase()
+    ]
+
+  if (!lift) return false
+
+  const name =
+    normalizedExerciseText(
+      exercise?.name
+    )
+
+  const variant =
+    normalizedExerciseText(
+      exercise?.variant
+    )
+
+  if (
+    COMPETITION_VARIATION_PATTERN.test(
+      `${name} ${variant}`
+    )
+  ) {
+    return false
+  }
+
+  if (/\bcomp(?:etition)?\b/.test(name)) {
+    return true
+  }
+
+  return /^(?:squat|bench|deadlift|sumo)(?:\s+(?:primaire|secondaire|tertiaire|single|volume|fatigue single))?$/.test(
+    name
+  )
+}
+
 function numberList(value) {
   return (String(value ?? '')
     .replaceAll(',', '.')
@@ -164,6 +247,53 @@ function relativeVolumeWeight(
   )
 }
 
+function tonnageDifficultyScore({
+  averageTonnageKg,
+  bodyWeight,
+}) {
+  const relativeTonnage =
+    Math.max(
+      0,
+      Number(
+        averageTonnageKg
+      ) || 0
+    ) /
+    Math.max(
+      40,
+      Number(
+        bodyWeight
+      ) || 80
+    )
+
+  /*
+   * Le tonnage est rapporté au poids de corps afin de comparer les
+   * athlètes sans avantager mécaniquement les catégories lourdes.
+   *
+   * L'ancien barème atteignait 100 dès 75 x PDC par semaine : presque
+   * tous les blocs plafonnaient et devenaient impossibles à départager.
+   * Cette courbe volontairement plus exigeante conserve de l'écart
+   * jusqu'aux très gros tonnages (600 x PDC / semaine).
+   */
+  return clamp(
+    piecewiseScore(
+      relativeTonnage,
+      [
+        [0, 0],
+        [40, 10],
+        [80, 20],
+        [120, 30],
+        [160, 42],
+        [200, 55],
+        [250, 68],
+        [300, 78],
+        [375, 88],
+        [475, 96],
+        [600, 100],
+      ]
+    )
+  )
+}
+
 function difficultyTier(score) {
   if (score < 25) return { key: 'easy', label: 'FACILE', detail: 'Débutant' }
   if (score < 40) return { key: 'moderate', label: 'MODÉRÉ', detail: 'Accessible' }
@@ -283,6 +413,10 @@ export function analyzeTrainingBlock({
         const lift = SBD_TYPES[String(exercise?.type || '').toUpperCase()]
         if (!lift) return
         dayHasSbd = true
+        const competitionLift =
+          isCompetitionLift(
+            exercise
+          )
 
         ;(exercise.sets || []).forEach(set => {
           const reps = averageReps(set?.reps)
@@ -361,7 +495,16 @@ export function analyzeTrainingBlock({
           ].sets +=
             1
 
-          if (percent > 0) {
+          /*
+           * Le facteur Intensité représente uniquement l'exposition
+           * aux mouvements de compétition. Les variantes (RDL, pause,
+           * tempo, Larsen, etc.) continuent de compter dans le volume,
+           * le tonnage et la fréquence, mais pas dans cette moyenne.
+           */
+          if (
+            competitionLift &&
+            percent > 0
+          ) {
             intensityWeighted += percent * reps
             intensityReps += reps
           }
@@ -618,14 +761,11 @@ export function analyzeTrainingBlock({
       ),
 
     tonnage:
-      clamp(
-        averageTonnageKg /
-          (
-            safeBodyWeight *
-            75
-          ) *
-          100
-      ),
+      tonnageDifficultyScore({
+        averageTonnageKg,
+        bodyWeight:
+          safeBodyWeight,
+      }),
 
     gl:
       clamp(

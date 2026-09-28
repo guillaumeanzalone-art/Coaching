@@ -220,6 +220,10 @@ export function exportBlockReportPdf({
       )
 
       text(
+        `Bodyweight : ${metricLabel(session.bodyWeightKg, ' kg')}`
+      )
+
+      text(
         `Hydratation : ${metricLabel(session.hydrationLiters, ' L')} · Sommeil : ${metricLabel(session.sleepHours, ' h')}`
       )
 
