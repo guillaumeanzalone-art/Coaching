@@ -61,34 +61,66 @@ function formatStoryDate(value) {
   ).format(date)
 }
 
-function topSetLabel(rows) {
-  const candidates = rows
+function groupCompletedSets(rows) {
+  const groups = []
+
+  rows
     .filter(({ setState }) =>
-      setState.status === 'done'
+      setState.status === 'done' ||
+      setState.status === 'failed'
     )
-    .map(({ sourceSet, setState }) => ({
-      load: numberFromInput(setState.load),
-      reps: repsFromPrescription(sourceSet.reps),
-      rpe: String(setState.rpe ?? '').trim(),
-    }))
-    .filter(item => item.load !== null)
-    .sort((a, b) => b.load - a.load)
+    .forEach(({ sourceSet, setState }) => {
+      const load = numberFromInput(setState.load)
+      const reps = repsFromPrescription(sourceSet.reps)
+      const rpe = String(setState.rpe ?? '').trim()
+      const failed = setState.status === 'failed'
+      const key = [
+        failed ? 'failed' : 'done',
+        load ?? '',
+        reps ?? String(sourceSet.reps ?? '').trim(),
+        rpe,
+      ].join('|')
 
-  const top = candidates[0]
+      const existing = groups.find(group => group.key === key)
 
-  if (!top) {
-    return ''
-  }
+      if (existing) {
+        existing.count += 1
+        return
+      }
 
-  const reps = top.reps !== null
-    ? ` × ${formatFrenchNumber(top.reps, 0)}`
-    : ''
+      groups.push({
+        key,
+        count: 1,
+        load,
+        reps,
+        rawReps: String(sourceSet.reps ?? '').trim(),
+        rpe,
+        failed,
+      })
+    })
 
-  const rpe = top.rpe
-    ? ` · RPE ${top.rpe}`
-    : ''
+  return groups.map((group) => {
+    const reps = group.reps !== null
+      ? formatFrenchNumber(group.reps, 0)
+      : group.rawReps || '—'
 
-  return `${formatFrenchNumber(top.load)} kg${reps}${rpe}`
+    const load = group.load !== null
+      ? ` @ ${formatFrenchNumber(group.load)} kg`
+      : ''
+
+    const rpe = group.rpe
+      ? ` · RPE ${group.rpe}`
+      : ''
+
+    const status = group.failed
+      ? 'ÉCHEC · '
+      : ''
+
+    return {
+      ...group,
+      label: `${status}${group.count}×${reps}${load}${rpe}`,
+    }
+  })
 }
 
 export function buildSessionStorySummary({
@@ -119,6 +151,9 @@ export function buildSessionStorySummary({
       setState.status === 'failed'
     )
 
+    const groups =
+      groupCompletedSets(rows)
+
     return {
       name: exercise?.variant
         ? `${exercise.name} · ${exercise.variant}`
@@ -126,7 +161,7 @@ export function buildSessionStorySummary({
       rows,
       completed: completedRows.length,
       total: rows.length,
-      topSet: topSetLabel(rows),
+      groups,
     }
   })
 
@@ -185,14 +220,18 @@ export function buildSessionStorySummary({
       item => item.completed > 0
     ).length,
     tonnageKg,
-    highlights: exerciseRows
+    exercises: exerciseRows
       .filter(item => item.completed > 0)
-      .slice(0, 4)
       .map(item => ({
         name: item.name,
-        detail: item.topSet ||
-          `${item.completed}/${item.total} séries`,
+        completed: item.completed,
+        total: item.total,
+        groups: item.groups,
       })),
+    seriesGroupCount: exerciseRows.reduce(
+      (sum, item) => sum + item.groups.length,
+      0
+    ),
   }
 }
 
@@ -203,4 +242,3 @@ export function isSessionStoryReady(summary) {
     summary.completedSets === summary.totalSets
   )
 }
-

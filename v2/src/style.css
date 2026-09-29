@@ -1901,13 +1901,13 @@ body .training-page[data-athlete-theme="metaknight"] .day-tab-v2--active {
   font-variant-numeric: tabular-nums;
 }
 
-.session-story-card__highlights {
+.session-story-card__series {
   display: grid;
-  gap: 5px;
+  gap: 6px;
   margin-top: clamp(18px, 5vw, 25px);
 }
 
-.session-story-card__highlights > span {
+.session-story-card__series > span {
   margin-bottom: 3px;
   color: #b91f35;
   font-size: 8px;
@@ -1915,22 +1915,26 @@ body .training-page[data-athlete-theme="metaknight"] .day-tab-v2--active {
   letter-spacing: .16em;
 }
 
-.session-story-card__highlights > div {
+.session-story-card__exercise {
+  display: grid;
+  gap: 5px;
+  padding: 5px 0 7px;
+  border-bottom: 1px solid rgba(255,255,255,.055);
+}
+
+.session-story-card__exercise-head {
   display: grid;
   grid-template-columns: 25px minmax(0,1fr) auto;
   align-items: center;
   gap: 7px;
-  min-height: 29px;
-  padding: 4px 0;
-  border-bottom: 1px solid rgba(255,255,255,.055);
 }
 
-.session-story-card__highlights b {
+.session-story-card__exercise-head b {
   color: #b91f35;
   font-size: 9px;
 }
 
-.session-story-card__highlights p {
+.session-story-card__exercise-head p {
   min-width: 0;
   margin: 0;
   overflow: hidden;
@@ -1941,10 +1945,34 @@ body .training-page[data-athlete-theme="metaknight"] .day-tab-v2--active {
   white-space: nowrap;
 }
 
-.session-story-card__highlights strong {
+.session-story-card__exercise-head small {
+  color: #687488;
+  font-size: 8px;
+  font-weight: 850;
+}
+
+.session-story-card__set-stacks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding-left: 32px;
+}
+
+.session-story-card__set-stacks strong {
+  padding: 4px 7px;
+  border: 1px solid rgba(240,196,77,.16);
+  border-radius: 999px;
   color: #aab3c3;
-  font-size: 9px;
+  background: rgba(240,196,77,.045);
+  font-size: 7px;
+  line-height: 1.15;
   white-space: nowrap;
+}
+
+.session-story-card__set-stacks strong.is-failed {
+  border-color: rgba(239,82,97,.24);
+  color: #ff8d98;
+  background: rgba(239,82,97,.07);
 }
 
 .session-story-card blockquote {
@@ -1964,21 +1992,81 @@ body .training-page[data-athlete-theme="metaknight"] .day-tab-v2--active {
   border-top: 1px solid rgba(240,196,77,.18);
 }
 
-.session-story-card footer span,
-.session-story-card footer strong {
-  display: block;
-}
-
 .session-story-card footer span {
+  display: block;
   color: #7f899b;
   font-size: 8px;
 }
 
-.session-story-card footer strong {
-  margin-top: 6px;
-  color: #f0c44d;
-  font-size: 10px;
-  letter-spacing: .13em;
+.session-story-card--dense {
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+
+.session-story-card--dense .session-story-card__identity {
+  margin-top: 19px;
+}
+
+.session-story-card--dense .session-story-card__stats,
+.session-story-card--dense .session-story-card__series {
+  margin-top: 14px;
+}
+
+.session-story-card--dense .session-story-card__series {
+  gap: 3px;
+}
+
+.session-story-card--dense .session-story-card__exercise {
+  gap: 3px;
+  padding: 3px 0 4px;
+}
+
+.session-story-card--ultra-dense {
+  padding: 18px 22px;
+}
+
+.session-story-card--ultra-dense .session-story-card__header {
+  padding-bottom: 10px;
+}
+
+.session-story-card--ultra-dense .session-story-card__identity {
+  margin-top: 12px;
+}
+
+.session-story-card--ultra-dense .session-story-card__identity h2 {
+  margin: 4px 0;
+  font-size: 28px;
+}
+
+.session-story-card--ultra-dense .session-story-card__stats,
+.session-story-card--ultra-dense .session-story-card__series {
+  margin-top: 10px;
+}
+
+.session-story-card--ultra-dense .session-story-card__stats > div {
+  padding: 7px 9px;
+}
+
+.session-story-card--ultra-dense .session-story-card__stats strong {
+  font-size: 12px;
+}
+
+.session-story-card--ultra-dense .session-story-card__series {
+  gap: 2px;
+}
+
+.session-story-card--ultra-dense .session-story-card__exercise {
+  gap: 2px;
+  padding: 2px 0 3px;
+}
+
+.session-story-card--ultra-dense .session-story-card__set-stacks strong {
+  padding: 3px 5px;
+  font-size: 6px;
+}
+
+.session-story-card--ultra-dense blockquote {
+  display: none;
 }
 
 @media (max-height: 760px) {

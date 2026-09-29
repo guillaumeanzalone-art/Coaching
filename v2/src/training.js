@@ -7149,7 +7149,13 @@ export function mountTraining(
           </p>
         </div>
 
-        <article class="session-story-card">
+        <article class="session-story-card ${
+          summary.seriesGroupCount > 14
+            ? 'session-story-card--ultra-dense'
+            : summary.seriesGroupCount > 8
+              ? 'session-story-card--dense'
+              : ''
+        }">
           <div class="session-story-card__web session-story-card__web--left" aria-hidden="true"></div>
           <div class="session-story-card__web session-story-card__web--right" aria-hidden="true"></div>
           <div class="session-story-card__glow" aria-hidden="true"></div>
@@ -7205,15 +7211,25 @@ export function mountTraining(
             </div>
           </div>
 
-          <div class="session-story-card__highlights">
-            <span>RÉCAP DE LA MISSION</span>
+          <div class="session-story-card__series">
+            <span>TOUTES LES SÉRIES RÉALISÉES</span>
 
-            ${summary.highlights.map(
+            ${summary.exercises.map(
               (item, index) => `
-                <div>
-                  <b>${String(index + 1).padStart(2, '0')}</b>
-                  <p>${escapeHtml(item.name)}</p>
-                  <strong>${escapeHtml(item.detail)}</strong>
+                <div class="session-story-card__exercise">
+                  <div class="session-story-card__exercise-head">
+                    <b>${String(index + 1).padStart(2, '0')}</b>
+                    <p>${escapeHtml(item.name)}</p>
+                    <small>${item.completed}/${item.total}</small>
+                  </div>
+
+                  <div class="session-story-card__set-stacks">
+                    ${item.groups.map(group => `
+                      <strong class="${group.failed ? 'is-failed' : ''}">
+                        ${escapeHtml(group.label)}
+                      </strong>
+                    `).join('')}
+                  </div>
                 </div>
               `
             ).join('')}
@@ -7235,7 +7251,6 @@ export function mountTraining(
                 ? ` · ${summary.failedSets} échec${summary.failedSets > 1 ? 's' : ''}`
                 : ''}
             </span>
-            <strong>WE ARE THE SPIDER.</strong>
           </footer>
         </article>
       </div>

@@ -48,8 +48,49 @@ test('builds a completed story recap from the current session', () => {
   assert.equal(summary.totalSets, 3)
   assert.equal(summary.tonnageKg, 1340)
   assert.equal(summary.bodyWeightKg, 67.4)
-  assert.equal(summary.highlights[0].detail, '180 kg × 3 · RPE 8')
+  assert.deepEqual(
+    summary.exercises[0].groups.map(group => group.label),
+    [
+      '1×3 @ 180 kg · RPE 8',
+      '1×5 @ 160 kg · RPE 7',
+    ]
+  )
   assert.equal(isSessionStoryReady(summary), true)
+})
+
+test('stacks identical completed sets without hiding any series', () => {
+  const repeatedStates = {
+    a: { status: 'done', load: '100', rpe: '8' },
+    b: { status: 'done', load: '100', rpe: '8' },
+    c: { status: 'done', load: '100', rpe: '8' },
+    d: { status: 'failed', load: '105', rpe: '' },
+  }
+
+  const summary = buildSessionStorySummary({
+    exercises: [
+      {
+        name: 'Bench',
+        sets: [
+          { id: 'a', reps: '5' },
+          { id: 'b', reps: '5' },
+          { id: 'c', reps: '5' },
+          { id: 'd', reps: '5' },
+        ],
+      },
+    ],
+    session: {},
+    getSetState: sourceSet => repeatedStates[sourceSet.id],
+  })
+
+  assert.equal(summary.completedSets, 4)
+  assert.equal(summary.seriesGroupCount, 2)
+  assert.deepEqual(
+    summary.exercises[0].groups.map(group => group.label),
+    [
+      '3×5 @ 100 kg · RPE 8',
+      'ÉCHEC · 1×5 @ 105 kg',
+    ]
+  )
 })
 
 test('does not unlock the story while sets remain pending', () => {
@@ -76,4 +117,3 @@ test('does not unlock the story while sets remain pending', () => {
   assert.equal(summary.totalSets, 2)
   assert.equal(isSessionStoryReady(summary), false)
 })
-
