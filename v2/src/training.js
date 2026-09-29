@@ -7009,8 +7009,8 @@ export function mountTraining(
             ${storyReady ? '' : 'disabled'}
           >
             ${storyReady
-              ? 'Créer ma Story séance'
-              : 'Termine la séance pour créer ta Story'}
+              ? 'Débrief de séance'
+              : 'Termine la séance pour ouvrir le débrief'}
           </button>
         </div>
 
