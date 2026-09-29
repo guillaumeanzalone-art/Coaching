@@ -78,6 +78,11 @@ import {
   updateIpfMatchField,
 } from './ipf-match.js'
 
+import {
+  buildSessionStorySummary,
+  isSessionStoryReady,
+} from './session-story.js'
+
 /* GA V1.2 HOME PR THEMES SKIP V7 */
 
 /* GA V1.1 SESSION CLOUD + PDF V3 */
@@ -669,6 +674,8 @@ export function mountTraining(
   let showBlockDifficulty = false
 
   let showIpfMatch = false
+
+  let showSessionStory = false
 
 
   let STORAGE_KEY =
@@ -6914,6 +6921,40 @@ export function mountTraining(
     const report =
       buildBlockReport()
 
+    const context =
+      currentSessionContext()
+
+    const storySummary =
+      context
+        ? buildSessionStorySummary({
+            athleteName:
+              program.athlete?.name ||
+              cloudAthleteSlug ||
+              'Athlète',
+            blockLabel:
+              block.label,
+            weekLabel:
+              context.week.label,
+            dayName:
+              context.day.name,
+            session:
+              context.session,
+            exercises:
+              context.day.exercises,
+            getSetState:
+              sourceSet =>
+                getSetState(
+                  state,
+                  sourceSet
+                ),
+          })
+        : null
+
+    const storyReady =
+      isSessionStoryReady(
+        storySummary
+      )
+
     return `
       <section class="training-block-report-v11">
         <div class="training-block-report-v11__head">
@@ -6964,15 +7005,26 @@ export function mountTraining(
 
           <button
             class="training-block-report-v11__pdf"
-            data-action="block-report-pdf"
+            data-action="session-story-open"
+            ${storyReady ? '' : 'disabled'}
           >
-            Compte rendu PDF
+            ${storyReady
+              ? 'Créer ma Story séance'
+              : 'Termine la séance pour créer ta Story'}
           </button>
         </div>
 
         ${showBlockReport
           ? `
             <div class="training-block-report-v11__list">
+              <button
+                class="training-block-report-v11__download"
+                data-action="block-report-pdf"
+                type="button"
+              >
+                Télécharger le compte rendu PDF du bloc
+              </button>
+
               ${report.sessions.map(
                 (item) => `
                   <article class="training-block-report-v11__session">
@@ -7014,6 +7066,179 @@ export function mountTraining(
           `
           : ''}
       </section>
+    `
+  }
+
+  function formatStoryTonnage(
+    kilograms
+  ) {
+    const value =
+      Math.max(
+        0,
+        Number(kilograms) || 0
+      )
+
+    if (value >= 1000) {
+      return `${(value / 1000).toLocaleString('fr-FR', {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      })} t`
+    }
+
+    return `${Math.round(value).toLocaleString('fr-FR')} kg`
+  }
+
+  function renderSessionStory() {
+    const context =
+      currentSessionContext()
+
+    if (!context) {
+      return ''
+    }
+
+    const summary =
+      buildSessionStorySummary({
+        athleteName:
+          program.athlete?.name ||
+          cloudAthleteSlug ||
+          'Athlète',
+        blockLabel:
+          block.label,
+        weekLabel:
+          context.week.label,
+        dayName:
+          context.day.name,
+        session:
+          context.session,
+        exercises:
+          context.day.exercises,
+        getSetState:
+          sourceSet =>
+            getSetState(
+              state,
+              sourceSet
+            ),
+      })
+
+    if (!isSessionStoryReady(summary)) {
+      return ''
+    }
+
+    const note =
+      summary.note.length > 105
+        ? `${summary.note.slice(0, 102)}…`
+        : summary.note
+
+    return `
+      <div
+        class="session-story-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Récapitulatif Story de la séance"
+      >
+        <div class="session-story-modal__toolbar">
+          <button
+            type="button"
+            data-action="session-story-close"
+          >
+            ← Retour
+          </button>
+
+          <p>
+            Fais une capture d’écran puis recadre au bord de la carte.
+          </p>
+        </div>
+
+        <article class="session-story-card">
+          <div class="session-story-card__web session-story-card__web--left" aria-hidden="true"></div>
+          <div class="session-story-card__web session-story-card__web--right" aria-hidden="true"></div>
+          <div class="session-story-card__glow" aria-hidden="true"></div>
+
+          <header class="session-story-card__header">
+            <img
+              src="/spider.png"
+              alt=""
+              aria-hidden="true"
+            >
+
+            <div>
+              <span>LA BRIGADE FANTÔME</span>
+              <strong>L’ARAIGNÉE COACHING</strong>
+            </div>
+
+            <b>MISSION ACCOMPLIE</b>
+          </header>
+
+          <div class="session-story-card__identity">
+            <span>${escapeHtml(summary.dateLabel)}</span>
+            <h2>${escapeHtml(summary.athleteName)}</h2>
+            <p>
+              ${escapeHtml(summary.blockLabel)} ·
+              ${escapeHtml(summary.weekLabel)} ·
+              ${escapeHtml(summary.dayName)}
+            </p>
+          </div>
+
+          <div class="session-story-card__stats">
+            <div>
+              <small>DURÉE</small>
+              <strong>${formatDuration(summary.durationSeconds)}</strong>
+            </div>
+
+            <div>
+              <small>TONNAGE</small>
+              <strong>${formatStoryTonnage(summary.tonnageKg)}</strong>
+            </div>
+
+            <div>
+              <small>SÉRIES</small>
+              <strong>${summary.completedSets}/${summary.totalSets}</strong>
+            </div>
+
+            <div>
+              <small>BODYWEIGHT</small>
+              <strong>
+                ${summary.bodyWeightKg === null
+                  ? '—'
+                  : `${formatBodyWeightKg(summary.bodyWeightKg)} kg`}
+              </strong>
+            </div>
+          </div>
+
+          <div class="session-story-card__highlights">
+            <span>RÉCAP DE LA MISSION</span>
+
+            ${summary.highlights.map(
+              (item, index) => `
+                <div>
+                  <b>${String(index + 1).padStart(2, '0')}</b>
+                  <p>${escapeHtml(item.name)}</p>
+                  <strong>${escapeHtml(item.detail)}</strong>
+                </div>
+              `
+            ).join('')}
+          </div>
+
+          ${note
+            ? `
+              <blockquote>
+                “${escapeHtml(note)}”
+              </blockquote>
+            `
+            : ''}
+
+          <footer>
+            <span>
+              ${summary.exerciseCount} exercices ·
+              ${summary.successfulSets} séries validées
+              ${summary.failedSets
+                ? ` · ${summary.failedSets} échec${summary.failedSets > 1 ? 's' : ''}`
+                : ''}
+            </span>
+            <strong>WE ARE THE SPIDER.</strong>
+          </footer>
+        </article>
+      </div>
     `
   }
 
@@ -8447,6 +8672,10 @@ export function mountTraining(
 
         ${trainingBody}
 
+        ${showSessionStory
+          ? renderSessionStory()
+          : ''}
+
       </main>
     `
 
@@ -8700,6 +8929,44 @@ export function mountTraining(
         resetCurrentSessionTimer()
       }
 
+      return
+    }
+
+    if (
+      actionName ===
+        'session-story-open'
+    ) {
+      const context =
+        currentSessionContext()
+
+      if (!context) {
+        return
+      }
+
+      const progress =
+        countDayProgress(
+          state,
+          context.day
+        )
+
+      if (
+        progress.total > 0 &&
+        progress.completed ===
+          progress.total
+      ) {
+        showSessionStory = true
+        render()
+      }
+
+      return
+    }
+
+    if (
+      actionName ===
+        'session-story-close'
+    ) {
+      showSessionStory = false
+      render()
       return
     }
 
