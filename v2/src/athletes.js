@@ -114,7 +114,7 @@ export const athletes = [
     "name": "Dorian",
     "emoji": "🛹",
     "bodyWeight": 97.0,
-    "profileImage": "avatar-dorian-gamer.webp?v=20260930",
+    "profileImage": "avatar-dorian.png",
     "programKey": "dorian",
     "blockCount": 1,
     "cloudSlug": "dorian"
