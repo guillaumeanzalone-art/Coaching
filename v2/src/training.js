@@ -5284,6 +5284,73 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'nexus-arena'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const profileImage =
+        String(
+          athleteTheme.profileImage ||
+          ''
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--dorian-nexus"
+          aria-label="Arène multijeux néon de Dorian"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="dorian-nexus-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Chat champion dans une arène fusionnant Brawlhalla, Cyberpunk et Rocket League"
+                  width="1536"
+                  height="1024"
+                >
+              `
+              : ''
+          }
+
+          <div class="dorian-nexus-shade" aria-hidden="true"></div>
+          <div class="dorian-nexus-portal" aria-hidden="true"></div>
+          <div class="dorian-nexus-energy" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="dorian-nexus-pixels" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+
+          ${
+            profileImage
+              ? `
+                <div class="dorian-nexus-player-card">
+                  <img
+                    src="${escapeHtml(profileImage)}"
+                    alt="Photo de profil de Dorian avec son chat et ses compagnons"
+                    width="900"
+                    height="900"
+                  >
+                  <span>PLAYER ONE</span>
+                </div>
+              `
+              : ''
+          }
+
+          <div class="dorian-nexus-nasdas" aria-label="Clin d’œil à Nasdas">
+            <span>NASDAS</span>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'lunar-rider'
     ) {
       const heroImage =

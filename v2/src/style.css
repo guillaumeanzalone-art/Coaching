@@ -6140,6 +6140,483 @@ body .training-page[data-athlete-theme="metaknight"] .day-tab-v2--active {
   }
 }
 
+/* DORIAN NEXUS ARENA — animated multigame theme */
+body .training-page[data-athlete-theme="dorian"] {
+  --dorian-cyan: #2bdcff;
+  --dorian-yellow: #ffe253;
+  --dorian-pink: #ff4f91;
+  --dorian-orange: #ff982f;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #f8fbff;
+  background:
+    radial-gradient(circle at 13% 4%, rgba(48, 216, 255, .23), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(255, 102, 46, .23), transparent 29%),
+    radial-gradient(circle at 54% 41%, rgba(144, 76, 255, .14), transparent 37%),
+    linear-gradient(180deg, rgba(3, 9, 29, .93), rgba(4, 8, 23, .98)),
+    var(--athlete-theme-background-image) center top / cover no-repeat fixed,
+    #050a1a;
+}
+
+body .training-page[data-athlete-theme="dorian"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -7%;
+  pointer-events: none;
+  opacity: .20;
+  background:
+    linear-gradient(180deg, rgba(3, 10, 30, .12), rgba(2, 6, 20, .90)),
+    var(--athlete-theme-background-image) center top / cover no-repeat;
+  filter: saturate(1.12) contrast(1.07) blur(1px);
+  transform: scale(1.07);
+  animation: dorian-nexus-backdrop 16s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="dorian"] .training-topbar {
+  position: relative;
+  z-index: 5;
+  border: 1px solid rgba(61, 218, 255, .34);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(8, 25, 63, .95), rgba(55, 15, 73, .88));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .09),
+    0 18px 48px rgba(1, 5, 22, .43),
+    0 0 34px rgba(43, 220, 255, .11);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  animation: dorian-nexus-topbar 7s ease-in-out infinite;
+}
+
+.training-page[data-athlete-theme="dorian"] .training-topbar h1 {
+  color: #fbfdff;
+  text-shadow: 0 0 24px rgba(43, 220, 255, .24);
+}
+
+.training-page[data-athlete-theme="dorian"] .training-kicker,
+.training-page[data-athlete-theme="dorian"] .set-number,
+.training-page[data-athlete-theme="dorian"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="dorian"] .training-block-report-v11__kicker {
+  color: #63e7ff;
+}
+
+.training-page[data-athlete-theme="dorian"] .back-button,
+.training-page[data-athlete-theme="dorian"] .reset-button {
+  min-height: 44px;
+  border-color: rgba(70, 219, 255, .29);
+  background: rgba(6, 21, 56, .86);
+  color: #f4fbff;
+}
+
+.training-page[data-athlete-theme="dorian"] .back-button:hover,
+.training-page[data-athlete-theme="dorian"] .reset-button:hover {
+  border-color: rgba(255, 226, 83, .68);
+  background: rgba(54, 21, 96, .94);
+  color: #fff;
+}
+
+.athlete-theme-banner--dorian-nexus {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  min-height: 0;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(70, 221, 255, .50);
+  border-radius: 30px;
+  background: #07122d;
+  box-shadow:
+    0 30px 84px rgba(1, 5, 24, .63),
+    0 0 48px rgba(43, 220, 255, .17),
+    0 0 66px rgba(255, 78, 145, .10),
+    inset 0 1px 0 rgba(255, 255, 255, .13);
+  animation: dorian-nexus-banner-float 8.5s ease-in-out infinite;
+}
+
+.athlete-theme-banner--dorian-nexus::before {
+  content: "";
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    108deg,
+    transparent 0 32%,
+    rgba(94, 232, 255, .02) 38%,
+    rgba(129, 243, 255, .28) 47%,
+    rgba(255, 225, 81, .11) 53%,
+    transparent 62% 100%
+  );
+  background-size: 240% 100%;
+  background-position: -140% 0;
+  mix-blend-mode: screen;
+  animation: dorian-nexus-sweep 6.8s ease-in-out infinite;
+}
+
+.athlete-theme-banner--dorian-nexus::after {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  inset: 9px;
+  pointer-events: none;
+  border: 1px solid rgba(176, 242, 255, .18);
+  border-radius: 22px;
+  box-shadow:
+    inset 0 0 38px rgba(44, 220, 255, .07),
+    inset 0 -42px 72px rgba(2, 6, 22, .14);
+}
+
+.dorian-nexus-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2%;
+  display: block;
+  width: 104%;
+  height: 104%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(1.06) contrast(1.035) brightness(.98);
+  transform-origin: center;
+  will-change: transform, filter;
+  animation: dorian-nexus-scene 13s ease-in-out infinite alternate;
+}
+
+.dorian-nexus-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 84% 19%, rgba(255, 153, 46, .10), transparent 25%),
+    linear-gradient(180deg, rgba(4, 13, 37, .02), transparent 54%, rgba(2, 7, 24, .34));
+}
+
+.dorian-nexus-portal {
+  position: absolute;
+  z-index: 2;
+  top: -10%;
+  right: -2%;
+  width: 39%;
+  aspect-ratio: 1;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: .42;
+  background:
+    conic-gradient(from 20deg, transparent 0 19%, rgba(255, 161, 45, .32) 27%, transparent 36% 62%, rgba(255, 78, 145, .19) 71%, transparent 80%),
+    radial-gradient(circle, transparent 42%, rgba(255, 151, 38, .22) 48%, transparent 67%);
+  mix-blend-mode: screen;
+  filter: blur(3px);
+  animation: dorian-nexus-portal-spin 14s linear infinite;
+}
+
+.dorian-nexus-energy,
+.dorian-nexus-pixels {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.dorian-nexus-energy span {
+  position: absolute;
+  width: 98px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #7df1ff, transparent);
+  box-shadow: 0 0 12px rgba(43, 220, 255, .72);
+  transform: rotate(-24deg);
+  animation: dorian-nexus-energy 4.7s ease-in-out infinite;
+}
+
+.dorian-nexus-energy span:nth-child(1) { top: 17%; left: 4%; animation-delay: 0s; }
+.dorian-nexus-energy span:nth-child(2) { top: 34%; right: 5%; width: 126px; animation-delay: 1.1s; }
+.dorian-nexus-energy span:nth-child(3) { bottom: 20%; left: 17%; width: 74px; animation-delay: 2.2s; }
+.dorian-nexus-energy span:nth-child(4) { right: 24%; bottom: 13%; animation-delay: 3.3s; }
+
+.dorian-nexus-pixels span {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: #ffe85e;
+  box-shadow: 0 0 9px #ffd83e, 0 0 18px rgba(255, 79, 145, .55);
+  transform: rotate(45deg);
+  animation: dorian-nexus-pixel 3.9s ease-in-out infinite;
+}
+
+.dorian-nexus-pixels span:nth-child(1) { top: 12%; left: 13%; animation-delay: 0s; }
+.dorian-nexus-pixels span:nth-child(2) { top: 20%; right: 17%; width: 10px; height: 10px; animation-delay: .7s; }
+.dorian-nexus-pixels span:nth-child(3) { top: 44%; left: 6%; width: 5px; height: 5px; animation-delay: 1.4s; }
+.dorian-nexus-pixels span:nth-child(4) { top: 43%; right: 7%; animation-delay: 2.1s; }
+.dorian-nexus-pixels span:nth-child(5) { bottom: 15%; left: 32%; width: 6px; height: 6px; animation-delay: 2.8s; }
+.dorian-nexus-pixels span:nth-child(6) { right: 28%; bottom: 21%; width: 9px; height: 9px; animation-delay: 3.4s; }
+
+.dorian-nexus-player-card {
+  position: absolute;
+  z-index: 8;
+  left: 24px;
+  bottom: 22px;
+  display: grid;
+  grid-template-columns: 58px auto;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 13px 7px 7px;
+  border: 1px solid rgba(102, 231, 255, .52);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(4, 17, 47, .91), rgba(66, 20, 91, .83));
+  box-shadow: 0 10px 30px rgba(0, 4, 20, .45), 0 0 24px rgba(43, 220, 255, .17);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  animation: dorian-nexus-player-pulse 5s ease-in-out infinite;
+}
+
+.dorian-nexus-player-card img {
+  display: block;
+  width: 58px;
+  height: 58px;
+  object-fit: cover;
+  border: 2px solid #65e8ff;
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(43, 220, 255, .38);
+}
+
+.dorian-nexus-player-card span {
+  color: #fff4a0;
+  font-size: 9px;
+  font-weight: 950;
+  letter-spacing: .15em;
+  text-shadow: 0 0 12px rgba(255, 226, 83, .42);
+}
+
+.dorian-nexus-nasdas {
+  position: absolute;
+  z-index: 9;
+  right: 25px;
+  bottom: 24px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 226, 83, .66);
+  border-radius: 10px 3px 10px 3px;
+  background: rgba(17, 8, 44, .80);
+  box-shadow: 0 0 20px rgba(255, 79, 145, .30), inset 0 0 14px rgba(43, 220, 255, .09);
+  transform: rotate(-4deg);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  animation: dorian-nexus-nasdas 3.6s ease-in-out infinite;
+}
+
+.dorian-nexus-nasdas span {
+  color: #ffe557;
+  font-size: 11px;
+  font-weight: 1000;
+  letter-spacing: .18em;
+  text-shadow: 2px 0 #ff4f91, -2px 0 #2bdcff, 0 0 14px rgba(255, 229, 87, .56);
+}
+
+.training-page[data-athlete-theme="dorian"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="dorian"] .training-v3-history,
+.training-page[data-athlete-theme="dorian"] .training-v3-overview,
+.training-page[data-athlete-theme="dorian"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="dorian"] .training-session-v11,
+.training-page[data-athlete-theme="dorian"] .training-block-report-v11,
+.training-page[data-athlete-theme="dorian"] .training-summary,
+.training-page[data-athlete-theme="dorian"] .athlete-pr-panel,
+.training-page[data-athlete-theme="dorian"] .athlete-steps-panel-v249 {
+  border-color: rgba(64, 218, 255, .23);
+  background: linear-gradient(145deg, rgba(7, 23, 59, .95), rgba(45, 15, 69, .89));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 18px 46px rgba(1, 5, 23, .37);
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="dorian"] .week-tab,
+.training-page[data-athlete-theme="dorian"] .day-tab-v2 {
+  border-color: rgba(68, 219, 255, .18);
+  background: rgba(7, 24, 62, .88);
+  color: #cad3ea;
+}
+
+.training-page[data-athlete-theme="dorian"] .week-tab strong,
+.training-page[data-athlete-theme="dorian"] .day-tab-v2 strong {
+  color: #f8fbff;
+}
+
+body .training-page[data-athlete-theme="dorian"] .week-tab--active,
+body .training-page[data-athlete-theme="dorian"] .day-tab-v2--active {
+  border-color: rgba(255, 228, 86, .73);
+  background: linear-gradient(135deg, rgba(20, 150, 213, .76), rgba(141, 43, 180, .68));
+  color: #fff;
+  box-shadow: 0 0 27px rgba(43, 220, 255, .18);
+}
+
+.training-page[data-athlete-theme="dorian"] .training-exercise {
+  border-color: rgba(67, 219, 255, .19);
+  background: rgba(6, 20, 52, .96);
+  box-shadow: 0 20px 50px rgba(1, 5, 22, .39);
+}
+
+.training-page[data-athlete-theme="dorian"] .exercise-header {
+  border-bottom-color: rgba(71, 221, 255, .17);
+  background: linear-gradient(110deg, rgba(19, 109, 174, .96), rgba(99, 27, 135, .96));
+}
+
+body .training-page[data-athlete-theme="dorian"] .exercise-type {
+  border-color: rgba(255, 229, 88, .65);
+  background: rgba(255, 222, 70, .11);
+  color: #fff0a0;
+}
+
+.training-page[data-athlete-theme="dorian"] .training-set {
+  border-color: rgba(64, 218, 255, .14);
+  background: rgba(8, 29, 70, .77);
+}
+
+.training-page[data-athlete-theme="dorian"] .set-load,
+.training-page[data-athlete-theme="dorian"] .set-rpe,
+.training-page[data-athlete-theme="dorian"] .training-session-v11__note,
+.training-page[data-athlete-theme="dorian"] .training-session-v11__metrics label > div {
+  border-color: rgba(70, 220, 255, .22);
+  background: rgba(5, 20, 52, .91);
+  color: #f8fbff;
+}
+
+.training-page[data-athlete-theme="dorian"] .set-load:focus,
+.training-page[data-athlete-theme="dorian"] .set-rpe:focus,
+.training-page[data-athlete-theme="dorian"] .training-session-v11__note:focus {
+  border-color: #59e5ff;
+  box-shadow: 0 0 0 3px rgba(43, 220, 255, .14);
+}
+
+.training-page[data-athlete-theme="dorian"] .training-sync {
+  border-color: rgba(68, 219, 255, .25);
+  background: rgba(5, 20, 52, .88);
+  color: #8decff;
+}
+
+.training-page[data-athlete-theme="dorian"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #2bdcff 0%, #9055ff 43%, #ff4f91 71%, #ffe153 100%);
+  box-shadow: 0 0 22px rgba(43, 220, 255, .29);
+}
+
+@keyframes dorian-nexus-scene {
+  0% { transform: scale(1.01) translate3d(-.25%, .12%, 0); filter: saturate(1.04) contrast(1.03) brightness(.97); }
+  50% { transform: scale(1.047) translate3d(.35%, -.25%, 0); filter: saturate(1.13) contrast(1.05) brightness(1.025); }
+  100% { transform: scale(1.027) translate3d(-.12%, -.08%, 0); filter: saturate(1.08) contrast(1.04) brightness(.99); }
+}
+
+@keyframes dorian-nexus-sweep {
+  0%, 17% { background-position: -140% 0; opacity: .14; }
+  52% { background-position: 18% 0; opacity: .92; }
+  87%, 100% { background-position: 140% 0; opacity: .14; }
+}
+
+@keyframes dorian-nexus-portal-spin {
+  to { transform: rotate(360deg) scale(1.05); }
+}
+
+@keyframes dorian-nexus-energy {
+  0%, 100% { opacity: .12; transform: translate3d(-14px, 9px, 0) rotate(-24deg) scaleX(.72); }
+  50% { opacity: .92; transform: translate3d(14px, -9px, 0) rotate(-24deg) scaleX(1.12); }
+}
+
+@keyframes dorian-nexus-pixel {
+  0%, 100% { opacity: .16; transform: scale(.55) rotate(45deg); }
+  50% { opacity: 1; transform: scale(1.36) rotate(135deg); }
+}
+
+@keyframes dorian-nexus-player-pulse {
+  0%, 100% { transform: translateY(0); border-color: rgba(102, 231, 255, .52); }
+  50% { transform: translateY(-4px); border-color: rgba(255, 226, 83, .68); }
+}
+
+@keyframes dorian-nexus-nasdas {
+  0%, 100% { opacity: .75; filter: brightness(.95); }
+  50% { opacity: 1; filter: brightness(1.25); }
+}
+
+@keyframes dorian-nexus-banner-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -5px, 0); }
+}
+
+@keyframes dorian-nexus-backdrop {
+  from { transform: scale(1.07) translate3d(-.4%, 0, 0); }
+  to { transform: scale(1.11) translate3d(.5%, -.4%, 0); }
+}
+
+@keyframes dorian-nexus-topbar {
+  0%, 100% { border-color: rgba(61, 218, 255, .34); }
+  50% { border-color: rgba(255, 225, 82, .48); box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 20px 52px rgba(1,5,22,.44), 0 0 30px rgba(43,220,255,.14); }
+}
+
+@media (max-width: 760px) {
+  .athlete-theme-banner--dorian-nexus { border-radius: 26px; }
+  .dorian-nexus-hero { object-position: 52% center; }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="dorian"] .training-topbar {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .athlete-theme-banner--dorian-nexus {
+    aspect-ratio: 4 / 3;
+    border-radius: 23px;
+  }
+
+  .athlete-theme-banner--dorian-nexus::after {
+    inset: 7px;
+    border-radius: 17px;
+  }
+
+  .dorian-nexus-hero { object-position: 56% center; }
+
+  .dorian-nexus-player-card {
+    left: 14px;
+    bottom: 14px;
+    grid-template-columns: 44px auto;
+    padding: 5px 9px 5px 5px;
+  }
+
+  .dorian-nexus-player-card img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .dorian-nexus-player-card span { font-size: 7px; }
+
+  .dorian-nexus-nasdas {
+    right: 14px;
+    bottom: 15px;
+    padding: 6px 8px;
+  }
+
+  .dorian-nexus-nasdas span { font-size: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .training-page[data-athlete-theme="dorian"]::before,
+  .training-page[data-athlete-theme="dorian"] .training-topbar,
+  .athlete-theme-banner--dorian-nexus,
+  .athlete-theme-banner--dorian-nexus::before,
+  .dorian-nexus-hero,
+  .dorian-nexus-portal,
+  .dorian-nexus-energy span,
+  .dorian-nexus-pixels span,
+  .dorian-nexus-player-card,
+  .dorian-nexus-nasdas {
+    animation: none;
+  }
+}
+
 /* LOU LUNAR RIDER — Chinese New Year animated theme */
 body .training-page[data-athlete-theme="lou"] {
   --lou-red: #e54334;

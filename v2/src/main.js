@@ -1769,7 +1769,7 @@ const ATHLETE_CHOICE_AVATARS = {
   charles: '/avatar-charles.png',
   clemence: '/avatar-clemence.png?v=20260916-v251',
   clemosaurus: '/avatar-clemosaurus.png',
-  dorian: '/avatar-dorian.png',
+  dorian: '/avatar-dorian-gamer.webp?v=20260930',
   duane: '/avatar-duane.png',
   flop: '/avatar-flop.png',
   gibertini: '/avatar-gibertini.png',
