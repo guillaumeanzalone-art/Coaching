@@ -6140,6 +6140,411 @@ body .training-page[data-athlete-theme="metaknight"] .day-tab-v2--active {
   }
 }
 
+/* LOU LUNAR RIDER — Chinese New Year animated theme */
+body .training-page[data-athlete-theme="lou"] {
+  --lou-red: #e54334;
+  --lou-gold: #f3bf4f;
+  --lou-jade: #43b894;
+  --lou-ink: #061c1a;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #fff7e3;
+  background:
+    radial-gradient(circle at 12% 3%, rgba(229, 67, 52, .24), transparent 30%),
+    radial-gradient(circle at 88% 13%, rgba(243, 191, 79, .19), transparent 31%),
+    linear-gradient(180deg, rgba(5, 29, 26, .93), rgba(6, 20, 19, .98)),
+    var(--athlete-theme-background-image) center top / cover no-repeat fixed,
+    #061c1a;
+}
+
+body .training-page[data-athlete-theme="lou"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -6%;
+  pointer-events: none;
+  opacity: .21;
+  background:
+    linear-gradient(180deg, rgba(4, 24, 22, .16), rgba(3, 15, 14, .88)),
+    var(--athlete-theme-background-image) center top / cover no-repeat;
+  filter: saturate(.92) contrast(1.05) blur(1px);
+  transform: scale(1.06);
+  animation: lou-lunar-backdrop 18s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="lou"] .training-topbar {
+  position: relative;
+  z-index: 5;
+  border: 1px solid rgba(245, 190, 72, .34);
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(8, 47, 42, .95), rgba(74, 22, 20, .88));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .09),
+    0 18px 48px rgba(2, 14, 13, .39),
+    0 0 34px rgba(229, 67, 52, .10);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+  animation: lou-lunar-topbar 7s ease-in-out infinite;
+}
+
+.training-page[data-athlete-theme="lou"] .training-topbar h1 {
+  color: #fff9e9;
+  text-shadow: 0 0 22px rgba(243, 191, 79, .20);
+}
+
+.training-page[data-athlete-theme="lou"] .training-kicker,
+.training-page[data-athlete-theme="lou"] .set-number,
+.training-page[data-athlete-theme="lou"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="lou"] .training-block-report-v11__kicker {
+  color: #ffd16c;
+}
+
+.training-page[data-athlete-theme="lou"] .back-button,
+.training-page[data-athlete-theme="lou"] .reset-button {
+  min-height: 44px;
+  border-color: rgba(245, 190, 72, .31);
+  background: rgba(6, 42, 37, .86);
+  color: #fff8e6;
+}
+
+.training-page[data-athlete-theme="lou"] .back-button:hover,
+.training-page[data-athlete-theme="lou"] .reset-button:hover {
+  border-color: rgba(255, 211, 112, .72);
+  background: rgba(113, 33, 28, .94);
+  color: #fff;
+}
+
+.athlete-theme-banner--lou-lunar {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  min-height: 0;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(245, 190, 72, .52);
+  border-radius: 30px;
+  background: #082925;
+  box-shadow:
+    0 30px 82px rgba(2, 15, 14, .58),
+    0 0 48px rgba(229, 67, 52, .17),
+    0 0 64px rgba(243, 191, 79, .10),
+    inset 0 1px 0 rgba(255, 255, 255, .13);
+  animation: lou-lunar-banner-float 9s ease-in-out infinite;
+}
+
+.athlete-theme-banner--lou-lunar::before {
+  content: "";
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    108deg,
+    transparent 0 34%,
+    rgba(255, 238, 180, .02) 39%,
+    rgba(255, 218, 117, .26) 48%,
+    rgba(229, 67, 52, .08) 54%,
+    transparent 63% 100%
+  );
+  background-size: 240% 100%;
+  background-position: -135% 0;
+  mix-blend-mode: screen;
+  animation: lou-lunar-sweep 7.2s ease-in-out infinite;
+}
+
+.athlete-theme-banner--lou-lunar::after {
+  content: "";
+  position: absolute;
+  z-index: 9;
+  inset: 9px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 226, 151, .20);
+  border-radius: 22px;
+  box-shadow:
+    inset 0 0 35px rgba(243, 191, 79, .08),
+    inset 0 -40px 70px rgba(3, 20, 18, .12);
+}
+
+.lou-lunar-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2%;
+  display: block;
+  width: 104%;
+  height: 104%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(1.05) contrast(1.025) brightness(.98);
+  transform-origin: center;
+  will-change: transform, filter;
+  animation: lou-lunar-scene 14s ease-in-out infinite alternate;
+}
+
+.lou-lunar-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 80% 28%, rgba(255, 206, 93, .08), transparent 24%),
+    linear-gradient(180deg, rgba(4, 28, 25, .03), transparent 56%, rgba(3, 20, 18, .29));
+}
+
+.lou-lunar-moon {
+  position: absolute;
+  z-index: 2;
+  top: 8%;
+  right: 8%;
+  width: 17%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: .28;
+  background: radial-gradient(circle, rgba(255, 240, 177, .82), rgba(246, 179, 55, .18) 46%, transparent 69%);
+  mix-blend-mode: screen;
+  filter: blur(1px);
+  animation: lou-lunar-moon-pulse 4.6s ease-in-out infinite;
+}
+
+.lou-lunar-lantern-glow,
+.lou-lunar-sparks {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.lou-lunar-lantern-glow span {
+  position: absolute;
+  width: 46px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 218, 115, .62), rgba(239, 64, 42, .18) 42%, transparent 72%);
+  mix-blend-mode: screen;
+  filter: blur(3px);
+  animation: lou-lunar-lantern-pulse 3.8s ease-in-out infinite;
+}
+
+.lou-lunar-lantern-glow span:nth-child(1) { top: 4%; left: 4%; animation-delay: 0s; }
+.lou-lunar-lantern-glow span:nth-child(2) { top: 6%; left: 43%; width: 36px; animation-delay: .8s; }
+.lou-lunar-lantern-glow span:nth-child(3) { top: 3%; right: 20%; width: 56px; animation-delay: 1.5s; }
+.lou-lunar-lantern-glow span:nth-child(4) { top: 18%; right: 4%; width: 40px; animation-delay: 2.2s; }
+.lou-lunar-lantern-glow span:nth-child(5) { top: 28%; left: 1%; width: 32px; animation-delay: 2.9s; }
+
+.lou-lunar-sparks span {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffe097;
+  box-shadow: 0 0 8px #ffc85e, 0 0 18px rgba(232, 64, 45, .72);
+  animation: lou-lunar-spark 4.2s ease-in-out infinite;
+}
+
+.lou-lunar-sparks span:nth-child(1) { top: 13%; left: 17%; animation-delay: 0s; }
+.lou-lunar-sparks span:nth-child(2) { top: 22%; right: 17%; width: 8px; height: 8px; animation-delay: .6s; }
+.lou-lunar-sparks span:nth-child(3) { top: 46%; left: 6%; animation-delay: 1.2s; }
+.lou-lunar-sparks span:nth-child(4) { top: 49%; right: 7%; width: 7px; height: 7px; animation-delay: 1.8s; }
+.lou-lunar-sparks span:nth-child(5) { bottom: 17%; left: 24%; animation-delay: 2.4s; }
+.lou-lunar-sparks span:nth-child(6) { right: 31%; bottom: 13%; width: 8px; height: 8px; animation-delay: 3s; }
+.lou-lunar-sparks span:nth-child(7) { top: 34%; left: 48%; width: 4px; height: 4px; animation-delay: 3.5s; }
+.lou-lunar-sparks span:nth-child(8) { bottom: 31%; right: 10%; animation-delay: 3.9s; }
+
+.training-page[data-athlete-theme="lou"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="lou"] .training-v3-history,
+.training-page[data-athlete-theme="lou"] .training-v3-overview,
+.training-page[data-athlete-theme="lou"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="lou"] .training-session-v11,
+.training-page[data-athlete-theme="lou"] .training-block-report-v11,
+.training-page[data-athlete-theme="lou"] .training-summary,
+.training-page[data-athlete-theme="lou"] .athlete-pr-panel,
+.training-page[data-athlete-theme="lou"] .athlete-steps-panel-v249 {
+  border-color: rgba(245, 190, 72, .23);
+  background: linear-gradient(145deg, rgba(7, 47, 42, .95), rgba(62, 25, 23, .89));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06), 0 18px 46px rgba(2, 15, 14, .33);
+  -webkit-backdrop-filter: blur(13px);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="lou"] .week-tab,
+.training-page[data-athlete-theme="lou"] .day-tab-v2 {
+  border-color: rgba(245, 190, 72, .20);
+  background: rgba(7, 48, 42, .88);
+  color: #ded8c2;
+}
+
+.training-page[data-athlete-theme="lou"] .week-tab strong,
+.training-page[data-athlete-theme="lou"] .day-tab-v2 strong {
+  color: #fff8e6;
+}
+
+body .training-page[data-athlete-theme="lou"] .week-tab--active,
+body .training-page[data-athlete-theme="lou"] .day-tab-v2--active {
+  border-color: rgba(255, 212, 104, .74);
+  background: linear-gradient(135deg, rgba(200, 49, 40, .78), rgba(17, 112, 91, .67));
+  color: #fff;
+  box-shadow: 0 0 26px rgba(229, 67, 52, .18);
+}
+
+.training-page[data-athlete-theme="lou"] .training-exercise {
+  border-color: rgba(245, 190, 72, .20);
+  background: rgba(5, 39, 35, .96);
+  box-shadow: 0 20px 50px rgba(2, 14, 13, .37);
+}
+
+.training-page[data-athlete-theme="lou"] .exercise-header {
+  border-bottom-color: rgba(245, 190, 72, .18);
+  background: linear-gradient(110deg, rgba(140, 39, 32, .96), rgba(10, 88, 74, .96));
+}
+
+body .training-page[data-athlete-theme="lou"] .exercise-type {
+  border-color: rgba(255, 218, 122, .65);
+  background: rgba(255, 208, 82, .11);
+  color: #ffe5a1;
+}
+
+.training-page[data-athlete-theme="lou"] .training-set {
+  border-color: rgba(245, 190, 72, .15);
+  background: rgba(7, 54, 46, .76);
+}
+
+.training-page[data-athlete-theme="lou"] .set-load,
+.training-page[data-athlete-theme="lou"] .set-rpe,
+.training-page[data-athlete-theme="lou"] .training-session-v11__note,
+.training-page[data-athlete-theme="lou"] .training-session-v11__metrics label > div {
+  border-color: rgba(245, 190, 72, .23);
+  background: rgba(5, 40, 35, .91);
+  color: #fff8e8;
+}
+
+.training-page[data-athlete-theme="lou"] .set-load:focus,
+.training-page[data-athlete-theme="lou"] .set-rpe:focus,
+.training-page[data-athlete-theme="lou"] .training-session-v11__note:focus {
+  border-color: #ffd36f;
+  box-shadow: 0 0 0 3px rgba(243, 191, 79, .14);
+}
+
+.training-page[data-athlete-theme="lou"] .training-sync {
+  border-color: rgba(245, 190, 72, .26);
+  background: rgba(5, 40, 35, .88);
+  color: #ffe09a;
+}
+
+.training-page[data-athlete-theme="lou"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #2bc3a1 0%, #e54435 48%, #f5bd49 100%);
+  box-shadow: 0 0 21px rgba(239, 76, 53, .28);
+}
+
+@media (hover: hover) {
+  .training-page[data-athlete-theme="lou"] .training-exercise,
+  .training-page[data-athlete-theme="lou"] .week-tab,
+  .training-page[data-athlete-theme="lou"] .day-tab-v2 {
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .training-page[data-athlete-theme="lou"] .training-exercise:hover,
+  .training-page[data-athlete-theme="lou"] .week-tab:hover,
+  .training-page[data-athlete-theme="lou"] .day-tab-v2:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 211, 107, .52);
+    box-shadow: 0 23px 62px rgba(2, 18, 16, .45), 0 0 25px rgba(229, 67, 52, .10);
+  }
+}
+
+@keyframes lou-lunar-scene {
+  0% { transform: scale(1.01) translate3d(-.3%, .15%, 0); filter: saturate(1.02) contrast(1.02) brightness(.97); }
+  50% { transform: scale(1.045) translate3d(.35%, -.25%, 0); filter: saturate(1.10) contrast(1.04) brightness(1.02); }
+  100% { transform: scale(1.025) translate3d(-.12%, -.1%, 0); filter: saturate(1.06) contrast(1.03) brightness(.99); }
+}
+
+@keyframes lou-lunar-sweep {
+  0%, 18% { background-position: -135% 0; opacity: .16; }
+  52% { background-position: 18% 0; opacity: .92; }
+  86%, 100% { background-position: 135% 0; opacity: .16; }
+}
+
+@keyframes lou-lunar-moon-pulse {
+  0%, 100% { opacity: .18; transform: scale(.88); }
+  50% { opacity: .46; transform: scale(1.12); }
+}
+
+@keyframes lou-lunar-lantern-pulse {
+  0%, 100% { opacity: .27; transform: scale(.72); }
+  50% { opacity: .90; transform: scale(1.18); }
+}
+
+@keyframes lou-lunar-spark {
+  0%, 100% { opacity: .13; transform: translate3d(0, 8px, 0) scale(.55); }
+  50% { opacity: 1; transform: translate3d(4px, -9px, 0) scale(1.32); }
+}
+
+@keyframes lou-lunar-banner-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -5px, 0); }
+}
+
+@keyframes lou-lunar-backdrop {
+  from { transform: scale(1.06) translate3d(-.4%, 0, 0); }
+  to { transform: scale(1.10) translate3d(.5%, -.4%, 0); }
+}
+
+@keyframes lou-lunar-topbar {
+  0%, 100% { border-color: rgba(245, 190, 72, .34); }
+  50% { border-color: rgba(255, 217, 126, .52); box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 20px 52px rgba(2,14,13,.40), 0 0 31px rgba(229,67,52,.14); }
+}
+
+@media (max-width: 760px) {
+  .athlete-theme-banner--lou-lunar {
+    border-radius: 26px;
+  }
+
+  .lou-lunar-hero {
+    object-position: 53% center;
+  }
+}
+
+@media (max-width: 560px) {
+  .training-page[data-athlete-theme="lou"] .training-topbar {
+    padding: 12px;
+    border-radius: 18px;
+  }
+
+  .athlete-theme-banner--lou-lunar {
+    aspect-ratio: 4 / 3;
+    border-radius: 23px;
+  }
+
+  .athlete-theme-banner--lou-lunar::after {
+    inset: 7px;
+    border-radius: 17px;
+  }
+
+  .lou-lunar-hero {
+    object-position: 58% center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .training-page[data-athlete-theme="lou"]::before,
+  .training-page[data-athlete-theme="lou"] .training-topbar,
+  .athlete-theme-banner--lou-lunar,
+  .athlete-theme-banner--lou-lunar::before,
+  .lou-lunar-hero,
+  .lou-lunar-moon,
+  .lou-lunar-lantern-glow span,
+  .lou-lunar-sparks span {
+    animation: none;
+  }
+}
+
 /* LOUIS EMERALD REALM — native animated theme */
 .training-page[data-athlete-theme="louis"] {
   --louis-emerald: #43f178;

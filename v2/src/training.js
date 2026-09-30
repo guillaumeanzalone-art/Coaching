@@ -5284,6 +5284,48 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'lunar-rider'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--lou-lunar"
+          aria-label="Univers Nouvel An chinois de Lou, dragon d’or et motarde"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="lou-lunar-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Dragon chinois doré et motarde sous des lanternes rouges"
+                  width="1536"
+                  height="1024"
+                >
+              `
+              : ''
+          }
+
+          <div class="lou-lunar-shade" aria-hidden="true"></div>
+          <div class="lou-lunar-moon" aria-hidden="true"></div>
+          <div class="lou-lunar-lantern-glow" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="lou-lunar-sparks" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'emerald-realm'
     ) {
       const heroImage =
