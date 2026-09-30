@@ -11728,6 +11728,366 @@ body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .athlete-st
   }
 }
 
+/* =========================================================
+   EXOCEST — FROZEN RIFT ARENA
+   ========================================================= */
+body .training-page[data-athlete-theme="duane"] {
+  --exocest-ice: #45c8ff;
+  --exocest-fire: #ffad38;
+  --exocest-red: #ff4655;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #f7fbff;
+  background:
+    radial-gradient(circle at 17% 3%, rgba(55, 191, 255, .23), transparent 31%),
+    radial-gradient(circle at 85% 11%, rgba(255, 77, 79, .18), transparent 28%),
+    linear-gradient(180deg, rgba(3, 10, 20, .89), rgba(4, 9, 17, .98)),
+    var(--athlete-theme-background-image) center top / cover no-repeat fixed,
+    #050b15;
+}
+
+body .training-page[data-athlete-theme="duane"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -6%;
+  pointer-events: none;
+  opacity: .18;
+  background:
+    linear-gradient(180deg, rgba(3, 10, 20, .12), rgba(3, 8, 16, .92)),
+    var(--athlete-theme-background-image) center top / cover no-repeat;
+  filter: saturate(1.08) contrast(1.08) blur(2px);
+  animation: exocestBackdrop 16s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="duane"] .training-topbar,
+.training-page[data-athlete-theme="duane"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="duane"] .training-v3-history,
+.training-page[data-athlete-theme="duane"] .training-v3-overview,
+.training-page[data-athlete-theme="duane"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="duane"] .training-session-v11,
+.training-page[data-athlete-theme="duane"] .training-block-report-v11,
+.training-page[data-athlete-theme="duane"] .training-summary,
+.training-page[data-athlete-theme="duane"] .athlete-pr-panel,
+.training-page[data-athlete-theme="duane"] .athlete-steps-panel-v249 {
+  border-color: rgba(69, 200, 255, .24);
+  background: linear-gradient(145deg, rgba(8, 25, 42, .95), rgba(20, 17, 29, .91));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .06), 0 18px 48px rgba(0, 4, 12, .42);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="duane"] .training-topbar {
+  border-radius: 21px;
+}
+
+.training-page[data-athlete-theme="duane"] .training-kicker,
+.training-page[data-athlete-theme="duane"] .set-number,
+.training-page[data-athlete-theme="duane"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="duane"] .training-block-report-v11__kicker {
+  color: #6cdbff;
+}
+
+.training-page[data-athlete-theme="duane"] .back-button,
+.training-page[data-athlete-theme="duane"] .reset-button {
+  border-color: rgba(81, 207, 255, .28);
+  background: rgba(6, 23, 39, .88);
+  color: #f5fbff;
+}
+
+.training-page[data-athlete-theme="duane"] .week-tab,
+.training-page[data-athlete-theme="duane"] .day-tab-v2 {
+  border-color: rgba(75, 201, 255, .18);
+  background: rgba(8, 28, 47, .88);
+}
+
+body .training-page[data-athlete-theme="duane"] .week-tab--active,
+body .training-page[data-athlete-theme="duane"] .day-tab-v2--active {
+  border-color: rgba(255, 177, 61, .72);
+  background: linear-gradient(135deg, rgba(21, 127, 177, .72), rgba(156, 43, 47, .62));
+  box-shadow: 0 0 27px rgba(69, 200, 255, .17);
+}
+
+.training-page[data-athlete-theme="duane"] .training-exercise {
+  border-color: rgba(70, 199, 255, .18);
+  background: rgba(6, 21, 36, .96);
+  box-shadow: 0 20px 52px rgba(0, 4, 12, .4);
+}
+
+.training-page[data-athlete-theme="duane"] .exercise-header {
+  border-bottom-color: rgba(72, 203, 255, .18);
+  background: linear-gradient(105deg, rgba(15, 97, 139, .95), rgba(111, 30, 42, .94));
+}
+
+.training-page[data-athlete-theme="duane"] .training-set,
+.training-page[data-athlete-theme="duane"] .set-load,
+.training-page[data-athlete-theme="duane"] .set-rpe,
+.training-page[data-athlete-theme="duane"] .training-session-v11__note,
+.training-page[data-athlete-theme="duane"] .training-session-v11__metrics label > div {
+  border-color: rgba(69, 200, 255, .16);
+  background: rgba(7, 27, 45, .81);
+  color: #f7fbff;
+}
+
+.training-page[data-athlete-theme="duane"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #43c9ff, #fff1b5 49%, #ff9f36 74%, #ff4655);
+  box-shadow: 0 0 20px rgba(69, 200, 255, .28);
+}
+
+.athlete-theme-banner--exocest-rift {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 390px;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(76, 205, 255, .58);
+  border-radius: 29px;
+  background: #071321;
+  box-shadow:
+    0 30px 82px rgba(0, 4, 13, .66),
+    0 0 48px rgba(69, 200, 255, .16),
+    0 0 58px rgba(255, 70, 85, .08),
+    inset 0 1px rgba(255, 255, 255, .14);
+  animation: exocestBanner 8s ease-in-out infinite;
+}
+
+.athlete-theme-banner--exocest-rift::after {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  inset: 8px;
+  pointer-events: none;
+  border: 1px solid rgba(210, 245, 255, .2);
+  border-radius: 21px;
+  box-shadow: inset 0 0 34px rgba(62, 197, 255, .08);
+}
+
+.exocest-rift-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2%;
+  width: 104%;
+  height: 104%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(1.05) contrast(1.05) brightness(.84);
+  animation: exocestHero 14s ease-in-out infinite alternate;
+}
+
+.exocest-rift-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(2, 8, 15, .02) 42%, rgba(2, 7, 14, .76) 100%),
+    radial-gradient(ellipse at center, transparent 34%, rgba(2, 7, 14, .34) 110%);
+}
+
+.exocest-rift-rune {
+  position: absolute;
+  z-index: 2;
+  top: -24%;
+  left: 50%;
+  width: 48%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: .48;
+  background:
+    conic-gradient(from 0deg, transparent 0 11%, rgba(95, 218, 255, .36) 12% 13%, transparent 14% 24%, rgba(255, 174, 57, .2) 25% 26%, transparent 27% 100%),
+    radial-gradient(circle, transparent 39%, rgba(83, 207, 255, .29) 40% 41%, transparent 42% 55%, rgba(83, 207, 255, .15) 56% 57%, transparent 58%);
+  filter: drop-shadow(0 0 17px rgba(69, 200, 255, .45));
+  animation: exocestRune 22s linear infinite;
+}
+
+.exocest-rift-frost,
+.exocest-rift-energy,
+.exocest-rift-hud {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.exocest-rift-frost i {
+  position: absolute;
+  top: -8%;
+  width: 3px;
+  height: 20px;
+  border-radius: 999px;
+  background: #dff8ff;
+  box-shadow: 0 0 9px #5cd9ff, 0 0 20px rgba(69, 200, 255, .72);
+  animation: exocestFrost 6.5s linear infinite;
+}
+
+.exocest-rift-frost i:nth-child(1) { left: 7%; animation-delay: -1s; }
+.exocest-rift-frost i:nth-child(2) { left: 22%; animation-delay: -4.2s; animation-duration: 7.8s; }
+.exocest-rift-frost i:nth-child(3) { left: 39%; animation-delay: -2.3s; }
+.exocest-rift-frost i:nth-child(4) { left: 61%; animation-delay: -5.4s; animation-duration: 8.1s; }
+.exocest-rift-frost i:nth-child(5) { left: 79%; animation-delay: -.5s; }
+.exocest-rift-frost i:nth-child(6) { left: 93%; animation-delay: -3.5s; animation-duration: 7.3s; }
+
+.exocest-rift-energy i {
+  position: absolute;
+  bottom: -9%;
+  width: 5px;
+  height: 12px;
+  border-radius: 50%;
+  background: #68ddff;
+  box-shadow: 0 0 10px #45c8ff, 0 0 20px rgba(69, 200, 255, .66);
+  animation: exocestEnergy 5.8s ease-in infinite;
+}
+
+.exocest-rift-energy i:nth-child(n + 5) {
+  background: #ffc05a;
+  box-shadow: 0 0 10px #ff9d33, 0 0 21px rgba(255, 70, 85, .62);
+}
+
+.exocest-rift-energy i:nth-child(1) { left: 8%; animation-delay: -1.4s; }
+.exocest-rift-energy i:nth-child(2) { left: 25%; animation-delay: -4.3s; }
+.exocest-rift-energy i:nth-child(3) { left: 42%; animation-delay: -.7s; }
+.exocest-rift-energy i:nth-child(4) { left: 57%; animation-delay: -3.1s; }
+.exocest-rift-energy i:nth-child(5) { left: 67%; animation-delay: -2.2s; }
+.exocest-rift-energy i:nth-child(6) { left: 76%; animation-delay: -5s; }
+.exocest-rift-energy i:nth-child(7) { left: 86%; animation-delay: -1s; }
+.exocest-rift-energy i:nth-child(8) { left: 95%; animation-delay: -3.8s; }
+
+.exocest-rift-hud span {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  border: 1px solid rgba(255, 76, 86, .5);
+  clip-path: polygon(0 0, 43% 0, 43% 4%, 4% 4%, 4% 43%, 0 43%);
+  animation: exocestHud 5s ease-in-out infinite;
+}
+
+.exocest-rift-hud span:nth-child(1) { top: 9%; left: 5%; }
+.exocest-rift-hud span:nth-child(2) { top: 13%; right: 5%; transform: rotate(90deg); animation-delay: -1.7s; }
+.exocest-rift-hud span:nth-child(3) { right: 6%; bottom: 10%; transform: rotate(180deg); animation-delay: -3.4s; }
+
+.exocest-rift-copy {
+  position: absolute;
+  z-index: 8;
+  right: 0;
+  bottom: clamp(21px, 4vw, 44px);
+  left: 0;
+  pointer-events: none;
+  text-align: center;
+}
+
+.exocest-rift-copy span {
+  display: block;
+  margin-bottom: 5px;
+  color: #8fe7ff;
+  font-size: clamp(8px, 1.2vw, 12px);
+  font-weight: 950;
+  letter-spacing: .34em;
+  text-shadow: 0 0 15px rgba(69, 200, 255, .72);
+}
+
+.exocest-rift-copy h2 {
+  margin: 0;
+  color: #f7fbff;
+  font-size: clamp(40px, 6vw, 78px);
+  font-weight: 1000;
+  line-height: .88;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+  text-shadow:
+    -2px 0 rgba(69, 200, 255, .85),
+    2px 0 rgba(255, 70, 85, .72),
+    0 0 22px rgba(69, 200, 255, .48),
+    0 13px 32px rgba(0, 0, 0, .96);
+}
+
+@keyframes exocestHero {
+  from { transform: scale(1.01) translate3d(-.25%, .1%, 0); }
+  to { transform: scale(1.065) translate3d(.35%, -.4%, 0); }
+}
+
+@keyframes exocestRune {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to { transform: translateX(-50%) rotate(360deg); }
+}
+
+@keyframes exocestFrost {
+  0% { opacity: 0; transform: translate3d(0, -15px, 0) rotate(24deg); }
+  14% { opacity: .92; }
+  100% { opacity: 0; transform: translate3d(58px, 590px, 0) rotate(24deg); }
+}
+
+@keyframes exocestEnergy {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.55); }
+  20% { opacity: .95; }
+  100% { opacity: 0; transform: translate3d(22px, -470px, 0) scale(1.3); }
+}
+
+@keyframes exocestHud {
+  0%, 100% { opacity: .3; filter: brightness(.8); }
+  50% { opacity: .95; filter: brightness(1.4); }
+}
+
+@keyframes exocestBanner {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -4px, 0); }
+}
+
+@keyframes exocestBackdrop {
+  from { transform: scale(1.06) translate3d(-.4%, 0, 0); }
+  to { transform: scale(1.1) translate3d(.5%, -.4%, 0); }
+}
+
+@media (max-width: 650px) {
+  .athlete-theme-banner--exocest-rift {
+    min-height: 520px;
+    aspect-ratio: 4 / 5;
+    border-radius: 23px;
+  }
+
+  .athlete-theme-banner--exocest-rift::after {
+    inset: 6px;
+    border-radius: 17px;
+  }
+
+  .exocest-rift-hero {
+    object-position: 50% center;
+    filter: saturate(1.03) contrast(1.06) brightness(.76);
+  }
+
+  .exocest-rift-rune {
+    top: -7%;
+    width: 82%;
+  }
+
+  .exocest-rift-copy {
+    bottom: 28px;
+  }
+
+  .exocest-rift-copy h2 {
+    font-size: clamp(45px, 15vw, 65px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .training-page[data-athlete-theme="duane"]::before,
+  .athlete-theme-banner--exocest-rift,
+  .exocest-rift-hero,
+  .exocest-rift-rune,
+  .exocest-rift-frost i,
+  .exocest-rift-energy i,
+  .exocest-rift-hud span {
+    animation: none !important;
+  }
+}
+
 /* Exercise instructions */
 .exercise-header .exercise-heading {
   flex: 1;

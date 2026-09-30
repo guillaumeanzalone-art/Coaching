@@ -416,6 +416,13 @@ export function enhanceProgramForAthlete(
 
   return {
     ...program,
+    athlete:
+      hasDuaneWeekFourPrep
+        ? {
+            ...program.athlete,
+            name: 'Exocest',
+          }
+        : program.athlete,
     blocks:
       program.blocks.map(
         (block) => ({

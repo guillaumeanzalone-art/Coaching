@@ -5284,6 +5284,64 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'exocest-rift-arena'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Exocest'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--exocest-rift"
+          aria-label="Arène multijeux glacée d’Exocest"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="exocest-rift-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Guerriers réunis dans une arène nordique futuriste"
+                  width="1672"
+                  height="941"
+                >
+              `
+              : ''
+          }
+
+          <div class="exocest-rift-shade" aria-hidden="true"></div>
+          <div class="exocest-rift-rune" aria-hidden="true"></div>
+
+          <div class="exocest-rift-frost" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="exocest-rift-energy" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="exocest-rift-hud" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+
+          <div class="exocest-rift-copy">
+            <span>RIFT ARENA</span>
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'nexus-arena'
     ) {
       const heroImage =
