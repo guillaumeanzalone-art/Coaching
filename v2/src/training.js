@@ -5342,6 +5342,49 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'janel-tokyo-burgundy'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--janel-drift"
+          aria-label="Univers automobile rétro japonais de Janel"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="janel-drift-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Voiture bordeaux en drift sur une route de montagne japonaise"
+                  width="1672"
+                  height="940"
+                >
+              `
+              : ''
+          }
+
+          <div class="janel-drift-shade" aria-hidden="true"></div>
+          <div class="janel-drift-speed" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div class="janel-drift-lights" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </div>
+          <div class="janel-drift-sparks" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'lucine-burgundy-cat-manor'
     ) {
       const heroImage =

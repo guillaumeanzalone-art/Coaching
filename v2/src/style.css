@@ -12089,6 +12089,308 @@ body .training-page[data-athlete-theme="hugo"] .day-tab-v2--active {
 }
 
 /* =========================================================
+   JANEL — BURGUNDY TOKYO DRIFT
+   ========================================================= */
+body .training-page[data-athlete-theme="janel"] {
+  --janel-wine: #a5203f;
+  --janel-neon: #f44564;
+  --janel-cyan: #55d9f0;
+  --janel-amber: #f5b45d;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #fff8f5;
+  background:
+    radial-gradient(circle at 13% 5%, rgba(201, 37, 72, .27), transparent 31%),
+    radial-gradient(circle at 87% 10%, rgba(60, 192, 220, .15), transparent 28%),
+    linear-gradient(180deg, rgba(10, 6, 12, .88), rgba(8, 7, 11, .98)),
+    var(--athlete-theme-background-image) center top / cover no-repeat fixed,
+    #09070b;
+}
+
+body .training-page[data-athlete-theme="janel"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -7%;
+  pointer-events: none;
+  opacity: .19;
+  background:
+    linear-gradient(180deg, rgba(10, 5, 10, .08), rgba(8, 6, 10, .94)),
+    var(--athlete-theme-background-image) center top / cover no-repeat;
+  filter: saturate(1.12) contrast(1.08) blur(2px);
+  animation: janelDriftBackdrop 15s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="janel"] .training-topbar,
+.training-page[data-athlete-theme="janel"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="janel"] .training-v3-history,
+.training-page[data-athlete-theme="janel"] .training-v3-overview,
+.training-page[data-athlete-theme="janel"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="janel"] .training-session-v11,
+.training-page[data-athlete-theme="janel"] .training-block-report-v11,
+.training-page[data-athlete-theme="janel"] .training-summary,
+.training-page[data-athlete-theme="janel"] .athlete-pr-panel,
+.training-page[data-athlete-theme="janel"] .athlete-steps-panel-v249 {
+  border-color: rgba(205, 48, 81, .27);
+  background: linear-gradient(145deg, rgba(27, 12, 21, .96), rgba(11, 18, 24, .92));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, .06),
+    0 18px 48px rgba(4, 2, 7, .46),
+    0 0 28px rgba(173, 28, 58, .06);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="janel"] .training-topbar {
+  border-radius: 21px;
+}
+
+.training-page[data-athlete-theme="janel"] .training-kicker,
+.training-page[data-athlete-theme="janel"] .set-number,
+.training-page[data-athlete-theme="janel"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="janel"] .training-block-report-v11__kicker {
+  color: #ff7489;
+}
+
+.training-page[data-athlete-theme="janel"] .back-button,
+.training-page[data-athlete-theme="janel"] .reset-button {
+  border-color: rgba(221, 57, 88, .3);
+  background: rgba(32, 12, 22, .88);
+  color: #fff9f5;
+}
+
+.training-page[data-athlete-theme="janel"] .week-tab,
+.training-page[data-athlete-theme="janel"] .day-tab-v2 {
+  border-color: rgba(210, 51, 82, .2);
+  background: rgba(31, 13, 22, .9);
+}
+
+body .training-page[data-athlete-theme="janel"] .week-tab--active,
+body .training-page[data-athlete-theme="janel"] .day-tab-v2--active {
+  border-color: rgba(247, 177, 90, .66);
+  background: linear-gradient(135deg, rgba(169, 29, 61, .86), rgba(20, 91, 111, .72));
+  box-shadow: 0 0 28px rgba(227, 52, 82, .19);
+}
+
+.training-page[data-athlete-theme="janel"] .training-exercise {
+  border-color: rgba(205, 49, 80, .2);
+  background: rgba(24, 11, 19, .96);
+  box-shadow: 0 20px 52px rgba(5, 2, 8, .44);
+}
+
+.training-page[data-athlete-theme="janel"] .exercise-header {
+  border-bottom-color: rgba(230, 65, 94, .2);
+  background: linear-gradient(105deg, rgba(125, 22, 47, .97), rgba(16, 77, 94, .94));
+}
+
+.training-page[data-athlete-theme="janel"] .training-set,
+.training-page[data-athlete-theme="janel"] .set-load,
+.training-page[data-athlete-theme="janel"] .set-rpe,
+.training-page[data-athlete-theme="janel"] .training-session-v11__note,
+.training-page[data-athlete-theme="janel"] .training-session-v11__metrics label > div {
+  border-color: rgba(210, 53, 83, .17);
+  background: rgba(31, 13, 22, .82);
+  color: #fff8f5;
+}
+
+.training-page[data-athlete-theme="janel"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #a51f40, #f04461 42%, #f0b35c 69%, #54d7ed);
+  box-shadow: 0 0 21px rgba(228, 51, 82, .32);
+}
+
+.athlete-theme-banner--janel-drift {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 390px;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(220, 55, 87, .58);
+  border-radius: 29px;
+  background: #10080e;
+  box-shadow:
+    0 30px 82px rgba(5, 2, 8, .7),
+    -10px 0 42px rgba(223, 43, 77, .15),
+    10px 0 42px rgba(67, 203, 228, .1),
+    inset 0 1px rgba(255, 255, 255, .15);
+  animation: janelDriftBanner 7.5s ease-in-out infinite;
+}
+
+.athlete-theme-banner--janel-drift::after {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  inset: 8px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 210, 190, .18);
+  border-radius: 21px;
+  box-shadow:
+    inset 0 0 34px rgba(191, 37, 66, .09),
+    0 0 18px rgba(226, 54, 83, .06);
+}
+
+.janel-drift-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2%;
+  width: 104%;
+  height: 104%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(1.08) contrast(1.06) brightness(.87);
+  animation: janelDriftHero 10s cubic-bezier(.4, 0, .2, 1) infinite alternate;
+}
+
+.janel-drift-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(5, 3, 7, .01) 42%, rgba(7, 3, 7, .62) 100%),
+    radial-gradient(ellipse at 51% 53%, transparent 42%, rgba(5, 2, 6, .38) 112%);
+}
+
+.janel-drift-speed,
+.janel-drift-lights,
+.janel-drift-sparks {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.janel-drift-speed i {
+  position: absolute;
+  left: -26%;
+  width: 32%;
+  height: 2px;
+  border-radius: 999px;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 239, 226, .9), #ef3f5f);
+  box-shadow: 0 0 9px rgba(239, 62, 94, .65);
+  transform: rotate(-8deg);
+  animation: janelSpeedLine 3.8s linear infinite;
+}
+
+.janel-drift-speed i:nth-child(1) { top: 14%; animation-delay: -.4s; }
+.janel-drift-speed i:nth-child(2) { top: 27%; animation-delay: -2.5s; animation-duration: 4.4s; }
+.janel-drift-speed i:nth-child(3) { top: 43%; animation-delay: -1.4s; }
+.janel-drift-speed i:nth-child(4) { top: 61%; animation-delay: -3.1s; animation-duration: 4.8s; }
+.janel-drift-speed i:nth-child(5) { top: 76%; animation-delay: -.9s; }
+.janel-drift-speed i:nth-child(6) { top: 89%; animation-delay: -2.1s; animation-duration: 4.2s; }
+
+.janel-drift-lights i {
+  position: absolute;
+  right: -22%;
+  width: 36%;
+  height: 4px;
+  border-radius: 999px;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, #ff3157, rgba(255, 217, 158, .95));
+  box-shadow: 0 0 12px #e72d54, 0 0 24px rgba(225, 42, 78, .5);
+  transform: rotate(-10deg);
+  animation: janelTailLight 4.8s ease-in-out infinite;
+}
+
+.janel-drift-lights i:nth-child(1) { top: 20%; animation-delay: -.7s; }
+.janel-drift-lights i:nth-child(2) { top: 38%; animation-delay: -3.2s; animation-duration: 5.5s; }
+.janel-drift-lights i:nth-child(3) { top: 66%; animation-delay: -1.8s; }
+.janel-drift-lights i:nth-child(4) { top: 83%; animation-delay: -4.1s; animation-duration: 5.9s; }
+
+.janel-drift-sparks i {
+  position: absolute;
+  right: 12%;
+  bottom: 5%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff1b5;
+  box-shadow: 0 0 8px #ffb039, 0 0 17px rgba(239, 64, 75, .86);
+  animation: janelSpark 3.7s ease-out infinite;
+}
+
+.janel-drift-sparks i:nth-child(2) { right: 18%; animation-delay: -2.1s; }
+.janel-drift-sparks i:nth-child(3) { right: 25%; animation-delay: -.8s; animation-duration: 4.2s; }
+.janel-drift-sparks i:nth-child(4) { right: 32%; animation-delay: -3.2s; }
+.janel-drift-sparks i:nth-child(5) { right: 41%; animation-delay: -1.5s; animation-duration: 4.5s; }
+.janel-drift-sparks i:nth-child(6) { right: 52%; animation-delay: -2.8s; }
+.janel-drift-sparks i:nth-child(7) { right: 64%; animation-delay: -.3s; animation-duration: 4.1s; }
+.janel-drift-sparks i:nth-child(8) { right: 76%; animation-delay: -1.9s; }
+
+@keyframes janelDriftHero {
+  from { transform: scale(1.015) translate3d(-.35%, .15%, 0); }
+  to { transform: scale(1.07) translate3d(.55%, -.45%, 0); }
+}
+
+@keyframes janelSpeedLine {
+  0%, 12% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-8deg) scaleX(.5); }
+  28% { opacity: .8; }
+  72%, 100% { opacity: 0; transform: translate3d(460%, -55px, 0) rotate(-8deg) scaleX(1.25); }
+}
+
+@keyframes janelTailLight {
+  0%, 18% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-10deg) scaleX(.45); }
+  35% { opacity: .82; }
+  82%, 100% { opacity: 0; transform: translate3d(-410%, 48px, 0) rotate(-10deg) scaleX(1.3); }
+}
+
+@keyframes janelSpark {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.45); }
+  18% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(-145px, -82px, 0) scale(1.15); }
+}
+
+@keyframes janelDriftBanner {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -3px, 0); }
+}
+
+@keyframes janelDriftBackdrop {
+  from { transform: scale(1.06) translate3d(-.6%, .1%, 0); }
+  to { transform: scale(1.11) translate3d(.7%, -.5%, 0); }
+}
+
+@media (max-width: 650px) {
+  .athlete-theme-banner--janel-drift {
+    min-height: 520px;
+    aspect-ratio: 4 / 5;
+    border-radius: 23px;
+  }
+
+  .athlete-theme-banner--janel-drift::after {
+    inset: 6px;
+    border-radius: 17px;
+  }
+
+  .janel-drift-hero {
+    object-position: 48% center;
+    filter: saturate(1.06) contrast(1.08) brightness(.8);
+  }
+
+  .janel-drift-speed i,
+  .janel-drift-lights i {
+    width: 48%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .training-page[data-athlete-theme="janel"]::before,
+  .athlete-theme-banner--janel-drift,
+  .janel-drift-hero,
+  .janel-drift-speed i,
+  .janel-drift-lights i,
+  .janel-drift-sparks i {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
    LUCINE — BURGUNDY CAT MANOR
    ========================================================= */
 body .training-page[data-athlete-theme="lucine"] {
