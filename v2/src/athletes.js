@@ -121,7 +121,7 @@ export const athletes = [
   },
   {
     "id": "duane",
-    "name": "Exocest",
+    "name": "Duane",
     "emoji": "🪖",
     "bodyWeight": 93.0,
     "profileImage": "avatar-duane.png",
