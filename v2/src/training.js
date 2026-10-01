@@ -4605,6 +4605,64 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'tom-m8-cs2'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Tom Deneuville'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--tom-m8"
+          aria-label="Arène esport CS2 de Tom Deneuville"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="tom-m8-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Arène tactique inspirée de CS2 aux couleurs noir, blanc et rose"
+                  width="1672"
+                  height="941"
+                >
+              `
+              : ''
+          }
+
+          <div class="tom-m8-shade" aria-hidden="true"></div>
+          <div class="tom-m8-scanlines" aria-hidden="true"></div>
+          <div class="tom-m8-reticle" aria-hidden="true"><i></i></div>
+
+          <div class="tom-m8-grenades" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </div>
+
+          <div class="tom-m8-smoke" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="tom-m8-sparks" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="tom-m8-copy">
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'north-strength'
     ) {
       const logoImage =
