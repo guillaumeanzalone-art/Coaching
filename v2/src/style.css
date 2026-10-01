@@ -11729,6 +11729,345 @@ body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .athlete-st
 }
 
 /* =========================================================
+   LUCINE — BURGUNDY CAT MANOR
+   ========================================================= */
+body .training-page[data-athlete-theme="lucine"] {
+  --lucine-wine: #8e203d;
+  --lucine-rose: #d35c78;
+  --lucine-gold: #d8a46d;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #fff8f5;
+  background:
+    radial-gradient(circle at 17% 4%, rgba(165, 38, 72, .28), transparent 31%),
+    radial-gradient(circle at 86% 13%, rgba(210, 97, 117, .17), transparent 29%),
+    linear-gradient(180deg, rgba(20, 3, 9, .9), rgba(12, 4, 8, .98)),
+    var(--athlete-theme-background-image) center top / cover no-repeat fixed,
+    #15050a;
+}
+
+body .training-page[data-athlete-theme="lucine"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -6%;
+  pointer-events: none;
+  opacity: .2;
+  background:
+    linear-gradient(180deg, rgba(19, 3, 9, .1), rgba(13, 4, 8, .92)),
+    var(--athlete-theme-background-image) center top / cover no-repeat;
+  filter: saturate(1.05) contrast(1.08) blur(2px);
+  animation: lucineManorBackdrop 17s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="lucine"] .training-topbar,
+.training-page[data-athlete-theme="lucine"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="lucine"] .training-v3-history,
+.training-page[data-athlete-theme="lucine"] .training-v3-overview,
+.training-page[data-athlete-theme="lucine"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="lucine"] .training-session-v11,
+.training-page[data-athlete-theme="lucine"] .training-block-report-v11,
+.training-page[data-athlete-theme="lucine"] .training-summary,
+.training-page[data-athlete-theme="lucine"] .athlete-pr-panel,
+.training-page[data-athlete-theme="lucine"] .athlete-steps-panel-v249 {
+  border-color: rgba(190, 65, 94, .25);
+  background: linear-gradient(145deg, rgba(47, 10, 23, .95), rgba(21, 7, 13, .92));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .055), 0 18px 48px rgba(10, 1, 5, .44);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="lucine"] .training-topbar {
+  border-radius: 21px;
+}
+
+.training-page[data-athlete-theme="lucine"] .training-kicker,
+.training-page[data-athlete-theme="lucine"] .set-number,
+.training-page[data-athlete-theme="lucine"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="lucine"] .training-block-report-v11__kicker {
+  color: #e890a5;
+}
+
+.training-page[data-athlete-theme="lucine"] .back-button,
+.training-page[data-athlete-theme="lucine"] .reset-button {
+  border-color: rgba(195, 71, 101, .3);
+  background: rgba(48, 10, 23, .88);
+  color: #fff7f5;
+}
+
+.training-page[data-athlete-theme="lucine"] .week-tab,
+.training-page[data-athlete-theme="lucine"] .day-tab-v2 {
+  border-color: rgba(189, 67, 96, .2);
+  background: rgba(43, 9, 20, .88);
+}
+
+body .training-page[data-athlete-theme="lucine"] .week-tab--active,
+body .training-page[data-athlete-theme="lucine"] .day-tab-v2--active {
+  border-color: rgba(228, 145, 162, .68);
+  background: linear-gradient(135deg, rgba(143, 31, 62, .84), rgba(81, 17, 35, .9));
+  box-shadow: 0 0 28px rgba(177, 43, 75, .22);
+}
+
+.training-page[data-athlete-theme="lucine"] .training-exercise {
+  border-color: rgba(188, 65, 94, .2);
+  background: rgba(35, 8, 17, .96);
+  box-shadow: 0 20px 52px rgba(9, 1, 4, .41);
+}
+
+.training-page[data-athlete-theme="lucine"] .exercise-header {
+  border-bottom-color: rgba(198, 75, 102, .18);
+  background: linear-gradient(105deg, rgba(125, 26, 53, .97), rgba(58, 13, 28, .97));
+}
+
+.training-page[data-athlete-theme="lucine"] .training-set,
+.training-page[data-athlete-theme="lucine"] .set-load,
+.training-page[data-athlete-theme="lucine"] .set-rpe,
+.training-page[data-athlete-theme="lucine"] .training-session-v11__note,
+.training-page[data-athlete-theme="lucine"] .training-session-v11__metrics label > div {
+  border-color: rgba(189, 67, 96, .17);
+  background: rgba(49, 11, 23, .81);
+  color: #fff8f5;
+}
+
+.training-page[data-athlete-theme="lucine"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #7c1835, #c54464 54%, #e1a56e);
+  box-shadow: 0 0 20px rgba(184, 46, 80, .3);
+}
+
+.athlete-theme-banner--lucine-manor {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 390px;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(202, 73, 103, .58);
+  border-radius: 29px;
+  background: #1b060d;
+  box-shadow:
+    0 30px 82px rgba(10, 1, 5, .67),
+    0 0 48px rgba(171, 38, 70, .2),
+    inset 0 1px rgba(255, 255, 255, .13);
+  animation: lucineManorBanner 8.5s ease-in-out infinite;
+}
+
+.athlete-theme-banner--lucine-manor::after {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  inset: 8px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 205, 214, .18);
+  border-radius: 21px;
+  box-shadow: inset 0 0 38px rgba(156, 28, 58, .12);
+}
+
+.lucine-manor-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2%;
+  width: 104%;
+  height: 104%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(1.04) contrast(1.05) brightness(.86);
+  animation: lucineManorHero 14s ease-in-out infinite alternate;
+}
+
+.lucine-manor-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(14, 2, 7, .02) 40%, rgba(15, 2, 7, .76) 100%),
+    radial-gradient(ellipse at center, transparent 36%, rgba(12, 2, 6, .38) 112%);
+}
+
+.lucine-manor-halo {
+  position: absolute;
+  z-index: 2;
+  top: 7%;
+  left: 51%;
+  width: 34%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border: 1px solid rgba(235, 151, 168, .42);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow:
+    0 0 28px rgba(185, 47, 79, .32),
+    inset 0 0 52px rgba(139, 25, 55, .18);
+  animation: lucineManorHalo 5s ease-in-out infinite;
+}
+
+.lucine-manor-petals,
+.lucine-manor-paws {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.lucine-manor-petals i {
+  position: absolute;
+  top: -10%;
+  width: 13px;
+  height: 8px;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(135deg, #e97d96, #7d1734);
+  box-shadow: 0 0 8px rgba(202, 64, 97, .55);
+  opacity: 0;
+  animation: lucineManorPetal 8s linear infinite;
+}
+
+.lucine-manor-petals i:nth-child(1) { left: 5%; animation-delay: -1s; }
+.lucine-manor-petals i:nth-child(2) { left: 13%; animation-delay: -6.2s; animation-duration: 9.2s; }
+.lucine-manor-petals i:nth-child(3) { left: 22%; animation-delay: -3.4s; }
+.lucine-manor-petals i:nth-child(4) { left: 31%; animation-delay: -7.1s; animation-duration: 10s; }
+.lucine-manor-petals i:nth-child(5) { left: 41%; animation-delay: -2.2s; }
+.lucine-manor-petals i:nth-child(6) { left: 49%; animation-delay: -5.5s; animation-duration: 8.8s; }
+.lucine-manor-petals i:nth-child(7) { left: 58%; animation-delay: -.4s; }
+.lucine-manor-petals i:nth-child(8) { left: 67%; animation-delay: -4.5s; animation-duration: 9.6s; }
+.lucine-manor-petals i:nth-child(9) { left: 75%; animation-delay: -2.9s; }
+.lucine-manor-petals i:nth-child(10) { left: 83%; animation-delay: -6.8s; animation-duration: 10.4s; }
+.lucine-manor-petals i:nth-child(11) { left: 91%; animation-delay: -1.7s; }
+.lucine-manor-petals i:nth-child(12) { left: 97%; animation-delay: -4s; animation-duration: 9s; }
+
+.lucine-manor-paws i {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f2a9b8;
+  box-shadow:
+    -6px -5px 0 -2px #f2a9b8,
+    0 -8px 0 -2px #f2a9b8,
+    6px -5px 0 -2px #f2a9b8,
+    0 0 11px rgba(233, 118, 143, .85);
+  opacity: .55;
+  animation: lucineManorPaw 4.8s ease-in-out infinite;
+}
+
+.lucine-manor-paws i:nth-child(1) { top: 24%; left: 9%; }
+.lucine-manor-paws i:nth-child(2) { top: 16%; right: 15%; animation-delay: -1.1s; }
+.lucine-manor-paws i:nth-child(3) { bottom: 25%; left: 19%; animation-delay: -2.3s; }
+.lucine-manor-paws i:nth-child(4) { right: 9%; bottom: 31%; animation-delay: -3.5s; }
+.lucine-manor-paws i:nth-child(5) { top: 39%; right: 31%; animation-delay: -4.2s; }
+
+.lucine-manor-copy {
+  position: absolute;
+  z-index: 8;
+  right: 0;
+  bottom: clamp(20px, 3.8vw, 43px);
+  left: 0;
+  pointer-events: none;
+  text-align: center;
+}
+
+.lucine-manor-copy span {
+  display: block;
+  margin-bottom: 6px;
+  color: #ed9aae;
+  font-size: clamp(8px, 1.15vw, 12px);
+  font-weight: 950;
+  letter-spacing: .34em;
+  text-shadow: 0 0 15px rgba(188, 47, 80, .76);
+}
+
+.lucine-manor-copy h2 {
+  margin: 0;
+  color: #fff9f7;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(41px, 6vw, 78px);
+  font-weight: 900;
+  line-height: .88;
+  letter-spacing: .025em;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 20px rgba(187, 49, 80, .62),
+    0 13px 32px rgba(8, 0, 4, .98);
+}
+
+@keyframes lucineManorHero {
+  from { transform: scale(1.01) translate3d(-.2%, .1%, 0); }
+  to { transform: scale(1.06) translate3d(.3%, -.35%, 0); }
+}
+
+@keyframes lucineManorHalo {
+  0%, 100% { opacity: .42; transform: translateX(-50%) scale(.94); }
+  50% { opacity: .9; transform: translateX(-50%) scale(1.04); }
+}
+
+@keyframes lucineManorPetal {
+  0% { opacity: 0; transform: translate3d(0, -20px, 0) rotate(0deg); }
+  12% { opacity: .85; }
+  100% { opacity: 0; transform: translate3d(90px, 590px, 0) rotate(560deg); }
+}
+
+@keyframes lucineManorPaw {
+  0%, 100% { opacity: .18; transform: scale(.72) rotate(-8deg); }
+  50% { opacity: .92; transform: scale(1.13) rotate(7deg); }
+}
+
+@keyframes lucineManorBanner {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -4px, 0); }
+}
+
+@keyframes lucineManorBackdrop {
+  from { transform: scale(1.06) translate3d(-.4%, 0, 0); }
+  to { transform: scale(1.1) translate3d(.5%, -.4%, 0); }
+}
+
+@media (max-width: 650px) {
+  .athlete-theme-banner--lucine-manor {
+    min-height: 520px;
+    aspect-ratio: 4 / 5;
+    border-radius: 23px;
+  }
+
+  .athlete-theme-banner--lucine-manor::after {
+    inset: 6px;
+    border-radius: 17px;
+  }
+
+  .lucine-manor-hero {
+    object-position: 50% center;
+    filter: saturate(1.02) contrast(1.05) brightness(.79);
+  }
+
+  .lucine-manor-halo {
+    top: 15%;
+    width: 68%;
+  }
+
+  .lucine-manor-copy {
+    bottom: 28px;
+  }
+
+  .lucine-manor-copy h2 {
+    font-size: clamp(45px, 15vw, 64px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .training-page[data-athlete-theme="lucine"]::before,
+  .athlete-theme-banner--lucine-manor,
+  .lucine-manor-hero,
+  .lucine-manor-halo,
+  .lucine-manor-petals i,
+  .lucine-manor-paws i {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
    EXOCEST — FROZEN RIFT ARENA
    ========================================================= */
 body .training-page[data-athlete-theme="duane"] {

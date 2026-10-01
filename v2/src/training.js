@@ -5284,6 +5284,61 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'lucine-burgundy-cat-manor'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Lucine'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--lucine-manor"
+          aria-label="Manoir bordeaux du chat de Lucine"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="lucine-manor-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Chat noir et blanc dans un élégant manoir bordeaux"
+                  width="1672"
+                  height="941"
+                >
+              `
+              : ''
+          }
+
+          <div class="lucine-manor-shade" aria-hidden="true"></div>
+          <div class="lucine-manor-halo" aria-hidden="true"></div>
+
+          <div class="lucine-manor-petals" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="lucine-manor-paws" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="lucine-manor-copy">
+            <span>BURGUNDY MANOR</span>
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'exocest-rift-arena'
     ) {
       const heroImage =
