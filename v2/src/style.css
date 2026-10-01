@@ -11729,6 +11729,366 @@ body[data-app-backdrop="brigade"] .training-page[data-athlete-theme] .athlete-st
 }
 
 /* =========================================================
+   HUGO — ELEMENTAL RAID
+   ========================================================= */
+body .training-page[data-athlete-theme="hugo"] {
+  --hugo-ice: #46caff;
+  --hugo-nature: #73d873;
+  --hugo-petal: #f35da7;
+  --hugo-fire: #ff9538;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  color: #f8fbff;
+  background:
+    radial-gradient(circle at 12% 5%, rgba(56, 188, 255, .24), transparent 30%),
+    radial-gradient(circle at 52% 7%, rgba(240, 72, 158, .15), transparent 27%),
+    radial-gradient(circle at 89% 12%, rgba(255, 120, 35, .23), transparent 30%),
+    linear-gradient(180deg, rgba(3, 9, 18, .9), rgba(5, 9, 15, .98)),
+    var(--athlete-theme-background-image) center top / cover no-repeat fixed,
+    #070b12;
+}
+
+body .training-page[data-athlete-theme="hugo"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -6%;
+  pointer-events: none;
+  opacity: .18;
+  background:
+    linear-gradient(180deg, rgba(4, 10, 18, .08), rgba(4, 8, 14, .93)),
+    var(--athlete-theme-background-image) center top / cover no-repeat;
+  filter: saturate(1.08) contrast(1.08) blur(2px);
+  animation: hugoRaidBackdrop 16s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="hugo"] .training-topbar,
+.training-page[data-athlete-theme="hugo"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="hugo"] .training-v3-history,
+.training-page[data-athlete-theme="hugo"] .training-v3-overview,
+.training-page[data-athlete-theme="hugo"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="hugo"] .training-session-v11,
+.training-page[data-athlete-theme="hugo"] .training-block-report-v11,
+.training-page[data-athlete-theme="hugo"] .training-summary,
+.training-page[data-athlete-theme="hugo"] .athlete-pr-panel,
+.training-page[data-athlete-theme="hugo"] .athlete-steps-panel-v249 {
+  border-color: rgba(66, 195, 255, .23);
+  background: linear-gradient(145deg, rgba(8, 27, 44, .95), rgba(39, 16, 24, .91));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .06), 0 18px 48px rgba(0, 4, 12, .43);
+  backdrop-filter: blur(13px);
+}
+
+.training-page[data-athlete-theme="hugo"] .training-topbar {
+  border-radius: 21px;
+}
+
+.training-page[data-athlete-theme="hugo"] .training-kicker,
+.training-page[data-athlete-theme="hugo"] .set-number,
+.training-page[data-athlete-theme="hugo"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="hugo"] .training-block-report-v11__kicker {
+  color: #6ddcff;
+}
+
+.training-page[data-athlete-theme="hugo"] .back-button,
+.training-page[data-athlete-theme="hugo"] .reset-button {
+  border-color: rgba(66, 197, 255, .28);
+  background: rgba(7, 25, 41, .88);
+  color: #f7fbff;
+}
+
+.training-page[data-athlete-theme="hugo"] .week-tab,
+.training-page[data-athlete-theme="hugo"] .day-tab-v2 {
+  border-color: rgba(66, 194, 255, .18);
+  background: rgba(8, 28, 46, .88);
+}
+
+body .training-page[data-athlete-theme="hugo"] .week-tab--active,
+body .training-page[data-athlete-theme="hugo"] .day-tab-v2--active {
+  border-color: rgba(255, 167, 62, .72);
+  background: linear-gradient(135deg, rgba(21, 133, 182, .75), rgba(161, 49, 61, .66));
+  box-shadow: 0 0 28px rgba(63, 198, 255, .18);
+}
+
+.training-page[data-athlete-theme="hugo"] .training-exercise {
+  border-color: rgba(68, 195, 255, .18);
+  background: rgba(6, 21, 35, .96);
+  box-shadow: 0 20px 52px rgba(0, 4, 12, .4);
+}
+
+.training-page[data-athlete-theme="hugo"] .exercise-header {
+  border-bottom-color: rgba(66, 195, 255, .18);
+  background: linear-gradient(105deg, rgba(16, 106, 151, .96), rgba(132, 45, 44, .95));
+}
+
+.training-page[data-athlete-theme="hugo"] .training-set,
+.training-page[data-athlete-theme="hugo"] .set-load,
+.training-page[data-athlete-theme="hugo"] .set-rpe,
+.training-page[data-athlete-theme="hugo"] .training-session-v11__note,
+.training-page[data-athlete-theme="hugo"] .training-session-v11__metrics label > div {
+  border-color: rgba(67, 195, 255, .16);
+  background: rgba(7, 27, 44, .81);
+  color: #f8fbff;
+}
+
+.training-page[data-athlete-theme="hugo"] .athlete-steps-fill-v249 {
+  background: linear-gradient(90deg, #3bbfff, #72d873 34%, #ed5da2 63%, #ff9638);
+  box-shadow: 0 0 20px rgba(64, 198, 255, .29);
+}
+
+.athlete-theme-banner--hugo-raid {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 390px;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(69, 198, 255, .56);
+  border-radius: 29px;
+  background: #071321;
+  box-shadow:
+    0 30px 82px rgba(0, 4, 13, .67),
+    -12px 0 42px rgba(58, 190, 255, .14),
+    12px 0 46px rgba(255, 114, 36, .13),
+    inset 0 1px rgba(255, 255, 255, .14);
+  animation: hugoRaidBanner 8s ease-in-out infinite;
+}
+
+.athlete-theme-banner--hugo-raid::after {
+  content: "";
+  position: absolute;
+  z-index: 10;
+  inset: 8px;
+  pointer-events: none;
+  border: 1px solid rgba(208, 244, 255, .19);
+  border-radius: 21px;
+  box-shadow: inset 0 0 36px rgba(62, 197, 255, .08);
+}
+
+.hugo-raid-hero {
+  position: absolute;
+  z-index: 0;
+  inset: -2%;
+  width: 104%;
+  height: 104%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(1.03) contrast(1.05) brightness(.85);
+  animation: hugoRaidHero 14s ease-in-out infinite alternate;
+}
+
+.hugo-raid-shade {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(2, 7, 13, .01) 42%, rgba(2, 7, 13, .74) 100%),
+    radial-gradient(ellipse at center, transparent 38%, rgba(2, 7, 13, .34) 112%);
+}
+
+.hugo-raid-nature {
+  position: absolute;
+  z-index: 2;
+  top: -18%;
+  left: 48%;
+  width: 38%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  pointer-events: none;
+  opacity: .45;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(144, 255, 121, .22) 0 12%, rgba(80, 208, 94, .16) 28%, transparent 67%);
+  filter: blur(4px);
+  animation: hugoRaidNature 4.6s ease-in-out infinite;
+}
+
+.hugo-raid-ice,
+.hugo-raid-petals,
+.hugo-raid-embers {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hugo-raid-ice i {
+  position: absolute;
+  top: -9%;
+  left: 3%;
+  width: 4px;
+  height: 22px;
+  border-radius: 999px;
+  background: #ddf8ff;
+  box-shadow: 0 0 9px #4ed2ff, 0 0 19px rgba(63, 198, 255, .76);
+  animation: hugoRaidIce 6.5s linear infinite;
+}
+
+.hugo-raid-ice i:nth-child(2) { left: 11%; animation-delay: -4.1s; animation-duration: 7.6s; }
+.hugo-raid-ice i:nth-child(3) { left: 19%; animation-delay: -1.8s; }
+.hugo-raid-ice i:nth-child(4) { left: 27%; animation-delay: -5.2s; animation-duration: 8.2s; }
+.hugo-raid-ice i:nth-child(5) { left: 35%; animation-delay: -2.7s; }
+
+.hugo-raid-petals i {
+  position: absolute;
+  top: -8%;
+  width: 12px;
+  height: 7px;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(135deg, #ffabd0, #e94794);
+  box-shadow: 0 0 8px rgba(240, 75, 161, .62);
+  animation: hugoRaidPetal 8s linear infinite;
+}
+
+.hugo-raid-petals i:nth-child(1) { left: 34%; animation-delay: -1s; }
+.hugo-raid-petals i:nth-child(2) { left: 39%; animation-delay: -5.4s; animation-duration: 9.1s; }
+.hugo-raid-petals i:nth-child(3) { left: 44%; animation-delay: -3.1s; }
+.hugo-raid-petals i:nth-child(4) { left: 49%; animation-delay: -6.7s; animation-duration: 9.8s; }
+.hugo-raid-petals i:nth-child(5) { left: 54%; animation-delay: -.4s; }
+.hugo-raid-petals i:nth-child(6) { left: 59%; animation-delay: -4.2s; animation-duration: 8.8s; }
+.hugo-raid-petals i:nth-child(7) { left: 64%; animation-delay: -2.2s; }
+.hugo-raid-petals i:nth-child(8) { left: 69%; animation-delay: -7.1s; animation-duration: 10.2s; }
+
+.hugo-raid-embers i {
+  position: absolute;
+  right: 4%;
+  bottom: -8%;
+  width: 5px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ffd36c;
+  box-shadow: 0 0 10px #ff8e31, 0 0 20px rgba(255, 89, 42, .72);
+  animation: hugoRaidEmber 5.8s ease-in infinite;
+}
+
+.hugo-raid-embers i:nth-child(2) { right: 12%; animation-delay: -3.7s; }
+.hugo-raid-embers i:nth-child(3) { right: 20%; animation-delay: -1.3s; }
+.hugo-raid-embers i:nth-child(4) { right: 28%; animation-delay: -4.8s; }
+.hugo-raid-embers i:nth-child(5) { right: 36%; animation-delay: -2.2s; }
+.hugo-raid-embers i:nth-child(6) { right: 44%; animation-delay: -5.1s; }
+
+.hugo-raid-copy {
+  position: absolute;
+  z-index: 8;
+  right: 0;
+  bottom: clamp(20px, 3.8vw, 43px);
+  left: 0;
+  pointer-events: none;
+  text-align: center;
+}
+
+.hugo-raid-copy span {
+  display: block;
+  margin-bottom: 5px;
+  color: #a9edff;
+  font-size: clamp(8px, 1.15vw, 12px);
+  font-weight: 950;
+  letter-spacing: .34em;
+  text-shadow: 0 0 15px rgba(63, 198, 255, .75);
+}
+
+.hugo-raid-copy h2 {
+  margin: 0;
+  color: #f8fbff;
+  font-size: clamp(41px, 6vw, 78px);
+  font-weight: 1000;
+  line-height: .88;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+  text-shadow:
+    -2px 0 rgba(63, 198, 255, .82),
+    2px 0 rgba(255, 108, 48, .75),
+    0 0 20px rgba(235, 76, 162, .25),
+    0 13px 32px rgba(0, 0, 0, .98);
+}
+
+@keyframes hugoRaidHero {
+  from { transform: scale(1.01) translate3d(-.2%, .1%, 0); }
+  to { transform: scale(1.06) translate3d(.3%, -.35%, 0); }
+}
+
+@keyframes hugoRaidNature {
+  0%, 100% { opacity: .28; transform: translateX(-50%) scale(.9); }
+  50% { opacity: .72; transform: translateX(-50%) scale(1.1); }
+}
+
+@keyframes hugoRaidIce {
+  0% { opacity: 0; transform: translate3d(0, -15px, 0) rotate(22deg); }
+  15% { opacity: .92; }
+  100% { opacity: 0; transform: translate3d(55px, 590px, 0) rotate(22deg); }
+}
+
+@keyframes hugoRaidPetal {
+  0% { opacity: 0; transform: translate3d(0, -18px, 0) rotate(0deg); }
+  12% { opacity: .88; }
+  100% { opacity: 0; transform: translate3d(88px, 585px, 0) rotate(540deg); }
+}
+
+@keyframes hugoRaidEmber {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(.55); }
+  18% { opacity: .95; }
+  100% { opacity: 0; transform: translate3d(-26px, -480px, 0) scale(1.35); }
+}
+
+@keyframes hugoRaidBanner {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -4px, 0); }
+}
+
+@keyframes hugoRaidBackdrop {
+  from { transform: scale(1.06) translate3d(-.4%, 0, 0); }
+  to { transform: scale(1.1) translate3d(.5%, -.4%, 0); }
+}
+
+@media (max-width: 650px) {
+  .athlete-theme-banner--hugo-raid {
+    min-height: 520px;
+    aspect-ratio: 4 / 5;
+    border-radius: 23px;
+  }
+
+  .athlete-theme-banner--hugo-raid::after {
+    inset: 6px;
+    border-radius: 17px;
+  }
+
+  .hugo-raid-hero {
+    object-position: 50% center;
+    filter: saturate(1.02) contrast(1.06) brightness(.78);
+  }
+
+  .hugo-raid-nature {
+    top: -2%;
+    width: 72%;
+  }
+
+  .hugo-raid-copy {
+    bottom: 28px;
+  }
+
+  .hugo-raid-copy h2 {
+    font-size: clamp(45px, 15vw, 65px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .training-page[data-athlete-theme="hugo"]::before,
+  .athlete-theme-banner--hugo-raid,
+  .hugo-raid-hero,
+  .hugo-raid-nature,
+  .hugo-raid-ice i,
+  .hugo-raid-petals i,
+  .hugo-raid-embers i {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
    LUCINE — BURGUNDY CAT MANOR
    ========================================================= */
 body .training-page[data-athlete-theme="lucine"] {

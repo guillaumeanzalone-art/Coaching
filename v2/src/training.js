@@ -5284,6 +5284,64 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'hugo-elemental-raid'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Hugo'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--hugo-raid"
+          aria-label="Compagnie du raid élémentaire d’Hugo"
+        >
+          ${
+            heroImage
+              ? `
+                <img
+                  class="hugo-raid-hero"
+                  src="${escapeHtml(heroImage)}"
+                  alt="Guerriers, créatures et mascotte réunis dans une arène élémentaire"
+                  width="1672"
+                  height="941"
+                >
+              `
+              : ''
+          }
+
+          <div class="hugo-raid-shade" aria-hidden="true"></div>
+          <div class="hugo-raid-nature" aria-hidden="true"></div>
+
+          <div class="hugo-raid-ice" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="hugo-raid-petals" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="hugo-raid-embers" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="hugo-raid-copy">
+            <span>ELEMENTAL RAID</span>
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'lucine-burgundy-cat-manor'
     ) {
       const heroImage =
