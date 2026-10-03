@@ -109,6 +109,65 @@ const SQUAT_SUPPORT_ATHLETES =
 const DUANE_MILKO_PRESS_KEY =
   'duane-week-4-milko-press'
 
+const SARAH_SATURDAY_EXERCISES_TO_REMOVE =
+  new Set([
+    'comp squat tertiaire raw',
+    'larsen ou comp',
+    'larsen leger',
+    'comp deadlift tertiaire tempo concentrique',
+  ])
+
+function normalizeExerciseText(
+  value
+) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[-–—]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
+}
+
+function enhanceSarahSaturday(
+  day
+) {
+  if (
+    !normalizeExerciseText(
+      day?.name
+    ).includes('samedi')
+  ) {
+    return day
+  }
+
+  const exercises =
+    Array.isArray(day?.exercises)
+      ? day.exercises
+      : []
+
+  return {
+    ...day,
+    exercises:
+      exercises.filter(
+        (exercise) => {
+          const signature =
+            normalizeExerciseText(
+              [
+                exercise?.name,
+                exercise?.variant,
+              ]
+                .filter(Boolean)
+                .join(' ')
+            )
+
+          return !SARAH_SATURDAY_EXERCISES_TO_REMOVE.has(
+            signature
+          )
+        }
+      ),
+  }
+}
+
 function createDuaneMilkoPress(
   dayId
 ) {
@@ -401,10 +460,15 @@ export function enhanceProgramForAthlete(
     normalizedAthleteId ===
     'duane'
 
+  const hasSarahSaturdayCleanup =
+    normalizedAthleteId ===
+    'sarah'
+
   if (
     (
       !hasSquatSupport &&
-      !hasDuaneWeekFourPrep
+      !hasDuaneWeekFourPrep &&
+      !hasSarahSaturdayCleanup
     ) ||
     !program ||
     !Array.isArray(
@@ -469,6 +533,15 @@ export function enhanceProgramForAthlete(
                                     )
                                 }
 
+                                if (
+                                  hasSarahSaturdayCleanup
+                                ) {
+                                  enhancedDay =
+                                    enhanceSarahSaturday(
+                                      enhancedDay
+                                    )
+                                }
+
                                 return enhancedDay
                               }
                             )
@@ -488,5 +561,6 @@ export {
   CLARA_SQUAT_PREP,
   CLARA_SQUAT_PREP_KEY,
   DUANE_MILKO_PRESS_KEY,
+  SARAH_SATURDAY_EXERCISES_TO_REMOVE,
   SQUAT_SUPPORT_ATHLETES,
 }
