@@ -4601,6 +4601,86 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'kaoutar-moroccan-starry-medina'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Kaoutar'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--kaoutar-medina"
+          aria-label="Médina étoilée et artistique du Maroc pour Kaoutar"
+        >
+          ${
+            heroImage
+              ? `
+                <picture class="kaoutar-medina-picture">
+                  ${
+                    heroMobileImage
+                      ? `
+                        <source
+                          media="(max-width: 650px)"
+                          srcset="${escapeHtml(heroMobileImage)}"
+                        >
+                      `
+                      : ''
+                  }
+
+                  <img
+                    class="kaoutar-medina-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Médina marocaine peinte sous un ciel étoilé avec des chats et des créatures surréalistes"
+                    width="1672"
+                    height="941"
+                  >
+                </picture>
+              `
+              : ''
+          }
+
+          <div class="kaoutar-medina-sky" aria-hidden="true"></div>
+
+          <div class="kaoutar-medina-stars" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="kaoutar-medina-brushflow" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </div>
+
+          <div class="kaoutar-medina-lanterns" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="kaoutar-medina-canvas" aria-hidden="true"></div>
+          <div class="kaoutar-medina-shade" aria-hidden="true"></div>
+
+          <div class="kaoutar-medina-copy">
+            <span>Atelier du Royaume</span>
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'clemosaurus-pactbound-duel'
     ) {
       const heroImage =
