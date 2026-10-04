@@ -4521,6 +4521,86 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'anzalone-celestial-pantheon'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          ''
+        ).trim()
+
+      const athleteName =
+        String(
+          program.athlete?.name ||
+          'Anzalone'
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--anzalone-pantheon"
+          aria-label="Panthéon céleste d’Anzalone"
+        >
+          ${
+            heroImage
+              ? `
+                <picture class="anzalone-pantheon-picture">
+                  ${
+                    heroMobileImage
+                      ? `
+                        <source
+                          media="(max-width: 650px)"
+                          srcset="${escapeHtml(heroMobileImage)}"
+                        >
+                      `
+                      : ''
+                  }
+
+                  <img
+                    class="anzalone-pantheon-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Panthéon de guerriers, mages et légendes sportives sous une éclipse céleste"
+                    width="1672"
+                    height="941"
+                  >
+                </picture>
+              `
+              : ''
+          }
+
+          <div class="anzalone-pantheon-eclipse" aria-hidden="true"></div>
+
+          <div class="anzalone-pantheon-orbits" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </div>
+
+          <div class="anzalone-pantheon-rays" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="anzalone-pantheon-stars" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="anzalone-pantheon-grain" aria-hidden="true"></div>
+          <div class="anzalone-pantheon-shade" aria-hidden="true"></div>
+
+          <div class="anzalone-pantheon-copy">
+            <span>Celestial Pantheon</span>
+            <h2>${escapeHtml(athleteName)}</h2>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'clemosaurus-pactbound-duel'
     ) {
       const heroImage =

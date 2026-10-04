@@ -13516,6 +13516,491 @@ body .training-page[data-athlete-theme="tom"] .day-tab-v2--active {
   }
 }
 
+/* =========================================================
+   ANZALONE — CELESTIAL PANTHEON
+   ========================================================= */
+body .training-page[data-athlete-theme="guillaume"] {
+  --anzalone-gold: #e7b84d;
+  --anzalone-gold-soft: #ffe9a5;
+  --anzalone-indigo: #14162d;
+  --anzalone-crimson: #b92f43;
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+  overflow-y: visible;
+  color: #fff9ec;
+  background:
+    radial-gradient(circle at 50% 2%, rgba(231, 184, 77, .23), transparent 25%),
+    radial-gradient(circle at 12% 16%, rgba(89, 78, 192, .18), transparent 30%),
+    linear-gradient(180deg, rgba(4, 5, 14, .87), rgba(4, 5, 13, .985)),
+    var(--athlete-theme-background-image) center top / cover no-repeat fixed,
+    #050611;
+  box-shadow: none;
+}
+
+body .training-page[data-athlete-theme="guillaume"]::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: -6%;
+  pointer-events: none;
+  opacity: .16;
+  background:
+    linear-gradient(180deg, rgba(4, 5, 13, .08), rgba(4, 5, 13, .94)),
+    var(--athlete-theme-background-image) center top / cover no-repeat;
+  filter: saturate(1.08) contrast(1.08) blur(2px);
+  animation: anzalonePantheonBackdrop 18s ease-in-out infinite alternate;
+}
+
+.training-page[data-athlete-theme="guillaume"] .training-topbar,
+.training-page[data-athlete-theme="guillaume"] .athlete-insights-grid-v249 > *,
+.training-page[data-athlete-theme="guillaume"] .training-v3-history,
+.training-page[data-athlete-theme="guillaume"] .training-v3-overview,
+.training-page[data-athlete-theme="guillaume"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="guillaume"] .training-session-v11,
+.training-page[data-athlete-theme="guillaume"] .training-block-report-v11,
+.training-page[data-athlete-theme="guillaume"] .training-summary,
+.training-page[data-athlete-theme="guillaume"] .athlete-pr-panel,
+.training-page[data-athlete-theme="guillaume"] .athlete-steps-panel-v249 {
+  border-color: rgba(231, 184, 77, .25) !important;
+  background:
+    linear-gradient(145deg, rgba(18, 20, 40, .965), rgba(7, 9, 20, .95)) !important;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, .065),
+    0 20px 55px rgba(0, 0, 7, .54),
+    0 0 34px rgba(231, 184, 77, .055) !important;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.training-page[data-athlete-theme="guillaume"] .training-topbar {
+  border-radius: 21px;
+}
+
+.training-page[data-athlete-theme="guillaume"] .training-topbar h1 {
+  color: #fff9ea;
+  text-shadow:
+    0 0 22px rgba(231, 184, 77, .24),
+    0 5px 20px rgba(0, 0, 0, .72);
+}
+
+.training-page[data-athlete-theme="guillaume"] .training-kicker,
+.training-page[data-athlete-theme="guillaume"] .set-number,
+.training-page[data-athlete-theme="guillaume"] .training-session-v11__kicker,
+.training-page[data-athlete-theme="guillaume"] .training-block-report-v11__kicker {
+  color: #f0c761;
+}
+
+.training-page[data-athlete-theme="guillaume"] .back-button,
+.training-page[data-athlete-theme="guillaume"] .reset-button {
+  border-color: rgba(231, 184, 77, .31);
+  background: rgba(20, 21, 40, .9);
+  color: #fff9ec;
+}
+
+.training-page[data-athlete-theme="guillaume"] .back-button:hover,
+.training-page[data-athlete-theme="guillaume"] .reset-button:hover {
+  border-color: rgba(255, 232, 159, .62);
+  background: rgba(69, 51, 30, .88);
+}
+
+.training-page[data-athlete-theme="guillaume"] .week-tab,
+.training-page[data-athlete-theme="guillaume"] .day-tab-v2 {
+  border-color: rgba(231, 184, 77, .18);
+  background: rgba(17, 19, 37, .91);
+  color: #c8c5d8;
+}
+
+.training-page[data-athlete-theme="guillaume"] .week-tab strong,
+.training-page[data-athlete-theme="guillaume"] .day-tab-v2 strong {
+  color: #fff9ec;
+}
+
+body .training-page[data-athlete-theme="guillaume"] .week-tab--active,
+body .training-page[data-athlete-theme="guillaume"] .day-tab-v2--active {
+  border-color: rgba(255, 224, 133, .75);
+  background:
+    linear-gradient(135deg, rgba(137, 87, 24, .93), rgba(45, 35, 73, .94));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, .11),
+    0 0 29px rgba(231, 184, 77, .18);
+}
+
+.training-page[data-athlete-theme="guillaume"] .training-exercise {
+  border-color: rgba(231, 184, 77, .2);
+  background: rgba(12, 14, 28, .97);
+  box-shadow: 0 21px 54px rgba(0, 0, 8, .5);
+}
+
+.training-page[data-athlete-theme="guillaume"] .exercise-header {
+  border-bottom-color: rgba(231, 184, 77, .2);
+  background:
+    linear-gradient(105deg, rgba(98, 64, 24, .95), rgba(27, 27, 54, .965));
+}
+
+.training-page[data-athlete-theme="guillaume"] .exercise-type {
+  border-color: rgba(255, 226, 143, .52);
+  background: rgba(231, 184, 77, .11);
+  color: #ffedb7;
+}
+
+.training-page[data-athlete-theme="guillaume"] .training-set,
+.training-page[data-athlete-theme="guillaume"] .set-load,
+.training-page[data-athlete-theme="guillaume"] .set-rpe,
+.training-page[data-athlete-theme="guillaume"] .training-session-v11__note,
+.training-page[data-athlete-theme="guillaume"] .training-session-v11__metrics label > div {
+  border-color: rgba(231, 184, 77, .15);
+  background: rgba(18, 20, 39, .86);
+  color: #fff9ec;
+}
+
+.training-page[data-athlete-theme="guillaume"] .set-load:focus,
+.training-page[data-athlete-theme="guillaume"] .set-rpe:focus,
+.training-page[data-athlete-theme="guillaume"] .training-session-v11__note:focus {
+  border-color: #e7b84d;
+  box-shadow: 0 0 0 3px rgba(231, 184, 77, .13);
+}
+
+.training-page[data-athlete-theme="guillaume"] .athlete-steps-fill-v249 {
+  background:
+    linear-gradient(90deg, #701b32, #bb3045 26%, #e7b84d 68%, #fff0b9);
+  box-shadow: 0 0 22px rgba(231, 184, 77, .35);
+}
+
+.athlete-theme-banner--anzalone-pantheon {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 390px;
+  margin: 0 0 22px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(231, 184, 77, .64);
+  border-radius: 29px;
+  background: #050611;
+  box-shadow:
+    0 32px 88px rgba(0, 0, 8, .72),
+    0 0 54px rgba(231, 184, 77, .13),
+    inset 0 1px rgba(255, 255, 255, .17);
+  animation: anzalonePantheonBanner 7s ease-in-out infinite;
+}
+
+.athlete-theme-banner--anzalone-pantheon::after {
+  content: "";
+  position: absolute;
+  z-index: 12;
+  inset: 8px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 235, 178, .22);
+  border-radius: 21px;
+  box-shadow:
+    inset 0 0 40px rgba(231, 184, 77, .075),
+    0 0 19px rgba(231, 184, 77, .06);
+}
+
+.anzalone-pantheon-picture {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+}
+
+.anzalone-pantheon-hero {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(1.03) contrast(1.07) brightness(.82);
+  transform-origin: 50% 45%;
+  animation: anzalonePantheonHero 14s cubic-bezier(.4, 0, .2, 1) infinite alternate;
+}
+
+.anzalone-pantheon-eclipse {
+  position: absolute;
+  z-index: 2;
+  top: 3%;
+  left: 50%;
+  width: clamp(105px, 15vw, 215px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, transparent 52%, rgba(255, 224, 131, .19) 62%, transparent 73%);
+  box-shadow:
+    0 0 24px rgba(255, 223, 121, .32),
+    0 0 72px rgba(231, 184, 77, .2);
+  mix-blend-mode: screen;
+  animation: anzalonePantheonEclipse 4.8s ease-in-out infinite;
+}
+
+.anzalone-pantheon-orbits,
+.anzalone-pantheon-rays,
+.anzalone-pantheon-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.anzalone-pantheon-orbits {
+  z-index: 3;
+}
+
+.anzalone-pantheon-orbits i {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  width: 54%;
+  height: 28%;
+  border: 1px solid rgba(255, 232, 168, .24);
+  border-radius: 50%;
+  transform: translateX(-50%) rotate(-8deg);
+  box-shadow: 0 0 13px rgba(231, 184, 77, .08);
+  animation: anzalonePantheonOrbit 16s linear infinite;
+}
+
+.anzalone-pantheon-orbits i:nth-child(2) {
+  top: 5%;
+  width: 40%;
+  height: 36%;
+  opacity: .56;
+  transform: translateX(-50%) rotate(28deg);
+  animation-duration: 21s;
+  animation-direction: reverse;
+}
+
+.anzalone-pantheon-orbits i:nth-child(3) {
+  top: 13%;
+  width: 67%;
+  height: 22%;
+  opacity: .42;
+  transform: translateX(-50%) rotate(-24deg);
+  animation-duration: 27s;
+}
+
+.anzalone-pantheon-rays {
+  z-index: 4;
+  mix-blend-mode: screen;
+}
+
+.anzalone-pantheon-rays i {
+  position: absolute;
+  top: -28%;
+  left: 50%;
+  width: 2px;
+  height: 92%;
+  opacity: .2;
+  background: linear-gradient(180deg, transparent, rgba(255, 224, 137, .95), transparent);
+  transform-origin: 50% 58%;
+  filter: blur(.4px);
+  animation: anzalonePantheonRay 5.4s ease-in-out infinite;
+}
+
+.anzalone-pantheon-rays i:nth-child(1) { transform: rotate(-56deg); }
+.anzalone-pantheon-rays i:nth-child(2) { transform: rotate(-34deg); animation-delay: -2.1s; }
+.anzalone-pantheon-rays i:nth-child(3) { transform: rotate(-13deg); animation-delay: -3.7s; }
+.anzalone-pantheon-rays i:nth-child(4) { transform: rotate(14deg); animation-delay: -1.2s; }
+.anzalone-pantheon-rays i:nth-child(5) { transform: rotate(36deg); animation-delay: -4.4s; }
+.anzalone-pantheon-rays i:nth-child(6) { transform: rotate(58deg); animation-delay: -2.8s; }
+
+.anzalone-pantheon-stars {
+  z-index: 5;
+}
+
+.anzalone-pantheon-stars i {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff8d9;
+  box-shadow:
+    0 0 8px #fff5c8,
+    0 0 18px rgba(231, 184, 77, .9);
+  animation: anzalonePantheonStar 3.8s ease-in-out infinite;
+}
+
+.anzalone-pantheon-stars i:nth-child(1) { top: 15%; left: 8%; animation-delay: -.4s; }
+.anzalone-pantheon-stars i:nth-child(2) { top: 28%; left: 17%; animation-delay: -2.8s; }
+.anzalone-pantheon-stars i:nth-child(3) { top: 9%; left: 28%; animation-delay: -1.7s; }
+.anzalone-pantheon-stars i:nth-child(4) { top: 21%; left: 39%; animation-delay: -3.3s; }
+.anzalone-pantheon-stars i:nth-child(5) { top: 11%; left: 61%; animation-delay: -2.1s; }
+.anzalone-pantheon-stars i:nth-child(6) { top: 26%; left: 72%; animation-delay: -.9s; }
+.anzalone-pantheon-stars i:nth-child(7) { top: 14%; left: 88%; animation-delay: -3.6s; }
+.anzalone-pantheon-stars i:nth-child(8) { top: 48%; left: 6%; animation-delay: -1.3s; }
+.anzalone-pantheon-stars i:nth-child(9) { top: 57%; left: 24%; animation-delay: -2.5s; }
+.anzalone-pantheon-stars i:nth-child(10) { top: 44%; left: 79%; animation-delay: -.7s; }
+.anzalone-pantheon-stars i:nth-child(11) { top: 58%; left: 93%; animation-delay: -3.1s; }
+.anzalone-pantheon-stars i:nth-child(12) { top: 35%; left: 52%; animation-delay: -1.9s; }
+
+.anzalone-pantheon-grain {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  pointer-events: none;
+  opacity: .075;
+  background-image:
+    repeating-radial-gradient(circle at 20% 35%, rgba(255, 255, 255, .58) 0 1px, transparent 1px 4px);
+  background-size: 7px 7px;
+  mix-blend-mode: soft-light;
+  animation: anzalonePantheonGrain .7s steps(2) infinite;
+}
+
+.anzalone-pantheon-shade {
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(4, 5, 13, .02) 38%, rgba(4, 5, 13, .86) 100%),
+    radial-gradient(ellipse at 50% 44%, transparent 38%, rgba(3, 3, 10, .34) 110%);
+}
+
+.anzalone-pantheon-copy {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  bottom: clamp(22px, 4vw, 44px);
+  left: 0;
+  pointer-events: none;
+  text-align: center;
+}
+
+.anzalone-pantheon-copy span {
+  display: block;
+  margin: 0 0 8px;
+  color: #f3d783;
+  font-size: clamp(9px, 1vw, 13px);
+  font-weight: 900;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 13px rgba(0, 0, 0, .92);
+}
+
+.anzalone-pantheon-copy h2 {
+  margin: 0;
+  color: #fff9e8;
+  font-size: clamp(42px, 6vw, 80px);
+  font-weight: 1000;
+  line-height: .86;
+  letter-spacing: -.055em;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 11px rgba(255, 232, 162, .35),
+    0 0 31px rgba(231, 184, 77, .28),
+    0 15px 38px rgba(0, 0, 0, .98);
+  animation: anzalonePantheonName 4.8s ease-in-out infinite;
+}
+
+@keyframes anzalonePantheonHero {
+  from { transform: scale(1.01) translate3d(-.25%, .1%, 0); }
+  to { transform: scale(1.06) translate3d(.35%, -.45%, 0); }
+}
+
+@keyframes anzalonePantheonEclipse {
+  0%, 100% { opacity: .55; transform: translateX(-50%) scale(.94); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.08); }
+}
+
+@keyframes anzalonePantheonOrbit {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+@keyframes anzalonePantheonRay {
+  0%, 100% { opacity: .08; filter: blur(.8px); }
+  50% { opacity: .38; filter: blur(0); }
+}
+
+@keyframes anzalonePantheonStar {
+  0%, 100% { opacity: .2; transform: scale(.55); }
+  50% { opacity: 1; transform: scale(1.45); }
+}
+
+@keyframes anzalonePantheonGrain {
+  0% { transform: translate3d(-1%, 0, 0); }
+  50% { transform: translate3d(1%, -1%, 0); }
+  100% { transform: translate3d(0, 1%, 0); }
+}
+
+@keyframes anzalonePantheonName {
+  0%, 100% { filter: brightness(.94); transform: translateY(0); }
+  50% { filter: brightness(1.19); transform: translateY(-2px); }
+}
+
+@keyframes anzalonePantheonBanner {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -3px, 0); }
+}
+
+@keyframes anzalonePantheonBackdrop {
+  from { transform: scale(1.055) translate3d(-.4%, .1%, 0); }
+  to { transform: scale(1.105) translate3d(.5%, -.45%, 0); }
+}
+
+@media (max-width: 650px) {
+  body .training-page[data-athlete-theme="guillaume"] {
+    --athlete-theme-background-image: url('/anzalone-celestial-pantheon-mobile.webp?v=20261004');
+  }
+
+  .athlete-theme-banner--anzalone-pantheon {
+    min-height: 540px;
+    aspect-ratio: 4 / 5;
+    border-radius: 23px;
+  }
+
+  .athlete-theme-banner--anzalone-pantheon::after {
+    inset: 6px;
+    border-radius: 17px;
+  }
+
+  .anzalone-pantheon-hero {
+    object-position: 50% center;
+    filter: saturate(1.02) contrast(1.08) brightness(.77);
+  }
+
+  .anzalone-pantheon-eclipse {
+    top: 2%;
+    width: 34%;
+  }
+
+  .anzalone-pantheon-orbits i {
+    top: 7%;
+    width: 85%;
+    height: 25%;
+  }
+
+  .anzalone-pantheon-copy {
+    bottom: 30px;
+  }
+
+  .anzalone-pantheon-copy span {
+    margin-bottom: 7px;
+    font-size: 9px;
+    letter-spacing: .24em;
+  }
+
+  .anzalone-pantheon-copy h2 {
+    font-size: clamp(41px, 13vw, 60px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body .training-page[data-athlete-theme="guillaume"]::before,
+  .athlete-theme-banner--anzalone-pantheon,
+  .anzalone-pantheon-hero,
+  .anzalone-pantheon-eclipse,
+  .anzalone-pantheon-orbits i,
+  .anzalone-pantheon-rays i,
+  .anzalone-pantheon-stars i,
+  .anzalone-pantheon-grain,
+  .anzalone-pantheon-copy h2 {
+    animation: none !important;
+  }
+}
+
 /* Exercise instructions */
 .exercise-header .exercise-heading {
   flex: 1;
