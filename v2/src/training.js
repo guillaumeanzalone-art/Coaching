@@ -4197,7 +4197,7 @@ export function mountTraining(
           </div>
 
           <div class="metaknight-moonlit-copy">
-            <span>Forêt lunaire</span>
+            
             <h2>${escapeHtml(athleteName)}</h2>
           </div>
         </section>
@@ -4591,10 +4591,6 @@ export function mountTraining(
           <div class="anzalone-pantheon-grain" aria-hidden="true"></div>
           <div class="anzalone-pantheon-shade" aria-hidden="true"></div>
 
-          <div class="anzalone-pantheon-copy">
-            <span>Celestial Pantheon</span>
-            <h2>${escapeHtml(athleteName)}</h2>
-          </div>
         </section>
       `
     }
@@ -4672,7 +4668,7 @@ export function mountTraining(
           <div class="kaoutar-medina-shade" aria-hidden="true"></div>
 
           <div class="kaoutar-medina-copy">
-            <span>Atelier du Royaume</span>
+            
             <h2>${escapeHtml(athleteName)}</h2>
           </div>
         </section>
@@ -4870,9 +4866,7 @@ export function mountTraining(
           </div>
 
           <div class="north-strength-copy">
-            <span class="north-strength-eyebrow">
-              Programme polaire
-            </span>
+            
 
             <h2>
               ${escapeHtml(athleteName)}
@@ -4954,9 +4948,7 @@ export function mountTraining(
           </div>
 
           <div class="magicarpe-theme-copy">
-            <span class="magicarpe-theme-eyebrow">
-              Brick Splash Training
-            </span>
+            
 
             <h2>
               ${escapeHtml(athleteName)}
@@ -5352,9 +5344,7 @@ export function mountTraining(
           </div>
 
           <div class="flop-mew-copy">
-            <span class="flop-mew-eyebrow">
-              Le Royaume de Mew
-            </span>
+            
 
             <h2>
               ${escapeHtml(athleteName)}
@@ -5551,7 +5541,7 @@ export function mountTraining(
           </div>
 
           <div class="hugo-raid-copy">
-            <span>ELEMENTAL RAID</span>
+            
             <h2>${escapeHtml(athleteName)}</h2>
           </div>
         </section>
@@ -5649,7 +5639,7 @@ export function mountTraining(
           </div>
 
           <div class="lucine-manor-copy">
-            <span>BURGUNDY MANOR</span>
+            
             <h2>${escapeHtml(athleteName)}</h2>
           </div>
         </section>
@@ -5707,7 +5697,7 @@ export function mountTraining(
           </div>
 
           <div class="exocest-rift-copy">
-            <span>RIFT ARENA</span>
+            
             <h2>${escapeHtml(athleteName)}</h2>
           </div>
         </section>
