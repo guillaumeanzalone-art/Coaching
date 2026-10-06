@@ -4872,16 +4872,12 @@ export function mountTraining(
               ${escapeHtml(athleteName)}
             </h2>
 
-            <blockquote>
-              ${escapeHtml(quote)}
-            </blockquote>
+            
 
             ${
               cite
                 ? `
-                  <cite>
-                    ${escapeHtml(cite)}
-                  </cite>
+                  
                 `
                 : ''
             }
@@ -4954,24 +4950,20 @@ export function mountTraining(
               ${escapeHtml(athleteName)}
             </h2>
 
-            <blockquote>
-              ${escapeHtml(quote)}
-            </blockquote>
+            
 
             ${
               cite
                 ? `
-                  <cite>
-                    ${escapeHtml(cite)}
-                  </cite>
+                  
                 `
                 : ''
             }
 
             <div class="magicarpe-theme-badges" aria-label="Objectifs du thème">
-              <span>Construire</span>
-              <span>Progresser</span>
-              <span>Évoluer</span>
+              
+              
+              
             </div>
           </div>
 
@@ -5351,24 +5343,20 @@ export function mountTraining(
               <small>& son équipe</small>
             </h2>
 
-            <blockquote>
-              ${escapeHtml(quote)}
-            </blockquote>
+            
 
             ${
               cite
                 ? `
-                  <cite>
-                    ${escapeHtml(cite)}
-                  </cite>
+                  
                 `
                 : ''
             }
 
             <div class="flop-mew-badges" aria-label="Valeurs du thème">
-              <span>Amitié</span>
-              <span>Focus</span>
-              <span>Évolution</span>
+              
+              
+              
             </div>
           </div>
         </section>
@@ -5758,14 +5746,14 @@ export function mountTraining(
                     width="900"
                     height="900"
                   >
-                  <span>PLAYER ONE</span>
+                  
                 </div>
               `
               : ''
           }
 
           <div class="dorian-nexus-nasdas" aria-label="Clin d’œil à Nasdas">
-            <span>NASDAS</span>
+            
           </div>
         </section>
       `
@@ -5935,22 +5923,16 @@ export function mountTraining(
 
           <div class="benoit-sacred-psalms" aria-label="Psaumes de force et de confiance">
             <article>
-              <blockquote>
-                Béni soit l’Éternel, mon rocher, qui exerce mes mains au combat, mes doigts à la bataille.
-              </blockquote>
-              <cite>Psaume 144:1</cite>
+              
+              
             </article>
             <article>
-              <blockquote>
-                Tu me ceins de force pour le combat, tu fais plier sous moi mes adversaires.
-              </blockquote>
-              <cite>Psaume 18:40</cite>
+              
+              
             </article>
             <article>
-              <blockquote>
-                Si une armée se campait contre moi, mon cœur n’aurait aucune crainte.
-              </blockquote>
-              <cite>Psaume 27:3</cite>
+              
+              
             </article>
           </div>
         </section>
@@ -5967,19 +5949,11 @@ export function mountTraining(
           🕷
         </span>
 
-        <blockquote>
-          ${escapeHtml(
-            quote
-          )}
-        </blockquote>
+        
 
         ${cite
           ? `
-            <cite>
-              ${escapeHtml(
-                cite
-              )}
-            </cite>
+            
           `
           : ''}
       </section>
