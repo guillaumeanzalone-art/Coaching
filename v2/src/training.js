@@ -5340,7 +5340,6 @@ export function mountTraining(
 
             <h2>
               ${escapeHtml(athleteName)}
-              <small>& son équipe</small>
             </h2>
 
             
