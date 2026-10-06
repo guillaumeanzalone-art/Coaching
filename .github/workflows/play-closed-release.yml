@@ -1,0 +1,166 @@
+name: Play Closed Release
+
+on:
+  push:
+    branches:
+      - play-closed-20261006
+    paths-ignore:
+      - .github/play-closed-status.json
+
+permissions:
+  contents: write
+
+env:
+  APP_DIR: v2
+  APP_ID: com.gacoaching.app
+  RELEASE_VERSION: "1.5.0"
+  ANDROID_VERSION_CODE: "26100601"
+
+jobs:
+  android-closed:
+    name: Android closed test
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: v2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: play-closed-20261006
+
+      - name: Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+
+      - name: Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Verify Android publishing secrets
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          set -euo pipefail
+          missing=0
+          for var in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD GOOGLE_PLAY_SERVICE_ACCOUNT_JSON; do
+            if [ -z "${!var:-}" ]; then
+              echo "::error::Missing GitHub secret: $var"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run cloud-related tests
+        run: |
+          npm run test:cloud
+          npm run test:importer
+          npm run test:mobility
+
+      - name: Prepare store version
+        run: node scripts/set-store-version.mjs "$RELEASE_VERSION" "$ANDROID_VERSION_CODE" "20261006.1"
+
+      - name: Configure Android signing
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.ga-coaching"
+          export KEYSTORE_PATH="$RUNNER_TEMP/ga-coaching-release.jks"
+
+          python3 - <<'PY'
+          import base64
+          import os
+          from pathlib import Path
+
+          Path(os.environ["KEYSTORE_PATH"]).write_bytes(
+              base64.b64decode(os.environ["ANDROID_KEYSTORE_BASE64"])
+          )
+
+          def esc(value: str) -> str:
+              return value.replace("\\", "\\\\").replace("\n", "").replace("\r", "")
+
+          props = "\n".join([
+              f"storeFile={esc(os.environ['KEYSTORE_PATH'])}",
+              f"storePassword={esc(os.environ['ANDROID_KEYSTORE_PASSWORD'])}",
+              f"keyAlias={esc(os.environ['ANDROID_KEY_ALIAS'])}",
+              f"keyPassword={esc(os.environ['ANDROID_KEY_PASSWORD'])}",
+              "",
+          ])
+          Path.home().joinpath(".ga-coaching", "android-signing.properties").write_text(props)
+          PY
+
+      - name: Build web and sync Android
+        run: npm run android:sync
+
+      - name: Build signed AAB
+        run: |
+          cd android
+          ./gradlew bundleRelease --no-daemon --stacktrace
+
+      - name: Keep AAB artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ga-coaching-play-closed-${{ env.RELEASE_VERSION }}
+          path: v2/android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish to Google Play closed testing
+        id: play_upload
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.gacoaching.app
+          releaseFiles: v2/android/app/build/outputs/bundle/release/app-release.aab
+          tracks: alpha
+          status: completed
+          releaseName: v${{ env.RELEASE_VERSION }}
+
+      - name: Record deployment status
+        if: always()
+        working-directory: .
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .github
+          cat > .github/play-closed-status.json <<EOF
+          {
+            "run_id": "${GITHUB_RUN_ID}",
+            "run_number": "${GITHUB_RUN_NUMBER}",
+            "run_attempt": "${GITHUB_RUN_ATTEMPT}",
+            "commit": "${GITHUB_SHA}",
+            "branch": "${GITHUB_REF_NAME}",
+            "job_status": "${{ job.status }}",
+            "version_name": "${RELEASE_VERSION}",
+            "version_code": "${ANDROID_VERSION_CODE}",
+            "track": "alpha",
+            "run_url": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          }
+          EOF
+
+          git config user.name "ga-coaching-release-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add .github/play-closed-status.json
+          git commit -m "Record Play closed release status [skip ci]" || exit 0
+          git push origin HEAD:play-closed-20261006
