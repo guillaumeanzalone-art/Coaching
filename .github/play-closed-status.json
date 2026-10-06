@@ -1,0 +1,12 @@
+{
+  "run_id": "37450774444",
+  "run_number": "1",
+  "run_attempt": "1",
+  "commit": "1a504ffa6b7b31751ba1f2bc333adc00f9dfe3a2",
+  "branch": "play-closed-20261006",
+  "job_status": "failure",
+  "version_name": "1.5.0",
+  "version_code": "26100601",
+  "track": "alpha",
+  "run_url": "https://github.com/guillaumeanzalone-art/Coaching/actions/runs/37450774444"
+}
