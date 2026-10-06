@@ -63,6 +63,7 @@ jobs:
       - name: Build AAB
         run: |
           cd android
+          chmod +x gradlew
           ./gradlew bundleRelease --no-daemon --stacktrace
 
       - name: Keep AAB artifact
