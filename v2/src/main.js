@@ -2281,6 +2281,11 @@ async function openAthlete(
             athlete.id ===
               resolveAthleteIdFromMember()
           ),
+
+        isOwnAthlete:
+          currentMember?.role === 'athlete' &&
+          athlete.id ===
+            resolveAthleteIdFromMember(),
       }
     )
   } catch (error) {
