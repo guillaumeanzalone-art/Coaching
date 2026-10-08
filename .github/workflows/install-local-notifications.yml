@@ -25,6 +25,8 @@ jobs:
           cache-dependency-path: v2/package-lock.json
       - name: Install Capacitor Local Notifications
         run: npm install @capacitor/local-notifications@^8.0.0
+      - name: Build web assets
+        run: npm run build
       - name: Sync native projects
         run: npx cap sync
       - name: Commit dependency changes
