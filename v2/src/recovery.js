@@ -706,7 +706,7 @@ export async function loadRecovery({
     ] = await Promise.all([
       supabase
         .from(
-          'athlete_daily_wellness'
+          'athlete_daily_recovery_v1'
         )
         .select(
           'activity_date,steps,sleep_hours,wake_time,nutrition_score,hydration_liters,pain_upper,pain_lower,updated_at'
@@ -857,7 +857,7 @@ async function persistRecoveryField({
   let result =
     await supabase
       .from(
-        'athlete_daily_wellness'
+        'athlete_daily_recovery_v1'
       )
       .update(patch)
       .eq(
@@ -883,7 +883,7 @@ async function persistRecoveryField({
   result =
     await supabase
       .from(
-        'athlete_daily_wellness'
+        'athlete_daily_recovery_v1'
       )
       .insert({
         athlete_slug:
