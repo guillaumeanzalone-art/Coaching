@@ -5855,7 +5855,7 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
-      'french-cats'
+      'celia-luxio-army'
     ) {
       const heroImage =
         String(
@@ -5863,32 +5863,52 @@ export function mountTraining(
           ''
         ).trim()
 
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          ''
+        ).trim()
+
       return `
         <section
-          class="athlete-theme-banner athlete-theme-banner--celia-cats"
-          aria-label="Univers animé de Célia et ses chats"
+          class="athlete-theme-banner athlete-theme-banner--celia-luxio"
+          aria-label="Escouade Luxio et Lixy de Célia dans un univers militaire"
         >
           ${
             heroImage
               ? `
-                <img
-                  class="celia-cats-hero"
-                  src="${escapeHtml(heroImage)}"
-                  alt="Une brigade de chats dans un camp français kawaii"
-                  width="1672"
-                  height="941"
-                >
+                <picture class="celia-luxio-picture">
+                  ${
+                    heroMobileImage
+                      ? `
+                        <source
+                          media="(max-width: 650px)"
+                          srcset="${escapeHtml(heroMobileImage)}"
+                        >
+                      `
+                      : ''
+                  }
+
+                  <img
+                    class="celia-luxio-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Escouade de Luxio et de petits Lixy dans un camp militaire au coucher du soleil"
+                    width="1672"
+                    height="941"
+                  >
+                </picture>
               `
               : ''
           }
 
-          <div class="celia-cats-shade" aria-hidden="true"></div>
-          <div class="celia-cats-sunbeam" aria-hidden="true"></div>
-          <div class="celia-cats-paws" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span><span></span>
+          <div class="celia-luxio-shade" aria-hidden="true"></div>
+
+          <div class="celia-luxio-lightning" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
           </div>
-          <div class="celia-cats-hearts" aria-hidden="true">
-            <span></span><span></span><span></span><span></span>
+
+          <div class="celia-luxio-embers" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
           </div>
         </section>
       `
