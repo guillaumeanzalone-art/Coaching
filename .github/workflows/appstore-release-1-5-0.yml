@@ -1,0 +1,191 @@
+name: App Store 1.5.0 Release
+
+on:
+  push:
+    branches:
+      - appstore-release-1-5-0-20261008
+    paths-ignore:
+      - .github/appstore-release-status.json
+
+permissions:
+  contents: write
+
+env:
+  RELEASE_VERSION: "1.5.0"
+
+jobs:
+  ios:
+    name: Build and upload iOS
+    runs-on: macos-26
+
+    defaults:
+      run:
+        working-directory: v2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: appstore-release-1-5-0-20261008
+
+      - name: Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+
+      - name: Verify Apple secrets
+        shell: bash
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          missing=0
+          for var in APPLE_TEAM_ID APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_PRIVATE_KEY; do
+            if [ -z "${!var:-}" ]; then
+              echo "::error::Missing GitHub secret: $var"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run project tests
+        run: |
+          npm run test:cloud
+          npm run test:importer
+          npm run test:mobility
+
+      - name: Prepare store version
+        shell: bash
+        run: |
+          set -euo pipefail
+          IOS_BUILD_NUMBER="$(date -u +%Y%m%d%H%M)"
+          node scripts/set-store-version.mjs "$RELEASE_VERSION" "26100801" "$IOS_BUILD_NUMBER"
+          echo "IOS_BUILD_NUMBER=$IOS_BUILD_NUMBER" >> "$GITHUB_ENV"
+
+      - name: Build web and sync iOS
+        run: |
+          npm run build
+          npx cap sync ios
+
+      - name: Install App Store Connect API key
+        shell: bash
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          export ASC_KEY_PATH="$RUNNER_TEMP/AuthKey_${APP_STORE_CONNECT_KEY_ID}.p8"
+          export ASC_ALTOOL_DIR="$HOME/.appstoreconnect/private_keys"
+          mkdir -p "$ASC_ALTOOL_DIR"
+          printf '%s' "$APP_STORE_CONNECT_PRIVATE_KEY" > "$ASC_KEY_PATH"
+          chmod 600 "$ASC_KEY_PATH"
+          cp "$ASC_KEY_PATH" "$ASC_ALTOOL_DIR/AuthKey_${APP_STORE_CONNECT_KEY_ID}.p8"
+          echo "ASC_KEY_PATH=$ASC_KEY_PATH" >> "$GITHUB_ENV"
+
+      - name: Verify Xcode project
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -showBuildSettings >/dev/null
+
+      - name: Archive iOS app
+        shell: bash
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          xcodebuild             -project ios/App/App.xcodeproj             -scheme App             -configuration Release             -destination "generic/platform=iOS"             -archivePath "$RUNNER_TEMP/GA-Coaching.xcarchive"             -allowProvisioningUpdates             -authenticationKeyPath "$ASC_KEY_PATH"             -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID"             -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"             DEVELOPMENT_TEAM="$APPLE_TEAM_ID"             CODE_SIGN_STYLE=Automatic             clean archive
+
+      - name: Export App Store IPA
+        shell: bash
+        env:
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+            <key>destination</key>
+            <string>export</string>
+            <key>signingStyle</key>
+            <string>automatic</string>
+            <key>teamID</key>
+            <string>$APPLE_TEAM_ID</string>
+            <key>manageAppVersionAndBuildNumber</key>
+            <false/>
+            <key>stripSwiftSymbols</key>
+            <true/>
+            <key>uploadSymbols</key>
+            <true/>
+          </dict>
+          </plist>
+          PLIST
+
+          mkdir -p "$RUNNER_TEMP/ios-export"
+          xcodebuild             -exportArchive             -archivePath "$RUNNER_TEMP/GA-Coaching.xcarchive"             -exportPath "$RUNNER_TEMP/ios-export"             -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist"             -allowProvisioningUpdates             -authenticationKeyPath "$ASC_KEY_PATH"             -authenticationKeyID "$APP_STORE_CONNECT_KEY_ID"             -authenticationKeyIssuerID "$APP_STORE_CONNECT_ISSUER_ID"
+
+          IPA_PATH="$(find "$RUNNER_TEMP/ios-export" -maxdepth 1 -name '*.ipa' -print -quit)"
+          if [ -z "$IPA_PATH" ]; then
+            echo "::error::No IPA generated."
+            exit 1
+          fi
+          echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
+
+      - name: Keep IPA artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ga-coaching-ios-1.5.0-${{ env.IOS_BUILD_NUMBER }}
+          path: ${{ runner.temp }}/ios-export/*.ipa
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload to App Store Connect
+        shell: bash
+        env:
+          APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        run: |
+          set -euo pipefail
+          xcrun altool             --upload-app             --type ios             --file "$IPA_PATH"             --apiKey "$APP_STORE_CONNECT_KEY_ID"             --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID"
+
+      - name: Record release status
+        if: always()
+        working-directory: .
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .github
+          cat > .github/appstore-release-status.json <<EOF
+          {
+            "run_id": "${GITHUB_RUN_ID}",
+            "run_number": "${GITHUB_RUN_NUMBER}",
+            "commit": "${GITHUB_SHA}",
+            "version": "${RELEASE_VERSION}",
+            "build": "${IOS_BUILD_NUMBER:-unknown}",
+            "status": "${{ job.status }}",
+            "destination": "App Store Connect / TestFlight",
+            "run_url": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          }
+          EOF
+          git config user.name "ga-coaching-release-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add .github/appstore-release-status.json
+          git commit -m "Record App Store 1.5.0 release status [skip ci]" || exit 0
+          git push origin HEAD:appstore-release-1-5-0-20261008
