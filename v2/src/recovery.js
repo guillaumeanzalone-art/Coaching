@@ -1,8 +1,12 @@
+import { Capacitor } from '@capacitor/core'
+import { LocalNotifications } from '@capacitor/local-notifications'
 import { supabase } from './supabase.js'
 
 const DAY_MS = 24 * 60 * 60 * 1000
 const TRAINING_WINDOW_DAYS = 7
 const TRAINING_HALF_LIFE_HOURS = 36
+const RECOVERY_REMINDER_ID = 2100
+const RECOVERY_PREFERENCES_TABLE = 'athlete_recovery_preferences_v1'
 
 function clamp(value, min, max) {
   return Math.min(
@@ -43,6 +47,255 @@ function esc(value) {
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
+}
+
+function nativeNotificationsAvailable() {
+  return Capacitor.isNativePlatform()
+}
+
+async function getNotificationPermission(
+  request = false
+) {
+  if (!nativeNotificationsAvailable()) {
+    return 'mobile-only'
+  }
+
+  try {
+    let permission =
+      await LocalNotifications.checkPermissions()
+
+    if (
+      request &&
+      permission.display === 'prompt'
+    ) {
+      permission =
+        await LocalNotifications.requestPermissions()
+    }
+
+    return permission.display || 'unknown'
+  } catch (error) {
+    console.warn(
+      'RECOVERY NOTIFICATION PERMISSION ERROR',
+      error
+    )
+    return 'error'
+  }
+}
+
+async function cancelRecoveryReminder(
+  state
+) {
+  if (!nativeNotificationsAvailable()) {
+    if (state) {
+      state.notificationPermission =
+        'mobile-only'
+    }
+    return
+  }
+
+  try {
+    await LocalNotifications.cancel({
+      notifications: [
+        {
+          id:
+            RECOVERY_REMINDER_ID,
+        },
+      ],
+    })
+  } catch (error) {
+    console.warn(
+      'RECOVERY REMINDER CANCEL ERROR',
+      error
+    )
+  }
+}
+
+async function scheduleRecoveryReminder({
+  state,
+  requestPermission = false,
+} = {}) {
+  if (!state) {
+    return false
+  }
+
+  if (
+    !state.isOwnAthlete ||
+    !state.enabled ||
+    !state.reminderEnabled
+  ) {
+    await cancelRecoveryReminder(
+      state
+    )
+    return false
+  }
+
+  const permission =
+    await getNotificationPermission(
+      requestPermission
+    )
+
+  state.notificationPermission =
+    permission
+
+  if (permission !== 'granted') {
+    return false
+  }
+
+  try {
+    await LocalNotifications.cancel({
+      notifications: [
+        {
+          id:
+            RECOVERY_REMINDER_ID,
+        },
+      ],
+    })
+
+    await LocalNotifications.schedule({
+      notifications: [
+        {
+          id:
+            RECOVERY_REMINDER_ID,
+          title:
+            '❤️ Check-in récupération',
+          body:
+            'Prends 30 secondes pour renseigner sommeil, hydratation, nutrition et douleurs.',
+          schedule: {
+            on: {
+              hour:
+                Number(
+                  state.reminderHour
+                ) || 21,
+              minute:
+                Number(
+                  state.reminderMinute
+                ) || 0,
+            },
+            repeats: true,
+          },
+          extra: {
+            destination:
+              'recovery',
+          },
+        },
+      ],
+    })
+
+    state.notificationScheduled =
+      true
+
+    return true
+  } catch (error) {
+    console.error(
+      'RECOVERY REMINDER SCHEDULE ERROR',
+      error
+    )
+
+    state.notificationScheduled =
+      false
+
+    return false
+  }
+}
+
+async function loadRecoveryPreferences(
+  athleteSlug,
+  state
+) {
+  const { data, error } =
+    await supabase
+      .from(
+        RECOVERY_PREFERENCES_TABLE
+      )
+      .select(
+        'enabled,reminder_enabled,reminder_hour,reminder_minute'
+      )
+      .eq(
+        'athlete_slug',
+        athleteSlug
+      )
+      .maybeSingle()
+
+  if (error) {
+    throw error
+  }
+
+  state.enabled =
+    data?.enabled !== false
+
+  state.reminderEnabled =
+    data?.reminder_enabled !== false
+
+  state.reminderHour =
+    Number(
+      data?.reminder_hour
+    ) || 21
+
+  state.reminderMinute =
+    Number(
+      data?.reminder_minute
+    ) || 0
+}
+
+async function persistRecoveryPreferences(
+  athleteSlug,
+  state
+) {
+  const patch = {
+    enabled:
+      Boolean(state.enabled),
+    reminder_enabled:
+      Boolean(
+        state.reminderEnabled
+      ),
+    reminder_hour:
+      Number(
+        state.reminderHour
+      ) || 21,
+    reminder_minute:
+      Number(
+        state.reminderMinute
+      ) || 0,
+    updated_at:
+      new Date().toISOString(),
+  }
+
+  let result =
+    await supabase
+      .from(
+        RECOVERY_PREFERENCES_TABLE
+      )
+      .update(patch)
+      .eq(
+        'athlete_slug',
+        athleteSlug
+      )
+      .select(
+        'athlete_slug'
+      )
+
+  if (
+    !result.error &&
+    Array.isArray(result.data) &&
+    result.data.length
+  ) {
+    return
+  }
+
+  result =
+    await supabase
+      .from(
+        RECOVERY_PREFERENCES_TABLE
+      )
+      .insert({
+        athlete_slug:
+          athleteSlug,
+        ...patch,
+      })
+
+  if (result.error) {
+    throw result.error
+  }
 }
 
 function sleepWeightedAverage(rows, fallback) {
@@ -567,6 +820,17 @@ export function createRecoveryState() {
     awakeHours: null,
     hydrationTarget: 2.3,
     recentSets: 0,
+    enabled: true,
+    reminderEnabled: true,
+    reminderHour: 21,
+    reminderMinute: 0,
+    isOwnAthlete: false,
+    preferenceSaving: false,
+    notificationPermission:
+      nativeNotificationsAvailable()
+        ? 'unknown'
+        : 'mobile-only',
+    notificationScheduled: false,
   }
 }
 
@@ -671,6 +935,7 @@ export async function loadRecovery({
   state,
   bodyWeight = null,
   steps = 0,
+  isOwnAthlete = false,
 }) {
   if (!athleteSlug || !state) {
     return
@@ -680,6 +945,8 @@ export async function loadRecovery({
   state.error = ''
   state.bodyWeight =
     safeNumber(bodyWeight)
+  state.isOwnAthlete =
+    Boolean(isOwnAthlete)
   state.steps =
     Math.max(
       0,
@@ -703,13 +970,14 @@ export async function loadRecovery({
       wellnessResult,
       trainingResult,
       sessionResult,
+      preferencesResult,
     ] = await Promise.all([
       supabase
         .from(
           'athlete_daily_recovery_v1'
         )
         .select(
-          'activity_date,steps,sleep_hours,wake_time,nutrition_score,hydration_liters,pain_upper,pain_lower,updated_at'
+          'activity_date,sleep_hours,wake_time,nutrition_score,hydration_liters,pain_upper,pain_lower,updated_at'
         )
         .eq(
           'athlete_slug',
@@ -759,6 +1027,19 @@ export async function loadRecovery({
           }
         )
         .limit(6),
+
+      supabase
+        .from(
+          RECOVERY_PREFERENCES_TABLE
+        )
+        .select(
+          'enabled,reminder_enabled,reminder_hour,reminder_minute'
+        )
+        .eq(
+          'athlete_slug',
+          athleteSlug
+        )
+        .maybeSingle(),
     ])
 
     if (wellnessResult.error) {
@@ -768,6 +1049,26 @@ export async function loadRecovery({
     if (trainingResult.error) {
       throw trainingResult.error
     }
+
+    if (preferencesResult.error) {
+      throw preferencesResult.error
+    }
+
+    state.enabled =
+      preferencesResult.data?.enabled !== false
+
+    state.reminderEnabled =
+      preferencesResult.data?.reminder_enabled !== false
+
+    state.reminderHour =
+      Number(
+        preferencesResult.data?.reminder_hour
+      ) || 21
+
+    state.reminderMinute =
+      Number(
+        preferencesResult.data?.reminder_minute
+      ) || 0
 
     const history =
       wellnessResult.data || []
@@ -785,14 +1086,6 @@ export async function loadRecovery({
     state.trainingRows =
       trainingResult.data || []
 
-    state.steps =
-      Math.max(
-        state.steps,
-        Number(
-          todayRow?.steps || 0
-        )
-      )
-
     state.metrics =
       mergeSessionFallback(
         dailyRowToMetrics(
@@ -804,6 +1097,14 @@ export async function loadRecovery({
       )
 
     applyScore(state)
+
+    await scheduleRecoveryReminder({
+      state,
+      requestPermission:
+        state.isOwnAthlete &&
+        state.enabled &&
+        state.reminderEnabled,
+    })
   } catch (error) {
     console.error(
       'RECOVERY LOAD ERROR',
@@ -905,6 +1206,7 @@ export async function handleRecoveryInput({
   bodyWeight = null,
   steps = 0,
   canEdit = false,
+  isOwnAthlete = false,
 }) {
   if (
     !input ||
@@ -958,6 +1260,7 @@ export async function handleRecoveryInput({
       state,
       bodyWeight,
       steps,
+      isOwnAthlete,
     })
   } catch (error) {
     console.error(
@@ -977,6 +1280,130 @@ export async function handleRecoveryInput({
   return true
 }
 
+export async function handleRecoveryToggle({
+  input,
+  athleteSlug,
+  state,
+  canEdit = false,
+  isOwnAthlete = false,
+} = {}) {
+  if (
+    !input ||
+    !state ||
+    !athleteSlug ||
+    !input.matches(
+      '[data-recovery-toggle-v1]'
+    )
+  ) {
+    return false
+  }
+
+  if (
+    !canEdit ||
+    state.preferenceSaving
+  ) {
+    return true
+  }
+
+  const key =
+    input.dataset.recoveryToggle
+
+  if (
+    key !== 'enabled' &&
+    key !== 'reminder'
+  ) {
+    return false
+  }
+
+  state.isOwnAthlete =
+    Boolean(isOwnAthlete)
+
+  if (key === 'enabled') {
+    state.enabled =
+      Boolean(input.checked)
+  }
+
+  if (key === 'reminder') {
+    state.reminderEnabled =
+      Boolean(input.checked)
+  }
+
+  state.preferenceSaving = true
+  state.error = ''
+
+  try {
+    await persistRecoveryPreferences(
+      athleteSlug,
+      state
+    )
+
+    if (
+      state.isOwnAthlete &&
+      state.enabled &&
+      state.reminderEnabled
+    ) {
+      await scheduleRecoveryReminder({
+        state,
+        requestPermission: true,
+      })
+    } else if (
+      state.isOwnAthlete
+    ) {
+      await cancelRecoveryReminder(
+        state
+      )
+      state.notificationScheduled =
+        false
+    }
+  } catch (error) {
+    console.error(
+      'RECOVERY PREFERENCE SAVE ERROR',
+      error
+    )
+
+    state.error =
+      String(
+        error?.message ||
+        'Impossible de modifier les préférences de récupération.'
+      )
+  } finally {
+    state.preferenceSaving = false
+  }
+
+  return true
+}
+
+function recoveryNotificationCopy(
+  state
+) {
+  if (!state.isOwnAthlete) {
+    return 'Le rappel 21h sera appliqué sur le téléphone de l’athlète.'
+  }
+
+  if (
+    state.notificationPermission ===
+      'denied'
+  ) {
+    return 'Notifications bloquées dans les réglages du téléphone.'
+  }
+
+  if (
+    state.notificationPermission ===
+      'granted'
+  ) {
+    return 'Notification quotidienne programmée à 21h.'
+  }
+
+  if (
+    state.notificationPermission ===
+      'mobile-only'
+  ) {
+    return 'Le rappel 21h s’active dans l’app mobile.'
+  }
+
+  return 'Autorisation de notification requise au premier usage.'
+}
+
 function scoreText(state) {
   return Number.isFinite(
     Number(state?.score)
@@ -992,7 +1419,7 @@ function scoreText(state) {
 export function renderRecoverySnapshot({
   state,
 } = {}) {
-  if (!state) {
+  if (!state || !state.enabled) {
     return ''
   }
 
@@ -1086,6 +1513,55 @@ function renderBreakdown(state) {
   `
 }
 
+function renderRecoverySettings({
+  state,
+  canEdit = false,
+}) {
+  return `
+    <section class="recovery-settings-v1">
+      <div class="recovery-settings-v1__row">
+        <div>
+          <strong>Suivi récupération</strong>
+          <small>Affiche les PV et le check-in quotidien.</small>
+        </div>
+
+        <label class="recovery-switch-v1">
+          <input
+            type="checkbox"
+            data-recovery-toggle-v1
+            data-recovery-toggle="enabled"
+            ${state.enabled ? 'checked' : ''}
+            ${canEdit ? '' : 'disabled'}
+          >
+          <span></span>
+        </label>
+      </div>
+
+      <div class="recovery-settings-v1__row ${state.enabled ? '' : 'disabled'}">
+        <div>
+          <strong>Rappel quotidien · 21h</strong>
+          <small>${esc(recoveryNotificationCopy(state))}</small>
+        </div>
+
+        <label class="recovery-switch-v1">
+          <input
+            type="checkbox"
+            data-recovery-toggle-v1
+            data-recovery-toggle="reminder"
+            ${state.reminderEnabled ? 'checked' : ''}
+            ${canEdit && state.enabled ? '' : 'disabled'}
+          >
+          <span></span>
+        </label>
+      </div>
+
+      ${state.preferenceSaving
+        ? '<div class="recovery-panel-v1__notice">Enregistrement des préférences…</div>'
+        : ''}
+    </section>
+  `
+}
+
 export function renderRecoveryPanel({
   state,
   canEdit = false,
@@ -1094,7 +1570,24 @@ export function renderRecoveryPanel({
     return ''
   }
 
+  const settings =
+    renderRecoverySettings({
+      state,
+      canEdit,
+    })
+
+  if (!state.enabled) {
+    return `
+      ${settings}
+      <section class="recovery-panel-v1 recovery-panel-v1--disabled">
+        <strong>Suivi récupération désactivé</strong>
+        <span>La barre de PV et le check-in sont masqués. Réactive le switch quand tu veux.</span>
+      </section>
+    `
+  }
+
   return `
+    ${settings}
     <section class="recovery-panel-v1">
       <div class="recovery-panel-v1__title">
         <div>
