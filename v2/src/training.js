@@ -6368,6 +6368,10 @@ export function mountTraining(
       }
     }
 
+    await hydrateRecovery(
+      false
+    )
+
     if (rerender) {
       render()
     }
@@ -10361,7 +10365,6 @@ if (
   void hydrateSessionsFromCloud()
   void hydrateSbdPrs()
   void hydrateAthleteSteps()
-  void hydrateRecovery()
   void hydrateAthleteGlMultiplier()
   void flushSbdPrOutbox()
 }
