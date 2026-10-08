@@ -58,6 +58,7 @@ import {
 import {
   createRecoveryState,
   handleRecoveryInput,
+  handleRecoveryToggle,
   loadRecovery,
   renderRecoveryPanel,
   renderRecoverySnapshot,
@@ -6326,6 +6327,10 @@ export function mountTraining(
         program.athlete?.bodyWeight,
       steps:
         athleteSteps.steps,
+      isOwnAthlete:
+        Boolean(
+          options.isOwnAthlete
+        ),
     })
 
     if (rerender) {
@@ -10069,6 +10074,33 @@ if (
 
     if (
       input.matches?.(
+        '[data-recovery-toggle-v1]'
+      )
+    ) {
+      void handleRecoveryToggle({
+        input,
+        athleteSlug:
+          cloudAthleteSlug,
+        state:
+          recoveryState,
+        canEdit,
+        isOwnAthlete:
+          Boolean(
+            options.isOwnAthlete
+          ),
+      }).then(
+        handled => {
+          if (handled) {
+            render()
+          }
+        }
+      )
+
+      return
+    }
+
+    if (
+      input.matches?.(
         '[data-recovery-input-v1]'
       )
     ) {
@@ -10084,6 +10116,10 @@ if (
         steps:
           athleteSteps.steps,
         canEdit,
+        isOwnAthlete:
+          Boolean(
+            options.isOwnAthlete
+          ),
       }).then(
         handled => {
           if (handled) {
