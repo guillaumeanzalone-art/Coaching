@@ -14537,3 +14537,249 @@ body .training-page[data-athlete-theme="kaoutar"] .day-tab-v2--active {
     line-height: 1.45;
   }
 }
+
+
+/* ================================================================
+   GA V2 — RECOVERY HP V1
+   ================================================================ */
+.recovery-hp-v1{
+  margin:14px 0 12px;
+  padding:14px 16px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(15,19,29,.94),rgba(8,11,18,.94));
+}
+.recovery-hp-v1__head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:14px;
+}
+.recovery-hp-v1__head>div:first-child{
+  display:grid;
+  gap:3px;
+}
+.recovery-hp-v1__head span{
+  font-size:.68rem;
+  font-weight:850;
+  letter-spacing:.12em;
+  color:rgba(230,235,245,.70);
+}
+.recovery-hp-v1__head strong{
+  font-size:1.5rem;
+  line-height:1;
+  color:#f6f8fb;
+}
+.recovery-hp-v1__status{
+  display:grid;
+  justify-items:end;
+  gap:2px;
+  text-align:right;
+}
+.recovery-hp-v1__status b{
+  font-size:.86rem;
+  color:#f3f6fb;
+}
+.recovery-hp-v1__status small{
+  font-size:.68rem;
+  color:rgba(230,235,245,.60);
+}
+.recovery-hp-v1__track{
+  position:relative;
+  height:14px;
+  margin-top:12px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+}
+.recovery-hp-v1__fill{
+  display:block;
+  width:0;
+  height:100%;
+  border-radius:inherit;
+  transition:width .35s ease;
+  background:linear-gradient(90deg,#d34d4d,#e8a93d 45%,#4ac77b 78%);
+}
+.recovery-hp-v1--excellent .recovery-hp-v1__fill,
+.recovery-hp-v1--good .recovery-hp-v1__fill{
+  background:linear-gradient(90deg,#3ea86b,#68d590);
+}
+.recovery-hp-v1--medium .recovery-hp-v1__fill{
+  background:linear-gradient(90deg,#d59a35,#edc35a);
+}
+.recovery-hp-v1--low .recovery-hp-v1__fill,
+.recovery-hp-v1--critical .recovery-hp-v1__fill{
+  background:linear-gradient(90deg,#b94141,#e06565);
+}
+.recovery-hp-v1__meta{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:8px;
+  font-size:.72rem;
+  color:rgba(230,235,245,.64);
+}
+.recovery-panel-v1{
+  display:grid;
+  gap:14px;
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:16px;
+  background:rgba(7,10,17,.78);
+}
+.recovery-panel-v1__title{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:14px;
+}
+.recovery-panel-v1__title>div{
+  display:grid;
+  gap:2px;
+}
+.recovery-panel-v1__title span{
+  font-size:.67rem;
+  font-weight:850;
+  letter-spacing:.12em;
+  color:rgba(230,235,245,.58);
+}
+.recovery-panel-v1__title strong{
+  font-size:1.02rem;
+  color:#f6f8fb;
+}
+.recovery-panel-v1__title small{
+  max-width:360px;
+  text-align:right;
+  font-size:.7rem;
+  color:rgba(230,235,245,.60);
+}
+.recovery-input-grid-v1{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.recovery-input-grid-v1 label{
+  display:grid;
+  gap:6px;
+  min-width:0;
+}
+.recovery-input-grid-v1 label>span{
+  font-size:.68rem;
+  font-weight:800;
+  color:rgba(235,239,247,.70);
+}
+.recovery-input-grid-v1 label>div{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-width:0;
+  padding:0 10px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+}
+.recovery-input-grid-v1 input,
+.recovery-input-grid-v1 select{
+  min-width:0;
+  width:100%;
+  min-height:42px;
+  padding:8px 0;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#f3f6fb;
+  font:inherit;
+  font-size:.88rem;
+}
+.recovery-input-grid-v1 select option{
+  color:#111;
+}
+.recovery-input-grid-v1 small{
+  flex:none;
+  color:rgba(230,235,245,.52);
+  font-size:.68rem;
+}
+.recovery-breakdown-v1{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+}
+.recovery-breakdown-v1>div{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.035);
+  color:rgba(235,239,247,.76);
+  font-size:.72rem;
+}
+.recovery-breakdown-v1>div strong{
+  font-size:.72rem;
+  color:#f2f5f9;
+}
+.recovery-breakdown-v1>div.unknown{
+  opacity:.48;
+}
+.recovery-panel-v1__footer{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  gap:8px 14px;
+  font-size:.68rem;
+  color:rgba(230,235,245,.55);
+}
+.recovery-panel-v1__notice,
+.recovery-panel-v1__error{
+  padding:9px 11px;
+  border-radius:10px;
+  font-size:.72rem;
+}
+.recovery-panel-v1__notice{
+  background:rgba(76,150,255,.10);
+  color:#b9d6ff;
+}
+.recovery-panel-v1__error{
+  background:rgba(215,70,70,.12);
+  color:#ffb6b6;
+}
+.recovery-panel-v1__disclaimer{
+  margin:0;
+  font-size:.66rem;
+  line-height:1.4;
+  color:rgba(230,235,245,.44);
+}
+
+@media(max-width:650px){
+  .recovery-hp-v1__head,
+  .recovery-panel-v1__title{
+    align-items:flex-start;
+  }
+  .recovery-hp-v1__status{
+    max-width:48%;
+  }
+  .recovery-hp-v1__meta{
+    flex-direction:column;
+    gap:4px;
+  }
+  .recovery-input-grid-v1{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .recovery-panel-v1__title{
+    display:grid;
+  }
+  .recovery-panel-v1__title small{
+    text-align:left;
+  }
+}
+
+@media(max-width:390px){
+  .recovery-input-grid-v1,
+  .recovery-breakdown-v1{
+    grid-template-columns:1fr;
+  }
+}
