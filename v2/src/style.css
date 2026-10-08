@@ -15042,3 +15042,43 @@ body .training-page[data-athlete-theme="kaoutar"] .day-tab-v2--active {
     animation:none!important;
   }
 }
+
+
+/* ================================================================
+   GLOBAL THEME OVERRIDE — VALIDATED SETS STAY GREEN
+   ================================================================ */
+.training-page[data-athlete-theme] .training-set.training-set--done,
+.training-page[data-athlete-theme] .training-set--sbd.training-set--done,
+.training-page[data-athlete-theme] .training-set--accessory.training-set--done {
+  border-color: rgba(54, 209, 124, .72) !important;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(35, 138, 82, .30),
+      rgba(18, 82, 51, .24)
+    ) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(80, 230, 143, .10),
+    0 0 18px rgba(54, 209, 124, .07);
+}
+
+.training-page[data-athlete-theme] .training-set.training-set--done .set-check,
+.training-page[data-athlete-theme] .training-set.training-set--done .set-validate,
+.training-page[data-athlete-theme] .training-set .set-validate--active {
+  border-color: #36d17c !important;
+  background: #36d17c !important;
+  color: #06140d !important;
+  box-shadow: 0 0 14px rgba(54, 209, 124, .20);
+}
+
+.training-page[data-athlete-theme] .training-set.training-set--done .set-load,
+.training-page[data-athlete-theme] .training-set.training-set--done .set-rpe {
+  border-color: rgba(54, 209, 124, .68) !important;
+  background: rgba(13, 62, 39, .82) !important;
+  color: #f3fff8 !important;
+}
+
+.training-page[data-athlete-theme] .training-set.training-set--failed {
+  border-color: rgba(239, 82, 82, .72) !important;
+  background: rgba(151, 35, 35, .16) !important;
+}
