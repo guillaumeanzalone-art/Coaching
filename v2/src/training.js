@@ -56,6 +56,14 @@ import {
 } from './rpg-health.js'
 
 import {
+  createRecoveryState,
+  handleRecoveryInput,
+  loadRecovery,
+  renderRecoveryPanel,
+  renderRecoverySnapshot,
+} from './recovery.js'
+
+import {
   analyzeTrainingBlock,
   formatTonnes,
   liftLabel as analyticsLiftLabel,
@@ -596,6 +604,9 @@ export function mountTraining(
 
   const healthState =
     createRpgHealthState()
+
+  const recoveryState =
+    createRecoveryState()
 
   let athleteGlMultiplier = 1
 
@@ -6270,17 +6281,23 @@ export function mountTraining(
             data-action="athlete-insight-tab"
             data-insight="wellness"
           >
-            🚶 Steps & mobilité
+            ❤️ Récupération & mobilité
             ${healthState.mobilityCompleted ? '<span class="athlete-insights-tabs__done">✓</span>' : ''}
           </button>
         </div>
 
         <div class="athlete-insights-tabs__panel">
           ${activeAthleteInsight === 'wellness'
-            ? renderRpgHealth({
-                state: healthState,
-                canEdit,
-              })
+            ? `
+                ${renderRecoveryPanel({
+                  state: recoveryState,
+                  canEdit,
+                })}
+                ${renderRpgHealth({
+                  state: healthState,
+                  canEdit,
+                })}
+              `
             : renderSbdPrPanel()}
         </div>
       </section>
@@ -6294,6 +6311,26 @@ export function mountTraining(
       String(now.getMonth() + 1).padStart(2, '0'),
       String(now.getDate()).padStart(2, '0'),
     ].join('-')
+  }
+
+  async function hydrateRecovery(
+    rerender = true
+  ) {
+    await loadRecovery({
+      athleteSlug:
+        cloudAthleteSlug,
+      state:
+        recoveryState,
+      bodyWeight:
+        options.bodyWeight ||
+        program.athlete?.bodyWeight,
+      steps:
+        athleteSteps.steps,
+    })
+
+    if (rerender) {
+      render()
+    }
   }
 
   async function hydrateAthleteSteps(
@@ -9173,6 +9210,9 @@ export function mountTraining(
         </header>
 
         ${renderAthleteThemeBanner()}
+        ${renderRecoverySnapshot({
+          state: recoveryState,
+        })}
         ${renderAthleteInsights()}
 
         <div
@@ -10023,6 +10063,34 @@ if (
     const input =
       event.target
 
+    if (
+      input.matches?.(
+        '[data-recovery-input-v1]'
+      )
+    ) {
+      void handleRecoveryInput({
+        input,
+        athleteSlug:
+          cloudAthleteSlug,
+        state:
+          recoveryState,
+        bodyWeight:
+          options.bodyWeight ||
+          program.athlete?.bodyWeight,
+        steps:
+          athleteSteps.steps,
+        canEdit,
+      }).then(
+        handled => {
+          if (handled) {
+            render()
+          }
+        }
+      )
+
+      return
+    }
+
     const actionName =
       input.dataset.action
 
@@ -10244,6 +10312,7 @@ if (
 
       void hydrateFromCloud()
       void hydrateSessionsFromCloud()
+      void hydrateRecovery()
       void flushTrainingSessionOutbox(
         setSyncStatus
       )
@@ -10292,6 +10361,7 @@ if (
   void hydrateSessionsFromCloud()
   void hydrateSbdPrs()
   void hydrateAthleteSteps()
+  void hydrateRecovery()
   void hydrateAthleteGlMultiplier()
   void flushSbdPrOutbox()
 }
