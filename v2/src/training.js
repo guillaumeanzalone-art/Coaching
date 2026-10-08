@@ -5016,7 +5016,7 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
-      'storm-king'
+      'jolan-eragon-clair-obscur'
     ) {
       const heroImage =
         String(
@@ -5024,90 +5024,48 @@ export function mountTraining(
           ''
         ).trim()
 
-      const rivalImage =
+      const heroMobileImage =
         String(
-          athleteTheme.rivalImage ||
-          ''
-        ).trim()
-
-      const legacyImage =
-        String(
-          athleteTheme.legacyImage ||
-          ''
-        ).trim()
-
-      const crestImage =
-        String(
-          athleteTheme.crestImage ||
-          ''
+          athleteTheme.heroMobileImage ||
+          heroImage
         ).trim()
 
       return `
         <section
-          class="athlete-theme-banner athlete-theme-banner--jolan"
-          aria-label="Univers du Roi des Tempêtes de Jolan"
+          class="athlete-theme-banner athlete-theme-banner--jolan-epic"
+          aria-label="Univers fantasy de Jolan, dragon, épéiste, Clair Obscur et marmotte"
         >
           ${
             heroImage
               ? `
-                <img
-                  class="jolan-storm-hero"
-                  src="${escapeHtml(heroImage)}"
-                  alt="Guerrier du royaume des tempêtes"
-                  width="1200"
-                  height="675"
-                >
-              `
-              : ''
-          }
-
-          <div class="jolan-storm-overlay" aria-hidden="true"></div>
-          <div class="jolan-storm-lightning" aria-hidden="true"></div>
-
-          ${
-            rivalImage
-              ? `
-                <figure class="jolan-rival-card">
-                  <img
-                    src="${escapeHtml(rivalImage)}"
-                    alt="Épéiste du vent"
-                    width="474"
-                    height="842"
+                <picture>
+                  <source
+                    media="(max-width: 620px)"
+                    srcset="${escapeHtml(heroMobileImage)}"
                   >
-                </figure>
+                  <img
+                    class="jolan-epic-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Univers épique de Jolan entre dragon, duel au sabre, cité fantastique et marmotte"
+                    width="1672"
+                    height="941"
+                  >
+                </picture>
               `
               : ''
           }
 
-          ${
-            legacyImage
-              ? `
-                <figure class="jolan-legacy-card">
-                  <img
-                    src="${escapeHtml(legacyImage)}"
-                    alt="Héritage royal dans la savane"
-                    width="1200"
-                    height="686"
-                  >
-                </figure>
-              `
-              : ''
-          }
-
-          ${
-            crestImage
-              ? `
-                <div class="jolan-crest-card" aria-hidden="true">
-                  <img
-                    src="${escapeHtml(crestImage)}"
-                    alt="Signature Foncia"
-                    width="400"
-                    height="400"
-                  >
-                </div>
-              `
-              : ''
-          }
+          <div class="jolan-epic-shade" aria-hidden="true"></div>
+          <div class="jolan-epic-moon-glow" aria-hidden="true"></div>
+          <div class="jolan-epic-wind" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </div>
+          <div class="jolan-epic-petals" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div class="jolan-epic-embers" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
         </section>
       `
     }
