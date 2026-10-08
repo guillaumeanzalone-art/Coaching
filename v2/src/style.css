@@ -14783,3 +14783,94 @@ body .training-page[data-athlete-theme="kaoutar"] .day-tab-v2--active {
     grid-template-columns:1fr;
   }
 }
+
+
+/* Recovery preferences + reminder switches */
+.recovery-settings-v1{
+  display:grid;
+  gap:8px;
+  margin-bottom:12px;
+}
+.recovery-settings-v1__row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:11px 13px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:14px;
+  background:rgba(255,255,255,.035);
+}
+.recovery-settings-v1__row.disabled{
+  opacity:.58;
+}
+.recovery-settings-v1__row>div{
+  display:grid;
+  gap:3px;
+}
+.recovery-settings-v1__row strong{
+  color:#f4f7fb;
+  font-size:.82rem;
+}
+.recovery-settings-v1__row small{
+  color:rgba(230,235,245,.56);
+  font-size:.68rem;
+  line-height:1.35;
+}
+.recovery-switch-v1{
+  position:relative;
+  display:inline-flex;
+  width:48px;
+  height:28px;
+  flex:none;
+}
+.recovery-switch-v1 input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+.recovery-switch-v1 span{
+  position:absolute;
+  inset:0;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  background:rgba(255,255,255,.10);
+  transition:.2s ease;
+  box-shadow:inset 0 1px rgba(255,255,255,.06);
+}
+.recovery-switch-v1 span::after{
+  content:"";
+  position:absolute;
+  top:3px;
+  left:3px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:#f4f7fb;
+  box-shadow:0 3px 10px rgba(0,0,0,.35);
+  transition:.2s ease;
+}
+.recovery-switch-v1 input:checked + span{
+  border-color:rgba(83,213,133,.50);
+  background:rgba(57,184,108,.78);
+}
+.recovery-switch-v1 input:checked + span::after{
+  transform:translateX(20px);
+}
+.recovery-switch-v1 input:disabled + span{
+  cursor:not-allowed;
+  opacity:.45;
+}
+.recovery-panel-v1--disabled{
+  gap:5px;
+  color:rgba(235,239,247,.68);
+}
+.recovery-panel-v1--disabled strong{
+  color:#f3f6fb;
+  font-size:.9rem;
+}
+.recovery-panel-v1--disabled span{
+  font-size:.72rem;
+  line-height:1.45;
+}
