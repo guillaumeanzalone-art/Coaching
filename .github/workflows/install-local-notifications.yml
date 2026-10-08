@@ -1,0 +1,37 @@
+name: Install Local Notifications
+
+on:
+  push:
+    branches:
+      - recovery-local-notifications-20261008
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: v2
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: recovery-local-notifications-20261008
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+      - name: Install Capacitor Local Notifications
+        run: npm install @capacitor/local-notifications@^8.0.0
+      - name: Sync native projects
+        run: npx cap sync
+      - name: Commit dependency changes
+        working-directory: .
+        run: |
+          git config user.name "ga-coaching-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add v2/package.json v2/package-lock.json v2/android v2/ios
+          git commit -m "Add Capacitor local notifications" || exit 0
+          git push origin HEAD:recovery-local-notifications-20261008
