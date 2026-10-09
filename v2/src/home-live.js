@@ -235,7 +235,7 @@ async function loadLatestPrProgress(limit = 6) {
     const { data, error } = await supabase
       .from('workout_activities')
       .select('*')
-      .or('new_pr.eq.true,activity_type.eq.pr')
+      .or('new_pr_kg.not.is.null,activity_type.eq.pr,activity_type.eq.accessory_pr')
       .order('created_at', { ascending: false })
       .limit(300)
 
