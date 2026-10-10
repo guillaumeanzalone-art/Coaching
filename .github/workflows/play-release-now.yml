@@ -1,0 +1,150 @@
+name: Play Store Release Now
+
+on:
+  push:
+    branches:
+      - v2-refactor
+    paths:
+      - ".github/workflows/play-release-now.yml"
+
+permissions:
+  contents: write
+
+env:
+  APP_DIR: v2
+  APP_ID: com.gacoaching.app
+  RELEASE_VERSION: "1.9.0"
+  PLAY_TRACK: "alpha"
+
+jobs:
+  android:
+    name: Android AAB -> Google Play closed test
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: v2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: v2-refactor
+
+      - name: Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+
+      - name: Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Vérifier les secrets Android / Google Play
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          set -euo pipefail
+          missing=0
+          for var in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD GOOGLE_PLAY_SERVICE_ACCOUNT_JSON; do
+            if [ -z "${!var:-}" ]; then
+              echo "::error::Secret GitHub manquant: $var"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Préparer version Android
+        shell: bash
+        run: |
+          set -euo pipefail
+          ANDROID_VERSION_CODE=$((100000 + GITHUB_RUN_NUMBER))
+          IOS_BUILD_NUMBER="$(date -u +%Y%m%d%H%M)"
+          node scripts/set-store-version.mjs "$RELEASE_VERSION" "$ANDROID_VERSION_CODE" "$IOS_BUILD_NUMBER"
+          echo "ANDROID_VERSION_CODE=$ANDROID_VERSION_CODE" >> "$GITHUB_ENV"
+
+      - name: Configurer la signature Android
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.ga-coaching"
+          export KEYSTORE_PATH="$RUNNER_TEMP/ga-coaching-release.jks"
+          python3 - <<'PY'
+          import base64
+          import os
+          from pathlib import Path
+
+          Path(os.environ["KEYSTORE_PATH"]).write_bytes(
+              base64.b64decode(os.environ["ANDROID_KEYSTORE_BASE64"])
+          )
+
+          def esc(value: str) -> str:
+              return value.replace("\\", "\\\\").replace("\n", "").replace("\r", "")
+
+          props = "\n".join([
+              f"storeFile={esc(os.environ['KEYSTORE_PATH'])}",
+              f"storePassword={esc(os.environ['ANDROID_KEYSTORE_PASSWORD'])}",
+              f"keyAlias={esc(os.environ['ANDROID_KEY_ALIAS'])}",
+              f"keyPassword={esc(os.environ['ANDROID_KEY_PASSWORD'])}",
+              "",
+          ])
+          Path.home().joinpath(".ga-coaching", "android-signing.properties").write_text(props)
+          PY
+
+      - name: Build web + sync Android
+        run: npm run android:sync
+
+      - name: Construire le bundle signé
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd android
+          ./gradlew bundleRelease --no-daemon --stacktrace
+
+      - name: Publier sur Google Play
+        uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.gacoaching.app
+          releaseFiles: v2/android/app/build/outputs/bundle/release/app-release.aab
+          tracks: alpha
+          status: completed
+          releaseName: v1.9.0
+
+      - name: Marquer le résultat
+        if: always()
+        shell: bash
+        working-directory: .
+        run: |
+          set -euo pipefail
+          mkdir -p .release-status
+          cat > .release-status/play-1.9.0.txt <<EOF
+          status=${{ job.status }}
+          version=1.9.0
+          track=alpha
+          run_number=${{ github.run_number }}
+          source_sha=${{ github.sha }}
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .release-status/play-1.9.0.txt
+          git commit -m "ci: record Play Store 1.9.0 release result" || exit 0
+          git push origin HEAD:v2-refactor
