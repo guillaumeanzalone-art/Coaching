@@ -5016,6 +5016,61 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'malo-purple-emperor'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          heroImage
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--malo-emperor"
+          aria-label="Univers violet et bleu de Malo"
+        >
+          ${
+            heroImage
+              ? `
+                <picture class="malo-emperor-picture">
+                  <source
+                    media="(max-width: 620px)"
+                    srcset="${escapeHtml(heroMobileImage)}"
+                  >
+                  <img
+                    class="malo-emperor-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Malo en souverain cosmique dans un univers violet et bleu"
+                    width="1672"
+                    height="941"
+                  >
+                </picture>
+              `
+              : ''
+          }
+
+          <div class="malo-emperor-shade" aria-hidden="true"></div>
+          <div class="malo-emperor-aura" aria-hidden="true"></div>
+
+          <div class="malo-emperor-lightning" aria-hidden="true">
+            <i></i><i></i><i></i>
+          </div>
+
+          <div class="malo-emperor-particles" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'jolan-eragon-clair-obscur'
     ) {
       const heroImage =
