@@ -5016,6 +5016,61 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'maxence-mad-kings'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          heroImage
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--maxence-mad-kings"
+          aria-label="Royaume des rois déchaînés de Maxence"
+        >
+          ${
+            heroImage
+              ? `
+                <picture class="maxence-mad-kings-picture">
+                  <source
+                    media="(max-width: 620px)"
+                    srcset="${escapeHtml(heroMobileImage)}"
+                  >
+                  <img
+                    class="maxence-mad-kings-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Cour royale absurde peuplée de rois excentriques et couronnés"
+                    width="1672"
+                    height="941"
+                  >
+                </picture>
+              `
+              : ''
+          }
+
+          <div class="maxence-mad-kings-shade" aria-hidden="true"></div>
+          <div class="maxence-mad-kings-glow" aria-hidden="true"></div>
+
+          <div class="maxence-mad-kings-crowns" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </div>
+
+          <div class="maxence-mad-kings-confetti" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'malo-purple-emperor'
     ) {
       const heroImage =
