@@ -15302,3 +15302,206 @@ body .training-page[data-athlete-theme="kaoutar"] .day-tab-v2--active {
     animation:none!important;
   }
 }
+
+
+/* ================================================================
+   MAXENCE — MAD KINGS KINGDOM
+   ================================================================ */
+.athlete-theme-banner--maxence-mad-kings{
+  position:relative;
+  isolation:isolate;
+  width:100%;
+  aspect-ratio:16/9;
+  margin:0 0 20px;
+  overflow:hidden;
+  border:1px solid rgba(222,174,60,.48);
+  border-radius:28px;
+  background:#0d0810;
+  box-shadow:
+    0 28px 76px rgba(0,0,0,.48),
+    0 0 38px rgba(218,168,50,.10),
+    inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+.athlete-theme-banner--maxence-mad-kings picture{
+  position:absolute;
+  inset:0;
+}
+
+.maxence-mad-kings-hero{
+  position:absolute;
+  inset:-2%;
+  width:104%;
+  height:104%;
+  max-width:none;
+  object-fit:cover;
+  object-position:center 50%;
+  pointer-events:none;
+  user-select:none;
+  filter:saturate(1.04) contrast(1.04) brightness(.98);
+  transform-origin:52% 50%;
+  animation:maxence-kings-breathe 12s ease-in-out infinite alternate;
+}
+
+.maxence-mad-kings-shade{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(11,7,14,.02),rgba(11,7,14,.03) 62%,rgba(11,7,14,.30)),
+    radial-gradient(circle at 53% 47%,transparent 30%,rgba(17,9,20,.08) 70%,rgba(17,9,20,.28) 100%);
+}
+
+.maxence-mad-kings-glow{
+  position:absolute;
+  z-index:3;
+  top:28%;
+  left:38%;
+  width:30%;
+  aspect-ratio:1;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,210,95,.36),rgba(199,126,28,.11) 48%,transparent 72%);
+  filter:blur(18px);
+  mix-blend-mode:screen;
+  opacity:.12;
+  pointer-events:none;
+  animation:maxence-kings-glow 5.4s ease-in-out infinite;
+}
+
+.maxence-mad-kings-crowns,
+.maxence-mad-kings-confetti{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.maxence-mad-kings-crowns i{
+  position:absolute;
+  width:18px;
+  height:12px;
+  opacity:0;
+  border:2px solid rgba(255,216,104,.85);
+  border-top:0;
+  border-radius:2px 2px 6px 6px;
+  transform:rotate(-8deg);
+  box-shadow:0 0 10px rgba(255,203,72,.22);
+  animation:maxence-crown-float 7.8s ease-in-out infinite;
+}
+
+.maxence-mad-kings-crowns i::before,
+.maxence-mad-kings-crowns i::after{
+  content:"";
+  position:absolute;
+  bottom:8px;
+  width:7px;
+  height:7px;
+  border-left:2px solid rgba(255,216,104,.85);
+  border-top:2px solid rgba(255,216,104,.85);
+  transform:rotate(45deg);
+}
+
+.maxence-mad-kings-crowns i::before{left:0}
+.maxence-mad-kings-crowns i::after{right:0}
+
+.maxence-mad-kings-crowns i:nth-child(1){left:12%;top:18%;animation-delay:.4s}
+.maxence-mad-kings-crowns i:nth-child(2){left:34%;top:10%;animation-delay:2.2s}
+.maxence-mad-kings-crowns i:nth-child(3){right:20%;top:18%;animation-delay:4.1s}
+.maxence-mad-kings-crowns i:nth-child(4){right:8%;top:36%;animation-delay:6s}
+
+.maxence-mad-kings-confetti i{
+  position:absolute;
+  top:-8%;
+  width:6px;
+  height:11px;
+  border-radius:2px;
+  opacity:.68;
+  background:#d8a42d;
+  animation:maxence-confetti-fall linear infinite;
+}
+
+.maxence-mad-kings-confetti i:nth-child(2n){background:#7d5ec4}
+.maxence-mad-kings-confetti i:nth-child(3n){background:#b72f3c}
+.maxence-mad-kings-confetti i:nth-child(1){left:8%;animation-duration:8.4s;animation-delay:-2s}
+.maxence-mad-kings-confetti i:nth-child(2){left:19%;animation-duration:10.2s;animation-delay:-6s}
+.maxence-mad-kings-confetti i:nth-child(3){left:31%;animation-duration:9.1s;animation-delay:-4s}
+.maxence-mad-kings-confetti i:nth-child(4){left:46%;animation-duration:11.2s;animation-delay:-8s}
+.maxence-mad-kings-confetti i:nth-child(5){left:58%;animation-duration:8.8s;animation-delay:-3s}
+.maxence-mad-kings-confetti i:nth-child(6){left:72%;animation-duration:10.6s;animation-delay:-7s}
+.maxence-mad-kings-confetti i:nth-child(7){left:84%;animation-duration:9.7s;animation-delay:-5s}
+.maxence-mad-kings-confetti i:nth-child(8){left:94%;animation-duration:11.6s;animation-delay:-9s}
+
+.training-page[data-athlete-theme="maxence"] .training-topbar{
+  border-color:rgba(222,174,60,.28);
+  background:linear-gradient(135deg,rgba(25,16,29,.95),rgba(40,26,44,.91));
+}
+
+.training-page[data-athlete-theme="maxence"] .back-button,
+.training-page[data-athlete-theme="maxence"] .reset-button{
+  border-color:rgba(222,174,60,.28);
+  background:rgba(24,16,28,.88);
+  color:#fff6df;
+}
+
+.training-page[data-athlete-theme="maxence"] .week-tab--active,
+.training-page[data-athlete-theme="maxence"] .day-tab-v2--active{
+  border-color:rgba(226,180,66,.58);
+  background:linear-gradient(135deg,rgba(120,81,31,.48),rgba(83,49,93,.44));
+  box-shadow:0 0 22px rgba(222,174,60,.10);
+}
+
+@keyframes maxence-kings-breathe{
+  0%{
+    transform:scale(1.015) translate3d(-.2%,0,0);
+    filter:saturate(1.02) contrast(1.03) brightness(.96);
+  }
+  100%{
+    transform:scale(1.06) translate3d(.4%,-.4%,0);
+    filter:saturate(1.08) contrast(1.05) brightness(1.01);
+  }
+}
+
+@keyframes maxence-kings-glow{
+  0%,100%{opacity:.08;transform:scale(.92)}
+  50%{opacity:.18;transform:scale(1.08)}
+}
+
+@keyframes maxence-crown-float{
+  0%,100%{opacity:0;transform:translate3d(0,8px,0) rotate(-10deg) scale(.88)}
+  18%{opacity:.72}
+  50%{opacity:.82;transform:translate3d(10px,-10px,0) rotate(8deg) scale(1)}
+  82%{opacity:.62}
+}
+
+@keyframes maxence-confetti-fall{
+  0%{transform:translate3d(0,-10%,0) rotate(0deg);opacity:0}
+  10%{opacity:.72}
+  100%{transform:translate3d(70px,760px,0) rotate(540deg);opacity:0}
+}
+
+@media(max-width:620px){
+  .athlete-theme-banner--maxence-mad-kings{
+    aspect-ratio:4/5;
+    border-radius:22px;
+  }
+
+  .maxence-mad-kings-hero{
+    object-position:center 50%;
+  }
+
+  .maxence-mad-kings-glow{
+    left:28%;
+    width:44%;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .maxence-mad-kings-hero,
+  .maxence-mad-kings-glow,
+  .maxence-mad-kings-crowns i,
+  .maxence-mad-kings-confetti i{
+    animation:none!important;
+  }
+}
