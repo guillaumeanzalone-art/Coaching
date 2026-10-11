@@ -15648,6 +15648,10 @@ body .training-page[data-athlete-theme="kaoutar"] .day-tab-v2--active {
 }
 
 @media(max-width:650px){
+  body .training-page[data-athlete-theme="gibertini"]{
+    --athlete-theme-background-image:url('/gibertini-atrew-mobile.webp?v=20261011hq');
+  }
+
   .athlete-theme-banner--gibertini-atrew{
     aspect-ratio:4/5;
     border-radius:22px;
