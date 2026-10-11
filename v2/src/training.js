@@ -6038,6 +6038,61 @@ export function mountTraining(
       `
     }
 
+    if (
+      athleteTheme?.variant ===
+      'gibertini-atrew-rain'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          heroImage
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--gibertini-atrew"
+          aria-label="ATREW — univers pluie sacrée de Tom Gibertini"
+        >
+          ${
+            heroImage
+              ? `
+                <picture class="gibertini-atrew-picture">
+                  ${
+                    heroMobileImage
+                      ? `
+                        <source
+                          media="(max-width: 650px)"
+                          srcset="${escapeHtml(heroMobileImage)}"
+                        >
+                      `
+                      : ''
+                  }
+
+                  <img
+                    class="gibertini-atrew-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="ATREW — univers de Tom Gibertini sous la pluie sacrée"
+                    width="941"
+                    height="1672"
+                  >
+                </picture>
+              `
+              : ''
+          }
+
+          <div class="gibertini-atrew-shade" aria-hidden="true"></div>
+          <div class="gibertini-atrew-rain" aria-hidden="true"></div>
+          <div class="gibertini-atrew-glow" aria-hidden="true"></div>
+        </section>
+      `
+    }
+
     if (!quote) {
       return ''
     }
