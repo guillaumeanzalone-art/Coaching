@@ -1,0 +1,10 @@
+{
+  "run_id": "38128237300",
+  "run_number": "2",
+  "commit": "12fc87f90353d311029e47130c4a5ab050dc7ce2",
+  "version": "1.10.0",
+  "build": "202610110924",
+  "status": "success",
+  "destination": "App Store Connect / TestFlight",
+  "run_url": "https://github.com/guillaumeanzalone-art/Coaching/actions/runs/38128237300"
+}
