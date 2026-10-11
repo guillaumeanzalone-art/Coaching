@@ -6093,6 +6093,52 @@ export function mountTraining(
       `
     }
 
+    if (
+      athleteTheme?.variant ===
+      'jonathan-journey'
+    ) {
+      const heroImage =
+        String(
+          athleteTheme.heroImage ||
+          ''
+        ).trim()
+
+      const heroMobileImage =
+        String(
+          athleteTheme.heroMobileImage ||
+          heroImage
+        ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--jonathan-journey"
+          aria-label="Univers voyage spirituel de Jonathan"
+        >
+          ${
+            heroImage
+              ? `
+                <picture class="jonathan-journey-picture">
+                  <source
+                    media="(max-width: 650px)"
+                    srcset="${escapeHtml(heroMobileImage)}"
+                  >
+                  <img
+                    class="jonathan-journey-hero"
+                    src="${escapeHtml(heroImage)}"
+                    alt="Univers voyage spirituel de Jonathan"
+                    width="720"
+                    height="405"
+                  >
+                </picture>
+              `
+              : ''
+          }
+          <div class="jonathan-journey-shade" aria-hidden="true"></div>
+          <div class="jonathan-journey-glow" aria-hidden="true"></div>
+        </section>
+      `
+    }
+
     if (!quote) {
       return ''
     }
