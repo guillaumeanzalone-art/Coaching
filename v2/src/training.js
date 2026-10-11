@@ -6126,8 +6126,8 @@ export function mountTraining(
                     class="jonathan-journey-hero"
                     src="${escapeHtml(heroImage)}"
                     alt="Univers voyage spirituel de Jonathan"
-                    width="720"
-                    height="405"
+                    width="1672"
+                    height="941"
                   >
                 </picture>
               `
