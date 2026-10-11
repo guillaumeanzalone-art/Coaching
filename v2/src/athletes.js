@@ -321,7 +321,7 @@ const athleteList = [
   },
   {
     "id": "timothee",
-    "name": "Timo",
+    "name": "Timothée",
     "emoji": "🏋️",
     "bodyWeight": null,
     "profileImage": null,
