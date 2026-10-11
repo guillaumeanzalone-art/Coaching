@@ -158,6 +158,14 @@ function visibleAthletes() {
     currentMember?.role === 'athlete'
   ) {
     return athletes
+      .slice()
+      .sort((a, b) =>
+        String(a?.name || '').localeCompare(
+          String(b?.name || ''),
+          'fr',
+          { sensitivity: 'base' }
+        )
+      )
   }
 
   return []
