@@ -15665,3 +15665,121 @@ body .training-page[data-athlete-theme="kaoutar"] .day-tab-v2--active {
     animation:none!important;
   }
 }
+
+
+/* ================================================================
+   JONATHAN — JOURNEY / NUJABES / MADAGASCAR
+   ================================================================ */
+.training-page[data-athlete-theme="jonathan"]{
+  position:relative;
+  isolation:isolate;
+  min-height:100vh;
+  overflow-x:clip;
+  color:#fff7e9;
+  background:
+    linear-gradient(180deg,rgba(7,6,5,.88),rgba(8,7,5,.96)),
+    var(--athlete-theme-background-image) center top/cover fixed no-repeat,
+    #080705;
+}
+
+.training-page[data-athlete-theme="jonathan"] .training-topbar,
+.training-page[data-athlete-theme="jonathan"] .training-summary,
+.training-page[data-athlete-theme="jonathan"] .training-v3-history,
+.training-page[data-athlete-theme="jonathan"] .training-v3-overview,
+.training-page[data-athlete-theme="jonathan"] .training-v3-overview-launcher,
+.training-page[data-athlete-theme="jonathan"] .training-session-v11,
+.training-page[data-athlete-theme="jonathan"] .training-block-report-v11{
+  border-color:rgba(216,173,82,.24);
+  background:linear-gradient(145deg,rgba(17,13,10,.93),rgba(30,21,14,.88));
+  box-shadow:
+    0 18px 48px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+}
+
+.athlete-theme-banner--jonathan-journey{
+  position:relative;
+  isolation:isolate;
+  width:100%;
+  aspect-ratio:16/9;
+  margin:0 0 20px;
+  overflow:hidden;
+  border:1px solid rgba(216,173,82,.48);
+  border-radius:28px;
+  background:#080705;
+  box-shadow:
+    0 28px 76px rgba(0,0,0,.52),
+    0 0 38px rgba(216,173,82,.10),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.jonathan-journey-picture{
+  position:absolute;
+  inset:0;
+}
+
+.jonathan-journey-hero{
+  position:absolute;
+  inset:-2%;
+  width:104%;
+  height:104%;
+  max-width:none;
+  object-fit:cover;
+  object-position:center center;
+  filter:saturate(1.03) contrast(1.05) brightness(.93);
+  transform-origin:center;
+  animation:jonathan-journey-breathe 14s ease-in-out infinite alternate;
+}
+
+.jonathan-journey-shade{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(4,3,2,.02),rgba(4,3,2,.10) 58%,rgba(4,3,2,.44)),
+    radial-gradient(circle at 50% 38%,transparent 28%,rgba(0,0,0,.20) 84%);
+}
+
+.jonathan-journey-glow{
+  position:absolute;
+  z-index:3;
+  left:31%;
+  top:9%;
+  width:38%;
+  aspect-ratio:1;
+  border-radius:50%;
+  pointer-events:none;
+  background:radial-gradient(circle,rgba(255,220,150,.16),transparent 68%);
+  filter:blur(24px);
+  animation:jonathan-journey-glow 5.5s ease-in-out infinite;
+}
+
+@keyframes jonathan-journey-breathe{
+  0%{transform:scale(1.01)}
+  100%{transform:scale(1.045) translate3d(0,-.25%,0)}
+}
+
+@keyframes jonathan-journey-glow{
+  0%,100%{opacity:.42;transform:scale(.95)}
+  50%{opacity:.9;transform:scale(1.05)}
+}
+
+@media(max-width:650px){
+  .athlete-theme-banner--jonathan-journey{
+    aspect-ratio:4/5;
+    border-radius:22px;
+  }
+
+  .jonathan-journey-hero{
+    object-position:center 50%;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .jonathan-journey-hero,
+  .jonathan-journey-glow{
+    animation:none!important;
+  }
+}
