@@ -1,4 +1,4 @@
-export const athletes = [
+const athleteList = [
   {
     "id": "rudy",
     "name": "Rudy",
@@ -320,6 +320,16 @@ export const athletes = [
     "cloudSlug": "serena"
   },
   {
+    "id": "timothee",
+    "name": "Timo",
+    "emoji": "🏋️",
+    "bodyWeight": null,
+    "profileImage": null,
+    "programKey": "timothee",
+    "blockCount": 0,
+    "cloudSlug": "timothee"
+  },
+  {
     "id": "tom",
     "name": "Tom Deneuville",
     "emoji": "🐻‍❄️",
@@ -350,6 +360,16 @@ export const athletes = [
     "cloudSlug": "yann"
   }
 ]
+
+export const athletes = athleteList
+  .slice()
+  .sort((a, b) =>
+    a.name.localeCompare(
+      b.name,
+      'fr',
+      { sensitivity: 'base' }
+    )
+  )
 
 export function getAthlete(athleteId) {
   return athletes.find(
