@@ -71,7 +71,7 @@ function ensureStyles() {
     '.brute-menu-side{display:grid;gap:13px}.brute-wood{border:3px solid #6c391e;border-radius:9px;background:linear-gradient(180deg,#b86b31,#7e3d1e);box-shadow:inset 0 0 0 2px rgba(255,220,145,.3),0 5px 0 #512713,0 10px 18px rgba(69,33,13,.18);padding:13px;color:#fff2b7;font-weight:1000;letter-spacing:.06em;text-shadow:0 2px 0 #4d2411;cursor:pointer}.brute-wood:hover{filter:brightness(1.08);transform:translateY(-1px)}.brute-wood small{display:block;margin-top:3px;font-size:8px;color:#efcb87;letter-spacing:0}',
     '.brute-menu-avatar{display:flex;flex-direction:column;align-items:center;justify-content:center}.brute-menu-avatar .ga-brute-svg{width:min(310px,100%);animation:bruteIdle 2.7s ease-in-out infinite;filter:drop-shadow(0 16px 13px rgba(73,40,18,.24))}.brute-nameplate{margin-top:-14px;padding:7px 16px;border:3px solid #70401f;border-radius:8px;background:#f0dba3;color:#66371c;font-weight:1000;box-shadow:0 4px 0 rgba(92,45,20,.25)}',
     '.brute-menu-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(350px,100%);margin-top:9px}.brute-menu-stat{padding:7px 5px;border:2px solid rgba(104,56,24,.36);border-radius:7px;background:rgba(255,242,190,.58);text-align:center;color:#693a1c}.brute-menu-stat b{display:block;font-size:14px}.brute-menu-stat span{font-size:7px;text-transform:uppercase;font-weight:1000}',
-    '.brute-create{display:grid;grid-template-columns:minmax(270px,.85fr) minmax(0,1.15fr);gap:14px}.brute-create-stage{position:relative;min-height:650px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;border:2px solid #65401f;border-radius:20px;background:radial-gradient(circle at 50% 22%,rgba(255,247,191,.84),transparent 25%),linear-gradient(180deg,#88c7d7 0 27%,#d9c47d 27% 34%,#b97a3c 34% 100%);box-shadow:0 22px 60px rgba(0,0,0,.28)}.brute-create-stage:after{content:"CHARACTER";position:absolute;left:50%;top:63%;transform:translate(-50%,-50%) rotate(-8deg);font-size:62px;font-weight:1000;letter-spacing:.08em;color:rgba(89,44,18,.06)}.brute-create-stage .ga-brute-svg{position:relative;z-index:2;width:min(390px,92%);filter:drop-shadow(0 18px 14px rgba(73,40,18,.25));animation:bruteIdle 2.7s ease-in-out infinite}.brute-create-sign{position:relative;z-index:3;margin-bottom:-6px;padding:7px 18px;border:4px solid #6d391c;border-radius:8px;background:linear-gradient(180deg,#e8b85c,#bd6f2c);box-shadow:inset 0 0 0 3px #f5d78b,0 6px 0 #542813;color:#552817;font-size:18px;font-weight:1000;text-shadow:1px 1px 0 #f8dc91}.brute-creator-random{position:relative;z-index:3;width:min(280px,82%);margin-top:10px}.brute-creator-section{margin-top:10px;border:1px solid rgba(255,255,255,.07);border-radius:16px;background:rgba(255,255,255,.025);overflow:hidden}.brute-creator-section-title{padding:9px 11px;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(90deg,color-mix(in srgb,var(--accent),transparent 84%),transparent);font-size:9px;font-weight:1000;letter-spacing:.09em;color:#d9dcef;text-transform:uppercase}.brute-creator-section-body{padding:0 11px 5px}.brute-create-help{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0 12px}.brute-create-help span{padding:4px 7px;border:1px solid rgba(255,255,255,.07);border-radius:999px;background:rgba(255,255,255,.03);font-size:7px;color:#858ca8;font-weight:900;text-transform:uppercase}.brute-creator-counter{font-size:7px;color:#676e88;font-weight:800}.brute-create-preview{min-height:620px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--accent),transparent 73%),transparent 34%),#0b0f21}.brute-create-preview .ga-brute-svg{width:min(390px,100%);animation:bruteIdle 2.7s ease-in-out infinite}.brute-create-controls{padding:16px;max-height:76vh;overflow:auto}.brute-create-controls h2{margin:4px 0 8px}.brute-create-controls p{color:#858ba5;font-size:10px;line-height:1.6}',
+    '.brute-create{display:grid;grid-template-columns:minmax(270px,.85fr) minmax(0,1.15fr);gap:14px}.brute-create-stage{position:relative;min-height:650px;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;border:2px solid #65401f;border-radius:20px;background:radial-gradient(circle at 50% 22%,rgba(255,247,191,.84),transparent 25%),linear-gradient(180deg,#88c7d7 0 27%,#d9c47d 27% 34%,#b97a3c 34% 100%);box-shadow:0 22px 60px rgba(0,0,0,.28)}.brute-create-stage:after{content:"CHARACTER";position:absolute;left:50%;top:63%;transform:translate(-50%,-50%) rotate(-8deg);font-size:62px;font-weight:1000;letter-spacing:.08em;color:rgba(89,44,18,.06)}.brute-create-stage .ga-brute-svg{position:relative;z-index:2;width:min(390px,92%);filter:drop-shadow(0 18px 14px rgba(73,40,18,.25));animation:bruteIdle 2.7s ease-in-out infinite}.brute-create-sign{position:relative;z-index:3;margin-bottom:-6px;padding:7px 18px;border:4px solid #6d391c;border-radius:8px;background:linear-gradient(180deg,#e8b85c,#bd6f2c);box-shadow:inset 0 0 0 3px #f5d78b,0 6px 0 #542813;color:#552817;font-size:18px;font-weight:1000;text-shadow:1px 1px 0 #f8dc91}.brute-creator-random{position:relative;z-index:3;width:min(280px,82%);margin-top:10px}.brute-creator-section{margin-top:10px;border:1px solid rgba(255,255,255,.07);border-radius:16px;background:rgba(255,255,255,.025);overflow:hidden}.brute-creator-section-title{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 11px;border-bottom:1px solid rgba(255,255,255,.06);background:linear-gradient(90deg,color-mix(in srgb,var(--accent),transparent 84%),transparent);font-size:9px;font-weight:1000;letter-spacing:.09em;color:#d9dcef;text-transform:uppercase}.brute-section-random{width:28px;height:24px;border:1px solid rgba(255,255,255,.09);border-radius:8px;background:rgba(255,255,255,.05);color:#fff;cursor:pointer;font-size:12px;line-height:1}.brute-section-random:hover{background:color-mix(in srgb,var(--accent),transparent 82%)}.brute-creator-section-body{padding:0 11px 5px}.brute-create-help{display:flex;gap:7px;flex-wrap:wrap;margin:7px 0 12px}.brute-create-help span{padding:4px 7px;border:1px solid rgba(255,255,255,.07);border-radius:999px;background:rgba(255,255,255,.03);font-size:7px;color:#858ca8;font-weight:900;text-transform:uppercase}.brute-creator-counter{font-size:7px;color:#676e88;font-weight:800}.brute-create-preview{min-height:620px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--accent),transparent 73%),transparent 34%),#0b0f21}.brute-create-preview .ga-brute-svg{width:min(390px,100%);animation:bruteIdle 2.7s ease-in-out infinite}.brute-create-controls{padding:16px;max-height:76vh;overflow:auto}.brute-create-controls h2{margin:4px 0 8px}.brute-create-controls p{color:#858ba5;font-size:10px;line-height:1.6}',
     '.brute-name-input{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:#080b17;color:white;padding:12px;margin:8px 0 12px;font-weight:900}',
     '.brute-control{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.055)}.brute-control label{font-size:9px;color:#858ca8;text-transform:uppercase;font-weight:900;letter-spacing:.08em}.brute-control strong{display:block;margin-top:3px;font-size:12px;color:#fff}.brute-arrows{display:flex;gap:5px}.brute-arrows button{width:34px;height:34px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.04);color:white;font-weight:1000;cursor:pointer}',
     '.brute-swatches{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.brute-swatch{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.22);cursor:pointer}.brute-swatch.active{outline:3px solid var(--accent);outline-offset:2px}',
@@ -443,12 +443,61 @@ export async function mountBruteGame(root, options = {}) {
   function creatorSection(
     title,
     icon,
-    content
+    content,
+    randomKey = ''
   ) {
     return '<div class="brute-creator-section">'+
-      '<div class="brute-creator-section-title">'+esc(icon+' '+title)+'</div>'+
+      '<div class="brute-creator-section-title"><span>'+esc(icon+' '+title)+'</span>'+
+        (
+          randomKey
+            ? '<button type="button" class="brute-section-random" data-brute-random-section="'+esc(randomKey)+'" title="Randomiser cette partie">🎲</button>'
+            : ''
+        )+
+      '</div>'+
       '<div class="brute-creator-section-body">'+content+'</div>'+
     '</div>'
+  }
+
+  function randomizeDraftSection(section) {
+    const random = randomAppearance()
+    const groups = {
+      morphology:[
+        'body',
+        'head',
+        'skin',
+      ],
+      face:[
+        'eyes',
+        'nose',
+        'mouth',
+        'marking',
+      ],
+      hair:[
+        'hair',
+        'hairColor',
+        'beard',
+      ],
+      outfit:[
+        'top',
+        'bottom',
+        'colors',
+      ],
+      accessory:[
+        'acc',
+      ],
+    }
+
+    const keys =
+      groups[
+        String(section || '')
+      ] || []
+
+    for (const key of keys) {
+      draft[key] =
+        clone(
+          random[key]
+        )
+    }
   }
 
   function renderCreator() {
@@ -476,7 +525,8 @@ export async function mountBruteGame(root, options = {}) {
           '💪',
           control('body','Corps',partName(BRUTE_PARTS.bodies,draft.body))+
           control('head','Forme du visage',partName(BRUTE_PARTS.heads,draft.head))+
-          colorSwatches('skin',BRUTE_PARTS.skins,draft.skin)
+          colorSwatches('skin',BRUTE_PARTS.skins,draft.skin),
+          'morphology'
         )+
         creatorSection(
           'Visage',
@@ -484,14 +534,16 @@ export async function mountBruteGame(root, options = {}) {
           control('eyes','Yeux / sourcils',partName(BRUTE_PARTS.eyes,draft.eyes))+
           control('nose','Nez',partName(BRUTE_PARTS.noses,draft.nose))+
           control('mouth','Bouche',partName(BRUTE_PARTS.mouths,draft.mouth))+
-          control('marking','Marque / cicatrice',partName(BRUTE_PARTS.markings,draft.marking))
+          control('marking','Marque / cicatrice',partName(BRUTE_PARTS.markings,draft.marking)),
+          'face'
         )+
         creatorSection(
           'Cheveux',
           '✂️',
           control('hair','Coupe',partName(BRUTE_PARTS.hairs,draft.hair))+
           colorSwatches('hairColor',BRUTE_PARTS.hairColors,draft.hairColor)+
-          control('beard','Pilosité',partName(BRUTE_PARTS.beards,draft.beard))
+          control('beard','Pilosité',partName(BRUTE_PARTS.beards,draft.beard)),
+          'hair'
         )+
         creatorSection(
           'Tenue',
@@ -499,12 +551,14 @@ export async function mountBruteGame(root, options = {}) {
           control('top','Haut',partName(BRUTE_PARTS.tops,draft.top))+
           control('bottom','Bas',partName(BRUTE_PARTS.bottoms,draft.bottom))+
           colorSwatches('primary',['#7c3aed','#2563eb','#dc2626','#059669','#d97706','#e11d48','#06b6d4','#f8fafc'],draft.colors?.[0])+
-          colorSwatches('secondary',['#111827','#1f2937','#3f3f46','#0f172a','#27272a','#f8fafc','#f59e0b','#0f766e'],draft.colors?.[1])
+          colorSwatches('secondary',['#111827','#1f2937','#3f3f46','#0f172a','#27272a','#f8fafc','#f59e0b','#0f766e'],draft.colors?.[1]),
+          'outfit'
         )+
         creatorSection(
           'Accessoires',
           '✨',
-          control('acc','Accessoire',partName(BRUTE_PARTS.accessories,draft.acc))
+          control('acc','Accessoire',partName(BRUTE_PARTS.accessories,draft.acc)),
+          'accessory'
         )+
         '<div class="brute-actions">'+
           '<button class="brute-secondary" data-brute-random>🎲 Aléatoire</button>'+
@@ -2138,11 +2192,28 @@ export async function mountBruteGame(root, options = {}) {
       return
     }
 
-    const data = result.data
-    const fight = data.fight
+    const data =
+      Array.isArray(result.data)
+        ? result.data[0]
+        : result.data
+
+    const fight =
+      data?.fight
+
+    if (
+      !fight?.attacker_snapshot ||
+      !fight?.defender_snapshot
+    ) {
+      notice =
+        'Le combat reçu est incomplet. Recharge le Duel et réessaie.'
+      screen = 'duel'
+      render()
+      return
+    }
+
     currentFightMeta = data
 
-    if (data.attacker) {
+    if (data?.attacker) {
       brute = {
         ...brute,
         ...data.attacker,
@@ -2151,18 +2222,33 @@ export async function mountBruteGame(root, options = {}) {
 
     levelChoices =
       Array.isArray(
-        data.level_choices
+        data?.level_choices
       )
         ? data.level_choices
         : []
 
-    currentTimeline = generateFightTimeline({
-      seed:fight.seed,
-      attacker:fight.attacker_snapshot,
-      defender:fight.defender_snapshot,
-      winnerSlug:fight.winner_slug,
-    })
-    daily = data.daily || daily
+    try {
+      currentTimeline = generateFightTimeline({
+        seed:fight.seed,
+        attacker:fight.attacker_snapshot,
+        defender:fight.defender_snapshot,
+        winnerSlug:fight.winner_slug,
+      })
+    } catch (error) {
+      console.error(
+        '[GA Brute] timeline duel',
+        error
+      )
+      currentTimeline = null
+      currentFightMeta = null
+      notice =
+        'Le moteur de combat a rencontré une erreur. Réessaie après rechargement.'
+      screen = 'duel'
+      render()
+      return
+    }
+
+    daily = data?.daily || daily
     screen = 'fight'
     render()
     void playTimeline(currentTimeline)
@@ -2192,15 +2278,30 @@ export async function mountBruteGame(root, options = {}) {
       },
     }
 
-    currentFightMeta = { practice:true }
-    currentTimeline = generateFightTimeline({
-      seed,
-      attacker:selfSnapshot,
-      defender:opponent,
-    })
-    screen = 'fight'
-    render()
-    void playTimeline(currentTimeline)
+    try {
+      currentFightMeta = {
+        practice:true,
+      }
+      currentTimeline = generateFightTimeline({
+        seed,
+        attacker:selfSnapshot,
+        defender:opponent,
+      })
+      screen = 'fight'
+      render()
+      void playTimeline(currentTimeline)
+    } catch (error) {
+      console.error(
+        '[GA Brute] timeline PVE',
+        error
+      )
+      currentTimeline = null
+      currentFightMeta = null
+      notice =
+        'Impossible de lancer le combat d’entraînement. Recharge GA Brute et réessaie.'
+      screen = 'pve'
+      render()
+    }
   }
 
   async function replayFight(id) {
@@ -2351,6 +2452,20 @@ export async function mountBruteGame(root, options = {}) {
       else if (key === 'hairColor') draft.hairColor = index
       else if (key === 'primary') draft.colors[0] = ['#7c3aed','#2563eb','#dc2626','#059669','#d97706','#e11d48','#f8fafc','#111827'][index]
       else if (key === 'secondary') draft.colors[1] = ['#111827','#1f2937','#3f3f46','#0f172a','#27272a','#f8fafc','#f59e0b','#06b6d4'][index]
+      render()
+      return
+    }
+
+    const randomSection =
+      event.target.closest(
+        '[data-brute-random-section]'
+      )
+
+    if (randomSection) {
+      randomizeDraftSection(
+        randomSection.dataset
+          .bruteRandomSection
+      )
       render()
       return
     }
