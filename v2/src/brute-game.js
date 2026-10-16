@@ -871,7 +871,13 @@ export async function mountBruteGame(root, options = {}) {
       createSeededRandom(seed)
 
     const roster =
-      OPENPOWERLIFTING_FFFORCE_RIVALS
+      [
+        ...OPENPOWERLIFTING_FFFORCE_RIVALS,
+      ].sort(
+        (a,b) =>
+          normalizedRivalScore(a) -
+          normalizedRivalScore(b)
+      )
 
     const maxIndex =
       Math.min(
