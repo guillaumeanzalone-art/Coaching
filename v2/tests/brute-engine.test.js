@@ -209,3 +209,50 @@ test('GA Brute dodge block and thrown motion metadata stay in safe bounds', () =
     'test seeds should exercise at least one weapon throw'
   )
 })
+
+
+test('sleep score changes XP only and does not change the combat timeline', () => {
+  const base = {
+    seed: 424242,
+    attacker: fighter('awake',{
+      activity:{
+        training_score:55,
+        steps_score:65,
+        sleep_score:0,
+        power:120,
+      },
+    }),
+    defender: fighter('target',{
+      activity:{
+        training_score:45,
+        steps_score:50,
+        sleep_score:50,
+        power:110,
+      },
+    }),
+  }
+
+  const rested = {
+    ...base,
+    attacker: fighter('awake',{
+      activity:{
+        training_score:55,
+        steps_score:65,
+        sleep_score:100,
+        power:120,
+      },
+    }),
+  }
+
+  const withoutSleep =
+    generateFightTimeline(base)
+
+  const withSleep =
+    generateFightTimeline(rested)
+
+  assert.equal(
+    replayFingerprint(withoutSleep),
+    replayFingerprint(withSleep),
+    'sleep score must not change combat stats or combat outcome'
+  )
+})
