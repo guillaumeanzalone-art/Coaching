@@ -806,17 +806,6 @@ function maybeThrowWeapon(
     return false
   }
 
-  pushEvent(
-    events,
-    'WEAPON_THROW',
-    {
-      actor: attacker.side,
-      weapon: weapon.id,
-    },
-    left,
-    right
-  )
-
   return true
 }
 
@@ -917,21 +906,46 @@ function turnAttack(
     right
   )
 
-  pushEvent(
-    events,
-    'MOVE',
-    {
-      actor: attacker.side,
-      target: defender.side,
-      weapon: weapon.id,
-      reach: weapon.reach || 1,
-      counter:
-        Boolean(meta.counter),
-      thrown,
-    },
-    left,
-    right
-  )
+  if (thrown) {
+    pushEvent(
+      events,
+      'WEAPON_THROW',
+      {
+        actor: attacker.side,
+        target: defender.side,
+        weapon: weapon.id,
+        reach:
+          Math.max(
+            1.8,
+            weapon.reach || 1
+          ),
+      },
+      left,
+      right
+    )
+  } else {
+    pushEvent(
+      events,
+      'MOVE',
+      {
+        actor: attacker.side,
+        target: defender.side,
+        weapon: weapon.id,
+        reach:
+          weapon.category === 'ranged'
+            ? Math.max(
+                1.65,
+                weapon.reach || 1
+              )
+            : weapon.reach || 1,
+        counter:
+          Boolean(meta.counter),
+        thrown,
+      },
+      left,
+      right
+    )
+  }
 
   if (
     !chance(
