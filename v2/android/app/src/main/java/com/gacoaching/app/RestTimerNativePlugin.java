@@ -226,7 +226,7 @@ public class RestTimerNativePlugin extends Plugin {
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setCategory(
-                    NotificationCompat.CATEGORY_WORKOUT
+                    NotificationCompat.CATEGORY_STOPWATCH
                 )
                 .setPriority(
                     NotificationCompat.PRIORITY_LOW
