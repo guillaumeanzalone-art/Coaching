@@ -742,7 +742,7 @@ export async function mountBruteGame(root, options = {}) {
                 '<div><span>Steps</span><b>'+num(idleSnapshot?.steps,0)+'</b></div>'+
                 '<div><span>Score</span><b>'+num(idleSnapshot?.steps_score,0)+'/100</b></div>'+
               '</div>'+
-              '<small>Les pas améliorent surtout agilité et vitesse.</small>'+
+              '<small>Les pas améliorent agilité/vitesse et ajoutent jusqu’à +18 XP sur une victoire. Bonus actuel : +'+Math.round(num(idleSnapshot?.steps_score,0)*.18)+' XP.</small>'+
             '</div>'+
             '<button class="brute-camp-action" data-brute-screen="equipment">🎒 ÉQUIPEMENT</button>'+
             '<button class="brute-camp-action" data-brute-screen="duel">🥊 ALLER AU DUEL</button>'+
@@ -781,7 +781,7 @@ export async function mountBruteGame(root, options = {}) {
                 '<div><span>Sommeil</span><b>'+Math.round(num(idleSnapshot?.sleep_seconds,0)/3600*10)/10+' h</b></div>'+
                 '<div><span>Score</span><b>'+num(idleSnapshot?.sleep_score,0)+'/100</b></div>'+
               '</div>'+
-              '<small>Au lit, tu récupères environ '+sleepRecoveryRate()+' énergie par heure.</small>'+
+              '<small>Au lit, tu récupères environ '+sleepRecoveryRate()+' énergie par heure. Un bon sommeil ajoute jusqu’à +22 XP par victoire. Bonus actuel : +'+Math.round(num(idleSnapshot?.sleep_score,0)*.22)+' XP.</small>'+
             '</div>'+
             '<button class="brute-camp-action sleep" data-brute-go-sleep>'+
               (
@@ -2475,10 +2475,25 @@ export async function mountBruteGame(root, options = {}) {
         '</p>'+
         (
           practice
-            ? '<div class="brute-xp-gain">ENTRAÎNEMENT · 0 XP</div>'
+            ? '<div class="brute-xp-gain">OPENPOWER PVE · 0 XP</div>'+
+              (
+                currentFightMeta?.openpowerlifting
+                  ? '<div style="margin-top:8px;color:#7e859f;font-size:8px;font-weight:900">OPENPOWERLIFTING · TOTAL '+num(currentFightMeta.openpowerlifting.total,0)+' KG · '+num(currentFightMeta.openpowerlifting.points,0)+' '+esc(currentFightMeta.openpowerlifting.metric || '')+'</div>'
+                  : ''
+              )
             : replayOnly
               ? '<div class="brute-xp-gain">↻ Replay · XP déjà attribuée</div>'
               : '<div class="brute-xp-gain">✨ +'+gained+' XP</div>'
+        )+
+        (
+          xp && !practice && !replayOnly
+            ? '<div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:9px auto 0;max-width:620px">'+
+                '<span class="brute-activity-pill">Base +'+num(xp.base_xp,0)+'</span>'+
+                '<span class="brute-activity-pill">🚶 Steps +'+num(xp.steps_bonus,0)+'</span>'+
+                '<span class="brute-activity-pill">🌙 Sommeil +'+num(xp.sleep_bonus,0)+'</span>'+
+                '<span class="brute-activity-pill">🏋️ Training +'+num(xp.training_bonus,0)+'</span>'+
+              '</div>'
+            : ''
         )+
         (
           xp
@@ -2665,6 +2680,8 @@ export async function mountBruteGame(root, options = {}) {
     try {
       currentFightMeta = {
         practice:true,
+        openpowerlifting:
+          opponent.openpowerlifting,
       }
       currentTimeline = generateFightTimeline({
         seed,
