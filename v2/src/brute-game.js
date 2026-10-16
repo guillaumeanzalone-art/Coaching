@@ -2178,10 +2178,30 @@ export async function mountBruteGame(root, options = {}) {
     notice = ''
     render()
 
-    const result = await supabase.rpc('brute_start_fight_v2',{
-      p_attacker_slug:selectedSlug,
-      p_defender_slug:defenderSlug,
-    })
+    let result
+
+    try {
+      result = await supabase.rpc(
+        'brute_start_fight_v2',
+        {
+          p_attacker_slug:
+            selectedSlug,
+          p_defender_slug:
+            defenderSlug,
+        }
+      )
+    } catch (error) {
+      console.error(
+        '[GA Brute] start duel',
+        error
+      )
+      busy = false
+      notice =
+        'Connexion au Duel impossible. Vérifie ta connexion puis réessaie.'
+      screen = 'duel'
+      render()
+      return
+    }
 
     busy = false
 
