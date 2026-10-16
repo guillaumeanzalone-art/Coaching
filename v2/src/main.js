@@ -1542,31 +1542,7 @@ function renderGameHubScreen() {
             </strong>
 
             <span>
-              Séances + steps + sommeil · PvE · PvP automatique
-            </span>
-          </div>
-
-          <span class="arrow">
-            ›
-          </span>
-        </button>
-
-        <button
-          class="card"
-          data-action="game-brute"
-          type="button"
-        >
-          <span class="card-icon">
-            ⚔️
-          </span>
-
-          <div>
-            <strong>
-              GA Brute
-            </strong>
-
-            <span>
-              Crée ta brute · PvE · Duel · équipement · classement
+              Séances · steps · sommeil · avatar · PvE · Duel · classement
             </span>
           </div>
 
@@ -1578,9 +1554,9 @@ function renderGameHubScreen() {
 
       <section class="home-live-dashboard home-live-dashboard--bottom">
         <div class="home-live-loading">
-          RPG pour la progression classique · Idle Training pour
-          séance/steps/sommeil · GA Brute pour les duels automatiques,
-          la création de personnage et le classement.
+          RPG pour la progression classique · Idle Training regroupe
+          maintenant séances, steps, sommeil, création de personnage,
+          PvE, Duel, équipement et classement.
         </div>
       </section>
     </main>
@@ -1618,14 +1594,6 @@ function renderGameHubScreen() {
       if (
         action.dataset.action ===
           'game-idle'
-      ) {
-        await renderIdleGameScreen()
-        return
-      }
-
-      if (
-        action.dataset.action ===
-          'game-brute'
       ) {
         await renderBruteGameScreen()
       }
