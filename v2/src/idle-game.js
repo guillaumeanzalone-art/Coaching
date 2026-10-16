@@ -191,6 +191,55 @@ function ensureStyle() {
     .idle-fighter-visual-v1 .idle-avatar-v1{width:128px;height:128px;font-size:54px;margin:auto}
     .idle-fighter-v1 strong{display:block;font-size:15px}.idle-fighter-v1 small{display:block;margin-top:3px;color:#7e86a2;font-size:10px}
     .idle-vs-v1{font-size:21px;font-weight:950;color:#846aff;text-shadow:0 0 18px rgba(132,106,255,.4)}
+    .idle-brute-arena-v1{position:relative;min-height:430px;overflow:hidden;color:#3b2618;background:
+      radial-gradient(circle at 50% 22%,rgba(255,249,190,.82),transparent 34%),
+      linear-gradient(180deg,#f0c46f 0 23%,#d99a48 23% 27%,#bc7637 27% 29%,#d39b58 29% 100%);border-bottom:1px solid rgba(255,255,255,.08)}
+    .idle-brute-arena-v1:before{content:"";position:absolute;left:-8%;right:-8%;bottom:-8%;height:54%;opacity:.75;background:
+      linear-gradient(90deg,transparent 0 12%,rgba(93,53,24,.16) 12% 13%,transparent 13% 25%,rgba(93,53,24,.16) 25% 26%,transparent 26% 38%,rgba(93,53,24,.16) 38% 39%,transparent 39% 51%,rgba(93,53,24,.16) 51% 52%,transparent 52% 64%,rgba(93,53,24,.16) 64% 65%,transparent 65% 77%,rgba(93,53,24,.16) 77% 78%,transparent 78%),
+      linear-gradient(0deg,transparent 0 24%,rgba(93,53,24,.16) 24% 26%,transparent 26% 49%,rgba(93,53,24,.16) 49% 51%,transparent 51% 74%,rgba(93,53,24,.16) 74% 76%,transparent 76%);
+      transform:perspective(440px) rotateX(58deg);transform-origin:bottom}
+    .idle-brute-arena-v1:after{content:"GA BRUTE";position:absolute;left:50%;top:51%;transform:translate(-50%,-50%) rotate(-7deg);font-size:54px;font-weight:1000;letter-spacing:.08em;color:rgba(117,55,22,.08);white-space:nowrap}
+    .idle-brute-hud-v1{position:absolute;z-index:7;inset:12px 14px auto;display:grid;grid-template-columns:1fr 58px 1fr;gap:10px;align-items:start}
+    .idle-brute-hud-side-v1{min-width:0}
+    .idle-brute-hud-side-v1.right{text-align:right}
+    .idle-brute-name-v1{display:flex;align-items:center;gap:7px;margin-bottom:5px;color:#fff7cf;font-size:11px;font-weight:1000;letter-spacing:.06em;text-shadow:0 2px 0 rgba(93,49,21,.55)}
+    .idle-brute-hud-side-v1.right .idle-brute-name-v1{justify-content:flex-end}
+    .idle-brute-power-v1{font-size:8px;color:#6f3e1e;font-weight:950;text-transform:uppercase;letter-spacing:.08em}
+    .idle-brute-hp-shell-v1{height:20px;padding:3px;border-radius:4px;background:#3e2417;border:2px solid #6d3f20;box-shadow:inset 0 0 0 1px rgba(255,232,137,.35),0 2px 0 rgba(59,31,16,.25);overflow:hidden}
+    .idle-brute-hp-v1{height:100%;border-radius:2px;background:linear-gradient(180deg,#ffe53b,#ffb300 44%,#e85b20 100%);box-shadow:inset 0 1px rgba(255,255,255,.55);transition:width .36s ease}
+    .idle-brute-hp-number-v1{margin-top:3px;font-size:8px;font-weight:950;color:#6f3e1e}
+    .idle-brute-round-v1{display:grid;place-items:center;height:46px;border-radius:50%;background:#fff3b5;border:3px solid #a95f26;color:#8a431d;font-size:10px;font-weight:1000;box-shadow:0 2px 0 rgba(83,43,20,.25)}
+    .idle-brute-floor-v1{position:absolute;z-index:2;left:8%;right:8%;bottom:17%;height:3px;border-radius:50%;background:rgba(89,47,25,.25);box-shadow:0 0 30px 18px rgba(84,44,21,.08)}
+    .idle-brute-fighters-v1{position:absolute;z-index:4;left:0;right:0;bottom:44px;display:grid;grid-template-columns:1fr 1fr;align-items:end;padding:0 7%}
+    .idle-brute-fighter-v1{position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;transition:filter .2s}
+    .idle-brute-fighter-v1.enemy{transform:scaleX(-1)}
+    .idle-brute-fighter-v1.enemy .idle-brute-label-v1,.idle-brute-fighter-v1.enemy .idle-brute-damage-v1{transform:scaleX(-1)}
+    .idle-brute-sprite-v1{height:225px;max-width:82%;display:grid;place-items:end center;transform-origin:50% 100%;position:relative}
+    .idle-brute-sprite-v1 img{display:block;max-width:100%;max-height:225px;object-fit:contain;filter:drop-shadow(0 12px 9px rgba(69,33,14,.28))}
+    .idle-brute-sprite-v1 .idle-avatar-v1{width:132px;height:132px;border-radius:24px;border:4px solid rgba(255,246,189,.72);font-size:52px;box-shadow:0 12px 25px rgba(71,34,15,.22)}
+    .idle-brute-label-v1{margin-top:-2px;padding:5px 9px;border-radius:999px;background:rgba(80,39,17,.8);color:#fff2b4;font-size:9px;font-weight:1000;letter-spacing:.05em;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
+    .idle-brute-weapon-v1{position:absolute;z-index:9;top:45%;font-size:33px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.2));animation:idleBruteWeapon .48s ease both}
+    .idle-brute-fighter-v1.player .idle-brute-weapon-v1{right:7%}
+    .idle-brute-fighter-v1.enemy .idle-brute-weapon-v1{right:7%;transform:scaleX(-1)}
+    .idle-brute-damage-v1{position:absolute;z-index:12;top:18%;padding:4px 7px;border-radius:8px;background:#fff8c9;border:2px solid #a34d24;color:#d62d20;font-size:15px;font-weight:1000;box-shadow:0 3px 0 rgba(86,39,17,.18);animation:idleBruteDamage .68s ease both}
+    .idle-brute-damage-v1.dodge{color:#3f67a9}
+    .idle-brute-damage-v1.crit{font-size:20px;color:#c21919}
+    .idle-brute-fighter-v1.attacking.player .idle-brute-sprite-v1{animation:idleBruteAttackRight .54s cubic-bezier(.2,.8,.2,1)}
+    .idle-brute-fighter-v1.attacking.enemy .idle-brute-sprite-v1{animation:idleBruteAttackLeft .54s cubic-bezier(.2,.8,.2,1)}
+    .idle-brute-fighter-v1.hit .idle-brute-sprite-v1{animation:idleBruteHit .48s ease}
+    .idle-brute-fighter-v1.ko .idle-brute-sprite-v1{animation:idleBruteKo .72s ease forwards}
+    .idle-brute-center-v1{position:absolute;z-index:6;left:50%;top:53%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+    .idle-brute-action-v1{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:12px;background:rgba(255,247,199,.92);border:2px solid rgba(145,71,28,.7);color:#723a1b;font-size:10px;font-weight:1000;box-shadow:0 4px 0 rgba(94,48,22,.16)}
+    .idle-brute-log-v1{position:absolute;z-index:8;left:12px;right:12px;bottom:9px;display:flex;gap:6px;justify-content:center;pointer-events:none}
+    .idle-brute-log-line-v1{max-width:45%;padding:5px 8px;border-radius:9px;background:rgba(65,32,15,.72);color:#fff1bc;font-size:8px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .idle-brute-ready-v1{position:absolute;z-index:6;left:50%;top:52%;transform:translate(-50%,-50%);padding:10px 14px;border-radius:14px;background:rgba(255,245,186,.92);border:3px solid #a45b25;color:#814019;font-size:13px;font-weight:1000;box-shadow:0 4px 0 rgba(79,38,17,.2)}
+    .idle-brute-replay-v1{margin:0 12px 12px;width:calc(100% - 24px)}
+    @keyframes idleBruteAttackRight{0%,100%{transform:translateX(0) rotate(0)}45%{transform:translateX(46%) rotate(4deg)}60%{transform:translateX(38%) rotate(-3deg)}}
+    @keyframes idleBruteAttackLeft{0%,100%{transform:translateX(0) rotate(0)}45%{transform:translateX(46%) rotate(4deg)}60%{transform:translateX(38%) rotate(-3deg)}}
+    @keyframes idleBruteHit{0%,100%{transform:translateX(0);filter:none}20%{transform:translateX(-9px);filter:brightness(1.8)}45%{transform:translateX(8px)}65%{transform:translateX(-5px)}}
+    @keyframes idleBruteKo{0%{transform:rotate(0) translateY(0);opacity:1}100%{transform:rotate(78deg) translate(28px,22px);opacity:.45}}
+    @keyframes idleBruteDamage{0%{opacity:0;transform:translateY(12px) scale(.7)}35%{opacity:1;transform:translateY(-12px) scale(1.15)}100%{opacity:0;transform:translateY(-34px) scale(.9)}}
+    @keyframes idleBruteWeapon{0%{opacity:0;transform:scale(.4) rotate(-35deg)}35%{opacity:1;transform:scale(1.15) rotate(12deg)}100%{opacity:0;transform:scale(.8) rotate(38deg)}}
     .idle-result-v1{margin:12px;padding:14px;border-radius:15px;text-align:center;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.035)}
     .idle-result-v1.win{border-color:rgba(71,221,161,.24);background:rgba(71,221,161,.07)}
     .idle-result-v1.loss{border-color:rgba(255,97,122,.22);background:rgba(255,97,122,.06)}
@@ -213,6 +262,17 @@ function ensureStyle() {
       .idle-fighter-visual-v1 img{max-height:160px}
       .idle-fighter-visual-v1 .idle-avatar-v1{width:92px;height:92px;font-size:38px}
       .idle-hero-v1 h2{font-size:27px}
+      .idle-brute-arena-v1{min-height:360px}
+      .idle-brute-hud-v1{inset:9px 8px auto;grid-template-columns:1fr 42px 1fr;gap:6px}
+      .idle-brute-round-v1{height:36px;font-size:8px}
+      .idle-brute-sprite-v1{height:170px;max-width:94%}
+      .idle-brute-sprite-v1 img{max-height:170px}
+      .idle-brute-sprite-v1 .idle-avatar-v1{width:92px;height:92px;border-radius:20px}
+      .idle-brute-fighters-v1{padding:0 2%;bottom:40px}
+      .idle-brute-arena-v1:after{font-size:36px}
+      .idle-brute-name-v1{font-size:9px}
+      .idle-brute-log-line-v1{max-width:48%;font-size:7px}
+      .idle-brute-damage-v1{top:20%;font-size:13px}
     }
   `
 
@@ -456,6 +516,8 @@ export async function mountIdleGame(
   let history = []
   let manifest = []
   let battle = null
+  let combatReplay = null
+  let combatTimer = null
   let busy = false
   let notice = ''
   let sleepTicker = null
@@ -505,6 +567,11 @@ export async function mountIdleGame(
     if (sleepTicker) {
       clearInterval(sleepTicker)
       sleepTicker = null
+    }
+
+    if (combatTimer) {
+      clearTimeout(combatTimer)
+      combatTimer = null
     }
 
     root.onclick = null
@@ -1038,29 +1105,570 @@ export async function mountIdleGame(
     `
   }
 
-  function fighterAvatar() {
-    const athlete =
-      selectedAthlete()
+  function athleteBySlug(slug) {
+    const wanted =
+      normalizeMonsterKey(slug)
 
-    return athlete?.profileImage
+    return athletes.find(athlete =>
+      normalizeMonsterKey(
+        athleteSlug(athlete)
+      ) === wanted
+    )
+  }
+
+  function athleteBattleImage(
+    athlete
+  ) {
+    if (!athlete) {
+      return ''
+    }
+
+    const slugKey =
+      normalizeMonsterKey(
+        athleteSlug(athlete)
+      )
+
+    const nameKey =
+      normalizeMonsterKey(
+        athlete.name
+      )
+
+    const tokens =
+      Array.from(
+        new Set(
+          [
+            slugKey,
+            ...nameKey.split(' '),
+          ].filter(
+            token =>
+              token.length >= 3
+          )
+        )
+      )
+
+    const sprite =
+      manifest.find(item => {
+        const words =
+          normalizeMonsterKey(
+            item?.name ||
+            item?.key
+          ).split(' ')
+
+        return tokens.some(
+          token =>
+            words.includes(token)
+        )
+      })
+
+    return assetPath(
+      sprite?.file ||
+      athlete.profileImage ||
+      ''
+    )
+  }
+
+  function renderFighterVisual(
+    athlete,
+    fallbackEmoji = '🏋️'
+  ) {
+    const image =
+      athleteBattleImage(
+        athlete
+      )
+
+    return image
       ? `
-        <div class="idle-avatar-v1">
-          <img
-            src="${esc(
-              athlete.profileImage
-            )}"
-            alt=""
-          >
-        </div>
+        <img
+          src="${esc(image)}"
+          alt=""
+          loading="eager"
+        >
       `
       : `
         <div class="idle-avatar-v1">
           ${esc(
             athlete?.emoji ||
-            '🏋️'
+            fallbackEmoji
           )}
         </div>
       `
+  }
+
+  function seededRandom(seedText) {
+    let seed = 2166136261
+
+    for (
+      let i = 0;
+      i < seedText.length;
+      i += 1
+    ) {
+      seed ^=
+        seedText.charCodeAt(i)
+
+      seed =
+        Math.imul(
+          seed,
+          16777619
+        )
+    }
+
+    return () => {
+      seed += 0x6D2B79F5
+
+      let value = seed
+      value =
+        Math.imul(
+          value ^ value >>> 15,
+          value | 1
+        )
+
+      value ^=
+        value +
+        Math.imul(
+          value ^ value >>> 7,
+          value | 61
+        )
+
+      return (
+        (
+          value ^ value >>> 14
+        ) >>> 0
+      ) / 4294967296
+    }
+  }
+
+  function buildCombatReplay(
+    row,
+    mode
+  ) {
+    const random =
+      seededRandom(
+        String(
+          row?.battle_id ||
+          `${mode}-${selectedSlug}`
+        )
+      )
+
+    const playerPower =
+      Math.max(
+        20,
+        number(
+          mode === 'pve'
+            ? row?.player_power
+            : row?.attacker_power,
+          snapshot?.power || 35
+        )
+      )
+
+    const enemyPower =
+      Math.max(
+        20,
+        number(
+          mode === 'pve'
+            ? row?.enemy_power
+            : row?.defender_power,
+          35
+        )
+      )
+
+    const playerMax =
+      Math.round(
+        105 +
+        playerPower * 0.72
+      )
+
+    const enemyMax =
+      Math.round(
+        105 +
+        enemyPower * 0.72
+      )
+
+    let playerHp = playerMax
+    let enemyHp = enemyMax
+
+    const expectedWinner =
+      row?.won
+        ? 'player'
+        : 'enemy'
+
+    const weapons = [
+      '👊',
+      '👊',
+      '🥊',
+      '🏋️',
+      '🔨',
+      '🪑',
+      '🧱',
+      '🥤',
+    ]
+
+    const events = []
+
+    let actor =
+      random() > 0.5
+        ? 'player'
+        : 'enemy'
+
+    const totalTurns =
+      7 +
+      Math.floor(
+        random() * 5
+      )
+
+    for (
+      let turn = 0;
+      turn < totalTurns - 1;
+      turn += 1
+    ) {
+      const target =
+        actor === 'player'
+          ? 'enemy'
+          : 'player'
+
+      const attackerPower =
+        actor === 'player'
+          ? playerPower
+          : enemyPower
+
+      const defenderPower =
+        target === 'player'
+          ? playerPower
+          : enemyPower
+
+      const targetMax =
+        target === 'player'
+          ? playerMax
+          : enemyMax
+
+      const targetHp =
+        target === 'player'
+          ? playerHp
+          : enemyHp
+
+      const dodge =
+        random() < 0.11
+
+      const crit =
+        !dodge &&
+        random() < 0.16
+
+      const weapon =
+        weapons[
+          Math.floor(
+            random() *
+            weapons.length
+          )
+        ]
+
+      let damage = 0
+
+      if (!dodge) {
+        const powerRatio =
+          clamp(
+            attackerPower /
+            Math.max(
+              1,
+              defenderPower
+            ),
+            0.55,
+            1.65
+          )
+
+        damage =
+          Math.max(
+            5,
+            Math.round(
+              (
+                targetMax *
+                (
+                  0.075 +
+                  random() * 0.075
+                ) *
+                powerRatio
+              ) *
+              (
+                crit
+                  ? 1.65
+                  : 1
+              )
+            )
+          )
+
+        const reserve =
+          Math.max(
+            1,
+            Math.round(
+              targetMax *
+              (
+                target ===
+                  expectedWinner
+                  ? 0.24
+                  : 0.08
+              )
+            )
+          )
+
+        damage =
+          Math.min(
+            damage,
+            Math.max(
+              0,
+              targetHp - reserve
+            )
+          )
+      }
+
+      if (target === 'player') {
+        playerHp =
+          Math.max(
+            1,
+            playerHp - damage
+          )
+      } else {
+        enemyHp =
+          Math.max(
+            1,
+            enemyHp - damage
+          )
+      }
+
+      events.push({
+        actor,
+        target,
+        damage,
+        dodge,
+        crit,
+        weapon,
+        playerHp,
+        enemyHp,
+      })
+
+      actor =
+        actor === 'player'
+          ? 'enemy'
+          : 'player'
+    }
+
+    const finalActor =
+      expectedWinner
+
+    const finalTarget =
+      expectedWinner === 'player'
+        ? 'enemy'
+        : 'player'
+
+    const finalHp =
+      finalTarget === 'player'
+        ? playerHp
+        : enemyHp
+
+    if (finalTarget === 'player') {
+      playerHp = 0
+    } else {
+      enemyHp = 0
+    }
+
+    events.push({
+      actor:
+        finalActor,
+      target:
+        finalTarget,
+      damage:
+        Math.max(
+          finalHp,
+          Math.round(
+            (
+              finalTarget === 'player'
+                ? playerMax
+                : enemyMax
+            ) * 0.16
+          )
+        ),
+      dodge: false,
+      crit: true,
+      weapon:
+        weapons[
+          2 +
+          Math.floor(
+            random() *
+            (
+              weapons.length - 2
+            )
+          )
+        ],
+      playerHp,
+      enemyHp,
+      knockout: true,
+    })
+
+    return {
+      mode,
+      events,
+      index: -1,
+      running: true,
+      done: false,
+      playerMax,
+      enemyMax,
+      playerHp:
+        playerMax,
+      enemyHp:
+        enemyMax,
+      lastEvent: null,
+      log: [],
+    }
+  }
+
+  function eventLabel(
+    event,
+    playerName,
+    enemyName
+  ) {
+    const actorName =
+      event.actor === 'player'
+        ? playerName
+        : enemyName
+
+    const targetName =
+      event.target === 'player'
+        ? playerName
+        : enemyName
+
+    if (event.dodge) {
+      return `${targetName} esquive l'attaque de ${actorName}`
+    }
+
+    if (event.knockout) {
+      return `${actorName} met ${targetName} K.O. !`
+    }
+
+    if (event.crit) {
+      return `${actorName} place un critique à ${event.damage}`
+    }
+
+    return `${actorName} inflige ${event.damage}`
+  }
+
+  function stopCombatReplay() {
+    if (combatTimer) {
+      clearTimeout(
+        combatTimer
+      )
+
+      combatTimer = null
+    }
+  }
+
+  function advanceCombatReplay() {
+    if (
+      !combatReplay ||
+      !combatReplay.running
+    ) {
+      return
+    }
+
+    combatReplay.index += 1
+
+    const event =
+      combatReplay.events[
+        combatReplay.index
+      ]
+
+    if (!event) {
+      combatReplay.running = false
+      combatReplay.done = true
+      render()
+      return
+    }
+
+    combatReplay.playerHp =
+      event.playerHp
+
+    combatReplay.enemyHp =
+      event.enemyHp
+
+    combatReplay.lastEvent =
+      event
+
+    const playerName =
+      selectedAthlete()?.name ||
+      selectedSlug ||
+      'Athlète'
+
+    const enemyName =
+      battle?.mode === 'pve'
+        ? (
+          battle?.monster_name ||
+          'Monstre'
+        )
+        : (
+          battle?.defender_name ||
+          displayNameFromSlug(
+            battle?.defender_slug
+          ) ||
+          'Adversaire'
+        )
+
+    combatReplay.log.unshift(
+      eventLabel(
+        event,
+        playerName,
+        enemyName
+      )
+    )
+
+    combatReplay.log =
+      combatReplay.log.slice(
+        0,
+        2
+      )
+
+    const isLast =
+      combatReplay.index >=
+      combatReplay.events.length - 1
+
+    if (isLast) {
+      combatReplay.running = false
+      combatReplay.done = true
+
+      render()
+
+      battleSound(
+        Boolean(
+          battle?.won
+        )
+      )
+
+      return
+    }
+
+    render()
+
+    combatTimer =
+      setTimeout(
+        advanceCombatReplay,
+        720
+      )
+  }
+
+  function startCombatReplay(
+    row,
+    mode
+  ) {
+    stopCombatReplay()
+
+    combatReplay =
+      buildCombatReplay(
+        row,
+        mode
+      )
+
+    render()
+
+    combatTimer =
+      setTimeout(
+        advanceCombatReplay,
+        620
+      )
   }
 
   function renderBattleResult(
@@ -1068,7 +1676,12 @@ export async function mountIdleGame(
   ) {
     if (
       !battle ||
-      battle.mode !== mode
+      battle.mode !== mode ||
+      (
+        combatReplay &&
+        combatReplay.mode === mode &&
+        !combatReplay.done
+      )
     ) {
       return ''
     }
@@ -1109,6 +1722,354 @@ export async function mountIdleGame(
             : ''}
         </p>
       </div>
+
+      <button
+        type="button"
+        class="idle-secondary-v1 idle-brute-replay-v1"
+        data-idle-replay
+      >
+        ↻ Revoir le combat
+      </button>
+    `
+  }
+
+  function renderBruteArena(
+    mode
+  ) {
+    const current =
+      snapshot || {}
+
+    const player =
+      selectedAthlete()
+
+    const opponentAthlete =
+      mode === 'pvp' &&
+      battle?.mode === 'pvp'
+        ? athleteBySlug(
+            battle.defender_slug
+          )
+        : null
+
+    const playerName =
+      player?.name ||
+      selectedSlug ||
+      'Athlète'
+
+    const enemyName =
+      mode === 'pve'
+        ? (
+          battle?.mode === 'pve'
+            ? (
+              battle.monster_name ||
+              battle.monster_key ||
+              'Monstre'
+            )
+            : 'Prochaine rencontre'
+        )
+        : (
+          battle?.mode === 'pvp'
+            ? (
+              battle.defender_name ||
+              opponentAthlete?.name ||
+              displayNameFromSlug(
+                battle.defender_slug
+              )
+            )
+            : 'Adversaire aléatoire'
+        )
+
+    const playerPower =
+      number(
+        mode === 'pve'
+          ? battle?.player_power
+          : battle?.attacker_power,
+        current.power || 35
+      )
+
+    const enemyPower =
+      number(
+        mode === 'pve'
+          ? battle?.enemy_power
+          : battle?.defender_power,
+        35
+      )
+
+    const playerMax =
+      combatReplay?.mode === mode
+        ? combatReplay.playerMax
+        : Math.round(
+            105 +
+            playerPower * 0.72
+          )
+
+    const enemyMax =
+      combatReplay?.mode === mode
+        ? combatReplay.enemyMax
+        : Math.round(
+            105 +
+            enemyPower * 0.72
+          )
+
+    const playerHp =
+      combatReplay?.mode === mode
+        ? combatReplay.playerHp
+        : playerMax
+
+    const enemyHp =
+      combatReplay?.mode === mode
+        ? combatReplay.enemyHp
+        : enemyMax
+
+    const playerPct =
+      clamp(
+        playerHp /
+        Math.max(
+          1,
+          playerMax
+        ) *
+        100,
+        0,
+        100
+      )
+
+    const enemyPct =
+      clamp(
+        enemyHp /
+        Math.max(
+          1,
+          enemyMax
+        ) *
+        100,
+        0,
+        100
+      )
+
+    const last =
+      combatReplay?.mode === mode
+        ? combatReplay.lastEvent
+        : null
+
+    const playerClass = [
+      'idle-brute-fighter-v1',
+      'player',
+      last?.actor === 'player'
+        ? 'attacking'
+        : '',
+      last?.target === 'player'
+        ? 'hit'
+        : '',
+      playerHp <= 0
+        ? 'ko'
+        : '',
+    ].filter(Boolean).join(' ')
+
+    const enemyClass = [
+      'idle-brute-fighter-v1',
+      'enemy',
+      last?.actor === 'enemy'
+        ? 'attacking'
+        : '',
+      last?.target === 'enemy'
+        ? 'hit'
+        : '',
+      enemyHp <= 0
+        ? 'ko'
+        : '',
+    ].filter(Boolean).join(' ')
+
+    const enemyVisual =
+      mode === 'pve'
+        ? (
+          battle?.mode === 'pve'
+            ? (
+              monsterImage(
+                battle
+              ) ||
+              '/sprites/monsters/le-monstre-du-sbd-complet.webp'
+            )
+            : '/sprites/monsters/le-monstre-du-sbd-complet.webp'
+        )
+        : athleteBattleImage(
+            opponentAthlete
+          )
+
+    const round =
+      combatReplay?.mode === mode
+        ? Math.max(
+            1,
+            combatReplay.index + 2
+          )
+        : 1
+
+    const action =
+      !battle ||
+      battle.mode !== mode
+        ? (
+          mode === 'pve'
+            ? 'Lance une expédition'
+            : 'Cherche un adversaire'
+        )
+        : combatReplay?.running
+          ? (
+            last?.dodge
+              ? 'ESQUIVE !'
+              : last?.crit
+                ? 'COUP CRITIQUE !'
+                : 'COMBAT !'
+          )
+          : combatReplay?.done
+            ? (
+              battle.won
+                ? 'VICTOIRE !'
+                : 'K.O.'
+            )
+            : 'PRÊT'
+
+    return `
+      <div class="idle-brute-arena-v1">
+        <div class="idle-brute-hud-v1">
+          <div class="idle-brute-hud-side-v1">
+            <div class="idle-brute-name-v1">
+              ${esc(playerName)}
+            </div>
+
+            <div class="idle-brute-hp-shell-v1">
+              <div
+                class="idle-brute-hp-v1"
+                style="width:${playerPct}%"
+              ></div>
+            </div>
+
+            <div class="idle-brute-hp-number-v1">
+              ${Math.max(0, playerHp)} / ${playerMax}
+              · PWR ${playerPower}
+            </div>
+          </div>
+
+          <div class="idle-brute-round-v1">
+            T${round}
+          </div>
+
+          <div class="idle-brute-hud-side-v1 right">
+            <div class="idle-brute-name-v1">
+              ${esc(enemyName)}
+            </div>
+
+            <div class="idle-brute-hp-shell-v1">
+              <div
+                class="idle-brute-hp-v1"
+                style="width:${enemyPct}%"
+              ></div>
+            </div>
+
+            <div class="idle-brute-hp-number-v1">
+              ${Math.max(0, enemyHp)} / ${enemyMax}
+              · PWR ${enemyPower}
+            </div>
+          </div>
+        </div>
+
+        <div class="idle-brute-floor-v1"></div>
+
+        <div class="idle-brute-fighters-v1">
+          <div class="${playerClass}">
+            <div class="idle-brute-sprite-v1">
+              ${renderFighterVisual(
+                player
+              )}
+            </div>
+
+            ${last?.actor === 'player'
+              ? `
+                <div class="idle-brute-weapon-v1">
+                  ${esc(
+                    last.weapon ||
+                    '👊'
+                  )}
+                </div>
+              `
+              : ''}
+
+            ${last?.target === 'player'
+              ? `
+                <div class="idle-brute-damage-v1 ${last.dodge ? 'dodge' : ''} ${last.crit ? 'crit' : ''}">
+                  ${last.dodge
+                    ? 'ESQUIVE'
+                    : `-${last.damage}`}
+                </div>
+              `
+              : ''}
+
+            <div class="idle-brute-label-v1">
+              ${esc(playerName)}
+            </div>
+          </div>
+
+          <div class="${enemyClass}">
+            <div class="idle-brute-sprite-v1">
+              ${enemyVisual
+                ? `
+                  <img
+                    src="${esc(enemyVisual)}"
+                    alt=""
+                    loading="eager"
+                  >
+                `
+                : `
+                  <div class="idle-avatar-v1">
+                    🥊
+                  </div>
+                `}
+            </div>
+
+            ${last?.actor === 'enemy'
+              ? `
+                <div class="idle-brute-weapon-v1">
+                  ${esc(
+                    last.weapon ||
+                    '👊'
+                  )}
+                </div>
+              `
+              : ''}
+
+            ${last?.target === 'enemy'
+              ? `
+                <div class="idle-brute-damage-v1 ${last.dodge ? 'dodge' : ''} ${last.crit ? 'crit' : ''}">
+                  ${last.dodge
+                    ? 'ESQUIVE'
+                    : `-${last.damage}`}
+                </div>
+              `
+              : ''}
+
+            <div class="idle-brute-label-v1">
+              ${esc(enemyName)}
+            </div>
+          </div>
+        </div>
+
+        <div class="idle-brute-center-v1">
+          <div class="idle-brute-action-v1">
+            ${esc(action)}
+          </div>
+        </div>
+
+        ${combatReplay?.mode === mode &&
+          combatReplay.log.length
+          ? `
+            <div class="idle-brute-log-v1">
+              ${combatReplay.log.map(
+                line => `
+                  <div class="idle-brute-log-line-v1">
+                    ${esc(line)}
+                  </div>
+                `
+              ).join('')}
+            </div>
+          `
+          : ''}
+      </div>
     `
   }
 
@@ -1116,87 +2077,16 @@ export async function mountIdleGame(
     const current =
       snapshot || {}
 
-    const image =
-      battle?.mode === 'pve'
-        ? monsterImage(
-            battle
-          )
-        : '/sprites/monsters/le-monstre-du-sbd-complet.webp'
-
-    const monsterName =
-      battle?.mode === 'pve'
-        ? (
-          battle.monster_name ||
-          battle.monster_key
-        )
-        : 'Prochaine rencontre'
-
-    const monsterIcon =
-      battle?.mode === 'pve'
-        ? battle.icon
-        : '👾'
+    const fighting =
+      combatReplay?.mode === 'pve' &&
+      combatReplay.running
 
     return `
       <div class="idle-grid-v1">
         <section class="idle-card-v1">
-          <div class="idle-battle-stage-v1">
-            <div class="idle-fighter-v1">
-              <div class="idle-fighter-visual-v1">
-                ${fighterAvatar()}
-              </div>
-
-              <strong>
-                ${esc(
-                  selectedAthlete()?.name ||
-                  selectedSlug
-                )}
-              </strong>
-
-              <small>
-                Puissance ${number(
-                  current.power,
-                  35
-                )}
-              </small>
-            </div>
-
-            <div class="idle-vs-v1">
-              VS
-            </div>
-
-            <div class="idle-fighter-v1">
-              <div class="idle-fighter-visual-v1">
-                ${image
-                  ? `
-                    <img
-                      src="${esc(image)}"
-                      alt=""
-                    >
-                  `
-                  : `
-                    <div class="idle-avatar-v1">
-                      ${esc(
-                        monsterIcon ||
-                        '👾'
-                      )}
-                    </div>
-                  `}
-              </div>
-
-              <strong>
-                ${esc(
-                  monsterName ||
-                  'Monstre'
-                )}
-              </strong>
-
-              <small>
-                ${battle?.mode === 'pve'
-                  ? `${esc(battle.rarity || '')} · Puissance ${number(battle.enemy_power)}`
-                  : 'Le bestiaire complet peut apparaître'}
-              </small>
-            </div>
-          </div>
+          ${renderBruteArena(
+            'pve'
+          )}
 
           ${renderBattleResult(
             'pve'
@@ -1205,7 +2095,7 @@ export async function mountIdleGame(
 
         <aside class="idle-card-v1 idle-card-pad-v1">
           <span class="idle-kicker-v1">
-            👾 EXPÉDITION AUTOMATIQUE
+            👾 GA BRUTE · EXPÉDITION
           </span>
 
           <h3 style="margin:8px 0 5px">
@@ -1213,10 +2103,9 @@ export async function mountIdleGame(
           </h3>
 
           <p style="margin:0 0 12px;color:#858da9;font-size:10px;line-height:1.6">
-            Combat automatique façon jeu idle.
-            La difficulté monte toutes les 8 victoires
-            et pioche dans les monstres déjà présents dans
-            l’application.
+            Le duel se joue tout seul : déplacements, coups,
+            esquives, critiques et K.O. Ta puissance vient
+            uniquement de tes séances, de tes pas et de ton sommeil.
           </p>
 
           <div class="idle-power-row-v1" style="margin:0 0 12px">
@@ -1243,9 +2132,11 @@ export async function mountIdleGame(
             type="button"
             class="idle-primary-v1"
             data-idle-pve
-            ${(!canEdit() || busy) ? 'disabled' : ''}
+            ${(!canEdit() || busy || fighting) ? 'disabled' : ''}
           >
-            ⚔️ Lancer le combat
+            ${fighting
+              ? '⚔️ Combat en cours…'
+              : '⚔️ Lancer le combat'}
           </button>
 
           <button
@@ -1253,6 +2144,7 @@ export async function mountIdleGame(
             class="idle-secondary-v1"
             style="margin-top:8px;width:100%"
             data-idle-claim
+            ${fighting ? 'disabled' : ''}
           >
             🔋 Collecter l’énergie
           </button>
@@ -1265,65 +2157,16 @@ export async function mountIdleGame(
     const current =
       snapshot || {}
 
-    const opponent =
-      battle?.mode === 'pvp'
-        ? (
-          battle.defender_name ||
-          displayNameFromSlug(
-            battle.defender_slug
-          )
-        )
-        : 'Adversaire aléatoire'
+    const fighting =
+      combatReplay?.mode === 'pvp' &&
+      combatReplay.running
 
     return `
       <div class="idle-grid-v1">
         <section class="idle-card-v1">
-          <div class="idle-battle-stage-v1">
-            <div class="idle-fighter-v1">
-              <div class="idle-fighter-visual-v1">
-                ${fighterAvatar()}
-              </div>
-
-              <strong>
-                ${esc(
-                  selectedAthlete()?.name ||
-                  selectedSlug
-                )}
-              </strong>
-
-              <small>
-                ${number(
-                  current.rank_points,
-                  1000
-                )} ELO · PWR ${number(
-                  current.power,
-                  35
-                )}
-              </small>
-            </div>
-
-            <div class="idle-vs-v1">
-              VS
-            </div>
-
-            <div class="idle-fighter-v1">
-              <div class="idle-fighter-visual-v1">
-                <div class="idle-avatar-v1">
-                  🥊
-                </div>
-              </div>
-
-              <strong>
-                ${esc(opponent)}
-              </strong>
-
-              <small>
-                ${battle?.mode === 'pvp'
-                  ? `PWR ${number(battle.defender_power)}`
-                  : 'Puissance calculée sur ses vraies données'}
-              </small>
-            </div>
-          </div>
+          ${renderBruteArena(
+            'pvp'
+          )}
 
           ${renderBattleResult(
             'pvp'
@@ -1332,7 +2175,7 @@ export async function mountIdleGame(
 
         <aside class="idle-card-v1 idle-card-pad-v1">
           <span class="idle-kicker-v1">
-            🥊 ARÈNE ASYNCHRONE
+            🥊 GA BRUTE · ARÈNE
           </span>
 
           <h3 style="margin:8px 0 5px">
@@ -1340,10 +2183,10 @@ export async function mountIdleGame(
           </h3>
 
           <p style="margin:0 0 12px;color:#858da9;font-size:10px;line-height:1.6">
-            Comme La Brute : tu lances le duel et les deux
-            combattants se battent automatiquement.
-            Aucun clic de vitesse : le résultat dépend des
-            données séance + pas + sommeil des deux athlètes.
+            Duel automatique façon My Brute :
+            les deux athlètes se frappent sans commande manuelle,
+            avec esquives, critiques et objets improvisés.
+            Le résultat serveur reste basé sur les données réelles.
           </p>
 
           <div class="idle-power-row-v1" style="margin:0 0 12px">
@@ -1364,15 +2207,27 @@ export async function mountIdleGame(
               </b>
               <span>Défaites</span>
             </div>
+
+            <div class="idle-power-pill-v1">
+              <b>
+                ${number(
+                  current.rank_points,
+                  1000
+                )}
+              </b>
+              <span>Cote</span>
+            </div>
           </div>
 
           <button
             type="button"
             class="idle-primary-v1"
             data-idle-pvp
-            ${(!canEdit() || busy) ? 'disabled' : ''}
+            ${(!canEdit() || busy || fighting) ? 'disabled' : ''}
           >
-            🥊 Chercher un adversaire
+            ${fighting
+              ? '🥊 Duel en cours…'
+              : '🥊 Chercher un adversaire'}
           </button>
 
           <div class="idle-history-v1" style="margin-top:14px">
@@ -1613,6 +2468,8 @@ export async function mountIdleGame(
         snapshot = null
         history = []
         battle = null
+        combatReplay = null
+        stopCombatReplay()
         ambient.stop()
         render()
         return
@@ -1803,6 +2660,28 @@ export async function mountIdleGame(
         return
       }
 
+      const replay =
+        event.target.closest(
+          '[data-idle-replay]'
+        )
+
+      if (replay) {
+        if (
+          battle &&
+          (
+            battle.mode === 'pve' ||
+            battle.mode === 'pvp'
+          )
+        ) {
+          startCombatReplay(
+            battle,
+            battle.mode
+          )
+        }
+
+        return
+      }
+
       const pve =
         event.target.closest(
           '[data-idle-pve]'
@@ -1850,11 +2729,13 @@ export async function mountIdleGame(
           mode: 'pve',
         }
 
-        battleSound(
-          Boolean(row?.won)
+        await loadSelected()
+
+        startCombatReplay(
+          battle,
+          'pve'
         )
 
-        await loadSelected()
         return
       }
 
@@ -1907,11 +2788,13 @@ export async function mountIdleGame(
           mode: 'pvp',
         }
 
-        battleSound(
-          Boolean(row?.won)
+        await loadSelected()
+
+        startCombatReplay(
+          battle,
+          'pvp'
         )
 
-        await loadSelected()
         return
       }
     }
