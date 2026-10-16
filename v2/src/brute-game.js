@@ -317,10 +317,39 @@ export async function mountBruteGame(root, options = {}) {
         )
 
     if (!brute.appearance_locked_at) {
-      draft = Object.keys(brute.appearance || {}).length
-        ? clone(brute.appearance)
-        : clone(DEFAULT_APPEARANCE)
-      draftName = brute.name || selectedAthlete()?.name || selectedSlug
+      const storedAppearance =
+        Object.keys(
+          brute.appearance ||
+          {}
+        ).length
+          ? clone(
+              brute.appearance
+            )
+          : {}
+
+      draft = {
+        ...clone(
+          DEFAULT_APPEARANCE
+        ),
+        ...storedAppearance,
+        colors:
+          Array.isArray(
+            storedAppearance.colors
+          )
+            ? [
+                ...storedAppearance.colors,
+              ]
+            : [
+                ...DEFAULT_APPEARANCE.colors,
+              ],
+        v: 2,
+      }
+
+      draftName =
+        brute.name ||
+        selectedAthlete()?.name ||
+        selectedSlug
+
       screen = 'creator'
     } else if (screen === 'selector' || screen === 'creator') {
       screen = 'menu'
