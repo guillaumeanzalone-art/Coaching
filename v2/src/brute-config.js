@@ -263,6 +263,7 @@ export const BRUTE_PARTS = {
   ],
 
   skins: [
+    // Keep the first eight entries stable for already-created brutes.
     '#f7d7c4',
     '#edc3a5',
     '#dca57f',
@@ -271,6 +272,13 @@ export const BRUTE_PARTS = {
     '#82503a',
     '#5f3a2e',
     '#3d2824',
+    // Extra stylised tones inspired by La Brute's broad palette.
+    '#fbe6c8',
+    '#f8d198',
+    '#d79b75',
+    '#cb841b',
+    '#996600',
+    '#eccd57',
   ],
 
   hairs: [
@@ -295,6 +303,7 @@ export const BRUTE_PARTS = {
   ],
 
   hairColors: [
+    // Keep legacy indices stable.
     '#111111',
     '#4b2d1f',
     '#7a4c2b',
@@ -305,6 +314,18 @@ export const BRUTE_PARTS = {
     '#35b6d4',
     '#60d36f',
     '#f15fc5',
+    // Wider cartoon palette, closer to the remake's creator philosophy.
+    '#fff9ae',
+    '#b85f1d',
+    '#4f677d',
+    '#df7e37',
+    '#fbcd15',
+    '#ffaa1e',
+    '#952f04',
+    '#a2886f',
+    '#fff2df',
+    '#eea2c9',
+    '#8e63ad',
   ],
 
   beards: [
@@ -389,6 +410,47 @@ export const BRUTE_PARTS = {
   ],
 }
 
+export const BRUTE_PALETTES = {
+  primary: [
+    '#7bad30',
+    '#b78104',
+    '#bb1111',
+    '#559399',
+    '#fae31f',
+    '#784129',
+    '#7a73c8',
+    '#fff9ae',
+    '#f0dc99',
+    '#b6e7a9',
+    '#d31818',
+    '#b85f1d',
+    '#97cbff',
+    '#8ba3d7',
+    '#df7e37',
+    '#d5eaff',
+    '#ffaa1e',
+    '#cbff97',
+    '#ffcc79',
+    '#fff2df',
+  ],
+
+  secondary: [
+    '#111827',
+    '#1f2937',
+    '#3f3f46',
+    '#0f172a',
+    '#27272a',
+    '#784129',
+    '#4f677d',
+    '#7a73c8',
+    '#b78104',
+    '#559399',
+    '#bb1111',
+    '#f0dc99',
+    '#fff2df',
+  ],
+}
+
 export const DEFAULT_APPEARANCE = {
   v: 2,
   body: 1,
@@ -421,27 +483,11 @@ export function randomAppearance(random = Math.random) {
       Math.max(1, length)
     )
 
-  const palette = [
-    '#7c3aed',
-    '#2563eb',
-    '#dc2626',
-    '#059669',
-    '#d97706',
-    '#e11d48',
-    '#06b6d4',
-    '#f8fafc',
-  ]
+  const palette =
+    BRUTE_PALETTES.primary
 
-  const neutrals = [
-    '#111827',
-    '#1f2937',
-    '#3f3f46',
-    '#0f172a',
-    '#27272a',
-    '#f8fafc',
-    '#f59e0b',
-    '#0f766e',
-  ]
+  const neutrals =
+    BRUTE_PALETTES.secondary
 
   return {
     v: 2,
