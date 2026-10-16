@@ -455,8 +455,10 @@ export const BRUTE_PALETTES = {
   ],
 }
 
+export const BRUTE_APPEARANCE_VERSION = 3
+
 export const DEFAULT_APPEARANCE = {
-  v: 2,
+  v: BRUTE_APPEARANCE_VERSION,
   body: 1,
   head: 0,
   skin: 2,
@@ -494,7 +496,7 @@ export function randomAppearance(random = Math.random) {
     BRUTE_PALETTES.secondary
 
   return {
-    v: 2,
+    v: BRUTE_APPEARANCE_VERSION,
     body: pickIndex(BRUTE_PARTS.bodies.length),
     head: pickIndex(BRUTE_PARTS.heads.length),
     skin: pickIndex(BRUTE_PARTS.skins.length),
