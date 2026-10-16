@@ -489,6 +489,12 @@ function ensureStyle() {
     .idle-title-footer-v2{position:absolute;z-index:5;right:12px;bottom:10px;display:flex;gap:7px}
     .idle-title-mini-v2{border:2px solid #764322;border-radius:8px;padding:8px 10px;background:#f3dda2;color:#6b391c;font-size:9px;font-weight:1000;cursor:pointer}
     .idle-section-top-v2{display:flex;gap:9px;align-items:center;margin-bottom:11px}.idle-section-top-v2 .idle-back-v1{flex:0 0 auto}.idle-section-top-v2 strong{font-size:14px}.idle-section-top-v2 small{display:block;color:#797f9a;font-size:9px;margin-top:2px}
+    .idle-avatar-creator-v2{position:relative;z-index:4;display:grid;grid-template-columns:minmax(240px,.9fr) minmax(0,1.1fr);gap:16px;align-items:center;min-height:500px;padding:28px}
+    .idle-avatar-creator-panel-v2{padding:18px;border:3px solid #74431f;border-radius:12px;background:linear-gradient(180deg,rgba(255,242,190,.96),rgba(221,190,126,.96));box-shadow:0 7px 0 #5a2e18;color:#60371e}
+    .idle-avatar-creator-panel-v2 h2{margin:4px 0 6px;font-size:25px;letter-spacing:-.03em}.idle-avatar-creator-panel-v2 p{margin:0 0 14px;font-size:10px;line-height:1.6;color:#7a5235}
+    .idle-avatar-creator-v2 .idle-equip-group-v2 h4{color:#744522}
+    .idle-avatar-creator-v2 .idle-equip-option-v2{border-color:rgba(101,54,25,.28);background:rgba(255,249,215,.48);color:#6a3a1f}.idle-avatar-creator-v2 .idle-equip-option-v2.active{border-color:#8c4a20;background:#d79545;color:#fff8cf}
+    .idle-avatar-confirm-v2{width:100%;margin-top:8px;border:3px solid #633318;border-radius:10px;padding:13px 15px;background:linear-gradient(180deg,#d47b36,#9c4d24);box-shadow:0 5px 0 #512615;color:#fff2b6;font-weight:1000;letter-spacing:.06em;cursor:pointer}
     .idle-equipment-v2{display:grid;grid-template-columns:minmax(230px,.8fr) minmax(0,1.2fr);gap:12px}
     .idle-equipment-avatar-v2{min-height:410px;display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 50% 34%,rgba(123,90,255,.2),transparent 36%),#0b0f25}
     .idle-equip-group-v2{margin-bottom:15px}.idle-equip-group-v2 h4{margin:0 0 7px;font-size:10px;color:#aaa5c9;text-transform:uppercase;letter-spacing:.09em}
@@ -525,6 +531,8 @@ function ensureStyle() {
       .idle-brute-avatar-v2{transform:scale(.88);margin:-16px 0}
       .idle-title-footer-v2{position:static;justify-content:center;padding:0 0 14px}
       .idle-equipment-v2{grid-template-columns:1fr}
+      .idle-avatar-creator-v2{grid-template-columns:1fr;padding:15px}
+      .idle-avatar-creator-panel-v2{order:2}
     }
   `
 
@@ -977,6 +985,7 @@ export async function mountIdleGame(
       snapshotResult,
       historyResult,
       avatarResult,
+      avatarStatusResult,
     ] = await Promise.all([
       supabase.rpc(
         'idle_get_snapshot_v1',
@@ -995,6 +1004,13 @@ export async function mountIdleGame(
       ),
       supabase.rpc(
         'idle_avatar_get_v1',
+        {
+          p_athlete_slug:
+            selectedSlug,
+        }
+      ),
+      supabase.rpc(
+        'idle_avatar_status_v1',
         {
           p_athlete_slug:
             selectedSlug,
@@ -1040,14 +1056,21 @@ export async function mountIdleGame(
             avatar_outfit: 'rookie',
             avatar_weapon: 'fists',
             avatar_aura: 'none',
+            avatar_confirmed_at: new Date().toISOString(),
           }
-        : (
-          Array.isArray(
-            avatarResult.data
-          )
-            ? avatarResult.data[0]
-            : avatarResult.data
-        )
+        : {
+            ...(
+              Array.isArray(
+                avatarResult.data
+              )
+                ? avatarResult.data[0]
+                : avatarResult.data
+            ),
+            avatar_confirmed_at:
+              avatarStatusResult.error
+                ? new Date().toISOString()
+                : avatarStatusResult.data,
+          }
 
     render()
   }
@@ -1254,7 +1277,136 @@ export async function mountIdleGame(
     `
   }
 
+  function renderAvatarCreator() {
+    const athlete =
+      selectedAthlete()
+
+    const profile =
+      avatarProfile || {
+        avatar_skin: 'classic',
+        avatar_outfit: 'rookie',
+        avatar_weapon: 'fists',
+        avatar_aura: 'none',
+      }
+
+    return `
+      <section class="idle-title-v2">
+        <div class="idle-title-logo-v2">
+          GA BRUTE
+        </div>
+
+        <div class="idle-title-sub-v2">
+          CRÉE TON COMBATTANT
+        </div>
+
+        <div class="idle-avatar-creator-v2">
+          <div class="idle-title-avatar-card-v2">
+            ${renderBruteAvatarV2(
+              athlete,
+              profile
+            )}
+
+            <div class="idle-title-avatar-name-v2">
+              ${esc(
+                athlete?.name ||
+                selectedSlug
+              )}
+            </div>
+          </div>
+
+          <div class="idle-avatar-creator-panel-v2">
+            <span class="idle-kicker-v1">
+              PREMIÈRE CONNEXION
+            </span>
+
+            <h2>
+              Ta tête. Ton combattant.
+            </h2>
+
+            <p>
+              On garde automatiquement ton avatar de profil pour
+              la tête. Choisis ton corps et ton style : ils seront
+              sauvegardés dans le cloud pour les prochaines connexions.
+            </p>
+
+            <div class="idle-equip-group-v2">
+              <h4>Skin</h4>
+
+              <div class="idle-equip-options-v2">
+                ${IDLE_AVATAR_SKINS.map(
+                  item => `
+                    <button
+                      type="button"
+                      class="idle-equip-option-v2 ${profile.avatar_skin === item.key ? 'active' : ''}"
+                      data-idle-avatar-field="avatar_skin"
+                      data-idle-avatar-value="${esc(item.key)}"
+                    >
+                      ${item.icon} ${esc(item.label)}
+                    </button>
+                  `
+                ).join('')}
+              </div>
+            </div>
+
+            <div class="idle-equip-group-v2">
+              <h4>Tenue de départ</h4>
+
+              <div class="idle-equip-options-v2">
+                ${IDLE_AVATAR_OUTFITS.map(
+                  item => `
+                    <button
+                      type="button"
+                      class="idle-equip-option-v2 ${profile.avatar_outfit === item.key ? 'active' : ''}"
+                      data-idle-avatar-field="avatar_outfit"
+                      data-idle-avatar-value="${esc(item.key)}"
+                    >
+                      ${item.icon} ${esc(item.label)}
+                    </button>
+                  `
+                ).join('')}
+              </div>
+            </div>
+
+            <div class="idle-equip-group-v2">
+              <h4>Aura</h4>
+
+              <div class="idle-equip-options-v2">
+                ${IDLE_AVATAR_AURAS.map(
+                  item => `
+                    <button
+                      type="button"
+                      class="idle-equip-option-v2 ${profile.avatar_aura === item.key ? 'active' : ''}"
+                      data-idle-avatar-field="avatar_aura"
+                      data-idle-avatar-value="${esc(item.key)}"
+                    >
+                      ${item.icon} ${esc(item.label)}
+                    </button>
+                  `
+                ).join('')}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              class="idle-avatar-confirm-v2"
+              data-idle-avatar-confirm
+            >
+              GO ! CRÉER MON COMBATTANT
+            </button>
+          </div>
+        </div>
+      </section>
+    `
+  }
+
   function renderTitleMenu() {
+    if (
+      avatarProfile &&
+      !avatarProfile.avatar_confirmed_at
+    ) {
+      return renderAvatarCreator()
+    }
+
     const athlete =
       selectedAthlete()
 
@@ -3735,15 +3887,68 @@ export async function mountIdleGame(
             result.error.message ||
             'Impossible de sauvegarder l’avatar.'
         } else {
-          avatarProfile =
+          const updatedAvatar =
             Array.isArray(
               result.data
             )
               ? result.data[0]
               : result.data
 
+          avatarProfile = {
+            ...avatarProfile,
+            ...updatedAvatar,
+          }
+
           notice =
             'Avatar sauvegardé.'
+        }
+
+        render()
+        return
+      }
+
+      const avatarConfirm =
+        event.target.closest(
+          '[data-idle-avatar-confirm]'
+        )
+
+      if (avatarConfirm) {
+        if (
+          !canEdit() ||
+          busy
+        ) {
+          return
+        }
+
+        busy = true
+        render()
+
+        const result =
+          await supabase.rpc(
+            'idle_avatar_confirm_v1',
+            {
+              p_athlete_slug:
+                selectedSlug,
+            }
+          )
+
+        busy = false
+
+        if (result.error) {
+          notice =
+            result.error.message ||
+            'Impossible de créer le combattant.'
+        } else {
+          avatarProfile = {
+            ...avatarProfile,
+            avatar_confirmed_at:
+              result.data ||
+              new Date().toISOString(),
+          }
+
+          notice =
+            'Combattant créé. Bienvenue dans GA Brute.'
+          syncScreenMusic(true)
         }
 
         render()
