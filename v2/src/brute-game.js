@@ -1119,11 +1119,27 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function renderPve() {
+    const energy =
+      passiveEnergyNow()
+
+    const canFight =
+      energy >= 8
+
     return topBar('PvE','Entraînement')+
       '<section class="brute-panel brute-pad" style="text-align:center">'+
         '<div style="font-size:54px">🏋️</div><h2>OpenPower PvE</h2>'+
         '<p style="max-width:620px;margin:0 auto;color:#858ca8;font-size:10px;line-height:1.6">Tu affrontes des profils générés à partir de noms et performances FFForce présents dans OpenPowerlifting. Les meilleurs GL Points / DOTS apparaissent progressivement, mais le PvE est volontairement plus accessible que le Duel.</p>'+
-        '<div class="brute-actions" style="justify-content:center"><button class="brute-primary" data-brute-pve>⚔️ Lancer le combat</button></div>'+
+        '<div style="display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:12px 0 4px">'+
+          '<span class="brute-activity-pill">⚡ Coût 8 énergie</span>'+
+          '<span class="brute-activity-pill">🔋 <b data-brute-pve-energy>'+energy+'</b> / 500</span>'+
+          '<span class="brute-activity-pill">⏱️ +1/min</span>'+
+        '</div>'+
+        '<p style="max-width:560px;margin:8px auto 0;color:#858ca8;font-size:9px;line-height:1.5">Victoire : XP de base + bonus steps + sommeil + entraînement. Le Duel reste plus rentable.</p>'+
+        '<div class="brute-actions" style="justify-content:center"><button class="brute-primary" data-brute-pve '+(canFight ? '' : 'disabled')+'>'+(
+          canFight
+            ? '⚔️ Lancer le combat'
+            : '⚡ Énergie insuffisante'
+        )+'</button></div>'+
       '</section>'
   }
 
@@ -1441,7 +1457,8 @@ export async function mountBruteGame(root, options = {}) {
 
     if (
       screen !== 'sleep' &&
-      screen !== 'camp'
+      screen !== 'camp' &&
+      screen !== 'pve'
     ) {
       return
     }
@@ -1461,6 +1478,16 @@ export async function mountBruteGame(root, options = {}) {
             energyEl.textContent =
               energy +
               ' / 500'
+          }
+
+          const pveEnergyEl =
+            root.querySelector(
+              '[data-brute-pve-energy]'
+            )
+
+          if (pveEnergyEl) {
+            pveEnergyEl.textContent =
+              String(energy)
           }
 
           const energyBar =
@@ -2562,6 +2589,11 @@ export async function mountBruteGame(root, options = {}) {
         currentFightMeta?.practice
       )
 
+    const pve =
+      Boolean(
+        currentFightMeta?.pve
+      )
+
     const gained =
       practice
         ? 0
@@ -2643,15 +2675,17 @@ export async function mountBruteGame(root, options = {}) {
         '</p>'+
         (
           practice
-            ? '<div class="brute-xp-gain">OPENPOWER PVE · 0 XP</div>'+
-              (
-                currentFightMeta?.openpowerlifting
-                  ? '<div style="margin-top:8px;color:#7e859f;font-size:8px;font-weight:900">OPENPOWERLIFTING · TOTAL '+num(currentFightMeta.openpowerlifting.total,0)+' KG · '+num(currentFightMeta.openpowerlifting.points,0)+' '+esc(currentFightMeta.openpowerlifting.metric || '')+'</div>'
-                  : ''
-              )
+            ? '<div class="brute-xp-gain">ENTRAÎNEMENT · 0 XP</div>'
             : replayOnly
               ? '<div class="brute-xp-gain">↻ Replay · XP déjà attribuée</div>'
-              : '<div class="brute-xp-gain">✨ +'+gained+' XP</div>'
+              : '<div class="brute-xp-gain">'+(pve ? '🏋️ OPENPOWER PVE · ' : '✨ ')+'+'+gained+' XP</div>'
+        )+
+        (
+          pve &&
+          currentFightMeta
+            ?.openpowerlifting
+            ? '<div style="margin-top:8px;color:#7e859f;font-size:8px;font-weight:900">OPENPOWERLIFTING · TOTAL '+num(currentFightMeta.openpowerlifting.total,0)+' KG · '+num(currentFightMeta.openpowerlifting.points,0)+' '+esc(currentFightMeta.openpowerlifting.metric || '')+' · ⚡ -'+num(currentFightMeta?.energy?.cost,8)+'</div>'
+            : ''
         )+
         (
           xp && !practice && !replayOnly
@@ -2821,9 +2855,17 @@ export async function mountBruteGame(root, options = {}) {
     void playTimeline(currentTimeline)
   }
 
-  function startPve() {
+  async function startPve() {
+    if (busy) return
+
+    busy = true
+    notice = ''
+    render()
+
     const seed = Date.now()
-    const opponent = pveOpponent(seed)
+    const opponent =
+      pveOpponent(seed)
+
     const selfSnapshot = {
       slug:brute.athlete_slug,
       name:brute.name,
@@ -2838,39 +2880,172 @@ export async function mountBruteGame(root, options = {}) {
       appearance:brute.appearance,
       loadout:brute.loadout,
       activity:{
-        training_score:num(idleSnapshot?.training_score,0),
-        steps_score:num(idleSnapshot?.steps_score,0),
-        sleep_score:num(idleSnapshot?.sleep_score,0),
-        power:num(idleSnapshot?.power,35),
+        training_score:
+          num(
+            idleSnapshot
+              ?.training_score,
+            0
+          ),
+        steps_score:
+          num(
+            idleSnapshot
+              ?.steps_score,
+            0
+          ),
+        sleep_score:
+          num(
+            idleSnapshot
+              ?.sleep_score,
+            0
+          ),
+        power:
+          num(
+            idleSnapshot
+              ?.power,
+            35
+          ),
       },
     }
 
+    let timeline
+
     try {
-      currentFightMeta = {
-        practice:true,
-        openpowerlifting:
-          opponent.openpowerlifting,
-      }
-      currentTimeline = generateFightTimeline({
-        seed,
-        attacker:selfSnapshot,
-        defender:opponent,
-      })
-      screen = 'fight'
-      render()
-      void playTimeline(currentTimeline)
+      timeline =
+        generateFightTimeline({
+          seed,
+          attacker:selfSnapshot,
+          defender:opponent,
+        })
     } catch (error) {
       console.error(
         '[GA Brute] timeline PVE',
         error
       )
-      currentTimeline = null
-      currentFightMeta = null
+
+      busy = false
       notice =
         'Impossible de lancer le combat d’entraînement. Recharge GA Brute et réessaie.'
       screen = 'pve'
       render()
+      return
     }
+
+    let reward
+
+    try {
+      reward =
+        await supabase.rpc(
+          'brute_finish_pve_v1',
+          {
+            p_athlete_slug:
+              selectedSlug,
+            p_won:
+              timeline.winnerSlug ===
+              selectedSlug,
+          }
+        )
+    } catch (error) {
+      console.error(
+        '[GA Brute] reward PVE',
+        error
+      )
+
+      busy = false
+      notice =
+        'Impossible de valider le combat PvE. Réessaie dans quelques secondes.'
+      screen = 'pve'
+      render()
+      return
+    }
+
+    if (reward.error) {
+      busy = false
+      notice =
+        reward.error.message ||
+        'Impossible de valider le combat PvE.'
+      screen = 'pve'
+      render()
+      return
+    }
+
+    const rewardData =
+      Array.isArray(
+        reward.data
+      )
+        ? reward.data[0]
+        : reward.data
+
+    currentTimeline =
+      timeline
+
+    currentFightMeta = {
+      pve:true,
+      openpowerlifting:
+        opponent.openpowerlifting,
+      xp_progress:
+        rewardData
+          ?.xp_progress,
+      level_choices:
+        Array.isArray(
+          rewardData
+            ?.level_choices
+        )
+          ? rewardData
+              .level_choices
+          : [],
+      energy:
+        rewardData
+          ?.energy,
+    }
+
+    if (
+      rewardData
+        ?.attacker
+    ) {
+      brute = {
+        ...brute,
+        ...rewardData
+          .attacker,
+      }
+    }
+
+    levelChoices =
+      currentFightMeta
+        .level_choices
+
+    if (
+      rewardData
+        ?.energy
+    ) {
+      idleSnapshot = {
+        ...idleSnapshot,
+        idle_energy:
+          num(
+            rewardData
+              .energy
+              .remaining,
+            idleSnapshot
+              ?.idle_energy
+          ),
+        last_claim_at:
+          rewardData
+            .energy
+            .last_claim_at ||
+          new Date()
+            .toISOString(),
+      }
+
+      idleSnapshotAt =
+        Date.now()
+    }
+
+    busy = false
+    screen = 'fight'
+    render()
+
+    void playTimeline(
+      currentTimeline
+    )
   }
 
   async function replayFight(id) {
@@ -3265,7 +3440,7 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.target.closest('[data-brute-pve]')) {
-      startPve()
+      await startPve()
       return
     }
 
