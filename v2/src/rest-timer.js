@@ -429,7 +429,7 @@ async function requestFallbackPermission() {
         'granted'
     ) {
       await LocalNotifications
-        .requestPermissions()
+        .requestTimerPermissions()
     }
   } catch {
     // Notification is a bonus; in-app timer still works.
