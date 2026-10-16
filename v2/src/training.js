@@ -10168,6 +10168,114 @@ export function mountTraining(
 
     if (
       actionName ===
+        'rest-timer-open'
+    ) {
+      if (!canEdit) {
+        return
+      }
+
+      restTimerEditorKey =
+        String(
+          action.dataset.restKey ||
+          ''
+        )
+
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'rest-timer-close'
+    ) {
+      restTimerEditorKey = ''
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'rest-timer-preset'
+    ) {
+      if (!canEdit) {
+        return
+      }
+
+      const key =
+        String(
+          action.dataset.restKey ||
+          restTimerEditorKey ||
+          ''
+        )
+
+      const exercise =
+        findExerciseByRestKey(
+          key
+        )
+
+      if (!exercise) {
+        return
+      }
+
+      saveRestPreference(
+        cloudAthleteSlug,
+        exercise,
+        Number(
+          action.dataset.restSeconds
+        ) || 0
+      )
+
+      restTimerEditorKey = ''
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'rest-timer-adjust'
+    ) {
+      if (!activeRestTimer) {
+        return
+      }
+
+      activeRestTimer =
+        await adjustRestTimer(
+          activeRestTimer,
+          Number(
+            action.dataset.restDelta
+          ) || 0
+        )
+
+      scheduleRestTimerTicker()
+      render()
+      return
+    }
+
+    if (
+      actionName ===
+        'rest-timer-skip'
+    ) {
+      if (activeRestTimer) {
+        activeRestTimer =
+          await stopRestTimer(
+            activeRestTimer
+          )
+      }
+
+      if (restTimerInterval) {
+        clearInterval(
+          restTimerInterval
+        )
+
+        restTimerInterval = null
+      }
+
+      render()
+      return
+    }
+
+    if (
+      actionName ===
         'athlete-insight-tab'
     ) {
       const next =
@@ -10345,6 +10453,21 @@ export function mountTraining(
           prFlashTimer
         )
       }
+
+      if (
+        restTimerInterval
+      ) {
+        clearInterval(
+          restTimerInterval
+        )
+
+        restTimerInterval = null
+      }
+
+      document.removeEventListener(
+        'visibilitychange',
+        handleRestTimerVisibility
+      )
 
       onBack()
       return
@@ -11262,6 +11385,33 @@ if (
     }
   )
 
+  const handleRestTimerVisibility =
+    () => {
+      if (
+        document.visibilityState !==
+          'visible'
+      ) {
+        return
+      }
+
+      void syncRestTimerFromNative(
+        cloudAthleteSlug
+      ).then(
+        timer => {
+          activeRestTimer =
+            timer
+
+          scheduleRestTimerTicker()
+          render()
+        }
+      )
+    }
+
+  document.addEventListener(
+    'visibilitychange',
+    handleRestTimerVisibility
+  )
+
   sessionTimerInterval =
     setInterval(
       updateDisplayedTimer,
@@ -11269,6 +11419,19 @@ if (
     )
 
   render()
+  scheduleRestTimerTicker()
+
+  void syncRestTimerFromNative(
+    cloudAthleteSlug
+  ).then(
+    timer => {
+      activeRestTimer =
+        timer
+
+      scheduleRestTimerTicker()
+      render()
+    }
+  )
 
   void hydrateProgramBlocksV3()
 
