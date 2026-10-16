@@ -1005,6 +1005,17 @@ function turnAttack(
         actor: defender.side,
         from: attacker.side,
         weapon: weapon.id,
+        distance:
+          Math.round(
+            clamp(
+              7 +
+              defender.speed * .22 +
+              defender.agility * .12 -
+              attacker.speed * .08,
+              7,
+              16
+            )
+          ),
       },
       left,
       right
@@ -1097,6 +1108,20 @@ function turnAttack(
         weapon:
           weaponFor(defender).id,
         damage,
+        knockback:
+          Math.round(
+            clamp(
+              5 +
+              damage /
+              Math.max(
+                1,
+                defender.hpMax
+              ) *
+              22,
+              5,
+              12
+            )
+          ),
       },
       left,
       right
@@ -1223,6 +1248,20 @@ function turnAttack(
       counter:
         Boolean(meta.counter),
       thrown,
+      category:
+        weapon.category ||
+        'unarmed',
+      impactVariant:
+        (
+          attacker.attacks +
+          damage +
+          weapon.id.length +
+          (
+            critical
+              ? 1
+              : 0
+          )
+        ) % 3,
       knockback:
         blocked
           ? Math.max(
