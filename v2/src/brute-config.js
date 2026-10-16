@@ -473,7 +473,6 @@ export const OPENPOWERLIFTING_FFFORCE_RIVALS = [
   { name:'Morgann Denis', sex:'M', bodyweight:92.7, squat:240, bench:152.5, deadlift:275, total:667.5, metric:'DOTS', points:425.36 },
   { name:'Mohammed Yaghi', sex:'M', bodyweight:91.4, squat:260, bench:180, deadlift:302.5, total:742.5, metric:'DOTS', points:476.27 },
   { name:'Louis Felix', sex:'M', bodyweight:80.1, squat:240, bench:150, deadlift:310, total:700, metric:'DOTS', points:482.26 },
-  { name:'Noé Perdereau', sex:'M', bodyweight:92.3, squat:270, bench:187.5, deadlift:305, total:762.5, metric:'DOTS', points:486.92 },
   { name:'Bastien Jakubowicz', sex:'M', bodyweight:73.6, squat:230, bench:150, deadlift:292.5, total:672.5, metric:'DOTS', points:488.12 },
   { name:'Mathilde Pataille', sex:'F', bodyweight:68.2, squat:177.5, bench:92.5, deadlift:207.5, total:477.5, metric:'DOTS', points:489.81 },
   { name:'Romain De Jesus', sex:'M', bodyweight:73.1, squat:235, bench:175, deadlift:270, total:680, metric:'DOTS', points:495.64 },
