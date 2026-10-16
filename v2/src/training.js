@@ -1336,7 +1336,7 @@ export function mountTraining(
       >
         <section
           class="rest-timer-modal__card"
-          onclick="event.stopPropagation()"
+          data-action="rest-timer-card"
         >
           <header>
             <div>
@@ -10165,6 +10165,13 @@ export function mountTraining(
 
     const actionName =
       action.dataset.action
+
+    if (
+      actionName ===
+        'rest-timer-card'
+    ) {
+      return
+    }
 
     if (
       actionName ===
