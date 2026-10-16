@@ -43,7 +43,8 @@
 }
 
 .ipf-match-hero > div:first-child > span,
-.ipf-match-target > span,
+.ipf-match-target label > span,
+.ipf-match-gl-conversion > span,
 .ipf-match-recommendation span {
   color: #86a8ff;
   font-size: 0.72rem;
@@ -67,34 +68,90 @@
 }
 
 .ipf-match-target {
-  flex: 0 0 180px;
+  flex: 0 0 360px;
   padding: 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
   background: rgba(4, 8, 15, 0.66);
 }
 
-.ipf-match-target > div {
+.ipf-match-target--advanced {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ipf-match-target label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ipf-match-target label > div {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: baseline;
   gap: 8px;
-  margin-top: 6px;
 }
 
-.ipf-match-target input {
+.ipf-match-target input,
+.ipf-match-target select {
   min-width: 0;
   width: 100%;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
   outline: 0;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.045);
   color: #fff;
-  font: 900 1.75rem/1 system-ui, sans-serif;
+  min-height: 40px;
+  padding: 0 9px;
+  font: 850 0.95rem/1 system-ui, sans-serif;
+}
+
+.ipf-match-target-value input {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: 900 1.55rem/1 system-ui, sans-serif;
+}
+
+.ipf-match-target select {
+  color-scheme: dark;
 }
 
 .ipf-match-target b {
   color: #7990af;
   font-size: 0.78rem;
+}
+
+.ipf-match-gl-conversion {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 4px;
+  padding: 10px 11px;
+  border: 1px dashed rgba(134, 168, 255, 0.28);
+  border-radius: 10px;
+  background: rgba(53, 85, 164, 0.08);
+}
+
+.ipf-match-gl-conversion strong {
+  color: #f5f8ff;
+  font-size: 1.2rem;
+}
+
+.ipf-match-gl-conversion small {
+  color: #7f8ea7;
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.ipf-match-gl-conversion.is-ready {
+  border-color: rgba(72, 208, 135, 0.38);
+  background: rgba(29, 113, 72, 0.12);
+}
+
+.ipf-match-gl-conversion.is-ready strong {
+  color: #7ce5ad;
 }
 
 .ipf-match-controls {
@@ -155,7 +212,7 @@
 
 .ipf-match-scoreboard {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -457,6 +514,14 @@
 
   .ipf-match-target {
     flex-basis: auto;
+  }
+
+  .ipf-match-target--advanced {
+    grid-template-columns: 1fr;
+  }
+
+  .ipf-match-gl-conversion {
+    grid-column: 1;
   }
 
   .ipf-match-control-actions {
