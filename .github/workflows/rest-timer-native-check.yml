@@ -52,6 +52,7 @@ jobs:
       - name: Compile Android
         run: |
           cd android
+          chmod +x gradlew
           ./gradlew assembleDebug --no-daemon --stacktrace
 
   ios:
