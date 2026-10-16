@@ -92,6 +92,21 @@ import {
   isSessionStoryReady,
 } from './session-story.js'
 
+import {
+  adjustRestTimer,
+  defaultRestSeconds,
+  formatRestDuration,
+  loadActiveRestTimer,
+  loadRestPreference,
+  requestRestTimerPermissions,
+  restTimerExerciseKey,
+  restTimerRemaining,
+  saveRestPreference,
+  startRestTimer,
+  stopRestTimer,
+  syncRestTimerFromNative,
+} from './rest-timer.js'
+
 /* GA V1.2 HOME PR THEMES SKIP V7 */
 
 /* GA V1.1 SESSION CLOUD + PDF V3 */
@@ -651,6 +666,13 @@ export function mountTraining(
   let sbdPrSaving = false
   let sbdPrError = ''
 
+  let restTimerEditorKey = ''
+  let activeRestTimer =
+    loadActiveRestTimer(
+      cloudAthleteSlug
+    )
+  let restTimerInterval = null
+
   const BLOCK_SELECTION_KEY =
     createBlockSelectionKey(
       program
@@ -775,6 +797,593 @@ export function mountTraining(
       IPF_MATCH_STORAGE_KEY,
       ipfMatchState
     )
+  }
+
+  function exerciseDisplayName(
+    exercise
+  ) {
+    if (!exercise) {
+      return 'Exercice'
+    }
+
+    return exercise.variant
+      ? (
+          exercise.name +
+          ' · ' +
+          exercise.variant
+        )
+      : exercise.name
+  }
+
+  function restSecondsForExercise(
+    exercise
+  ) {
+    return loadRestPreference(
+      cloudAthleteSlug,
+      exercise,
+      defaultRestSeconds({
+        isSbd:
+          isSbdExercise(
+            exercise
+          ),
+        exercise,
+      })
+    )
+  }
+
+  function findExerciseByRestKey(
+    key
+  ) {
+    const context =
+      currentSessionContext()
+
+    return (
+      context?.day
+        ?.exercises
+        ?.find(
+          exercise =>
+            restTimerExerciseKey(
+              exercise
+            ) === key
+        ) ||
+      null
+    )
+  }
+
+  function nextPendingRowAfter(
+    found
+  ) {
+    if (!found?.day) {
+      return null
+    }
+
+    const rows =
+      listDaySets(
+        found.day
+      )
+
+    for (
+      let index =
+        found.setIndex + 1;
+      index < rows.length;
+      index += 1
+    ) {
+      const row =
+        rows[index]
+
+      const current =
+        getSetState(
+          state,
+          row.sourceSet
+        )
+
+      if (
+        current.status !==
+          'done' &&
+        current.status !==
+          'failed'
+      ) {
+        return row
+      }
+    }
+
+    return null
+  }
+
+  function timerLoadLabel(
+    row
+  ) {
+    if (!row) {
+      return ''
+    }
+
+    const current =
+      getSetState(
+        state,
+        row.sourceSet
+      )
+
+    const currentLoad =
+      String(
+        current?.load || ''
+      ).trim()
+
+    if (currentLoad) {
+      return (
+        currentLoad +
+        ' kg'
+      )
+    }
+
+    const range =
+      formatLoadRange(
+        row.sourceSet
+          ?.loadRange
+      )
+
+    if (range) {
+      return (
+        range +
+        ' kg'
+      )
+    }
+
+    if (
+      row.sourceSet
+        ?.percent !==
+        null &&
+      row.sourceSet
+        ?.percent !==
+        undefined &&
+      row.sourceSet
+        ?.percent !== ''
+    ) {
+      return (
+        row.sourceSet
+          .percent +
+        ' %'
+      )
+    }
+
+    return 'Charge libre'
+  }
+
+  function timerSetLabel(
+    row
+  ) {
+    if (!row) {
+      return ''
+    }
+
+    return (
+      exerciseDisplayName(
+        row.exercise
+      ) +
+      ' · Série ' +
+      (
+        row.setInExerciseIndex +
+        1
+      )
+    )
+  }
+
+  function restCountdownLabel(
+    seconds
+  ) {
+    const value =
+      Math.max(
+        0,
+        Math.ceil(
+          Number(seconds) ||
+          0
+        )
+      )
+
+    const minutes =
+      Math.floor(
+        value / 60
+      )
+
+    const remainder =
+      value % 60
+
+    return (
+      minutes +
+      ':' +
+      String(remainder)
+        .padStart(
+          2,
+          '0'
+        )
+    )
+  }
+
+  async function startRestAfterFoundSet(
+    found
+  ) {
+    if (!found?.exercise) {
+      return
+    }
+
+    const next =
+      nextPendingRowAfter(
+        found
+      )
+
+    if (!next) {
+      if (activeRestTimer) {
+        await stopRestTimer(
+          activeRestTimer
+        )
+
+        activeRestTimer = null
+      }
+
+      return
+    }
+
+    const duration =
+      restSecondsForExercise(
+        found.exercise
+      )
+
+    if (duration <= 0) {
+      return
+    }
+
+    const completed =
+      getSetState(
+        state,
+        found.sourceSet
+      )
+
+    const completedLoad =
+      String(
+        completed?.load || ''
+      ).trim()
+
+    const completedSet =
+      [
+        'Série ' +
+          (
+            found
+              .setInExerciseIndex +
+            1
+          ) +
+          ' validée',
+        completedLoad
+          ? completedLoad +
+            ' kg'
+          : '',
+        formatReps(
+          found.sourceSet
+            ?.reps
+        ),
+      ]
+        .filter(Boolean)
+        .join(' · ')
+
+    await requestRestTimerPermissions()
+
+    activeRestTimer =
+      await startRestTimer({
+        athleteSlug:
+          cloudAthleteSlug,
+        exerciseName:
+          exerciseDisplayName(
+            found.exercise
+          ),
+        exerciseKey:
+          restTimerExerciseKey(
+            found.exercise
+          ),
+        durationSeconds:
+          duration,
+        completedSet,
+        nextSet:
+          timerSetLabel(
+            next
+          ),
+        nextLoad:
+          timerLoadLabel(
+            next
+          ),
+        nextReps:
+          formatReps(
+            next.sourceSet
+              ?.reps
+          ),
+      })
+
+    scheduleRestTimerTicker()
+    render()
+  }
+
+  function updateRestTimerDom() {
+    if (!activeRestTimer) {
+      return
+    }
+
+    const remaining =
+      restTimerRemaining(
+        activeRestTimer
+      )
+
+    const countdown =
+      root.querySelector(
+        '[data-rest-timer-countdown]'
+      )
+
+    if (countdown) {
+      countdown.textContent =
+        restCountdownLabel(
+          remaining
+        )
+    }
+
+    const progress =
+      root.querySelector(
+        '[data-rest-timer-progress]'
+      )
+
+    if (progress) {
+      const duration =
+        Math.max(
+          1,
+          Number(
+            activeRestTimer
+              .durationSeconds
+          ) || 1
+        )
+
+      const ratio =
+        Math.max(
+          0,
+          Math.min(
+            1,
+            remaining /
+              duration
+          )
+        )
+
+      progress.style.width =
+        (
+          ratio * 100
+        ) +
+        '%'
+    }
+
+    const dock =
+      root.querySelector(
+        '[data-rest-timer-dock]'
+      )
+
+    if (dock) {
+      dock.classList.toggle(
+        'is-ready',
+        remaining <= 0
+      )
+    }
+  }
+
+  function scheduleRestTimerTicker() {
+    if (restTimerInterval) {
+      clearInterval(
+        restTimerInterval
+      )
+
+      restTimerInterval = null
+    }
+
+    if (!activeRestTimer) {
+      return
+    }
+
+    updateRestTimerDom()
+
+    restTimerInterval =
+      setInterval(
+        updateRestTimerDom,
+        500
+      )
+  }
+
+  function renderRestTimerDock() {
+    if (!activeRestTimer) {
+      return ''
+    }
+
+    const remaining =
+      restTimerRemaining(
+        activeRestTimer
+      )
+
+    const duration =
+      Math.max(
+        1,
+        Number(
+          activeRestTimer
+            .durationSeconds
+        ) || 1
+      )
+
+    const progress =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          remaining /
+            duration *
+            100
+        )
+      )
+
+    return `
+      <aside
+        class="rest-timer-dock ${remaining <= 0 ? 'is-ready' : ''}"
+        data-rest-timer-dock
+      >
+        <div class="rest-timer-dock__top">
+          <div>
+            <span>
+              REPOS · ${escapeHtml(activeRestTimer.exerciseName)}
+            </span>
+
+            <strong data-rest-timer-countdown>
+              ${restCountdownLabel(remaining)}
+            </strong>
+          </div>
+
+          <button
+            type="button"
+            data-action="rest-timer-skip"
+            aria-label="Passer le repos"
+          >
+            PRÊT
+          </button>
+        </div>
+
+        <div class="rest-timer-dock__progress">
+          <i
+            data-rest-timer-progress
+            style="width:${progress}%"
+          ></i>
+        </div>
+
+        <div class="rest-timer-dock__context">
+          <span>
+            ✓ ${escapeHtml(activeRestTimer.completedSet || 'Série validée')}
+          </span>
+
+          <b>
+            SUIVANTE · ${escapeHtml(activeRestTimer.nextSet || '—')}
+          </b>
+
+          <small>
+            ${escapeHtml(
+              [
+                activeRestTimer.nextLoad,
+                activeRestTimer.nextReps,
+              ]
+                .filter(Boolean)
+                .join(' · ')
+            )}
+          </small>
+        </div>
+
+        <div class="rest-timer-dock__actions">
+          <button
+            type="button"
+            data-action="rest-timer-adjust"
+            data-rest-delta="-15"
+          >
+            −15 s
+          </button>
+
+          <button
+            type="button"
+            data-action="rest-timer-skip"
+          >
+            Passer
+          </button>
+
+          <button
+            type="button"
+            data-action="rest-timer-adjust"
+            data-rest-delta="15"
+          >
+            +15 s
+          </button>
+        </div>
+      </aside>
+    `
+  }
+
+  function renderRestTimerEditor() {
+    if (!restTimerEditorKey) {
+      return ''
+    }
+
+    const exercise =
+      findExerciseByRestKey(
+        restTimerEditorKey
+      )
+
+    if (!exercise) {
+      return ''
+    }
+
+    const selected =
+      restSecondsForExercise(
+        exercise
+      )
+
+    const presets = [
+      0,
+      60,
+      90,
+      120,
+      150,
+      180,
+      240,
+      300,
+    ]
+
+    return `
+      <div
+        class="rest-timer-modal"
+        data-action="rest-timer-close"
+      >
+        <section
+          class="rest-timer-modal__card"
+          onclick="event.stopPropagation()"
+        >
+          <header>
+            <div>
+              <span>TEMPS DE REPOS</span>
+              <h3>
+                ${escapeHtml(exerciseDisplayName(exercise))}
+              </h3>
+            </div>
+
+            <button
+              type="button"
+              data-action="rest-timer-close"
+              aria-label="Fermer"
+            >
+              ×
+            </button>
+          </header>
+
+          <div class="rest-timer-presets">
+            ${presets.map(
+              seconds => `
+                <button
+                  type="button"
+                  class="${selected === seconds ? 'active' : ''}"
+                  data-action="rest-timer-preset"
+                  data-rest-key="${escapeHtml(restTimerEditorKey)}"
+                  data-rest-seconds="${seconds}"
+                >
+                  ${seconds === 0
+                    ? 'OFF'
+                    : escapeHtml(
+                        formatRestDuration(
+                          seconds
+                        )
+                      )}
+                </button>
+              `
+            ).join('')}
+          </div>
+
+          <p>
+            Le chrono démarre automatiquement dès qu’une série est validée.
+            Il continue écran verrouillé et affiche la prochaine série.
+          </p>
+        </section>
+      </div>
+    `
   }
 
   function programKey() {
