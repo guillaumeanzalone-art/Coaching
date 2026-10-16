@@ -147,11 +147,7 @@ function makeFighter(snapshot, side, random) {
 
   const hpMax =
     Math.round(
-      baseHp *
-      (
-        1 +
-        activity.sleep * .0018
-      )
+      baseHp
     )
 
   const strength =
@@ -159,8 +155,7 @@ function makeFighter(snapshot, side, random) {
       1,
       (Number(snapshot?.strength) || 10) +
       Math.round(
-        activity.training * .06 +
-        activity.sleep * .012
+        activity.training * .06
       )
     )
 
@@ -169,8 +164,7 @@ function makeFighter(snapshot, side, random) {
       1,
       (Number(snapshot?.agility) || 10) +
       Math.round(
-        activity.steps * .065 +
-        activity.sleep * .022
+        activity.steps * .065
       )
     )
 
@@ -179,8 +173,7 @@ function makeFighter(snapshot, side, random) {
       1,
       (Number(snapshot?.speed) || 10) +
       Math.round(
-        activity.steps * .075 +
-        activity.sleep * .028
+        activity.steps * .075
       )
     )
 
@@ -286,10 +279,9 @@ function statRatio(attacker, defender) {
 
 function activityDamageMultiplier(fighter) {
   return (
-    .93 +
-    fighter.activity.training * .0017 +
-    fighter.activity.steps * .0010 +
-    fighter.activity.sleep * .00125
+    .94 +
+    fighter.activity.training * .0018 +
+    fighter.activity.steps * .00115
   )
 }
 
@@ -342,20 +334,15 @@ function dodgeChance(
       ? .10
       : 0
 
-  const rested =
-    defender.activity.sleep *
-    .00065
-
   const activeSteps =
     defender.activity.steps *
-    .00045
+    .0005
 
   return clamp(
     .035 +
     defender.agility * .0058 -
     attacker.speed * .0016 +
     arch +
-    rested +
     activeSteps,
     .025,
     .38
