@@ -212,6 +212,17 @@ export function loadRestPreference(
           exercise
         )
 
+  if (
+    Object.prototype
+      .hasOwnProperty.call(
+        prefs,
+        key
+      ) &&
+    Number(prefs[key]) === 0
+  ) {
+    return 0
+  }
+
   return safeSeconds(
     prefs[key],
     fallbackSeconds
@@ -243,9 +254,11 @@ export function saveRestPreference(
         )
 
   prefs[key] =
-    safeSeconds(
-      seconds
-    )
+    Number(seconds) === 0
+      ? 0
+      : safeSeconds(
+          seconds
+        )
 
   writeJson(
     storageKey,
