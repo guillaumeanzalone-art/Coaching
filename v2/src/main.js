@@ -1,6 +1,7 @@
 import { mountProgramEditor } from './program-editor.js'
 import { mountRpg } from './rpg.js'
 import { mountIdleGame } from './idle-game.js'
+import { mountBruteGame } from './brute-game.js'
 import { getAthleteProgress, xpProgressFromTotal } from './xp.js'
 import './style.css'
 import './theme-spider.css'
@@ -1549,6 +1550,30 @@ function renderGameHubScreen() {
             ›
           </span>
         </button>
+
+        <button
+          class="card"
+          data-action="game-brute"
+          type="button"
+        >
+          <span class="card-icon">
+            ⚔️
+          </span>
+
+          <div>
+            <strong>
+              GA Brute
+            </strong>
+
+            <span>
+              Crée ta brute · PvE · Duel · équipement · classement
+            </span>
+          </div>
+
+          <span class="arrow">
+            ›
+          </span>
+        </button>
       </section>
 
       <section class="home-live-dashboard home-live-dashboard--bottom">
@@ -1595,8 +1620,77 @@ function renderGameHubScreen() {
           'game-idle'
       ) {
         await renderIdleGameScreen()
+        return
+      }
+
+      if (
+        action.dataset.action ===
+          'game-brute'
+      ) {
+        await renderBruteGameScreen()
       }
     }
+}
+
+
+async function renderBruteGameScreen() {
+  clearAppHandlers()
+
+  const list =
+    visibleAthletes()
+
+  const ownId =
+    resolveAthleteIdFromMember()
+
+  const ownAthlete =
+    list.find(
+      athlete =>
+        athlete.id === ownId
+    )
+
+  const ownSlug =
+    String(
+      ownAthlete?.cloudSlug ||
+      ownAthlete?.slug ||
+      ownAthlete?.id ||
+      currentMember?.athlete_slug ||
+      ''
+    )
+
+  const isCoach =
+    currentMember?.role === 'coach'
+
+  await mountBruteGame(
+    app,
+    {
+      athletes: list,
+
+      initialSlug:
+        isCoach
+          ? ''
+          : ownSlug,
+
+      allowAthleteSelection:
+        isCoach,
+
+      isCoach,
+
+      canEditAthlete:
+        slug => {
+          if (isCoach) {
+            return true
+          }
+
+          return (
+            normalizeSlug(slug) ===
+            normalizeSlug(ownSlug)
+          )
+        },
+
+      onBack:
+        renderGameHubScreen,
+    }
+  )
 }
 
 
