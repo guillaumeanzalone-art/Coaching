@@ -455,6 +455,37 @@ export const BRUTE_PALETTES = {
   ],
 }
 
+export const OPENPOWERLIFTING_FFFORCE_RIVALS = [
+  // Recent FFForce results mirrored by OpenPowerlifting.
+  // Sorted roughly from accessible to elite so higher levels can unlock stronger names.
+  { name:'Axel Boireau', sex:'M', bodyweight:79.3, squat:215, bench:125, deadlift:240, total:580, metric:'GLP', points:82.17 },
+  { name:'Hugo Juignet', sex:'M', bodyweight:82.8, squat:262.5, bench:150, deadlift:255, total:667.5, metric:'GLP', points:92.50 },
+  { name:'Clément Goudin', sex:'M', bodyweight:92.9, squat:270, bench:170, deadlift:270, total:710, metric:'GLP', points:92.93 },
+  { name:'Ryan Skaf', sex:'M', bodyweight:92.7, squat:265, bench:177.5, deadlift:270, total:712.5, metric:'GLP', points:93.36 },
+  { name:'Sacha Cabanius Matraman', sex:'M', bodyweight:82.9, squat:240, bench:140, deadlift:300, total:680, metric:'GLP', points:94.19 },
+  { name:'Noé Perdereau', sex:'M', bodyweight:83, squat:240, bench:170, deadlift:282.5, total:692.5, metric:'GLP', points:95.86 },
+  { name:'Tom Gibertini', sex:'M', bodyweight:79.7, squat:235, bench:150, deadlift:295, total:680, metric:'GLP', points:96.05 },
+  { name:'Thibault Marty', sex:'M', bodyweight:78.8, squat:235, bench:142.5, deadlift:310, total:687.5, metric:'GLP', points:97.71 },
+  { name:'Marvin Boucher', sex:'M', bodyweight:82.8, squat:280, bench:172.5, deadlift:280, total:732.5, metric:'GLP', points:101.48 },
+  { name:'Valentin Pays', sex:'M', bodyweight:82.6, squat:270, bench:170, deadlift:300, total:740, metric:'GLP', points:102.64 },
+  { name:'Manon Kramczynski', sex:'F', bodyweight:70.1, squat:170, bench:95, deadlift:217.5, total:500, metric:'GLP', points:102.69 },
+  { name:'Pierre Pechino', sex:'M', bodyweight:80.9, squat:205, bench:145, deadlift:250, total:600, metric:'DOTS', points:410.88 },
+  { name:'Morgann Denis', sex:'M', bodyweight:92.7, squat:240, bench:152.5, deadlift:275, total:667.5, metric:'DOTS', points:425.36 },
+  { name:'Mohammed Yaghi', sex:'M', bodyweight:91.4, squat:260, bench:180, deadlift:302.5, total:742.5, metric:'DOTS', points:476.27 },
+  { name:'Louis Felix', sex:'M', bodyweight:80.1, squat:240, bench:150, deadlift:310, total:700, metric:'DOTS', points:482.26 },
+  { name:'Noé Perdereau', sex:'M', bodyweight:92.3, squat:270, bench:187.5, deadlift:305, total:762.5, metric:'DOTS', points:486.92 },
+  { name:'Bastien Jakubowicz', sex:'M', bodyweight:73.6, squat:230, bench:150, deadlift:292.5, total:672.5, metric:'DOTS', points:488.12 },
+  { name:'Mathilde Pataille', sex:'F', bodyweight:68.2, squat:177.5, bench:92.5, deadlift:207.5, total:477.5, metric:'DOTS', points:489.81 },
+  { name:'Romain De Jesus', sex:'M', bodyweight:73.1, squat:235, bench:175, deadlift:270, total:680, metric:'DOTS', points:495.64 },
+  { name:'Jordan Leyrit', sex:'M', bodyweight:118.9, squat:330, bench:212.5, deadlift:317.5, total:860, metric:'DOTS', points:495.43 },
+  { name:'Enzo Crepet', sex:'M', bodyweight:80.3, squat:250, bench:147.5, deadlift:325, total:722.5, metric:'DOTS', points:496.88 },
+  { name:'Anthony Costarigot', sex:'M', bodyweight:82.4, squat:252.5, bench:182.5, deadlift:305, total:740, metric:'DOTS', points:501.62 },
+  { name:'Justine Jouve', sex:'F', bodyweight:58, squat:157.5, bench:92.5, deadlift:197.5, total:447.5, metric:'DOTS', points:506.93 },
+  { name:'Yann Puget', sex:'M', bodyweight:73.8, squat:260, bench:170.5, deadlift:295, total:725.5, metric:'DOTS', points:525.70 },
+  { name:'Anthony Cascan', sex:'M', bodyweight:82.9, squat:300, bench:182.5, deadlift:310, total:792.5, metric:'DOTS', points:535.08 },
+  { name:'Eliam Tchandeu Noundou', sex:'M', bodyweight:104.9, squat:327.5, bench:212.5, deadlift:360, total:900, metric:'DOTS', points:542.83 },
+]
+
 export const BRUTE_APPEARANCE_VERSION = 3
 
 export const DEFAULT_APPEARANCE = {
