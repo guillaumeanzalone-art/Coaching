@@ -502,9 +502,15 @@ export function renderBruteSvg(
         metrics.headScale+') translate(-'+
         center+' -104)'
 
+  const weaponAnchorX =
+    armRightX + 26
+
+  const weaponAnchorY =
+    249
+
   const weaponMarkup =
     weapon
-      ? '<g class="brute-limb brute-weapon" data-brute-part="weapon" transform="translate(231 228)">'+
+      ? '<g class="brute-limb brute-weapon" data-brute-part="weapon" transform="translate('+weaponAnchorX+' '+weaponAnchorY+')">'+
           weaponSvg(weapon)+
         '</g>'
       : ''
