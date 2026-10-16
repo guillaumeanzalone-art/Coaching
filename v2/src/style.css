@@ -15856,3 +15856,344 @@ body .training-page[data-athlete-theme="kaoutar"] .day-tab-v2--active {
     animation:none!important;
   }
 }
+
+
+/* ================================================================
+   GA REST TIMER · HEVY-LIKE TRAINING TIMER
+   ================================================================ */
+
+.exercise-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exercise-rest-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid rgba(99, 142, 255, 0.26);
+  border-radius: 999px;
+  background: rgba(56, 103, 221, 0.12);
+  color: #dce7ff;
+  font: 900 0.72rem/1 system-ui, sans-serif;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+
+.exercise-rest-control > span {
+  font-size: 1.08rem;
+  line-height: 1;
+}
+
+.exercise-rest-control > b {
+  color: inherit;
+  white-space: nowrap;
+}
+
+.exercise-rest-control:hover {
+  border-color: rgba(99, 142, 255, 0.54);
+  background: rgba(56, 103, 221, 0.19);
+}
+
+.exercise-rest-control.is-off {
+  border-color: rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.035);
+  color: #727d92;
+}
+
+.exercise-rest-control:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.training-page:has(.rest-timer-dock) {
+  padding-bottom: calc(210px + env(safe-area-inset-bottom, 0px));
+}
+
+.rest-timer-dock {
+  position: fixed;
+  z-index: 2600;
+  left: 50%;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  width: min(680px, calc(100vw - 24px));
+  transform: translateX(-50%);
+  overflow: hidden;
+  border: 1px solid rgba(108, 147, 255, 0.36);
+  border-radius: 20px;
+  background:
+    linear-gradient(145deg, rgba(14, 21, 41, 0.98), rgba(8, 13, 27, 0.98));
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.48),
+    inset 0 1px rgba(255, 255, 255, 0.05);
+  color: #f6f8ff;
+  backdrop-filter: blur(18px);
+}
+
+.rest-timer-dock.is-ready {
+  border-color: rgba(76, 220, 137, 0.52);
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.48),
+    0 0 28px rgba(76, 220, 137, 0.12);
+}
+
+.rest-timer-dock__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 14px 9px;
+}
+
+.rest-timer-dock__top > div {
+  min-width: 0;
+}
+
+.rest-timer-dock__top span {
+  display: block;
+  overflow: hidden;
+  color: #8ea0c9;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.rest-timer-dock__top strong {
+  display: block;
+  margin-top: 4px;
+  color: #fff;
+  font: 1000 2rem/0.95 system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+
+.rest-timer-dock.is-ready .rest-timer-dock__top strong {
+  color: #65e49f;
+}
+
+.rest-timer-dock__top > button {
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 0 13px;
+  border: 1px solid rgba(95, 139, 255, 0.36);
+  border-radius: 11px;
+  background: rgba(71, 116, 232, 0.15);
+  color: #dce6ff;
+  font: 900 0.72rem/1 system-ui, sans-serif;
+}
+
+.rest-timer-dock__progress {
+  height: 4px;
+  margin: 0 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.rest-timer-dock__progress > i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #4778ff, #49cfff);
+  transition: width 0.45s linear;
+}
+
+.rest-timer-dock.is-ready .rest-timer-dock__progress > i {
+  background: #54dd93;
+}
+
+.rest-timer-dock__context {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 12px;
+  padding: 10px 14px 8px;
+}
+
+.rest-timer-dock__context > span {
+  grid-column: 1 / -1;
+  color: #7785a7;
+  font-size: 0.67rem;
+  font-weight: 800;
+}
+
+.rest-timer-dock__context > b {
+  overflow: hidden;
+  color: #f4f7ff;
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rest-timer-dock__context > small {
+  color: #a9b6d3;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.rest-timer-dock__actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.rest-timer-dock__actions button {
+  min-height: 42px;
+  border: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  color: #a9bbeb;
+  font: 900 0.76rem/1 system-ui, sans-serif;
+}
+
+.rest-timer-dock__actions button:last-child {
+  border-right: 0;
+}
+
+.rest-timer-dock__actions button:hover {
+  background: rgba(255, 255, 255, 0.045);
+  color: #fff;
+}
+
+.rest-timer-modal {
+  position: fixed;
+  z-index: 2800;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(2, 6, 15, 0.72);
+  backdrop-filter: blur(10px);
+}
+
+.rest-timer-modal__card {
+  width: min(430px, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(118, 149, 227, 0.26);
+  border-radius: 22px;
+  background:
+    linear-gradient(155deg, #151d33, #0c1222);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+}
+
+.rest-timer-modal__card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 18px 12px;
+}
+
+.rest-timer-modal__card header span {
+  display: block;
+  color: #7485a8;
+  font-size: 0.66rem;
+  font-weight: 1000;
+  letter-spacing: 0.1em;
+}
+
+.rest-timer-modal__card header h3 {
+  margin: 4px 0 0;
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+.rest-timer-modal__card header button {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #dbe3f5;
+  font-size: 1.4rem;
+}
+
+.rest-timer-presets {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  padding: 4px 18px 14px;
+}
+
+.rest-timer-presets button {
+  min-height: 48px;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #b6c1db;
+  font: 900 0.74rem/1.15 system-ui, sans-serif;
+}
+
+.rest-timer-presets button.active {
+  border-color: rgba(82, 137, 255, 0.65);
+  background: rgba(65, 112, 230, 0.2);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px rgba(106, 154, 255, 0.18);
+}
+
+.rest-timer-modal__card > p {
+  margin: 0;
+  padding: 0 18px 18px;
+  color: #7f8ca9;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+  .exercise-header {
+    align-items: flex-start;
+  }
+
+  .exercise-header__actions {
+    flex-direction: column-reverse;
+    align-items: flex-end;
+  }
+
+  .exercise-rest-control {
+    min-height: 34px;
+    padding: 0 9px;
+  }
+
+  .rest-timer-dock {
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    width: calc(100vw - 14px);
+    border-radius: 17px;
+  }
+
+  .rest-timer-dock__top {
+    padding: 11px 12px 8px;
+  }
+
+  .rest-timer-dock__top strong {
+    font-size: 1.72rem;
+  }
+
+  .rest-timer-dock__progress {
+    margin: 0 12px;
+  }
+
+  .rest-timer-dock__context {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 9px 12px 7px;
+  }
+
+  .rest-timer-dock__context > span {
+    grid-column: 1;
+  }
+
+  .rest-timer-dock__context > small {
+    text-align: left;
+  }
+
+  .rest-timer-presets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
