@@ -76,7 +76,7 @@ function ensureStyles() {
     '.brute-control{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.055)}.brute-control label{font-size:9px;color:#858ca8;text-transform:uppercase;font-weight:900;letter-spacing:.08em}.brute-control strong{display:block;margin-top:3px;font-size:12px;color:#fff}.brute-arrows{display:flex;gap:5px}.brute-arrows button{width:34px;height:34px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.04);color:white;font-weight:1000;cursor:pointer}',
     '.brute-swatches{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.brute-swatch{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.22);cursor:pointer}.brute-swatch.active{outline:3px solid var(--accent);outline-offset:2px}',
     '.brute-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.brute-primary,.brute-secondary{border:0;border-radius:13px;padding:12px 15px;font-weight:1000;cursor:pointer}.brute-primary{background:linear-gradient(135deg,var(--accent),#47c7f7);color:white}.brute-secondary{border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:#e7e8f0}.brute-primary:disabled,.brute-secondary:disabled{opacity:.38;cursor:not-allowed}',
-    '.brute-dashboard{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:12px}.brute-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.brute-stat-card{padding:12px;border:1px solid rgba(255,255,255,.06);border-radius:15px;background:rgba(255,255,255,.03)}.brute-stat-card b{display:block;font-size:22px}.brute-stat-card span{font-size:8px;color:#8087a2;text-transform:uppercase;font-weight:900}',
+    '.brute-dashboard{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:12px}.brute-camp-scene{position:relative;overflow:hidden;border:2px solid #65401f;border-radius:24px;background:radial-gradient(circle at 50% 13%,rgba(255,246,188,.75),transparent 25%),linear-gradient(180deg,#8fc9d7 0 21%,#dec786 21% 28%,#bd7d3d 28% 100%);box-shadow:0 26px 70px rgba(0,0,0,.34);padding:18px}.brute-camp-scene:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(79,64,46,.20) 0 4%,transparent 4% 96%,rgba(79,64,46,.20) 96%),linear-gradient(180deg,transparent 0 69%,rgba(91,50,22,.12) 69%);pointer-events:none}.brute-camp-sign{position:relative;z-index:2;width:max-content;margin:0 auto 16px;padding:7px 21px;border:4px solid #6a361a;border-radius:8px;background:linear-gradient(180deg,#e8ba64,#bd6e2c);box-shadow:inset 0 0 0 3px #f7d993,0 6px 0 #512613;color:#562817;font-size:26px;font-weight:1000;letter-spacing:.08em;text-shadow:1px 1px 0 #f8db91}.brute-camp-grid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(220px,.85fr) minmax(260px,1fr) minmax(220px,.85fr);gap:14px;align-items:start}.brute-camp-column{display:grid;gap:10px}.brute-camp-card{border:3px solid #6a381d;border-radius:10px;padding:12px;background:linear-gradient(180deg,rgba(248,220,153,.97),rgba(211,160,88,.97));box-shadow:inset 0 0 0 2px rgba(255,247,200,.43),0 5px 0 #512713,0 9px 16px rgba(70,34,14,.19);color:#63361d}.brute-camp-card h3{margin:0 0 6px;font-size:12px;color:#5b2d16}.brute-camp-card small{color:#80522f;font-size:8px;font-weight:800}.brute-camp-kpi{display:grid;grid-template-columns:1fr 1fr;gap:6px}.brute-camp-kpi div{padding:8px;border:2px solid rgba(107,57,29,.24);border-radius:8px;background:rgba(255,245,198,.55)}.brute-camp-kpi span{display:block;font-size:7px;font-weight:1000;text-transform:uppercase}.brute-camp-kpi b{display:block;margin-top:2px;font-size:15px}.brute-camp-avatar{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:390px}.brute-camp-avatar .ga-brute-svg{width:min(300px,100%);filter:drop-shadow(0 16px 12px rgba(76,40,20,.22));animation:bruteIdle 2.7s ease-in-out infinite}.brute-camp-energy{margin-top:8px;width:min(330px,100%)}.brute-camp-energy-head{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#66351b;font-size:9px;font-weight:1000}.brute-camp-energy-track{height:12px;margin-top:5px;padding:2px;border:2px solid #6a371d;border-radius:999px;background:#3d2116}.brute-camp-energy-track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#66d56f,#f1dc54,#f49a38);transition:width .35s ease}.brute-camp-action{width:100%;border:3px solid #6e391b;border-radius:9px;padding:11px 12px;background:linear-gradient(180deg,#b96b30,#7f3d1d);box-shadow:inset 0 0 0 2px rgba(255,221,148,.30),0 4px 0 #4e2512;color:#fff0b5;font-size:10px;font-weight:1000;letter-spacing:.04em;text-shadow:0 2px 0 #48220f;cursor:pointer}.brute-camp-action.sleep{background:linear-gradient(180deg,#6f64b9,#403879);border-color:#372e68;box-shadow:inset 0 0 0 2px rgba(214,204,255,.25),0 4px 0 #282151;color:#f4eeff}.brute-camp-action:disabled{opacity:.48;cursor:not-allowed}.brute-camp-history{max-height:280px;overflow:auto}.brute-camp-history .brute-row{background:rgba(255,246,206,.44);border-color:rgba(104,56,28,.22);color:#63361d}.brute-camp-history .brute-row small{color:#845632}.brute-camp-xp{margin-top:8px}.brute-camp-xp .brute-track{height:10px;border:2px solid #6a381d;background:#3b2116}.brute-camp-xp .brute-track i{background:linear-gradient(90deg,#7d54cb,#4fc4e8,#f0d85c)}.brute-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.brute-stat-card{padding:12px;border:1px solid rgba(255,255,255,.06);border-radius:15px;background:rgba(255,255,255,.03)}.brute-stat-card b{display:block;font-size:22px}.brute-stat-card span{font-size:8px;color:#8087a2;text-transform:uppercase;font-weight:900}',
     '.brute-xp{margin-top:13px}.brute-track{height:8px;border-radius:999px;background:#060812;overflow:hidden}.brute-track i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#4ec6ff);border-radius:inherit}.brute-list{display:grid;gap:7px}.brute-row{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(255,255,255,.025)}.brute-row .icon{font-size:25px}.brute-row b{font-size:11px}.brute-row small{display:block;margin-top:2px;color:#747c98;font-size:8px}.brute-selector-avatar{width:48px;height:48px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#0b0f21;display:grid;place-items:center;font-size:25px}.brute-selector-avatar img{width:100%;height:100%;object-fit:cover}.brute-real-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.brute-real-card{padding:11px;border:1px solid rgba(255,255,255,.06);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018))}.brute-real-card b{display:block;font-size:18px}.brute-real-card span{font-size:8px;color:#858ca8;text-transform:uppercase;font-weight:900}.brute-real-card small{display:block;margin-top:3px;color:#68708b;font-size:7px}.brute-real-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(255,255,255,.025)}',
     '.brute-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.brute-choice{padding:14px;border:1px solid color-mix(in srgb,var(--accent),transparent 55%);border-radius:16px;background:color-mix(in srgb,var(--accent),transparent 90%);color:#fff;cursor:pointer;text-align:left}.brute-choice .big{font-size:30px}.brute-choice b{display:block;margin-top:6px}.brute-choice small{color:#a8abc1}',
     '.brute-arena{position:relative;min-height:560px;overflow:hidden;background:radial-gradient(circle at 50% 24%,rgba(255,246,189,.72),transparent 25%),linear-gradient(180deg,#88c4d1 0 27%,#d6bd78 27% 34%,#b77638 34% 100%);border:2px solid #65401f;border-radius:21px}.brute-arena:after{content:"GA BRUTE";position:absolute;left:50%;top:58%;transform:translate(-50%,-50%) rotate(-7deg);font-size:65px;font-weight:1000;letter-spacing:.08em;color:rgba(87,43,18,.07);white-space:nowrap}',
@@ -87,9 +87,9 @@ function ensureStyles() {
     '.brute-log{position:absolute;z-index:8;left:13px;right:13px;bottom:9px;text-align:center;color:#fff2ba;font-size:8px;font-weight:900;text-shadow:0 2px #4c2814}.brute-controls{display:flex;gap:7px;justify-content:center;margin-top:10px}.brute-xp-result{margin-top:10px;padding:16px;text-align:center;overflow:hidden;position:relative}.brute-xp-gain{display:inline-flex;align-items:center;gap:7px;margin-top:8px;padding:8px 12px;border:1px solid color-mix(in srgb,var(--accent),transparent 45%);border-radius:999px;background:color-mix(in srgb,var(--accent),transparent 88%);font-size:18px;font-weight:1000;color:#fff}.brute-xp-track{width:min(500px,100%);height:13px;margin:13px auto 5px;padding:2px;border-radius:999px;background:#050711;border:1px solid rgba(255,255,255,.08);overflow:hidden}.brute-xp-track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),#54d5ff,#ffe46a);transition:width 1.1s cubic-bezier(.15,.8,.2,1)}.brute-level-up{margin:10px auto 0;width:max-content;max-width:100%;padding:8px 15px;border:2px solid #e6b739;border-radius:10px;background:linear-gradient(180deg,#ffe98d,#d99c2d);color:#5d3218;font-size:17px;font-weight:1000;box-shadow:0 0 25px rgba(255,203,67,.3);animation:bruteLevelUp .9s ease}.brute-reward-inline{margin-top:14px}.brute-reward-inline .brute-choice-grid{max-width:620px;margin:8px auto 0}',
     '.brute-fight-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:620px;margin:12px auto 0}.brute-fight-summary-side{padding:10px;border:1px solid rgba(255,255,255,.07);border-radius:14px;background:rgba(255,255,255,.025)}.brute-fight-summary-side h4{margin:0 0 7px;font-size:10px;color:#d8d9e6}.brute-fight-summary-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.brute-fight-summary-stats span{padding:6px;border-radius:9px;background:rgba(255,255,255,.035);font-size:7px;color:#858ba5;text-transform:uppercase;font-weight:900}.brute-fight-summary-stats b{display:block;margin-top:2px;color:#fff;font-size:12px}.brute-weapon-label{display:inline-flex;gap:4px;align-items:center;margin-top:3px;padding:2px 6px;border-radius:99px;background:rgba(255,244,191,.45);color:#6b3a1d;font-size:7px;font-weight:1000}.brute-resting .ga-brute-svg{animation:bruteBreathe .7s ease}.brute-switching .ga-brute-svg{animation:bruteWeaponSwitch .48s ease}.brute-blocking .ga-brute-svg{animation:bruteBlock .42s ease}.brute-equipment{display:grid;grid-template-columns:minmax(250px,.85fr) minmax(0,1.15fr);gap:12px}.brute-equipment-preview{display:grid;place-items:center;min-height:430px}.brute-equipment-preview .ga-brute-svg{width:min(360px,100%)}.brute-chip-row{display:flex;gap:7px;flex-wrap:wrap}.brute-chip{border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(255,255,255,.04);color:#d8dae6;padding:8px 10px;font-size:9px;font-weight:900}.brute-chip.active{border-color:var(--accent);color:#fff;background:color-mix(in srgb,var(--accent),transparent 86%)}',
     '.brute-ranking{display:grid;gap:7px}.brute-rank-row{display:grid;grid-template-columns:34px 1fr repeat(3,auto);gap:9px;align-items:center;padding:10px;border-bottom:1px solid rgba(255,255,255,.055)}.brute-rank-row .rank{font-size:17px;font-weight:1000;color:var(--accent)}',
-    '.brute-sleep{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.7fr);gap:12px}.brute-moon{min-height:390px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 32%,rgba(131,112,255,.28),transparent 25%),#0a0d21}.brute-moon .moon{font-size:100px;filter:drop-shadow(0 0 25px rgba(129,109,255,.38));animation:bruteIdle 4s ease-in-out infinite}.brute-sleep-time{font-size:40px;font-weight:1000;font-variant-numeric:tabular-nums}.brute-sound-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}',
+    '.brute-sleep{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.7fr);gap:12px}.brute-sleep-energy{margin-top:12px;padding:10px 12px;border:2px solid rgba(127,112,208,.32);border-radius:13px;background:rgba(104,91,176,.12);color:#d9d2ff}.brute-sleep-energy b{display:block;font-size:18px}.brute-sleep-energy small{color:#8f88bc;font-size:8px}.brute-moon{min-height:390px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 32%,rgba(131,112,255,.28),transparent 25%),#0a0d21}.brute-moon .moon{font-size:100px;filter:drop-shadow(0 0 25px rgba(129,109,255,.38));animation:bruteIdle 4s ease-in-out infinite}.brute-sleep-time{font-size:40px;font-weight:1000;font-variant-numeric:tabular-nums}.brute-sound-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}',
     '@keyframes bruteIdle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.01)}}@keyframes bruteAttackFastLeft{0%,100%{transform:translateX(0) rotate(0)}40%{transform:translateX(24%) rotate(2deg)}56%{transform:translateX(34%) rotate(-2deg)}}@keyframes bruteAttackFastRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}40%{transform:scaleX(-1) translateX(24%) rotate(2deg)}56%{transform:scaleX(-1) translateX(34%) rotate(-2deg)}}@keyframes bruteAttackHeavyLeft{0%{transform:translateX(0) rotate(0)}27%{transform:translateX(-5%) rotate(-5deg)}62%{transform:translateX(34%) rotate(5deg)}100%{transform:translateX(0) rotate(0)}}@keyframes bruteAttackHeavyRight{0%{transform:scaleX(-1) translateX(0) rotate(0)}27%{transform:scaleX(-1) translateX(-5%) rotate(-5deg)}62%{transform:scaleX(-1) translateX(34%) rotate(5deg)}100%{transform:scaleX(-1) translateX(0) rotate(0)}}@keyframes bruteAttackRangedLeft{0%,100%{transform:translateX(0)}35%{transform:translateX(-6%) rotate(-3deg)}65%{transform:translateX(9%) rotate(2deg)}}@keyframes bruteAttackRangedRight{0%,100%{transform:scaleX(-1) translateX(0)}35%{transform:scaleX(-1) translateX(-6%) rotate(-3deg)}65%{transform:scaleX(-1) translateX(9%) rotate(2deg)}}@keyframes bruteHit{0%,100%{filter:none}22%{filter:brightness(1.75) saturate(1.4);transform:translateX(-8px)}55%{transform:translateX(7px)}}@keyframes bruteHitHeavy{0%,100%{filter:none}18%{filter:brightness(2) saturate(1.5);transform:translateX(-18px) rotate(-3deg)}48%{transform:translateX(13px) rotate(2deg)}72%{transform:translateX(-5px)}}@keyframes bruteDodgeLeft{0%,100%{transform:translate(0,0)}42%{transform:translate(-38px,-38px) rotate(-4deg)}70%{transform:translate(-22px,-9px)}}@keyframes bruteDodgeRight{0%,100%{transform:scaleX(-1) translate(0,0)}42%{transform:scaleX(-1) translate(-38px,-38px) rotate(-4deg)}70%{transform:scaleX(-1) translate(-22px,-9px)}}@keyframes bruteKo{0%{transform:rotate(0) translate(0,0);opacity:1}38%{transform:rotate(18deg) translate(12px,-8px);opacity:1}100%{transform:rotate(78deg) translate(35px,34px);opacity:.45}}@keyframes bruteGuard{0%,100%{filter:none}45%{filter:drop-shadow(0 0 18px rgba(101,167,255,.95)) brightness(1.25)}}@keyframes bruteStun{0%,100%{filter:none}25%{filter:saturate(.2) brightness(1.3)}50%{filter:saturate(.2) brightness(.75)}75%{filter:saturate(.2) brightness(1.2)}}@keyframes bruteArmHeavy{0%,100%{transform:rotate(0)}30%{transform:rotate(-38deg)}62%{transform:rotate(62deg)}}@keyframes bruteArmFast{0%,100%{transform:rotate(0)}45%{transform:rotate(52deg)}}@keyframes bruteGuardArm{0%,100%{transform:rotate(0)}50%{transform:rotate(-55deg) translate(-5px,-6px)}}@keyframes bruteHeadStun{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}50%{transform:rotate(9deg)}75%{transform:rotate(-5deg)}}@keyframes bruteFloat{0%{opacity:0;transform:translateY(12px) scale(.7)}35%{opacity:1;transform:translateY(-10px) scale(1.12)}100%{opacity:0;transform:translateY(-44px) scale(.92)}}@keyframes bruteImpact{0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(0)}35%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(18deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.45) rotate(36deg)}}@keyframes bruteDust{0%{opacity:0;transform:scale(.45)}35%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.45)}}@keyframes bruteSkillBanner{0%{opacity:0;transform:translate(-50%,-30%) scale(.65)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}78%{opacity:1;transform:translate(-50%,-60%) scale(1)}100%{opacity:0;transform:translate(-50%,-85%) scale(.9)}}@keyframes bruteProjectileLR{0%{left:24%;transform:rotate(-20deg) scale(.75)}100%{left:73%;transform:rotate(220deg) scale(1.08)}}@keyframes bruteProjectileRL{0%{left:73%;transform:rotate(20deg) scale(.75)}100%{left:24%;transform:rotate(-220deg) scale(1.08)}}@keyframes bruteArenaShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,-1px)}80%{transform:translate(3px,2px)}}@keyframes bruteFlash{0%{opacity:0}30%{opacity:.85}100%{opacity:0}}@keyframes bruteLevelUp{0%{opacity:0;transform:translateY(12px) scale(.8)}45%{opacity:1;transform:translateY(-3px) scale(1.08)}100%{transform:translateY(0) scale(1)}}@keyframes bruteBreathe{0%,100%{transform:scale(1)}50%{transform:scale(.985) translateY(3px)}}@keyframes bruteWeaponSwitch{0%,100%{transform:rotate(0)}35%{transform:rotate(-5deg) translateY(-6px)}70%{transform:rotate(4deg)}}@keyframes bruteBlock{0%,100%{transform:translateX(0)}45%{transform:translateX(-7px) scale(.97);filter:drop-shadow(0 0 14px rgba(92,165,255,.9))}}',
-    '@media(max-width:760px){.brute-app{padding:9px}.brute-menu-grid{grid-template-columns:1fr;padding:14px;min-height:0}.brute-menu-avatar{order:-1}.brute-menu-side{grid-template-columns:1fr 1fr}.brute-title-screen{min-height:0}.brute-logo{font-size:32px}.brute-create,.brute-dashboard,.brute-equipment,.brute-sleep{grid-template-columns:1fr}.brute-create-preview{min-height:350px}.brute-create-preview .ga-brute-svg{width:280px}.brute-create-controls{max-height:none}.brute-stat-grid{grid-template-columns:1fr 1fr}.brute-arena{min-height:440px}.brute-fighters{padding:0 0%;bottom:43px}.brute-fighter .ga-brute-svg{width:220px}.brute-hud{inset:8px 7px auto;grid-template-columns:1fr 39px 1fr;gap:5px}.brute-round{height:34px}.brute-choice-grid{grid-template-columns:1fr}.brute-rank-row{grid-template-columns:30px 1fr auto}.brute-rank-row .extra{display:none}.brute-real-grid{grid-template-columns:1fr 1fr}.brute-selector-avatar{width:44px;height:44px}.brute-fight-summary{grid-template-columns:1fr}}',
+    '@media(max-width:760px){.brute-app{padding:9px}.brute-menu-grid{grid-template-columns:1fr;padding:14px;min-height:0}.brute-camp-grid{grid-template-columns:1fr}.brute-camp-avatar{order:-1;min-height:320px}.brute-camp-avatar .ga-brute-svg{width:260px}.brute-camp-scene{padding:11px}.brute-camp-sign{font-size:21px}.brute-menu-avatar{order:-1}.brute-menu-side{grid-template-columns:1fr 1fr}.brute-title-screen{min-height:0}.brute-logo{font-size:32px}.brute-create,.brute-dashboard,.brute-equipment,.brute-sleep{grid-template-columns:1fr}.brute-create-preview{min-height:350px}.brute-create-preview .ga-brute-svg{width:280px}.brute-create-controls{max-height:none}.brute-stat-grid{grid-template-columns:1fr 1fr}.brute-arena{min-height:440px}.brute-fighters{padding:0 0%;bottom:43px}.brute-fighter .ga-brute-svg{width:220px}.brute-hud{inset:8px 7px auto;grid-template-columns:1fr 39px 1fr;gap:5px}.brute-round{height:34px}.brute-choice-grid{grid-template-columns:1fr}.brute-rank-row{grid-template-columns:30px 1fr auto}.brute-rank-row .extra{display:none}.brute-real-grid{grid-template-columns:1fr 1fr}.brute-selector-avatar{width:44px;height:44px}.brute-fight-summary{grid-template-columns:1fr}}',
   ].join('')
   document.head.appendChild(style)
 }
@@ -499,38 +499,194 @@ export async function mountBruteGame(root, options = {}) {
     '</div>'
   }
 
-  function renderCamp() {
-    const pct = Math.min(100,Math.round(num(brute.xp) / Math.max(1,xpNeeded()) * 100))
-    const recent = history.slice(0,6)
+  function sleepRecoveryRate() {
+    return Math.max(
+      12,
+      Math.min(
+        30,
+        num(idleSnapshot?.idle_rate,0) + 8
+      )
+    )
+  }
 
-    return topBar('Camp','Progression')+
-      '<div class="brute-dashboard">'+
-        '<section class="brute-panel brute-pad">'+
-          '<div class="brute-stat-grid">'+
-            statCard('PV',brute.hp,'❤️')+
-            statCard('Force',brute.strength,'💪')+
-            statCard('Agilité',brute.agility,'🤸')+
-            statCard('Vitesse',brute.speed,'⚡')+
+  function pendingSleepEnergy() {
+    const started =
+      idleSnapshot?.active_sleep_started_at
+
+    if (!started) return 0
+
+    const seconds =
+      Math.max(
+        0,
+        (
+          Date.now() -
+          new Date(started).getTime()
+        ) / 1000
+      )
+
+    return Math.max(
+      0,
+      Math.floor(
+        seconds / 3600 *
+        sleepRecoveryRate()
+      )
+    )
+  }
+
+  function renderCamp() {
+    const pct =
+      Math.min(
+        100,
+        Math.round(
+          num(brute.xp) /
+          Math.max(
+            1,
+            xpNeeded()
+          ) *
+          100
+        )
+      )
+
+    const recent =
+      history.slice(0,6)
+
+    const energy =
+      num(
+        idleSnapshot?.idle_energy,
+        0
+      )
+
+    const pending =
+      num(
+        idleSnapshot?.pending_energy,
+        0
+      )
+
+    const energyPct =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          energy / 500 * 100
+        )
+      )
+
+    const asleep =
+      Boolean(
+        idleSnapshot?.active_sleep_started_at
+      )
+
+    const weaponId =
+      brute.loadout?.weapon ||
+      'fists'
+
+    const weapon =
+      BRUTE_WEAPONS[weaponId] ||
+      BRUTE_WEAPONS.fists
+
+    const pet =
+      BRUTE_PETS[
+        (brute.pets || [])[0]
+      ]
+
+    return topBar('Camp','Idle Training')+
+      '<section class="brute-camp-scene">'+
+        '<div class="brute-camp-sign">⛺ CAMP</div>'+
+        '<div class="brute-camp-grid">'+
+          '<div class="brute-camp-column">'+
+            '<div class="brute-camp-card">'+
+              '<h3>🏋️ ENTRAÎNEMENT</h3>'+
+              '<div class="brute-camp-kpi">'+
+                '<div><span>Séries</span><b>'+num(idleSnapshot?.training_sets,0)+'</b></div>'+
+                '<div><span>Score</span><b>'+num(idleSnapshot?.training_score,0)+'/100</b></div>'+
+              '</div>'+
+              '<small>Les séances terminées renforcent ta puissance de combat.</small>'+
+            '</div>'+
+            '<div class="brute-camp-card">'+
+              '<h3>🚶 ACTIVITÉ</h3>'+
+              '<div class="brute-camp-kpi">'+
+                '<div><span>Steps</span><b>'+num(idleSnapshot?.steps,0)+'</b></div>'+
+                '<div><span>Score</span><b>'+num(idleSnapshot?.steps_score,0)+'/100</b></div>'+
+              '</div>'+
+              '<small>Les pas améliorent surtout agilité et vitesse.</small>'+
+            '</div>'+
+            '<button class="brute-camp-action" data-brute-screen="equipment">🎒 ÉQUIPEMENT</button>'+
+            '<button class="brute-camp-action" data-brute-screen="duel">🥊 ALLER AU DUEL</button>'+
           '</div>'+
-          '<div class="brute-xp"><div style="display:flex;justify-content:space-between;font-size:9px;color:#858ca8;margin-bottom:5px"><span>XP niveau '+num(brute.level,1)+'</span><span>'+num(brute.xp)+' / '+xpNeeded()+'</span></div><div class="brute-track"><i style="width:'+pct+'%"></i></div></div>'+
-          '<div class="brute-real-grid">'+
-            '<div class="brute-real-card"><span>🏋️ Entraînement</span><b>'+num(idleSnapshot?.training_sets,0)+' séries</b><small>Score '+num(idleSnapshot?.training_score,0)+'/100</small></div>'+
-            '<div class="brute-real-card"><span>🚶 Steps</span><b>'+num(idleSnapshot?.steps,0)+'</b><small>Score '+num(idleSnapshot?.steps_score,0)+'/100</small></div>'+
-            '<div class="brute-real-card"><span>🌙 Sommeil</span><b>'+Math.round(num(idleSnapshot?.sleep_seconds,0)/3600*10)/10+' h</b><small>Score '+num(idleSnapshot?.sleep_score,0)+'/100</small></div>'+
-            '<div class="brute-real-card"><span>⚡ Puissance réelle</span><b>'+num(idleSnapshot?.power,35)+'</b><small>'+num(idleSnapshot?.idle_rate,0)+' énergie/h</small></div>'+
+
+          '<div class="brute-camp-avatar">'+
+            renderBruteSvg(
+              brute.appearance,
+              {
+                label:brute.name,
+                weapon,
+                pet,
+              }
+            )+
+            '<div class="brute-nameplate">'+esc(brute.name)+' · NIV. '+num(brute.level,1)+'</div>'+
+            '<div class="brute-camp-energy">'+
+              '<div class="brute-camp-energy-head"><span>⚡ ÉNERGIE</span><span>'+energy+' / 500</span></div>'+
+              '<div class="brute-camp-energy-track"><i style="width:'+energyPct+'%"></i></div>'+
+              '<div class="brute-camp-xp">'+
+                '<div class="brute-camp-energy-head"><span>✨ XP</span><span>'+num(brute.xp)+' / '+xpNeeded()+'</span></div>'+
+                '<div class="brute-track"><i style="width:'+pct+'%"></i></div>'+
+              '</div>'+
+            '</div>'+
+            (
+              pending > 0
+                ? '<button class="brute-camp-action" style="margin-top:9px;max-width:330px" data-brute-claim>🔋 COLLECTER +'+pending+' ÉNERGIE</button>'
+                : ''
+            )+
+            renderChoices()+
           '</div>'+
-          '<div class="brute-real-actions"><div><b>Énergie Idle : '+num(idleSnapshot?.idle_energy,0)+'</b><small style="display:block;color:#747c98;margin-top:2px">+'+num(idleSnapshot?.pending_energy,0)+' en attente</small></div><button class="brute-secondary" data-brute-claim '+(num(idleSnapshot?.pending_energy,0)<=0?'disabled':'')+'>🔋 Collecter</button></div>'+
-          renderChoices()+
-          '<div class="brute-actions"><button class="brute-secondary" data-brute-screen="equipment">🎒 Équipement</button><button class="brute-secondary" data-brute-screen="duel">🥊 Duel</button></div>'+
-        '</section>'+
-        '<aside class="brute-panel brute-pad"><small style="color:#858ca8;font-weight:900">20 DERNIERS COMBATS</small><div class="brute-list" style="margin-top:8px">'+
-          (recent.length ? recent.map(f => {
-            const opp = f.attacker_slug === selectedSlug ? f.defender_slug : f.attacker_slug
-            const win = f.winner_slug === selectedSlug
-            return '<div class="brute-row"><span class="icon">'+(win?'🏆':'💀')+'</span><span><b>'+esc(opp)+'</b><small>'+new Date(f.created_at).toLocaleString('fr-FR')+' · +'+num(f.xp_gained)+' XP</small></span><button class="brute-mini" data-brute-replay="'+esc(f.id)+'">Replay</button></div>'
-          }).join('') : '<div style="color:#737b96;font-size:10px">Aucun combat.</div>')+
-        '</div></aside>'+
-      '</div>'
+
+          '<div class="brute-camp-column">'+
+            '<div class="brute-camp-card">'+
+              '<h3>🌙 RÉCUPÉRATION</h3>'+
+              '<div class="brute-camp-kpi">'+
+                '<div><span>Sommeil</span><b>'+Math.round(num(idleSnapshot?.sleep_seconds,0)/3600*10)/10+' h</b></div>'+
+                '<div><span>Score</span><b>'+num(idleSnapshot?.sleep_score,0)+'/100</b></div>'+
+              '</div>'+
+              '<small>Au lit, tu récupères environ '+sleepRecoveryRate()+' énergie par heure.</small>'+
+            '</div>'+
+            '<button class="brute-camp-action sleep" data-brute-go-sleep>'+
+              (
+                asleep
+                  ? '🌙 SOMMEIL EN COURS · +'+pendingSleepEnergy()
+                  : '🌙 ALLER SE COUCHER'
+              )+
+            '</button>'+
+            '<div class="brute-camp-card">'+
+              '<h3>⚡ PUISSANCE DU JOUR</h3>'+
+              '<div class="brute-camp-kpi">'+
+                '<div><span>Puissance</span><b>'+num(idleSnapshot?.power,35)+'</b></div>'+
+                '<div><span>Idle / h</span><b>'+num(idleSnapshot?.idle_rate,0)+'</b></div>'+
+              '</div>'+
+              '<small>Entraînement + steps + sommeil influencent directement le moteur de combat.</small>'+
+            '</div>'+
+            '<div class="brute-camp-card brute-camp-history">'+
+              '<h3>⚔️ DERNIERS COMBATS</h3>'+
+              '<div class="brute-list">'+
+                (
+                  recent.length
+                    ? recent.map(f => {
+                        const opp =
+                          f.attacker_slug === selectedSlug
+                            ? f.defender_slug
+                            : f.attacker_slug
+
+                        const win =
+                          f.winner_slug === selectedSlug
+
+                        return '<div class="brute-row"><span class="icon">'+(win?'🏆':'💀')+'</span><span><b>'+esc(opp)+'</b><small>+'+num(f.xp_gained)+' XP</small></span><button class="brute-mini" data-brute-replay="'+esc(f.id)+'">Replay</button></div>'
+                      }).join('')
+                    : '<small>Aucun combat depuis le reset.</small>'
+                )+
+              '</div>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+      '</section>'
   }
 
   function renderDuel() {
@@ -619,14 +775,70 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function renderSleep() {
-    const active = idleSnapshot?.active_sleep_started_at
-    const baseSeconds = num(idleSnapshot?.sleep_seconds)
+    const active =
+      idleSnapshot?.active_sleep_started_at
+
+    const baseSeconds =
+      num(
+        idleSnapshot?.sleep_seconds
+      )
+
+    const liveSeconds =
+      active
+        ? Math.max(
+            0,
+            (
+              Date.now() -
+              new Date(active).getTime()
+            ) / 1000
+          )
+        : 0
+
     return topBar('Sommeil','Récupération')+
       '<div class="brute-sleep">'+
-        '<section class="brute-panel brute-moon"><div class="moon">☾</div><div class="brute-sleep-time" data-brute-sleep-time>'+sleepLabel(active ? Math.max(0,(Date.now()-new Date(active).getTime())/1000) : baseSeconds)+'</div><small style="color:#858ca8">'+(active?'Sommeil en cours':'Sommeil enregistré aujourd’hui')+'</small><button class="brute-primary" style="margin-top:18px" data-brute-sleep-toggle>'+(active?'☀️ Je me réveille':'🌙 Démarrer mon sommeil')+'</button></section>'+
-        '<aside class="brute-panel brute-pad"><h3>Ambiance</h3><p style="color:#858ca8;font-size:10px;line-height:1.6">Le chrono est côté serveur : fermer l’app n’efface pas ton temps.</p><div class="brute-sound-grid">'+
-          [['rain','🌧️ Pluie'],['brown','🟤 Bruit brun'],['temple','🕯️ Temple'],['none','🔇 Silence']].map(([key,label]) => '<button class="brute-secondary '+(sleepMode===key?'active':'')+'" data-brute-sound="'+key+'">'+label+'</button>').join('')+
-        '</div></aside>'+
+        '<section class="brute-panel brute-moon">'+
+          '<div class="moon">☾</div>'+
+          '<div class="brute-sleep-time" data-brute-sleep-time>'+
+            sleepLabel(
+              active
+                ? liveSeconds
+                : baseSeconds
+            )+
+          '</div>'+
+          '<small style="color:#858ca8">'+
+            (
+              active
+                ? 'Sommeil en cours'
+                : 'Sommeil enregistré aujourd’hui'
+            )+
+          '</small>'+
+          '<div class="brute-sleep-energy">'+
+            '<b data-brute-sleep-energy>'+
+              (
+                active
+                  ? '+'+pendingSleepEnergy()+' énergie'
+                  : sleepRecoveryRate()+' énergie / heure'
+              )+
+            '</b>'+
+            '<small>Minimum 5 minutes de sommeil pour valider une récupération.</small>'+
+          '</div>'+
+          '<button class="brute-primary" style="margin-top:18px" data-brute-sleep-toggle>'+
+            (
+              active
+                ? '☀️ Je me réveille'
+                : '🌙 Démarrer mon sommeil'
+            )+
+          '</button>'+
+        '</section>'+
+        '<aside class="brute-panel brute-pad">'+
+          '<h3>Ambiance</h3>'+
+          '<p style="color:#858ca8;font-size:10px;line-height:1.6">Le chrono tourne côté serveur même si tu fermes l’app. Quand tu te réveilles, la durée de sommeil est convertie en énergie, jusqu’à 500.</p>'+
+          '<div class="brute-sound-grid">'+
+            [['rain','🌧️ Pluie'],['brown','🟤 Bruit brun'],['temple','🕯️ Temple'],['none','🔇 Silence']].map(([key,label]) =>
+              '<button class="brute-secondary '+(sleepMode===key?'active':'')+'" data-brute-sound="'+key+'">'+label+'</button>'
+            ).join('')+
+          '</div>'+
+        '</aside>'+
       '</div>'
   }
 
@@ -702,9 +914,37 @@ export async function mountBruteGame(root, options = {}) {
     if (screen !== 'sleep' || !idleSnapshot?.active_sleep_started_at) return
 
     sleepTimer = setInterval(() => {
-      const el = root.querySelector('[data-brute-sleep-time]')
-      if (!el) return
-      el.textContent = sleepLabel(Math.max(0,(Date.now()-new Date(idleSnapshot.active_sleep_started_at).getTime())/1000))
+      const el =
+        root.querySelector(
+          '[data-brute-sleep-time]'
+        )
+
+      if (el) {
+        el.textContent =
+          sleepLabel(
+            Math.max(
+              0,
+              (
+                Date.now() -
+                new Date(
+                  idleSnapshot.active_sleep_started_at
+                ).getTime()
+              ) / 1000
+            )
+          )
+      }
+
+      const energyEl =
+        root.querySelector(
+          '[data-brute-sleep-energy]'
+        )
+
+      if (energyEl) {
+        energyEl.textContent =
+          '+' +
+          pendingSleepEnergy() +
+          ' énergie'
+      }
     },1000)
   }
 
@@ -1810,6 +2050,49 @@ export async function mountBruteGame(root, options = {}) {
       return
     }
 
+    if (event.target.closest('[data-brute-go-sleep]')) {
+      const active =
+        idleSnapshot?.active_sleep_started_at
+
+      if (!active) {
+        const result =
+          await supabase.rpc(
+            'idle_sleep_start_v1',
+            {
+              p_athlete_slug:
+                selectedSlug,
+              p_sound_mode:
+                sleepMode,
+            }
+          )
+
+        if (result.error) {
+          notice =
+            result.error.message
+          render()
+          return
+        }
+
+        try {
+          await ambient.play(
+            sleepMode
+          )
+        } catch {
+          // Audio is optional.
+        }
+
+        await loadSleep()
+      }
+
+      screen = 'sleep'
+      notice =
+        active
+          ? ''
+          : 'Bonne nuit. Ton énergie remonte pendant ton sommeil.'
+      render()
+      return
+    }
+
     const screenBtn = event.target.closest('[data-brute-screen]')
     if (screenBtn) {
       const next = String(screenBtn.dataset.bruteScreen || 'menu')
@@ -2016,21 +2299,66 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.target.closest('[data-brute-sleep-toggle]')) {
-      const active = idleSnapshot?.active_sleep_started_at
-      const result = active
-        ? await supabase.rpc('idle_sleep_stop_v1',{p_athlete_slug:selectedSlug})
-        : await supabase.rpc('idle_sleep_start_v1',{p_athlete_slug:selectedSlug,p_sound_mode:sleepMode})
+      const active =
+        idleSnapshot?.active_sleep_started_at
+
+      const result =
+        active
+          ? await supabase.rpc(
+              'idle_sleep_stop_v2',
+              {
+                p_athlete_slug:
+                  selectedSlug,
+              }
+            )
+          : await supabase.rpc(
+              'idle_sleep_start_v1',
+              {
+                p_athlete_slug:
+                  selectedSlug,
+                p_sound_mode:
+                  sleepMode,
+              }
+            )
 
       if (result.error) {
-        notice = result.error.message
+        notice =
+          result.error.message
       } else {
-        if (active) ambient.stop()
-        else {
-          try { await ambient.play(sleepMode) } catch {}
+        if (active) {
+          ambient.stop()
+
+          const row =
+            Array.isArray(result.data)
+              ? result.data[0]
+              : result.data
+
+          notice =
+            'Réveil : +' +
+            num(
+              row?.energy_gained,
+              0
+            ) +
+            ' énergie récupérée.'
+        } else {
+          try {
+            await ambient.play(
+              sleepMode
+            )
+          } catch {
+            // Audio is optional.
+          }
+
+          notice =
+            'Bonne nuit. Ton énergie remonte pendant ton sommeil.'
         }
+
         await loadSleep()
+        await refreshData(false)
       }
+
       render()
+      return
     }
   }
 
