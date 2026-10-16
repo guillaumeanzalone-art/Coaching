@@ -101,3 +101,111 @@ test('GA Brute generates a playable deterministic fight timeline', () => {
     'same seed and fighters should replay identically'
   )
 })
+
+
+test('GA Brute dodge block and thrown motion metadata stay in safe bounds', () => {
+  let sawDodge = false
+  let sawBlock = false
+  let sawThrow = false
+
+  for (
+    let seed = 1;
+    seed <= 240;
+    seed += 1
+  ) {
+    const timeline =
+      generateFightTimeline({
+        seed,
+        attacker:fighter(
+          'thrower',
+          {
+            agility:18,
+            speed:17,
+            weapons:['plate20'],
+            loadout:{
+              weapon:'plate20',
+            },
+          }
+        ),
+        defender:fighter(
+          'defender',
+          {
+            agility:18,
+            speed:16,
+            weapons:['belt'],
+            loadout:{
+              weapon:'belt',
+            },
+          }
+        ),
+      })
+
+    timeline.events.forEach(
+      (event,index) => {
+        if (event.type === 'DODGE') {
+          sawDodge = true
+          assert.ok(
+            Number(event.distance) >= 7 &&
+            Number(event.distance) <= 16,
+            'dodge distance should remain inside visual bounds'
+          )
+        }
+
+        if (event.type === 'BLOCK') {
+          sawBlock = true
+          assert.ok(
+            Number(event.knockback) >= 5 &&
+            Number(event.knockback) <= 12,
+            'block knockback should remain controlled'
+          )
+        }
+
+        if (event.type === 'ATTACK') {
+          assert.ok(
+            Number(event.impactVariant) >= 0 &&
+            Number(event.impactVariant) <= 2,
+            'attack impact variant should be one of the three hit poses'
+          )
+        }
+
+        if (event.type === 'WEAPON_THROW') {
+          sawThrow = true
+
+          const next =
+            timeline.events[
+              index + 1
+            ]
+
+          assert.notEqual(
+            next?.type,
+            'MOVE',
+            'a thrown weapon should resolve from range instead of forcing melee movement'
+          )
+        }
+      }
+    )
+
+    if (
+      sawDodge &&
+      sawBlock &&
+      sawThrow
+    ) {
+      break
+    }
+  }
+
+  assert.ok(
+    sawDodge,
+    'test seeds should exercise at least one dodge'
+  )
+
+  assert.ok(
+    sawBlock,
+    'test seeds should exercise at least one block'
+  )
+
+  assert.ok(
+    sawThrow,
+    'test seeds should exercise at least one weapon throw'
+  )
+})
