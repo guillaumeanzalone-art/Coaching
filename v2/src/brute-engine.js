@@ -532,6 +532,20 @@ function turnAttack(
     lockout = true
   }
 
+  if (lockout) {
+    pushEvent(
+      events,
+      'SKILL_ACTIVATE',
+      {
+        actor: defender.side,
+        target: attacker.side,
+        skill: 'lockout',
+      },
+      left,
+      right
+    )
+  }
+
   applyDamage(
     defender,
     damage
@@ -564,6 +578,18 @@ function turnAttack(
         defender.stunned,
         1
       )
+
+    pushEvent(
+      events,
+      'SKILL_ACTIVATE',
+      {
+        actor: attacker.side,
+        target: defender.side,
+        skill: 'pause_bench',
+      },
+      left,
+      right
+    )
   }
 
   pushEvent(
@@ -585,6 +611,49 @@ function turnAttack(
     left,
     right
   )
+
+  const defenderWeapon =
+    weaponFor(defender)
+
+  const disarm =
+    defender.hp > 0 &&
+    defenderWeapon.id !== 'fists' &&
+    damage > 0 &&
+    chance(
+      random,
+      clamp(
+        0.025 +
+        attacker.agility * 0.0026,
+        0.025,
+        0.13
+      )
+    )
+
+  if (disarm) {
+    defender.weapons =
+      defender.weapons.filter(
+        id =>
+          id !== defenderWeapon.id
+      )
+
+    if (!defender.weapons.length) {
+      defender.weapons = ['fists']
+    }
+
+    defender.weaponIndex = 0
+
+    pushEvent(
+      events,
+      'DISARM',
+      {
+        actor: attacker.side,
+        target: defender.side,
+        weapon: defenderWeapon.id,
+      },
+      left,
+      right
+    )
+  }
 
   if (
     defender.hp <= 0
@@ -747,6 +816,28 @@ export function generateFightTimeline({
       right.hp <= 0
     ) {
       break
+    }
+
+    pushEvent(
+      events,
+      'MOVE_BACK',
+      {
+        actor: active.side,
+      },
+      left,
+      right
+    )
+
+    if (result.counter) {
+      pushEvent(
+        events,
+        'MOVE_BACK',
+        {
+          actor: defenderFighter.side,
+        },
+        left,
+        right
+      )
     }
 
     active =
