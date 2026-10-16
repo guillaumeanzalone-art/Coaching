@@ -134,7 +134,7 @@ export const BRUTE_WEAPONS = {
 }
 
 export const BRUTE_COMBAT_RULES = {
-  engineVersion: 3,
+  engineVersion: 4,
   activityMaxPower: 435,
   baseInitiative: 100,
   fatiguePerAttack: 5,
@@ -245,10 +245,21 @@ export const BRUTE_PETS = {
 
 export const BRUTE_PARTS = {
   bodies: [
-    { id: 0, name: 'Fin' },
-    { id: 1, name: 'Standard' },
-    { id: 2, name: 'Massif' },
-    { id: 3, name: 'Powerlifter' },
+    { id: 0, name: 'Sec' },
+    { id: 1, name: 'Athlétique' },
+    { id: 2, name: 'Compact' },
+    { id: 3, name: 'Massif' },
+    { id: 4, name: 'Powerlifter' },
+    { id: 5, name: 'Heavyweight' },
+  ],
+
+  heads: [
+    { id: 0, name: 'Classique' },
+    { id: 1, name: 'Carré' },
+    { id: 2, name: 'Rond' },
+    { id: 3, name: 'Fin' },
+    { id: 4, name: 'Mâchoire large' },
+    { id: 5, name: 'Pommettes hautes' },
   ],
 
   skins: [
@@ -263,7 +274,7 @@ export const BRUTE_PARTS = {
   ],
 
   hairs: [
-    { id: 0, name: 'Rasé' },
+    { id: 0, name: 'Buzz cut' },
     { id: 1, name: 'Crête' },
     { id: 2, name: 'Man bun' },
     { id: 3, name: 'Afro' },
@@ -274,7 +285,13 @@ export const BRUTE_PARTS = {
     { id: 8, name: 'Dreads' },
     { id: 9, name: 'Banane' },
     { id: 10, name: 'Queue de cheval' },
-    { id: 11, name: 'Tondeuse côtés' },
+    { id: 11, name: 'Fade' },
+    { id: 12, name: 'Curly crop' },
+    { id: 13, name: 'Undercut' },
+    { id: 14, name: 'Long ondulé' },
+    { id: 15, name: 'Tresses' },
+    { id: 16, name: 'Mohawk court' },
+    { id: 17, name: 'Slick back' },
   ],
 
   hairColors: [
@@ -294,8 +311,11 @@ export const BRUTE_PARTS = {
     { id: 0, name: 'Aucune' },
     { id: 1, name: 'Moustache' },
     { id: 2, name: 'Bouc' },
-    { id: 3, name: 'Barbe complète' },
-    { id: 4, name: 'Barbe viking' },
+    { id: 3, name: 'Barbe courte' },
+    { id: 4, name: 'Barbe complète' },
+    { id: 5, name: 'Barbe viking' },
+    { id: 6, name: 'Moustache + bouc' },
+    { id: 7, name: 'Barbe de 3 jours' },
   ],
 
   eyes: [
@@ -305,6 +325,17 @@ export const BRUTE_PARTS = {
     { id: 3, name: 'Fou' },
     { id: 4, name: 'Concentré' },
     { id: 5, name: 'Serein' },
+    { id: 6, name: 'Fatigué' },
+    { id: 7, name: 'Provocateur' },
+  ],
+
+  noses: [
+    { id: 0, name: 'Droit' },
+    { id: 1, name: 'Court' },
+    { id: 2, name: 'Large' },
+    { id: 3, name: 'Aquilin' },
+    { id: 4, name: 'Cassé' },
+    { id: 5, name: 'Petit' },
   ],
 
   mouths: [
@@ -314,6 +345,17 @@ export const BRUTE_PARTS = {
     { id: 3, name: 'Cri' },
     { id: 4, name: 'Coin de bouche' },
     { id: 5, name: 'Défi' },
+    { id: 6, name: 'Serrée' },
+    { id: 7, name: 'Smirk' },
+  ],
+
+  markings: [
+    { id: 0, name: 'Aucun' },
+    { id: 1, name: 'Cicatrice sourcil' },
+    { id: 2, name: 'Cicatrice joue' },
+    { id: 3, name: 'Freckles' },
+    { id: 4, name: 'Chalk face' },
+    { id: 5, name: 'Eye black' },
   ],
 
   tops: [
@@ -321,12 +363,16 @@ export const BRUTE_PARTS = {
     { id: 1, name: 'Singlet compétition' },
     { id: 2, name: 'T-shirt' },
     { id: 3, name: 'Torse nu' },
+    { id: 4, name: 'Hoodie sans manches' },
+    { id: 5, name: 'Crop training' },
   ],
 
   bottoms: [
     { id: 0, name: 'Short' },
     { id: 1, name: 'Singlet' },
     { id: 2, name: 'Jogging' },
+    { id: 3, name: 'Short compression' },
+    { id: 4, name: 'Pantalon training' },
   ],
 
   accessories: [
@@ -336,18 +382,25 @@ export const BRUTE_PARTS = {
     { id: 3, name: 'Protège-poignets' },
     { id: 4, name: 'Chaîne en or' },
     { id: 5, name: 'Lunettes' },
+    { id: 6, name: 'Casquette arrière' },
+    { id: 7, name: 'Bande nasale' },
+    { id: 8, name: 'Boucle d’oreille' },
+    { id: 9, name: 'Ceinture de force' },
   ],
 }
 
 export const DEFAULT_APPEARANCE = {
-  v: 1,
+  v: 2,
   body: 1,
+  head: 0,
   skin: 2,
   hair: 0,
   hairColor: 0,
   beard: 0,
   eyes: 0,
+  nose: 0,
   mouth: 0,
+  marking: 0,
   top: 0,
   bottom: 0,
   colors: ['#7c3aed', '#111827'],
@@ -363,22 +416,50 @@ export function getBruteTheme(slug) {
 
 export function randomAppearance(random = Math.random) {
   const pickIndex = length =>
-    Math.floor(random() * Math.max(1, length))
+    Math.floor(
+      random() *
+      Math.max(1, length)
+    )
+
+  const palette = [
+    '#7c3aed',
+    '#2563eb',
+    '#dc2626',
+    '#059669',
+    '#d97706',
+    '#e11d48',
+    '#06b6d4',
+    '#f8fafc',
+  ]
+
+  const neutrals = [
+    '#111827',
+    '#1f2937',
+    '#3f3f46',
+    '#0f172a',
+    '#27272a',
+    '#f8fafc',
+    '#f59e0b',
+    '#0f766e',
+  ]
 
   return {
-    v: 1,
+    v: 2,
     body: pickIndex(BRUTE_PARTS.bodies.length),
+    head: pickIndex(BRUTE_PARTS.heads.length),
     skin: pickIndex(BRUTE_PARTS.skins.length),
     hair: pickIndex(BRUTE_PARTS.hairs.length),
     hairColor: pickIndex(BRUTE_PARTS.hairColors.length),
     beard: pickIndex(BRUTE_PARTS.beards.length),
     eyes: pickIndex(BRUTE_PARTS.eyes.length),
+    nose: pickIndex(BRUTE_PARTS.noses.length),
     mouth: pickIndex(BRUTE_PARTS.mouths.length),
+    marking: pickIndex(BRUTE_PARTS.markings.length),
     top: pickIndex(BRUTE_PARTS.tops.length),
     bottom: pickIndex(BRUTE_PARTS.bottoms.length),
     colors: [
-      ['#7c3aed','#2563eb','#dc2626','#059669','#d97706','#e11d48'][pickIndex(6)],
-      ['#111827','#1f2937','#3f3f46','#0f172a','#27272a','#f8fafc'][pickIndex(6)],
+      palette[pickIndex(palette.length)],
+      neutrals[pickIndex(neutrals.length)],
     ],
     acc: pickIndex(BRUTE_PARTS.accessories.length),
   }
