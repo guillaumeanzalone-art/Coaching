@@ -817,29 +817,6 @@ function renderHome() {
           </span>
         </button>
 
-        <button
-          class="card"
-          data-action="activity"
-        >
-          <span class="card-icon card-icon--spider card-icon--activity">
-            ${spiderMenuIcon('activity')}
-          </span>
-
-          <div>
-            <strong>
-              Activité
-            </strong>
-
-            <span>
-              Voir les derni&egrave;res s&eacute;ances
-            </span>
-          </div>
-
-          <span class="arrow">
-            ›
-          </span>
-        </button>
-
                 ${
           currentMember?.role === 'coach'
             ? `
