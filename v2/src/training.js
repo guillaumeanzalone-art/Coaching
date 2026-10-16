@@ -8967,6 +8967,10 @@ export function mountTraining(
       awardCompletedSetXp(
         found
       )
+
+      void startRestAfterFoundSet(
+        found
+      )
     }
   }
 
@@ -9848,9 +9852,19 @@ export function mountTraining(
       ).length
 
     const displayName =
-      exercise.variant
-        ? `${exercise.name} · ${exercise.variant}`
-        : exercise.name
+      exerciseDisplayName(
+        exercise
+      )
+
+    const restSeconds =
+      restSecondsForExercise(
+        exercise
+      )
+
+    const restKey =
+      restTimerExerciseKey(
+        exercise
+      )
 
     return `
       <section
@@ -9889,13 +9903,35 @@ export function mountTraining(
             </div>
           </div>
 
-          <span
-            class="exercise-progress"
-          >
-            ${completed}
-            /
-            ${exercise.sets.length}
-          </span>
+          <div class="exercise-header__actions">
+            <button
+              type="button"
+              class="exercise-rest-control ${restSeconds <= 0 ? 'is-off' : ''}"
+              data-action="rest-timer-open"
+              data-rest-key="${escapeHtml(restKey)}"
+              ${canEdit ? '' : 'disabled'}
+              aria-label="Régler le temps de repos"
+            >
+              <span>◷</span>
+              <b>
+                ${restSeconds <= 0
+                  ? 'OFF'
+                  : escapeHtml(
+                      formatRestDuration(
+                        restSeconds
+                      )
+                    )}
+              </b>
+            </button>
+
+            <span
+              class="exercise-progress"
+            >
+              ${completed}
+              /
+              ${exercise.sets.length}
+            </span>
+          </div>
         </header>
 
         <div
@@ -10070,6 +10106,9 @@ export function mountTraining(
         ${showSessionStory
           ? renderSessionStory()
           : ''}
+
+        ${renderRestTimerDock()}
+        ${renderRestTimerEditor()}
 
       </main>
     `
