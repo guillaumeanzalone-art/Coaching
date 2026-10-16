@@ -3,6 +3,7 @@ import { supabase } from './supabase.js'
 import {
   BRUTE_PARTS,
   BRUTE_PALETTES,
+  BRUTE_APPEARANCE_VERSION,
   BRUTE_WEAPONS,
   BRUTE_SKILLS,
   BRUTE_PETS,
@@ -91,6 +92,9 @@ function ensureStyles() {
     '.brute-sleep{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.7fr);gap:12px}.brute-sleep-energy{margin-top:12px;padding:10px 12px;border:2px solid rgba(127,112,208,.32);border-radius:13px;background:rgba(104,91,176,.12);color:#d9d2ff}.brute-sleep-energy b{display:block;font-size:18px}.brute-sleep-energy small{color:#8f88bc;font-size:8px}.brute-moon{min-height:390px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 32%,rgba(131,112,255,.28),transparent 25%),#0a0d21}.brute-moon .moon{font-size:100px;filter:drop-shadow(0 0 25px rgba(129,109,255,.38));animation:bruteIdle 4s ease-in-out infinite}.brute-sleep-time{font-size:40px;font-weight:1000;font-variant-numeric:tabular-nums}.brute-sound-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}',
     '@keyframes bruteIdle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.01)}}@keyframes bruteAttackFastLeft{0%,100%{transform:translateX(0) rotate(0)}40%{transform:translateX(24%) rotate(2deg)}56%{transform:translateX(34%) rotate(-2deg)}}@keyframes bruteAttackFastRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}40%{transform:scaleX(-1) translateX(24%) rotate(2deg)}56%{transform:scaleX(-1) translateX(34%) rotate(-2deg)}}@keyframes bruteAttackHeavyLeft{0%{transform:translateX(0) rotate(0)}27%{transform:translateX(-5%) rotate(-5deg)}62%{transform:translateX(34%) rotate(5deg)}100%{transform:translateX(0) rotate(0)}}@keyframes bruteAttackHeavyRight{0%{transform:scaleX(-1) translateX(0) rotate(0)}27%{transform:scaleX(-1) translateX(-5%) rotate(-5deg)}62%{transform:scaleX(-1) translateX(34%) rotate(5deg)}100%{transform:scaleX(-1) translateX(0) rotate(0)}}@keyframes bruteAttackRangedLeft{0%,100%{transform:translateX(0)}35%{transform:translateX(-6%) rotate(-3deg)}65%{transform:translateX(9%) rotate(2deg)}}@keyframes bruteAttackRangedRight{0%,100%{transform:scaleX(-1) translateX(0)}35%{transform:scaleX(-1) translateX(-6%) rotate(-3deg)}65%{transform:scaleX(-1) translateX(9%) rotate(2deg)}}@keyframes bruteAttackFlexibleLeft{0%,100%{transform:translateX(0) rotate(0)}28%{transform:translateX(-4%) rotate(-7deg)}58%{transform:translateX(22%) rotate(8deg)}78%{transform:translateX(12%) rotate(-4deg)}}@keyframes bruteAttackFlexibleRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}28%{transform:scaleX(-1) translateX(-4%) rotate(-7deg)}58%{transform:scaleX(-1) translateX(22%) rotate(8deg)}78%{transform:scaleX(-1) translateX(12%) rotate(-4deg)}}@keyframes bruteHitLeft{0%,100%{filter:none;transform:translate(0,0) rotate(0)}22%{filter:brightness(1.75) saturate(1.4);transform:translate(-8px,var(--hit-y)) rotate(var(--hit-tilt))}55%{transform:translate(7px,0) rotate(0)}}@keyframes bruteHitRight{0%,100%{filter:none;transform:scaleX(-1) translate(0,0) rotate(0)}22%{filter:brightness(1.75) saturate(1.4);transform:scaleX(-1) translate(-8px,var(--hit-y)) rotate(var(--hit-tilt))}55%{transform:scaleX(-1) translate(7px,0) rotate(0)}}@keyframes bruteHitHeavyLeft{0%,100%{filter:none;transform:translate(0,0) rotate(0)}18%{filter:brightness(2) saturate(1.5);transform:translate(-18px,var(--hit-y)) rotate(var(--hit-tilt))}48%{transform:translate(13px,0) rotate(2deg)}72%{transform:translate(-5px,0)}}@keyframes bruteHitHeavyRight{0%,100%{filter:none;transform:scaleX(-1) translate(0,0) rotate(0)}18%{filter:brightness(2) saturate(1.5);transform:scaleX(-1) translate(-18px,var(--hit-y)) rotate(var(--hit-tilt))}48%{transform:scaleX(-1) translate(13px,0) rotate(2deg)}72%{transform:scaleX(-1) translate(-5px,0)}}@keyframes bruteDodgeLeft{0%,100%{transform:translate(0,0)}42%{transform:translate(-38px,-38px) rotate(-4deg)}70%{transform:translate(-22px,-9px)}}@keyframes bruteDodgeRight{0%,100%{transform:scaleX(-1) translate(0,0)}42%{transform:scaleX(-1) translate(-38px,-38px) rotate(-4deg)}70%{transform:scaleX(-1) translate(-22px,-9px)}}@keyframes bruteKoLeft{0%{transform:rotate(0) translate(0,0);opacity:1}38%{transform:rotate(18deg) translate(12px,-8px);opacity:1}100%{transform:rotate(78deg) translate(35px,34px);opacity:.45}}@keyframes bruteKoRight{0%{transform:scaleX(-1) rotate(0) translate(0,0);opacity:1}38%{transform:scaleX(-1) rotate(18deg) translate(12px,-8px);opacity:1}100%{transform:scaleX(-1) rotate(78deg) translate(35px,34px);opacity:.45}}@keyframes bruteGuard{0%,100%{filter:none}45%{filter:drop-shadow(0 0 18px rgba(101,167,255,.95)) brightness(1.25)}}@keyframes bruteStun{0%,100%{filter:none}25%{filter:saturate(.2) brightness(1.3)}50%{filter:saturate(.2) brightness(.75)}75%{filter:saturate(.2) brightness(1.2)}}@keyframes bruteArmHeavy{0%,100%{transform:rotate(0)}30%{transform:rotate(-38deg)}62%{transform:rotate(62deg)}}@keyframes bruteArmFast{0%,100%{transform:rotate(0)}45%{transform:rotate(52deg)}}@keyframes bruteGuardArm{0%,100%{transform:rotate(0)}50%{transform:rotate(-55deg) translate(-5px,-6px)}}@keyframes bruteHeadStun{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}50%{transform:rotate(9deg)}75%{transform:rotate(-5deg)}}@keyframes bruteFloat{0%{opacity:0;transform:translateY(12px) scale(.7)}35%{opacity:1;transform:translateY(-10px) scale(1.12)}100%{opacity:0;transform:translateY(-44px) scale(.92)}}@keyframes bruteImpact{0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(0)}35%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(18deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.45) rotate(36deg)}}@keyframes bruteDust{0%{opacity:0;transform:scale(.45)}35%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.45)}}@keyframes bruteSkillBanner{0%{opacity:0;transform:translate(-50%,-30%) scale(.65)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}78%{opacity:1;transform:translate(-50%,-60%) scale(1)}100%{opacity:0;transform:translate(-50%,-85%) scale(.9)}}@keyframes bruteProjectileLR{0%{left:24%;transform:rotate(-20deg) scale(.75)}100%{left:73%;transform:rotate(220deg) scale(1.08)}}@keyframes bruteProjectileRL{0%{left:73%;transform:rotate(20deg) scale(.75)}100%{left:24%;transform:rotate(-220deg) scale(1.08)}}@keyframes bruteArenaShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,-1px)}80%{transform:translate(3px,2px)}}@keyframes bruteFlash{0%{opacity:0}30%{opacity:.85}100%{opacity:0}}@keyframes bruteLevelUp{0%{opacity:0;transform:translateY(12px) scale(.8)}45%{opacity:1;transform:translateY(-3px) scale(1.08)}100%{transform:translateY(0) scale(1)}}@keyframes bruteBreathe{0%,100%{transform:scale(1)}50%{transform:scale(.985) translateY(3px)}}@keyframes bruteWeaponSwitch{0%,100%{transform:rotate(0)}35%{transform:rotate(-5deg) translateY(-6px)}70%{transform:rotate(4deg)}}@keyframes bruteBlockLeft{0%,100%{transform:translateX(0)}45%{transform:translateX(-7px) scale(.97);filter:drop-shadow(0 0 14px rgba(92,165,255,.9))}}@keyframes bruteBlockRight{0%,100%{transform:scaleX(-1) translateX(0)}45%{transform:scaleX(-1) translateX(-7px) scale(.97);filter:drop-shadow(0 0 14px rgba(92,165,255,.9))}}@keyframes bruteArriveLeft{0%{transform:translate(-78%,-90px) rotate(-8deg) scale(.9);opacity:0}58%{transform:translate(5%,8px) rotate(2deg) scale(1.02);opacity:1}100%{transform:translate(0,0) rotate(0) scale(1)}}@keyframes bruteArriveRight{0%{transform:scaleX(-1) translate(-78%,-90px) rotate(-8deg) scale(.9);opacity:0}58%{transform:scaleX(-1) translate(5%,8px) rotate(2deg) scale(1.02);opacity:1}100%{transform:scaleX(-1) translate(0,0) rotate(0) scale(1)}}@keyframes bruteWindupFast{0%{transform:rotate(0)}100%{transform:rotate(-32deg) translate(-4px,-2px)}}@keyframes bruteWindupHeavy{0%{transform:rotate(0)}55%{transform:rotate(-58deg) translate(-8px,-6px)}100%{transform:rotate(-45deg) translate(-5px,-4px)}}@keyframes bruteWindupRanged{0%{transform:rotate(0)}100%{transform:rotate(-38deg) translate(-8px,-8px)}}@keyframes bruteWindupFlexible{0%{transform:rotate(0)}55%{transform:rotate(-46deg) translate(-5px,-4px)}100%{transform:rotate(-22deg) translate(3px,-2px)}}@keyframes bruteStaggerLeft{0%,100%{transform:translateX(0)}13%{transform:translateX(calc(var(--knock) * -1)) rotate(-2deg);filter:brightness(1.9)}30%{transform:translateX(calc(var(--knock) * -.55)) rotate(1deg)}46%{transform:translateX(calc(var(--knock) * -.76))}64%{transform:translateX(calc(var(--knock) * -.34))}82%{transform:translateX(calc(var(--knock) * -.14))}}@keyframes bruteStaggerRight{0%,100%{transform:scaleX(-1) translateX(0)}13%{transform:scaleX(-1) translateX(calc(var(--knock) * -1)) rotate(-2deg);filter:brightness(1.9)}30%{transform:scaleX(-1) translateX(calc(var(--knock) * -.55)) rotate(1deg)}46%{transform:scaleX(-1) translateX(calc(var(--knock) * -.76))}64%{transform:scaleX(-1) translateX(calc(var(--knock) * -.34))}82%{transform:scaleX(-1) translateX(calc(var(--knock) * -.14))}}',
     '@media(max-width:760px){.brute-app{padding:9px}.brute-menu-grid{grid-template-columns:1fr;padding:14px;min-height:0}.brute-camp-grid{grid-template-columns:1fr}.brute-camp-avatar{order:-1;min-height:320px}.brute-camp-avatar .ga-brute-svg{width:260px}.brute-camp-scene{padding:11px}.brute-camp-sign{font-size:21px}.brute-menu-avatar{order:-1}.brute-menu-side{grid-template-columns:1fr 1fr}.brute-title-screen{min-height:0}.brute-logo{font-size:32px}.brute-create,.brute-dashboard,.brute-equipment,.brute-sleep{grid-template-columns:1fr}.brute-create-preview{min-height:350px}.brute-create-preview .ga-brute-svg{width:280px}.brute-create-controls{max-height:none}.brute-stat-grid{grid-template-columns:1fr 1fr}.brute-arena{min-height:440px}.brute-fighters{padding:0 0%;bottom:43px}.brute-fighter .ga-brute-svg{width:220px}.brute-hud{inset:8px 7px auto;grid-template-columns:1fr 39px 1fr;gap:5px}.brute-round{height:34px}.brute-choice-grid{grid-template-columns:1fr}.brute-rank-row{grid-template-columns:30px 1fr auto}.brute-rank-row .extra{display:none}.brute-real-grid{grid-template-columns:1fr 1fr}.brute-selector-avatar{width:44px;height:44px}.brute-fight-summary{grid-template-columns:1fr}}',
+    '.brute-mybrute-create{width:min(420px,100%);margin:22px auto 0;padding:0 0 28px}.brute-mybrute-paper{position:relative;min-height:500px;padding:18px 26px 24px;border:4px solid #6e3a1f;border-radius:12px;background:radial-gradient(circle at 50% 17%,rgba(255,248,201,.95),rgba(239,214,154,.97) 34%,rgba(205,158,88,.98) 100%);box-shadow:inset 0 0 0 3px rgba(255,244,196,.58),0 8px 0 #4d2513,0 20px 42px rgba(0,0,0,.28);color:#65361e}.brute-mybrute-paper:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.14;background:repeating-linear-gradient(0deg,transparent 0 8px,rgba(87,45,20,.14) 9px 10px)}.brute-mybrute-heading{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:7px;font-size:12px;font-weight:1000;text-transform:uppercase;letter-spacing:.06em}.brute-mybrute-heading b{font-size:18px;transform:rotate(10deg)}.brute-mybrute-name-row{position:relative;z-index:3;display:grid;grid-template-columns:1fr 42px;gap:7px;width:min(245px,100%);margin:0 auto}.brute-mybrute-name{min-width:0;border:3px solid #6a361c;border-radius:5px;background:#fff4c5;color:#60321b;padding:8px 9px;text-align:center;font-size:13px;font-weight:1000;box-shadow:inset 0 0 0 2px rgba(147,83,36,.14)}.brute-mybrute-lock{border:3px solid #6a361c;border-radius:6px;background:linear-gradient(#e7b65f,#bb6b2c);color:#542710;font-size:18px;cursor:pointer}.brute-mybrute-lock.locked{background:linear-gradient(#8ed88d,#4d9d58)}.brute-mybrute-status{position:relative;z-index:2;margin:7px auto 0;text-align:center;font-size:7px;font-weight:1000;letter-spacing:.12em;color:#8b5a35}.brute-mybrute-character{position:relative;z-index:2;height:238px;display:flex;align-items:flex-start;justify-content:center;padding-top:10px}.brute-mybrute-character .ga-brute-svg{width:116px;max-height:218px;filter:drop-shadow(0 8px 6px rgba(74,39,18,.22));animation:bruteIdle 2.8s ease-in-out infinite}.brute-mybrute-tools{position:relative;z-index:3;display:flex;justify-content:space-between;gap:34px;width:min(300px,100%);margin:-8px auto 0}.brute-mybrute-tool{width:112px;height:86px;border:3px solid #6b371c;border-radius:11px;background:linear-gradient(180deg,#f2d98f,#c88a41);box-shadow:inset 0 0 0 2px rgba(255,249,204,.48),0 4px 0 #5a2a16;color:#65331a;font-size:8px;font-weight:1000;text-transform:uppercase;cursor:pointer}.brute-mybrute-tool:hover{filter:brightness(1.07);transform:translateY(-1px)}.brute-mybrute-tool .icon{display:block;margin-bottom:3px;font-size:31px}.brute-mybrute-help{position:relative;z-index:2;width:min(300px,100%);margin:15px auto 10px;text-align:center;color:#80512f;font-size:8px;line-height:1.45;font-weight:800}.brute-mybrute-validate{position:relative;z-index:3;display:block;width:min(245px,100%);margin:0 auto;border:4px solid #6a361b;border-radius:8px;padding:11px 12px;background:linear-gradient(180deg,#d98d3f,#9f4f24);box-shadow:inset 0 0 0 3px rgba(255,214,125,.4),0 5px 0 #4d2412;color:#fff2b1;font-size:11px;font-weight:1000;letter-spacing:.06em;text-shadow:0 2px #4e2410;cursor:pointer}.brute-mybrute-validate:disabled{opacity:.5;cursor:wait}',
+    '.brute-fighter .ga-brute-svg{width:min(190px,58%)}',
+    '@media(max-width:760px){.brute-mybrute-create{margin-top:8px}.brute-mybrute-paper{min-height:470px;padding:14px 16px 21px}.brute-mybrute-character{height:216px}.brute-mybrute-character .ga-brute-svg{width:105px;max-height:198px}.brute-mybrute-tools{gap:22px}.brute-fighter .ga-brute-svg{width:min(135px,56%)}}',
   ].join('')
   document.head.appendChild(style)
 }
@@ -176,8 +180,9 @@ export async function mountBruteGame(root, options = {}) {
   const athletes = Array.isArray(options.athletes) ? options.athletes : []
   let selectedSlug = String(options.initialSlug || '')
   let brute = null
-  let draft = clone(DEFAULT_APPEARANCE)
+  let draft = randomAppearance()
   let draftName = ''
+  let draftFixed = false
   let screen = 'selector'
   let roster = []
   let history = []
@@ -317,42 +322,66 @@ export async function mountBruteGame(root, options = {}) {
             : idleResult.data
         )
 
-    if (!brute.appearance_locked_at) {
-      const storedAppearance =
+    const storedVersion =
+      num(
+        brute.appearance?.v,
+        0
+      )
+
+    const needsCreation =
+      !brute.appearance_locked_at ||
+      storedVersion !==
+        BRUTE_APPEARANCE_VERSION
+
+    if (needsCreation) {
+      const canReuseDraft =
+        storedVersion ===
+          BRUTE_APPEARANCE_VERSION &&
         Object.keys(
           brute.appearance ||
           {}
-        ).length
+        ).length > 0
+
+      const storedAppearance =
+        canReuseDraft
           ? clone(
               brute.appearance
             )
-          : {}
+          : null
 
-      draft = {
-        ...clone(
-          DEFAULT_APPEARANCE
-        ),
-        ...storedAppearance,
-        colors:
-          Array.isArray(
-            storedAppearance.colors
-          )
-            ? [
-                ...storedAppearance.colors,
-              ]
-            : [
-                ...DEFAULT_APPEARANCE.colors,
-              ],
-        v: 2,
-      }
+      draft =
+        storedAppearance
+          ? {
+              ...clone(
+                DEFAULT_APPEARANCE
+              ),
+              ...storedAppearance,
+              colors:
+                Array.isArray(
+                  storedAppearance.colors
+                )
+                  ? [
+                      ...storedAppearance.colors,
+                    ]
+                  : [
+                      ...DEFAULT_APPEARANCE.colors,
+                    ],
+              v:
+                BRUTE_APPEARANCE_VERSION,
+            }
+          : randomAppearance()
 
       draftName =
         brute.name ||
         selectedAthlete()?.name ||
         selectedSlug
 
+      draftFixed = false
       screen = 'creator'
-    } else if (screen === 'selector' || screen === 'creator') {
+    } else if (
+      screen === 'selector' ||
+      screen === 'creator'
+    ) {
       screen = 'menu'
     }
 
@@ -502,71 +531,48 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function renderCreator() {
-    return '<div class="brute-create">'+
-      '<section class="brute-create-stage">'+
-        '<div class="brute-create-sign">'+esc(draftName || 'MA BRUTE')+'</div>'+
-        renderBruteSvg(
-          draft,
-          {
-            label:
-              draftName ||
-              'Ma brute',
-          }
-        )+
-        '<button class="brute-camp-action brute-creator-random" data-brute-random>🎲 NOUVEAU PERSONNAGE</button>'+
-      '</section>'+
-      '<section class="brute-panel brute-create-controls">'+
-        '<small style="color:var(--accent);font-weight:1000">CHARACTER CREATOR</small>'+
-        '<h2>Crée ta brute</h2>'+
-        '<p>Le personnage est composé de calques SVG indépendants : morphologie, visage, cheveux, tenue et accessoires. Ton apparence est figée après validation.</p>'+
-        '<div class="brute-create-help"><span>18 coiffures</span><span>14 peaux</span><span>21 couleurs cheveux</span><span>20 couleurs tenue</span><span>8 morphologies</span><span>8 visages</span><span>10 accessoires</span></div>'+
-        '<input class="brute-name-input" maxlength="28" data-brute-name value="'+esc(draftName)+'" placeholder="Nom de la brute">'+
-        creatorSection(
-          'Morphologie',
-          '💪',
-          control('body','Corps',partName(BRUTE_PARTS.bodies,draft.body))+
-          control('head','Forme du visage',partName(BRUTE_PARTS.heads,draft.head))+
-          colorSwatches('skin',BRUTE_PARTS.skins,draft.skin),
-          'morphology'
-        )+
-        creatorSection(
-          'Visage',
-          '🙂',
-          control('eyes','Yeux / sourcils',partName(BRUTE_PARTS.eyes,draft.eyes))+
-          control('nose','Nez',partName(BRUTE_PARTS.noses,draft.nose))+
-          control('mouth','Bouche',partName(BRUTE_PARTS.mouths,draft.mouth))+
-          control('marking','Marque / cicatrice',partName(BRUTE_PARTS.markings,draft.marking)),
-          'face'
-        )+
-        creatorSection(
-          'Cheveux',
-          '✂️',
-          control('hair','Coupe',partName(BRUTE_PARTS.hairs,draft.hair))+
-          colorSwatches('hairColor',BRUTE_PARTS.hairColors,draft.hairColor)+
-          control('beard','Pilosité',partName(BRUTE_PARTS.beards,draft.beard)),
-          'hair'
-        )+
-        creatorSection(
-          'Tenue',
-          '👕',
-          control('top','Haut',partName(BRUTE_PARTS.tops,draft.top))+
-          control('bottom','Bas',partName(BRUTE_PARTS.bottoms,draft.bottom))+
-          colorSwatches('primary',BRUTE_PALETTES.primary,draft.colors?.[0])+
-          colorSwatches('secondary',BRUTE_PALETTES.secondary,draft.colors?.[1]),
-          'outfit'
-        )+
-        creatorSection(
-          'Accessoires',
-          '✨',
-          control('acc','Accessoire',partName(BRUTE_PARTS.accessories,draft.acc)),
-          'accessory'
-        )+
-        '<div class="brute-actions">'+
-          '<button class="brute-secondary" data-brute-random>🎲 Aléatoire</button>'+
-          '<button class="brute-primary" data-brute-create '+(busy ? 'disabled' : '')+'>⚔️ Valider ma brute</button>'+
+    const status =
+      draftFixed
+        ? 'APPARENCE VERROUILLÉE'
+        : 'APPARENCE LIBRE'
+
+    return '<section class="brute-mybrute-create">'+
+      '<div class="brute-mybrute-paper">'+
+        '<div class="brute-mybrute-heading">'+
+          '<span>Choisis ton nom</span>'+
+          '<b>➜</b>'+
         '</div>'+
-      '</section>'+
-    '</div>'
+        '<div class="brute-mybrute-name-row">'+
+          '<input class="brute-mybrute-name" maxlength="28" data-brute-name value="'+esc(draftName)+'" placeholder="Nom de la brute">'+
+          '<button type="button" class="brute-mybrute-lock '+(draftFixed ? 'locked' : '')+'" data-brute-lock title="'+esc(status)+'">'+
+            (draftFixed ? '🔒' : '🔓')+
+          '</button>'+
+        '</div>'+
+        '<div class="brute-mybrute-status">'+esc(status)+'</div>'+
+        '<div class="brute-mybrute-character" data-brute-creator-preview>'+
+          renderBruteSvg(
+            draft,
+            {
+              label:'Ma brute',
+            }
+          )+
+        '</div>'+
+        '<div class="brute-mybrute-tools">'+
+          '<button type="button" class="brute-mybrute-tool" data-brute-change-appearance>'+
+            '<span class="icon">👤</span>'+
+            '<span>Changer<br>l’apparence</span>'+
+          '</button>'+
+          '<button type="button" class="brute-mybrute-tool" data-brute-change-colors>'+
+            '<span class="icon">🎨</span>'+
+            '<span>Changer<br>les couleurs</span>'+
+          '</button>'+
+        '</div>'+
+        '<p class="brute-mybrute-help">Comme dans My Brute : choisis une combinaison, change les couleurs, verrouille-la puis valide.</p>'+
+        '<button class="brute-mybrute-validate" data-brute-create '+(busy ? 'disabled' : '')+'>'+
+          (busy ? 'CRÉATION…' : 'VALIDER MA BRUTE')+
+        '</button>'+
+      '</div>'+
+    '</section>'
   }
 
   function renderMenu() {
@@ -2612,6 +2618,40 @@ export async function mountBruteGame(root, options = {}) {
       return
     }
 
+    if (event.target.closest('[data-brute-lock]')) {
+      draftFixed = !draftFixed
+      render()
+      return
+    }
+
+    if (event.target.closest('[data-brute-change-appearance]')) {
+      draft = randomAppearance()
+      render()
+      return
+    }
+
+    if (event.target.closest('[data-brute-change-colors]')) {
+      const next =
+        randomAppearance()
+
+      draft = {
+        ...draft,
+        skin:
+          next.skin,
+        hairColor:
+          next.hairColor,
+        colors:
+          clone(
+            next.colors
+          ),
+        v:
+          BRUTE_APPEARANCE_VERSION,
+      }
+
+      render()
+      return
+    }
+
     const prev = event.target.closest('[data-brute-prev]')
     if (prev) {
       adjustDraft(String(prev.dataset.brutePrev || ''),-1)
@@ -2751,8 +2791,9 @@ export async function mountBruteGame(root, options = {}) {
       if (result.error) notice = result.error.message
       else {
         brute = Array.isArray(result.data) ? result.data[0] : result.data
-        draft = clone(DEFAULT_APPEARANCE)
+        draft = randomAppearance()
         draftName = brute.name
+        draftFixed = false
         screen = 'creator'
       }
       render()
@@ -2888,11 +2929,40 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   root.oninput = event => {
-    const input = event.target.closest('[data-brute-name]')
+    const input =
+      event.target.closest(
+        '[data-brute-name]'
+      )
+
     if (input) {
-      draftName = String(input.value || '').slice(0,28)
-      const plate = root.querySelector('.brute-nameplate')
-      if (plate) plate.textContent = draftName || 'Ma brute'
+      draftName =
+        String(
+          input.value ||
+          ''
+        ).slice(
+          0,
+          28
+        )
+
+      if (!draftFixed) {
+        draft =
+          randomAppearance()
+
+        const preview =
+          root.querySelector(
+            '[data-brute-creator-preview]'
+          )
+
+        if (preview) {
+          preview.innerHTML =
+            renderBruteSvg(
+              draft,
+              {
+                label:'Ma brute',
+              }
+            )
+        }
+      }
     }
   }
 
