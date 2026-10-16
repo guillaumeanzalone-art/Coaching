@@ -912,38 +912,6 @@ function turnAttack(
       counter:
         Boolean(meta.counter),
       thrown,
-      knockback:
-        blocked
-          ? Math.max(
-              2,
-              Math.round(
-                damage /
-                Math.max(
-                  1,
-                  defender.hpMax
-                ) *
-                28
-              )
-            )
-          : Math.max(
-              3,
-              Math.min(
-                72,
-                Math.round(
-                  damage /
-                  Math.max(
-                    1,
-                    defender.hpMax
-                  ) *
-                  72 +
-                  (
-                    critical
-                      ? 12
-                      : 0
-                  )
-                )
-              )
-            ),
     },
     left,
     right
@@ -1255,6 +1223,46 @@ function turnAttack(
       counter:
         Boolean(meta.counter),
       thrown,
+      knockback:
+        blocked
+          ? Math.max(
+              4,
+              Math.min(
+                28,
+                Math.round(
+                  damage /
+                  Math.max(
+                    1,
+                    defender.hpMax
+                  ) *
+                  34
+                )
+              )
+            )
+          : Math.max(
+              6,
+              Math.min(
+                72,
+                Math.round(
+                  damage /
+                  Math.max(
+                    1,
+                    defender.hpMax
+                  ) *
+                  72 +
+                  (
+                    critical
+                      ? 12
+                      : 0
+                  ) +
+                  (
+                    weapon.category === 'heavy'
+                      ? 7
+                      : 0
+                  )
+                )
+              )
+            ),
     },
     left,
     right
