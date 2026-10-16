@@ -239,11 +239,16 @@ export async function mountBruteGame(root, options = {}) {
 
     stopMusic()
     try {
-      music = new Audio(src)
-      music.loop = true
-      music.volume = .16
-      music.dataset.src = src
-      void music.play().catch(() => {})
+      const audio = new Audio(src)
+      audio.loop = true
+      audio.volume = .16
+      audio.dataset.src = src
+      music = audio
+      void audio.play().catch(() => {
+        if (music === audio) {
+          music = null
+        }
+      })
     } catch {
       music = null
     }
@@ -1016,8 +1021,12 @@ export async function mountBruteGame(root, options = {}) {
     const speedBtn = event.target.closest('[data-brute-speed]')
     if (speedBtn) {
       playbackSpeed = num(speedBtn.dataset.bruteSpeed,1)
-      render()
-      if (currentTimeline) void playTimeline(currentTimeline)
+      root.querySelectorAll('[data-brute-speed]').forEach(button => {
+        button.classList.toggle(
+          'active',
+          num(button.dataset.bruteSpeed,1) === playbackSpeed
+        )
+      })
       return
     }
 
