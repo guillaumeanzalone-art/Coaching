@@ -104,6 +104,152 @@ function normalizeMonsterKey(value) {
     .toLowerCase()
 }
 
+const GA_BRUTE_WEAPONS = [
+  { key: 'fists', icon: '👊', label: 'Poings', damage: 1.00, speed: 1.08 },
+  { key: 'belt', icon: '🥋', label: 'Ceinture', damage: 1.06, speed: 1.04 },
+  { key: 'dumbbell', icon: '🏋️', label: 'Haltère', damage: 1.24, speed: 0.86 },
+  { key: 'shaker', icon: '🥤', label: 'Shaker', damage: 0.94, speed: 1.18 },
+  { key: 'bench', icon: '🪑', label: 'Banc', damage: 1.18, speed: 0.88 },
+  { key: 'hammer', icon: '🔨', label: 'Marteau', damage: 1.30, speed: 0.82 },
+]
+
+function deriveGaBruteStats(source = {}) {
+  const training = metricPercent(source.training_score)
+  const steps = metricPercent(source.steps_score)
+  const sleep = metricPercent(source.sleep_score)
+
+  const strength =
+    5 +
+    Math.round(
+      training * 0.16 +
+      sleep * 0.035
+    )
+
+  const agility =
+    5 +
+    Math.round(
+      steps * 0.14 +
+      sleep * 0.045
+    )
+
+  const speed =
+    5 +
+    Math.round(
+      steps * 0.09 +
+      sleep * 0.085
+    )
+
+  const vitality =
+    5 +
+    Math.round(
+      training * 0.055 +
+      sleep * 0.145
+    )
+
+  return {
+    training,
+    steps,
+    sleep,
+    strength,
+    agility,
+    speed,
+    vitality,
+    block:
+      clamp(
+        0.05 +
+        training / 100 * 0.14 +
+        sleep / 100 * 0.05,
+        0.05,
+        0.27
+      ),
+    evade:
+      clamp(
+        0.04 +
+        agility * 0.007,
+        0.05,
+        0.25
+      ),
+    counter:
+      clamp(
+        0.035 +
+        sleep / 100 * 0.09 +
+        training / 100 * 0.055,
+        0.04,
+        0.22
+      ),
+    combo:
+      clamp(
+        0.055 +
+        speed * 0.007,
+        0.06,
+        0.24
+      ),
+    crit:
+      clamp(
+        0.07 +
+        strength * 0.0045,
+        0.08,
+        0.20
+      ),
+    disarm:
+      clamp(
+        0.025 +
+        agility * 0.0025,
+        0.03,
+        0.10
+      ),
+  }
+}
+
+function deriveOpponentStats(power, random) {
+  const base =
+    clamp(
+      (number(power, 35) - 35) / 3.8,
+      0,
+      100
+    )
+
+  const wobble = () =>
+    clamp(
+      base +
+      (random() - 0.5) * 26,
+      0,
+      100
+    )
+
+  return deriveGaBruteStats({
+    training_score: wobble(),
+    steps_score: wobble(),
+    sleep_score: wobble(),
+  })
+}
+
+function gaBruteTraits(stats) {
+  const traits = []
+
+  if (stats.training >= 70) {
+    traits.push('💪 Force du top set')
+  }
+
+  if (stats.steps >= 70) {
+    traits.push('⚡ Jambes légères')
+  }
+
+  if (stats.sleep >= 70) {
+    traits.push('🌙 Récupération profonde')
+  }
+
+  if (
+    stats.training >= 70 &&
+    stats.steps >= 70 &&
+    stats.sleep >= 70
+  ) {
+    traits.push('👑 SBD complet')
+  }
+
+  return traits
+}
+
 function ensureStyle() {
   if (
     document.getElementById(
@@ -234,6 +380,25 @@ function ensureStyle() {
     .idle-brute-log-line-v1{max-width:45%;padding:5px 8px;border-radius:9px;background:rgba(65,32,15,.72);color:#fff1bc;font-size:8px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .idle-brute-ready-v1{position:absolute;z-index:6;left:50%;top:52%;transform:translate(-50%,-50%);padding:10px 14px;border-radius:14px;background:rgba(255,245,186,.92);border:3px solid #a45b25;color:#814019;font-size:13px;font-weight:1000;box-shadow:0 4px 0 rgba(79,38,17,.2)}
     .idle-brute-replay-v1{margin:0 12px 12px;width:calc(100% - 24px)}
+    .idle-brute-sheet-v1{margin:12px 0 14px;padding:12px;border:1px solid rgba(255,235,157,.16);border-radius:16px;background:linear-gradient(180deg,rgba(116,70,28,.12),rgba(255,255,255,.025))}
+    .idle-brute-sheet-title-v1{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px;color:#ffe8a7;font-size:10px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}
+    .idle-brute-stat-v1{display:grid;grid-template-columns:72px 1fr 28px;gap:7px;align-items:center;margin:6px 0}
+    .idle-brute-stat-v1 span{font-size:9px;color:#a8acc2;font-weight:900;text-transform:uppercase}
+    .idle-brute-stat-v1 b{font-size:10px;text-align:right;color:#fff0b2}
+    .idle-brute-stat-track-v1{height:8px;border-radius:999px;background:#070a17;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
+    .idle-brute-stat-track-v1 i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#f2c037,#ff7d2d)}
+    .idle-brute-traits-v1{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
+    .idle-brute-trait-v1{padding:5px 7px;border-radius:999px;border:1px solid rgba(255,232,151,.16);background:rgba(255,205,79,.07);color:#d9d4c1;font-size:8px;font-weight:850}
+    .idle-brute-rage-v1{height:4px;margin-top:4px;border-radius:99px;background:rgba(82,31,16,.28);overflow:hidden}
+    .idle-brute-rage-v1 span{display:block;height:100%;background:linear-gradient(90deg,#e34622,#ffcf35);transition:width .25s ease}
+    .idle-brute-fighter-v1.blocking .idle-brute-sprite-v1{animation:idleBruteBlock .46s ease}
+    .idle-brute-fighter-v1.dodging .idle-brute-sprite-v1{animation:idleBruteDodge .46s ease}
+    .idle-brute-fighter-v1.raging .idle-brute-sprite-v1{filter:drop-shadow(0 0 18px rgba(255,92,26,.8))}
+    .idle-brute-damage-v1.block{color:#7d5b2c}
+    .idle-brute-damage-v1.counter{color:#8b2ccd}
+    .idle-brute-damage-v1.rage{color:#ef3d1f;font-size:20px}
+    @keyframes idleBruteBlock{0%,100%{transform:translateX(0)}35%{transform:translateX(8px) scale(.96)}60%{transform:translateX(3px) scale(1.02)}}
+    @keyframes idleBruteDodge{0%,100%{transform:translateX(0)}45%{transform:translateX(-28px) translateY(-4px)}70%{transform:translateX(-10px)}}
     @keyframes idleBruteAttackRight{0%,100%{transform:translateX(0) rotate(0)}45%{transform:translateX(46%) rotate(4deg)}60%{transform:translateX(38%) rotate(-3deg)}}
     @keyframes idleBruteAttackLeft{0%,100%{transform:translateX(0) rotate(0)}45%{transform:translateX(46%) rotate(4deg)}60%{transform:translateX(38%) rotate(-3deg)}}
     @keyframes idleBruteHit{0%,100%{transform:translateX(0);filter:none}20%{transform:translateX(-9px);filter:brightness(1.8)}45%{transform:translateX(8px)}65%{transform:translateX(-5px)}}
@@ -1194,6 +1359,68 @@ export async function mountIdleGame(
       `
   }
 
+  function renderBruteSheet(source = snapshot || {}) {
+    const stats =
+      deriveGaBruteStats(source)
+
+    const traits =
+      gaBruteTraits(stats)
+
+    const statRow = (
+      label,
+      value
+    ) => {
+      const pct =
+        clamp(
+          value / 25 * 100,
+          0,
+          100
+        )
+
+      return `
+        <div class="idle-brute-stat-v1">
+          <span>${esc(label)}</span>
+
+          <div class="idle-brute-stat-track-v1">
+            <i style="width:${pct}%"></i>
+          </div>
+
+          <b>${value}</b>
+        </div>
+      `
+    }
+
+    return `
+      <div class="idle-brute-sheet-v1">
+        <div class="idle-brute-sheet-title-v1">
+          <span>Profil de combat</span>
+          <span>GA BRUTE</span>
+        </div>
+
+        ${statRow('Force', stats.strength)}
+        ${statRow('Agilité', stats.agility)}
+        ${statRow('Vitesse', stats.speed)}
+        ${statRow('Vitalité', stats.vitality)}
+
+        <div class="idle-brute-traits-v1">
+          ${traits.length
+            ? traits.map(
+                trait => `
+                  <span class="idle-brute-trait-v1">
+                    ${esc(trait)}
+                  </span>
+                `
+              ).join('')
+            : `
+              <span class="idle-brute-trait-v1">
+                Entraîne-toi, marche et dors pour débloquer des traits
+              </span>
+            `}
+        </div>
+      </div>
+    `
+  }
+
   function seededRandom(seedText) {
     let seed = 2166136261
 
@@ -1271,48 +1498,101 @@ export async function mountIdleGame(
         )
       )
 
+    const playerStats =
+      deriveGaBruteStats(
+        snapshot || {}
+      )
+
+    const enemyStats =
+      deriveOpponentStats(
+        enemyPower,
+        random
+      )
+
     const playerMax =
       Math.round(
-        105 +
-        playerPower * 0.72
+        82 +
+        playerStats.vitality * 8 +
+        playerStats.strength * 2.2
       )
 
     const enemyMax =
       Math.round(
-        105 +
-        enemyPower * 0.72
+        82 +
+        enemyStats.vitality * 8 +
+        enemyStats.strength * 2.2
       )
 
     let playerHp = playerMax
     let enemyHp = enemyMax
+    let playerRage = 0
+    let enemyRage = 0
 
     const expectedWinner =
       row?.won
         ? 'player'
         : 'enemy'
 
-    const weapons = [
-      '👊',
-      '👊',
-      '🥊',
-      '🏋️',
-      '🔨',
-      '🪑',
-      '🧱',
-      '🥤',
-    ]
+    const chooseWeapon = stats => {
+      const unlocked =
+        GA_BRUTE_WEAPONS.filter(
+          weapon =>
+            weapon.key === 'fists' ||
+            (
+              weapon.key === 'dumbbell' &&
+              stats.training >= 45
+            ) ||
+            (
+              weapon.key === 'belt' &&
+              stats.training >= 25
+            ) ||
+            (
+              weapon.key === 'shaker' &&
+              stats.sleep >= 35
+            ) ||
+            (
+              weapon.key === 'bench' &&
+              stats.training >= 70
+            ) ||
+            (
+              weapon.key === 'hammer' &&
+              stats.training >= 88
+            )
+        )
+
+      return unlocked[
+        Math.floor(
+          random() *
+          unlocked.length
+        )
+      ] || GA_BRUTE_WEAPONS[0]
+    }
+
+    let playerWeapon =
+      chooseWeapon(playerStats)
+
+    let enemyWeapon =
+      chooseWeapon(enemyStats)
 
     const events = []
 
     let actor =
-      random() > 0.5
+      (
+        playerStats.speed +
+        random() * 6
+      ) >= (
+        enemyStats.speed +
+        random() * 6
+      )
         ? 'player'
         : 'enemy'
 
+    let comboCarry = false
+
     const totalTurns =
-      7 +
+      9 +
       Math.floor(
-        random() * 5
+        random() * 6
       )
 
     for (
@@ -1325,6 +1605,16 @@ export async function mountIdleGame(
           ? 'enemy'
           : 'player'
 
+      const attackerStats =
+        actor === 'player'
+          ? playerStats
+          : enemyStats
+
+      const defenderStats =
+        target === 'player'
+          ? playerStats
+          : enemyStats
+
       const attackerPower =
         actor === 'player'
           ? playerPower
@@ -1334,6 +1624,11 @@ export async function mountIdleGame(
         target === 'player'
           ? playerPower
           : enemyPower
+
+      const weapon =
+        actor === 'player'
+          ? playerWeapon
+          : enemyWeapon
 
       const targetMax =
         target === 'player'
@@ -1345,52 +1640,77 @@ export async function mountIdleGame(
           ? playerHp
           : enemyHp
 
+      const currentRage =
+        actor === 'player'
+          ? playerRage
+          : enemyRage
+
+      const rage =
+        currentRage >= 100
+
       const dodge =
-        random() < 0.11
+        !rage &&
+        random() <
+          defenderStats.evade *
+          (
+            0.84 +
+            random() * 0.28
+          )
+
+      const block =
+        !dodge &&
+        !rage &&
+        random() <
+          defenderStats.block *
+          (
+            0.78 +
+            random() * 0.30
+          )
 
       const crit =
         !dodge &&
-        random() < 0.16
+        (
+          rage ||
+          random() <
+            attackerStats.crit
+        )
 
-      const weapon =
-        weapons[
-          Math.floor(
-            random() *
-            weapons.length
-          )
-        ]
+      const powerRatio =
+        clamp(
+          attackerPower /
+          Math.max(
+            1,
+            defenderPower
+          ),
+          0.62,
+          1.55
+        )
 
       let damage = 0
 
       if (!dodge) {
-        const powerRatio =
-          clamp(
-            attackerPower /
-            Math.max(
-              1,
-              defenderPower
-            ),
-            0.55,
-            1.65
-          )
+        const raw =
+          (
+            5 +
+            attackerStats.strength * 1.25 +
+            random() *
+              (
+                5 +
+                attackerStats.agility * 0.55
+              )
+          ) *
+          powerRatio *
+          (weapon?.damage || 1) *
+          (crit ? 1.48 : 1) *
+          (rage ? 1.45 : 1)
 
         damage =
           Math.max(
-            5,
+            3,
             Math.round(
-              (
-                targetMax *
-                (
-                  0.075 +
-                  random() * 0.075
-                ) *
-                powerRatio
-              ) *
-              (
-                crit
-                  ? 1.65
-                  : 1
-              )
+              block
+                ? raw * 0.34
+                : raw
             )
           )
 
@@ -1402,8 +1722,8 @@ export async function mountIdleGame(
               (
                 target ===
                   expectedWinner
-                  ? 0.24
-                  : 0.08
+                  ? 0.22
+                  : 0.06
               )
             )
           )
@@ -1424,12 +1744,88 @@ export async function mountIdleGame(
             1,
             playerHp - damage
           )
+
+        playerRage =
+          clamp(
+            playerRage +
+            Math.max(
+              6,
+              Math.round(
+                damage /
+                Math.max(
+                  1,
+                  playerMax
+                ) *
+                115
+              )
+            ),
+            0,
+            100
+          )
       } else {
         enemyHp =
           Math.max(
             1,
             enemyHp - damage
           )
+
+        enemyRage =
+          clamp(
+            enemyRage +
+            Math.max(
+              6,
+              Math.round(
+                damage /
+                Math.max(
+                  1,
+                  enemyMax
+                ) *
+                115
+              )
+            ),
+            0,
+            100
+          )
+      }
+
+      if (rage) {
+        if (actor === 'player') {
+          playerRage = 0
+        } else {
+          enemyRage = 0
+        }
+      }
+
+      const counter =
+        (
+          block ||
+          dodge
+        ) &&
+        random() <
+          defenderStats.counter
+
+      const combo =
+        !dodge &&
+        !block &&
+        !counter &&
+        random() <
+          attackerStats.combo
+
+      const disarm =
+        !dodge &&
+        !block &&
+        weapon?.key !== 'fists' &&
+        random() <
+          defenderStats.disarm
+
+      if (disarm) {
+        if (actor === 'player') {
+          playerWeapon =
+            GA_BRUTE_WEAPONS[0]
+        } else {
+          enemyWeapon =
+            GA_BRUTE_WEAPONS[0]
+        }
       }
 
       events.push({
@@ -1437,16 +1833,41 @@ export async function mountIdleGame(
         target,
         damage,
         dodge,
+        block,
+        counter,
+        combo,
+        disarm,
         crit,
-        weapon,
+        rage,
+        weapon:
+          weapon?.icon ||
+          '👊',
+        weaponLabel:
+          weapon?.label ||
+          'Poings',
         playerHp,
         enemyHp,
+        playerRage,
+        enemyRage,
       })
 
-      actor =
-        actor === 'player'
-          ? 'enemy'
-          : 'player'
+      if (counter) {
+        actor = target
+        comboCarry = true
+      } else if (combo) {
+        comboCarry = true
+      } else {
+        actor =
+          actor === 'player'
+            ? 'enemy'
+            : 'player'
+
+        comboCarry = false
+      }
+
+      if (comboCarry && random() < 0.18) {
+        // Keep the same fighter one extra time to make combos readable.
+      }
     }
 
     const finalActor =
@@ -1468,6 +1889,11 @@ export async function mountIdleGame(
       enemyHp = 0
     }
 
+    const finalWeapon =
+      finalActor === 'player'
+        ? playerWeapon
+        : enemyWeapon
+
     events.push({
       actor:
         finalActor,
@@ -1485,19 +1911,28 @@ export async function mountIdleGame(
           )
         ),
       dodge: false,
+      block: false,
+      counter: false,
+      combo: false,
+      disarm: false,
       crit: true,
+      rage: true,
       weapon:
-        weapons[
-          2 +
-          Math.floor(
-            random() *
-            (
-              weapons.length - 2
-            )
-          )
-        ],
+        finalWeapon?.icon ||
+        '👊',
+      weaponLabel:
+        finalWeapon?.label ||
+        'Poings',
       playerHp,
       enemyHp,
+      playerRage:
+        finalActor === 'player'
+          ? 0
+          : playerRage,
+      enemyRage:
+        finalActor === 'enemy'
+          ? 0
+          : enemyRage,
       knockout: true,
     })
 
@@ -1513,6 +1948,10 @@ export async function mountIdleGame(
         playerMax,
       enemyHp:
         enemyMax,
+      playerRage: 0,
+      enemyRage: 0,
+      playerStats,
+      enemyStats,
       lastEvent: null,
       log: [],
     }
@@ -1534,11 +1973,31 @@ export async function mountIdleGame(
         : enemyName
 
     if (event.dodge) {
-      return `${targetName} esquive l'attaque de ${actorName}`
+      return `${targetName} esquive ${event.weaponLabel || 'le coup'}`
+    }
+
+    if (event.block) {
+      return `${targetName} bloque et encaisse ${event.damage}`
+    }
+
+    if (event.counter) {
+      return `${targetName} déclenche une contre-attaque`
+    }
+
+    if (event.disarm) {
+      return `${targetName} désarme ${actorName}`
     }
 
     if (event.knockout) {
       return `${actorName} met ${targetName} K.O. !`
+    }
+
+    if (event.rage) {
+      return `${actorName} libère sa RAGE : ${event.damage}`
+    }
+
+    if (event.combo) {
+      return `${actorName} enchaîne : ${event.damage}`
     }
 
     if (event.crit) {
@@ -1585,6 +2044,16 @@ export async function mountIdleGame(
 
     combatReplay.enemyHp =
       event.enemyHp
+
+    combatReplay.playerRage =
+      number(
+        event.playerRage
+      )
+
+    combatReplay.enemyRage =
+      number(
+        event.enemyRage
+      )
 
     combatReplay.lastEvent =
       event
@@ -1856,7 +2325,17 @@ export async function mountIdleGame(
         ? 'attacking'
         : '',
       last?.target === 'player'
-        ? 'hit'
+        ? (
+          last?.dodge
+            ? 'dodging'
+            : last?.block
+              ? 'blocking'
+              : 'hit'
+        )
+        : '',
+      last?.rage &&
+      last?.actor === 'player'
+        ? 'raging'
         : '',
       playerHp <= 0
         ? 'ko'
@@ -1870,7 +2349,17 @@ export async function mountIdleGame(
         ? 'attacking'
         : '',
       last?.target === 'enemy'
-        ? 'hit'
+        ? (
+          last?.dodge
+            ? 'dodging'
+            : last?.block
+              ? 'blocking'
+              : 'hit'
+        )
+        : '',
+      last?.rage &&
+      last?.actor === 'enemy'
+        ? 'raging'
         : '',
       enemyHp <= 0
         ? 'ko'
@@ -1913,9 +2402,17 @@ export async function mountIdleGame(
           ? (
             last?.dodge
               ? 'ESQUIVE !'
-              : last?.crit
-                ? 'COUP CRITIQUE !'
-                : 'COMBAT !'
+              : last?.block
+                ? 'BLOQUÉ !'
+                : last?.counter
+                  ? 'CONTRE !'
+                  : last?.rage
+                    ? 'RAGE !'
+                    : last?.combo
+                      ? 'ENCHAÎNEMENT !'
+                      : last?.crit
+                        ? 'COUP CRITIQUE !'
+                        : 'COMBAT !'
           )
           : combatReplay?.done
             ? (
@@ -1944,6 +2441,18 @@ export async function mountIdleGame(
               ${Math.max(0, playerHp)} / ${playerMax}
               · PWR ${playerPower}
             </div>
+
+            <div class="idle-brute-rage-v1">
+              <span
+                style="width:${clamp(
+                  combatReplay?.mode === mode
+                    ? combatReplay.playerRage
+                    : 0,
+                  0,
+                  100
+                )}%"
+              ></span>
+            </div>
           </div>
 
           <div class="idle-brute-round-v1">
@@ -1965,6 +2474,18 @@ export async function mountIdleGame(
             <div class="idle-brute-hp-number-v1">
               ${Math.max(0, enemyHp)} / ${enemyMax}
               · PWR ${enemyPower}
+            </div>
+
+            <div class="idle-brute-rage-v1">
+              <span
+                style="width:${clamp(
+                  combatReplay?.mode === mode
+                    ? combatReplay.enemyRage
+                    : 0,
+                  0,
+                  100
+                )}%"
+              ></span>
             </div>
           </div>
         </div>
@@ -1992,10 +2513,16 @@ export async function mountIdleGame(
 
             ${last?.target === 'player'
               ? `
-                <div class="idle-brute-damage-v1 ${last.dodge ? 'dodge' : ''} ${last.crit ? 'crit' : ''}">
+                <div class="idle-brute-damage-v1 ${last.dodge ? 'dodge' : ''} ${last.block ? 'block' : ''} ${last.counter ? 'counter' : ''} ${last.crit ? 'crit' : ''} ${last.rage ? 'rage' : ''}">
                   ${last.dodge
                     ? 'ESQUIVE'
-                    : `-${last.damage}`}
+                    : last.block
+                      ? `BLOQUE -${last.damage}`
+                      : last.counter
+                        ? 'CONTRE'
+                        : last.rage
+                          ? `RAGE -${last.damage}`
+                          : `-${last.damage}`}
                 </div>
               `
               : ''}
@@ -2035,10 +2562,16 @@ export async function mountIdleGame(
 
             ${last?.target === 'enemy'
               ? `
-                <div class="idle-brute-damage-v1 ${last.dodge ? 'dodge' : ''} ${last.crit ? 'crit' : ''}">
+                <div class="idle-brute-damage-v1 ${last.dodge ? 'dodge' : ''} ${last.block ? 'block' : ''} ${last.counter ? 'counter' : ''} ${last.crit ? 'crit' : ''} ${last.rage ? 'rage' : ''}">
                   ${last.dodge
                     ? 'ESQUIVE'
-                    : `-${last.damage}`}
+                    : last.block
+                      ? `BLOQUE -${last.damage}`
+                      : last.counter
+                        ? 'CONTRE'
+                        : last.rage
+                          ? `RAGE -${last.damage}`
+                          : `-${last.damage}`}
                 </div>
               `
               : ''}
@@ -2103,9 +2636,10 @@ export async function mountIdleGame(
           </h3>
 
           <p style="margin:0 0 12px;color:#858da9;font-size:10px;line-height:1.6">
-            Le duel se joue tout seul : déplacements, coups,
-            esquives, critiques et K.O. Ta puissance vient
-            uniquement de tes séances, de tes pas et de ton sommeil.
+            Le duel se joue tout seul : initiative, armes,
+            esquives, blocages, contres, enchaînements, rage,
+            critiques et K.O. Force = entraînement, agilité =
+            steps, vitalité/récupération = sommeil.
           </p>
 
           <div class="idle-power-row-v1" style="margin:0 0 12px">
@@ -2127,6 +2661,10 @@ export async function mountIdleGame(
               <span>Défaites</span>
             </div>
           </div>
+
+          ${renderBruteSheet(
+            current
+          )}
 
           <button
             type="button"
@@ -2183,10 +2721,10 @@ export async function mountIdleGame(
           </h3>
 
           <p style="margin:0 0 12px;color:#858da9;font-size:10px;line-height:1.6">
-            Duel automatique façon My Brute :
-            les deux athlètes se frappent sans commande manuelle,
-            avec esquives, critiques et objets improvisés.
-            Le résultat serveur reste basé sur les données réelles.
+            Duel automatique façon brute arena :
+            initiative, armes, esquive, blocage, contre-attaque,
+            combo, désarmement et jauge de rage. Le résultat reste
+            calculé à partir des données réelles des deux athlètes.
           </p>
 
           <div class="idle-power-row-v1" style="margin:0 0 12px">
@@ -2218,6 +2756,10 @@ export async function mountIdleGame(
               <span>Cote</span>
             </div>
           </div>
+
+          ${renderBruteSheet(
+            current
+          )}
 
           <button
             type="button"
