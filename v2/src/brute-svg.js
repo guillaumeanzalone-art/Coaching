@@ -25,6 +25,84 @@ function safeColor(value, fallback) {
     : fallback
 }
 
+function mixColor(value, target, amount = .5) {
+  const expand = input => {
+    const raw =
+      String(input || '')
+        .replace('#','')
+        .slice(0,6)
+
+    if (raw.length === 3) {
+      return raw
+        .split('')
+        .map(char => char + char)
+        .join('')
+    }
+
+    return raw.padEnd(6,'0')
+  }
+
+  const from = expand(value)
+  const to = expand(target)
+  const ratio =
+    Math.max(
+      0,
+      Math.min(
+        1,
+        Number(amount) || 0
+      )
+    )
+
+  const channel = offset => {
+    const a =
+      parseInt(
+        from.slice(
+          offset,
+          offset + 2
+        ),
+        16
+      )
+
+    const b =
+      parseInt(
+        to.slice(
+          offset,
+          offset + 2
+        ),
+        16
+      )
+
+    return Math.round(
+      a +
+      (
+        b - a
+      ) *
+      ratio
+    )
+      .toString(16)
+      .padStart(2,'0')
+  }
+
+  return '#'+
+    channel(0)+
+    channel(2)+
+    channel(4)
+}
+
+function hairSheenSvg(style, color) {
+  if (
+    idx(
+      style,
+      BRUTE_PARTS.hairs.length
+    ) === 5
+  ) {
+    return ''
+  }
+
+  return '<path d="M129 61 Q157 45 187 58" fill="none" stroke="'+color+'" stroke-width="5" stroke-linecap="round" opacity=".42"/>'+
+    '<path d="M136 72 Q157 61 177 68" fill="none" stroke="'+color+'" stroke-width="3" stroke-linecap="round" opacity=".26"/>'
+}
+
 function normalizeAppearance(input = {}) {
   const colors =
     Array.isArray(input.colors)
@@ -442,6 +520,55 @@ export function renderBruteSvg(
       '#111827'
     )
 
+  const skinShadow =
+    mixColor(
+      skin,
+      '#5a2f28',
+      .34
+    )
+
+  const skinHighlight =
+    mixColor(
+      skin,
+      '#ffffff',
+      .34
+    )
+
+  const hairHighlight =
+    mixColor(
+      hair,
+      '#ffffff',
+      .32
+    )
+
+  const primaryHighlight =
+    mixColor(
+      primary,
+      '#ffffff',
+      .28
+    )
+
+  const primaryShadow =
+    mixColor(
+      primary,
+      '#000000',
+      .25
+    )
+
+  const secondaryHighlight =
+    mixColor(
+      secondary,
+      '#ffffff',
+      .24
+    )
+
+  const shoe =
+    mixColor(
+      secondary,
+      '#ffffff',
+      .58
+    )
+
   const center = 160
 
   const torsoX =
@@ -526,12 +653,12 @@ export function renderBruteSvg(
 
       '<g class="brute-limb brute-leg brute-leg-left" data-brute-part="leg-left">'+
         '<path d="M'+(center-metrics.thighW-4)+' 282 L'+(center-5)+' 282 L'+(center-10)+' 341 L'+(center-metrics.thighW-7)+' 341Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-        '<path d="M'+(center-metrics.thighW-15)+' 335 Q'+(center-metrics.thighW+4)+' 325 '+(center-7)+' 336 L'+(center-9)+' 354 L'+(center-metrics.thighW-20)+' 354 Q'+(center-metrics.thighW-27)+' 344 '+(center-metrics.thighW-15)+' 335Z" fill="#f4ead2" stroke="#171717" stroke-width="5"/>'+
+        '<path d="M'+(center-metrics.thighW-15)+' 335 Q'+(center-metrics.thighW+4)+' 325 '+(center-7)+' 336 L'+(center-9)+' 354 L'+(center-metrics.thighW-20)+' 354 Q'+(center-metrics.thighW-27)+' 344 '+(center-metrics.thighW-15)+' 335Z" fill="'+shoe+'" stroke="#171717" stroke-width="5"/>'+
       '</g>'+
 
       '<g class="brute-limb brute-leg brute-leg-right" data-brute-part="leg-right">'+
         '<path d="M'+(center+5)+' 282 L'+(center+metrics.thighW+4)+' 282 L'+(center+metrics.thighW+7)+' 341 L'+(center+10)+' 341Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-        '<path d="M'+(center+8)+' 336 Q'+(center+metrics.thighW-4)+' 325 '+(center+metrics.thighW+15)+' 335 Q'+(center+metrics.thighW+27)+' 344 '+(center+metrics.thighW+20)+' 354 L'+(center+9)+' 354Z" fill="#f4ead2" stroke="#171717" stroke-width="5"/>'+
+        '<path d="M'+(center+8)+' 336 Q'+(center+metrics.thighW-4)+' 325 '+(center+metrics.thighW+15)+' 335 Q'+(center+metrics.thighW+27)+' 344 '+(center+metrics.thighW+20)+' 354 L'+(center+9)+' 354Z" fill="'+shoe+'" stroke="#171717" stroke-width="5"/>'+
       '</g>'+
 
       '<g class="brute-bottom" data-brute-part="bottom">'+
@@ -541,24 +668,27 @@ export function renderBruteSvg(
           secondary,
           bodyId
         )+
+        '<path d="M119 279 L150 279 M170 279 L201 279" stroke="'+secondaryHighlight+'" stroke-width="3.5" stroke-linecap="round" opacity=".34"/>'+
       '</g>'+
 
       '<g class="brute-limb brute-arm brute-arm-left" data-brute-part="arm-left">'+
         '<path d="M'+armLeftX+' 187 Q'+(armLeftX-38-metrics.armW*.15)+' 192 '+(armLeftX-31)+' 238 Q'+(armLeftX-23)+' 261 '+(armLeftX-9)+' 249 L'+(armLeftX+metrics.armW)+' 204Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-        '<path d="M'+(armLeftX-30)+' 238 Q'+(armLeftX-16)+' 246 '+(armLeftX-8)+' 251" fill="none" stroke="#9d6a54" stroke-width="3" opacity=".45"/>'+
+        '<path d="M'+(armLeftX-30)+' 238 Q'+(armLeftX-16)+' 246 '+(armLeftX-8)+' 251" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".45"/>'+
         '<circle cx="'+(armLeftX-26)+'" cy="249" r="'+Math.max(14,metrics.armW*.58)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
       '</g>'+
 
       '<g class="brute-limb brute-arm brute-arm-right" data-brute-part="arm-right">'+
         '<path d="M'+armRightX+' 187 Q'+(armRightX+38+metrics.armW*.15)+' 192 '+(armRightX+31)+' 238 Q'+(armRightX+23)+' 261 '+(armRightX+9)+' 249 L'+(armRightX-metrics.armW)+' 204Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-        '<path d="M'+(armRightX+30)+' 238 Q'+(armRightX+16)+' 246 '+(armRightX+8)+' 251" fill="none" stroke="#9d6a54" stroke-width="3" opacity=".45"/>'+
+        '<path d="M'+(armRightX+30)+' 238 Q'+(armRightX+16)+' 246 '+(armRightX+8)+' 251" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".45"/>'+
         '<circle cx="'+(armRightX+26)+'" cy="249" r="'+Math.max(14,metrics.armW*.58)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
       '</g>'+
 
       '<g class="brute-torso" data-brute-part="torso">'+
         '<path d="M'+torsoX+' 180 Q'+center+' 145 '+torsoRight+' 180 Q'+(torsoRight-2)+' 227 '+waistRight+' '+torsoBottom+' L'+waistLeft+' '+torsoBottom+' Q'+(torsoX+2)+' 227 '+torsoX+' 180Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-        '<path d="M'+(torsoX+12)+' 188 Q'+center+' 171 '+(torsoRight-12)+' 188" fill="none" stroke="#a66e56" stroke-width="3.5" opacity=".45"/>'+
-        '<path d="M'+center+' 189 L'+center+' '+(torsoBottom-7)+'" stroke="#a66e56" stroke-width="3" opacity=".3"/>'+
+        '<path d="M'+(torsoX+12)+' 188 Q'+center+' 171 '+(torsoRight-12)+' 188" fill="none" stroke="'+skinShadow+'" stroke-width="3.5" opacity=".45"/>'+
+        '<path d="M'+center+' 189 L'+center+' '+(torsoBottom-7)+'" stroke="'+skinShadow+'" stroke-width="3" opacity=".3"/>'+
+        '<path d="M'+(torsoX+18)+' 198 Q'+(torsoX+28)+' 211 '+(torsoX+23)+' 231 M'+(torsoRight-18)+' 198 Q'+(torsoRight-28)+' 211 '+(torsoRight-23)+' 231" fill="none" stroke="'+skinShadow+'" stroke-width="2.4" opacity=".25"/>'+
+        '<path d="M'+(torsoX+20)+' 184 Q'+center+' 165 '+(torsoRight-20)+' 184" fill="none" stroke="'+skinHighlight+'" stroke-width="3" opacity=".25"/>'+
         topSvg(
           a.top,
           primary,
@@ -568,10 +698,17 @@ export function renderBruteSvg(
           metrics.shoulder,
           torsoBottom
         )+
+        (
+          a.top !== 3
+            ? '<path d="M'+(torsoX+14)+' 188 Q'+center+' 171 '+(torsoRight-14)+' 188" fill="none" stroke="'+primaryHighlight+'" stroke-width="4" opacity=".34"/>'+
+              '<path d="M'+(waistLeft+8)+' '+(torsoBottom-9)+' L'+(waistRight-8)+' '+(torsoBottom-9)+'" stroke="'+primaryShadow+'" stroke-width="4" opacity=".28"/>'
+            : ''
+        )+
       '</g>'+
 
       '<g class="brute-neck" data-brute-part="neck">'+
         '<rect x="'+neckX+'" y="139" width="'+metrics.neckW+'" height="45" rx="12" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+        '<path d="M'+(neckX+5)+' 149 Q'+center+' 159 '+(neckX+metrics.neckW-5)+' 149" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".28"/>'+
       '</g>'+
 
       '<g class="brute-head" data-brute-part="head" transform="'+headTransform+'">'+
@@ -579,14 +716,17 @@ export function renderBruteSvg(
           a.head,
           skin
         )+
+        '<path d="M122 122 Q133 146 153 151 M198 122 Q187 146 167 151" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".26"/>'+
+        '<path d="M126 77 Q146 61 166 62" fill="none" stroke="'+skinHighlight+'" stroke-width="4" stroke-linecap="round" opacity=".28"/>'+
         '<path d="M112 106 Q99 100 101 118 Q105 132 117 128 M208 106 Q221 100 219 118 Q215 132 203 128" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+        '<path d="M105 113 Q111 110 115 119 M215 113 Q209 110 205 119" fill="none" stroke="'+skinShadow+'" stroke-width="2.5" opacity=".4"/>'+
         '<g data-brute-part="eyes">'+
           eyesSvg(a.eyes)+
         '</g>'+
         '<g data-brute-part="nose">'+
           noseSvg(
             a.nose,
-            '#8b5a45'
+            skinShadow
           )+
         '</g>'+
         '<g data-brute-part="mouth">'+
@@ -608,6 +748,10 @@ export function renderBruteSvg(
           hairSvg(
             a.hair,
             hair
+          )+
+          hairSheenSvg(
+            a.hair,
+            hairHighlight
           )+
         '</g>'+
       '</g>'+
