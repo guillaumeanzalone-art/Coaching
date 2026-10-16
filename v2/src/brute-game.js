@@ -7,6 +7,7 @@ import {
   BRUTE_WEAPONS,
   BRUTE_SKILLS,
   BRUTE_PETS,
+  OPENPOWERLIFTING_FFFORCE_RIVALS,
   DEFAULT_APPEARANCE,
   getBruteTheme,
   randomAppearance,
@@ -839,36 +840,231 @@ export async function mountBruteGame(root, options = {}) {
       '</section>'
   }
 
+  function normalizedRivalScore(rival) {
+    if (rival.metric === 'GLP') {
+      return Math.max(
+        0,
+        Math.min(
+          1,
+          (
+            num(rival.points,75) -
+            75
+          ) / 30
+        )
+      )
+    }
+
+    return Math.max(
+      0,
+      Math.min(
+        1,
+        (
+          num(rival.points,400) -
+          400
+        ) / 150
+      )
+    )
+  }
+
   function pveOpponent(seed) {
-    const random = createSeededRandom(seed)
-    const level = Math.max(1,brute.level + Math.floor(random()*5)-2)
+    const random =
+      createSeededRandom(seed)
+
+    const roster =
+      OPENPOWERLIFTING_FFFORCE_RIVALS
+
+    const maxIndex =
+      Math.min(
+        roster.length - 1,
+        5 +
+        Math.max(
+          1,
+          num(brute.level,1)
+        ) * 2
+      )
+
+    const rival =
+      roster[
+        Math.floor(
+          random() *
+          Math.max(
+            1,
+            maxIndex + 1
+          )
+        )
+      ] ||
+      roster[0]
+
+    const rankFactor =
+      normalizedRivalScore(
+        rival
+      )
+
+    const levelShift =
+      random() < .56
+        ? -1
+        : random() < .82
+          ? 0
+          : 1
+
+    const level =
+      Math.max(
+        1,
+        num(brute.level,1) +
+        levelShift
+      )
+
+    const pveScale =
+      .70 +
+      rankFactor * .10
+
+    const strengthBias =
+      (
+        num(rival.squat,200) +
+        num(rival.deadlift,220) -
+        420
+      ) / 220
+
+    const agilityBias =
+      (
+        95 -
+        num(rival.bodyweight,85)
+      ) / 28
+
+    const speedBias =
+      (
+        rankFactor -
+        .45
+      ) * 2.1
+
+    const strength =
+      Math.max(
+        5,
+        Math.round(
+          num(brute.strength,10) *
+          pveScale +
+          strengthBias
+        )
+      )
+
+    const agility =
+      Math.max(
+        5,
+        Math.round(
+          num(brute.agility,10) *
+          pveScale +
+          agilityBias
+        )
+      )
+
+    const speed =
+      Math.max(
+        5,
+        Math.round(
+          num(brute.speed,10) *
+          pveScale +
+          speedBias
+        )
+      )
+
+    const hp =
+      Math.max(
+        58,
+        Math.round(
+          num(brute.hp,100) *
+          (
+            .72 +
+            rankFactor * .08
+          )
+        )
+      )
+
+    const weaponRoll =
+      random()
+
+    const weapon =
+      weaponRoll > .82
+        ? 'plate20'
+        : weaponRoll > .55
+          ? 'kettlebell'
+          : 'fists'
+
     return {
-      slug:'rack-beast-'+seed,
-      name:['Le Spotter Sauvage','Le Rack Possédé','Le Démon du Deload','La Barre Maudite'][Math.floor(random()*4)],
+      slug:
+        'openpower-'+
+        seed,
+      name:rival.name,
       level,
-      hp:90+level*5+Math.floor(random()*20),
-      strength:9+Math.floor(level*.75)+Math.floor(random()*4),
-      agility:9+Math.floor(level*.65)+Math.floor(random()*4),
-      speed:9+Math.floor(level*.7)+Math.floor(random()*4),
-      weapons:['fists','kettlebell','plate20'].slice(0,1+Math.floor(random()*3)),
-      skills:random()>.62?['lockout']:[],
+      hp,
+      strength,
+      agility,
+      speed,
+      weapons:
+        weapon === 'fists'
+          ? ['fists']
+          : [
+              weapon,
+              'fists',
+            ],
+      skills:
+        rankFactor > .78 &&
+        random() > .76
+          ? ['lockout']
+          : [],
       pets:[],
-      appearance:randomAppearance(random),
+      appearance:
+        randomAppearance(
+          random
+        ),
       activity:{
-        training_score:35+Math.floor(random()*56),
-        steps_score:35+Math.floor(random()*56),
-        sleep_score:35+Math.floor(random()*56),
-        power:120+Math.floor(random()*180),
+        training_score:
+          22 +
+          Math.floor(
+            random() * 30
+          ),
+        steps_score:
+          18 +
+          Math.floor(
+            random() * 34
+          ),
+        sleep_score:
+          18 +
+          Math.floor(
+            random() * 34
+          ),
+        power:
+          70 +
+          Math.floor(
+            rankFactor * 55
+          ),
       },
-      loadout:{weapon:random()>.55?'kettlebell':'fists'},
+      loadout:{
+        weapon,
+      },
+      openpowerlifting:{
+        total:
+          rival.total,
+        squat:
+          rival.squat,
+        bench:
+          rival.bench,
+        deadlift:
+          rival.deadlift,
+        metric:
+          rival.metric,
+        points:
+          rival.points,
+        bodyweight:
+          rival.bodyweight,
+      },
     }
   }
 
   function renderPve() {
     return topBar('PvE','Entraînement')+
       '<section class="brute-panel brute-pad" style="text-align:center">'+
-        '<div style="font-size:54px">👹</div><h2>Combat d’entraînement</h2>'+
-        '<p style="max-width:560px;margin:0 auto;color:#858ca8;font-size:10px;line-height:1.6">Même moteur déterministe que le Duel, mais sans consommer tes 6 combats et sans modifier ton classement. Parfait pour tester ton build.</p>'+
+        '<div style="font-size:54px">🏋️</div><h2>OpenPower PvE</h2>'+
+        '<p style="max-width:620px;margin:0 auto;color:#858ca8;font-size:10px;line-height:1.6">Tu affrontes des profils générés à partir de noms et performances FFForce présents dans OpenPowerlifting. Les meilleurs GL Points / DOTS apparaissent progressivement, mais le PvE est volontairement plus accessible que le Duel.</p>'+
         '<div class="brute-actions" style="justify-content:center"><button class="brute-primary" data-brute-pve>⚔️ Lancer le combat</button></div>'+
       '</section>'
   }
