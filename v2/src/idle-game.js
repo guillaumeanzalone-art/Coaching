@@ -1,11 +1,45 @@
 import { supabase } from './supabase.js'
 
 const IDLE_TABS = new Set([
+  'menu',
   'camp',
   'sleep',
   'pve',
   'pvp',
+  'equipment',
 ])
+
+const IDLE_SCREEN_MUSIC = {
+  menu: '/main-menu.mp3',
+  camp: '/main-menu.mp3',
+  sleep: null,
+  pve: '/mobs-epiques.mp3',
+  pvp: '/combat-normal.mp3',
+  equipment: '/casino.mp3',
+}
+
+const IDLE_AVATAR_SKINS = [
+  { key: 'classic', label: 'Classique', icon: '🟤' },
+  { key: 'tan', label: 'Bronze', icon: '🟠' },
+  { key: 'night', label: 'Nocturne', icon: '🌑' },
+  { key: 'gold', label: 'Champion', icon: '🏆' },
+]
+
+const IDLE_AVATAR_OUTFITS = [
+  { key: 'rookie', label: 'Rookie', icon: '🥋' },
+  { key: 'power', label: 'Power', icon: '🏋️' },
+  { key: 'shadow', label: 'Shadow', icon: '🥷' },
+  { key: 'ronin', label: 'Ronin', icon: '⚔️' },
+  { key: 'sleep', label: 'Dreamer', icon: '🌙' },
+]
+
+const IDLE_AVATAR_AURAS = [
+  { key: 'none', label: 'Aucune', icon: '⚪' },
+  { key: 'violet', label: 'Violet', icon: '🟣' },
+  { key: 'blue', label: 'Bleue', icon: '🔵' },
+  { key: 'gold', label: 'Or', icon: '🟡' },
+  { key: 'red', label: 'Rouge', icon: '🔴' },
+]
 
 const ENERGY_CAP = 500
 const SLEEP_TARGET_SECONDS = 8 * 60 * 60
@@ -416,6 +450,51 @@ function ensureStyle() {
     .idle-history-row-v1 em.win{color:#58dda8}.idle-history-row-v1 em.loss{color:#ff748b}
     .idle-busy-v1{opacity:.56;pointer-events:none}
     @keyframes idleMoonFloat{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+
+    .idle-title-v2{position:relative;min-height:640px;overflow:hidden;border:1px solid rgba(255,236,173,.22);border-radius:26px;background:
+      radial-gradient(circle at 50% 14%,rgba(255,249,194,.72),transparent 25%),
+      radial-gradient(circle at 10% 42%,rgba(79,166,191,.24),transparent 26%),
+      linear-gradient(180deg,#8bc9d8 0 25%,#d9c58b 25% 31%,#c69a55 31% 100%);box-shadow:0 28px 80px rgba(0,0,0,.34)}
+    .idle-title-v2:before{content:"";position:absolute;inset:0;pointer-events:none;background:
+      linear-gradient(90deg,rgba(65,66,73,.38) 0 4%,transparent 4% 96%,rgba(65,66,73,.38) 96%),
+      linear-gradient(180deg,transparent 0 66%,rgba(104,64,28,.17) 66%);
+      opacity:.42}
+    .idle-title-logo-v2{position:relative;z-index:3;width:max-content;max-width:88%;margin:18px auto 0;padding:10px 24px;border:4px solid #7c431d;border-radius:8px;background:linear-gradient(180deg,#e9bc67,#c77d32);box-shadow:inset 0 0 0 3px #f7d98f,0 8px 0 #6b3619,0 14px 26px rgba(72,36,13,.3);color:#5c2a17;font-size:clamp(31px,6vw,58px);font-weight:1000;letter-spacing:.06em;text-shadow:2px 2px 0 #f6dd9a,-1px -1px 0 #f6dd9a;transform:rotate(-1deg)}
+    .idle-title-sub-v2{position:relative;z-index:3;text-align:center;margin:11px 0 0;color:#64391f;font-size:10px;font-weight:1000;letter-spacing:.18em;text-transform:uppercase}
+    .idle-title-scene-v2{position:relative;z-index:2;display:grid;grid-template-columns:minmax(190px,.75fr) minmax(240px,1fr) minmax(190px,.75fr);gap:16px;align-items:center;min-height:480px;padding:22px 28px 28px}
+    .idle-title-menu-side-v2{display:grid;gap:13px}
+    .idle-title-menu-side-v2.right{align-self:stretch;align-content:center}
+    .idle-wood-btn-v2{position:relative;border:3px solid #713d1f;border-radius:8px;padding:13px 13px;background:linear-gradient(180deg,#b86b32,#80401f);box-shadow:inset 0 0 0 2px rgba(255,220,145,.34),0 5px 0 #552914,0 9px 18px rgba(73,35,14,.2);color:#fff3ba;font-size:12px;font-weight:1000;letter-spacing:.07em;text-shadow:0 2px 0 #4e2412;cursor:pointer;transition:transform .14s ease,filter .14s ease}
+    .idle-wood-btn-v2:hover,.idle-wood-btn-v2.active{transform:translateY(-2px) rotate(-.4deg);filter:brightness(1.08)}
+    .idle-wood-btn-v2 small{display:block;margin-top:3px;color:#f0cf8b;font-size:8px;letter-spacing:.02em}
+    .idle-title-avatar-card-v2{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:415px}
+    .idle-title-avatar-name-v2{margin-top:5px;padding:7px 16px;border:3px solid #74431f;border-radius:8px;background:#f2dda7;color:#6f3b1e;font-weight:1000;letter-spacing:.07em;box-shadow:0 4px 0 rgba(96,49,23,.28)}
+    .idle-brute-avatar-v2{--skin:#d7a06c;--outfit:#4e5b72;--accent:#eacb72;position:relative;width:210px;height:290px;filter:drop-shadow(0 18px 15px rgba(72,40,20,.28))}
+    .idle-brute-avatar-v2.skin-tan{--skin:#b96f42}.idle-brute-avatar-v2.skin-night{--skin:#4d536b}.idle-brute-avatar-v2.skin-gold{--skin:#d9b34c}
+    .idle-brute-avatar-v2.outfit-power{--outfit:#7d262f;--accent:#e7a02f}.idle-brute-avatar-v2.outfit-shadow{--outfit:#252b3f;--accent:#6f57c9}.idle-brute-avatar-v2.outfit-ronin{--outfit:#5e2329;--accent:#d5b45e}.idle-brute-avatar-v2.outfit-sleep{--outfit:#545683;--accent:#b4a8ff}
+    .idle-brute-avatar-aura-v2{position:absolute;left:50%;top:48%;width:178px;height:236px;transform:translate(-50%,-50%);border-radius:48%;filter:blur(18px);opacity:.42;pointer-events:none}
+    .idle-brute-avatar-aura-v2.violet{background:#7452ff}.idle-brute-avatar-aura-v2.blue{background:#3fb5ff}.idle-brute-avatar-aura-v2.gold{background:#ffd65d}.idle-brute-avatar-aura-v2.red{background:#ff4d4d}
+    .idle-brute-avatar-body-v2{position:absolute;left:50%;bottom:25px;width:118px;height:154px;transform:translateX(-50%);border:4px solid #432a1b;border-radius:50px 50px 28px 28px;background:linear-gradient(90deg,color-mix(in srgb,var(--outfit),#000 14%),var(--outfit) 48%,color-mix(in srgb,var(--outfit),#fff 9%));box-shadow:inset 0 -17px rgba(0,0,0,.12)}
+    .idle-brute-avatar-body-v2:before,.idle-brute-avatar-body-v2:after{content:"";position:absolute;top:36px;width:40px;height:112px;border:4px solid #432a1b;border-radius:24px;background:var(--skin);z-index:-1}
+    .idle-brute-avatar-body-v2:before{left:-32px;transform:rotate(13deg)}.idle-brute-avatar-body-v2:after{right:-32px;transform:rotate(-13deg)}
+    .idle-brute-avatar-belt-v2{position:absolute;left:50%;bottom:72px;width:122px;height:21px;transform:translateX(-50%);border:4px solid #432a1b;border-radius:9px;background:var(--accent);z-index:3}
+    .idle-brute-avatar-leg-v2{position:absolute;bottom:0;width:45px;height:83px;border:4px solid #432a1b;border-radius:20px 20px 13px 13px;background:#25273a}.idle-brute-avatar-leg-v2.left{left:54px;transform:rotate(5deg)}.idle-brute-avatar-leg-v2.right{right:54px;transform:rotate(-5deg)}
+    .idle-brute-avatar-shoe-v2{position:absolute;bottom:-1px;width:68px;height:28px;border:4px solid #432a1b;border-radius:20px 20px 10px 10px;background:#ece8d5}.idle-brute-avatar-shoe-v2.left{left:32px}.idle-brute-avatar-shoe-v2.right{right:32px}
+    .idle-brute-avatar-head-v2{position:absolute;z-index:5;left:50%;top:17px;width:116px;height:116px;transform:translateX(-50%);overflow:hidden;border:5px solid #432a1b;border-radius:48% 48% 44% 44%;background:var(--skin);box-shadow:inset 0 -8px rgba(0,0,0,.08),0 5px 0 rgba(255,232,164,.26)}
+    .idle-brute-avatar-head-v2 img{width:100%;height:100%;object-fit:cover;object-position:center 23%;transform:scale(1.08)}
+    .idle-brute-avatar-fallback-v2{width:100%;height:100%;display:grid;place-items:center;font-size:52px}
+    .idle-brute-avatar-weapon-v2{position:absolute;z-index:7;right:18px;bottom:71px;font-size:42px;transform:rotate(-18deg);filter:drop-shadow(0 3px 2px rgba(0,0,0,.22))}
+    .idle-title-stats-v2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:min(340px,100%);margin-top:10px}
+    .idle-title-stat-v2{padding:7px 5px;border:2px solid rgba(103,56,26,.38);border-radius:7px;background:rgba(255,242,190,.58);text-align:center;color:#6d3d1e}.idle-title-stat-v2 b{display:block;font-size:14px}.idle-title-stat-v2 span{font-size:7px;font-weight:1000;text-transform:uppercase}
+    .idle-title-footer-v2{position:absolute;z-index:5;right:12px;bottom:10px;display:flex;gap:7px}
+    .idle-title-mini-v2{border:2px solid #764322;border-radius:8px;padding:8px 10px;background:#f3dda2;color:#6b391c;font-size:9px;font-weight:1000;cursor:pointer}
+    .idle-section-top-v2{display:flex;gap:9px;align-items:center;margin-bottom:11px}.idle-section-top-v2 .idle-back-v1{flex:0 0 auto}.idle-section-top-v2 strong{font-size:14px}.idle-section-top-v2 small{display:block;color:#797f9a;font-size:9px;margin-top:2px}
+    .idle-equipment-v2{display:grid;grid-template-columns:minmax(230px,.8fr) minmax(0,1.2fr);gap:12px}
+    .idle-equipment-avatar-v2{min-height:410px;display:grid;place-items:center;padding:18px;background:radial-gradient(circle at 50% 34%,rgba(123,90,255,.2),transparent 36%),#0b0f25}
+    .idle-equip-group-v2{margin-bottom:15px}.idle-equip-group-v2 h4{margin:0 0 7px;font-size:10px;color:#aaa5c9;text-transform:uppercase;letter-spacing:.09em}
+    .idle-equip-options-v2{display:flex;gap:7px;flex-wrap:wrap}
+    .idle-equip-option-v2{border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:9px 11px;background:rgba(255,255,255,.035);color:#c9cadb;font-size:10px;font-weight:900;cursor:pointer}.idle-equip-option-v2.active{color:#fff;border-color:rgba(255,206,92,.55);background:rgba(255,195,60,.11)}.idle-equip-option-v2:disabled{opacity:.35;cursor:not-allowed}
+    .idle-equip-option-v2 small{display:block;margin-top:2px;font-size:7px;color:#7b829d}
     @media(max-width:760px){
       .idle-grid-v1,.idle-sleep-v1{grid-template-columns:1fr}
       .idle-page-v1{padding:12px}
@@ -438,6 +517,14 @@ function ensureStyle() {
       .idle-brute-name-v1{font-size:9px}
       .idle-brute-log-line-v1{max-width:48%;font-size:7px}
       .idle-brute-damage-v1{top:20%;font-size:13px}
+      .idle-title-v2{min-height:0}
+      .idle-title-scene-v2{grid-template-columns:1fr;padding:16px;min-height:0}
+      .idle-title-menu-side-v2{grid-template-columns:1fr 1fr}
+      .idle-title-menu-side-v2.right{grid-template-columns:1fr 1fr}
+      .idle-title-avatar-card-v2{order:-1;min-height:335px}
+      .idle-brute-avatar-v2{transform:scale(.88);margin:-16px 0}
+      .idle-title-footer-v2{position:static;justify-content:center;padding:0 0 14px}
+      .idle-equipment-v2{grid-template-columns:1fr}
     }
   `
 
@@ -676,8 +763,9 @@ export async function mountIdleGame(
       options.initialSlug || ''
     )
 
-  let activeTab = 'camp'
+  let activeTab = 'menu'
   let snapshot = null
+  let avatarProfile = null
   let history = []
   let manifest = []
   let battle = null
@@ -686,6 +774,14 @@ export async function mountIdleGame(
   let busy = false
   let notice = ''
   let sleepTicker = null
+  let screenMusic = null
+  let musicEnabled = (() => {
+    try {
+      return localStorage.getItem('ga-idle-music-v2') !== 'off'
+    } catch {
+      return true
+    }
+  })()
 
   const ambient =
     createAmbientEngine()
@@ -726,8 +822,84 @@ export async function mountIdleGame(
     )
   }
 
+  function stopScreenMusic() {
+    if (!screenMusic) {
+      return
+    }
+
+    try {
+      screenMusic.pause()
+      screenMusic.currentTime = 0
+    } catch {
+      // Cosmetic audio only.
+    }
+
+    screenMusic = null
+  }
+
+  function syncScreenMusic(force = false) {
+    const src =
+      IDLE_SCREEN_MUSIC[
+        activeTab
+      ]
+
+    if (
+      !musicEnabled ||
+      !src ||
+      activeTab === 'sleep'
+    ) {
+      stopScreenMusic()
+      return
+    }
+
+    if (
+      !force &&
+      screenMusic &&
+      screenMusic.dataset?.src === src
+    ) {
+      return
+    }
+
+    stopScreenMusic()
+
+    try {
+      const audio =
+        new Audio(src)
+
+      audio.loop = true
+      audio.volume = 0.18
+      audio.dataset.src = src
+      screenMusic = audio
+      void audio.play().catch(() => {})
+    } catch {
+      screenMusic = null
+    }
+  }
+
+  function setActiveTab(next, playMusic = true) {
+    if (!IDLE_TABS.has(next)) {
+      return
+    }
+
+    if (
+      activeTab !== 'sleep' &&
+      next === 'sleep'
+    ) {
+      stopScreenMusic()
+    }
+
+    activeTab = next
+
+    if (playMusic) {
+      syncScreenMusic()
+    }
+
+    render()
+  }
+
   function cleanup() {
     ambient.stop()
+    stopScreenMusic()
 
     if (sleepTicker) {
       clearInterval(sleepTicker)
@@ -804,6 +976,7 @@ export async function mountIdleGame(
     const [
       snapshotResult,
       historyResult,
+      avatarResult,
     ] = await Promise.all([
       supabase.rpc(
         'idle_get_snapshot_v1',
@@ -818,6 +991,13 @@ export async function mountIdleGame(
           p_athlete_slug:
             selectedSlug,
           p_limit: 8,
+        }
+      ),
+      supabase.rpc(
+        'idle_avatar_get_v1',
+        {
+          p_athlete_slug:
+            selectedSlug,
         }
       ),
       loadManifest(),
@@ -850,6 +1030,23 @@ export async function mountIdleGame(
           )
             ? historyResult.data
             : []
+        )
+
+    avatarProfile =
+      avatarResult.error
+        ? {
+            avatar_seed: 0,
+            avatar_skin: 'classic',
+            avatar_outfit: 'rookie',
+            avatar_weapon: 'fists',
+            avatar_aura: 'none',
+          }
+        : (
+          Array.isArray(
+            avatarResult.data
+          )
+            ? avatarResult.data[0]
+            : avatarResult.data
         )
 
     render()
@@ -933,6 +1130,396 @@ export async function mountIdleGame(
           </div>
         </section>
       </main>
+    `
+  }
+
+  function avatarHeadImage(
+    athlete = selectedAthlete()
+  ) {
+    return assetPath(
+      athlete?.profileImage ||
+      ''
+    )
+  }
+
+  function weaponMeta(key) {
+    return (
+      GA_BRUTE_WEAPONS.find(
+        weapon =>
+          weapon.key === key
+      ) ||
+      GA_BRUTE_WEAPONS[0]
+    )
+  }
+
+  function weaponUnlocked(
+    key,
+    source = snapshot || {}
+  ) {
+    const training =
+      metricPercent(
+        source.training_score
+      )
+
+    const sleep =
+      metricPercent(
+        source.sleep_score
+      )
+
+    if (key === 'fists') return true
+    if (key === 'belt') return training >= 25
+    if (key === 'shaker') return sleep >= 35
+    if (key === 'dumbbell') return training >= 45
+    if (key === 'bench') return training >= 70
+    if (key === 'hammer') return training >= 88
+    return false
+  }
+
+  function weaponRequirement(key) {
+    if (key === 'belt') return '25 % entraînement'
+    if (key === 'shaker') return '35 % sommeil'
+    if (key === 'dumbbell') return '45 % entraînement'
+    if (key === 'bench') return '70 % entraînement'
+    if (key === 'hammer') return '88 % entraînement'
+    return 'Débloqué'
+  }
+
+  function renderBruteAvatarV2(
+    athlete = selectedAthlete(),
+    profile = avatarProfile || {}
+  ) {
+    const image =
+      avatarHeadImage(
+        athlete
+      )
+
+    const skin =
+      profile.avatar_skin ||
+      'classic'
+
+    const outfit =
+      profile.avatar_outfit ||
+      'rookie'
+
+    const aura =
+      profile.avatar_aura ||
+      'none'
+
+    const selectedWeapon =
+      weaponMeta(
+        profile.avatar_weapon ||
+        'fists'
+      )
+
+    return `
+      <div class="idle-brute-avatar-v2 skin-${esc(skin)} outfit-${esc(outfit)}">
+        ${aura !== 'none'
+          ? `
+            <div class="idle-brute-avatar-aura-v2 ${esc(aura)}"></div>
+          `
+          : ''}
+
+        <div class="idle-brute-avatar-leg-v2 left"></div>
+        <div class="idle-brute-avatar-leg-v2 right"></div>
+        <div class="idle-brute-avatar-shoe-v2 left"></div>
+        <div class="idle-brute-avatar-shoe-v2 right"></div>
+        <div class="idle-brute-avatar-body-v2"></div>
+        <div class="idle-brute-avatar-belt-v2"></div>
+
+        <div class="idle-brute-avatar-head-v2">
+          ${image
+            ? `
+              <img
+                src="${esc(image)}"
+                alt=""
+                loading="eager"
+              >
+            `
+            : `
+              <div class="idle-brute-avatar-fallback-v2">
+                ${esc(
+                  athlete?.emoji ||
+                  '🏋️'
+                )}
+              </div>
+            `}
+        </div>
+
+        <div class="idle-brute-avatar-weapon-v2">
+          ${esc(
+            selectedWeapon.icon
+          )}
+        </div>
+      </div>
+    `
+  }
+
+  function renderTitleMenu() {
+    const athlete =
+      selectedAthlete()
+
+    const current =
+      snapshot || {}
+
+    const name =
+      athlete?.name ||
+      selectedSlug
+
+    return `
+      <section class="idle-title-v2">
+        <div class="idle-title-logo-v2">
+          GA BRUTE
+        </div>
+
+        <div class="idle-title-sub-v2">
+          TRAIN · WALK · SLEEP · FIGHT
+        </div>
+
+        <div class="idle-title-scene-v2">
+          <div class="idle-title-menu-side-v2">
+            <button
+              type="button"
+              class="idle-wood-btn-v2"
+              data-idle-tab="camp"
+            >
+              ⛺ CAMP
+              <small>Progression · énergie</small>
+            </button>
+
+            <button
+              type="button"
+              class="idle-wood-btn-v2"
+              data-idle-tab="pve"
+            >
+              ⚔️ PVE
+              <small>Expéditions automatiques</small>
+            </button>
+          </div>
+
+          <div class="idle-title-avatar-card-v2">
+            ${renderBruteAvatarV2(
+              athlete,
+              avatarProfile
+            )}
+
+            <div class="idle-title-avatar-name-v2">
+              ${esc(name)}
+            </div>
+
+            <div class="idle-title-stats-v2">
+              <div class="idle-title-stat-v2">
+                <b>${number(current.power,35)}</b>
+                <span>Puissance</span>
+              </div>
+
+              <div class="idle-title-stat-v2">
+                <b>${number(current.idle_energy)}</b>
+                <span>Énergie</span>
+              </div>
+
+              <div class="idle-title-stat-v2">
+                <b>${number(current.rank_points,1000)}</b>
+                <span>Cote Duel</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="idle-title-menu-side-v2 right">
+            <button
+              type="button"
+              class="idle-wood-btn-v2"
+              data-idle-tab="pvp"
+            >
+              🥊 DUEL
+              <small>Arène contre les athlètes</small>
+            </button>
+
+            <button
+              type="button"
+              class="idle-wood-btn-v2"
+              data-idle-tab="sleep"
+            >
+              🌙 SOMMEIL
+              <small>Récupération · ambiance</small>
+            </button>
+
+            <button
+              type="button"
+              class="idle-wood-btn-v2"
+              data-idle-tab="equipment"
+            >
+              🎒 ÉQUIPEMENT / SKIN
+              <small>Avatar · arme · aura</small>
+            </button>
+          </div>
+        </div>
+
+        <div class="idle-title-footer-v2">
+          <button
+            type="button"
+            class="idle-title-mini-v2"
+            data-idle-music
+          >
+            ${musicEnabled
+              ? '🔊 MUSIQUE'
+              : '🔇 MUSIQUE'}
+          </button>
+
+          <button
+            type="button"
+            class="idle-title-mini-v2"
+            data-idle-back
+          >
+            ← JEU
+          </button>
+        </div>
+      </section>
+    `
+  }
+
+  function renderEquipment() {
+    const current =
+      snapshot || {}
+
+    const profile =
+      avatarProfile || {
+        avatar_skin: 'classic',
+        avatar_outfit: 'rookie',
+        avatar_weapon: 'fists',
+        avatar_aura: 'none',
+      }
+
+    const weaponButtons =
+      GA_BRUTE_WEAPONS.map(
+        weapon => {
+          const unlocked =
+            weaponUnlocked(
+              weapon.key,
+              current
+            )
+
+          return `
+            <button
+              type="button"
+              class="idle-equip-option-v2 ${profile.avatar_weapon === weapon.key ? 'active' : ''}"
+              data-idle-avatar-field="avatar_weapon"
+              data-idle-avatar-value="${esc(weapon.key)}"
+              ${unlocked ? '' : 'disabled'}
+            >
+              ${esc(weapon.icon)}
+              ${esc(weapon.label)}
+              <small>
+                ${esc(
+                  unlocked
+                    ? 'Débloqué'
+                    : weaponRequirement(
+                        weapon.key
+                      )
+                )}
+              </small>
+            </button>
+          `
+        }
+      ).join('')
+
+    return `
+      <div class="idle-equipment-v2">
+        <section class="idle-card-v1 idle-equipment-avatar-v2">
+          <div>
+            ${renderBruteAvatarV2(
+              selectedAthlete(),
+              profile
+            )}
+
+            <div class="idle-title-avatar-name-v2">
+              ${esc(
+                selectedAthlete()?.name ||
+                selectedSlug
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section class="idle-card-v1 idle-card-pad-v1">
+          <span class="idle-kicker-v1">
+            🎒 TON COMBATTANT
+          </span>
+
+          <h3 style="margin:8px 0 14px">
+            Équipement & skin
+          </h3>
+
+          <div class="idle-note-v1" style="margin-bottom:14px">
+            La tête vient de ton avatar athlète et reste la même.
+            Le corps et l'équipement sont sauvegardés dans le cloud.
+          </div>
+
+          <div class="idle-equip-group-v2">
+            <h4>Skin</h4>
+
+            <div class="idle-equip-options-v2">
+              ${IDLE_AVATAR_SKINS.map(
+                item => `
+                  <button
+                    type="button"
+                    class="idle-equip-option-v2 ${profile.avatar_skin === item.key ? 'active' : ''}"
+                    data-idle-avatar-field="avatar_skin"
+                    data-idle-avatar-value="${esc(item.key)}"
+                  >
+                    ${item.icon} ${esc(item.label)}
+                  </button>
+                `
+              ).join('')}
+            </div>
+          </div>
+
+          <div class="idle-equip-group-v2">
+            <h4>Tenue</h4>
+
+            <div class="idle-equip-options-v2">
+              ${IDLE_AVATAR_OUTFITS.map(
+                item => `
+                  <button
+                    type="button"
+                    class="idle-equip-option-v2 ${profile.avatar_outfit === item.key ? 'active' : ''}"
+                    data-idle-avatar-field="avatar_outfit"
+                    data-idle-avatar-value="${esc(item.key)}"
+                  >
+                    ${item.icon} ${esc(item.label)}
+                  </button>
+                `
+              ).join('')}
+            </div>
+          </div>
+
+          <div class="idle-equip-group-v2">
+            <h4>Arme</h4>
+
+            <div class="idle-equip-options-v2">
+              ${weaponButtons}
+            </div>
+          </div>
+
+          <div class="idle-equip-group-v2">
+            <h4>Aura</h4>
+
+            <div class="idle-equip-options-v2">
+              ${IDLE_AVATAR_AURAS.map(
+                item => `
+                  <button
+                    type="button"
+                    class="idle-equip-option-v2 ${profile.avatar_aura === item.key ? 'active' : ''}"
+                    data-idle-avatar-field="avatar_aura"
+                    data-idle-avatar-value="${esc(item.key)}"
+                  >
+                    ${item.icon} ${esc(item.label)}
+                  </button>
+                `
+              ).join('')}
+            </div>
+          </div>
+        </section>
+      </div>
     `
   }
 
@@ -1568,8 +2155,24 @@ export async function mountIdleGame(
       ] || GA_BRUTE_WEAPONS[0]
     }
 
+    const preferredPlayerWeapon =
+      GA_BRUTE_WEAPONS.find(
+        weapon =>
+          weapon.key ===
+          (
+            avatarProfile?.avatar_weapon ||
+            'fists'
+          )
+      )
+
     let playerWeapon =
-      chooseWeapon(playerStats)
+      preferredPlayerWeapon &&
+      weaponUnlocked(
+        preferredPlayerWeapon.key,
+        snapshot || {}
+      )
+        ? preferredPlayerWeapon
+        : chooseWeapon(playerStats)
 
     let enemyWeapon =
       chooseWeapon(enemyStats)
@@ -2828,6 +3431,14 @@ export async function mountIdleGame(
       `
     }
 
+    if (activeTab === 'menu') {
+      return renderTitleMenu()
+    }
+
+    if (activeTab === 'equipment') {
+      return renderEquipment()
+    }
+
     if (activeTab === 'sleep') {
       return renderSleep()
     }
@@ -2899,61 +3510,52 @@ export async function mountIdleGame(
 
     root.innerHTML = `
       <main class="idle-page-v1 ${busy ? 'idle-busy-v1' : ''}">
-        <header class="idle-top-v1">
-          <button
-            type="button"
-            class="idle-back-v1"
-            data-idle-back
-          >
-            ← Jeu
-          </button>
+        ${activeTab !== 'menu'
+          ? `
+            <header class="idle-top-v1">
+              <button
+                type="button"
+                class="idle-back-v1"
+                data-idle-menu
+              >
+                ← Menu
+              </button>
 
-          <div>
-            <span>
-              GA COACHING · IDLE TRAINING
-            </span>
+              <div>
+                <span>
+                  GA BRUTE · ${esc(
+                    activeTab === 'pvp'
+                      ? 'DUEL'
+                      : activeTab === 'pve'
+                        ? 'PVE'
+                        : activeTab === 'sleep'
+                          ? 'SOMMEIL'
+                          : activeTab === 'equipment'
+                            ? 'ÉQUIPEMENT'
+                            : 'CAMP'
+                  )}
+                </span>
 
-            <h1>
-              ${esc(
-                athlete?.name ||
-                selectedSlug
-              )}
-            </h1>
-          </div>
+                <h1>
+                  ${esc(
+                    athlete?.name ||
+                    selectedSlug
+                  )}
+                </h1>
+              </div>
 
-          ${options.allowAthleteSelection
-            ? `
               <button
                 type="button"
                 class="idle-switch-v1"
-                data-idle-switch
+                data-idle-music
               >
-                Changer
+                ${musicEnabled ? '🔊' : '🔇'}
               </button>
-            `
-            : ''}
-        </header>
+            </header>
+          `
+          : ''}
 
         <section class="idle-shell-v1">
-          <nav class="idle-tabs-v1">
-            ${[
-              ['camp','⚡ Camp'],
-              ['sleep','🌙 Sommeil'],
-              ['pve','👾 PvE'],
-              ['pvp','🥊 PvP'],
-            ].map(
-              ([key,label]) => `
-                <button
-                  type="button"
-                  data-idle-tab="${key}"
-                  class="${activeTab === key ? 'active' : ''}"
-                >
-                  ${label}
-                </button>
-              `
-            ).join('')}
-          </nav>
-
           ${notice
             ? `
               <div class="idle-notice-v1">
@@ -2994,7 +3596,7 @@ export async function mountIdleGame(
             ''
           )
 
-        activeTab = 'camp'
+        activeTab = 'menu'
         battle = null
         await loadSelected()
         return
@@ -3009,10 +3611,141 @@ export async function mountIdleGame(
         selectedSlug = ''
         snapshot = null
         history = []
+        avatarProfile = null
         battle = null
         combatReplay = null
         stopCombatReplay()
         ambient.stop()
+        stopScreenMusic()
+        render()
+        return
+      }
+
+      const menuButton =
+        event.target.closest(
+          '[data-idle-menu]'
+        )
+
+      if (menuButton) {
+        stopCombatReplay()
+        combatReplay = null
+        battle = null
+        ambient.stop()
+        setActiveTab('menu')
+        return
+      }
+
+      const musicButton =
+        event.target.closest(
+          '[data-idle-music]'
+        )
+
+      if (musicButton) {
+        musicEnabled =
+          !musicEnabled
+
+        try {
+          localStorage.setItem(
+            'ga-idle-music-v2',
+            musicEnabled
+              ? 'on'
+              : 'off'
+          )
+        } catch {
+          // no-op
+        }
+
+        syncScreenMusic(true)
+        render()
+        return
+      }
+
+      const avatarOption =
+        event.target.closest(
+          '[data-idle-avatar-field]'
+        )
+
+      if (avatarOption) {
+        if (
+          !canEdit() ||
+          busy
+        ) {
+          return
+        }
+
+        const field =
+          String(
+            avatarOption.dataset.idleAvatarField ||
+            ''
+          )
+
+        const value =
+          String(
+            avatarOption.dataset.idleAvatarValue ||
+            ''
+          )
+
+        if (
+          field === 'avatar_weapon' &&
+          !weaponUnlocked(
+            value,
+            snapshot || {}
+          )
+        ) {
+          notice =
+            'Cette arme n’est pas encore débloquée.'
+          render()
+          return
+        }
+
+        const payload = {
+          p_athlete_slug:
+            selectedSlug,
+          p_avatar_skin:
+            field === 'avatar_skin'
+              ? value
+              : null,
+          p_avatar_outfit:
+            field === 'avatar_outfit'
+              ? value
+              : null,
+          p_avatar_weapon:
+            field === 'avatar_weapon'
+              ? value
+              : null,
+          p_avatar_aura:
+            field === 'avatar_aura'
+              ? value
+              : null,
+        }
+
+        busy = true
+        render()
+
+        const result =
+          await supabase.rpc(
+            'idle_avatar_update_v1',
+            payload
+          )
+
+        busy = false
+
+        if (result.error) {
+          notice =
+            result.error.message ||
+            'Impossible de sauvegarder l’avatar.'
+        } else {
+          avatarProfile =
+            Array.isArray(
+              result.data
+            )
+              ? result.data[0]
+              : result.data
+
+          notice =
+            'Avatar sauvegardé.'
+        }
+
         render()
         return
       }
@@ -3030,8 +3763,15 @@ export async function mountIdleGame(
           )
 
         if (IDLE_TABS.has(next)) {
-          activeTab = next
-          render()
+          stopCombatReplay()
+          combatReplay = null
+          battle = null
+
+          if (next !== 'sleep') {
+            ambient.stop()
+          }
+
+          setActiveTab(next)
         }
 
         return
@@ -3043,6 +3783,8 @@ export async function mountIdleGame(
         )
 
       if (sound) {
+        stopScreenMusic()
+
         soundMode =
           String(
             sound.dataset.idleSound ||
@@ -3347,4 +4089,5 @@ export async function mountIdleGame(
   }
 
   await loadSelected()
+  syncScreenMusic()
 }
