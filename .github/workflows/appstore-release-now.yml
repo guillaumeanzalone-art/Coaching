@@ -1,5 +1,5 @@
-# include Timothee alphabetical profile
-name: App Store 1.10.0 Release
+# GA Coaching 1.11.0 release
+name: App Store 1.11.0 Release
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 env:
-  RELEASE_VERSION: "1.10.0"
+  RELEASE_VERSION: "1.11.0"
 
 jobs:
   ios:
@@ -62,13 +62,15 @@ jobs:
           npm run test:cloud
           npm run test:importer
           npm run test:mobility
+          npm run test:brute
+          node --test tests/ipf-match.test.js
 
       - name: Prepare store version
         shell: bash
         run: |
           set -euo pipefail
           IOS_BUILD_NUMBER="$(date -u +%Y%m%d%H%M)"
-          node scripts/set-store-version.mjs "$RELEASE_VERSION" "26101101" "$IOS_BUILD_NUMBER"
+          node scripts/set-store-version.mjs "$RELEASE_VERSION" "26101601" "$IOS_BUILD_NUMBER"
           echo "IOS_BUILD_NUMBER=$IOS_BUILD_NUMBER" >> "$GITHUB_ENV"
 
       - name: Build web and sync iOS
@@ -150,7 +152,7 @@ jobs:
       - name: Keep IPA artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ga-coaching-ios-1.10.0-${{ env.IOS_BUILD_NUMBER }}
+          name: ga-coaching-ios-1.11.0-${{ env.IOS_BUILD_NUMBER }}
           path: ${{ runner.temp }}/ios-export/*.ipa
           if-no-files-found: error
           retention-days: 30
@@ -171,7 +173,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p .github
-          cat > .github/appstore-release-status-1.10.0.json <<EOF
+          cat > .github/appstore-release-status-1.11.0.json <<EOF
           {
             "run_id": "${GITHUB_RUN_ID}",
             "run_number": "${GITHUB_RUN_NUMBER}",
@@ -186,5 +188,5 @@ jobs:
           git config user.name "ga-coaching-release-bot"
           git config user.email "actions@users.noreply.github.com"
           git add .github/appstore-release-status-1.10.0.json
-          git commit -m "Record App Store 1.10.0 release status [skip ci]" || exit 0
+          git commit -m "Record App Store 1.11.0 release status [skip ci]" || exit 0
           git push origin HEAD:v2-refactor
