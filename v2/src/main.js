@@ -1578,9 +1578,9 @@ function renderGameHubScreen() {
 
       <section class="home-live-dashboard home-live-dashboard--bottom">
         <div class="home-live-loading">
-          Le RPG garde sa progression actuelle.
-          Idle Training utilise uniquement les données réelles
-          d'entraînement, de pas et de sommeil.
+          RPG pour la progression classique · Idle Training pour
+          séance/steps/sommeil · GA Brute pour les duels automatiques,
+          la création de personnage et le classement.
         </div>
       </section>
     </main>
