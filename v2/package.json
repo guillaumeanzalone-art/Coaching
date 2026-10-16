@@ -16,7 +16,7 @@
     "android:sync": "npm run build && cap sync android",
     "android:open": "cap open android",
     "android:bundle": "npm run android:sync && node scripts/android-bundle.mjs",
-    "test:brute": "node --test tests/brute-engine.test.js"
+    "test:brute": "node --test tests/brute-*.test.js"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
