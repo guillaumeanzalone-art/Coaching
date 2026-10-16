@@ -198,11 +198,19 @@ export function roundIpfLoad(
   const units = load / 2.5
 
   if (direction === 'up') {
-    return Math.ceil(units) * 2.5
+    return (
+      Math.ceil(
+        units - 1e-9
+      ) * 2.5
+    )
   }
 
   if (direction === 'down') {
-    return Math.floor(units) * 2.5
+    return (
+      Math.floor(
+        units + 1e-9
+      ) * 2.5
+    )
   }
 
   return Math.round(units) * 2.5
