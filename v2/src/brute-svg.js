@@ -181,6 +181,24 @@ function bodyMetrics(body) {
       neckW: 43,
       headScale: 1.07,
     },
+    {
+      shoulder: 90,
+      waist: 66,
+      torsoH: 116,
+      armW: 20,
+      thighW: 24,
+      neckW: 29,
+      headScale: .98,
+    },
+    {
+      shoulder: 124,
+      waist: 98,
+      torsoH: 96,
+      armW: 33,
+      thighW: 36,
+      neckW: 41,
+      headScale: .99,
+    },
   ]
 
   return list[
@@ -205,6 +223,8 @@ function headShapeSvg(style, skin) {
     '<path d="M117 77 Q125 49 160 47 Q195 49 203 78 L198 124 Q190 151 160 159 Q130 151 122 124Z" fill="'+skin+'" stroke="#171717" stroke-width="6"/>',
     '<path d="M108 75 Q116 47 160 44 Q205 47 213 76 L208 122 Q203 143 185 158 L160 169 L135 158 Q117 143 112 122Z" fill="'+skin+'" stroke="#171717" stroke-width="6"/>',
     '<path d="M112 78 Q119 48 160 45 Q201 48 208 79 L201 116 Q190 121 184 145 Q173 160 160 163 Q145 160 135 145 Q129 121 119 116Z" fill="'+skin+'" stroke="#171717" stroke-width="6"/>',
+    '<path d="M108 76 Q119 45 160 43 Q201 45 212 76 L205 118 Q193 147 160 171 Q126 147 115 118Z" fill="'+skin+'" stroke="#171717" stroke-width="6" stroke-linejoin="round"/>',
+    '<path d="M105 82 Q108 47 160 44 Q212 47 215 82 L211 123 Q202 158 160 166 Q118 158 109 123Z" fill="'+skin+'" stroke="#171717" stroke-width="6"/>',
   ]
 
   return map[s] || map[0]
