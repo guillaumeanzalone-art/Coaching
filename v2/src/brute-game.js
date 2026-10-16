@@ -519,7 +519,7 @@ export async function mountBruteGame(root, options = {}) {
         '<small style="color:var(--accent);font-weight:1000">CHARACTER CREATOR</small>'+
         '<h2>Crée ta brute</h2>'+
         '<p>Le personnage est composé de calques SVG indépendants : morphologie, visage, cheveux, tenue et accessoires. Ton apparence est figée après validation.</p>'+
-        '<div class="brute-create-help"><span>18 coiffures</span><span>14 peaux</span><span>21 couleurs cheveux</span><span>20 couleurs tenue</span><span>6 morphologies</span><span>10 accessoires</span></div>'+
+        '<div class="brute-create-help"><span>18 coiffures</span><span>14 peaux</span><span>21 couleurs cheveux</span><span>20 couleurs tenue</span><span>8 morphologies</span><span>8 visages</span><span>10 accessoires</span></div>'+
         '<input class="brute-name-input" maxlength="28" data-brute-name value="'+esc(draftName)+'" placeholder="Nom de la brute">'+
         creatorSection(
           'Morphologie',
