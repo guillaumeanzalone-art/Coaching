@@ -8,7 +8,7 @@ public class RestTimerNativePlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "RestTimerNativePlugin"
     public let jsName = "RestTimerNative"
     public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "requestPermissions", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "requestTimerPermissions", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "start", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "update", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "end", returnType: CAPPluginReturnPromise),
@@ -17,7 +17,7 @@ public class RestTimerNativePlugin: CAPPlugin, CAPBridgedPlugin {
 
     private let iso = ISO8601DateFormatter()
 
-    @objc func requestPermissions(_ call: CAPPluginCall) {
+    @objc func requestTimerPermissions(_ call: CAPPluginCall) {
         UNUserNotificationCenter.current().requestAuthorization(
             options: [.alert, .sound, .badge]
         ) { granted, error in
