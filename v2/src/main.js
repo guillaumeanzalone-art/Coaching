@@ -2,6 +2,7 @@ import { mountProgramEditor } from './program-editor.js'
 import { mountRpg } from './rpg.js'
 import { mountIdleGame } from './idle-game.js'
 import { mountBruteGame } from './brute-game.js'
+import { mountCut } from './cut.js'
 import { getAthleteProgress, xpProgressFromTotal } from './xp.js'
 import './style.css'
 import './theme-spider.css'
@@ -794,6 +795,30 @@ function renderHome() {
 
         <button
           class="card"
+          data-action="cut"
+          type="button"
+        >
+          <span class="card-icon">
+            💧
+          </span>
+
+          <div>
+            <strong>
+              CUT
+            </strong>
+
+            <span>
+              Water Cut · Food Mass · suivi compétition
+            </span>
+          </div>
+
+          <span class="arrow">
+            ›
+          </span>
+        </button>
+
+        <button
+          class="card"
           data-action="activity"
         >
           <span class="card-icon card-icon--spider card-icon--activity">
@@ -980,6 +1005,14 @@ function renderHome() {
       return
     }
 
+
+    if (
+      action.dataset.action ===
+      'cut'
+    ) {
+      await renderCutScreen()
+      return
+    }
 
     if (
       action.dataset.action ===
@@ -1474,6 +1507,58 @@ async function renderSbdLeaderboardScreen() {
    * un clic explicite sur GL, Steps ou Difficulté.
    */
   rerender()
+}
+
+
+async function renderCutScreen() {
+  clearAppHandlers()
+
+  const list =
+    visibleAthletes()
+
+  const ownId =
+    resolveAthleteIdFromMember()
+
+  const ownAthlete =
+    list.find(
+      athlete =>
+        athlete.id === ownId
+    )
+
+  const ownSlug =
+    String(
+      ownAthlete?.cloudSlug ||
+      ownAthlete?.slug ||
+      ownAthlete?.id ||
+      currentMember?.athlete_slug ||
+      ''
+    )
+
+  const isCoach =
+    currentMember?.role ===
+      'coach'
+
+  await mountCut(
+    app,
+    {
+      athletes:list,
+
+      initialSlug:
+        isCoach
+          ? (
+              list[0]?.cloudSlug ||
+              list[0]?.id ||
+              ''
+            )
+          : ownSlug,
+
+      allowAthleteSelection:
+        isCoach,
+
+      onBack:
+        renderHome,
+    }
+  )
 }
 
 
