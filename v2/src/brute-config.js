@@ -31,6 +31,11 @@ export const BRUTE_WEAPONS = {
     speed: 1.12,
     reach: 0.75,
     accuracy: 0.97,
+    tempo: 0.82,
+    block: 0.06,
+    combo: 0.10,
+    crit: 0.03,
+    category: 'unarmed',
   },
 
   olympic_bar: {
@@ -41,6 +46,11 @@ export const BRUTE_WEAPONS = {
     speed: 0.74,
     reach: 1.55,
     accuracy: 0.84,
+    tempo: 1.42,
+    block: 0.16,
+    combo: -0.04,
+    crit: 0.10,
+    category: 'heavy',
   },
 
   kettlebell: {
@@ -51,6 +61,11 @@ export const BRUTE_WEAPONS = {
     speed: 0.91,
     reach: 0.9,
     accuracy: 0.91,
+    tempo: 1.18,
+    block: 0.08,
+    combo: 0.01,
+    crit: 0.07,
+    category: 'heavy',
   },
 
   plate20: {
@@ -61,6 +76,12 @@ export const BRUTE_WEAPONS = {
     speed: 0.82,
     reach: 0.85,
     accuracy: 0.88,
+    tempo: 1.30,
+    block: 0.11,
+    combo: -0.02,
+    crit: 0.09,
+    category: 'heavy',
+    throwable: true,
   },
 
   belt: {
@@ -71,6 +92,11 @@ export const BRUTE_WEAPONS = {
     speed: 1.03,
     reach: 1.15,
     accuracy: 0.94,
+    tempo: 0.96,
+    block: 0.12,
+    combo: 0.07,
+    crit: 0.02,
+    category: 'flexible',
   },
 
   chalk: {
@@ -81,6 +107,12 @@ export const BRUTE_WEAPONS = {
     speed: 1.2,
     reach: 1.15,
     accuracy: 0.98,
+    tempo: 0.72,
+    block: 0.01,
+    combo: 0.13,
+    crit: 0.00,
+    category: 'ranged',
+    throwable: true,
     effect: 'blind',
   },
 
@@ -92,8 +124,25 @@ export const BRUTE_WEAPONS = {
     speed: 1.08,
     reach: 1.1,
     accuracy: 0.96,
+    tempo: 0.88,
+    block: 0.05,
+    combo: 0.12,
+    crit: 0.03,
+    category: 'flexible',
     effect: 'grip',
   },
+}
+
+export const BRUTE_COMBAT_RULES = {
+  engineVersion: 3,
+  activityMaxPower: 435,
+  baseInitiative: 100,
+  fatiguePerAttack: 5,
+  fatigueRecovery: 9,
+  maxFatigue: 100,
+  maxTimelineEvents: 180,
+  minActionDelay: 0.42,
+  maxActionDelay: 2.4,
 }
 
 export const BRUTE_SKILLS = {
@@ -102,6 +151,8 @@ export const BRUTE_SKILLS = {
     name: 'Leg Drive',
     icon: '🦵',
     description: 'Augmente la chance de contre-attaque.',
+    kind: 'reaction',
+    stat: 'counter',
   },
 
   arch: {
@@ -109,6 +160,8 @@ export const BRUTE_SKILLS = {
     name: 'Arch',
     icon: '🌉',
     description: 'Augmente les chances d’esquive.',
+    kind: 'passive',
+    stat: 'dodge',
   },
 
   lockout: {
@@ -116,6 +169,8 @@ export const BRUTE_SKILLS = {
     name: 'Lockout',
     icon: '🛡️',
     description: 'Réduit fortement un impact une fois par combat.',
+    kind: 'guard',
+    charges: 1,
   },
 
   pause_bench: {
@@ -123,6 +178,7 @@ export const BRUTE_SKILLS = {
     name: 'Pause Bench',
     icon: '⏸️',
     description: 'Peut étourdir l’adversaire.',
+    kind: 'control',
   },
 
   grind: {
@@ -130,6 +186,8 @@ export const BRUTE_SKILLS = {
     name: 'Grind',
     icon: '🔥',
     description: 'Survit à 1 PV une fois par combat.',
+    kind: 'survival',
+    charges: 1,
   },
 }
 
