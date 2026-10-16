@@ -1204,19 +1204,22 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function weaponAnimationClass(weaponId) {
-    if (
-      weaponId === 'olympic_bar' ||
-      weaponId === 'plate20' ||
-      weaponId === 'kettlebell'
-    ) {
+    const category =
+      BRUTE_WEAPONS[
+        weaponId
+      ]?.category ||
+      'unarmed'
+
+    if (category === 'heavy') {
       return 'attack-heavy'
     }
 
-    if (
-      weaponId === 'chalk' ||
-      weaponId === 'straps'
-    ) {
+    if (category === 'ranged') {
       return 'attack-ranged'
+    }
+
+    if (category === 'flexible') {
+      return 'attack-flexible'
     }
 
     return 'attack-fast'
@@ -1226,7 +1229,14 @@ export async function mountBruteGame(root, options = {}) {
     const delays = {
       START: 180,
       ARRIVE: 620,
-      WINDUP: 260,
+      WINDUP:
+        event?.category === 'heavy'
+          ? 360
+          : event?.category === 'ranged'
+            ? 300
+            : event?.category === 'flexible'
+              ? 285
+              : 225,
       MOVE: 190,
       MOVE_BACK: 210,
       REPOSITION: 260,
@@ -1264,6 +1274,7 @@ export async function mountBruteGame(root, options = {}) {
         'attack-fast',
         'attack-heavy',
         'attack-ranged',
+        'attack-flexible',
         'hit',
         'hit-heavy',
         'dodge',
@@ -1278,6 +1289,7 @@ export async function mountBruteGame(root, options = {}) {
         'windup-fast',
         'windup-heavy',
         'windup-ranged',
+        'windup-flexible',
         'staggering'
       )
     })
@@ -1290,6 +1302,49 @@ export async function mountBruteGame(root, options = {}) {
     arena?.classList.remove(
       'shake',
       'flash'
+    )
+  }
+
+  function fightOffset(el) {
+    return num(
+      el?.dataset
+        ?.fightOffset,
+      0
+    )
+  }
+
+  function setFightOffset(
+    el,
+    value
+  ) {
+    if (!el) return
+
+    const bounded =
+      Math.max(
+        -28,
+        Math.min(
+          28,
+          num(value,0)
+        )
+      )
+
+    el.dataset.fightOffset =
+      String(bounded)
+
+    el.style.setProperty(
+      '--fight-offset',
+      bounded + '%'
+    )
+  }
+
+  function nudgeFightOffset(
+    el,
+    delta
+  ) {
+    setFightOffset(
+      el,
+      fightOffset(el) +
+      num(delta,0)
     )
   }
 
@@ -1372,8 +1427,14 @@ export async function mountBruteGame(root, options = {}) {
         : rightEl
 
     if (event.type === 'START') {
-      leftEl?.style.setProperty('--fight-offset','0%')
-      rightEl?.style.setProperty('--fight-offset','0%')
+      setFightOffset(
+        leftEl,
+        0
+      )
+      setFightOffset(
+        rightEl,
+        0
+      )
       leftEl?.style.setProperty('--fight-y','0px')
       rightEl?.style.setProperty('--fight-y','0px')
     }
@@ -1398,7 +1459,9 @@ export async function mountBruteGame(root, options = {}) {
           ? 'windup-heavy'
           : event.category === 'ranged'
             ? 'windup-ranged'
-            : 'windup-fast'
+            : event.category === 'flexible'
+              ? 'windup-flexible'
+              : 'windup-fast'
 
       actorEl?.classList.add(cls)
     }
@@ -1406,6 +1469,24 @@ export async function mountBruteGame(root, options = {}) {
     if (event.type === 'REPOSITION') {
       leftEl?.style.setProperty('--fight-y',num(event.leftY,0)+'px')
       rightEl?.style.setProperty('--fight-y',num(event.rightY,0)+'px')
+
+      setFightOffset(
+        leftEl,
+        Math.abs(
+          fightOffset(leftEl)
+        ) < 1
+          ? 0
+          : fightOffset(leftEl) * .45
+      )
+
+      setFightOffset(
+        rightEl,
+        Math.abs(
+          fightOffset(rightEl)
+        ) < 1
+          ? 0
+          : fightOffset(rightEl) * .45
+      )
     }
 
     if (event.type === 'MOVE') {
@@ -1414,16 +1495,16 @@ export async function mountBruteGame(root, options = {}) {
 
       const distance =
         reach >= 1.45
-          ? 17
+          ? 14
           : reach >= 1.1
-            ? 24
-            : 34
+            ? 21
+            : 29
 
-      actorEl?.style.setProperty(
-        '--fight-offset',
+      setFightOffset(
+        actorEl,
         event.actor === 'left'
-          ? distance+'%'
-          : '-'+distance+'%'
+          ? distance
+          : -distance
       )
 
       const dust =
@@ -1443,9 +1524,9 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.type === 'MOVE_BACK') {
-      actorEl?.style.setProperty(
-        '--fight-offset',
-        '0%'
+      setFightOffset(
+        actorEl,
+        0
       )
     }
 
@@ -1469,6 +1550,21 @@ export async function mountBruteGame(root, options = {}) {
 
     if (event.type === 'BLOCK') {
       actorEl?.classList.add('blocking')
+
+      nudgeFightOffset(
+        actorEl,
+        (
+          event.actor === 'left'
+            ? -1
+            : 1
+        ) *
+        num(
+          event.knockback,
+          7
+        ) *
+        .45
+      )
+
       const floater = document.createElement('span')
       floater.className = 'brute-float skill'
       floater.textContent = 'BLOQUÉ'
@@ -1617,6 +1713,19 @@ export async function mountBruteGame(root, options = {}) {
         'dodge'
       )
 
+      nudgeFightOffset(
+        actorEl,
+        (
+          event.actor === 'left'
+            ? -1
+            : 1
+        ) *
+        num(
+          event.distance,
+          10
+        )
+      )
+
       const floater =
         document.createElement(
           'span'
@@ -1735,12 +1844,42 @@ export async function mountBruteGame(root, options = {}) {
           : 'hit'
       )
 
-      targetEl?.classList.add(
-        'staggering'
+      const impactVariant =
+        Math.abs(
+          Math.floor(
+            num(
+              event.impactVariant,
+              num(event.damage,0) % 3
+            )
+          )
+        ) % 3
+
+      const hitMotion = [
+        {
+          y:'-2px',
+          tilt:'-4deg',
+        },
+        {
+          y:'2px',
+          tilt:'3deg',
+        },
+        {
+          y:'-6px',
+          tilt:'-1deg',
+        },
+      ][impactVariant]
+
+      targetEl?.style.setProperty(
+        '--hit-y',
+        hitMotion.y
       )
 
       targetEl?.style.setProperty(
-        '--knock',
+        '--hit-tilt',
+        hitMotion.tilt
+      )
+
+      const knockback =
         Math.max(
           4,
           Math.min(
@@ -1750,8 +1889,30 @@ export async function mountBruteGame(root, options = {}) {
               heavy ? 28 : 12
             )
           )
-        )+'px'
+        )
+
+      targetEl?.style.setProperty(
+        '--knock',
+        knockback+'px'
       )
+
+      if (!event.blocked) {
+        nudgeFightOffset(
+          targetEl,
+          (
+            event.target === 'left'
+              ? -1
+              : 1
+          ) *
+          Math.max(
+            2,
+            Math.min(
+              12,
+              knockback / 6
+            )
+          )
+        )
+      }
 
       if (heavy) {
         arena?.classList.add(
