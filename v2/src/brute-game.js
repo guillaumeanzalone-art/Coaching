@@ -3101,33 +3101,6 @@ export async function mountBruteGame(root, options = {}) {
       return
     }
 
-    if (event.target.closest('[data-brute-claim]')) {
-      busy = true
-      render()
-
-      const result =
-        await supabase.rpc(
-          'idle_claim_v1',
-          {
-            p_athlete_slug:
-              selectedSlug,
-          }
-        )
-
-      busy = false
-
-      if (result.error) {
-        notice =
-          result.error.message ||
-          'Impossible de collecter l’énergie.'
-      } else {
-        await refreshData(false)
-        notice = 'Énergie Idle collectée.'
-      }
-
-      render()
-      return
-    }
 
     const choice = event.target.closest('[data-brute-choice]')
     if (choice) {
