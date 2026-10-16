@@ -81,14 +81,14 @@ function ensureStyles() {
     '.brute-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.brute-choice{padding:14px;border:1px solid color-mix(in srgb,var(--accent),transparent 55%);border-radius:16px;background:color-mix(in srgb,var(--accent),transparent 90%);color:#fff;cursor:pointer;text-align:left}.brute-choice .big{font-size:30px}.brute-choice b{display:block;margin-top:6px}.brute-choice small{color:#a8abc1}',
     '.brute-arena{position:relative;min-height:560px;overflow:hidden;background:radial-gradient(circle at 50% 24%,rgba(255,246,189,.72),transparent 25%),linear-gradient(180deg,#88c4d1 0 27%,#d6bd78 27% 34%,#b77638 34% 100%);border:2px solid #65401f;border-radius:21px}.brute-arena:after{content:"GA BRUTE";position:absolute;left:50%;top:58%;transform:translate(-50%,-50%) rotate(-7deg);font-size:65px;font-weight:1000;letter-spacing:.08em;color:rgba(87,43,18,.07);white-space:nowrap}',
     '.brute-hud{position:absolute;z-index:8;inset:12px 14px auto;display:grid;grid-template-columns:1fr 55px 1fr;gap:10px}.brute-hud-side.right{text-align:right}.brute-hud-name{font-size:10px;font-weight:1000;color:#fff4bd;text-shadow:0 2px #563018}.brute-hp{height:18px;padding:3px;border:2px solid #633719;border-radius:5px;background:#392216}.brute-hp i{display:block;height:100%;background:linear-gradient(180deg,#ffe646,#ffaf22 55%,#e6531d);transition:width .25s linear}.brute-round{display:grid;place-items:center;height:43px;border:3px solid #8e4d22;border-radius:50%;background:#fff0ae;color:#7b3d1d;font-size:9px;font-weight:1000}',
-    '.brute-fighters{position:absolute;z-index:5;left:0;right:0;bottom:48px;display:grid;grid-template-columns:1fr 1fr;align-items:end;padding:0 4%}.brute-fighter{position:relative;display:flex;flex-direction:column;align-items:center}.brute-fighter .ga-brute-svg{width:min(340px,95%);transition:transform .22s ease,filter .18s ease}.brute-fighter.right .ga-brute-svg{transform:scaleX(-1)}.brute-fighter.attacking.left .ga-brute-svg{animation:bruteAttackLeft .42s ease}.brute-fighter.attacking.right .ga-brute-svg{animation:bruteAttackRight .42s ease}.brute-fighter.hit .ga-brute-svg{animation:bruteHit .34s ease}.brute-fighter.dodge.left .ga-brute-svg{animation:bruteDodgeLeft .34s ease}.brute-fighter.dodge.right .ga-brute-svg{animation:bruteDodgeRight .34s ease}.brute-fighter.ko .ga-brute-svg{transform:rotate(77deg) translate(24px,20px)!important;opacity:.48}',
+    '.brute-fighters{position:absolute;z-index:5;left:0;right:0;bottom:48px;display:grid;grid-template-columns:1fr 1fr;align-items:end;padding:0 4%}.brute-fighter{--fight-offset:0%;position:relative;display:flex;flex-direction:column;align-items:center;transform:translateX(var(--fight-offset));transition:transform .28s cubic-bezier(.2,.8,.2,1)}.brute-fighter .ga-brute-svg{width:min(340px,95%);transition:filter .16s ease,opacity .2s ease}.brute-fighter.right .ga-brute-svg{transform:scaleX(-1)}.brute-fighter.attack-fast.left .ga-brute-svg{animation:bruteAttackFastLeft .30s cubic-bezier(.2,.9,.2,1)}.brute-fighter.attack-fast.right .ga-brute-svg{animation:bruteAttackFastRight .30s cubic-bezier(.2,.9,.2,1)}.brute-fighter.attack-heavy.left .ga-brute-svg{animation:bruteAttackHeavyLeft .48s cubic-bezier(.15,.75,.2,1)}.brute-fighter.attack-heavy.right .ga-brute-svg{animation:bruteAttackHeavyRight .48s cubic-bezier(.15,.75,.2,1)}.brute-fighter.attack-ranged.left .ga-brute-svg{animation:bruteAttackRangedLeft .38s ease}.brute-fighter.attack-ranged.right .ga-brute-svg{animation:bruteAttackRangedRight .38s ease}.brute-fighter.countering .ga-brute-svg{filter:drop-shadow(0 0 14px rgba(177,102,255,.85))}.brute-fighter.comboing .ga-brute-svg{filter:drop-shadow(0 0 12px rgba(255,195,64,.75))}.brute-fighter.guard .ga-brute-svg{animation:bruteGuard .42s ease}.brute-fighter.stunned .ga-brute-svg{animation:bruteStun .56s ease}.brute-fighter.hit .ga-brute-svg{animation:bruteHit .34s ease}.brute-fighter.hit-heavy .ga-brute-svg{animation:bruteHitHeavy .46s ease}.brute-fighter.dodge.left .ga-brute-svg{animation:bruteDodgeLeft .48s cubic-bezier(.2,.85,.2,1)}.brute-fighter.dodge.right .ga-brute-svg{animation:bruteDodgeRight .48s cubic-bezier(.2,.85,.2,1)}.brute-fighter.ko .ga-brute-svg{animation:bruteKo .78s cubic-bezier(.18,.75,.25,1) forwards}.brute-fighter.attack-heavy .brute-arm-right{transform-box:fill-box;transform-origin:15% 15%;animation:bruteArmHeavy .48s ease}.brute-fighter.attack-fast .brute-arm-right{transform-box:fill-box;transform-origin:20% 15%;animation:bruteArmFast .30s ease}.brute-fighter.guard .brute-arm-left{transform-box:fill-box;transform-origin:80% 20%;animation:bruteGuardArm .42s ease}.brute-fighter.stunned .brute-head{transform-box:fill-box;transform-origin:center;animation:bruteHeadStun .56s ease}',
     '.brute-pet-slot{position:absolute;bottom:7px;width:84px}.brute-fighter.left .brute-pet-slot{right:7%}.brute-fighter.right .brute-pet-slot{left:7%}.ga-brute-pet-svg{width:100%}',
-    '.brute-float{position:absolute;z-index:15;top:25%;padding:5px 8px;border:2px solid #91451f;border-radius:9px;background:#fff6be;color:#d3241e;font-weight:1000;animation:bruteFloat .72s ease forwards}.brute-fighter.left .brute-float{right:15%}.brute-fighter.right .brute-float{left:15%}.brute-float.dodge{color:#285fa7}.brute-float.skill{color:#7b36b3}',
-    '.brute-log{position:absolute;z-index:8;left:13px;right:13px;bottom:9px;text-align:center;color:#fff2ba;font-size:8px;font-weight:900;text-shadow:0 2px #4c2814}.brute-controls{display:flex;gap:7px;justify-content:center;margin-top:10px}',
+    '.brute-float{position:absolute;z-index:15;top:25%;padding:5px 8px;border:2px solid #91451f;border-radius:9px;background:#fff6be;color:#d3241e;font-size:14px;font-weight:1000;box-shadow:0 4px 0 rgba(82,38,17,.15);animation:bruteFloat .78s ease forwards}.brute-fighter.left .brute-float{right:15%}.brute-fighter.right .brute-float{left:15%}.brute-float.dodge{color:#285fa7}.brute-float.skill{color:#7b36b3}.brute-float.crit{font-size:20px;color:#e01818}.brute-float.combo{color:#a85a00}.brute-float.heal{color:#198754}.brute-stagefx{position:absolute;z-index:12;inset:0;pointer-events:none;overflow:hidden}.brute-impact{position:absolute;width:86px;height:86px;border-radius:50%;border:7px solid rgba(255,246,182,.95);box-shadow:0 0 0 10px rgba(255,157,38,.22),0 0 34px rgba(255,106,0,.75);transform:translate(-50%,-50%) scale(.2);animation:bruteImpact .42s ease forwards}.brute-impact.crit{width:120px;height:120px;border-color:#fff;background:radial-gradient(circle,rgba(255,255,255,.98) 0 8%,rgba(255,199,60,.82) 9% 18%,transparent 45%);box-shadow:0 0 55px rgba(255,58,30,.85)}.brute-dust{position:absolute;bottom:76px;width:100px;height:34px;border-radius:50%;background:radial-gradient(ellipse,rgba(238,214,157,.72),rgba(206,160,93,.24) 56%,transparent 70%);filter:blur(3px);animation:bruteDust .5s ease forwards}.brute-skill-banner{position:absolute;z-index:20;left:50%;top:25%;transform:translate(-50%,-50%) scale(.7);padding:9px 14px;border:3px solid #6e3a1c;border-radius:12px;background:#fff2b6;color:#743617;font-size:15px;font-weight:1000;letter-spacing:.05em;box-shadow:0 5px 0 rgba(82,39,17,.2);animation:bruteSkillBanner .72s ease forwards}.brute-projectile{position:absolute;z-index:18;top:48%;font-size:34px;filter:drop-shadow(0 3px 3px rgba(0,0,0,.28));animation:bruteProjectileLR .34s linear forwards}.brute-projectile.right{animation-name:bruteProjectileRL}.brute-arena.shake{animation:bruteArenaShake .34s ease}.brute-arena.flash:before{content:"";position:absolute;z-index:30;inset:0;background:rgba(255,248,213,.88);animation:bruteFlash .24s ease forwards;pointer-events:none}',
+    '.brute-log{position:absolute;z-index:8;left:13px;right:13px;bottom:9px;text-align:center;color:#fff2ba;font-size:8px;font-weight:900;text-shadow:0 2px #4c2814}.brute-controls{display:flex;gap:7px;justify-content:center;margin-top:10px}.brute-xp-result{margin-top:10px;padding:16px;text-align:center;overflow:hidden;position:relative}.brute-xp-gain{display:inline-flex;align-items:center;gap:7px;margin-top:8px;padding:8px 12px;border:1px solid color-mix(in srgb,var(--accent),transparent 45%);border-radius:999px;background:color-mix(in srgb,var(--accent),transparent 88%);font-size:18px;font-weight:1000;color:#fff}.brute-xp-track{width:min(500px,100%);height:13px;margin:13px auto 5px;padding:2px;border-radius:999px;background:#050711;border:1px solid rgba(255,255,255,.08);overflow:hidden}.brute-xp-track i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),#54d5ff,#ffe46a);transition:width 1.1s cubic-bezier(.15,.8,.2,1)}.brute-level-up{margin:10px auto 0;width:max-content;max-width:100%;padding:8px 15px;border:2px solid #e6b739;border-radius:10px;background:linear-gradient(180deg,#ffe98d,#d99c2d);color:#5d3218;font-size:17px;font-weight:1000;box-shadow:0 0 25px rgba(255,203,67,.3);animation:bruteLevelUp .9s ease}.brute-reward-inline{margin-top:14px}.brute-reward-inline .brute-choice-grid{max-width:620px;margin:8px auto 0}',
     '.brute-equipment{display:grid;grid-template-columns:minmax(250px,.85fr) minmax(0,1.15fr);gap:12px}.brute-equipment-preview{display:grid;place-items:center;min-height:430px}.brute-equipment-preview .ga-brute-svg{width:min(360px,100%)}.brute-chip-row{display:flex;gap:7px;flex-wrap:wrap}.brute-chip{border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(255,255,255,.04);color:#d8dae6;padding:8px 10px;font-size:9px;font-weight:900}.brute-chip.active{border-color:var(--accent);color:#fff;background:color-mix(in srgb,var(--accent),transparent 86%)}',
     '.brute-ranking{display:grid;gap:7px}.brute-rank-row{display:grid;grid-template-columns:34px 1fr repeat(3,auto);gap:9px;align-items:center;padding:10px;border-bottom:1px solid rgba(255,255,255,.055)}.brute-rank-row .rank{font-size:17px;font-weight:1000;color:var(--accent)}',
     '.brute-sleep{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.7fr);gap:12px}.brute-moon{min-height:390px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 32%,rgba(131,112,255,.28),transparent 25%),#0a0d21}.brute-moon .moon{font-size:100px;filter:drop-shadow(0 0 25px rgba(129,109,255,.38));animation:bruteIdle 4s ease-in-out infinite}.brute-sleep-time{font-size:40px;font-weight:1000;font-variant-numeric:tabular-nums}.brute-sound-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}',
-    '@keyframes bruteIdle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.01)}}@keyframes bruteAttackLeft{0%,100%{transform:translateX(0)}50%{transform:translateX(42%) rotate(3deg)}}@keyframes bruteAttackRight{0%,100%{transform:scaleX(-1) translateX(0)}50%{transform:scaleX(-1) translateX(42%) rotate(3deg)}}@keyframes bruteHit{0%,100%{filter:none}30%{filter:brightness(1.8);transform:translateX(-9px)}60%{transform:translateX(7px)}}@keyframes bruteDodgeLeft{50%{transform:translateX(-30px)}}@keyframes bruteDodgeRight{50%{transform:scaleX(-1) translateX(-30px)}}@keyframes bruteFloat{0%{opacity:0;transform:translateY(12px) scale(.7)}35%{opacity:1;transform:translateY(-10px) scale(1.12)}100%{opacity:0;transform:translateY(-40px)}}',
+    '@keyframes bruteIdle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.01)}}@keyframes bruteAttackFastLeft{0%,100%{transform:translateX(0) rotate(0)}40%{transform:translateX(24%) rotate(2deg)}56%{transform:translateX(34%) rotate(-2deg)}}@keyframes bruteAttackFastRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}40%{transform:scaleX(-1) translateX(24%) rotate(2deg)}56%{transform:scaleX(-1) translateX(34%) rotate(-2deg)}}@keyframes bruteAttackHeavyLeft{0%{transform:translateX(0) rotate(0)}27%{transform:translateX(-5%) rotate(-5deg)}62%{transform:translateX(34%) rotate(5deg)}100%{transform:translateX(0) rotate(0)}}@keyframes bruteAttackHeavyRight{0%{transform:scaleX(-1) translateX(0) rotate(0)}27%{transform:scaleX(-1) translateX(-5%) rotate(-5deg)}62%{transform:scaleX(-1) translateX(34%) rotate(5deg)}100%{transform:scaleX(-1) translateX(0) rotate(0)}}@keyframes bruteAttackRangedLeft{0%,100%{transform:translateX(0)}35%{transform:translateX(-6%) rotate(-3deg)}65%{transform:translateX(9%) rotate(2deg)}}@keyframes bruteAttackRangedRight{0%,100%{transform:scaleX(-1) translateX(0)}35%{transform:scaleX(-1) translateX(-6%) rotate(-3deg)}65%{transform:scaleX(-1) translateX(9%) rotate(2deg)}}@keyframes bruteHit{0%,100%{filter:none}22%{filter:brightness(1.75) saturate(1.4);transform:translateX(-8px)}55%{transform:translateX(7px)}}@keyframes bruteHitHeavy{0%,100%{filter:none}18%{filter:brightness(2) saturate(1.5);transform:translateX(-18px) rotate(-3deg)}48%{transform:translateX(13px) rotate(2deg)}72%{transform:translateX(-5px)}}@keyframes bruteDodgeLeft{0%,100%{transform:translate(0,0)}42%{transform:translate(-38px,-38px) rotate(-4deg)}70%{transform:translate(-22px,-9px)}}@keyframes bruteDodgeRight{0%,100%{transform:scaleX(-1) translate(0,0)}42%{transform:scaleX(-1) translate(-38px,-38px) rotate(-4deg)}70%{transform:scaleX(-1) translate(-22px,-9px)}}@keyframes bruteKo{0%{transform:rotate(0) translate(0,0);opacity:1}38%{transform:rotate(18deg) translate(12px,-8px);opacity:1}100%{transform:rotate(78deg) translate(35px,34px);opacity:.45}}@keyframes bruteGuard{0%,100%{filter:none}45%{filter:drop-shadow(0 0 18px rgba(101,167,255,.95)) brightness(1.25)}}@keyframes bruteStun{0%,100%{filter:none}25%{filter:saturate(.2) brightness(1.3)}50%{filter:saturate(.2) brightness(.75)}75%{filter:saturate(.2) brightness(1.2)}}@keyframes bruteArmHeavy{0%,100%{transform:rotate(0)}30%{transform:rotate(-38deg)}62%{transform:rotate(62deg)}}@keyframes bruteArmFast{0%,100%{transform:rotate(0)}45%{transform:rotate(52deg)}}@keyframes bruteGuardArm{0%,100%{transform:rotate(0)}50%{transform:rotate(-55deg) translate(-5px,-6px)}}@keyframes bruteHeadStun{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}50%{transform:rotate(9deg)}75%{transform:rotate(-5deg)}}@keyframes bruteFloat{0%{opacity:0;transform:translateY(12px) scale(.7)}35%{opacity:1;transform:translateY(-10px) scale(1.12)}100%{opacity:0;transform:translateY(-44px) scale(.92)}}@keyframes bruteImpact{0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(0)}35%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(18deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.45) rotate(36deg)}}@keyframes bruteDust{0%{opacity:0;transform:scale(.45)}35%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.45)}}@keyframes bruteSkillBanner{0%{opacity:0;transform:translate(-50%,-30%) scale(.65)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}78%{opacity:1;transform:translate(-50%,-60%) scale(1)}100%{opacity:0;transform:translate(-50%,-85%) scale(.9)}}@keyframes bruteProjectileLR{0%{left:24%;transform:rotate(-20deg) scale(.75)}100%{left:73%;transform:rotate(220deg) scale(1.08)}}@keyframes bruteProjectileRL{0%{left:73%;transform:rotate(20deg) scale(.75)}100%{left:24%;transform:rotate(-220deg) scale(1.08)}}@keyframes bruteArenaShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,-1px)}80%{transform:translate(3px,2px)}}@keyframes bruteFlash{0%{opacity:0}30%{opacity:.85}100%{opacity:0}}@keyframes bruteLevelUp{0%{opacity:0;transform:translateY(12px) scale(.8)}45%{opacity:1;transform:translateY(-3px) scale(1.08)}100%{transform:translateY(0) scale(1)}}',
     '@media(max-width:760px){.brute-app{padding:9px}.brute-menu-grid{grid-template-columns:1fr;padding:14px;min-height:0}.brute-menu-avatar{order:-1}.brute-menu-side{grid-template-columns:1fr 1fr}.brute-title-screen{min-height:0}.brute-logo{font-size:32px}.brute-create,.brute-dashboard,.brute-equipment,.brute-sleep{grid-template-columns:1fr}.brute-create-preview{min-height:350px}.brute-create-preview .ga-brute-svg{width:280px}.brute-create-controls{max-height:none}.brute-stat-grid{grid-template-columns:1fr 1fr}.brute-arena{min-height:440px}.brute-fighters{padding:0 0%;bottom:43px}.brute-fighter .ga-brute-svg{width:220px}.brute-hud{inset:8px 7px auto;grid-template-columns:1fr 39px 1fr;gap:5px}.brute-round{height:34px}.brute-choice-grid{grid-template-columns:1fr}.brute-rank-row{grid-template-columns:30px 1fr auto}.brute-rank-row .extra{display:none}.brute-real-grid{grid-template-columns:1fr 1fr}.brute-selector-avatar{width:44px;height:44px}}',
   ].join('')
   document.head.appendChild(style)
@@ -636,10 +636,11 @@ export async function mountBruteGame(root, options = {}) {
     const rightPet = BRUTE_PETS[(right.pets||[])[0]]
 
     return '<div class="brute-arena" data-brute-arena>'+
+      '<div class="brute-stagefx" data-brute-stagefx></div>'+
       '<div class="brute-hud">'+
-        '<div class="brute-hud-side"><div class="brute-hud-name">'+esc(left.name)+'</div><div class="brute-hp"><i data-hp-left style="width:100%"></i></div></div>'+
+        '<div class="brute-hud-side"><div class="brute-hud-name">'+esc(left.name)+' · Niv. '+num(left.level,1)+'</div><div class="brute-hp"><i data-hp-left style="width:100%"></i></div><div class="brute-hud-name" data-hp-text-left>'+num(left.hpMax)+' / '+num(left.hpMax)+'</div></div>'+
         '<div class="brute-round" data-brute-round>GO</div>'+
-        '<div class="brute-hud-side right"><div class="brute-hud-name">'+esc(right.name)+'</div><div class="brute-hp"><i data-hp-right style="width:100%"></i></div></div>'+
+        '<div class="brute-hud-side right"><div class="brute-hud-name">'+esc(right.name)+' · Niv. '+num(right.level,1)+'</div><div class="brute-hp"><i data-hp-right style="width:100%"></i></div><div class="brute-hud-name" data-hp-text-right>'+num(right.hpMax)+' / '+num(right.hpMax)+'</div></div>'+
       '</div>'+
       '<div class="brute-fighters">'+
         '<div class="brute-fighter left" data-fighter="left">'+renderBruteSvg(left.appearance,{label:left.name,weapon:leftWeapon})+(leftPet?'<div class="brute-pet-slot">'+renderPetSvg(leftPet)+'</div>':'')+'</div>'+
@@ -730,78 +731,804 @@ export async function mountBruteGame(root, options = {}) {
     return new Promise(resolve => setTimeout(resolve,ms))
   }
 
+  function fightSfx(type) {
+    const map = {
+      hit: '/ragnarok-hit.mp3',
+      miss: '/ragnarok-miss.mp3',
+      critical: '/critical-ragnarok.mp3',
+      perfect: '/ragnarok-perfect.mp3',
+    }
+
+    const src = map[type]
+    if (!src) return
+
+    try {
+      const audio = new Audio(src)
+      audio.volume = type === 'critical' ? .32 : .20
+      void audio.play().catch(() => {})
+    } catch {
+      // Cosmetic sound only.
+    }
+  }
+
+  function weaponAnimationClass(weaponId) {
+    if (
+      weaponId === 'olympic_bar' ||
+      weaponId === 'plate20' ||
+      weaponId === 'kettlebell'
+    ) {
+      return 'attack-heavy'
+    }
+
+    if (
+      weaponId === 'chalk' ||
+      weaponId === 'straps'
+    ) {
+      return 'attack-ranged'
+    }
+
+    return 'attack-fast'
+  }
+
+  function eventDelay(event) {
+    const delays = {
+      START: 360,
+      MOVE: 230,
+      MOVE_BACK: 210,
+      SKILL_ACTIVATE: 520,
+      ATTACK: event?.critical ? 560 : 400,
+      DODGE: 480,
+      MISS: 330,
+      COUNTER_READY: 300,
+      COMBO: 210,
+      DISARM: 480,
+      GRIND: 540,
+      PET_ATTACK: 410,
+      PET_DODGE: 320,
+      STUN_SKIP: 480,
+      FINISHER: 620,
+      KO: 760,
+      END: 80,
+    }
+
+    return Math.max(
+      90,
+      num(delays[event?.type], 320) /
+      Math.max(.5, playbackSpeed)
+    )
+  }
+
   function clearAnimClasses() {
     root.querySelectorAll('.brute-fighter').forEach(el => {
-      el.classList.remove('attacking','hit','dodge','ko')
+      el.classList.remove(
+        'attack-fast',
+        'attack-heavy',
+        'attack-ranged',
+        'hit',
+        'hit-heavy',
+        'dodge',
+        'guard',
+        'stunned',
+        'countering',
+        'comboing'
+      )
     })
     root.querySelectorAll('.brute-float').forEach(el => el.remove())
+    root.querySelectorAll('.brute-impact,.brute-dust,.brute-skill-banner,.brute-projectile').forEach(el => el.remove())
+
+    const arena =
+      root.querySelector('[data-brute-arena]')
+
+    arena?.classList.remove(
+      'shake',
+      'flash'
+    )
   }
 
   function eventText(event,tl) {
-    const actor = event.actor === 'left' ? tl.left.name : tl.right.name
-    const target = event.target === 'left' ? tl.left.name : tl.right.name
-    if (event.type === 'DODGE') return target+' esquive !'
+    const actor =
+      event.actor === 'left'
+        ? tl.left.name
+        : tl.right.name
+
+    const target =
+      event.target === 'left'
+        ? tl.left.name
+        : tl.right.name
+
+    if (event.type === 'START') return 'GO !'
+    if (event.type === 'MOVE') return actor+' fonce sur '+target+'.'
+    if (event.type === 'MOVE_BACK') return actor+' reprend sa position.'
+    if (event.type === 'DODGE') return actor+' esquive !'
     if (event.type === 'MISS') return actor+' rate son attaque.'
-    if (event.type === 'COUNTER_READY') return actor+' prépare un contre.'
+    if (event.type === 'COUNTER_READY') return actor+' prépare un contre !'
     if (event.type === 'COMBO') return actor+' enchaîne !'
-    if (event.type === 'GRIND') return actor+' GRIND : survit à 1 PV.'
+    if (event.type === 'GRIND') return actor+' active GRIND et survit à 1 PV !'
+    if (event.type === 'DISARM') return target+' perd '+(BRUTE_WEAPONS[event.weapon]?.name || 'son arme')+' !'
+    if (event.type === 'SKILL_ACTIVATE') return actor+' active '+(BRUTE_SKILLS[event.skill]?.name || event.skill)+' !'
     if (event.type === 'PET_ATTACK') return actor+' reçoit l’aide de son familier.'
-    if (event.type === 'STUN_SKIP') return actor+' est stun.'
-    if (event.type === 'FINISHER') return actor+' termine le combat !'
+    if (event.type === 'PET_DODGE') return target+' esquive le familier.'
+    if (event.type === 'STUN_SKIP') return actor+' est étourdi.'
+    if (event.type === 'FINISHER') return actor+' déclenche le coup final !'
     if (event.type === 'KO') return target+' est K.O.'
-    if (event.type === 'ATTACK') return actor+' inflige '+num(event.damage)+' à '+target+(event.critical?' · CRITIQUE':'')+(event.lockout?' · LOCKOUT':'')+(event.stun?' · PAUSE BENCH':'')
+    if (event.type === 'ATTACK') {
+      return actor+' inflige '+num(event.damage)+' à '+target+
+        (event.critical?' · CRITIQUE':'')+
+        (event.lockout?' · LOCKOUT':'')+
+        (event.stun?' · PAUSE BENCH':'')+
+        (event.blind?' · AVEUGLÉ':'')
+    }
+
     return 'Combat en cours…'
   }
 
   function applyEvent(event,tl) {
     clearAnimClasses()
 
-    const leftEl = root.querySelector('[data-fighter="left"]')
-    const rightEl = root.querySelector('[data-fighter="right"]')
-    const actorEl = event.actor === 'left' ? leftEl : rightEl
-    const targetEl = event.target === 'left' ? leftEl : rightEl
+    const arena =
+      root.querySelector(
+        '[data-brute-arena]'
+      )
 
-    if (event.type === 'MOVE' || event.type === 'ATTACK' || event.type === 'FINISHER') {
-      actorEl?.classList.add('attacking')
+    const fx =
+      root.querySelector(
+        '[data-brute-stagefx]'
+      )
+
+    const leftEl =
+      root.querySelector(
+        '[data-fighter="left"]'
+      )
+
+    const rightEl =
+      root.querySelector(
+        '[data-fighter="right"]'
+      )
+
+    const actorEl =
+      event.actor === 'left'
+        ? leftEl
+        : rightEl
+
+    const targetEl =
+      event.target === 'left'
+        ? leftEl
+        : rightEl
+
+    if (event.type === 'START') {
+      leftEl?.style.setProperty(
+        '--fight-offset',
+        '0%'
+      )
+      rightEl?.style.setProperty(
+        '--fight-offset',
+        '0%'
+      )
     }
-    if (event.type === 'ATTACK' || event.type === 'PET_ATTACK' || event.type === 'FINISHER') {
-      targetEl?.classList.add('hit')
+
+    if (event.type === 'MOVE') {
+      actorEl?.style.setProperty(
+        '--fight-offset',
+        event.actor === 'left'
+          ? '33%'
+          : '-33%'
+      )
+
+      const dust =
+        document.createElement(
+          'span'
+        )
+
+      dust.className =
+        'brute-dust'
+
+      dust.style.left =
+        event.actor === 'left'
+          ? '23%'
+          : '70%'
+
+      fx?.appendChild(dust)
     }
+
+    if (event.type === 'MOVE_BACK') {
+      actorEl?.style.setProperty(
+        '--fight-offset',
+        '0%'
+      )
+    }
+
+    if (
+      event.type === 'ATTACK' ||
+      event.type === 'FINISHER'
+    ) {
+      const weaponId =
+        event.weapon ||
+        (
+          event.actor === 'left'
+            ? tl.left.loadout?.weapon
+            : tl.right.loadout?.weapon
+        ) ||
+        'fists'
+
+      actorEl?.classList.add(
+        weaponAnimationClass(
+          weaponId
+        )
+      )
+
+      if (event.counter) {
+        actorEl?.classList.add(
+          'countering'
+        )
+      }
+
+      if (
+        weaponId === 'chalk' ||
+        weaponId === 'straps'
+      ) {
+        const projectile =
+          document.createElement(
+            'span'
+          )
+
+        projectile.className =
+          'brute-projectile ' +
+          (
+            event.actor === 'right'
+              ? 'right'
+              : ''
+          )
+
+        projectile.textContent =
+          BRUTE_WEAPONS[weaponId]?.icon ||
+          '•'
+
+        fx?.appendChild(
+          projectile
+        )
+      }
+    }
+
+    if (event.type === 'COMBO') {
+      actorEl?.classList.add(
+        'comboing'
+      )
+
+      const banner =
+        document.createElement(
+          'span'
+        )
+
+      banner.className =
+        'brute-skill-banner'
+
+      banner.textContent =
+        '⚡ ENCHAÎNEMENT'
+
+      fx?.appendChild(banner)
+    }
+
+    if (event.type === 'COUNTER_READY') {
+      actorEl?.classList.add(
+        'countering'
+      )
+
+      const banner =
+        document.createElement(
+          'span'
+        )
+
+      banner.className =
+        'brute-skill-banner'
+
+      banner.textContent =
+        '↩ CONTRE'
+
+      fx?.appendChild(banner)
+    }
+
+    if (
+      event.type ===
+      'SKILL_ACTIVATE'
+    ) {
+      actorEl?.classList.add(
+        event.skill === 'lockout'
+          ? 'guard'
+          : 'comboing'
+      )
+
+      const skill =
+        BRUTE_SKILLS[
+          event.skill
+        ]
+
+      const banner =
+        document.createElement(
+          'span'
+        )
+
+      banner.className =
+        'brute-skill-banner'
+
+      banner.textContent =
+        (skill?.icon || '✨') +
+        ' ' +
+        (skill?.name || event.skill)
+
+      fx?.appendChild(banner)
+    }
+
     if (event.type === 'DODGE') {
-      actorEl?.classList.add('dodge')
+      actorEl?.classList.add(
+        'dodge'
+      )
+
+      const floater =
+        document.createElement(
+          'span'
+        )
+
+      floater.className =
+        'brute-float dodge'
+
+      floater.textContent =
+        'ESQUIVE'
+
+      actorEl?.appendChild(
+        floater
+      )
+
+      fightSfx('miss')
     }
+
+    if (event.type === 'MISS') {
+      const floater =
+        document.createElement(
+          'span'
+        )
+
+      floater.className =
+        'brute-float dodge'
+
+      floater.textContent =
+        'MISS'
+
+      targetEl?.appendChild(
+        floater
+      )
+
+      fightSfx('miss')
+    }
+
+    if (event.type === 'STUN_SKIP') {
+      actorEl?.classList.add(
+        'stunned'
+      )
+
+      const floater =
+        document.createElement(
+          'span'
+        )
+
+      floater.className =
+        'brute-float skill'
+
+      floater.textContent =
+        'STUN'
+
+      actorEl?.appendChild(
+        floater
+      )
+    }
+
+    if (event.type === 'DISARM') {
+      targetEl?.classList.add(
+        'hit'
+      )
+
+      const banner =
+        document.createElement(
+          'span'
+        )
+
+      banner.className =
+        'brute-skill-banner'
+
+      banner.textContent =
+        '💥 DÉSARMÉ'
+
+      fx?.appendChild(banner)
+    }
+
+    if (event.type === 'GRIND') {
+      actorEl?.classList.add(
+        'guard'
+      )
+
+      const banner =
+        document.createElement(
+          'span'
+        )
+
+      banner.className =
+        'brute-skill-banner'
+
+      banner.textContent =
+        '🔥 GRIND · 1 PV'
+
+      fx?.appendChild(banner)
+    }
+
+    if (
+      event.type === 'ATTACK' ||
+      event.type === 'PET_ATTACK' ||
+      event.type === 'FINISHER'
+    ) {
+      const targetHpMax =
+        event.target === 'left'
+          ? num(tl.left.hpMax,1)
+          : num(tl.right.hpMax,1)
+
+      const heavy =
+        event.critical ||
+        event.type === 'FINISHER' ||
+        num(event.damage) >=
+          targetHpMax * .18
+
+      targetEl?.classList.add(
+        heavy
+          ? 'hit-heavy'
+          : 'hit'
+      )
+
+      if (heavy) {
+        arena?.classList.add(
+          'shake'
+        )
+      }
+
+      if (
+        event.critical ||
+        event.type === 'FINISHER'
+      ) {
+        arena?.classList.add(
+          'flash'
+        )
+      }
+
+      const impact =
+        document.createElement(
+          'span'
+        )
+
+      impact.className =
+        'brute-impact' +
+        (
+          event.critical
+            ? ' crit'
+            : ''
+        )
+
+      impact.style.left =
+        event.target === 'left'
+          ? '30%'
+          : '70%'
+
+      impact.style.top =
+        '53%'
+
+      fx?.appendChild(
+        impact
+      )
+
+      fightSfx(
+        event.critical
+          ? 'critical'
+          : 'hit'
+      )
+    }
+
     if (event.type === 'KO') {
-      targetEl?.classList.add('ko')
+      targetEl?.classList.add(
+        'ko'
+      )
+
+      targetEl?.style.setProperty(
+        '--fight-offset',
+        '0%'
+      )
+
+      fightSfx('perfect')
     }
 
     if (event.state) {
-      const lPct = Math.max(0,Math.min(100,num(event.state.leftHp)/Math.max(1,num(tl.left.hpMax))*100))
-      const rPct = Math.max(0,Math.min(100,num(event.state.rightHp)/Math.max(1,num(tl.right.hpMax))*100))
-      const lBar = root.querySelector('[data-hp-left]')
-      const rBar = root.querySelector('[data-hp-right]')
-      if (lBar) lBar.style.width = lPct+'%'
-      if (rBar) rBar.style.width = rPct+'%'
+      const leftHp =
+        num(event.state.leftHp)
+
+      const rightHp =
+        num(event.state.rightHp)
+
+      const lPct =
+        Math.max(
+          0,
+          Math.min(
+            100,
+            leftHp /
+            Math.max(
+              1,
+              num(tl.left.hpMax)
+            ) *
+            100
+          )
+        )
+
+      const rPct =
+        Math.max(
+          0,
+          Math.min(
+            100,
+            rightHp /
+            Math.max(
+              1,
+              num(tl.right.hpMax)
+            ) *
+            100
+          )
+        )
+
+      const lBar =
+        root.querySelector(
+          '[data-hp-left]'
+        )
+
+      const rBar =
+        root.querySelector(
+          '[data-hp-right]'
+        )
+
+      const lText =
+        root.querySelector(
+          '[data-hp-text-left]'
+        )
+
+      const rText =
+        root.querySelector(
+          '[data-hp-text-right]'
+        )
+
+      if (lBar) {
+        lBar.style.width =
+          lPct + '%'
+      }
+
+      if (rBar) {
+        rBar.style.width =
+          rPct + '%'
+      }
+
+      if (lText) {
+        lText.textContent =
+          leftHp +
+          ' / ' +
+          num(tl.left.hpMax)
+      }
+
+      if (rText) {
+        rText.textContent =
+          rightHp +
+          ' / ' +
+          num(tl.right.hpMax)
+      }
     }
 
-    if (num(event.damage) > 0 && targetEl) {
-      const floater = document.createElement('span')
-      floater.className = 'brute-float'+(event.lockout?' skill':'')
-      floater.textContent = '-'+num(event.damage)
-      targetEl.appendChild(floater)
+    if (
+      num(event.damage) > 0 &&
+      targetEl
+    ) {
+      const floater =
+        document.createElement(
+          'span'
+        )
+
+      floater.className =
+        'brute-float' +
+        (
+          event.critical
+            ? ' crit'
+            : ''
+        ) +
+        (
+          event.lockout
+            ? ' skill'
+            : ''
+        )
+
+      floater.textContent =
+        '-' +
+        num(event.damage)
+
+      targetEl.appendChild(
+        floater
+      )
     }
 
-    const log = root.querySelector('[data-brute-log]')
-    if (log) log.textContent = eventText(event,tl)
-    const round = root.querySelector('[data-brute-round]')
-    if (round) round.textContent = String(event.i || 1)
+    const log =
+      root.querySelector(
+        '[data-brute-log]'
+      )
+
+    if (log) {
+      log.textContent =
+        eventText(event,tl)
+    }
+
+    const round =
+      root.querySelector(
+        '[data-brute-round]'
+      )
+
+    if (round) {
+      round.textContent =
+        event.type === 'START'
+          ? 'GO'
+          : String(
+              event.i || 1
+            )
+    }
   }
 
   function finishFightPlayback(tl) {
-    const result = root.querySelector('[data-brute-fight-result]')
+    const result =
+      root.querySelector(
+        '[data-brute-fight-result]'
+      )
+
     if (!result) return
-    const won = tl.winnerSlug === selectedSlug
+
+    const won =
+      tl.winnerSlug ===
+      selectedSlug
+
     const t = theme()
-    result.innerHTML = '<div class="brute-panel brute-pad" style="margin-top:10px;text-align:center"><h2 style="margin:0">'+(won?'🏆 VICTOIRE':'💀 DÉFAITE')+'</h2><p style="color:#969bb1;font-size:10px">'+(won?esc(t.victory):'Tu reviendras plus fort.')+'</p><div class="brute-actions" style="justify-content:center"><button class="brute-primary" data-brute-replay-current>↻ Revoir</button><button class="brute-secondary" data-brute-after-fight>Retour au camp</button></div></div>'
+
+    const xp =
+      currentFightMeta?.xp_progress
+
+    const replayOnly =
+      Boolean(
+        currentFightMeta?.replay
+      )
+
+    const practice =
+      Boolean(
+        currentFightMeta?.practice
+      )
+
+    const gained =
+      practice
+        ? 0
+        : num(
+            xp?.xp_gained,
+            currentFightMeta?.fight?.xp_gained ||
+            0
+          )
+
+    const thresholdAfter =
+      Math.max(
+        1,
+        num(
+          xp?.threshold_after,
+          xpNeeded()
+        )
+      )
+
+    const beforePct =
+      xp
+        ? (
+            xp.leveled_up
+              ? 100
+              : Math.max(
+                  0,
+                  Math.min(
+                    100,
+                    num(xp.xp_before) /
+                    Math.max(
+                      1,
+                      num(
+                        xp.threshold_before,
+                        thresholdAfter
+                      )
+                    ) *
+                    100
+                  )
+                )
+          )
+        : 0
+
+    const afterPct =
+      xp
+        ? Math.max(
+            0,
+            Math.min(
+              100,
+              num(xp.xp_after) /
+              thresholdAfter *
+              100
+            )
+          )
+        : 0
+
+    const choices =
+      !replayOnly &&
+      !practice &&
+      Array.isArray(
+        currentFightMeta?.level_choices
+      )
+        ? currentFightMeta.level_choices
+        : []
+
+    result.innerHTML =
+      '<div class="brute-panel brute-xp-result">'+
+        '<h2 style="margin:0">'+
+          (
+            won
+              ? '🏆 VICTOIRE'
+              : '💀 DÉFAITE'
+          )+
+        '</h2>'+
+        '<p style="color:#969bb1;font-size:10px">'+
+          (
+            won
+              ? esc(t.victory)
+              : 'Tu reviendras plus fort.'
+          )+
+        '</p>'+
+        (
+          practice
+            ? '<div class="brute-xp-gain">ENTRAÎNEMENT · 0 XP</div>'
+            : replayOnly
+              ? '<div class="brute-xp-gain">↻ Replay · XP déjà attribuée</div>'
+              : '<div class="brute-xp-gain">✨ +'+gained+' XP</div>'
+        )+
+        (
+          xp
+            ? (
+                xp.leveled_up
+                  ? '<div class="brute-level-up">NIVEAU '+num(xp.level_before)+' → '+num(xp.level_after)+' !</div>'
+                  : ''
+              )+
+              '<div class="brute-xp-track"><i data-brute-xp-bar style="width:'+beforePct+'%"></i></div>'+
+              '<small style="color:#7e859f">'+num(xp.xp_after)+' / '+thresholdAfter+' XP · Niveau '+num(xp.level_after)+'</small>'
+            : ''
+        )+
+        (
+          choices.length
+            ? '<div class="brute-reward-inline"><small style="color:var(--accent);font-weight:1000">LEVEL UP · CHOISIS TON BONUS</small><div class="brute-choice-grid">'+
+                choices.slice(0,2).map((choice,index) =>
+                  '<button class="brute-choice" data-brute-choice="'+index+'"><span class="big">'+esc(choice.icon || '⭐')+'</span><b>'+esc(choice.name || 'Bonus')+'</b><small>'+esc(choice.type || '')+'</small></button>'
+                ).join('')+
+              '</div></div>'
+            : ''
+        )+
+        '<div class="brute-actions" style="justify-content:center">'+
+          '<button class="brute-primary" data-brute-replay-current>↻ Revoir</button>'+
+          '<button class="brute-secondary" data-brute-after-fight>Retour au camp</button>'+
+        '</div>'+
+      '</div>'
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const bar =
+          root.querySelector(
+            '[data-brute-xp-bar]'
+          )
+
+        if (bar) {
+          bar.style.width =
+            afterPct + '%'
+        }
+      })
+    })
   }
 
   async function playTimeline(tl) {
@@ -811,7 +1538,9 @@ export async function mountBruteGame(root, options = {}) {
       if (token !== playbackToken) return
       applyEvent(event,tl)
       if (event.type === 'END') break
-      await wait(Math.max(95,420/playbackSpeed))
+      await wait(
+        eventDelay(event)
+      )
     }
     if (token !== playbackToken) return
     finishFightPlayback(tl)
@@ -839,6 +1568,21 @@ export async function mountBruteGame(root, options = {}) {
     const data = result.data
     const fight = data.fight
     currentFightMeta = data
+
+    if (data.attacker) {
+      brute = {
+        ...brute,
+        ...data.attacker,
+      }
+    }
+
+    levelChoices =
+      Array.isArray(
+        data.level_choices
+      )
+        ? data.level_choices
+        : []
+
     currentTimeline = generateFightTimeline({
       seed:fight.seed,
       attacker:fight.attacker_snapshot,
@@ -883,7 +1627,10 @@ export async function mountBruteGame(root, options = {}) {
   async function replayFight(id) {
     const fight = history.find(row => row.id === id)
     if (!fight) return
-    currentFightMeta = { replay:true }
+    currentFightMeta = {
+      replay:true,
+      fight,
+    }
     currentTimeline = generateFightTimeline({
       seed:fight.seed,
       attacker:fight.attacker_snapshot,
@@ -1054,6 +1801,10 @@ export async function mountBruteGame(root, options = {}) {
       } else {
         notice = 'Bonus appliqué.'
         await refreshData(false)
+
+        if (screen === 'fight') {
+          screen = 'camp'
+        }
       }
       render()
       return
