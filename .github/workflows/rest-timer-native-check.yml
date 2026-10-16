@@ -1,0 +1,97 @@
+name: Rest Timer Native Check
+
+on:
+  push:
+    branches:
+      - v2-refactor
+    paths:
+      - ".github/workflows/rest-timer-native-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    name: Android rest timer build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: v2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: v2-refactor
+
+      - name: Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+
+      - name: Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Install
+        run: npm ci
+
+      - name: Rest timer tests
+        run: npm run test:rest
+
+      - name: Build and sync Android
+        run: |
+          npm run build
+          npx cap sync android
+
+      - name: Compile Android
+        run: |
+          cd android
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+  ios:
+    name: iOS Live Activity build
+    runs-on: macos-26
+    defaults:
+      run:
+        working-directory: v2
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: v2-refactor
+
+      - name: Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Rest timer tests
+        run: npm run test:rest
+
+      - name: Build and sync iOS
+        run: |
+          npm run build
+          npx cap sync ios
+
+      - name: Compile iOS app + Live Activity
+        run: |
+          xcodebuild \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Debug \
+            -destination "generic/platform=iOS" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
