@@ -14,11 +14,11 @@ const TEMPLATES = [
     targetBodyweight:76,
     days:[
       {
-        waterTarget:3,
-        waterMultiplier:'x1',
-        saltTarget:2.5,
-        saltMultiplier:'x1',
-        note:'Base du protocole.',
+        waterTarget:null,
+        waterMultiplier:'',
+        saltTarget:null,
+        saltMultiplier:'',
+        note:'D1 : valeurs de base à renseigner.',
       },
       {
         waterTarget:4.5,
