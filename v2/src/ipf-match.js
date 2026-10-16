@@ -23,6 +23,21 @@ const ATTEMPT_STATUSES =
     'failed',
   ])
 
+const IPF_GL_CLASSIC_POWERLIFTING = {
+  male: {
+    A: 1199.72839,
+    B: 1025.18162,
+    C: 0.00921,
+    minBodyWeight: 40,
+  },
+  female: {
+    A: 610.32796,
+    B: 1045.59282,
+    C: 0.03048,
+    minBodyWeight: 35,
+  },
+}
+
 function numeric(value) {
   const parsed = Number(
     String(value ?? '')
@@ -39,6 +54,137 @@ function positiveLoad(value) {
   return load > 0 && load <= 1000
     ? load
     : null
+}
+
+function positiveGl(value) {
+  const gl = numeric(value)
+  return gl > 0 && gl <= 300
+    ? gl
+    : null
+}
+
+function normalizeSex(value) {
+  return value === 'female'
+    ? 'female'
+    : 'male'
+}
+
+function positiveBodyWeight(
+  value,
+  sex = 'male'
+) {
+  const bodyWeight =
+    numeric(value)
+
+  const config =
+    IPF_GL_CLASSIC_POWERLIFTING[
+      normalizeSex(sex)
+    ]
+
+  return (
+    bodyWeight >=
+      config.minBodyWeight &&
+    bodyWeight <= 400
+  )
+    ? bodyWeight
+    : null
+}
+
+export function calculateIpfGlCoefficient(
+  bodyWeight,
+  sex = 'male'
+) {
+  const normalizedSex =
+    normalizeSex(sex)
+
+  const weight =
+    positiveBodyWeight(
+      bodyWeight,
+      normalizedSex
+    )
+
+  if (!weight) return null
+
+  const {
+    A,
+    B,
+    C,
+  } =
+    IPF_GL_CLASSIC_POWERLIFTING[
+      normalizedSex
+    ]
+
+  const denominator =
+    A -
+    B *
+    Math.exp(
+      -C * weight
+    )
+
+  if (
+    !Number.isFinite(
+      denominator
+    ) ||
+    denominator <= 0
+  ) {
+    return null
+  }
+
+  return 100 / denominator
+}
+
+export function calculateIpfGlPoints(
+  total,
+  bodyWeight,
+  sex = 'male'
+) {
+  const result =
+    positiveLoad(total)
+
+  const coefficient =
+    calculateIpfGlCoefficient(
+      bodyWeight,
+      sex
+    )
+
+  if (
+    !result ||
+    !coefficient
+  ) {
+    return null
+  }
+
+  return (
+    result *
+    coefficient
+  )
+}
+
+export function calculateTotalForIpfGl(
+  targetGl,
+  bodyWeight,
+  sex = 'male'
+) {
+  const gl =
+    positiveGl(targetGl)
+
+  const coefficient =
+    calculateIpfGlCoefficient(
+      bodyWeight,
+      sex
+    )
+
+  if (
+    !gl ||
+    !coefficient
+  ) {
+    return null
+  }
+
+  return roundIpfLoad(
+    gl / coefficient,
+    'up'
+  )
 }
 
 export function roundIpfLoad(
@@ -112,15 +258,34 @@ function normalizeLift(
 export function createIpfMatchState(
   saved = null
 ) {
+  const sex =
+    normalizeSex(
+      saved?.sex
+    )
+
   return {
-    version: 1,
+    version: 2,
     targetEnabled:
       saved?.targetEnabled !==
       false,
+    targetMode:
+      saved?.targetMode === 'gl'
+        ? 'gl'
+        : 'total',
     targetTotal:
       positiveLoad(
         saved?.targetTotal
       ),
+    targetGl:
+      positiveGl(
+        saved?.targetGl
+      ),
+    bodyWeight:
+      positiveBodyWeight(
+        saved?.bodyWeight,
+        sex
+      ),
+    sex,
     lifts:
       Object.fromEntries(
         IPF_LIFTS.map(
@@ -176,6 +341,9 @@ export function hasIpfMatchData(
   if (
     positiveLoad(
       state?.targetTotal
+    ) ||
+    positiveGl(
+      state?.targetGl
     )
   ) {
     return true
@@ -251,7 +419,14 @@ export function seedIpfMatchFromPrs(
       0
     )
 
-  if (prTotal > 0) {
+  if (
+    prTotal > 0 &&
+    (
+      next.targetMode !==
+        'gl' ||
+      !next.targetGl
+    )
+  ) {
     next.targetTotal =
       roundIpfLoad(
         prTotal
@@ -280,6 +455,50 @@ export function updateIpfMatchField(
   ) {
     next.targetTotal =
       positiveLoad(value)
+    return next
+  }
+
+  if (
+    field === 'targetGl'
+  ) {
+    next.targetGl =
+      positiveGl(value)
+    return next
+  }
+
+  if (
+    field === 'bodyWeight'
+  ) {
+    next.bodyWeight =
+      positiveBodyWeight(
+        value,
+        next.sex
+      )
+    return next
+  }
+
+  if (
+    field === 'sex'
+  ) {
+    next.sex =
+      normalizeSex(value)
+
+    next.bodyWeight =
+      positiveBodyWeight(
+        next.bodyWeight,
+        next.sex
+      )
+
+    return next
+  }
+
+  if (
+    field === 'targetMode'
+  ) {
+    next.targetMode =
+      value === 'gl'
+        ? 'gl'
+        : 'total'
     return next
   }
 
@@ -384,15 +603,48 @@ export function projectedLiftLoad(
   )
 }
 
+export function effectiveIpfTargetTotal(
+  state
+) {
+  const safeState =
+    createIpfMatchState(
+      state
+    )
+
+  if (
+    safeState.targetMode ===
+      'gl'
+  ) {
+    return (
+      calculateTotalForIpfGl(
+        safeState.targetGl,
+        safeState.bodyWeight,
+        safeState.sex
+      ) || 0
+    )
+  }
+
+  return (
+    positiveLoad(
+      safeState.targetTotal
+    ) || 0
+  )
+}
+
 export function calculateIpfMatchSummary(
   state
 ) {
+  const safeState =
+    createIpfMatchState(
+      state
+    )
+
   const securedTotal =
     IPF_LIFTS.reduce(
       (sum, { key }) =>
         sum +
         bestSuccessfulLoad(
-          state,
+          safeState,
           key
         ),
       0
@@ -403,21 +655,60 @@ export function calculateIpfMatchSummary(
       (sum, { key }) =>
         sum +
         projectedLiftLoad(
-          state,
+          safeState,
           key
         ),
       0
     )
 
   const targetTotal =
-    positiveLoad(
-      state?.targetTotal
-    ) || 0
+    effectiveIpfTargetTotal(
+      safeState
+    )
+
+  const securedGl =
+    calculateIpfGlPoints(
+      securedTotal,
+      safeState.bodyWeight,
+      safeState.sex
+    )
+
+  const projectedGl =
+    calculateIpfGlPoints(
+      projectedTotal,
+      safeState.bodyWeight,
+      safeState.sex
+    )
+
+  const targetGl =
+    safeState.targetMode ===
+      'gl'
+      ? (
+          positiveGl(
+            safeState.targetGl
+          ) || 0
+        )
+      : (
+          calculateIpfGlPoints(
+            targetTotal,
+            safeState.bodyWeight,
+            safeState.sex
+          ) || 0
+        )
 
   return {
     securedTotal,
     projectedTotal,
     targetTotal,
+    securedGl,
+    projectedGl,
+    targetGl,
+    targetMode:
+      safeState.targetMode,
+    bodyWeight:
+      safeState.bodyWeight,
+    sex:
+      safeState.sex,
     securedGap:
       targetTotal > 0
         ? targetTotal -
@@ -427,6 +718,12 @@ export function calculateIpfMatchSummary(
       targetTotal > 0
         ? targetTotal -
           projectedTotal
+        : 0,
+    projectedGlGap:
+      targetGl > 0 &&
+      projectedGl !== null
+        ? targetGl -
+          projectedGl
         : 0,
   }
 }
@@ -500,8 +797,8 @@ export function recommendIpfAttempt(
   }
 
   const target =
-    positiveLoad(
-      state?.targetTotal
+    effectiveIpfTargetTotal(
+      state
     )
 
   if (!target) return null
