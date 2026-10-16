@@ -398,11 +398,17 @@ function storeActive(
   return timer
 }
 
-function nativeIosAvailable() {
+function nativeTimerAvailable() {
+  if (!Capacitor.isNativePlatform()) {
+    return false
+  }
+
+  const platform =
+    Capacitor.getPlatform()
+
   return (
-    Capacitor.isNativePlatform() &&
-    Capacitor.getPlatform() ===
-      'ios'
+    platform === 'ios' ||
+    platform === 'android'
   )
 }
 
@@ -534,6 +540,10 @@ function nativePayload(
       new Date(
         timer.endAt
       ).toISOString(),
+    endAtEpochMs:
+      Number(
+        timer.endAt
+      ),
   }
 }
 
@@ -541,7 +551,7 @@ async function updateSystemTimer(
   timer,
   mode = 'update'
 ) {
-  if (nativeIosAvailable()) {
+  if (nativeTimerAvailable()) {
     try {
       await RestTimerNative[
         mode === 'start'
@@ -570,7 +580,7 @@ async function updateSystemTimer(
 }
 
 export async function requestRestTimerPermissions() {
-  if (nativeIosAvailable()) {
+  if (nativeTimerAvailable()) {
     try {
       return await RestTimerNative
         .requestPermissions()
@@ -727,7 +737,7 @@ export async function stopRestTimer(
 
   await cancelFallbackNotification()
 
-  if (nativeIosAvailable()) {
+  if (nativeTimerAvailable()) {
     try {
       await RestTimerNative
         .end({
@@ -744,7 +754,7 @@ export async function stopRestTimer(
 export async function syncRestTimerFromNative(
   athleteSlug
 ) {
-  if (!nativeIosAvailable()) {
+  if (!nativeTimerAvailable()) {
     return loadActiveRestTimer(
       athleteSlug
     )
@@ -784,6 +794,14 @@ export async function syncRestTimerFromNative(
       )
     }
 
+    const nativeEndAt =
+      Number(
+        native.endAtEpochMs
+      ) ||
+      new Date(
+        native.endAt
+      ).getTime()
+
     const timer = {
       version:1,
       athleteSlug:slug,
@@ -808,9 +826,7 @@ export async function syncRestTimerFromNative(
         ) ||
         Date.now(),
       endAt:
-        new Date(
-          native.endAt
-        ).getTime(),
+        nativeEndAt,
       completedSet:
         String(
           native.completedSet ||
