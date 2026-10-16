@@ -2,7 +2,9 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {
   applyIpfRecommendation,
+  calculateIpfGlPoints,
   calculateIpfMatchSummary,
+  calculateTotalForIpfGl,
   createIpfMatchState,
   generateIpfWarmups,
   recommendIpfAttempt,
@@ -176,5 +178,108 @@ test('distingue total sécurisé et total projeté', () => {
   assert.equal(
     summary.projectedGap,
     -7.5
+  )
+})
+
+
+test('calcule les GL Points classic powerlifting depuis le bodyweight', () => {
+  const gl =
+    calculateIpfGlPoints(
+      600,
+      83,
+      'male'
+    )
+
+  assert.ok(
+    gl > 82 &&
+    gl < 84
+  )
+})
+
+test('convertit un objectif GL en total IPF arrondi au 2,5 supérieur', () => {
+  const targetGl =
+    calculateIpfGlPoints(
+      770,
+      83,
+      'male'
+    )
+
+  const total =
+    calculateTotalForIpfGl(
+      targetGl,
+      83,
+      'male'
+    )
+
+  assert.equal(
+    total,
+    770
+  )
+})
+
+test('utilise le GL comme objectif pour recommander les troisièmes barres', () => {
+  const targetGl =
+    calculateIpfGlPoints(
+      770,
+      83,
+      'male'
+    )
+
+  const state =
+    createIpfMatchState({
+      ...plannedMatch(),
+      targetMode:'gl',
+      targetGl,
+      bodyWeight:83,
+      sex:'male',
+    })
+
+  const recommendation =
+    recommendIpfAttempt(
+      state,
+      'squat',
+      2
+    )
+
+  assert.equal(
+    recommendation.kg,
+    287.5
+  )
+
+  assert.ok(
+    recommendation.projectedGl > 0
+  )
+})
+
+test('le résumé affiche le GL projeté et le total nécessaire', () => {
+  const targetGl =
+    calculateIpfGlPoints(
+      770,
+      83,
+      'male'
+    )
+
+  const summary =
+    calculateIpfMatchSummary(
+      createIpfMatchState({
+        ...plannedMatch(),
+        targetMode:'gl',
+        targetGl,
+        bodyWeight:83,
+        sex:'male',
+      })
+    )
+
+  assert.equal(
+    summary.targetTotal,
+    770
+  )
+
+  assert.ok(
+    summary.projectedGl > targetGl
+  )
+
+  assert.ok(
+    summary.projectedGlGap < 0
   )
 })
