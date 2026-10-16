@@ -2,6 +2,7 @@
 import { supabase } from './supabase.js'
 import {
   BRUTE_PARTS,
+  BRUTE_PALETTES,
   BRUTE_WEAPONS,
   BRUTE_SKILLS,
   BRUTE_PETS,
@@ -518,7 +519,7 @@ export async function mountBruteGame(root, options = {}) {
         '<small style="color:var(--accent);font-weight:1000">CHARACTER CREATOR</small>'+
         '<h2>Crée ta brute</h2>'+
         '<p>Le personnage est composé de calques SVG indépendants : morphologie, visage, cheveux, tenue et accessoires. Ton apparence est figée après validation.</p>'+
-        '<div class="brute-create-help"><span>18 coiffures</span><span>6 morphologies</span><span>6 visages</span><span>10 accessoires</span></div>'+
+        '<div class="brute-create-help"><span>18 coiffures</span><span>14 peaux</span><span>21 couleurs cheveux</span><span>20 couleurs tenue</span><span>6 morphologies</span><span>10 accessoires</span></div>'+
         '<input class="brute-name-input" maxlength="28" data-brute-name value="'+esc(draftName)+'" placeholder="Nom de la brute">'+
         creatorSection(
           'Morphologie',
@@ -550,8 +551,8 @@ export async function mountBruteGame(root, options = {}) {
           '👕',
           control('top','Haut',partName(BRUTE_PARTS.tops,draft.top))+
           control('bottom','Bas',partName(BRUTE_PARTS.bottoms,draft.bottom))+
-          colorSwatches('primary',['#7c3aed','#2563eb','#dc2626','#059669','#d97706','#e11d48','#06b6d4','#f8fafc'],draft.colors?.[0])+
-          colorSwatches('secondary',['#111827','#1f2937','#3f3f46','#0f172a','#27272a','#f8fafc','#f59e0b','#0f766e'],draft.colors?.[1]),
+          colorSwatches('primary',BRUTE_PALETTES.primary,draft.colors?.[0])+
+          colorSwatches('secondary',BRUTE_PALETTES.secondary,draft.colors?.[1]),
           'outfit'
         )+
         creatorSection(
@@ -2470,8 +2471,8 @@ export async function mountBruteGame(root, options = {}) {
       const index = num(swatch.dataset.bruteColorIndex)
       if (key === 'skin') draft.skin = index
       else if (key === 'hairColor') draft.hairColor = index
-      else if (key === 'primary') draft.colors[0] = ['#7c3aed','#2563eb','#dc2626','#059669','#d97706','#e11d48','#f8fafc','#111827'][index]
-      else if (key === 'secondary') draft.colors[1] = ['#111827','#1f2937','#3f3f46','#0f172a','#27272a','#f8fafc','#f59e0b','#06b6d4'][index]
+      else if (key === 'primary') draft.colors[0] = BRUTE_PALETTES.primary[index] || BRUTE_PALETTES.primary[0]
+      else if (key === 'secondary') draft.colors[1] = BRUTE_PALETTES.secondary[index] || BRUTE_PALETTES.secondary[0]
       render()
       return
     }
