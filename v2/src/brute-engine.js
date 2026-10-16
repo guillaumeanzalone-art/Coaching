@@ -901,6 +901,56 @@ function turnAttack(
 
   pushEvent(
     events,
+    'WINDUP',
+    {
+      actor: attacker.side,
+      target: defender.side,
+      weapon: weapon.id,
+      category:
+        weapon.category ||
+        'unarmed',
+      counter:
+        Boolean(meta.counter),
+      thrown,
+      knockback:
+        blocked
+          ? Math.max(
+              2,
+              Math.round(
+                damage /
+                Math.max(
+                  1,
+                  defender.hpMax
+                ) *
+                28
+              )
+            )
+          : Math.max(
+              3,
+              Math.min(
+                72,
+                Math.round(
+                  damage /
+                  Math.max(
+                    1,
+                    defender.hpMax
+                  ) *
+                  72 +
+                  (
+                    critical
+                      ? 12
+                      : 0
+                  )
+                )
+              )
+            ),
+    },
+    left,
+    right
+  )
+
+  pushEvent(
+    events,
     'MOVE',
     {
       actor: attacker.side,
@@ -1501,6 +1551,25 @@ export function generateFightTimeline({
     right
   )
 
+  pushEvent(
+    events,
+    'ARRIVE',
+    {
+      leftY:
+        Math.round(
+          -7 +
+          random() * 14
+        ),
+      rightY:
+        Math.round(
+          -7 +
+          random() * 14
+        ),
+    },
+    left,
+    right
+  )
+
   let actions = 0
 
   while (
@@ -1643,6 +1712,31 @@ export function generateFightTimeline({
       left,
       right
     )
+
+    if (
+      actions % 4 === 0
+    ) {
+      pushEvent(
+        events,
+        'REPOSITION',
+        {
+          actor: active.side,
+          target: target.side,
+          leftY:
+            Math.round(
+              -8 +
+              random() * 16
+            ),
+          rightY:
+            Math.round(
+              -8 +
+              random() * 16
+            ),
+        },
+        left,
+        right
+      )
+    }
 
     active.fatigue =
       Math.max(
