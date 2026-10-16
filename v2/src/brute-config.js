@@ -251,6 +251,8 @@ export const BRUTE_PARTS = {
     { id: 3, name: 'Massif' },
     { id: 4, name: 'Powerlifter' },
     { id: 5, name: 'Heavyweight' },
+    { id: 6, name: 'Longiligne' },
+    { id: 7, name: 'Brawler' },
   ],
 
   heads: [
@@ -260,6 +262,8 @@ export const BRUTE_PARTS = {
     { id: 3, name: 'Fin' },
     { id: 4, name: 'Mâchoire large' },
     { id: 5, name: 'Pommettes hautes' },
+    { id: 6, name: 'Triangulaire' },
+    { id: 7, name: 'Rond large' },
   ],
 
   skins: [
