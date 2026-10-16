@@ -56,6 +56,13 @@ function positiveLoad(value) {
     : null
 }
 
+function positiveTotal(value) {
+  const total = numeric(value)
+  return total > 0 && total <= 1500
+    ? total
+    : null
+}
+
 function positiveGl(value) {
   const gl = numeric(value)
   return gl > 0 && gl <= 300
@@ -139,7 +146,7 @@ export function calculateIpfGlPoints(
   sex = 'male'
 ) {
   const result =
-    positiveLoad(total)
+    positiveTotal(total)
 
   const coefficient =
     calculateIpfGlCoefficient(
@@ -281,7 +288,7 @@ export function createIpfMatchState(
         ? 'gl'
         : 'total',
     targetTotal:
-      positiveLoad(
+      positiveTotal(
         saved?.targetTotal
       ),
     targetGl:
@@ -347,7 +354,7 @@ export function hasIpfMatchData(
   state
 ) {
   if (
-    positiveLoad(
+    positiveTotal(
       state?.targetTotal
     ) ||
     positiveGl(
@@ -462,7 +469,7 @@ export function updateIpfMatchField(
     field === 'targetTotal'
   ) {
     next.targetTotal =
-      positiveLoad(value)
+      positiveTotal(value)
     return next
   }
 
@@ -633,7 +640,7 @@ export function effectiveIpfTargetTotal(
   }
 
   return (
-    positiveLoad(
+    positiveTotal(
       safeState.targetTotal
     ) || 0
   )
