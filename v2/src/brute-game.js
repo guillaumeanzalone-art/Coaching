@@ -863,11 +863,33 @@ export async function mountBruteGame(root, options = {}) {
 
     const select = event.target.closest('[data-brute-select]')
     if (select) {
-      selectedSlug = String(select.dataset.bruteSelect || '')
+      const nextSlug =
+        String(
+          select.dataset.bruteSelect ||
+          ''
+        )
+
+      if (!nextSlug) {
+        return
+      }
+
+      selectedSlug = nextSlug
+      brute = null
       busy = true
-      render()
-      await refreshData()
+      notice = ''
+
+      root.innerHTML =
+        '<main class="brute-app"><div class="brute-shell"><section class="brute-panel brute-pad" style="text-align:center;padding:40px"><h2>Chargement de la brute…</h2><p style="color:#858ca8;font-size:10px">Connexion à Supabase</p></section></div></main>'
+
+      await refreshData(false)
       busy = false
+
+      if (!brute) {
+        selectedSlug = ''
+        screen = 'selector'
+      }
+
+      render()
       return
     }
 
