@@ -3151,6 +3151,11 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.target.closest('[data-brute-reroll-skin]')) {
+      if (busy) return
+
+      busy = true
+      render()
+
       const nextAppearance =
         randomAppearance()
 
@@ -3164,6 +3169,8 @@ export async function mountBruteGame(root, options = {}) {
               nextAppearance,
           }
         )
+
+      busy = false
 
       if (result.error) {
         notice =
@@ -3185,6 +3192,11 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.target.closest('[data-brute-reroll-colors]')) {
+      if (busy) return
+
+      busy = true
+      render()
+
       const random =
         randomAppearance()
 
@@ -3215,6 +3227,8 @@ export async function mountBruteGame(root, options = {}) {
               nextAppearance,
           }
         )
+
+      busy = false
 
       if (result.error) {
         notice =
