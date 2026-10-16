@@ -1613,8 +1613,8 @@ export async function mountBruteGame(root, options = {}) {
       }
 
       if (
-        weaponId === 'chalk' ||
-        weaponId === 'straps'
+        event.category === 'ranged' &&
+        !event.thrown
       ) {
         const projectile =
           document.createElement(
