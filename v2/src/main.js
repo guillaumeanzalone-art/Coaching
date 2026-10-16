@@ -1,5 +1,6 @@
 import { mountProgramEditor } from './program-editor.js'
 import { mountRpg } from './rpg.js'
+import { mountIdleGame } from './idle-game.js'
 import { getAthleteProgress, xpProgressFromTotal } from './xp.js'
 import './style.css'
 import './theme-spider.css'
@@ -844,7 +845,7 @@ function renderHome() {
         }
         <button
           class="card"
-          data-action="rpg"
+          data-action="game"
         >
           <span class="card-icon card-icon--spider card-icon--rpg">
             ${spiderMenuIcon('rpg')}
@@ -852,11 +853,11 @@ function renderHome() {
 
           <div>
             <strong>
-              RPG
+              Jeu
             </strong>
 
             <span>
-              Ouvrir le hub RPG
+              RPG · Idle Training · Sommeil · PvE / PvP
             </span>
           </div>
 
@@ -988,9 +989,18 @@ function renderHome() {
     }
 
     if (
+      action.dataset.action === 'game'
+    ) {
+      renderGameHubScreen()
+      return
+    }
+
+    if (
       action.dataset.action === 'rpg'
     ) {
-      await renderRpgScreen()
+      await renderRpgScreen(
+        renderGameHubScreen
+      )
       return
     }
 
@@ -1466,7 +1476,192 @@ async function renderSbdLeaderboardScreen() {
 }
 
 
-async function renderRpgScreen() {
+function renderGameHubScreen() {
+  clearAppHandlers()
+
+  app.innerHTML = `
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <span class="version">
+            GA COACHING · JEU
+          </span>
+
+          <h1>
+            Salle d'arcade
+          </h1>
+        </div>
+
+        <button
+          class="status status-button"
+          data-action="game-back-home"
+          type="button"
+        >
+          ← Accueil
+        </button>
+      </header>
+
+      <section class="cards">
+        <button
+          class="card"
+          data-action="game-rpg"
+          type="button"
+        >
+          <span class="card-icon card-icon--spider card-icon--rpg">
+            ${spiderMenuIcon('rpg')}
+          </span>
+
+          <div>
+            <strong>
+              RPG
+            </strong>
+
+            <span>
+              Classes · équipement · coffres · bestiaire · raids
+            </span>
+          </div>
+
+          <span class="arrow">
+            ›
+          </span>
+        </button>
+
+        <button
+          class="card"
+          data-action="game-idle"
+          type="button"
+        >
+          <span class="card-icon">
+            ⚡
+          </span>
+
+          <div>
+            <strong>
+              Idle Training
+            </strong>
+
+            <span>
+              Séances + steps + sommeil · PvE · PvP automatique
+            </span>
+          </div>
+
+          <span class="arrow">
+            ›
+          </span>
+        </button>
+      </section>
+
+      <section class="home-live-dashboard home-live-dashboard--bottom">
+        <div class="home-live-loading">
+          Le RPG garde sa progression actuelle.
+          Idle Training utilise uniquement les données réelles
+          d'entraînement, de pas et de sommeil.
+        </div>
+      </section>
+    </main>
+  `
+
+  app.onclick =
+    async event => {
+      const action =
+        event.target.closest(
+          '[data-action]'
+        )
+
+      if (!action) {
+        return
+      }
+
+      if (
+        action.dataset.action ===
+          'game-back-home'
+      ) {
+        renderHome()
+        return
+      }
+
+      if (
+        action.dataset.action ===
+          'game-rpg'
+      ) {
+        await renderRpgScreen(
+          renderGameHubScreen
+        )
+        return
+      }
+
+      if (
+        action.dataset.action ===
+          'game-idle'
+      ) {
+        await renderIdleGameScreen()
+      }
+    }
+}
+
+
+async function renderIdleGameScreen() {
+  clearAppHandlers()
+
+  const list =
+    visibleAthletes()
+
+  const ownId =
+    resolveAthleteIdFromMember()
+
+  const ownAthlete =
+    list.find(
+      athlete =>
+        athlete.id === ownId
+    )
+
+  const ownSlug =
+    String(
+      ownAthlete?.cloudSlug ||
+      ownAthlete?.slug ||
+      ownAthlete?.id ||
+      currentMember?.athlete_slug ||
+      ''
+    )
+
+  const isCoach =
+    currentMember?.role === 'coach'
+
+  await mountIdleGame(
+    app,
+    {
+      athletes: list,
+
+      initialSlug:
+        isCoach
+          ? ''
+          : ownSlug,
+
+      allowAthleteSelection:
+        isCoach,
+
+      canEditAthlete:
+        slug => {
+          if (isCoach) {
+            return true
+          }
+
+          return (
+            normalizeSlug(slug) ===
+            normalizeSlug(ownSlug)
+          )
+        },
+
+      onBack:
+        renderGameHubScreen,
+    }
+  )
+}
+
+
+async function renderRpgScreen(
+  onBack = renderHome
+) {
   clearAppHandlers()
 
   const list =
@@ -1518,8 +1713,7 @@ async function renderRpgScreen() {
           )
         },
 
-      onBack:
-        renderHome,
+      onBack,
     }
   )
 }
