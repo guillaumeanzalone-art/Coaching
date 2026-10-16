@@ -759,9 +759,13 @@ export async function syncRestTimerFromNative(
       !native?.active ||
       !native?.endAt
     ) {
-      return loadActiveRestTimer(
-        athleteSlug
+      removeStored(
+        activeKey(
+          athleteSlug
+        )
       )
+
+      return null
     }
 
     const slug =
