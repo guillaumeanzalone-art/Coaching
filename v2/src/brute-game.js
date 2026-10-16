@@ -77,7 +77,7 @@ function ensureStyles() {
     '.brute-swatches{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.brute-swatch{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.22);cursor:pointer}.brute-swatch.active{outline:3px solid var(--accent);outline-offset:2px}',
     '.brute-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.brute-primary,.brute-secondary{border:0;border-radius:13px;padding:12px 15px;font-weight:1000;cursor:pointer}.brute-primary{background:linear-gradient(135deg,var(--accent),#47c7f7);color:white}.brute-secondary{border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:#e7e8f0}.brute-primary:disabled,.brute-secondary:disabled{opacity:.38;cursor:not-allowed}',
     '.brute-dashboard{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:12px}.brute-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.brute-stat-card{padding:12px;border:1px solid rgba(255,255,255,.06);border-radius:15px;background:rgba(255,255,255,.03)}.brute-stat-card b{display:block;font-size:22px}.brute-stat-card span{font-size:8px;color:#8087a2;text-transform:uppercase;font-weight:900}',
-    '.brute-xp{margin-top:13px}.brute-track{height:8px;border-radius:999px;background:#060812;overflow:hidden}.brute-track i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#4ec6ff);border-radius:inherit}.brute-list{display:grid;gap:7px}.brute-row{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(255,255,255,.025)}.brute-row .icon{font-size:25px}.brute-row b{font-size:11px}.brute-row small{display:block;margin-top:2px;color:#747c98;font-size:8px}',
+    '.brute-xp{margin-top:13px}.brute-track{height:8px;border-radius:999px;background:#060812;overflow:hidden}.brute-track i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#4ec6ff);border-radius:inherit}.brute-list{display:grid;gap:7px}.brute-row{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(255,255,255,.025)}.brute-row .icon{font-size:25px}.brute-row b{font-size:11px}.brute-row small{display:block;margin-top:2px;color:#747c98;font-size:8px}.brute-selector-avatar{width:48px;height:48px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#0b0f21;display:grid;place-items:center;font-size:25px}.brute-selector-avatar img{width:100%;height:100%;object-fit:cover}.brute-real-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.brute-real-card{padding:11px;border:1px solid rgba(255,255,255,.06);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018))}.brute-real-card b{display:block;font-size:18px}.brute-real-card span{font-size:8px;color:#858ca8;text-transform:uppercase;font-weight:900}.brute-real-card small{display:block;margin-top:3px;color:#68708b;font-size:7px}.brute-real-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(255,255,255,.025)}',
     '.brute-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.brute-choice{padding:14px;border:1px solid color-mix(in srgb,var(--accent),transparent 55%);border-radius:16px;background:color-mix(in srgb,var(--accent),transparent 90%);color:#fff;cursor:pointer;text-align:left}.brute-choice .big{font-size:30px}.brute-choice b{display:block;margin-top:6px}.brute-choice small{color:#a8abc1}',
     '.brute-arena{position:relative;min-height:560px;overflow:hidden;background:radial-gradient(circle at 50% 24%,rgba(255,246,189,.72),transparent 25%),linear-gradient(180deg,#88c4d1 0 27%,#d6bd78 27% 34%,#b77638 34% 100%);border:2px solid #65401f;border-radius:21px}.brute-arena:after{content:"GA BRUTE";position:absolute;left:50%;top:58%;transform:translate(-50%,-50%) rotate(-7deg);font-size:65px;font-weight:1000;letter-spacing:.08em;color:rgba(87,43,18,.07);white-space:nowrap}',
     '.brute-hud{position:absolute;z-index:8;inset:12px 14px auto;display:grid;grid-template-columns:1fr 55px 1fr;gap:10px}.brute-hud-side.right{text-align:right}.brute-hud-name{font-size:10px;font-weight:1000;color:#fff4bd;text-shadow:0 2px #563018}.brute-hp{height:18px;padding:3px;border:2px solid #633719;border-radius:5px;background:#392216}.brute-hp i{display:block;height:100%;background:linear-gradient(180deg,#ffe646,#ffaf22 55%,#e6531d);transition:width .25s linear}.brute-round{display:grid;place-items:center;height:43px;border:3px solid #8e4d22;border-radius:50%;background:#fff0ae;color:#7b3d1d;font-size:9px;font-weight:1000}',
@@ -89,7 +89,7 @@ function ensureStyles() {
     '.brute-ranking{display:grid;gap:7px}.brute-rank-row{display:grid;grid-template-columns:34px 1fr repeat(3,auto);gap:9px;align-items:center;padding:10px;border-bottom:1px solid rgba(255,255,255,.055)}.brute-rank-row .rank{font-size:17px;font-weight:1000;color:var(--accent)}',
     '.brute-sleep{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.7fr);gap:12px}.brute-moon{min-height:390px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 32%,rgba(131,112,255,.28),transparent 25%),#0a0d21}.brute-moon .moon{font-size:100px;filter:drop-shadow(0 0 25px rgba(129,109,255,.38));animation:bruteIdle 4s ease-in-out infinite}.brute-sleep-time{font-size:40px;font-weight:1000;font-variant-numeric:tabular-nums}.brute-sound-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}',
     '@keyframes bruteIdle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.01)}}@keyframes bruteAttackLeft{0%,100%{transform:translateX(0)}50%{transform:translateX(42%) rotate(3deg)}}@keyframes bruteAttackRight{0%,100%{transform:scaleX(-1) translateX(0)}50%{transform:scaleX(-1) translateX(42%) rotate(3deg)}}@keyframes bruteHit{0%,100%{filter:none}30%{filter:brightness(1.8);transform:translateX(-9px)}60%{transform:translateX(7px)}}@keyframes bruteDodgeLeft{50%{transform:translateX(-30px)}}@keyframes bruteDodgeRight{50%{transform:scaleX(-1) translateX(-30px)}}@keyframes bruteFloat{0%{opacity:0;transform:translateY(12px) scale(.7)}35%{opacity:1;transform:translateY(-10px) scale(1.12)}100%{opacity:0;transform:translateY(-40px)}}',
-    '@media(max-width:760px){.brute-app{padding:9px}.brute-menu-grid{grid-template-columns:1fr;padding:14px;min-height:0}.brute-menu-avatar{order:-1}.brute-menu-side{grid-template-columns:1fr 1fr}.brute-title-screen{min-height:0}.brute-logo{font-size:32px}.brute-create,.brute-dashboard,.brute-equipment,.brute-sleep{grid-template-columns:1fr}.brute-create-preview{min-height:350px}.brute-create-preview .ga-brute-svg{width:280px}.brute-create-controls{max-height:none}.brute-stat-grid{grid-template-columns:1fr 1fr}.brute-arena{min-height:440px}.brute-fighters{padding:0 0%;bottom:43px}.brute-fighter .ga-brute-svg{width:220px}.brute-hud{inset:8px 7px auto;grid-template-columns:1fr 39px 1fr;gap:5px}.brute-round{height:34px}.brute-choice-grid{grid-template-columns:1fr}.brute-rank-row{grid-template-columns:30px 1fr auto}.brute-rank-row .extra{display:none}}',
+    '@media(max-width:760px){.brute-app{padding:9px}.brute-menu-grid{grid-template-columns:1fr;padding:14px;min-height:0}.brute-menu-avatar{order:-1}.brute-menu-side{grid-template-columns:1fr 1fr}.brute-title-screen{min-height:0}.brute-logo{font-size:32px}.brute-create,.brute-dashboard,.brute-equipment,.brute-sleep{grid-template-columns:1fr}.brute-create-preview{min-height:350px}.brute-create-preview .ga-brute-svg{width:280px}.brute-create-controls{max-height:none}.brute-stat-grid{grid-template-columns:1fr 1fr}.brute-arena{min-height:440px}.brute-fighters{padding:0 0%;bottom:43px}.brute-fighter .ga-brute-svg{width:220px}.brute-hud{inset:8px 7px auto;grid-template-columns:1fr 39px 1fr;gap:5px}.brute-round{height:34px}.brute-choice-grid{grid-template-columns:1fr}.brute-rank-row{grid-template-columns:30px 1fr auto}.brute-rank-row .extra{display:none}.brute-real-grid{grid-template-columns:1fr 1fr}.brute-selector-avatar{width:44px;height:44px}}',
   ].join('')
   document.head.appendChild(style)
 }
@@ -188,7 +188,7 @@ export async function mountBruteGame(root, options = {}) {
   let playbackToken = 0
   let currentTimeline = null
   let currentFightMeta = null
-  let sleepSnapshot = null
+  let idleSnapshot = null
   let sleepMode = 'rain'
   let sleepTimer = null
   let music = null
@@ -277,6 +277,7 @@ export async function mountBruteGame(root, options = {}) {
       historyResult,
       dailyResult,
       choicesResult,
+      idleResult,
     ] = await Promise.all([
       supabase.rpc('brute_get_or_create_v1',{
         p_athlete_slug:selectedSlug,
@@ -287,6 +288,9 @@ export async function mountBruteGame(root, options = {}) {
         p_athlete_slug:selectedSlug,
       }),
       supabase.rpc('brute_level_choices_v1',{
+        p_athlete_slug:selectedSlug,
+      }),
+      supabase.rpc('idle_get_snapshot_v1',{
         p_athlete_slug:selectedSlug,
       }),
     ])
@@ -304,6 +308,13 @@ export async function mountBruteGame(root, options = {}) {
     history = historyResult.error ? [] : (historyResult.data || [])
     daily = dailyResult.error ? daily : (dailyResult.data || daily)
     levelChoices = choicesResult.error ? [] : (choicesResult.data || [])
+    idleSnapshot = idleResult.error
+      ? null
+      : (
+          Array.isArray(idleResult.data)
+            ? idleResult.data[0]
+            : idleResult.data
+        )
 
     if (!brute.appearance_locked_at) {
       draft = Object.keys(brute.appearance || {}).length
@@ -324,7 +335,7 @@ export async function mountBruteGame(root, options = {}) {
     })
 
     if (!result.error) {
-      sleepSnapshot = Array.isArray(result.data)
+      idleSnapshot = Array.isArray(result.data)
         ? result.data[0]
         : result.data
     }
@@ -339,14 +350,38 @@ export async function mountBruteGame(root, options = {}) {
     '</header>'
   }
 
+  function athleteAvatarMarkup(athlete) {
+    const raw =
+      String(
+        athlete?.profileImage ||
+        ''
+      ).trim()
+
+    const src =
+      !raw
+        ? ''
+        : (
+            raw.startsWith('data:') ||
+            raw.startsWith('http://') ||
+            raw.startsWith('https://') ||
+            raw.startsWith('/')
+          )
+          ? raw
+          : '/' + raw
+
+    return src
+      ? '<span class="brute-selector-avatar"><img src="' + esc(src) + '" alt=""></span>'
+      : '<span class="brute-selector-avatar">' + esc(athlete?.emoji || '🏋️') + '</span>'
+  }
+
   function renderSelector() {
     return '<div class="brute-panel brute-pad">'+
-      '<div><small style="color:#858ca8;font-weight:900">GA BRUTE</small><h2>Choisir un athlète</h2></div>'+
+      '<div><small style="color:#858ca8;font-weight:900">IDLE TRAINING · GA BRUTE</small><h2>Choisir un athlète</h2><p style="margin:4px 0 13px;color:#747c98;font-size:9px">Sommeil · steps · séances · personnage · PvE · Duel</p></div>'+
       '<div class="brute-list">'+
         athletes.map(a =>
           '<button class="brute-row brute-secondary" data-brute-select="'+esc(athleteSlug(a))+'">'+
-            '<span class="icon">'+esc(a.emoji || '🏋️')+'</span>'+
-            '<span><b>'+esc(a.name || a.id)+'</b><small>Ouvrir sa brute</small></span>'+
+            athleteAvatarMarkup(a)+
+            '<span><b>'+esc(a.name || a.id)+'</b><small>Ouvrir son Idle Training</small></span>'+
             '<span>›</span>'+
           '</button>'
         ).join('')+
@@ -414,11 +449,11 @@ export async function mountBruteGame(root, options = {}) {
     const pet = BRUTE_PETS[(brute.pets || [])[0]]
 
     return '<section class="brute-title-screen">'+
-      '<div class="brute-logo">GA BRUTE</div>'+
-      '<div class="brute-title-sub">POWERLIFTING ARENA</div>'+
+      '<div class="brute-logo">IDLE TRAINING</div>'+
+      '<div class="brute-title-sub">GA BRUTE · TRAIN · WALK · SLEEP · FIGHT</div>'+
       '<div class="brute-menu-grid">'+
         '<div class="brute-menu-side">'+
-          '<button class="brute-wood" data-brute-screen="camp">⛺ CAMP<small>Stats · niveau · historique</small></button>'+
+          '<button class="brute-wood" data-brute-screen="camp">⛺ CAMP<small>Séances · steps · sommeil · progression</small></button>'+
           '<button class="brute-wood" data-brute-screen="pve">⚔️ PVE<small>Combat d’entraînement</small></button>'+
           '<button class="brute-wood" data-brute-screen="ranking">🏆 CLASSEMENT<small>Toutes les brutes</small></button>'+
         '</div>'+
@@ -427,8 +462,8 @@ export async function mountBruteGame(root, options = {}) {
           '<div class="brute-nameplate">'+esc(t.emoji)+' '+esc(brute.name)+'</div>'+
           '<div class="brute-menu-stats">'+
             '<div class="brute-menu-stat"><b>'+num(brute.level,1)+'</b><span>Niveau</span></div>'+
-            '<div class="brute-menu-stat"><b>'+num(brute.rating,1000)+'</b><span>Cote</span></div>'+
-            '<div class="brute-menu-stat"><b>'+num(daily.remaining,6)+'/6</b><span>Duels</span></div>'+
+            '<div class="brute-menu-stat"><b>'+num(idleSnapshot?.steps,0)+'</b><span>Steps</span></div>'+
+            '<div class="brute-menu-stat"><b>'+Math.round(num(idleSnapshot?.sleep_seconds,0)/3600*10)/10+'h</b><span>Sommeil</span></div>'+
           '</div>'+
         '</div>'+
         '<div class="brute-menu-side">'+
@@ -478,6 +513,13 @@ export async function mountBruteGame(root, options = {}) {
             statCard('Vitesse',brute.speed,'⚡')+
           '</div>'+
           '<div class="brute-xp"><div style="display:flex;justify-content:space-between;font-size:9px;color:#858ca8;margin-bottom:5px"><span>XP niveau '+num(brute.level,1)+'</span><span>'+num(brute.xp)+' / '+xpNeeded()+'</span></div><div class="brute-track"><i style="width:'+pct+'%"></i></div></div>'+
+          '<div class="brute-real-grid">'+
+            '<div class="brute-real-card"><span>🏋️ Entraînement</span><b>'+num(idleSnapshot?.training_sets,0)+' séries</b><small>Score '+num(idleSnapshot?.training_score,0)+'/100</small></div>'+
+            '<div class="brute-real-card"><span>🚶 Steps</span><b>'+num(idleSnapshot?.steps,0)+'</b><small>Score '+num(idleSnapshot?.steps_score,0)+'/100</small></div>'+
+            '<div class="brute-real-card"><span>🌙 Sommeil</span><b>'+Math.round(num(idleSnapshot?.sleep_seconds,0)/3600*10)/10+' h</b><small>Score '+num(idleSnapshot?.sleep_score,0)+'/100</small></div>'+
+            '<div class="brute-real-card"><span>⚡ Puissance réelle</span><b>'+num(idleSnapshot?.power,35)+'</b><small>'+num(idleSnapshot?.idle_rate,0)+' énergie/h</small></div>'+
+          '</div>'+
+          '<div class="brute-real-actions"><div><b>Énergie Idle : '+num(idleSnapshot?.idle_energy,0)+'</b><small style="display:block;color:#747c98;margin-top:2px">+'+num(idleSnapshot?.pending_energy,0)+' en attente</small></div><button class="brute-secondary" data-brute-claim '+(num(idleSnapshot?.pending_energy,0)<=0?'disabled':'')+'>🔋 Collecter</button></div>'+
           renderChoices()+
           '<div class="brute-actions"><button class="brute-secondary" data-brute-screen="equipment">🎒 Équipement</button><button class="brute-secondary" data-brute-screen="duel">🥊 Duel</button></div>'+
         '</section>'+
@@ -571,8 +613,8 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function renderSleep() {
-    const active = sleepSnapshot?.active_sleep_started_at
-    const baseSeconds = num(sleepSnapshot?.sleep_seconds)
+    const active = idleSnapshot?.active_sleep_started_at
+    const baseSeconds = num(idleSnapshot?.sleep_seconds)
     return topBar('Sommeil','Récupération')+
       '<div class="brute-sleep">'+
         '<section class="brute-panel brute-moon"><div class="moon">☾</div><div class="brute-sleep-time" data-brute-sleep-time>'+sleepLabel(active ? Math.max(0,(Date.now()-new Date(active).getTime())/1000) : baseSeconds)+'</div><small style="color:#858ca8">'+(active?'Sommeil en cours':'Sommeil enregistré aujourd’hui')+'</small><button class="brute-primary" style="margin-top:18px" data-brute-sleep-toggle>'+(active?'☀️ Je me réveille':'🌙 Démarrer mon sommeil')+'</button></section>'+
@@ -650,12 +692,12 @@ export async function mountBruteGame(root, options = {}) {
   function scheduleSleepTicker() {
     if (sleepTimer) clearInterval(sleepTimer)
     sleepTimer = null
-    if (screen !== 'sleep' || !sleepSnapshot?.active_sleep_started_at) return
+    if (screen !== 'sleep' || !idleSnapshot?.active_sleep_started_at) return
 
     sleepTimer = setInterval(() => {
       const el = root.querySelector('[data-brute-sleep-time]')
       if (!el) return
-      el.textContent = sleepLabel(Math.max(0,(Date.now()-new Date(sleepSnapshot.active_sleep_started_at).getTime())/1000))
+      el.textContent = sleepLabel(Math.max(0,(Date.now()-new Date(idleSnapshot.active_sleep_started_at).getTime())/1000))
     },1000)
   }
 
@@ -897,6 +939,7 @@ export async function mountBruteGame(root, options = {}) {
     if (switchBtn) {
       selectedSlug = ''
       brute = null
+      idleSnapshot = null
       screen = 'selector'
       render()
       return
@@ -967,6 +1010,34 @@ export async function mountBruteGame(root, options = {}) {
       await refreshData(false)
       screen = 'menu'
       notice = 'Brute créée.'
+      render()
+      return
+    }
+
+    if (event.target.closest('[data-brute-claim]')) {
+      busy = true
+      render()
+
+      const result =
+        await supabase.rpc(
+          'idle_claim_v1',
+          {
+            p_athlete_slug:
+              selectedSlug,
+          }
+        )
+
+      busy = false
+
+      if (result.error) {
+        notice =
+          result.error.message ||
+          'Impossible de collecter l’énergie.'
+      } else {
+        await refreshData(false)
+        notice = 'Énergie Idle collectée.'
+      }
+
       render()
       return
     }
@@ -1083,7 +1154,7 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.target.closest('[data-brute-sleep-toggle]')) {
-      const active = sleepSnapshot?.active_sleep_started_at
+      const active = idleSnapshot?.active_sleep_started_at
       const result = active
         ? await supabase.rpc('idle_sleep_stop_v1',{p_athlete_slug:selectedSlug})
         : await supabase.rpc('idle_sleep_start_v1',{p_athlete_slug:selectedSlug,p_sound_mode:sleepMode})
