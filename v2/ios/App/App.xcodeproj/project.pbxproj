@@ -24,6 +24,8 @@
 		A10000000000000000000014 /* RestTimerWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000003 /* RestTimerWidgetBundle.swift */; };
 		A10000000000000000000015 /* RestTimerLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000004 /* RestTimerLiveActivity.swift */; };
 		A10000000000000000000016 /* RestTimerWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* RestTimerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, CodeSignOnCopy, ); }; };
+		A10000000000000000000017 /* RestTimerIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000008 /* RestTimerIntents.swift */; };
+		A10000000000000000000018 /* RestTimerIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000008 /* RestTimerIntents.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +73,7 @@
 		A10000000000000000000004 /* RestTimerLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimerLiveActivity.swift; sourceTree = "<group>"; };
 		A10000000000000000000005 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A10000000000000000000006 /* RestTimerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RestTimerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000008 /* RestTimerIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestTimerIntents.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,7 @@
 				A1B2C3D40123456789ABCDEF /* HealthStepsPlugin.swift */,
 				A10000000000000000000001 /* RestTimerAttributes.swift */,
 				A10000000000000000000002 /* RestTimerNativePlugin.swift */,
+				A10000000000000000000008 /* RestTimerIntents.swift */,
 				A1B2C3D80123456789ABCDEF /* App.entitlements */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
@@ -265,6 +269,7 @@
 				A1B2C3D50123456789ABCDEF /* HealthStepsPlugin.swift in Sources */,
 				A10000000000000000000011 /* RestTimerAttributes.swift in Sources */,
 				A10000000000000000000012 /* RestTimerNativePlugin.swift in Sources */,
+				A10000000000000000000017 /* RestTimerIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +280,7 @@
 				A10000000000000000000013 /* RestTimerAttributes.swift in Sources */,
 				A10000000000000000000014 /* RestTimerWidgetBundle.swift in Sources */,
 				A10000000000000000000015 /* RestTimerLiveActivity.swift in Sources */,
+				A10000000000000000000018 /* RestTimerIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
