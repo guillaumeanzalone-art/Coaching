@@ -196,6 +196,7 @@ export async function mountBruteGame(root, options = {}) {
   let currentTimeline = null
   let currentFightMeta = null
   let idleSnapshot = null
+  let idleSnapshotAt = Date.now()
   let sleepMode = 'rain'
   let sleepTimer = null
   let music = null
@@ -323,6 +324,8 @@ export async function mountBruteGame(root, options = {}) {
             : idleResult.data
         )
 
+    idleSnapshotAt = Date.now()
+
     const storedVersion =
       num(
         brute.appearance?.v,
@@ -398,6 +401,8 @@ export async function mountBruteGame(root, options = {}) {
       idleSnapshot = Array.isArray(result.data)
         ? result.data[0]
         : result.data
+
+      idleSnapshotAt = Date.now()
     }
   }
 
@@ -633,37 +638,97 @@ export async function mountBruteGame(root, options = {}) {
     '</div>'
   }
 
-  function sleepRecoveryRate() {
+  function passiveEnergyNow() {
+    const stored =
+      num(
+        idleSnapshot?.idle_energy,
+        0
+      )
+
+    const anchor =
+      idleSnapshot?.last_claim_at
+
+    if (!anchor) {
+      return Math.max(
+        0,
+        Math.min(
+          500,
+          stored
+        )
+      )
+    }
+
+    const elapsedMinutes =
+      Math.max(
+        0,
+        Math.floor(
+          (
+            Date.now() -
+            new Date(
+              anchor
+            ).getTime()
+          ) /
+          60000
+        )
+      )
+
     return Math.max(
-      12,
+      0,
       Math.min(
-        30,
-        num(idleSnapshot?.idle_rate,0) + 8
+        500,
+        stored +
+        elapsedMinutes
       )
     )
   }
 
-  function pendingSleepEnergy() {
-    const started =
-      idleSnapshot?.active_sleep_started_at
+  function sleepScoreNow() {
+    const base =
+      num(
+        idleSnapshot?.sleep_score,
+        0
+      )
 
-    if (!started) return 0
+    if (
+      !idleSnapshot
+        ?.active_sleep_started_at
+    ) {
+      return Math.max(
+        0,
+        Math.min(
+          100,
+          base
+        )
+      )
+    }
 
-    const seconds =
+    const extraSeconds =
       Math.max(
         0,
         (
           Date.now() -
-          new Date(started).getTime()
+          idleSnapshotAt
         ) / 1000
       )
 
     return Math.max(
       0,
-      Math.floor(
-        seconds / 3600 *
-        sleepRecoveryRate()
+      Math.min(
+        100,
+        base +
+        Math.round(
+          extraSeconds /
+          28800 *
+          100
+        )
       )
+    )
+  }
+
+  function sleepXpBonusNow() {
+    return Math.round(
+      sleepScoreNow() *
+      .22
     )
   }
 
@@ -685,16 +750,7 @@ export async function mountBruteGame(root, options = {}) {
       history.slice(0,6)
 
     const energy =
-      num(
-        idleSnapshot?.idle_energy,
-        0
-      )
-
-    const pending =
-      num(
-        idleSnapshot?.pending_energy,
-        0
-      )
+      passiveEnergyNow()
 
     const energyPct =
       Math.max(
@@ -759,18 +815,14 @@ export async function mountBruteGame(root, options = {}) {
             )+
             '<div class="brute-nameplate">'+esc(brute.name)+' · NIV. '+num(brute.level,1)+'</div>'+
             '<div class="brute-camp-energy">'+
-              '<div class="brute-camp-energy-head"><span>⚡ ÉNERGIE</span><span>'+energy+' / 500</span></div>'+
-              '<div class="brute-camp-energy-track"><i style="width:'+energyPct+'%"></i></div>'+
+              '<div class="brute-camp-energy-head"><span>⚡ ÉNERGIE · +1 / MIN</span><span data-brute-energy-value>'+energy+' / 500</span></div>'+
+              '<div class="brute-camp-energy-track"><i data-brute-energy-bar style="width:'+energyPct+'%"></i></div>'+
               '<div class="brute-camp-xp">'+
                 '<div class="brute-camp-energy-head"><span>✨ XP</span><span>'+num(brute.xp)+' / '+xpNeeded()+'</span></div>'+
                 '<div class="brute-track"><i style="width:'+pct+'%"></i></div>'+
               '</div>'+
             '</div>'+
-            (
-              pending > 0
-                ? '<button class="brute-camp-action" style="margin-top:9px;max-width:330px" data-brute-claim>🔋 COLLECTER +'+pending+' ÉNERGIE</button>'
-                : ''
-            )+
+            '<small style="margin-top:7px;color:#744725;font-weight:900">Régénération passive : 1 énergie chaque minute, même hors de l’app.</small>'+
             renderChoices()+
           '</div>'+
 
@@ -781,12 +833,12 @@ export async function mountBruteGame(root, options = {}) {
                 '<div><span>Sommeil</span><b>'+Math.round(num(idleSnapshot?.sleep_seconds,0)/3600*10)/10+' h</b></div>'+
                 '<div><span>Score</span><b>'+num(idleSnapshot?.sleep_score,0)+'/100</b></div>'+
               '</div>'+
-              '<small>Au lit, tu récupères environ '+sleepRecoveryRate()+' énergie par heure. Un bon sommeil ajoute jusqu’à +22 XP par victoire. Bonus actuel : +'+Math.round(num(idleSnapshot?.sleep_score,0)*.22)+' XP.</small>'+
+              '<small>Le sommeil sert uniquement à l’XP. Jusqu’à +22 XP par victoire. Bonus actuel : +'+Math.round(num(idleSnapshot?.sleep_score,0)*.22)+' XP.</small>'+
             '</div>'+
             '<button class="brute-camp-action sleep" data-brute-go-sleep>'+
               (
                 asleep
-                  ? '🌙 SOMMEIL EN COURS · +'+pendingSleepEnergy()
+                  ? '🌙 SOMMEIL EN COURS · XP +'+sleepXpBonusNow()
                   : '🌙 ALLER SE COUCHER'
               )+
             '</button>'+
@@ -794,9 +846,9 @@ export async function mountBruteGame(root, options = {}) {
               '<h3>⚡ PUISSANCE DU JOUR</h3>'+
               '<div class="brute-camp-kpi">'+
                 '<div><span>Puissance</span><b>'+num(idleSnapshot?.power,35)+'</b></div>'+
-                '<div><span>Idle / h</span><b>'+num(idleSnapshot?.idle_rate,0)+'</b></div>'+
+                '<div><span>Énergie</span><b>+1/min</b></div>'+
               '</div>'+
-              '<small>Entraînement + steps + sommeil influencent directement le moteur de combat.</small>'+
+              '<small>Entraînement + steps influencent le combat. Le sommeil influence uniquement l’XP gagnée.</small>'+
             '</div>'+
             '<div class="brute-camp-card brute-camp-history">'+
               '<h3>⚔️ DERNIERS COMBATS</h3>'+
@@ -1076,26 +1128,91 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function renderEquipment() {
-    const equipped = brute.loadout?.weapon || 'fists'
-    return topBar('Équipement / Skin','Build')+
+    const equipped =
+      brute.loadout?.weapon ||
+      'fists'
+
+    return topBar(
+      'Équipement / Skin',
+      'Build'
+    )+
       '<div class="brute-equipment">'+
-        '<section class="brute-panel brute-equipment-preview">'+renderBruteSvg(brute.appearance,{label:brute.name,weapon:BRUTE_WEAPONS[equipped],pet:BRUTE_PETS[(brute.pets||[])[0]]})+'</section>'+
+        '<section class="brute-panel brute-equipment-preview">'+
+          renderBruteSvg(
+            brute.appearance,
+            {
+              label:brute.name,
+              weapon:
+                BRUTE_WEAPONS[
+                  equipped
+                ],
+              pet:
+                BRUTE_PETS[
+                  (brute.pets || [])[0]
+                ],
+            }
+          )+
+          '<div class="brute-actions" style="justify-content:center;padding:0 14px 16px">'+
+            '<button class="brute-primary" data-brute-reroll-skin>🎲 NOUVEAU SKIN ALÉATOIRE</button>'+
+            '<button class="brute-secondary" data-brute-reroll-colors>🎨 COULEURS ALÉATOIRES</button>'+
+          '</div>'+
+        '</section>'+
         '<section class="brute-panel brute-pad">'+
-          '<small style="color:var(--accent);font-weight:1000">APPARENCE VERROUILLÉE</small><h2 style="margin:5px 0 8px">'+esc(brute.name)+'</h2>'+
-          '<p style="color:#858ca8;font-size:10px">Ton corps, visage et vêtements de création sont figés. Les armes, compétences et familiers se débloquent aux montées de niveau.</p>'+
-          '<h3>Armes</h3><div class="brute-chip-row">'+(brute.weapons||[]).map(id => {
-            const w=BRUTE_WEAPONS[id]||{name:id,icon:'⚔️'}
-            return '<button class="brute-chip '+(equipped===id?'active':'')+'" data-brute-equip="'+esc(id)+'">'+esc(w.icon+' '+w.name)+'</button>'
-          }).join('')+'</div>'+
-          '<h3>Compétences</h3><div class="brute-chip-row">'+((brute.skills||[]).length?(brute.skills||[]).map(id => {
-            const s=BRUTE_SKILLS[id]||{name:id,icon:'✨'}
-            return '<span class="brute-chip">'+esc(s.icon+' '+s.name)+'</span>'
-          }).join(''):'<span style="color:#747c98;font-size:9px">Aucune pour le moment.</span>')+'</div>'+
-          '<h3>Familiers</h3><div class="brute-chip-row">'+((brute.pets||[]).length?(brute.pets||[]).map(id => {
-            const p=BRUTE_PETS[id]||{name:id,emoji:'🐾'}
-            return '<span class="brute-chip">'+esc(p.emoji+' '+p.name)+'</span>'
-          }).join(''):'<span style="color:#747c98;font-size:9px">0 / 3</span>')+'</div>'+
-          (options.isCoach ? '<div class="brute-actions"><button class="brute-secondary" data-brute-reset>♻️ Réinitialiser la création</button></div>' : '')+
+          '<small style="color:var(--accent);font-weight:1000">STYLE MODIFIABLE À VOLONTÉ</small>'+
+          '<h2 style="margin:5px 0 8px">'+esc(brute.name)+'</h2>'+
+          '<p style="color:#858ca8;font-size:10px;line-height:1.55">Tu peux relancer ton apparence autant de fois que tu veux. Cela ne change ni ton niveau, ni tes stats, ni tes armes, ni tes compétences.</p>'+
+          '<h3>Armes équipables</h3>'+
+          '<div class="brute-chip-row">'+
+            (brute.weapons || []).map(id => {
+              const w =
+                BRUTE_WEAPONS[id] ||
+                {
+                  name:id,
+                  icon:'⚔️',
+                }
+
+              return '<button class="brute-chip '+(equipped===id?'active':'')+'" data-brute-equip="'+esc(id)+'">'+esc(w.icon+' '+w.name)+'</button>'
+            }).join('')+
+          '</div>'+
+          '<h3>Compétences</h3>'+
+          '<div class="brute-chip-row">'+
+            (
+              (brute.skills || []).length
+                ? (brute.skills || []).map(id => {
+                    const s =
+                      BRUTE_SKILLS[id] ||
+                      {
+                        name:id,
+                        icon:'✨',
+                      }
+
+                    return '<span class="brute-chip">'+esc(s.icon+' '+s.name)+'</span>'
+                  }).join('')
+                : '<span style="color:#747c98;font-size:9px">Aucune pour le moment.</span>'
+            )+
+          '</div>'+
+          '<h3>Familiers</h3>'+
+          '<div class="brute-chip-row">'+
+            (
+              (brute.pets || []).length
+                ? (brute.pets || []).map(id => {
+                    const p =
+                      BRUTE_PETS[id] ||
+                      {
+                        name:id,
+                        emoji:'🐾',
+                      }
+
+                    return '<span class="brute-chip">'+esc(p.emoji+' '+p.name)+'</span>'
+                  }).join('')
+                : '<span style="color:#747c98;font-size:9px">0 / 3</span>'
+            )+
+          '</div>'+
+          (
+            options.isCoach
+              ? '<div class="brute-actions"><button class="brute-secondary" data-brute-reset>♻️ Refaire la création complète</button></div>'
+              : ''
+          )+
         '</section>'+
       '</div>'
   }
@@ -1148,14 +1265,8 @@ export async function mountBruteGame(root, options = {}) {
             )+
           '</small>'+
           '<div class="brute-sleep-energy">'+
-            '<b data-brute-sleep-energy>'+
-              (
-                active
-                  ? '+'+pendingSleepEnergy()+' énergie'
-                  : sleepRecoveryRate()+' énergie / heure'
-              )+
-            '</b>'+
-            '<small>Minimum 5 minutes de sommeil pour valider une récupération.</small>'+
+            '<b data-brute-sleep-xp>✨ Bonus XP +'+sleepXpBonusNow()+'</b>'+
+            '<small>8 h de sommeil = score 100/100 = jusqu’à +22 XP par victoire. Aucun gain d’énergie ici.</small>'+
           '</div>'+
           '<button class="brute-primary" style="margin-top:18px" data-brute-sleep-toggle>'+
             (
@@ -1167,7 +1278,7 @@ export async function mountBruteGame(root, options = {}) {
         '</section>'+
         '<aside class="brute-panel brute-pad">'+
           '<h3>Ambiance</h3>'+
-          '<p style="color:#858ca8;font-size:10px;line-height:1.6">Le chrono tourne côté serveur même si tu fermes l’app. Quand tu te réveilles, la durée de sommeil est convertie en énergie, jusqu’à 500.</p>'+
+          '<p style="color:#858ca8;font-size:10px;line-height:1.6">Le chrono tourne côté serveur même si tu fermes l’app. Le sommeil augmente uniquement ton bonus d’XP. L’énergie, elle, revient automatiquement à raison de +1 par minute.</p>'+
           '<div class="brute-sound-grid">'+
             [['rain','🌧️ Pluie'],['brown','🟤 Bruit brun'],['temple','🕯️ Temple'],['none','🔇 Silence']].map(([key,label]) =>
               '<button class="brute-secondary '+(sleepMode===key?'active':'')+'" data-brute-sound="'+key+'">'+label+'</button>'
@@ -1320,43 +1431,94 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function scheduleSleepTicker() {
-    if (sleepTimer) clearInterval(sleepTimer)
+    if (sleepTimer) {
+      clearInterval(
+        sleepTimer
+      )
+    }
+
     sleepTimer = null
-    if (screen !== 'sleep' || !idleSnapshot?.active_sleep_started_at) return
 
-    sleepTimer = setInterval(() => {
-      const el =
-        root.querySelector(
-          '[data-brute-sleep-time]'
-        )
+    if (
+      screen !== 'sleep' &&
+      screen !== 'camp'
+    ) {
+      return
+    }
 
-      if (el) {
-        el.textContent =
-          sleepLabel(
-            Math.max(
-              0,
-              (
-                Date.now() -
-                new Date(
-                  idleSnapshot.active_sleep_started_at
-                ).getTime()
-              ) / 1000
+    sleepTimer =
+      setInterval(
+        () => {
+          const energy =
+            passiveEnergyNow()
+
+          const energyEl =
+            root.querySelector(
+              '[data-brute-energy-value]'
             )
-          )
-      }
 
-      const energyEl =
-        root.querySelector(
-          '[data-brute-sleep-energy]'
-        )
+          if (energyEl) {
+            energyEl.textContent =
+              energy +
+              ' / 500'
+          }
 
-      if (energyEl) {
-        energyEl.textContent =
-          '+' +
-          pendingSleepEnergy() +
-          ' énergie'
-      }
-    },1000)
+          const energyBar =
+            root.querySelector(
+              '[data-brute-energy-bar]'
+            )
+
+          if (energyBar) {
+            energyBar.style.width =
+              Math.max(
+                0,
+                Math.min(
+                  100,
+                  energy / 500 * 100
+                )
+              ) +
+              '%'
+          }
+
+          const timeEl =
+            root.querySelector(
+              '[data-brute-sleep-time]'
+            )
+
+          if (
+            timeEl &&
+            idleSnapshot
+              ?.active_sleep_started_at
+          ) {
+            timeEl.textContent =
+              sleepLabel(
+                Math.max(
+                  0,
+                  (
+                    Date.now() -
+                    new Date(
+                      idleSnapshot
+                        .active_sleep_started_at
+                    ).getTime()
+                  ) /
+                  1000
+                )
+              )
+          }
+
+          const sleepXpEl =
+            root.querySelector(
+              '[data-brute-sleep-xp]'
+            )
+
+          if (sleepXpEl) {
+            sleepXpEl.textContent =
+              '✨ Bonus XP +' +
+              sleepXpBonusNow()
+          }
+        },
+        1000
+      )
   }
 
   function adjustDraft(key,direction) {
@@ -2988,6 +3150,91 @@ export async function mountBruteGame(root, options = {}) {
       return
     }
 
+    if (event.target.closest('[data-brute-reroll-skin]')) {
+      const nextAppearance =
+        randomAppearance()
+
+      const result =
+        await supabase.rpc(
+          'brute_reroll_appearance_v1',
+          {
+            p_athlete_slug:
+              selectedSlug,
+            p_appearance:
+              nextAppearance,
+          }
+        )
+
+      if (result.error) {
+        notice =
+          result.error.message
+      } else {
+        brute =
+          Array.isArray(
+            result.data
+          )
+            ? result.data[0]
+            : result.data
+
+        notice =
+          'Nouveau skin aléatoire appliqué.'
+      }
+
+      render()
+      return
+    }
+
+    if (event.target.closest('[data-brute-reroll-colors]')) {
+      const random =
+        randomAppearance()
+
+      const nextAppearance = {
+        ...clone(
+          brute.appearance ||
+          DEFAULT_APPEARANCE
+        ),
+        skin:
+          random.skin,
+        hairColor:
+          random.hairColor,
+        colors:
+          clone(
+            random.colors
+          ),
+        v:
+          BRUTE_APPEARANCE_VERSION,
+      }
+
+      const result =
+        await supabase.rpc(
+          'brute_reroll_appearance_v1',
+          {
+            p_athlete_slug:
+              selectedSlug,
+            p_appearance:
+              nextAppearance,
+          }
+        )
+
+      if (result.error) {
+        notice =
+          result.error.message
+      } else {
+        brute =
+          Array.isArray(
+            result.data
+          )
+            ? result.data[0]
+            : result.data
+
+        notice =
+          'Nouvelles couleurs appliquées.'
+      }
+
+      render()
+      return
+    }
+
     const equip = event.target.closest('[data-brute-equip]')
     if (equip) {
       const result = await supabase.rpc('brute_update_loadout_v1',{
@@ -3113,18 +3360,8 @@ export async function mountBruteGame(root, options = {}) {
         if (active) {
           ambient.stop()
 
-          const row =
-            Array.isArray(result.data)
-              ? result.data[0]
-              : result.data
-
           notice =
-            'Réveil : +' +
-            num(
-              row?.energy_gained,
-              0
-            ) +
-            ' énergie récupérée.'
+            'Réveil enregistré. Ton sommeil augmente uniquement ton bonus d’XP.'
         } else {
           try {
             await ambient.play(
@@ -3135,7 +3372,7 @@ export async function mountBruteGame(root, options = {}) {
           }
 
           notice =
-            'Bonne nuit. Ton énergie remonte pendant ton sommeil.'
+            'Bonne nuit. Le chrono sommeil augmente ton bonus d’XP.'
         }
 
         await loadSleep()
