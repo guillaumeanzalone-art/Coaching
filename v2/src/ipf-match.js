@@ -853,13 +853,27 @@ export function recommendIpfAttempt(
       required
     )
 
+  const projectedTotal =
+    otherTotal + kg
+
+  const projectedGl =
+    calculateIpfGlPoints(
+      projectedTotal,
+      state?.bodyWeight,
+      state?.sex
+    )
+
   return {
     kg,
     reason:
-      `${kg} kg porte la projection à ${otherTotal + kg} kg.`,
+      state?.targetMode ===
+        'gl' &&
+      projectedGl !== null
+        ? `${kg} kg porte la projection à ${projectedTotal} kg, soit ~${projectedGl.toFixed(2)} GL.`
+        : `${kg} kg porte la projection à ${projectedTotal} kg.`,
     kind: 'target',
-    projectedTotal:
-      otherTotal + kg,
+    projectedTotal,
+    projectedGl,
   }
 }
 
