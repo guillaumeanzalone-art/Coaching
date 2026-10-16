@@ -598,6 +598,33 @@ export function mountTraining(
       IPF_MATCH_STORAGE_KEY
     )
 
+  const initialIpfBodyWeight =
+    normalizeBodyWeightKg(
+      options.bodyWeight ||
+      program.athlete?.bodyWeight
+    )
+
+  if (
+    !ipfMatchState.bodyWeight &&
+    initialIpfBodyWeight
+  ) {
+    ipfMatchState =
+      updateIpfMatchField(
+        ipfMatchState,
+        {
+          field:
+            'bodyWeight',
+          value:
+            initialIpfBodyWeight,
+        }
+      )
+
+    saveIpfMatchState(
+      IPF_MATCH_STORAGE_KEY,
+      ipfMatchState
+    )
+  }
+
   let activeAthleteInsight =
     localStorage.getItem(ATHLETE_INSIGHT_KEY) === 'wellness'
       ? 'wellness'
@@ -1757,6 +1784,11 @@ export function mountTraining(
       athleteName:
         program.athlete?.name ||
         cloudAthleteSlug,
+      bodyWeight:
+        normalizeBodyWeightKg(
+          options.bodyWeight ||
+          program.athlete?.bodyWeight
+        ),
       canEdit,
     })
   }
