@@ -9899,7 +9899,13 @@ export function mountTraining(
 
       if (confirmed) {
         ipfMatchState =
-          createIpfMatchState()
+          createIpfMatchState({
+            bodyWeight:
+              ipfMatchState.bodyWeight ||
+              initialIpfBodyWeight,
+            sex:
+              ipfMatchState.sex,
+          })
         persistIpfMatch()
         render()
       }
