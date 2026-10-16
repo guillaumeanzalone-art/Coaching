@@ -16197,3 +16197,1285 @@ body .training-page[data-athlete-theme="kaoutar"] .day-tab-v2--active {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+
+/* ================================================================
+   GA CUT · WATER CUT + FOOD MASS
+   ================================================================ */
+
+.cut-page {
+  min-height: 100vh;
+  padding:
+    max(18px, env(safe-area-inset-top, 0px))
+    max(18px, env(safe-area-inset-right, 0px))
+    calc(52px + env(safe-area-inset-bottom, 0px))
+    max(18px, env(safe-area-inset-left, 0px));
+  background:
+    radial-gradient(circle at 15% 0%, rgba(38, 175, 255, .12), transparent 32%),
+    radial-gradient(circle at 82% 20%, rgba(86, 232, 205, .08), transparent 28%),
+    linear-gradient(180deg, #07101d 0%, #09111e 48%, #060b13 100%);
+  color: #f4f8ff;
+}
+
+.cut-topbar {
+  width: min(1180px, 100%);
+  margin: 0 auto 18px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: center;
+}
+
+.cut-title {
+  text-align: center;
+}
+
+.cut-title > span {
+  display: block;
+  color: #7197c2;
+  font-size: .66rem;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.cut-title h1 {
+  margin: 3px 0 0;
+  font-size: clamp(1.65rem, 4vw, 2.6rem);
+  letter-spacing: .08em;
+}
+
+.cut-save-status {
+  min-width: 118px;
+  color: #6f8198;
+  font-size: .72rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.cut-hero,
+.cut-tabs,
+.cut-protocols,
+.cut-overview,
+.cut-panel,
+.cut-loading {
+  width: min(1180px, 100%);
+  margin-inline: auto;
+}
+
+.cut-hero {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, .75fr);
+  gap: 22px;
+  align-items: end;
+  padding: 28px;
+  border: 1px solid rgba(82, 169, 229, .18);
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(12, 29, 48, .96), rgba(8, 18, 33, .98));
+  box-shadow:
+    0 26px 70px rgba(0, 0, 0, .32),
+    inset 0 1px rgba(255, 255, 255, .04);
+}
+
+.cut-hero::before {
+  content: '';
+  position: absolute;
+  inset: auto -80px -140px auto;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(59, 198, 255, .22), transparent 64%);
+  pointer-events: none;
+}
+
+.cut-hero__copy {
+  position: relative;
+  z-index: 1;
+}
+
+.cut-hero__copy > span {
+  color: #64c7ff;
+  font-size: .72rem;
+  font-weight: 1000;
+  letter-spacing: .12em;
+}
+
+.cut-hero__copy h2 {
+  max-width: 760px;
+  margin: 8px 0 8px;
+  color: #fff;
+  font-size: clamp(1.55rem, 4vw, 2.65rem);
+  line-height: 1.03;
+  letter-spacing: -.035em;
+}
+
+.cut-hero__copy p {
+  max-width: 680px;
+  margin: 0;
+  color: #8497ad;
+  font-size: .92rem;
+  line-height: 1.55;
+}
+
+.cut-hero__athlete {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 10px;
+}
+
+.cut-hero__athlete > div:last-child,
+.cut-athlete-static,
+.cut-athlete-select {
+  display: grid;
+  gap: 5px;
+  padding: 13px 14px;
+  border: 1px solid rgba(255, 255, 255, .075);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, .035);
+}
+
+.cut-hero__athlete span,
+.cut-athlete-static > span,
+.cut-athlete-select > span {
+  color: #6f8198;
+  font-size: .64rem;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.cut-hero__athlete strong,
+.cut-athlete-static strong {
+  color: #f8fbff;
+  font-size: .95rem;
+}
+
+.cut-athlete-select select {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+}
+
+.cut-athlete-select option {
+  color: #111827;
+}
+
+.cut-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.cut-tabs button {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  align-items: center;
+  min-height: 74px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, .075);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .025);
+  color: #8595aa;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cut-tabs button > span {
+  grid-row: 1 / 3;
+  font-size: 1.55rem;
+}
+
+.cut-tabs button b {
+  color: #dfe9f7;
+  font-size: .92rem;
+}
+
+.cut-tabs button small {
+  color: #6e7d90;
+  font-size: .7rem;
+}
+
+.cut-tabs button.active {
+  border-color: rgba(62, 178, 255, .42);
+  background:
+    linear-gradient(145deg, rgba(30, 117, 190, .18), rgba(38, 213, 188, .08));
+  box-shadow:
+    inset 0 0 0 1px rgba(94, 195, 255, .05),
+    0 12px 35px rgba(0, 0, 0, .16);
+}
+
+.cut-tabs button.active b {
+  color: #fff;
+}
+
+.cut-protocols {
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 20px;
+  background: rgba(9, 18, 31, .76);
+}
+
+.cut-protocols > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+
+.cut-protocols header span {
+  color: #5fbaf1;
+  font-size: .64rem;
+  font-weight: 1000;
+  letter-spacing: .1em;
+}
+
+.cut-protocols header h3 {
+  margin: 3px 0 0;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.cut-protocols header p {
+  max-width: 510px;
+  margin: 0;
+  color: #72839a;
+  font-size: .72rem;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.cut-protocol-selector {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.cut-protocol-selector button {
+  min-height: 62px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, .065);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .025);
+  color: #8b9aad;
+  text-align: left;
+}
+
+.cut-protocol-selector button strong,
+.cut-protocol-selector button span {
+  display: block;
+}
+
+.cut-protocol-selector button strong {
+  color: #dfe9f6;
+  font-size: .76rem;
+}
+
+.cut-protocol-selector button span {
+  margin-top: 4px;
+  color: #6b7a8e;
+  font-size: .62rem;
+  line-height: 1.25;
+}
+
+.cut-protocol-selector button.active {
+  border-color: rgba(70, 191, 255, .44);
+  background: rgba(50, 147, 214, .12);
+}
+
+.cut-protocol-selector button.active strong {
+  color: #fff;
+}
+
+.cut-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, .8fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.cut-overview__meta,
+.cut-overview__weight {
+  border: 1px solid rgba(255, 255, 255, .065);
+  border-radius: 20px;
+  background:
+    linear-gradient(145deg, rgba(15, 25, 41, .96), rgba(7, 14, 25, .96));
+}
+
+.cut-overview__meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px;
+}
+
+.cut-overview__meta label,
+.cut-target-inline label,
+.cut-day-weight-inputs label,
+.cut-food-fields label {
+  display: grid;
+  gap: 5px;
+}
+
+.cut-overview__meta label > span,
+.cut-target-inline label > span,
+.cut-day-weight-inputs label > span,
+.cut-food-fields label > span {
+  color: #67788f;
+  font-size: .59rem;
+  font-weight: 1000;
+  letter-spacing: .08em;
+}
+
+.cut-overview__meta input,
+.cut-target-inline input,
+.cut-day-weight-inputs input,
+.cut-food-fields input,
+.cut-food-fields textarea,
+.cut-note-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, .075);
+  border-radius: 11px;
+  outline: 0;
+  background: rgba(255, 255, 255, .035);
+  color: #f5f8ff;
+  font: inherit;
+}
+
+.cut-overview__meta input,
+.cut-target-inline input,
+.cut-day-weight-inputs input,
+.cut-food-fields input {
+  min-height: 42px;
+  padding: 0 10px;
+}
+
+.cut-overview__meta input:focus,
+.cut-target-inline input:focus,
+.cut-day-weight-inputs input:focus,
+.cut-food-fields input:focus,
+.cut-food-fields textarea:focus,
+.cut-note-field textarea:focus {
+  border-color: rgba(70, 188, 255, .48);
+  box-shadow: 0 0 0 3px rgba(45, 166, 235, .08);
+}
+
+.cut-overview__weight {
+  display: grid;
+  grid-template-columns: minmax(150px, .7fr) minmax(150px, 1fr);
+  overflow: hidden;
+}
+
+.cut-overview__weight-copy {
+  padding: 16px;
+}
+
+.cut-overview__weight-copy > span {
+  color: #698097;
+  font-size: .6rem;
+  font-weight: 1000;
+  letter-spacing: .09em;
+}
+
+.cut-overview__weight-copy > strong {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 8px;
+  color: #f9fbff;
+  font-size: 1.16rem;
+}
+
+.cut-overview__weight-copy strong small {
+  color: #708096;
+  font-size: .65rem;
+}
+
+.cut-overview__weight-copy strong i {
+  margin: 0 3px;
+  color: #4cbefb;
+  font-style: normal;
+}
+
+.cut-overview__weight-copy > b {
+  display: block;
+  margin-top: 6px;
+  color: #60d6b9;
+  font-size: .72rem;
+}
+
+.cut-overview__chart {
+  min-height: 120px;
+  padding: 10px;
+  background:
+    linear-gradient(180deg, rgba(29, 120, 187, .07), transparent);
+}
+
+.cut-weight-chart {
+  width: 100%;
+  height: 100%;
+  min-height: 105px;
+  overflow: visible;
+}
+
+.cut-weight-path {
+  fill: none;
+  stroke: #4dbdf7;
+  stroke-width: 2.3;
+  vector-effect: non-scaling-stroke;
+}
+
+.cut-weight-dot {
+  fill: #c7f0ff;
+  stroke: #238dcb;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.cut-weight-target-line {
+  stroke: rgba(84, 224, 169, .75);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 3;
+  vector-effect: non-scaling-stroke;
+}
+
+.cut-weight-target-label {
+  fill: #64dcb0;
+  font-size: 7px;
+  font-weight: 900;
+}
+
+.cut-weight-empty {
+  display: grid;
+  min-height: 100px;
+  place-items: center;
+  padding: 14px;
+  color: #66788e;
+  font-size: .7rem;
+  text-align: center;
+}
+
+.cut-panel,
+.cut-loading {
+  margin-top: 14px;
+}
+
+.cut-panel {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 22px;
+  background: rgba(8, 16, 29, .9);
+}
+
+.cut-loading {
+  padding: 40px 20px;
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .025);
+  color: #708198;
+  text-align: center;
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.cut-day-rail {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(80px, 1fr));
+  overflow-x: auto;
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+  scrollbar-width: thin;
+}
+
+.cut-day-rail button {
+  min-height: 62px;
+  border: 0;
+  border-right: 1px solid rgba(255, 255, 255, .045);
+  background: rgba(255, 255, 255, .018);
+  color: #75869b;
+}
+
+.cut-day-rail button:last-child {
+  border-right: 0;
+}
+
+.cut-day-rail button b,
+.cut-day-rail button span {
+  display: block;
+}
+
+.cut-day-rail button b {
+  color: #aebdce;
+  font-size: .8rem;
+}
+
+.cut-day-rail button span {
+  margin-top: 3px;
+  font-size: .62rem;
+}
+
+.cut-day-rail button.active {
+  background:
+    linear-gradient(180deg, rgba(38, 167, 233, .18), rgba(25, 96, 157, .06));
+  box-shadow: inset 0 -3px #43bff5;
+}
+
+.cut-day-rail button.active b {
+  color: #fff;
+}
+
+.cut-day-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  padding: 20px;
+}
+
+.cut-day-header > div:first-child > span {
+  color: #4ebef9;
+  font-size: .63rem;
+  font-weight: 1000;
+  letter-spacing: .1em;
+}
+
+.cut-day-header h2 {
+  margin: 4px 0 0;
+  color: #fff;
+  font-size: 1.35rem;
+}
+
+.cut-day-weight-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, 120px);
+  gap: 8px;
+}
+
+.cut-hydration-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 0 20px 20px;
+}
+
+.cut-gauge-card {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .065);
+  border-radius: 20px;
+  background:
+    linear-gradient(150deg, rgba(14, 26, 43, .96), rgba(8, 15, 27, .96));
+}
+
+.cut-gauge-card--water {
+  box-shadow: inset 0 1px rgba(80, 188, 248, .05);
+}
+
+.cut-gauge-card--salt {
+  box-shadow: inset 0 1px rgba(239, 235, 220, .035);
+}
+
+.cut-gauge-card > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, .055);
+}
+
+.cut-gauge-card > header > div:first-child > span {
+  color: #6b7e95;
+  font-size: .61rem;
+  font-weight: 1000;
+  letter-spacing: .09em;
+}
+
+.cut-gauge-card > header > div:first-child > strong {
+  display: block;
+  margin-top: 4px;
+  color: #fff;
+  font-size: 1.18rem;
+}
+
+.cut-gauge-card > header strong small {
+  color: #708197;
+  font-size: .7rem;
+}
+
+.cut-target-inline {
+  display: grid;
+  grid-template-columns: repeat(2, 86px);
+  gap: 7px;
+}
+
+.cut-target-inline input {
+  min-height: 36px;
+  font-size: .72rem;
+}
+
+.cut-gauge-card__body {
+  display: grid;
+  grid-template-columns: 155px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  min-height: 290px;
+  padding: 20px 18px;
+}
+
+.cut-bottle {
+  position: relative;
+  width: 118px;
+  margin-inline: auto;
+}
+
+.cut-bottle__cap {
+  width: 48px;
+  height: 18px;
+  margin: 0 auto -1px;
+  border: 2px solid rgba(117, 210, 255, .36);
+  border-bottom: 0;
+  border-radius: 7px 7px 3px 3px;
+  background: rgba(38, 121, 176, .12);
+}
+
+.cut-bottle__body {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  border: 3px solid rgba(117, 210, 255, .38);
+  border-radius: 28px 28px 22px 22px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.035), rgba(255,255,255,.01));
+  box-shadow:
+    inset 9px 0 18px rgba(255,255,255,.025),
+    inset -10px 0 22px rgba(30, 132, 184, .07);
+}
+
+.cut-bottle__fill {
+  position: absolute;
+  inset: auto 0 0;
+  min-height: 0;
+  background:
+    linear-gradient(180deg, rgba(68, 207, 255, .78), rgba(13, 127, 214, .86));
+  transition: height .3s ease;
+}
+
+.cut-bottle__fill::before,
+.cut-bottle__fill::after,
+.cut-bottle__fill > span {
+  content: '';
+  position: absolute;
+  top: -7px;
+  width: 52px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(107, 226, 255, .72);
+}
+
+.cut-bottle__fill::before {
+  left: -4px;
+}
+
+.cut-bottle__fill::after {
+  right: -6px;
+}
+
+.cut-bottle__fill > span {
+  left: 32px;
+  opacity: .55;
+}
+
+.cut-bottle__body > strong {
+  position: absolute;
+  z-index: 3;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  padding: 6px 8px;
+  border-radius: 9px;
+  background: rgba(3, 13, 25, .58);
+  color: #eafdff;
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+  backdrop-filter: blur(6px);
+}
+
+.cut-bottle__marks {
+  position: absolute;
+  inset: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  pointer-events: none;
+}
+
+.cut-bottle__marks i {
+  width: 18px;
+  height: 1px;
+  margin-left: auto;
+  background: rgba(213, 244, 255, .26);
+}
+
+.cut-salt-visual {
+  position: relative;
+  width: 138px;
+  min-height: 215px;
+  margin-inline: auto;
+  display: grid;
+  place-items: end center;
+}
+
+.cut-salt-mound {
+  position: relative;
+  width: 132px;
+  height: 116px;
+  overflow: hidden;
+  clip-path: polygon(50% 3%, 96% 92%, 100% 100%, 0 100%, 4% 92%);
+  background:
+    linear-gradient(145deg, rgba(220, 228, 236, .13), rgba(255,255,255,.04));
+  border-bottom: 3px solid rgba(255,255,255,.2);
+}
+
+.cut-salt-mound::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  clip-path: inherit;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.16);
+}
+
+.cut-salt-mound__fill {
+  position: absolute;
+  inset: auto 0 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.72) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 55%, rgba(255,255,255,.54) 0 1px, transparent 2px),
+    radial-gradient(circle at 45% 80%, rgba(255,255,255,.66) 0 1px, transparent 2px),
+    linear-gradient(180deg, #eaf2f7, #aebfcd);
+  background-size: 15px 15px, 17px 17px, 19px 19px, 100% 100%;
+  transition: height .3s ease;
+}
+
+.cut-salt-visual > strong {
+  position: absolute;
+  z-index: 3;
+  bottom: 46px;
+  padding: 5px 8px;
+  border-radius: 9px;
+  background: rgba(3, 10, 19, .64);
+  color: #fff;
+  font-size: .78rem;
+}
+
+.cut-salt-grains {
+  position: absolute;
+  inset: 25px 20px auto;
+  height: 70px;
+}
+
+.cut-salt-grains i {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(242, 249, 255, .65);
+  box-shadow: 0 0 6px rgba(255,255,255,.2);
+}
+
+.cut-salt-grains i:nth-child(1) { left: 18%; top: 30%; }
+.cut-salt-grains i:nth-child(2) { left: 42%; top: 9%; }
+.cut-salt-grains i:nth-child(3) { left: 61%; top: 39%; }
+.cut-salt-grains i:nth-child(4) { left: 76%; top: 18%; }
+.cut-salt-grains i:nth-child(5) { left: 52%; top: 66%; }
+
+.cut-quick-log {
+  min-width: 0;
+}
+
+.cut-quick-log > span,
+.cut-food-label {
+  display: block;
+  margin-bottom: 9px;
+  color: #6c7e94;
+  font-size: .64rem;
+  font-weight: 1000;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.cut-quick-log > div:first-of-type,
+.cut-food-quick {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.cut-quick-log > div:first-of-type button,
+.cut-food-quick button {
+  min-height: 42px;
+  padding: 7px 8px;
+  border: 1px solid rgba(62, 187, 250, .18);
+  border-radius: 11px;
+  background: rgba(39, 144, 206, .08);
+  color: #a8dcf7;
+  font: 900 .72rem/1 system-ui, sans-serif;
+}
+
+.cut-gauge-card--salt .cut-quick-log > div:first-of-type button {
+  border-color: rgba(227, 235, 242, .14);
+  background: rgba(255,255,255,.035);
+  color: #dce4eb;
+}
+
+.cut-log-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.cut-log-chips button {
+  min-height: 29px;
+  padding: 0 9px;
+  border: 1px solid rgba(69, 203, 255, .18);
+  border-radius: 999px;
+  background: rgba(42, 152, 216, .08);
+  color: #87d7fb;
+  font: 800 .64rem/1 system-ui, sans-serif;
+}
+
+.cut-log-chips--salt button {
+  border-color: rgba(255,255,255,.12);
+  background: rgba(255,255,255,.04);
+  color: #d8e1e8;
+}
+
+.cut-log-chips--food button {
+  border-color: rgba(103, 225, 180, .18);
+  background: rgba(68, 184, 143, .07);
+  color: #93e4c6;
+}
+
+.cut-log-empty {
+  color: #55667b;
+  font-size: .66rem;
+}
+
+.cut-note-field {
+  display: grid;
+  gap: 7px;
+  padding: 0 20px 18px;
+}
+
+.cut-note-field > span {
+  color: #687a90;
+  font-size: .61rem;
+  font-weight: 1000;
+  letter-spacing: .08em;
+}
+
+.cut-note-field textarea,
+.cut-food-fields textarea {
+  resize: vertical;
+  padding: 11px 12px;
+  line-height: 1.45;
+}
+
+.cut-safety-note {
+  margin: 0 20px 20px;
+  padding: 11px 13px;
+  border: 1px solid rgba(243, 185, 72, .14);
+  border-radius: 12px;
+  background: rgba(243, 185, 72, .045);
+  color: #8f876f;
+  font-size: .67rem;
+  line-height: 1.5;
+}
+
+.cut-food-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.cut-food-summary b {
+  color: #6de0b9;
+  font-size: 1.18rem;
+}
+
+.cut-food-summary span {
+  color: #6a7b8e;
+  font-size: .72rem;
+}
+
+.cut-food-grid {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: 14px;
+  padding: 0 20px 20px;
+}
+
+.cut-food-gauge-card,
+.cut-food-fields {
+  border: 1px solid rgba(255,255,255,.065);
+  border-radius: 20px;
+  background: linear-gradient(150deg, rgba(14, 26, 43, .96), rgba(8, 15, 27, .96));
+}
+
+.cut-food-gauge-card {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  padding: 20px;
+}
+
+.cut-food-gauge-card > div:last-child > strong {
+  display: block;
+  margin-bottom: 12px;
+  color: #fff;
+  font-size: 1.45rem;
+}
+
+.cut-food-gauge-card > div:last-child > strong small {
+  color: #68798d;
+  font-size: .65rem;
+}
+
+.cut-food-plate {
+  position: relative;
+  width: 155px;
+  aspect-ratio: 1;
+  margin-inline: auto;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #151f2f 0 49%, #59697a 50% 54%, #121b29 55% 68%, #8796a4 69% 72%, #182232 73%);
+  box-shadow:
+    inset 0 4px 12px rgba(255,255,255,.08),
+    0 15px 35px rgba(0,0,0,.22);
+}
+
+.cut-food-plate__fill {
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  background:
+    conic-gradient(
+      #55d3a6 var(--food-progress),
+      rgba(255,255,255,.04) 0
+    );
+  opacity: .95;
+}
+
+.cut-food-plate__fill::after {
+  content: '';
+  position: absolute;
+  inset: 20%;
+  border-radius: 50%;
+  background: #101a29;
+}
+
+.cut-food-plate__inner {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.cut-food-plate__inner strong {
+  color: #eefdf8;
+  font-size: 1.05rem;
+}
+
+.cut-food-plate__inner span {
+  margin-top: 2px;
+  color: #6f8d82;
+  font-size: .55rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.cut-food-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-content: start;
+  padding: 16px;
+}
+
+.cut-food-fields__notes {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 920px) {
+  .cut-hero,
+  .cut-overview,
+  .cut-food-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cut-protocol-selector {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cut-overview__meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cut-hydration-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .cut-page {
+    padding:
+      max(10px, env(safe-area-inset-top, 0px))
+      8px
+      calc(34px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .cut-topbar {
+    grid-template-columns: auto 1fr;
+    gap: 9px;
+  }
+
+  .cut-topbar .back-button {
+    min-width: auto;
+    padding-inline: 10px;
+  }
+
+  .cut-title {
+    text-align: right;
+  }
+
+  .cut-title > span {
+    font-size: .53rem;
+  }
+
+  .cut-title h1 {
+    font-size: 1.45rem;
+  }
+
+  .cut-save-status {
+    grid-column: 1 / -1;
+    min-width: 0;
+    margin-top: -5px;
+    font-size: .6rem;
+    text-align: right;
+  }
+
+  .cut-hero {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .cut-hero__copy h2 {
+    font-size: 1.65rem;
+  }
+
+  .cut-hero__copy p {
+    font-size: .78rem;
+  }
+
+  .cut-tabs {
+    gap: 7px;
+  }
+
+  .cut-tabs button {
+    min-height: 66px;
+    grid-template-columns: auto 1fr;
+    gap: 2px 8px;
+    padding: 11px;
+  }
+
+  .cut-tabs button > span {
+    font-size: 1.25rem;
+  }
+
+  .cut-tabs button b {
+    font-size: .78rem;
+  }
+
+  .cut-tabs button small {
+    font-size: .58rem;
+  }
+
+  .cut-protocols {
+    padding: 13px;
+    border-radius: 17px;
+  }
+
+  .cut-protocols > header {
+    display: block;
+  }
+
+  .cut-protocols header p {
+    margin-top: 7px;
+    font-size: .63rem;
+    text-align: left;
+  }
+
+  .cut-protocol-selector {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .cut-protocol-selector button {
+    min-height: 58px;
+    padding: 9px;
+  }
+
+  .cut-protocol-selector button strong {
+    font-size: .68rem;
+  }
+
+  .cut-protocol-selector button span {
+    font-size: .55rem;
+  }
+
+  .cut-overview {
+    gap: 8px;
+  }
+
+  .cut-overview__meta {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    padding: 10px;
+  }
+
+  .cut-overview__weight {
+    grid-template-columns: .8fr 1.2fr;
+  }
+
+  .cut-overview__weight-copy {
+    padding: 12px;
+  }
+
+  .cut-day-rail {
+    grid-template-columns: repeat(7, 78px);
+  }
+
+  .cut-day-header {
+    align-items: flex-start;
+    padding: 15px 12px 12px;
+  }
+
+  .cut-day-weight-inputs {
+    grid-template-columns: repeat(2, 86px);
+  }
+
+  .cut-day-weight-inputs input {
+    min-height: 38px;
+  }
+
+  .cut-hydration-grid,
+  .cut-food-grid {
+    gap: 9px;
+    padding: 0 10px 12px;
+  }
+
+  .cut-gauge-card {
+    border-radius: 16px;
+  }
+
+  .cut-gauge-card > header {
+    display: block;
+    padding: 12px;
+  }
+
+  .cut-target-inline {
+    grid-template-columns: 1fr 1fr;
+    margin-top: 10px;
+  }
+
+  .cut-gauge-card__body {
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 10px;
+    min-height: 240px;
+    padding: 15px 10px;
+  }
+
+  .cut-bottle {
+    width: 94px;
+  }
+
+  .cut-bottle__cap {
+    width: 39px;
+    height: 15px;
+  }
+
+  .cut-bottle__body {
+    height: 180px;
+    border-radius: 22px 22px 18px 18px;
+  }
+
+  .cut-salt-visual {
+    width: 108px;
+    min-height: 180px;
+  }
+
+  .cut-salt-mound {
+    width: 104px;
+    height: 92px;
+  }
+
+  .cut-salt-visual > strong {
+    bottom: 37px;
+  }
+
+  .cut-quick-log > div:first-of-type {
+    grid-template-columns: 1fr;
+  }
+
+  .cut-note-field {
+    padding: 0 10px 12px;
+  }
+
+  .cut-safety-note {
+    margin: 0 10px 12px;
+    font-size: .61rem;
+  }
+
+  .cut-food-gauge-card {
+    grid-template-columns: 125px minmax(0, 1fr);
+    gap: 10px;
+    padding: 14px 10px;
+  }
+
+  .cut-food-plate {
+    width: 112px;
+  }
+
+  .cut-food-gauge-card > div:last-child > strong {
+    font-size: 1.12rem;
+  }
+
+  .cut-food-quick {
+    grid-template-columns: 1fr;
+  }
+
+  .cut-food-fields {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .cut-food-fields label:nth-child(3),
+  .cut-food-fields__notes {
+    grid-column: 1 / -1;
+  }
+}
