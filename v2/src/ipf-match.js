@@ -1009,11 +1009,23 @@ export function renderIpfMatchTool({
   sbdPrs = {},
   athleteName = '',
   canEdit = true,
+  bodyWeight = null,
 } = {}) {
   const safeState =
     createIpfMatchState(
       state
     )
+
+  if (
+    !safeState.bodyWeight &&
+    bodyWeight
+  ) {
+    safeState.bodyWeight =
+      positiveBodyWeight(
+        bodyWeight,
+        safeState.sex
+      )
+  }
 
   const summary =
     calculateIpfMatchSummary(
@@ -1025,6 +1037,30 @@ export function renderIpfMatchTool({
       ? ''
       : 'disabled'
 
+  const targetInput =
+    safeState.targetMode ===
+      'gl'
+      ? (
+          safeState.targetGl ||
+          ''
+        )
+      : (
+          safeState.targetTotal ||
+          ''
+        )
+
+  const targetUnit =
+    safeState.targetMode ===
+      'gl'
+      ? 'GL'
+      : 'kg'
+
+  const glTargetTotal =
+    safeState.targetMode ===
+      'gl'
+      ? summary.targetTotal
+      : 0
+
   return `
     <section class="ipf-match-tool">
       <header class="ipf-match-hero">
@@ -1034,24 +1070,77 @@ export function renderIpfMatchTool({
           <p>Prépare les neuf barres, valide les essais et ajuste la route vers le total.</p>
         </div>
 
-        <label class="ipf-match-target">
-          <span>OBJECTIF TOTAL</span>
-          <div>
-            <input
-              type="number"
-              min="1"
-              max="1500"
-              step="2.5"
-              inputmode="decimal"
-              value="${safeState.targetTotal || ''}"
-              placeholder="770"
+        <div class="ipf-match-target ipf-match-target--advanced">
+          <label class="ipf-match-target-mode">
+            <span>OBJECTIF</span>
+            <select
               data-action="ipf-match-field"
-              data-ipf-field="targetTotal"
+              data-ipf-field="targetMode"
               ${disabled}
             >
-            <b>kg</b>
-          </div>
-        </label>
+              <option value="total" ${safeState.targetMode === 'total' ? 'selected' : ''}>Total</option>
+              <option value="gl" ${safeState.targetMode === 'gl' ? 'selected' : ''}>GL Points</option>
+            </select>
+          </label>
+
+          <label class="ipf-match-target-value">
+            <span>${safeState.targetMode === 'gl' ? 'OBJECTIF GL' : 'OBJECTIF TOTAL'}</span>
+            <div>
+              <input
+                type="number"
+                min="1"
+                max="${safeState.targetMode === 'gl' ? '300' : '1500'}"
+                step="${safeState.targetMode === 'gl' ? '0.01' : '2.5'}"
+                inputmode="decimal"
+                value="${targetInput}"
+                placeholder="${safeState.targetMode === 'gl' ? '90' : '770'}"
+                data-action="ipf-match-field"
+                data-ipf-field="${safeState.targetMode === 'gl' ? 'targetGl' : 'targetTotal'}"
+                ${disabled}
+              >
+              <b>${targetUnit}</b>
+            </div>
+          </label>
+
+          <label>
+            <span>BODYWEIGHT</span>
+            <div>
+              <input
+                type="number"
+                min="${safeState.sex === 'female' ? '35' : '40'}"
+                max="400"
+                step="0.1"
+                inputmode="decimal"
+                value="${safeState.bodyWeight || ''}"
+                placeholder="83.0"
+                data-action="ipf-match-field"
+                data-ipf-field="bodyWeight"
+                ${disabled}
+              >
+              <b>kg</b>
+            </div>
+          </label>
+
+          <label>
+            <span>CATÉGORIE GL</span>
+            <select
+              data-action="ipf-match-field"
+              data-ipf-field="sex"
+              ${disabled}
+            >
+              <option value="male" ${safeState.sex === 'male' ? 'selected' : ''}>Homme · Classic</option>
+              <option value="female" ${safeState.sex === 'female' ? 'selected' : ''}>Femme · Classic</option>
+            </select>
+          </label>
+
+          ${safeState.targetMode === 'gl' ? `
+            <div class="ipf-match-gl-conversion ${glTargetTotal ? 'is-ready' : ''}">
+              <span>TOTAL À ATTEINDRE</span>
+              <strong>${glTargetTotal ? `${formatKg(glTargetTotal)} kg` : 'Renseigne GL + bodyweight'}</strong>
+              <small>${glTargetTotal ? 'Arrondi au 2,5 kg supérieur pour atteindre au moins le GL visé.' : 'La formule GL dépend du poids de corps et de la catégorie.'}</small>
+            </div>
+          ` : ''}
+        </div>
       </header>
 
       <div class="ipf-match-controls">
@@ -1085,9 +1174,29 @@ export function renderIpfMatchTool({
           <span>Projection actuelle</span>
           <strong>${formatKg(summary.projectedTotal)} <small>kg</small></strong>
         </article>
-        <article class="${summary.projectedGap <= 0 && summary.targetTotal ? 'is-on-target' : ''}">
+        <article>
+          <span>GL projeté</span>
+          <strong>${summary.projectedGl !== null ? summary.projectedGl.toFixed(2) : '—'} <small>GL</small></strong>
+        </article>
+        <article class="${(
+          summary.targetMode === 'gl'
+            ? summary.projectedGlGap <= 0 && summary.targetGl
+            : summary.projectedGap <= 0 && summary.targetTotal
+        ) ? 'is-on-target' : ''}">
           <span>Écart à l’objectif</span>
-          <strong>${summary.targetTotal ? `${summary.projectedGap > 0 ? '+' : ''}${formatKg(summary.projectedGap)}` : '—'} <small>${summary.targetTotal ? 'kg' : ''}</small></strong>
+          <strong>${
+            summary.targetMode === 'gl'
+              ? (
+                  summary.targetGl && summary.projectedGl !== null
+                    ? `${summary.projectedGlGap > 0 ? '+' : ''}${summary.projectedGlGap.toFixed(2)} <small>GL</small>`
+                    : '—'
+                )
+              : (
+                  summary.targetTotal
+                    ? `${summary.projectedGap > 0 ? '+' : ''}${formatKg(summary.projectedGap)} <small>kg</small>`
+                    : '—'
+                )
+          }</strong>
         </article>
       </div>
 
@@ -1222,7 +1331,7 @@ export function renderIpfMatchTool({
       </div>
 
       <p class="ipf-match-rule-note">
-        Charges arrondies au pas IPF standard de 2,5 kg. Les recommandations sont des aides de décision : le coach reste libre de conserver une autre barre.
+        Charges arrondies au pas IPF standard de 2,5 kg. GL Points calculés avec la formule IPF GL Classic Powerlifting. Les recommandations restent des aides de décision.
       </p>
     </section>
   `
