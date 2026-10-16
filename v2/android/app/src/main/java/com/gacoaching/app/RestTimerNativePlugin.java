@@ -39,7 +39,7 @@ public class RestTimerNativePlugin extends Plugin {
     static final int FINISHED_NOTIFICATION_ID = 47018;
 
     @PluginMethod
-    public void requestPermissions(PluginCall call) {
+    public void requestTimerPermissions(PluginCall call) {
         ensureChannels(getContext());
 
         if (
