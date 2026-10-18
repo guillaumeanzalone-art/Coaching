@@ -2951,6 +2951,77 @@ function ensureStyles() {
 }
 
 /* ================================================================
+   GA BRUTE · BUILD IDENTITY / KEYBOARD V20
+   Archetypes, mastery deltas and desktop shortcuts
+   ================================================================ */
+.brute-build-meta{
+  display:inline-flex!important;
+  align-items:center;
+  gap:3px;
+}
+.brute-build-meta-glyph{
+  width:11px;
+  height:11px;
+}
+.brute-armory-weapon-copy u{
+  display:inline-flex;
+  width:max-content;
+  margin-top:3px;
+  padding:2px 5px;
+  border-radius:999px;
+  background:rgba(255,255,255,.035);
+  color:#79819b;
+  font-size:5px;
+  font-weight:1000;
+  text-decoration:none;
+  letter-spacing:.04em;
+}
+.brute-armory-weapon-copy u.up{
+  background:rgba(82,169,118,.1);
+  color:#9fd6ae;
+}
+.brute-armory-weapon-copy u.down{
+  background:rgba(196,93,76,.08);
+  color:#be8a80;
+}
+.brute-armory-weapon-copy u.even{
+  color:#9aa0b4;
+}
+.brute-desktop-quicknav button{
+  position:relative;
+}
+.brute-desktop-quicknav kbd{
+  position:absolute;
+  right:5px;
+  top:5px;
+  min-width:13px;
+  height:13px;
+  display:grid;
+  place-items:center;
+  padding:0 3px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:4px;
+  background:rgba(0,0,0,.16);
+  color:#626b87;
+  font-family:inherit;
+  font-size:4.5px;
+  font-weight:1000;
+}
+.brute-desktop-quicknav button.active kbd{
+  color:#aa8c56;
+  border-color:rgba(255,215,111,.12);
+}
+@media(max-width:760px){
+  .brute-desktop-quicknav kbd{display:none}
+}
+@media(max-width:660px){
+  .brute-cell-name-meta .brute-build-meta-glyph{
+    width:9px;
+    height:9px;
+  }
+}
+
+/* ================================================================
    GA BRUTE · DESKTOP FLOW / COMPARISON V19
    Fast desktop navigation, smarter duel risk and ranking search
    ================================================================ */
@@ -5230,6 +5301,7 @@ export async function mountBruteGame(root, options = {}) {
     sleepTimer = null
     root.onclick = null
     root.oninput = null
+    root.onkeydown = null
   }
 
   function xpNeeded() {
@@ -5448,6 +5520,7 @@ export async function mountBruteGame(root, options = {}) {
       '<button class="'+(screen===target?'active':'')+'" data-brute-screen="'+target+'" aria-current="'+(screen===target?'page':'false')+'">'+
         uiGlyph(glyph,'brute-quicknav-glyph')+
         '<span>'+label+'</span>'+
+        '<kbd>'+(target==='duel'?'1':target==='pve'?'2':target==='camp'?'3':target==='equipment'?'4':target==='sleep'?'5':'6')+'</kbd>'+
       '</button>'
     )
 
@@ -6024,6 +6097,71 @@ export async function mountBruteGame(root, options = {}) {
     )
   }
 
+  function fighterArchetype(
+    fighter
+  ) {
+    const strength =
+      num(
+        fighter?.strength
+      )
+
+    const agility =
+      num(
+        fighter?.agility
+      )
+
+    const speed =
+      num(
+        fighter?.speed
+      )
+
+    const max =
+      Math.max(
+        strength,
+        agility,
+        speed
+      )
+
+    const min =
+      Math.min(
+        strength,
+        agility,
+        speed
+      )
+
+    if (
+      max - min <= 3
+    ) {
+      return {
+        label:'ÉQUILIBRÉ',
+        glyph:'profile',
+      }
+    }
+
+    if (
+      strength === max
+    ) {
+      return {
+        label:'POWER',
+        glyph:'strength',
+      }
+    }
+
+    if (
+      speed === max
+    ) {
+      return {
+        label:'RUSH',
+        glyph:'speed',
+      }
+    }
+
+    return {
+      label:'TECHNIQUE',
+      glyph:'agility',
+    }
+  }
+
   function fighterBuildTag(
     fighter
   ) {
@@ -6456,6 +6594,8 @@ export async function mountBruteGame(root, options = {}) {
               '<span>NIV. '+num(brute.level,1)+'</span>'+
               '<i></i>'+
               '<span>COTE '+num(brute.rating,1000)+'</span>'+
+              '<i></i>'+
+              '<span class="brute-build-meta">'+uiGlyph(fighterArchetype(brute).glyph,'brute-build-meta-glyph')+fighterArchetype(brute).label+'</span>'+
             '</div>'+
           '</div>'+
           '<div class="brute-cell-header-actions">'+
@@ -7700,6 +7840,13 @@ export async function mountBruteGame(root, options = {}) {
                     BRUTE_WEAPONS[id] ||
                     BRUTE_WEAPONS.fists
 
+                  const masteryDelta =
+                    weaponMastery(
+                      brute,
+                      w
+                    ) -
+                    mastery
+
                   return (
                     '<button class="brute-armory-weapon-v3 '+(equipped===id?'active':'')+'" data-brute-equip="'+esc(id)+'">'+
                       '<span class="brute-armory-weapon-art">'+renderWeaponIconSvg(w,{className:'armory'})+'</span>'+
@@ -7707,6 +7854,11 @@ export async function mountBruteGame(root, options = {}) {
                         '<b>'+esc(w.name)+'</b>'+
                         '<small>'+weaponRole(w)+'</small>'+
                         '<em>'+esc(weaponIdentity(w))+' · MAÎTRISE '+weaponMastery(brute,w)+'</em>'+
+                        (
+                          equipped===id
+                            ? '<u>RÉFÉRENCE ACTUELLE</u>'
+                            : '<u class="'+(masteryDelta>0?'up':masteryDelta<0?'down':'even')+'">'+(masteryDelta>0?'+':'')+masteryDelta+' VS ÉQUIPÉE</u>'
+                        )+
                       '</span>'+
                       '<i>'+(equipped===id?'ÉQUIPÉE':'ÉQUIPER')+'</i>'+
                     '</button>'
@@ -12058,6 +12210,119 @@ export async function mountBruteGame(root, options = {}) {
 
       render()
       return
+    }
+  }
+
+  root.onkeydown = event => {
+    const tag =
+      String(
+        event.target?.tagName ||
+        ''
+      ).toLowerCase()
+
+    const typing =
+      tag === 'input' ||
+      tag === 'textarea' ||
+      tag === 'select' ||
+      event.target?.isContentEditable
+
+    if (typing) {
+      return
+    }
+
+    if (
+      screen === 'fight'
+    ) {
+      if (
+        event.code === 'Space'
+      ) {
+        event.preventDefault()
+
+        root
+          .querySelector(
+            '[data-brute-pause]'
+          )
+          ?.click()
+
+        return
+      }
+
+      if (
+        ['1','2','3']
+          .includes(
+            event.key
+          )
+      ) {
+        root
+          .querySelector(
+            '[data-brute-speed="'+
+            event.key+
+            '"]'
+          )
+          ?.click()
+
+        return
+      }
+    }
+
+    if (
+      event.key === 'Escape' &&
+      selectedSlug &&
+      screen !== 'menu' &&
+      screen !== 'creator' &&
+      screen !== 'selector' &&
+      screen !== 'fight'
+    ) {
+      event.preventDefault()
+      setScreen('menu')
+      return
+    }
+
+    const screenKeys = {
+      '1':'duel',
+      '2':'pve',
+      '3':'camp',
+      '4':'equipment',
+      '5':'sleep',
+      '6':'ranking',
+    }
+
+    const next =
+      screenKeys[
+        event.key
+      ]
+
+    if (
+      next &&
+      selectedSlug &&
+      screen !== 'fight' &&
+      screen !== 'creator' &&
+      screen !== 'selector'
+    ) {
+      event.preventDefault()
+
+      if (
+        next === 'sleep'
+      ) {
+        void loadSleep()
+      }
+
+      setScreen(next)
+      return
+    }
+
+    if (
+      (
+        event.key === 'm' ||
+        event.key === 'M'
+      ) &&
+      selectedSlug
+    ) {
+      root
+        .querySelector(
+          '[data-brute-music-toggle]'
+        )
+        ?.click()
     }
   }
 
