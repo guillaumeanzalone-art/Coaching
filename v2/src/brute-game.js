@@ -2840,6 +2840,58 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · MICRO UX V15
+   Better scan order, history labels and podium presentation
+   ================================================================ */
+.brute-ranking-v2-podium .place-1{
+  order:2;
+  transform:translateY(-8px);
+  box-shadow:0 7px 0 #4c2613,0 15px 28px rgba(91,51,18,.18);
+}
+.brute-ranking-v2-podium .place-2{order:1}
+.brute-ranking-v2-podium .place-3{order:3}
+.brute-ranking-v2-podium .place-1 .brute-podium-avatar{
+  width:68px;
+  height:68px;
+  box-shadow:0 0 0 3px rgba(255,221,100,.26);
+}
+.brute-camp-v2-history-row>div{min-width:0}
+.brute-camp-v2-history-row>div b{
+  display:block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.brute-camp-v2-history-row>div small{
+  letter-spacing:.03em;
+}
+.brute-duel-poster.recommended{
+  z-index:2;
+}
+.brute-duel-poster.recommended:before{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  z-index:-1;
+  border-radius:5px;
+  background:linear-gradient(135deg,rgba(255,222,100,.32),transparent 35% 65%,rgba(255,174,58,.22));
+  animation:bruteRecommendedPulse 1.9s ease-in-out infinite;
+}
+@keyframes bruteRecommendedPulse{
+  0%,100%{opacity:.35}
+  50%{opacity:.9}
+}
+@media(max-width:620px){
+  .brute-ranking-v2-podium .place-1{
+    transform:translateY(-4px);
+  }
+  .brute-ranking-v2-podium .place-1 .brute-podium-avatar{
+    width:50px;
+    height:50px;
+  }
+}
+
+/* ================================================================
    GA BRUTE · NAVIGATION / PRIORITY V14
    Search behaviour, sticky information and smart daily priority
    ================================================================ */
@@ -6285,10 +6337,18 @@ export async function mountBruteGame(root, options = {}) {
                     const win =
                       f.winner_slug === selectedSlug
 
+                    const opponentName =
+                      roster.find(
+                        row =>
+                          row.athlete_slug ===
+                          opp
+                      )?.name ||
+                      opp
+
                     return (
                       '<div class="brute-camp-v2-history-row">'+
                         '<span class="brute-history-glyph">'+uiGlyph(win?'trophy':'loss')+'</span>'+
-                        '<div><b>'+esc(opp)+'</b><small>+'+num(f.xp_gained)+' XP</small></div>'+
+                        '<div><b>'+esc(opponentName)+'</b><small>'+(win?'VICTOIRE':'DÉFAITE')+' · +'+num(f.xp_gained)+' XP</small></div>'+
                         '<button class="brute-mini brute-icon-button" data-brute-replay="'+esc(f.id)+'">'+uiGlyph('replay')+'</button>'+
                       '</div>'
                     )
@@ -6357,6 +6417,18 @@ export async function mountBruteGame(root, options = {}) {
           ? 'Adversaire conseillé : '+recommended.name+' · '+threat(recommended)
           : 'Aucun adversaire disponible actuellement.'
 
+    const displayOpponents =
+      recommended
+        ? [
+            recommended,
+            ...opponents.filter(
+              row =>
+                row.athlete_slug !==
+                recommended.athlete_slug
+            ),
+          ]
+        : opponents
+
     return (
       topBar(
         'Arène',
@@ -6381,8 +6453,8 @@ export async function mountBruteGame(root, options = {}) {
         '</header>'+
         '<div class="brute-duel-posters">'+
           (
-            opponents.length
-              ? opponents.map(o => {
+            displayOpponents.length
+              ? displayOpponents.map(o => {
                   const ratio =
                     num(o.wins) +
                     num(o.losses) > 0
@@ -6958,11 +7030,17 @@ export async function mountBruteGame(root, options = {}) {
           '</div>'+
         '</div>'+
         '<div class="brute-ranking-v2-podium">'+
-          top.map(
-            (row,index) => {
-              const place =
-                index + 1
-
+          [
+            [top[1],2],
+            [top[0],1],
+            [top[2],3],
+          ]
+            .filter(
+              ([row]) =>
+                Boolean(row)
+            )
+            .map(
+            ([row,place]) => {
               return (
                 '<div class="brute-podium place-'+place+'">'+
                   '<span class="brute-podium-crown">'+uiGlyph(place===1?'trophy':'ranking')+'</span>'+
@@ -7482,6 +7560,31 @@ export async function mountBruteGame(root, options = {}) {
     screen = next
     notice = ''
     render()
+
+    requestAnimationFrame(
+      () => {
+        const shell =
+          root.querySelector(
+            '.brute-shell'
+          )
+
+        if (!shell) return
+
+        try {
+          shell.scrollIntoView({
+            block:'start',
+            behavior:
+              window.matchMedia?.(
+                '(prefers-reduced-motion: reduce)'
+              )?.matches
+                ? 'auto'
+                : 'smooth',
+          })
+        } catch {
+          shell.scrollIntoView()
+        }
+      }
+    )
   }
 
   function wait(ms) {
