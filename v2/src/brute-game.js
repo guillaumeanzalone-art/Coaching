@@ -2840,6 +2840,489 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · MENU / ERGONOMY V12
+   Clearer hierarchy, readable status, action priority and mobile dock
+   ================================================================ */
+.brute-top-v2{
+  min-height:62px;
+  margin-bottom:14px;
+  padding:8px 10px;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:15px;
+  background:linear-gradient(180deg,rgba(22,26,47,.92),rgba(9,12,25,.94));
+  box-shadow:0 10px 30px rgba(0,0,0,.18);
+}
+.brute-top-title{min-width:0}
+.brute-top-v2 .brute-top-title small{
+  color:#9ca4bd;
+  font-size:8px;
+  letter-spacing:.13em;
+}
+.brute-top-v2 .brute-top-title h1{
+  margin-top:2px;
+  color:#f7f1df;
+  font-size:22px;
+}
+.brute-top-actions{display:flex;gap:7px}
+.brute-nav-button{
+  min-width:72px;
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:7px 10px!important;
+  border-color:rgba(255,255,255,.1)!important;
+  background:rgba(255,255,255,.045)!important;
+  color:#e9ebf4!important;
+  box-shadow:none!important;
+}
+.brute-nav-button span{font-size:7px;font-weight:1000;letter-spacing:.06em}
+.brute-nav-glyph{width:18px;height:18px}
+.brute-nav-button:hover{background:rgba(255,255,255,.075)!important}
+
+.brute-cell-header-v3{
+  min-height:78px;
+  padding:10px 14px;
+}
+.brute-cell-home,
+.brute-cell-header-button{
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.brute-cell-home{min-width:62px}
+.brute-cell-header-button{min-width:72px}
+.brute-cell-home span,
+.brute-cell-header-button span{
+  font-size:7px;
+  letter-spacing:.06em;
+}
+.brute-header-glyph{width:18px;height:18px}
+.brute-cell-name-meta{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  margin-top:4px;
+  color:#85512e;
+  font-size:7px;
+  font-weight:1000;
+  letter-spacing:.07em;
+}
+.brute-cell-name-meta i{
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:#9e6637;
+}
+.brute-menu-status-strip{
+  position:relative;
+  z-index:4;
+  display:grid;
+  grid-template-columns:1.25fr repeat(3,1fr);
+  gap:7px;
+  padding:10px 16px 0;
+}
+.brute-menu-status{
+  min-width:0;
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr) auto;
+  gap:7px;
+  align-items:center;
+  padding:8px 9px;
+  border:2px solid rgba(91,47,24,.34);
+  border-radius:10px;
+  background:rgba(255,236,181,.78);
+  color:#64371d;
+  box-shadow:inset 0 1px rgba(255,255,255,.35),0 3px 0 rgba(78,38,18,.18);
+}
+.brute-menu-status-icon{
+  width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  padding:5px;
+  border-radius:8px;
+  background:rgba(103,55,29,.11);
+}
+.brute-menu-status-icon .ga-ui-glyph{width:100%;height:100%}
+.brute-menu-status small{
+  display:block;
+  color:#8b603d;
+  font-size:6px;
+  font-weight:1000;
+  letter-spacing:.1em;
+}
+.brute-menu-status b{
+  display:block;
+  margin-top:1px;
+  overflow:hidden;
+  font-size:9px;
+  line-height:1.15;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.brute-menu-status>em{
+  font-size:7px;
+  font-style:normal;
+  font-weight:1000;
+  color:#946036;
+}
+.brute-menu-status.readiness.ready{border-color:#608449;background:linear-gradient(#eef0ae,#d5cf6b)}
+.brute-menu-status.readiness.medium{border-color:#9c743b;background:linear-gradient(#f4dea0,#dbb568)}
+.brute-menu-status.readiness.low{border-color:#9b4f3c;background:linear-gradient(#f2c18c,#d88d5b)}
+.brute-cell-grid-v3{padding-top:12px}
+.brute-cell-board-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:1px;
+  min-height:37px;
+}
+.brute-cell-board-title>span{font-size:10px}
+.brute-cell-board-title>small{
+  color:#e9c684;
+  font-size:5.5px;
+  letter-spacing:.1em;
+  opacity:.9;
+}
+.brute-menu-loadout{
+  display:grid;
+  grid-template-columns:62px minmax(0,1fr);
+  gap:9px;
+  align-items:center;
+  margin-bottom:10px;
+  padding:9px;
+  border:2px solid rgba(95,50,25,.35);
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(255,242,191,.72),rgba(164,96,46,.15));
+}
+.brute-menu-loadout-art,
+.brute-menu-loadout-art .ga-weapon-icon{
+  width:58px;
+  height:58px;
+}
+.brute-menu-loadout small{
+  display:block;
+  color:#8d5a35;
+  font-size:6px;
+  font-weight:1000;
+  letter-spacing:.09em;
+}
+.brute-menu-loadout b{
+  display:block;
+  margin-top:2px;
+  color:#5b2e18;
+  font-size:11px;
+}
+.brute-menu-loadout em{
+  display:block;
+  margin-top:2px;
+  color:#7d4f2b;
+  font-size:6px;
+  font-style:normal;
+  font-weight:900;
+  line-height:1.35;
+}
+.brute-menu-loadout-mastery{
+  position:relative;
+  height:12px;
+  margin-top:6px;
+  overflow:hidden;
+  border:1px solid rgba(86,44,22,.5);
+  border-radius:99px;
+  background:#4b291a;
+}
+.brute-menu-loadout-mastery i{
+  display:block;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#d57a34,#f0c14f,#f4e392);
+}
+.brute-menu-loadout-mastery span{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color:#fff4c4;
+  font-size:5px;
+  font-weight:1000;
+  text-shadow:0 1px #3e2113;
+}
+.brute-cell-inventory-link{
+  display:grid;
+  grid-template-columns:24px minmax(0,1fr) 12px;
+  gap:7px;
+  align-items:center;
+  text-align:left;
+}
+.brute-cell-inventory-link>span{width:22px;height:22px}
+.brute-cell-inventory-link b{display:block;font-size:8px}
+.brute-cell-inventory-link small{display:block;margin-top:2px;color:#d6b675;font-size:6px;line-height:1.25}
+.brute-cell-inventory-link i{font-size:16px;font-style:normal}
+.brute-cell-level-ribbon-v3 span,
+.brute-cell-level-ribbon-v3 i{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+}
+.brute-cell-level-ribbon-v3 span{align-items:flex-start}
+.brute-cell-level-ribbon-v3 i{align-items:flex-end}
+.brute-cell-level-ribbon-v3 small{
+  color:#815029;
+  font-size:5.5px;
+  letter-spacing:.1em;
+}
+.brute-cell-level-ribbon-v3 strong{
+  font-size:10px;
+  letter-spacing:0;
+}
+.brute-menu-progress header span{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+}
+.brute-menu-progress header span small{
+  overflow:hidden;
+  color:#885a35;
+  font-size:6px;
+  font-weight:800;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.brute-progress-glyph{width:15px;height:15px}
+.brute-menu-progress .brute-cell-bar{position:relative;height:15px}
+.brute-menu-progress .brute-cell-bar em{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color:#fff5d3;
+  font-size:6px;
+  font-style:normal;
+  font-weight:1000;
+  text-shadow:0 1px 2px rgba(53,27,17,.85);
+}
+.brute-menu-record-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-bottom:8px;
+}
+.brute-menu-record-grid>div{
+  padding:8px 7px;
+  border:2px solid rgba(96,48,24,.28);
+  border-radius:9px;
+  background:rgba(255,240,187,.5);
+  text-align:center;
+}
+.brute-menu-record-grid small{
+  display:block;
+  color:#81502d;
+  font-size:5.5px;
+  font-weight:1000;
+  letter-spacing:.06em;
+}
+.brute-menu-record-grid b{
+  display:block;
+  margin-top:2px;
+  color:#5c2f19;
+  font-size:17px;
+}
+.brute-menu-record-grid b em{
+  margin-left:2px;
+  font-size:8px;
+  font-style:normal;
+}
+.brute-menu-record-grid>div>em{
+  display:block;
+  color:#875633;
+  font-size:6px;
+  font-style:normal;
+  font-weight:900;
+}
+.brute-cell-action.hero{
+  min-height:76px;
+  grid-template-columns:42px minmax(0,1fr) 18px;
+  padding:10px;
+  border-width:3px;
+}
+.brute-cell-action.hero .brute-cell-action-icon{
+  width:38px;
+  height:38px;
+}
+.brute-cell-action.hero .brute-cell-action-copy b{font-size:13px}
+.brute-cell-action.hero .brute-cell-action-copy small{font-size:7px;line-height:1.35}
+.brute-cell-action-copy{min-width:0}
+.brute-cell-action-copy em{
+  display:inline-flex;
+  margin-top:4px;
+  padding:2px 5px;
+  border:1px solid rgba(255,231,167,.22);
+  border-radius:999px;
+  color:#ffe2a0;
+  font-size:5.5px;
+  font-style:normal;
+  font-weight:1000;
+  letter-spacing:.06em;
+}
+.brute-cell-action.recommended{
+  border-color:#6351a2;
+  background:linear-gradient(#7164b4,#493a7f);
+  box-shadow:inset 0 0 0 2px rgba(222,214,255,.14),0 3px 0 #302459,0 0 14px rgba(110,91,195,.18);
+}
+.brute-menu-secondary-actions{display:grid;gap:1px}
+.brute-cell-actions-v3 .brute-cell-action:not(.hero){
+  min-height:53px;
+}
+.brute-cell-actions-v3 .brute-cell-action b{font-size:9px}
+.brute-cell-actions-v3 .brute-cell-action small{font-size:6.5px;line-height:1.25}
+.brute-mobile-dock{display:none}
+
+.brute-parchment-panel h3,
+.brute-armory-v3-list h3,
+.brute-armory-v3-focus h3{
+  letter-spacing:.08em;
+}
+.brute-parchment-panel small,
+.brute-camp-v2-meter small,
+.brute-row small{
+  line-height:1.35;
+}
+.brute-camp-v2-meter header,
+.brute-cell-bars>div>header{
+  font-size:8px;
+}
+.brute-camp-v2-meter small{font-size:7px}
+.brute-camp-v2-action,
+.brute-camp-v2-sleep{
+  min-height:46px;
+  font-size:9px;
+}
+
+@media(max-width:900px){
+  .brute-menu-status-strip{
+    grid-template-columns:1fr 1fr;
+  }
+  .brute-cell-grid-v3{
+    grid-template-columns:minmax(220px,.8fr) minmax(320px,1.2fr);
+  }
+  .brute-cell-actions-v3{grid-column:1/-1}
+  .brute-cell-actions-v3 .brute-menu-secondary-actions{
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+  }
+  .brute-cell-actions-v3 .brute-cell-action.hero{
+    grid-column:1/-1;
+  }
+}
+@media(max-width:660px){
+  .brute-app{padding:6px 5px calc(78px + env(safe-area-inset-bottom))}
+  .brute-cell-v2{overflow:visible}
+  .brute-cell-header-v3{
+    position:sticky;
+    z-index:40;
+    top:0;
+    min-height:64px;
+    padding:7px 8px;
+    border-radius:11px 11px 0 0;
+  }
+  .brute-cell-header-v3 .brute-cell-name h1{font-size:20px}
+  .brute-cell-header-v3 .brute-brand-mark{font-size:6px}
+  .brute-cell-name-meta{font-size:6px}
+  .brute-cell-home{min-width:46px;padding:7px!important}
+  .brute-cell-header-button{min-width:44px;padding:7px!important}
+  .brute-cell-home span,
+  .brute-cell-header-button span{display:none}
+  .brute-header-glyph{width:20px;height:20px}
+  .brute-cell-header-actions{gap:4px}
+  .brute-menu-status-strip{
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+    padding:8px 8px 0;
+  }
+  .brute-menu-status{
+    grid-template-columns:27px minmax(0,1fr);
+    gap:6px;
+    padding:7px;
+  }
+  .brute-menu-status>em{display:none}
+  .brute-menu-status-icon{width:25px;height:25px;padding:4px}
+  .brute-menu-status small{font-size:5px}
+  .brute-menu-status b{font-size:7.5px}
+  .brute-cell-grid-v3{padding-top:8px}
+  .brute-cell-main{grid-row:1}
+  .brute-cell-actions-v3{grid-row:2}
+  .brute-cell-inventory-v3{grid-row:3}
+  .brute-cell-actions-v3 .brute-menu-secondary-actions{grid-template-columns:1fr 1fr}
+  .brute-cell-action.hero{min-height:68px}
+  .brute-cell-action.hero .brute-cell-action-copy b{font-size:12px}
+  .brute-cell-action.hero .brute-cell-action-copy small{font-size:6.5px}
+  .brute-menu-loadout{grid-template-columns:54px 1fr}
+  .brute-menu-loadout-art,
+  .brute-menu-loadout-art .ga-weapon-icon{width:50px;height:50px}
+  .brute-cell-shelf header{font-size:7px}
+  .brute-cell-item small{font-size:5.5px}
+  .brute-menu-progress header span small{display:none}
+  .brute-mobile-dock{
+    position:fixed;
+    z-index:80;
+    left:max(6px,env(safe-area-inset-left));
+    right:max(6px,env(safe-area-inset-right));
+    bottom:max(6px,env(safe-area-inset-bottom));
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:3px;
+    padding:5px;
+    border:1px solid rgba(255,232,175,.22);
+    border-radius:16px;
+    background:rgba(22,17,18,.92);
+    box-shadow:0 10px 30px rgba(0,0,0,.42);
+    backdrop-filter:blur(12px);
+  }
+  .brute-mobile-dock button{
+    min-width:0;
+    min-height:52px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    border:0;
+    border-radius:11px;
+    background:transparent;
+    color:#ecd9aa;
+    cursor:pointer;
+  }
+  .brute-mobile-dock button:active{transform:scale(.95)}
+  .brute-mobile-dock button.center{
+    background:linear-gradient(#b96832,#71361d);
+    color:#fff0b4;
+    box-shadow:inset 0 0 0 1px rgba(255,224,160,.18);
+  }
+  .brute-mobile-dock span{width:22px;height:22px}
+  .brute-mobile-dock b{font-size:5.5px;letter-spacing:.05em}
+  .brute-top-v2{
+    position:sticky;
+    z-index:60;
+    top:0;
+    min-height:54px;
+    padding:6px;
+  }
+  .brute-top-v2 .brute-top-title h1{font-size:18px}
+  .brute-top-v2 .brute-top-title small{font-size:6px}
+  .brute-nav-button{min-width:42px;min-height:38px;padding:6px!important}
+  .brute-nav-button span{display:none}
+  .brute-nav-glyph{width:19px;height:19px}
+  .brute-top-actions{gap:4px}
+}
+
+/* ================================================================
    GA BRUTE · KO RESOLUTION V11
    Winner pose, loser fade and cleaner end-of-fight read
    ================================================================ */
@@ -4040,12 +4523,30 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function topBar(title, subtitle) {
-    return '<header class="brute-top">'+
-      '<button class="brute-back" data-brute-menu>← Menu</button>'+
-      '<div><small>'+esc(subtitle || 'GA BRUTE')+'</small><h1>'+esc(title)+'</h1></div>'+
+    return '<header class="brute-top brute-top-v2">'+
+      '<button class="brute-back brute-nav-button" data-brute-menu aria-label="Retour au menu">'+
+        uiGlyph('home','brute-nav-glyph')+
+        '<span>MENU</span>'+
+      '</button>'+
+      '<div class="brute-top-title">'+
+        '<small>'+esc(subtitle || 'GA BRUTE')+'</small>'+
+        '<h1>'+esc(title)+'</h1>'+
+      '</div>'+
       '<div class="spacer"></div>'+
-      '<button class="brute-mini" data-brute-music-toggle>'+(musicEnabled ? 'MUSIQUE' : 'MUET')+'</button>'+
-      (options.allowAthleteSelection ? '<button class="brute-mini" data-brute-switch>Changer</button>' : '')+
+      '<div class="brute-top-actions">'+
+        '<button class="brute-mini brute-nav-button" data-brute-music-toggle aria-label="Activer ou couper le son">'+
+          uiGlyph('sound','brute-nav-glyph')+
+          '<span>'+(musicEnabled ? 'SON' : 'MUET')+'</span>'+
+        '</button>'+
+        (
+          options.allowAthleteSelection
+            ? '<button class="brute-mini brute-nav-button" data-brute-switch aria-label="Changer d’athlète">'+
+                uiGlyph('switch','brute-nav-glyph')+
+                '<span>ATHLÈTE</span>'+
+              '</button>'
+            : ''
+        )+
+      '</div>'+
     '</header>'
   }
 
@@ -4304,6 +4805,10 @@ export async function mountBruteGame(root, options = {}) {
       trophy:'<path d="M31 19 H69 V39 Q69 59 50 64 Q31 59 31 39Z M31 28 H18 V38 Q18 51 33 53 M69 28 H82 V38 Q82 51 67 53 M50 64 V76 M35 82 H65" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
       replay:'<path d="M29 31 Q43 18 61 24 Q79 30 82 49 Q84 69 67 79 Q47 90 29 76 Q18 67 18 53 M18 32 V53 H39" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
       loss:'<path d="M27 27 L73 73 M73 27 L27 73" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>',
+      home:'<path d="M17 48 L50 20 L83 48 M25 44 V80 H75 V44 M42 80 V57 H58 V80" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
+      sound:'<path d="M19 42 H35 L54 27 V73 L35 58 H19Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/><path d="M65 38 Q74 50 65 62 M73 28 Q89 50 73 72" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>',
+      switch:'<path d="M21 34 H72 M62 24 L72 34 L62 44 M79 66 H28 M38 56 L28 66 L38 76" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
+      info:'<circle cx="50" cy="50" r="32" fill="none" stroke="currentColor" stroke-width="7"/><path d="M50 44 V68 M50 31 V32" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>',
     }
 
     return '<svg class="ga-ui-glyph '+esc(className)+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
@@ -4881,12 +5386,21 @@ export async function mountBruteGame(root, options = {}) {
     icon,
     title,
     subtitle,
-    extra = ''
+    extra = '',
+    badge = ''
   ) {
     return (
       '<button class="brute-cell-action '+esc(extra)+'" data-brute-screen="'+esc(screenName)+'">'+
         '<span class="brute-cell-action-icon">'+uiGlyph(icon)+'</span>'+
-        '<span><b>'+esc(title)+'</b><small>'+esc(subtitle)+'</small></span>'+
+        '<span class="brute-cell-action-copy">'+
+          '<b>'+esc(title)+'</b>'+
+          '<small>'+esc(subtitle)+'</small>'+
+          (
+            badge
+              ? '<em>'+esc(badge)+'</em>'
+              : ''
+          )+
+        '</span>'+
         '<i>›</i>'+
       '</button>'
     )
@@ -4934,27 +5448,109 @@ export async function mountBruteGame(root, options = {}) {
         )
       )
 
+    const xpRemaining =
+      Math.max(
+        0,
+        xpNeeded() -
+        num(
+          brute.xp
+        )
+      )
+
+    const readiness =
+      energy >= 250
+        ? {
+            label:'PRÊT À COMBATTRE',
+            className:'ready',
+          }
+        : energy >= 80
+          ? {
+              label:'ÉNERGIE MOYENNE',
+              className:'medium',
+            }
+          : {
+              label:'RÉCUPÉRATION CONSEILLÉE',
+              className:'low',
+            }
+
+    const winRate =
+      num(brute.wins) +
+      num(brute.losses) > 0
+        ? Math.round(
+            num(brute.wins) /
+            (
+              num(brute.wins) +
+              num(brute.losses)
+            ) *
+            100
+          )
+        : 0
+
     return (
       '<section class="brute-cell-v2">'+
         '<div class="brute-cell-sky"></div>'+
-        '<header class="brute-cell-header">'+
-          '<button class="brute-cell-small" data-brute-exit>← GA</button>'+
+        '<header class="brute-cell-header brute-cell-header-v3">'+
+          '<button class="brute-cell-small brute-cell-home" data-brute-exit aria-label="Retour à GA">'+
+            uiGlyph('home','brute-header-glyph')+
+            '<span>GA</span>'+
+          '</button>'+
           '<div class="brute-cell-name">'+
             '<span class="brute-brand-mark">'+uiGlyph('strength','brute-brand-glyph')+' GA BRUTE</span>'+
             '<h1>'+esc(brute.name)+'</h1>'+
+            '<div class="brute-cell-name-meta">'+
+              '<span>NIV. '+num(brute.level,1)+'</span>'+
+              '<i></i>'+
+              '<span>COTE '+num(brute.rating,1000)+'</span>'+
+            '</div>'+
           '</div>'+
           '<div class="brute-cell-header-actions">'+
-            '<button class="brute-cell-small" data-brute-music-toggle>'+(musicEnabled ? 'SON' : 'MUET')+'</button>'+
+            '<button class="brute-cell-small brute-cell-header-button" data-brute-music-toggle aria-label="Activer ou couper le son">'+
+              uiGlyph('sound','brute-header-glyph')+
+              '<span>'+(musicEnabled ? 'SON' : 'MUET')+'</span>'+
+            '</button>'+
             (
               options.allowAthleteSelection
-                ? '<button class="brute-cell-small" data-brute-switch>Changer</button>'
+                ? '<button class="brute-cell-small brute-cell-header-button" data-brute-switch aria-label="Changer d’athlète">'+
+                    uiGlyph('switch','brute-header-glyph')+
+                    '<span>ATHLÈTE</span>'+
+                  '</button>'
                 : ''
             )+
           '</div>'+
         '</header>'+
-        '<div class="brute-cell-grid-v2">'+
-          '<aside class="brute-cell-inventory">'+
-            '<div class="brute-cell-board-title">ARSENAL</div>'+
+        '<div class="brute-menu-status-strip">'+
+          '<div class="brute-menu-status readiness '+readiness.className+'">'+
+            '<span class="brute-menu-status-icon">'+uiGlyph(energy >= 80 ? 'arena' : 'sleep')+'</span>'+
+            '<span><small>ÉTAT</small><b>'+readiness.label+'</b></span>'+
+          '</div>'+
+          '<div class="brute-menu-status">'+
+            '<span class="brute-menu-status-icon">'+uiGlyph('energy')+'</span>'+
+            '<span><small>ÉNERGIE</small><b>'+energy+' / 500</b></span>'+
+            '<em>'+Math.round(energyPct)+'%</em>'+
+          '</div>'+
+          '<div class="brute-menu-status">'+
+            '<span class="brute-menu-status-icon">'+uiGlyph('xp')+'</span>'+
+            '<span><small>PROCHAIN NIVEAU</small><b>'+xpRemaining+' XP</b></span>'+
+            '<em>'+Math.round(xpPct)+'%</em>'+
+          '</div>'+
+          '<div class="brute-menu-status">'+
+            '<span class="brute-menu-status-icon">'+uiGlyph('arena')+'</span>'+
+            '<span><small>COMBATS</small><b>'+num(daily.remaining,6)+' RESTANTS</b></span>'+
+            '<em>/ '+num(daily.limit,6)+'</em>'+
+          '</div>'+
+        '</div>'+
+        '<div class="brute-cell-grid-v2 brute-cell-grid-v3">'+
+          '<aside class="brute-cell-inventory brute-cell-inventory-v3">'+
+            '<div class="brute-cell-board-title"><span>ARSENAL</span><small>ÉQUIPEMENT ACTUEL</small></div>'+
+            '<div class="brute-menu-loadout">'+
+              '<span class="brute-menu-loadout-art">'+renderWeaponIconSvg(weapon,{ className:'menu-loadout' })+'</span>'+
+              '<div>'+
+                '<small>ARME ÉQUIPÉE</small>'+
+                '<b>'+esc(weapon.name)+'</b>'+
+                '<em>'+esc(weaponIdentity(weapon))+'</em>'+
+                '<div class="brute-menu-loadout-mastery"><i style="width:'+weaponMastery(brute,weapon)+'%"></i><span>MAÎTRISE '+weaponMastery(brute,weapon)+'</span></div>'+
+              '</div>'+
+            '</div>'+
             renderInventoryShelf(
               'ARMES',
               'weapon',
@@ -4972,12 +5568,18 @@ export async function mountBruteGame(root, options = {}) {
               brute.pets || [],
               petId
             )+
-            '<button class="brute-cell-inventory-link" data-brute-screen="equipment">GÉRER L’ÉQUIPEMENT</button>'+
+            '<button class="brute-cell-inventory-link" data-brute-screen="equipment">'+
+              '<span>'+uiGlyph('weapon','brute-inline-glyph')+'</span>'+
+              '<b>ARSENAL & APPARENCE</b>'+
+              '<small>Armes, compétences, familiers et style</small>'+
+              '<i>›</i>'+
+            '</button>'+
           '</aside>'+
           '<main class="brute-cell-main">'+
-            '<div class="brute-cell-level-ribbon">'+
-              '<span>NIVEAU</span><b>'+num(brute.level,1)+'</b>'+
-              '<i>Cote '+num(brute.rating,1000)+'</i>'+
+            '<div class="brute-cell-level-ribbon brute-cell-level-ribbon-v3">'+
+              '<span><small>NIVEAU</small><strong>'+num(brute.level,1)+'</strong></span>'+
+              '<b>'+num(brute.level,1)+'</b>'+
+              '<i><small>COTE</small><strong>'+num(brute.rating,1000)+'</strong></i>'+
             '</div>'+
             '<div class="brute-cell-avatar-stage">'+
               '<div class="brute-cell-window"></div>'+
@@ -5008,51 +5610,72 @@ export async function mountBruteGame(root, options = {}) {
               statCell('speed',brute.speed)+
             '</div>'+
             '<div class="brute-cell-bars">'+
-              '<div><header><span>EXPÉRIENCE</span><b>'+num(brute.xp)+' / '+xpNeeded()+'</b></header><div class="brute-cell-bar xp"><i style="width:'+xpPct+'%"></i></div></div>'+
-              '<div><header><span>ÉNERGIE · +1/MIN</span><b data-brute-energy-value>'+energy+' / 500</b></header><div class="brute-cell-bar energy"><i data-brute-energy-bar style="width:'+energyPct+'%"></i></div></div>'+
+              '<div class="brute-menu-progress">'+
+                '<header><span>'+uiGlyph('xp','brute-progress-glyph')+' EXPÉRIENCE <small>'+xpRemaining+' XP avant le niveau suivant</small></span><b>'+num(brute.xp)+' / '+xpNeeded()+'</b></header>'+
+                '<div class="brute-cell-bar xp"><i style="width:'+xpPct+'%"></i><em>'+Math.round(xpPct)+'%</em></div>'+
+              '</div>'+
+              '<div class="brute-menu-progress">'+
+                '<header><span>'+uiGlyph('energy','brute-progress-glyph')+' ÉNERGIE <small>Récupération passive +1/min</small></span><b data-brute-energy-value>'+energy+' / 500</b></header>'+
+                '<div class="brute-cell-bar energy"><i data-brute-energy-bar style="width:'+energyPct+'%"></i><em>'+Math.round(energyPct)+'%</em></div>'+
+              '</div>'+
             '</div>'+
             renderChoices()+
           '</main>'+
-          '<aside class="brute-cell-actions">'+
-            '<div class="brute-cell-board-title">AUJOURD’HUI</div>'+
-            '<div class="brute-cell-fights"><span>COMBATS</span><b>'+num(daily.remaining,6)+' / '+num(daily.limit,6)+'</b></div>'+
+          '<aside class="brute-cell-actions brute-cell-actions-v3">'+
+            '<div class="brute-cell-board-title"><span>ACTIONS</span><small>QUE VEUX-TU FAIRE ?</small></div>'+
+            '<div class="brute-menu-record-grid">'+
+              '<div><small>COMBATS RESTANTS</small><b>'+num(daily.remaining,6)+'<em>/'+num(daily.limit,6)+'</em></b></div>'+
+              '<div><small>PALMARÈS</small><b>'+num(brute.wins)+'-'+num(brute.losses)+'</b><em>'+winRate+'% V</em></div>'+
+            '</div>'+
             cellAction(
               'duel',
               'arena',
-              'ARÈNE',
-              'Affronter une autre brute',
-              'primary'
+              'COMBATTRE',
+              num(daily.remaining,6) > 0
+                ? 'Choisir un adversaire et entrer dans l’arène'
+                : 'Limite quotidienne atteinte',
+              'primary hero',
+              num(daily.remaining,6)+' RESTANTS'
             )+
-            cellAction(
-              'pve',
-              'pve',
-              'OPENPOWER',
-              'PvE · 8 énergie'
-            )+
-            cellAction(
-              'camp',
-              'camp',
-              'CAMP',
-              'Progression du jour'
-            )+
-            cellAction(
-              'sleep',
-              'sleep',
-              'SOMMEIL',
-              'Bonus XP & récupération'
-            )+
-            cellAction(
-              'ranking',
-              'ranking',
-              'CLASSEMENT',
-              'Toutes les brutes'
-            )+
-            '<div class="brute-cell-record">'+
-              '<span>PALMARÈS</span>'+
-              '<div><b>'+num(brute.wins)+'</b><small>V</small><b>'+num(brute.losses)+'</b><small>D</small></div>'+
+            '<div class="brute-menu-secondary-actions">'+
+              cellAction(
+                'pve',
+                'pve',
+                'OPENPOWER',
+                'PvE · coûte 8 énergie',
+                '',
+                energy >= 8 ? 'DISPONIBLE' : 'ÉNERGIE FAIBLE'
+              )+
+              cellAction(
+                'camp',
+                'camp',
+                'CAMP',
+                'Voir ta progression du jour'
+              )+
+              cellAction(
+                'sleep',
+                'sleep',
+                'RÉCUPÉRATION',
+                'Sommeil, énergie et bonus XP',
+                energy < 80 ? 'recommended' : '',
+                energy < 80 ? 'CONSEILLÉ' : ''
+              )+
+              cellAction(
+                'ranking',
+                'ranking',
+                'CLASSEMENT',
+                'Comparer ta brute aux autres'
+              )+
             '</div>'+
           '</aside>'+
         '</div>'+
+        '<nav class="brute-mobile-dock" aria-label="Navigation GA Brute">'+
+          '<button data-brute-screen="duel"><span>'+uiGlyph('arena')+'</span><b>COMBAT</b></button>'+
+          '<button data-brute-screen="camp"><span>'+uiGlyph('camp')+'</span><b>CAMP</b></button>'+
+          '<button class="center" data-brute-screen="equipment"><span>'+uiGlyph('weapon')+'</span><b>ARSENAL</b></button>'+
+          '<button data-brute-screen="sleep"><span>'+uiGlyph('sleep')+'</span><b>RÉCUP.</b></button>'+
+          '<button data-brute-screen="ranking"><span>'+uiGlyph('ranking')+'</span><b>RANG</b></button>'+
+        '</nav>'+
       '</section>'
     )
   }
