@@ -2840,6 +2840,74 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · ARCADE FEEDBACK V7
+   Damage lag bars, weapon signatures and cinematic callouts
+   ================================================================ */
+.brute-hud-v3-hp{overflow:hidden}
+.brute-hud-v3-hp .brute-hp-lag{
+  position:absolute;z-index:0;left:2px;top:2px;bottom:2px;display:block;border-radius:2px;
+  background:linear-gradient(180deg,#fff7c7,#ffdf66 44%,#ff7b37);
+  box-shadow:0 0 9px rgba(255,190,64,.58);
+  transition:width .46s cubic-bezier(.12,.72,.2,1) .08s;
+}
+.brute-hud-v3-side.right .brute-hp-lag{left:auto;right:2px}
+.brute-hud-v3-hp i{position:relative;z-index:1}
+.brute-hud-v3-hp span{z-index:3}
+.brute-arcade-callouts{position:absolute;z-index:28;inset:0;pointer-events:none;overflow:hidden}
+.brute-arcade-callouts>div{
+  position:absolute;top:34%;width:29%;opacity:0;color:#fff4d4;
+  text-shadow:0 2px 0 #1b1010,0 0 14px rgba(255,181,72,.35);
+  transform:translateY(10px) scale(.86);
+}
+.brute-arcade-callouts>div:first-child{left:5%;text-align:left}
+.brute-arcade-callouts>div:last-child{right:5%;text-align:right}
+.brute-arcade-callouts>div.show{animation:bruteArcadeCallout .62s cubic-bezier(.12,.82,.2,1) forwards}
+.brute-arcade-callouts b{display:block;font-size:24px;font-style:italic;font-weight:1000;letter-spacing:-.03em;line-height:.9}
+.brute-arcade-callouts small{display:block;margin-top:4px;font-size:6px;font-weight:1000;letter-spacing:.16em}
+.brute-arcade-callouts .tone-heavy b{color:#ffad50}
+.brute-arcade-callouts .tone-flexible b{color:#c5a0ff}
+.brute-arcade-callouts .tone-ranged b{color:#8de9f6}
+.brute-arcade-callouts .tone-unarmed b{color:#ffe071}
+.brute-arcade-callouts .tone-critical b{color:#fff;font-size:31px;text-shadow:3px 3px 0 #d42f24,0 0 18px rgba(255,65,40,.8)}
+.brute-arcade-callouts .tone-combo b{color:#ffd55d;text-shadow:2px 2px 0 #9b491d,0 0 18px rgba(255,181,45,.6)}
+.brute-arcade-callouts .tone-counter b{color:#ad93ff;text-shadow:2px 2px 0 #4f347f,0 0 18px rgba(151,105,255,.6)}
+.brute-arcade-callouts .tone-dodge b{color:#8fe7ff;text-shadow:2px 2px 0 #28617b,0 0 18px rgba(86,201,255,.55)}
+.brute-arcade-callouts .tone-guard b{color:#b6dcff;text-shadow:2px 2px 0 #2c5778}
+.brute-weapon-trail{position:absolute;z-index:18;left:26%;top:47%;width:48%;height:82px;border-radius:50%;pointer-events:none;opacity:0}
+.brute-weapon-trail.flexible{border-top:6px solid rgba(196,157,255,.9);box-shadow:0 -3px 10px rgba(162,110,255,.58);animation:bruteFlexibleTrail .42s ease forwards}
+.brute-weapon-trail.unarmed{height:35px;top:51%;background:linear-gradient(90deg,transparent,rgba(255,239,153,.85),rgba(255,136,58,.34),transparent);filter:blur(1px);animation:bruteUnarmedTrail .32s ease forwards}
+.brute-weapon-trail.right{transform:scaleX(-1)}
+.brute-heavy-crack{
+  position:absolute;z-index:14;bottom:61px;width:115px;height:70px;opacity:0;
+  background:linear-gradient(62deg,transparent 45%,rgba(70,36,24,.55) 46% 48%,transparent 49%) 17px 14px/45px 42px no-repeat,
+    linear-gradient(112deg,transparent 44%,rgba(70,36,24,.48) 45% 47%,transparent 48%) 48px 21px/50px 38px no-repeat,
+    linear-gradient(78deg,transparent 45%,rgba(70,36,24,.4) 46% 48%,transparent 49%) 28px 34px/62px 28px no-repeat;
+  animation:bruteHeavyCrack .48s ease forwards;
+}
+.brute-heavy-crack.left{left:21%}
+.brute-heavy-crack.right{right:21%;transform:scaleX(-1)}
+.brute-chalk-cloud{
+  position:absolute;z-index:17;top:39%;width:135px;height:120px;border-radius:50%;opacity:0;
+  background:radial-gradient(circle at 35% 45%,rgba(237,247,242,.74) 0 17%,transparent 18%),
+    radial-gradient(circle at 62% 35%,rgba(231,244,241,.6) 0 19%,transparent 20%),
+    radial-gradient(circle at 58% 67%,rgba(221,239,237,.52) 0 24%,transparent 25%),
+    radial-gradient(circle at 38% 69%,rgba(236,247,243,.45) 0 22%,transparent 23%);
+  filter:blur(2px);animation:bruteChalkCloud .65s ease forwards;
+}
+.brute-chalk-cloud.left{left:19%}
+.brute-chalk-cloud.right{right:19%}
+@keyframes bruteArcadeCallout{
+  0%{opacity:0;transform:translateY(12px) scale(.82) skewX(-7deg)}
+  32%{opacity:1;transform:translateY(-4px) scale(1.08) skewX(-7deg)}
+  70%{opacity:1;transform:translateY(-7px) scale(1) skewX(-7deg)}
+  100%{opacity:0;transform:translateY(-17px) scale(.98) skewX(-7deg)}
+}
+@keyframes bruteFlexibleTrail{0%{opacity:0;transform:rotate(-20deg) scale(.45)}40%{opacity:1;transform:rotate(-8deg) scale(1)}100%{opacity:0;transform:rotate(8deg) scale(1.18)}}
+@keyframes bruteUnarmedTrail{0%{opacity:0;transform:translateX(-28px) scaleX(.35)}38%{opacity:.95}100%{opacity:0;transform:translateX(52px) scaleX(1.16)}}
+@keyframes bruteHeavyCrack{0%{opacity:0;transform:scale(.55)}32%{opacity:.9;transform:scale(1.05)}100%{opacity:0;transform:scale(1.18)}}
+@keyframes bruteChalkCloud{0%{opacity:0;transform:scale(.45) translateY(8px)}34%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.35) translateY(-12px)}}
+
+/* ================================================================
    GA BRUTE · INTERFACE FLUIDITY V6
    Screen transitions, tactile controls and progression feedback
    ================================================================ */
@@ -4004,6 +4072,43 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     return 'COMBO'
+  }
+
+  function weaponAttackSignature(
+    weapon,
+    attackVariant = 0
+  ) {
+    const id =
+      String(
+        weapon?.id ||
+        'fists'
+      )
+
+    const variants = {
+      fists:['JAB','HOOK','UPPERCUT','CROSS','DRIVE','SWEEP'],
+      olympic_bar:['BAR CRUSH','LONG SWING','PRESS STRIKE','BAR CROSS','GROUND DRIVE','LOW SWEEP'],
+      kettlebell:['SWING','CLEAN HIT','RISING BELL','ROTATION','HAMMER','LOW SWING'],
+      plate20:['PLATE JAB','DISC HOOK','RISING DISC','SPIN HIT','PLATE SLAM','LOW DISC'],
+      belt:['SNAP','WHIP','RISING SNAP','CROSS WHIP','BELT CRACK','LOW WHIP'],
+      chalk:['BURST','CLOUD','RISING DUST','FLASH','CHALK BLAST','LOW CLOUD'],
+      straps:['SNAP','GRIP HIT','RISING STRAP','CROSS SNAP','STRAP CRACK','LOW GRIP'],
+    }
+
+    const list =
+      variants[id] ||
+      variants.fists
+
+    return list[
+      Math.abs(
+        Math.floor(
+          num(
+            attackVariant,
+            0
+          )
+        )
+      ) %
+      list.length
+    ]
   }
 
   function weaponIdentity(
@@ -5815,7 +5920,7 @@ export async function mountBruteGame(root, options = {}) {
               '<b>x1</b><small>CHAÎNE</small><i style="--chain:1"></i>'+
             '</div>'+
           '</div>'+
-          '<div class="brute-hud-v2-hp brute-hud-v3-hp"><i data-hp-'+side+' style="width:100%"></i><span data-hp-text-'+side+'>'+num(fighter.hpMax)+' / '+num(fighter.hpMax)+'</span></div>'+
+          '<div class="brute-hud-v2-hp brute-hud-v3-hp"><b class="brute-hp-lag" data-hp-lag-'+side+' style="width:100%"></b><i data-hp-'+side+' style="width:100%"></i><span data-hp-text-'+side+'>'+num(fighter.hpMax)+' / '+num(fighter.hpMax)+'</span></div>'+
           '<div class="brute-hud-v3-live">'+
             '<span>DÉGÂTS <b data-fight-damage-'+side+'>0</b></span>'+
             '<span>CRIT <b data-fight-crits-'+side+'>0</b></span>'+
@@ -5851,6 +5956,7 @@ export async function mountBruteGame(root, options = {}) {
           '<div class="brute-arena-v4-vignette"></div>'+
           '<div class="brute-arena-v4-foreground"></div>'+
           '<div class="brute-versus-callout" aria-hidden="true"><b>FIGHT!</b><i></i></div>'+
+          '<div class="brute-arcade-callouts" aria-hidden="true"><div data-arcade-callout-left></div><div data-arcade-callout-right></div></div>'+
           '<div class="brute-hud brute-hud-v2 brute-hud-v3">'+
             hud(left,'left',leftWeapon)+
             '<div class="brute-round-stack">'+
@@ -6197,7 +6303,7 @@ export async function mountBruteGame(root, options = {}) {
       )
     })
     root.querySelectorAll('.brute-float').forEach(el => el.remove())
-    root.querySelectorAll('.brute-impact,.brute-dust,.brute-skill-banner,.brute-projectile,.brute-speedline,.brute-slash-fx,.brute-shockwave,.brute-crit-burst,.brute-miss-swoosh,.brute-parry-spark,.brute-finisher-flare,.brute-afterimage,.brute-stat-spark,.brute-combo-burst,.brute-floor-streak,.brute-debris,.brute-contact-ring').forEach(el => el.remove())
+    root.querySelectorAll('.brute-impact,.brute-dust,.brute-skill-banner,.brute-projectile,.brute-speedline,.brute-slash-fx,.brute-shockwave,.brute-crit-burst,.brute-miss-swoosh,.brute-parry-spark,.brute-finisher-flare,.brute-afterimage,.brute-stat-spark,.brute-combo-burst,.brute-floor-streak,.brute-debris,.brute-contact-ring,.brute-weapon-trail,.brute-heavy-crack,.brute-chalk-cloud').forEach(el => el.remove())
 
     const arena =
       root.querySelector('[data-brute-arena]')
@@ -6307,6 +6413,54 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     return 'Combat en cours…'
+  }
+
+  function showArcadeCallout(
+    side,
+    title,
+    subtitle = '',
+    tone = 'neutral'
+  ) {
+    const el =
+      root.querySelector(
+        '[data-arcade-callout-'+
+        side+
+        ']'
+      )
+
+    if (!el) return
+
+    el.className =
+      'show tone-'+
+      tone
+
+    el.innerHTML =
+      '<b>'+
+      esc(
+        title
+      )+
+      '</b>'+
+      (
+        subtitle
+          ? '<small>'+esc(subtitle)+'</small>'
+          : ''
+      )
+
+    setTimeout(
+      () => {
+        el.classList.remove(
+          'show'
+        )
+      },
+      Math.max(
+        380,
+        680 /
+        Math.max(
+          .5,
+          playbackSpeed
+        )
+      )
+    )
   }
 
   function applyEvent(event,tl) {
@@ -6650,6 +6804,13 @@ export async function mountBruteGame(root, options = {}) {
       floater.textContent = 'BLOQUÉ'
       actorEl?.appendChild(floater)
 
+      showArcadeCallout(
+        event.actor,
+        'BLOCK',
+        'GARDE SOLIDE',
+        'guard'
+      )
+
       const spark =
         document.createElement(
           'span'
@@ -6674,6 +6835,13 @@ export async function mountBruteGame(root, options = {}) {
 
     if (event.type === 'COUNTER') {
       actorEl?.classList.add('countering')
+
+      showArcadeCallout(
+        event.actor,
+        'COUNTER',
+        'PUNITION',
+        'counter'
+      )
       const banner = document.createElement('span')
       banner.className = 'brute-skill-banner'
       banner.textContent = '↩ CONTRE'
@@ -6855,6 +7023,27 @@ export async function mountBruteGame(root, options = {}) {
         ]?.category ||
         'unarmed'
 
+      const weaponMeta =
+        BRUTE_WEAPONS[
+          weaponId
+        ] ||
+        BRUTE_WEAPONS.fists
+
+      const signature =
+        weaponAttackSignature(
+          weaponMeta,
+          attackVariant
+        )
+
+      showArcadeCallout(
+        event.actor,
+        signature,
+        weaponMeta.name,
+        event.critical
+          ? 'critical'
+          : category
+      )
+
       if (
         category === 'heavy'
       ) {
@@ -6881,6 +7070,23 @@ export async function mountBruteGame(root, options = {}) {
         fx?.appendChild(
           shockwave
         )
+
+        const crack =
+          document.createElement(
+            'span'
+          )
+
+        crack.className =
+          'brute-heavy-crack ' +
+          (
+            event.target === 'left'
+              ? 'left'
+              : 'right'
+          )
+
+        fx?.appendChild(
+          crack
+        )
       } else if (
         category === 'flexible'
       ) {
@@ -6904,11 +7110,45 @@ export async function mountBruteGame(root, options = {}) {
         fx?.appendChild(
           slash
         )
+
+        const trail =
+          document.createElement(
+            'span'
+          )
+
+        trail.className =
+          'brute-weapon-trail flexible ' +
+          (
+            event.actor === 'right'
+              ? 'right'
+              : 'left'
+          )
+
+        fx?.appendChild(
+          trail
+        )
       } else if (
         category === 'ranged'
       ) {
         arena?.classList.add(
           'impact-ranged'
+        )
+
+        const cloud =
+          document.createElement(
+            'span'
+          )
+
+        cloud.className =
+          'brute-chalk-cloud ' +
+          (
+            event.target === 'left'
+              ? 'left'
+              : 'right'
+          )
+
+        fx?.appendChild(
+          cloud
         )
       } else {
         const speedline =
@@ -6926,6 +7166,23 @@ export async function mountBruteGame(root, options = {}) {
 
         fx?.appendChild(
           speedline
+        )
+
+        const trail =
+          document.createElement(
+            'span'
+          )
+
+        trail.className =
+          'brute-weapon-trail unarmed ' +
+          (
+            event.actor === 'right'
+              ? 'right'
+              : 'left'
+          )
+
+        fx?.appendChild(
+          trail
         )
       }
 
@@ -6966,6 +7223,13 @@ export async function mountBruteGame(root, options = {}) {
       if (event.critical) {
         actorEl?.classList.add(
           'critical-burst'
+        )
+
+        showArcadeCallout(
+          event.actor,
+          'CRITICAL',
+          signature,
+          'critical'
         )
 
         const burst =
@@ -7039,6 +7303,13 @@ export async function mountBruteGame(root, options = {}) {
         comboTier(
           streak
         )
+
+      showArcadeCallout(
+        event.actor,
+        comboRank.label,
+        'COMBO x'+streak,
+        'combo'
+      )
 
       banner.innerHTML =
         '<b>COMBO x'+streak+'</b><small>'+comboRank.label+'</small>'
@@ -7187,6 +7458,15 @@ export async function mountBruteGame(root, options = {}) {
 
       actorEl?.appendChild(
         floater
+      )
+
+      showArcadeCallout(
+        event.actor,
+        'DODGE',
+        actorAgility >= 22
+          ? 'PHANTOM STEP'
+          : 'ESQUIVE',
+        'dodge'
       )
 
       fightSfx('miss')
@@ -7647,6 +7927,15 @@ export async function mountBruteGame(root, options = {}) {
         '0%'
       )
 
+      showArcadeCallout(
+        event.actor === 'left'
+          ? 'left'
+          : 'right',
+        'K.O.',
+        'FINISH',
+        'critical'
+      )
+
       fightSfx('perfect')
     }
 
@@ -7695,6 +7984,16 @@ export async function mountBruteGame(root, options = {}) {
           '[data-hp-right]'
         )
 
+      const lLag =
+        root.querySelector(
+          '[data-hp-lag-left]'
+        )
+
+      const rLag =
+        root.querySelector(
+          '[data-hp-lag-right]'
+        )
+
       const lText =
         root.querySelector(
           '[data-hp-text-left]'
@@ -7713,6 +8012,26 @@ export async function mountBruteGame(root, options = {}) {
       if (rBar) {
         rBar.style.width =
           rPct + '%'
+      }
+
+      if (lLag) {
+        setTimeout(
+          () => {
+            lLag.style.width =
+              lPct + '%'
+          },
+          135
+        )
+      }
+
+      if (rLag) {
+        setTimeout(
+          () => {
+            rLag.style.width =
+              rPct + '%'
+          },
+          135
+        )
       }
 
       if (lText) {
