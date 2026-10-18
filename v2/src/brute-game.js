@@ -2951,6 +2951,63 @@ function ensureStyles() {
 }
 
 /* ================================================================
+   GA BRUTE · REWARD CLARITY V22
+   Immediate impact preview for level-up choices
+   ================================================================ */
+.brute-tcg-head p{
+  margin:3px 0 0;
+  color:#858da7;
+  font-size:7px;
+  font-weight:800;
+}
+.brute-choice{
+  display:flex;
+  flex-direction:column;
+}
+.brute-choice>small{
+  min-height:30px;
+  line-height:1.35;
+}
+.brute-card-impact{
+  width:100%;
+  min-height:27px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:7px 0 5px;
+  padding:4px 6px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:7px;
+  background:rgba(255,255,255,.028);
+  color:#abb1c5;
+  font-size:6px;
+  font-weight:1000;
+  line-height:1.25;
+  letter-spacing:.025em;
+  text-align:center;
+}
+.brute-choice.rarity-rare .brute-card-impact{
+  border-color:rgba(79,151,215,.14);
+  background:rgba(73,137,201,.05);
+}
+.brute-choice.rarity-epic .brute-card-impact{
+  border-color:rgba(150,98,220,.16);
+  background:rgba(136,83,207,.055);
+}
+.brute-choice.rarity-legendary .brute-card-impact{
+  border-color:rgba(238,190,70,.2);
+  background:rgba(220,168,54,.065);
+  color:#d8c18a;
+}
+.brute-card-pick{
+  margin-top:auto;
+}
+@media(max-width:660px){
+  .brute-tcg-head p{font-size:6.5px}
+  .brute-card-impact{font-size:6px;min-height:25px}
+}
+
+/* ================================================================
    GA BRUTE · NEXT BEST ACTION V21
    Contextual recommendation directly on the main menu
    ================================================================ */
@@ -6991,6 +7048,111 @@ export async function mountBruteGame(root, options = {}) {
     )
   }
 
+  function rewardImpact(
+    choice
+  ) {
+    if (!choice) return ''
+
+    if (
+      choice.type === 'stat'
+    ) {
+      const effects = {
+        hp:'SURVIE',
+        strength:'DÉGÂTS · CRIT · IMPACT',
+        agility:'ESQUIVE · CONTRE · CONTRÔLE',
+        speed:'INITIATIVE · COMBO · CADENCE',
+      }
+
+      return (
+        effects[
+          choice.id
+        ] ||
+        'PROGRESSION'
+      )
+    }
+
+    if (
+      choice.type === 'weapon'
+    ) {
+      const weapon =
+        BRUTE_WEAPONS[
+          choice.id
+        ] ||
+        BRUTE_WEAPONS.fists
+
+      const equipped =
+        BRUTE_WEAPONS[
+          brute?.loadout?.weapon
+        ] ||
+        BRUTE_WEAPONS.fists
+
+      const nextMastery =
+        weaponMastery(
+          brute,
+          weapon
+        )
+
+      const currentMastery =
+        weaponMastery(
+          brute,
+          equipped
+        )
+
+      const delta =
+        nextMastery -
+        currentMastery
+
+      return (
+        'MAÎTRISE '+
+        nextMastery+
+        (
+          delta === 0
+            ? ' · ÉQUIVALENTE'
+            : ' · '+
+              (
+                delta > 0
+                  ? '+'
+                  : ''
+              )+
+              delta+
+              ' VS ÉQUIPÉE'
+        )
+      )
+    }
+
+    if (
+      choice.type === 'pet'
+    ) {
+      const pet =
+        BRUTE_PETS[
+          choice.id
+        ]
+
+      if (pet) {
+        return (
+          'PV '+
+          num(pet.hp)+
+          ' · FOR '+
+          num(pet.strength)+
+          ' · AGI '+
+          num(pet.agility)+
+          ' · VIT '+
+          num(pet.speed)
+        )
+      }
+
+      return 'NOUVEAU FAMILIER'
+    }
+
+    if (
+      choice.type === 'skill'
+    ) {
+      return 'NOUVELLE COMPÉTENCE DE COMBAT'
+    }
+
+    return 'AMÉLIORATION PERMANENTE'
+  }
+
   function rewardCurrentValue(
     choice
   ) {
@@ -7083,6 +7245,7 @@ export async function mountBruteGame(root, options = {}) {
         '<span class="big art">'+rewardArt(choice)+'</span>'+
         '<b>'+esc(choice?.name || 'Bonus')+'</b>'+
         '<small>'+esc(choice?.description || 'Amélioration permanente de ta brute.')+'</small>'+
+        '<span class="brute-card-impact">'+esc(rewardImpact(choice))+'</span>'+
         '<span class="brute-card-type">'+esc(rewardTypeLabel(choice))+'</span>'+
         (
           rewardCurrentValue(choice)
@@ -7117,8 +7280,8 @@ export async function mountBruteGame(root, options = {}) {
     return (
       '<section class="brute-tcg-pack '+(compact?'compact':'')+'">'+
         '<div class="brute-tcg-head">'+
-          '<div><span>LEVEL UP · TCG PACK</span><h3>Niveau '+rewardLevel+' · choisis 1 carte</h3></div>'+
-          '<small>1 choix définitif · 3 cartes</small>'+
+          '<div><span>LEVEL UP · TCG PACK</span><h3>Niveau '+rewardLevel+' · choisis 1 carte</h3><p>Compare l’impact sur ton build avant de valider.</p></div>'+
+          '<small>1 CHOIX DÉFINITIF · 3 CARTES</small>'+
         '</div>'+
         '<div class="brute-choice-grid">'+
           choices
