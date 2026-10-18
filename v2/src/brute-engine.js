@@ -895,6 +895,17 @@ function turnAttack(
       counter:
         Boolean(meta.counter),
       thrown,
+      animationVariant:
+        (
+          events.length +
+          attacker.speed +
+          weapon.id.length +
+          (
+            meta.counter
+              ? 3
+              : 0
+          )
+        ) % 6,
     },
     left,
     right
@@ -958,6 +969,12 @@ function turnAttack(
         target: defender.side,
         weapon: weapon.id,
         thrown,
+        animationVariant:
+          (
+            events.length +
+            attacker.agility +
+            weapon.id.length
+          ) % 3,
       },
       left,
       right
@@ -1024,6 +1041,13 @@ function turnAttack(
               16
             )
           ),
+        animationVariant:
+          (
+            events.length +
+            defender.agility +
+            defender.speed +
+            weapon.id.length
+          ) % 3,
       },
       left,
       right
@@ -1130,6 +1154,12 @@ function turnAttack(
               12
             )
           ),
+        animationVariant:
+          (
+            events.length +
+            defender.strength +
+            weapon.id.length
+          ) % 3,
       },
       left,
       right
@@ -1259,6 +1289,18 @@ function turnAttack(
       category:
         weapon.category ||
         'unarmed',
+      attackVariant:
+        (
+          attacker.attacks +
+          attacker.speed +
+          attacker.agility +
+          weapon.id.length +
+          (
+            meta.counter
+              ? 2
+              : 0
+          )
+        ) % 6,
       impactVariant:
         (
           attacker.attacks +
@@ -1266,10 +1308,22 @@ function turnAttack(
           weapon.id.length +
           (
             critical
-              ? 1
+              ? 3
               : 0
           )
-        ) % 3,
+        ) % 5,
+      impactStyle:
+        critical
+          ? 'critical'
+          : blocked
+            ? 'guarded'
+            : weapon.category === 'heavy'
+              ? 'smash'
+              : weapon.category === 'flexible'
+                ? 'whip'
+                : weapon.category === 'ranged'
+                  ? 'burst'
+                  : 'strike',
       knockback:
         blocked
           ? Math.max(
@@ -1473,6 +1527,22 @@ function forceWinnerIfNeeded(
       damage,
       weapon:
         weaponFor(desired).id,
+      category:
+        weaponFor(desired).category ||
+        'unarmed',
+      attackVariant:
+        (
+          events.length +
+          desired.strength +
+          weaponFor(desired).id.length
+        ) % 6,
+      impactVariant:
+        (
+          events.length +
+          damage
+        ) % 5,
+      impactStyle:'finisher',
+      critical:true,
     },
     left,
     right
@@ -1864,6 +1934,22 @@ export function generateFightTimeline({
         damage: 999,
         weapon:
           weaponFor(desired).id,
+        category:
+          weaponFor(desired).category ||
+          'unarmed',
+        attackVariant:
+          (
+            events.length +
+            desired.strength +
+            weaponFor(desired).id.length
+          ) % 6,
+        impactVariant:
+          (
+            events.length +
+            desired.speed
+          ) % 5,
+        impactStyle:'finisher',
+        critical:true,
       },
       left,
       right
@@ -1885,6 +1971,15 @@ export function generateFightTimeline({
           : 'right',
       target: loserSide,
       winnerSlug: winner,
+      animationVariant:
+        (
+          events.length +
+          (
+            loserSide === 'left'
+              ? left.agility
+              : right.agility
+          )
+        ) % 3,
     },
     left,
     right
