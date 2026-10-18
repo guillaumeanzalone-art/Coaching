@@ -152,6 +152,7 @@ const ASI_REHAB_ATHLETES =
   new Set([
     'duane',
     'metaknight',
+    'maxence',
     'noe',
   ])
 
