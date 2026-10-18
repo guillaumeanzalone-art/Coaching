@@ -1,5 +1,7 @@
 name: GA Brute Check
 
+# check signed-in athlete + rematch + music
+
 on:
   push:
     branches:
