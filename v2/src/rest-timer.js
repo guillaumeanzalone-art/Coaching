@@ -429,7 +429,7 @@ async function requestFallbackPermission() {
         'granted'
     ) {
       await LocalNotifications
-        .requestTimerPermissions()
+        .requestPermissions()
     }
   } catch {
     // Notification is a bonus; in-app timer still works.
@@ -509,7 +509,7 @@ async function scheduleFallbackNotification(
               allowWhileIdle:
                 true,
             },
-            sound:null,
+            sound:'default',
           },
         ],
       })
@@ -583,7 +583,7 @@ export async function requestRestTimerPermissions() {
   if (nativeTimerAvailable()) {
     try {
       return await RestTimerNative
-        .requestPermissions()
+        .requestTimerPermissions()
     } catch {
       // Fall through to local notifications.
     }
