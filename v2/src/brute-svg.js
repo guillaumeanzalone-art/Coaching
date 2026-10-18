@@ -809,11 +809,23 @@ export function renderBruteSvg(
         metrics.headScale+') translate(-'+
         center+' -104)'
 
+  const fightModel =
+    String(
+      options.className ||
+      ''
+    ).split(/\s+/).includes(
+      'fight-model'
+    )
+
   const weaponAnchorX =
-    armRightX + 26
+    fightModel
+      ? armRightX + 32
+      : armRightX + 26
 
   const weaponAnchorY =
-    249
+    fightModel
+      ? 176
+      : 249
 
   const weaponMarkup =
     weapon
@@ -828,6 +840,48 @@ export function renderBruteSvg(
           petShapeSvg(pet)+
         '</g>'
       : ''
+
+  const fightLeftFistX =
+    armLeftX + 27
+
+  const fightRightFistX =
+    armRightX + 31
+
+  const fightFistRadius =
+    Math.max(
+      13,
+      metrics.armW * .54
+    )
+
+  const armLeftMarkup =
+    fightModel
+      ? '<g class="brute-limb brute-arm brute-arm-left brute-arm-guard" data-brute-part="arm-left">'+
+          '<path d="M'+armLeftX+' 188 Q'+(armLeftX-15)+' 205 '+(armLeftX-11)+' 214 Q'+(armLeftX+5)+' 201 '+fightLeftFistX+' 176" fill="none" stroke="#171717" stroke-width="'+(metrics.armW+12)+'" stroke-linecap="round" stroke-linejoin="round"/>'+
+          '<path d="M'+armLeftX+' 188 Q'+(armLeftX-15)+' 205 '+(armLeftX-11)+' 214 Q'+(armLeftX+5)+' 201 '+fightLeftFistX+' 176" fill="none" stroke="'+skin+'" stroke-width="'+(metrics.armW+5)+'" stroke-linecap="round" stroke-linejoin="round"/>'+
+          '<path d="M'+(armLeftX+1)+' 188 Q'+(armLeftX-8)+' 202 '+(armLeftX-6)+' 208" fill="none" stroke="'+skinHighlight+'" stroke-width="3" stroke-linecap="round" opacity=".28"/>'+
+          '<circle cx="'+fightLeftFistX+'" cy="172" r="'+fightFistRadius+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+          '<path d="M'+(fightLeftFistX-8)+' 170 Q'+fightLeftFistX+' 164 '+(fightLeftFistX+8)+' 170" fill="none" stroke="'+skinShadow+'" stroke-width="2.6" opacity=".45"/>'+
+        '</g>'
+      : '<g class="brute-limb brute-arm brute-arm-left" data-brute-part="arm-left">'+
+          '<path d="M'+armLeftX+' 187 Q'+(armLeftX-38-metrics.armW*.15)+' 192 '+(armLeftX-31)+' 238 Q'+(armLeftX-23)+' 261 '+(armLeftX-9)+' 249 L'+(armLeftX+metrics.armW)+' 204Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+          '<path d="M'+(armLeftX-30)+' 238 Q'+(armLeftX-16)+' 246 '+(armLeftX-8)+' 251" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".45"/>'+
+          '<circle cx="'+(armLeftX-26)+'" cy="249" r="'+Math.max(14,metrics.armW*.58)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+        '</g>'
+
+  const armRightMarkup =
+    fightModel
+      ? '<g class="brute-limb brute-arm brute-arm-right brute-arm-lead" data-brute-part="arm-right">'+
+          '<path d="M'+armRightX+' 188 Q'+(armRightX+21)+' 196 '+(armRightX+22)+' 210 Q'+(armRightX+27)+' 194 '+fightRightFistX+' 176" fill="none" stroke="#171717" stroke-width="'+(metrics.armW+12)+'" stroke-linecap="round" stroke-linejoin="round"/>'+
+          '<path d="M'+armRightX+' 188 Q'+(armRightX+21)+' 196 '+(armRightX+22)+' 210 Q'+(armRightX+27)+' 194 '+fightRightFistX+' 176" fill="none" stroke="'+skin+'" stroke-width="'+(metrics.armW+5)+'" stroke-linecap="round" stroke-linejoin="round"/>'+
+          '<path d="M'+(armRightX+2)+' 188 Q'+(armRightX+17)+' 197 '+(armRightX+17)+' 205" fill="none" stroke="'+skinHighlight+'" stroke-width="3" stroke-linecap="round" opacity=".28"/>'+
+          '<circle cx="'+fightRightFistX+'" cy="171" r="'+fightFistRadius+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+          '<path d="M'+(fightRightFistX-8)+' 169 Q'+fightRightFistX+' 163 '+(fightRightFistX+8)+' 169" fill="none" stroke="'+skinShadow+'" stroke-width="2.6" opacity=".45"/>'+
+        '</g>'
+      : '<g class="brute-limb brute-arm brute-arm-right" data-brute-part="arm-right">'+
+          '<path d="M'+armRightX+' 187 Q'+(armRightX+38+metrics.armW*.15)+' 192 '+(armRightX+31)+' 238 Q'+(armRightX+23)+' 261 '+(armRightX+9)+' 249 L'+(armRightX-metrics.armW)+' 204Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+          '<path d="M'+(armRightX+30)+' 238 Q'+(armRightX+16)+' 246 '+(armRightX+8)+' 251" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".45"/>'+
+          '<circle cx="'+(armRightX+26)+'" cy="249" r="'+Math.max(14,metrics.armW*.58)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+        '</g>'
 
   return '<svg class="ga-brute-svg '+String(options.className || '')+'" data-side="'+String(options.side || 'right')+'" data-body="'+bodyId+'" viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+label+'">'+
     '<g class="brute-stage" transform="'+mirror+'">'+
@@ -853,17 +907,9 @@ export function renderBruteSvg(
         '<path d="M119 279 L150 279 M170 279 L201 279" stroke="'+secondaryHighlight+'" stroke-width="3.5" stroke-linecap="round" opacity=".34"/>'+
       '</g>'+
 
-      '<g class="brute-limb brute-arm brute-arm-left" data-brute-part="arm-left">'+
-        '<path d="M'+armLeftX+' 187 Q'+(armLeftX-38-metrics.armW*.15)+' 192 '+(armLeftX-31)+' 238 Q'+(armLeftX-23)+' 261 '+(armLeftX-9)+' 249 L'+(armLeftX+metrics.armW)+' 204Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-        '<path d="M'+(armLeftX-30)+' 238 Q'+(armLeftX-16)+' 246 '+(armLeftX-8)+' 251" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".45"/>'+
-        '<circle cx="'+(armLeftX-26)+'" cy="249" r="'+Math.max(14,metrics.armW*.58)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-      '</g>'+
+      armLeftMarkup+
 
-      '<g class="brute-limb brute-arm brute-arm-right" data-brute-part="arm-right">'+
-        '<path d="M'+armRightX+' 187 Q'+(armRightX+38+metrics.armW*.15)+' 192 '+(armRightX+31)+' 238 Q'+(armRightX+23)+' 261 '+(armRightX+9)+' 249 L'+(armRightX-metrics.armW)+' 204Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-        '<path d="M'+(armRightX+30)+' 238 Q'+(armRightX+16)+' 246 '+(armRightX+8)+' 251" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".45"/>'+
-        '<circle cx="'+(armRightX+26)+'" cy="249" r="'+Math.max(14,metrics.armW*.58)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-      '</g>'+
+      armRightMarkup+
 
       '<g class="brute-torso" data-brute-part="torso">'+
         '<path d="M'+torsoX+' 180 Q'+center+' 145 '+torsoRight+' 180 Q'+(torsoRight-2)+' 227 '+waistRight+' '+torsoBottom+' L'+waistLeft+' '+torsoBottom+' Q'+(torsoX+2)+' 227 '+torsoX+' 180Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
