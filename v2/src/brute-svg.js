@@ -827,9 +827,28 @@ export function renderBruteSvg(
       ? 176
       : 249
 
+  const fightWeaponPose =
+    fightModel
+      ? (
+          weapon?.id === 'olympic_bar'
+            ? ' rotate(9) translate(1 -8)'
+            : weapon?.id === 'kettlebell'
+              ? ' rotate(-12) translate(2 5)'
+              : weapon?.id === 'plate20'
+                ? ' rotate(-7) translate(0 3)'
+                : weapon?.id === 'belt'
+                  ? ' rotate(12) translate(1 4)'
+                  : weapon?.id === 'chalk'
+                    ? ' translate(2 -7) scale(.86)'
+                    : weapon?.id === 'straps'
+                      ? ' rotate(9) translate(1 5)'
+                      : ''
+        )
+      : ''
+
   const weaponMarkup =
     weapon
-      ? '<g class="brute-limb brute-weapon weapon-'+String(weapon.id || 'fists')+' category-'+String(weapon.category || 'unarmed')+'" data-brute-part="weapon" data-weapon-id="'+String(weapon.id || 'fists')+'" data-weapon-category="'+String(weapon.category || 'unarmed')+'" transform="translate('+weaponAnchorX+' '+weaponAnchorY+')">'+
+      ? '<g class="brute-limb brute-weapon weapon-'+String(weapon.id || 'fists')+' category-'+String(weapon.category || 'unarmed')+'" data-brute-part="weapon" data-weapon-id="'+String(weapon.id || 'fists')+'" data-weapon-category="'+String(weapon.category || 'unarmed')+'" transform="translate('+weaponAnchorX+' '+weaponAnchorY+')'+fightWeaponPose+'">'+
           weaponSvg(weapon)+
         '</g>'
       : ''
