@@ -2840,6 +2840,85 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · STAGE LIFE / HIT ZONES V10
+   Ambient movement, parallax and attack-specific contact placement
+   ================================================================ */
+.brute-arena-ambient{
+  position:absolute;
+  z-index:3;
+  inset:26% 0 32%;
+  overflow:hidden;
+  pointer-events:none;
+}
+.brute-arena-ambient i{
+  position:absolute;
+  width:7px;
+  height:4px;
+  border-radius:70% 20% 70% 20%;
+  background:#c85637;
+  opacity:.28;
+  filter:blur(.15px);
+  animation:bruteAmbientLeaf 7.8s linear infinite;
+}
+.brute-arena-ambient i:nth-child(1){left:8%;top:8%;animation-delay:-1.2s;animation-duration:7.1s}
+.brute-arena-ambient i:nth-child(2){left:18%;top:55%;animation-delay:-4.7s;animation-duration:9.2s}
+.brute-arena-ambient i:nth-child(3){left:34%;top:23%;animation-delay:-2.8s;animation-duration:8.4s}
+.brute-arena-ambient i:nth-child(4){left:47%;top:68%;animation-delay:-6.2s;animation-duration:10.1s}
+.brute-arena-ambient i:nth-child(5){left:62%;top:17%;animation-delay:-3.5s;animation-duration:8.8s}
+.brute-arena-ambient i:nth-child(6){left:74%;top:48%;animation-delay:-7.1s;animation-duration:9.8s}
+.brute-arena-ambient i:nth-child(7){left:86%;top:29%;animation-delay:-5.1s;animation-duration:7.6s}
+.brute-arena-ambient i:nth-child(8){left:94%;top:72%;animation-delay:-.8s;animation-duration:10.5s}
+.brute-arena-v4-sun,
+.brute-arena-v4-gong,
+.brute-arena-v4-banner,
+.brute-arena-v4-foreground,
+.brute-arena-ambient{
+  transition:transform .22s cubic-bezier(.16,.82,.2,1),filter .18s ease;
+}
+.brute-arena.camera-left .brute-arena-v4-gong,
+.brute-arena.camera-attack-left .brute-arena-v4-gong{transform:translate(-52%,-50%)}
+.brute-arena.camera-right .brute-arena-v4-gong,
+.brute-arena.camera-attack-right .brute-arena-v4-gong{transform:translate(-48%,-50%)}
+.brute-arena.camera-left .brute-arena-v4-sun,
+.brute-arena.camera-attack-left .brute-arena-v4-sun{transform:translateX(-51.2%)}
+.brute-arena.camera-right .brute-arena-v4-sun,
+.brute-arena.camera-attack-right .brute-arena-v4-sun{transform:translateX(-48.8%)}
+.brute-arena.camera-left .brute-arena-v4-foreground,
+.brute-arena.camera-attack-left .brute-arena-v4-foreground{transform:translateX(-1.2%)}
+.brute-arena.camera-right .brute-arena-v4-foreground,
+.brute-arena.camera-attack-right .brute-arena-v4-foreground{transform:translateX(1.2%)}
+.brute-arena.camera-left .brute-arena-ambient,
+.brute-arena.camera-attack-left .brute-arena-ambient{transform:translateX(-.7%)}
+.brute-arena.camera-right .brute-arena-ambient,
+.brute-arena.camera-attack-right .brute-arena-ambient{transform:translateX(.7%)}
+.brute-impact.zone-high{
+  filter:drop-shadow(0 0 18px rgba(255,108,39,.86)) brightness(1.08);
+}
+.brute-impact.zone-mid{
+  filter:drop-shadow(0 0 16px rgba(255,99,32,.82));
+}
+.brute-impact.zone-low{
+  filter:drop-shadow(0 0 15px rgba(255,134,45,.76)) saturate(.92);
+}
+.brute-impact.zone-low + .brute-contact-ring{
+  transform-origin:50% 70%;
+}
+.brute-fighter.hit-react .fight-model .brute-shadow{
+  animation:bruteHitShadow .34s ease;
+}
+@keyframes bruteAmbientLeaf{
+  0%{transform:translate(-35px,-12px) rotate(0);opacity:0}
+  12%{opacity:.3}
+  55%{opacity:.22}
+  100%{transform:translate(155px,52px) rotate(420deg);opacity:0}
+}
+@keyframes bruteHitShadow{
+  0%,100%{transform:scale(1);opacity:.25}
+  26%{transform:scale(1.2,.72);opacity:.38}
+  60%{transform:scale(.93,1.06);opacity:.22}
+}
+
+/* ================================================================
    GA BRUTE · CINEMATIC TENSION V9
    Low-HP drama, crowd reaction and finish-frame presentation
    ================================================================ */
@@ -6160,6 +6239,7 @@ export async function mountBruteGame(root, options = {}) {
           '<div class="brute-arena-v4-banner left"><i></i></div>'+
           '<div class="brute-arena-v4-banner right"><i></i></div>'+
           '<div class="brute-arena-v4-gong"></div>'+
+          '<div class="brute-arena-ambient" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'+
           '<div class="brute-arena-v2-wall">'+
             '<i></i><i></i><i></i><i></i><i></i>'+
           '</div>'+
@@ -7553,12 +7633,12 @@ export async function mountBruteGame(root, options = {}) {
           'brute-crit-burst'
 
         burst.style.left =
-          event.target === 'left'
-            ? '30%'
-            : '70%'
+          impactX+
+          '%'
 
         burst.style.top =
-          '50%'
+          impactY+
+          '%'
 
         fx?.appendChild(
           burst
@@ -8055,6 +8135,44 @@ export async function mountBruteGame(root, options = {}) {
         )
       }
 
+      const impactZones = [
+        { y:50, x:0 },
+        { y:47, x:1 },
+        { y:42, x:0 },
+        { y:48, x:2 },
+        { y:57, x:1 },
+        { y:65, x:2 },
+      ]
+
+      const impactZone =
+        impactZones[
+          Math.abs(
+            Math.floor(
+              num(
+                event.attackVariant,
+                0
+              )
+            )
+          ) %
+          impactZones.length
+        ]
+
+      const impactBaseX =
+        event.target === 'left'
+          ? 30
+          : 70
+
+      const impactX =
+        impactBaseX +
+        (
+          event.target === 'left'
+            ? -impactZone.x
+            : impactZone.x
+        )
+
+      const impactY =
+        impactZone.y
+
       const impact =
         document.createElement(
           'span'
@@ -8070,15 +8188,22 @@ export async function mountBruteGame(root, options = {}) {
           event.critical
             ? ' crit'
             : ''
+        ) +
+        (
+          impactY <= 45
+            ? ' zone-high'
+            : impactY >= 60
+              ? ' zone-low'
+              : ' zone-mid'
         )
 
       impact.style.left =
-        event.target === 'left'
-          ? '30%'
-          : '70%'
+        impactX+
+        '%'
 
       impact.style.top =
-        '53%'
+        impactY+
+        '%'
 
       fx?.appendChild(
         impact
@@ -8098,12 +8223,12 @@ export async function mountBruteGame(root, options = {}) {
         )
 
       ring.style.left =
-        event.target === 'left'
-          ? '30%'
-          : '70%'
+        impactX+
+        '%'
 
       ring.style.top =
-        '53%'
+        impactY+
+        '%'
 
       fx?.appendChild(
         ring
@@ -8155,13 +8280,13 @@ export async function mountBruteGame(root, options = {}) {
           )
 
         debris.style.left =
-          event.target === 'left'
-            ? '30%'
-            : '70%'
+          impactX+
+          '%'
 
         debris.style.top =
           (
-            50 +
+            impactY -
+            2 +
             (
               debrisIndex % 3
             ) * 2
