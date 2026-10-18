@@ -2951,6 +2951,118 @@ function ensureStyles() {
 }
 
 /* ================================================================
+   GA BRUTE · DESKTOP FLOW / COMPARISON V19
+   Fast desktop navigation, smarter duel risk and ranking search
+   ================================================================ */
+.brute-desktop-quicknav{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:5px;
+  margin:-6px 0 12px;
+  padding:5px;
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;
+  background:rgba(10,12,24,.58);
+}
+.brute-desktop-quicknav button{
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:5px 7px;
+  border:1px solid transparent;
+  border-radius:8px;
+  background:transparent;
+  color:#7f88a5;
+  cursor:pointer;
+  transition:background .14s ease,color .14s ease,border-color .14s ease,transform .1s ease;
+}
+.brute-desktop-quicknav button:hover{
+  background:rgba(255,255,255,.04);
+  color:#d6d9e7;
+}
+.brute-desktop-quicknav button.active{
+  border-color:rgba(255,215,111,.18);
+  background:linear-gradient(180deg,rgba(177,108,46,.22),rgba(102,55,31,.18));
+  color:#f0d397;
+}
+.brute-desktop-quicknav button:active{transform:scale(.98)}
+.brute-quicknav-glyph{width:17px;height:17px}
+.brute-desktop-quicknav span{font-size:6.5px;font-weight:1000;letter-spacing:.05em}
+
+.brute-duel-power{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  margin:0 0 8px;
+  padding:4px 6px;
+  border-radius:6px;
+  background:rgba(255,248,218,.34);
+  color:#80512d;
+}
+.brute-duel-power span{
+  font-size:5px;
+  font-weight:1000;
+  letter-spacing:.05em;
+}
+.brute-duel-power b{font-size:7px}
+.brute-duel-power.up b{color:#9b3427}
+.brute-duel-power.down b{color:#4f7d44}
+.brute-duel-power.even b{color:#8b6a31}
+
+.brute-ranking-tools{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin:0 0 8px;
+}
+.brute-ranking-tools label{
+  flex:1;
+  max-width:420px;
+  display:grid;
+  grid-template-columns:22px minmax(0,1fr);
+  gap:6px;
+  align-items:center;
+  min-height:40px;
+  padding:0 10px;
+  border:2px solid rgba(101,54,27,.2);
+  border-radius:9px;
+  background:rgba(255,246,207,.46);
+}
+.brute-ranking-search-glyph{width:17px;height:17px;color:#7d4d2b}
+.brute-ranking-tools input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#63361c;
+  font:inherit;
+  font-size:8px;
+  font-weight:900;
+}
+.brute-ranking-tools input::placeholder{color:#956b49}
+.brute-ranking-tools>em{
+  color:#80512f;
+  font-size:6px;
+  font-style:normal;
+  font-weight:1000;
+  letter-spacing:.07em;
+}
+.brute-ranking-v2-row[hidden]{display:none!important}
+@media(max-width:760px){
+  .brute-desktop-quicknav{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+@media(max-width:660px){
+  .brute-desktop-quicknav{display:none}
+  .brute-ranking-tools label{max-width:none}
+}
+
+/* ================================================================
    GA BRUTE · GLOBAL NAV / DECISION UX V18
    Persistent navigation and actionable equipment recommendation
    ================================================================ */
@@ -5328,6 +5440,17 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function topBar(title, subtitle) {
+    const quickTab = (
+      target,
+      glyph,
+      label
+    ) => (
+      '<button class="'+(screen===target?'active':'')+'" data-brute-screen="'+target+'" aria-current="'+(screen===target?'page':'false')+'">'+
+        uiGlyph(glyph,'brute-quicknav-glyph')+
+        '<span>'+label+'</span>'+
+      '</button>'
+    )
+
     return '<header class="brute-top brute-top-v2">'+
       '<button class="brute-back brute-nav-button" data-brute-menu aria-label="Retour au menu">'+
         uiGlyph('home','brute-nav-glyph')+
@@ -5357,7 +5480,15 @@ export async function mountBruteGame(root, options = {}) {
             : ''
         )+
       '</div>'+
-    '</header>'
+    '</header>'+
+    '<nav class="brute-desktop-quicknav" aria-label="Navigation rapide">'+
+      quickTab('duel','arena','ARÈNE')+
+      quickTab('pve','pve','OPENPOWER')+
+      quickTab('camp','camp','CAMP')+
+      quickTab('equipment','weapon','ARSENAL')+
+      quickTab('sleep','sleep','RÉCUPÉRATION')+
+      quickTab('ranking','ranking','CLASSEMENT')+
+    '</nav>'
   }
 
   function athleteAvatarMarkup(athlete) {
@@ -7017,15 +7148,37 @@ export async function mountBruteGame(root, options = {}) {
         )
         .slice(0,12)
 
+    const powerIndex =
+      fighter =>
+        num(fighter.level) * 42 +
+        num(fighter.rating) * .11 +
+        num(fighter.strength) * 5.2 +
+        num(fighter.agility) * 4.7 +
+        num(fighter.speed) * 4.9 +
+        num(fighter.hp) * .17
+
+    const myPower =
+      powerIndex(
+        brute
+      )
+
+    const threatDelta =
+      opponent =>
+        powerIndex(
+          opponent
+        ) -
+        myPower
+
     const threat =
       opponent => {
         const delta =
-          num(opponent.level) -
-          num(brute.level)
+          threatDelta(
+            opponent
+          )
 
-        if (delta >= 2) return 'DANGER'
-        if (delta === 1) return 'FORT'
-        if (delta <= -2) return 'FACILE'
+        if (delta >= 145) return 'DANGER'
+        if (delta >= 55) return 'FORT'
+        if (delta <= -145) return 'FACILE'
         return 'ÉQUILIBRÉ'
       }
 
@@ -7033,15 +7186,38 @@ export async function mountBruteGame(root, options = {}) {
       opponents
         .slice()
         .sort(
-          (a,b) =>
-            (
-              Math.abs(num(a.level)-num(brute.level))*120 +
-              Math.abs(num(a.rating)-num(brute.rating))
+          (a,b) => {
+            const aThreat =
+              Math.abs(
+                threatDelta(a)
+              )
+
+            const bThreat =
+              Math.abs(
+                threatDelta(b)
+              )
+
+            const aTarget =
+              threatDelta(a) >= -90 &&
+              threatDelta(a) <= 75
+                ? -80
+                : 0
+
+            const bTarget =
+              threatDelta(b) >= -90 &&
+              threatDelta(b) <= 75
+                ? -80
+                : 0
+
+            return (
+              aThreat +
+              aTarget
             ) -
             (
-              Math.abs(num(b.level)-num(brute.level))*120 +
-              Math.abs(num(b.rating)-num(brute.rating))
+              bThreat +
+              bTarget
             )
+          }
         )[0]
 
     const duelAdvice =
@@ -7111,6 +7287,10 @@ export async function mountBruteGame(root, options = {}) {
                       '<div class="brute-duel-threat '+threat(o).toLowerCase()+'">'+threat(o)+'</div>'+
                       '<div class="brute-duel-record"><span>'+num(o.wins)+' V</span><span>'+num(o.losses)+' D</span><span>'+ratio+'%</span></div>'+
                       '<div class="brute-duel-stats"><span>'+uiGlyph('strength')+'<b>'+num(o.strength)+'</b></span><span>'+uiGlyph('agility')+'<b>'+num(o.agility)+'</b></span><span>'+uiGlyph('speed')+'<b>'+num(o.speed)+'</b></span></div>'+
+                      '<div class="brute-duel-power '+(threatDelta(o)>55?'up':threatDelta(o)<-55?'down':'even')+'">'+
+                        '<span>PUISSANCE RELATIVE</span>'+
+                        '<b>'+(threatDelta(o)>0?'+':'')+Math.round(threatDelta(o))+'</b>'+
+                      '</div>'+
                       '<button class="brute-duel-fight" data-brute-duel="'+esc(o.athlete_slug)+'" '+(num(daily.remaining)<=0?'disabled':'')+'>'+(recommended?.athlete_slug===o.athlete_slug?'COMBAT CONSEILLÉ':'COMBATTRE')+'</button>'+
                     '</article>'
                   )
@@ -7736,11 +7916,15 @@ export async function mountBruteGame(root, options = {}) {
             }
           ).join('')+
         '</div>'+
+        '<div class="brute-ranking-tools">'+
+          '<label><span>'+uiGlyph('ranking','brute-ranking-search-glyph')+'</span><input type="search" data-brute-ranking-search placeholder="Rechercher une brute…" autocomplete="off"></label>'+
+          '<em data-brute-ranking-count>'+rest.length+' CLASSÉS</em>'+
+        '</div>'+
         '<div class="brute-ranking-v2-board">'+
           '<div class="brute-ranking-v2-header"><span>RANG</span><span></span><span>BRUTE</span><span>COTE</span><span>FOR</span><span>VIT</span></div>'+
           rest.map(
             (row,index) =>
-              '<div class="brute-ranking-v2-row '+(row.athlete_slug===selectedSlug?'self':'')+'">'+
+              '<div class="brute-ranking-v2-row '+(row.athlete_slug===selectedSlug?'self':'')+'" data-brute-ranking-name="'+esc(String(row.name || '').toLowerCase())+'">'+
                 '<span class="rank">#'+(index+4)+'</span>'+
                 '<span class="avatar custom">'+renderBruteSvg(row.appearance,{label:row.name,className:'ranking-row-mini'})+'</span>'+
                 '<span class="name"><b>'+esc(row.name)+'</b><small>Niv. '+num(row.level)+' · '+num(row.wins)+'V / '+num(row.losses)+'D</small></span>'+
@@ -11938,6 +12122,67 @@ export async function mountBruteGame(root, options = {}) {
               ? ' PROFILS'
               : ' PROFIL'
           )
+      }
+
+      return
+    }
+
+    const rankingSearch =
+      event.target.closest(
+        '[data-brute-ranking-search]'
+      )
+
+    if (rankingSearch) {
+      const query =
+        String(
+          rankingSearch.value ||
+          ''
+        )
+          .trim()
+          .toLowerCase()
+
+      const rows =
+        Array.from(
+          root.querySelectorAll(
+            '[data-brute-ranking-name]'
+          )
+        )
+
+      let visible = 0
+
+      rows.forEach(
+        row => {
+          const name =
+            String(
+              row.dataset
+                .bruteRankingName ||
+              ''
+            )
+
+          const show =
+            !query ||
+            name.includes(
+              query
+            )
+
+          row.hidden =
+            !show
+
+          if (show) {
+            visible += 1
+          }
+        }
+      )
+
+      const count =
+        root.querySelector(
+          '[data-brute-ranking-count]'
+        )
+
+      if (count) {
+        count.textContent =
+          visible +
+          ' CLASSÉS'
       }
 
       return
