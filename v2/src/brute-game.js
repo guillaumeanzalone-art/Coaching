@@ -2951,6 +2951,119 @@ function ensureStyles() {
 }
 
 /* ================================================================
+   GA BRUTE · NEXT BEST ACTION V21
+   Contextual recommendation directly on the main menu
+   ================================================================ */
+.brute-next-action{
+  width:calc(100% - 32px);
+  min-height:74px;
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr) auto;
+  gap:10px;
+  align-items:center;
+  margin:9px 16px 0;
+  padding:9px 11px;
+  border:2px solid rgba(101,53,26,.34);
+  border-radius:12px;
+  background:linear-gradient(110deg,rgba(248,224,164,.88),rgba(218,164,89,.78));
+  color:#5e321a;
+  text-align:left;
+  box-shadow:inset 0 1px rgba(255,255,255,.38),0 4px 0 rgba(76,37,18,.17);
+  cursor:pointer;
+  transition:transform .14s ease,filter .14s ease,box-shadow .14s ease;
+}
+.brute-next-action:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.03);
+  box-shadow:inset 0 1px rgba(255,255,255,.42),0 6px 0 rgba(76,37,18,.14),0 10px 20px rgba(73,38,20,.12);
+}
+.brute-next-action:active{transform:translateY(1px) scale(.992)}
+.brute-next-action-glyph{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  padding:8px;
+  border-radius:11px;
+  background:rgba(94,50,26,.1);
+}
+.brute-next-action-copy{min-width:0}
+.brute-next-action-copy small{
+  display:block;
+  color:#8a5c36;
+  font-size:6px;
+  font-weight:1000;
+  letter-spacing:.11em;
+}
+.brute-next-action-copy b{
+  display:block;
+  margin-top:2px;
+  font-size:12px;
+}
+.brute-next-action-copy em{
+  display:block;
+  margin-top:2px;
+  color:#80512e;
+  font-size:7px;
+  font-style:normal;
+  font-weight:800;
+  line-height:1.35;
+}
+.brute-next-action>strong{
+  min-width:120px;
+  padding:8px 10px;
+  border:1px solid rgba(92,47,24,.3);
+  border-radius:8px;
+  background:rgba(102,54,28,.12);
+  color:#60331b;
+  font-size:7px;
+  text-align:center;
+  white-space:nowrap;
+}
+.brute-next-action>strong i{font-size:11px;font-style:normal}
+.brute-next-action.recovery{
+  border-color:#6e5d9e;
+  background:linear-gradient(110deg,#d2c8ed,#9e8fc9);
+  color:#3d315a;
+}
+.brute-next-action.recovery .brute-next-action-copy small,
+.brute-next-action.recovery .brute-next-action-copy em{color:#5d5079}
+.brute-next-action.recovery>strong{color:#493b66;border-color:rgba(74,58,105,.3);background:rgba(70,53,102,.1)}
+.brute-next-action.fight{
+  border-color:#895326;
+  background:linear-gradient(110deg,#f3cf76,#d98a3a);
+}
+.brute-next-action.pve{
+  border-color:#4f7280;
+  background:linear-gradient(110deg,#b9d7d9,#7ca6b4);
+  color:#294957;
+}
+.brute-next-action.pve .brute-next-action-copy small,
+.brute-next-action.pve .brute-next-action-copy em{color:#466a78}
+.brute-next-action.pve>strong{color:#315663;border-color:rgba(49,86,99,.3);background:rgba(49,86,99,.1)}
+@media(max-width:660px){
+  .brute-next-action{
+    width:calc(100% - 16px);
+    grid-template-columns:38px minmax(0,1fr);
+    gap:8px;
+    margin:8px 8px 0;
+    padding:8px;
+  }
+  .brute-next-action-glyph{
+    width:36px;
+    height:36px;
+    padding:7px;
+  }
+  .brute-next-action-copy b{font-size:10px}
+  .brute-next-action-copy em{font-size:6.5px}
+  .brute-next-action>strong{
+    grid-column:1/-1;
+    min-width:0;
+    padding:7px 8px;
+  }
+}
+
+/* ================================================================
    GA BRUTE · BUILD IDENTITY / KEYBOARD V20
    Archetypes, mastery deltas and desktop shortcuts
    ================================================================ */
@@ -6579,6 +6692,85 @@ export async function mountBruteGame(root, options = {}) {
           )
         : 0
 
+    const dailyFocus = [
+      {
+        label:'entraînement',
+        value:num(
+          idleSnapshot?.training_score,
+          0
+        ),
+      },
+      {
+        label:'activité',
+        value:num(
+          idleSnapshot?.steps_score,
+          0
+        ),
+      },
+      {
+        label:'sommeil',
+        value:num(
+          sleepScoreNow(),
+          0
+        ),
+      },
+    ]
+      .sort(
+        (a,b) =>
+          a.value - b.value
+      )[0]
+
+    const nextAction =
+      energy < 80
+        ? {
+            screen:'sleep',
+            glyph:'sleep',
+            eyebrow:'PRIORITÉ',
+            title:'Récupère avant de repartir',
+            text:'Ton énergie est basse. Passe en récupération pour préparer les prochains combats.',
+            cta:'RÉCUPÉRER',
+            tone:'recovery',
+          }
+        : num(daily.remaining,6) > 0
+          ? {
+              screen:'duel',
+              glyph:'arena',
+              eyebrow:'ACTION CONSEILLÉE',
+              title:'Va chercher un combat',
+              text:num(daily.remaining,6)+' combat'+(num(daily.remaining,6)>1?'s':'')+' encore disponible'+(num(daily.remaining,6)>1?'s':'')+' aujourd’hui.',
+              cta:'ENTRER DANS L’ARÈNE',
+              tone:'fight',
+            }
+          : dailyFocus?.value < 60
+            ? {
+                screen:'camp',
+                glyph:'camp',
+                eyebrow:'À AMÉLIORER',
+                title:'Travaille '+dailyFocus.label,
+                text:'C’est actuellement le point le plus faible de ta journée : '+Math.round(dailyFocus.value)+'/100.',
+                cta:'VOIR LE CAMP',
+                tone:'progress',
+              }
+            : energy >= 8
+              ? {
+                  screen:'pve',
+                  glyph:'pve',
+                  eyebrow:'BONUS',
+                  title:'Teste ton build en OpenPower',
+                  text:'Tes combats quotidiens sont terminés, mais tu as assez d’énergie pour du PvE.',
+                  cta:'LANCER LE PVE',
+                  tone:'pve',
+                }
+              : {
+                  screen:'camp',
+                  glyph:'camp',
+                  eyebrow:'PROGRESSION',
+                  title:'Optimise ta journée',
+                  text:'Consulte le camp pour voir ce qui peut encore améliorer ton bonus du jour.',
+                  cta:'VOIR LE CAMP',
+                  tone:'progress',
+                }
+
     return (
       '<section class="brute-cell-v2">'+
         '<div class="brute-cell-sky"></div>'+
@@ -6634,6 +6826,15 @@ export async function mountBruteGame(root, options = {}) {
             '<em>/ '+num(daily.limit,6)+'</em>'+
           '</div>'+
         '</div>'+
+        '<button class="brute-next-action '+nextAction.tone+'" data-brute-screen="'+nextAction.screen+'">'+
+          '<span class="brute-next-action-glyph">'+uiGlyph(nextAction.glyph)+'</span>'+
+          '<span class="brute-next-action-copy">'+
+            '<small>'+nextAction.eyebrow+'</small>'+
+            '<b>'+nextAction.title+'</b>'+
+            '<em>'+nextAction.text+'</em>'+
+          '</span>'+
+          '<strong>'+nextAction.cta+' <i>›</i></strong>'+
+        '</button>'+
         '<div class="brute-cell-grid-v2 brute-cell-grid-v3">'+
           '<aside class="brute-cell-inventory brute-cell-inventory-v3">'+
             '<div class="brute-cell-board-title"><span>ARSENAL</span><small>ÉQUIPEMENT ACTUEL</small></div>'+
