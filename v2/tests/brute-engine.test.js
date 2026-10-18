@@ -163,8 +163,8 @@ test('GA Brute dodge block and thrown motion metadata stay in safe bounds', () =
         if (event.type === 'ATTACK') {
           assert.ok(
             Number(event.impactVariant) >= 0 &&
-            Number(event.impactVariant) <= 2,
-            'attack impact variant should be one of the three hit poses'
+            Number(event.impactVariant) <= 4,
+            'attack impact variant should be one of the five hit poses'
           )
         }
 
@@ -254,5 +254,172 @@ test('sleep score changes XP only and does not change the combat timeline', () =
     replayFingerprint(withoutSleep),
     replayFingerprint(withSleep),
     'sleep score must not change combat stats or combat outcome'
+  )
+})
+
+
+test('combat events expose diverse deterministic animation variants', () => {
+  const attackVariants =
+    new Set()
+
+  const dodgeVariants =
+    new Set()
+
+  const blockVariants =
+    new Set()
+
+  const koVariants =
+    new Set()
+
+  for (
+    let seed = 1;
+    seed <= 320;
+    seed += 1
+  ) {
+    const timeline =
+      generateFightTimeline({
+        seed,
+        attacker:fighter(
+          'anim-a',
+          {
+            level:8,
+            hp:160,
+            strength:18,
+            agility:18,
+            speed:18,
+            weapons:[
+              'fists',
+              'olympic_bar',
+              'plate20',
+              'belt',
+            ],
+            loadout:{
+              weapon:'olympic_bar',
+            },
+            skills:[
+              'leg_drive',
+              'arch',
+              'lockout',
+              'pause_bench',
+            ],
+          }
+        ),
+        defender:fighter(
+          'anim-b',
+          {
+            level:8,
+            hp:165,
+            strength:17,
+            agility:19,
+            speed:17,
+            weapons:[
+              'fists',
+              'kettlebell',
+              'straps',
+            ],
+            loadout:{
+              weapon:'straps',
+            },
+            skills:[
+              'leg_drive',
+              'arch',
+              'lockout',
+            ],
+          }
+        ),
+      })
+
+    timeline.events.forEach(
+      event => {
+        if (
+          event.type ===
+            'ATTACK'
+        ) {
+          assert.ok(
+            Number(event.attackVariant) >= 0 &&
+            Number(event.attackVariant) <= 5
+          )
+
+          assert.ok(
+            Number(event.impactVariant) >= 0 &&
+            Number(event.impactVariant) <= 4
+          )
+
+          attackVariants.add(
+            Number(
+              event.attackVariant
+            )
+          )
+        }
+
+        if (
+          event.type ===
+            'DODGE'
+        ) {
+          assert.ok(
+            Number(event.animationVariant) >= 0 &&
+            Number(event.animationVariant) <= 2
+          )
+
+          dodgeVariants.add(
+            Number(
+              event.animationVariant
+            )
+          )
+        }
+
+        if (
+          event.type ===
+            'BLOCK'
+        ) {
+          assert.ok(
+            Number(event.animationVariant) >= 0 &&
+            Number(event.animationVariant) <= 2
+          )
+
+          blockVariants.add(
+            Number(
+              event.animationVariant
+            )
+          )
+        }
+
+        if (
+          event.type ===
+            'KO'
+        ) {
+          assert.ok(
+            Number(event.animationVariant) >= 0 &&
+            Number(event.animationVariant) <= 2
+          )
+
+          koVariants.add(
+            Number(
+              event.animationVariant
+            )
+          )
+        }
+      }
+    )
+  }
+
+  assert.ok(
+    attackVariants.size >= 5,
+    'fight seeds should exercise most attack animation poses'
+  )
+
+  assert.ok(
+    dodgeVariants.size >= 2,
+    'fight seeds should exercise multiple dodge animations'
+  )
+
+  assert.ok(
+    blockVariants.size >= 2,
+    'fight seeds should exercise multiple block animations'
+  )
+
+  assert.ok(
+    koVariants.size >= 2,
+    'fight seeds should exercise multiple KO animations'
   )
 })
