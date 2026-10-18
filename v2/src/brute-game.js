@@ -2951,6 +2951,205 @@ function ensureStyles() {
 }
 
 /* ================================================================
+   GA BRUTE · GLOBAL NAV / DECISION UX V18
+   Persistent navigation and actionable equipment recommendation
+   ================================================================ */
+.brute-top-context{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.brute-top-context>span{
+  min-width:54px;
+  padding:5px 7px;
+  border:1px solid rgba(255,255,255,.065);
+  border-radius:8px;
+  background:rgba(255,255,255,.025);
+  text-align:center;
+}
+.brute-top-context small{
+  display:block;
+  color:#747d9b;
+  font-size:5px;
+  font-weight:1000;
+  letter-spacing:.08em;
+}
+.brute-top-context b{
+  display:block;
+  margin-top:1px;
+  color:#e8eaf4;
+  font-size:9px;
+}
+.brute-global-dock{
+  display:none;
+}
+.brute-armory-recommendation{
+  width:min(620px,100%);
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr) auto;
+  gap:9px;
+  align-items:center;
+  margin:-5px 0 12px;
+  padding:8px 9px;
+  border:1px solid rgba(255,203,83,.25);
+  border-radius:11px;
+  background:
+    radial-gradient(circle at 0 50%,rgba(255,204,73,.08),transparent 35%),
+    rgba(255,255,255,.025);
+}
+.brute-armory-recommendation .art,
+.brute-armory-recommendation .art .ga-weapon-icon{
+  width:50px;
+  height:50px;
+}
+.brute-armory-recommendation small{
+  display:block;
+  color:#b29a67;
+  font-size:5.5px;
+  font-weight:1000;
+  letter-spacing:.09em;
+}
+.brute-armory-recommendation b{
+  display:block;
+  margin-top:1px;
+  color:#f4ecd6;
+  font-size:10px;
+}
+.brute-armory-recommendation em{
+  display:block;
+  margin-top:2px;
+  color:#8e96ae;
+  font-size:6px;
+  font-style:normal;
+  font-weight:800;
+}
+.brute-armory-recommendation button,
+.brute-armory-recommendation>strong{
+  min-width:66px;
+  min-height:34px;
+  display:grid;
+  place-items:center;
+  padding:5px 8px;
+  border:1px solid rgba(255,211,91,.32);
+  border-radius:8px;
+  background:linear-gradient(#bd792e,#77421f);
+  color:#fff1b6;
+  font-size:6.5px;
+  font-weight:1000;
+}
+.brute-armory-recommendation>strong{
+  min-height:0;
+  background:rgba(112,159,87,.12);
+  border-color:rgba(114,177,87,.28);
+  color:#bde0a8;
+}
+@media(max-width:760px){
+  .brute-top-context{display:none}
+}
+@media(max-width:660px){
+  .brute-app{
+    padding-bottom:calc(82px + env(safe-area-inset-bottom))!important;
+  }
+  .brute-mobile-dock{display:none!important}
+  .brute-global-dock{
+    position:fixed;
+    z-index:100;
+    left:max(6px,env(safe-area-inset-left));
+    right:max(6px,env(safe-area-inset-right));
+    bottom:max(6px,env(safe-area-inset-bottom));
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:3px;
+    padding:5px;
+    border:1px solid rgba(255,232,175,.2);
+    border-radius:17px;
+    background:rgba(18,15,19,.94);
+    box-shadow:0 14px 38px rgba(0,0,0,.48);
+    backdrop-filter:blur(14px);
+  }
+  .brute-global-dock button{
+    position:relative;
+    min-width:0;
+    min-height:57px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    padding:4px 2px;
+    border:0;
+    border-radius:11px;
+    background:transparent;
+    color:#a99b7d;
+    cursor:pointer;
+    transition:transform .1s ease,background .14s ease,color .14s ease;
+  }
+  .brute-global-dock button.active{
+    background:rgba(255,221,143,.1);
+    color:#ffe5a2;
+  }
+  .brute-global-dock button.center{
+    background:linear-gradient(#9d592d,#63331d);
+    color:#f6daa0;
+  }
+  .brute-global-dock button.center.active{
+    background:linear-gradient(#cf8138,#804321);
+    color:#fff2b4;
+    box-shadow:0 0 16px rgba(214,133,53,.2);
+  }
+  .brute-global-dock button:active{transform:scale(.94)}
+  .brute-global-dock button>span{
+    width:23px;
+    height:23px;
+  }
+  .brute-global-dock button>b{
+    font-size:6px;
+    letter-spacing:.04em;
+  }
+  .brute-global-dock button>em{
+    position:absolute;
+    right:9px;
+    top:5px;
+    min-width:14px;
+    height:14px;
+    display:grid;
+    place-items:center;
+    padding:0 3px;
+    border-radius:999px;
+    background:#ce5b37;
+    color:#fff5dc;
+    font-size:5px;
+    font-style:normal;
+    font-weight:1000;
+    box-shadow:0 0 0 2px #21171a;
+  }
+  .brute-global-dock button.active:after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:2px;
+    width:20px;
+    height:2px;
+    transform:translateX(-50%);
+    border-radius:99px;
+    background:#f1c96b;
+  }
+  .brute-armory-recommendation{
+    grid-template-columns:46px minmax(0,1fr);
+  }
+  .brute-armory-recommendation .art,
+  .brute-armory-recommendation .art .ga-weapon-icon{
+    width:43px;
+    height:43px;
+  }
+  .brute-armory-recommendation button,
+  .brute-armory-recommendation>strong{
+    grid-column:1/-1;
+    min-height:38px;
+  }
+}
+
+/* ================================================================
    GA BRUTE · FEEDBACK / STATES V16
    Loading, notices, creation steps and clearer fight results
    ================================================================ */
@@ -5055,6 +5254,79 @@ export async function mountBruteGame(root, options = {}) {
     }
   }
 
+  function globalGameNav() {
+    if (
+      !selectedSlug ||
+      screen === 'selector' ||
+      screen === 'creator' ||
+      screen === 'fight'
+    ) {
+      return ''
+    }
+
+    const energy =
+      passiveEnergyNow()
+
+    const remaining =
+      num(
+        daily?.remaining,
+        6
+      )
+
+    const item = (
+      target,
+      glyph,
+      label,
+      badge = ''
+    ) => (
+      '<button class="'+(screen===target?'active ':'')+(target==='equipment'?'center ':'')+'" data-brute-screen="'+target+'" aria-current="'+(screen===target?'page':'false')+'">'+
+        '<span>'+uiGlyph(glyph)+'</span>'+
+        '<b>'+label+'</b>'+
+        (
+          badge
+            ? '<em>'+esc(badge)+'</em>'
+            : ''
+        )+
+      '</button>'
+    )
+
+    return (
+      '<nav class="brute-global-dock" aria-label="Navigation GA Brute">'+
+        item(
+          'duel',
+          'arena',
+          'COMBAT',
+          remaining > 0
+            ? String(remaining)
+            : '0'
+        )+
+        item(
+          'camp',
+          'camp',
+          'CAMP'
+        )+
+        item(
+          'equipment',
+          'weapon',
+          'ARSENAL'
+        )+
+        item(
+          'sleep',
+          'sleep',
+          'RÉCUP.',
+          energy < 80
+            ? '!'
+            : ''
+        )+
+        item(
+          'ranking',
+          'ranking',
+          'RANG'
+        )+
+      '</nav>'
+    )
+  }
+
   function topBar(title, subtitle) {
     return '<header class="brute-top brute-top-v2">'+
       '<button class="brute-back brute-nav-button" data-brute-menu aria-label="Retour au menu">'+
@@ -5064,6 +5336,11 @@ export async function mountBruteGame(root, options = {}) {
       '<div class="brute-top-title">'+
         '<small>'+esc(subtitle || 'GA BRUTE')+'</small>'+
         '<h1>'+esc(title)+'</h1>'+
+      '</div>'+
+      '<div class="brute-top-context">'+
+        '<span><small>NIV.</small><b>'+num(brute?.level,1)+'</b></span>'+
+        '<span><small>ÉNERGIE</small><b>'+passiveEnergyNow()+'</b></span>'+
+        '<span><small>COMBATS</small><b>'+num(daily?.remaining,6)+'</b></span>'+
       '</div>'+
       '<div class="spacer"></div>'+
       '<div class="brute-top-actions">'+
@@ -6216,13 +6493,6 @@ export async function mountBruteGame(root, options = {}) {
             '</div>'+
           '</aside>'+
         '</div>'+
-        '<nav class="brute-mobile-dock" aria-label="Navigation GA Brute">'+
-          '<button data-brute-screen="duel"><span>'+uiGlyph('arena')+'</span><b>COMBAT</b></button>'+
-          '<button data-brute-screen="camp"><span>'+uiGlyph('camp')+'</span><b>CAMP</b></button>'+
-          '<button class="center" data-brute-screen="equipment"><span>'+uiGlyph('weapon')+'</span><b>ARSENAL</b></button>'+
-          '<button data-brute-screen="sleep"><span>'+uiGlyph('sleep')+'</span><b>RÉCUP.</b></button>'+
-          '<button data-brute-screen="ranking"><span>'+uiGlyph('ranking')+'</span><b>RANG</b></button>'+
-        '</nav>'+
       '</section>'
     )
   }
@@ -7152,6 +7422,42 @@ export async function mountBruteGame(root, options = {}) {
         equippedWeapon
       )
 
+    const ownedWeaponScores =
+      (brute.weapons || [])
+        .map(
+          id => {
+            const weapon =
+              BRUTE_WEAPONS[id] ||
+              BRUTE_WEAPONS.fists
+
+            return {
+              id,
+              weapon,
+              mastery:
+                weaponMastery(
+                  brute,
+                  weapon
+                ),
+            }
+          }
+        )
+        .sort(
+          (a,b) =>
+            b.mastery - a.mastery
+        )
+
+    const bestOwnedWeapon =
+      ownedWeaponScores[0] ||
+      {
+        id:equipped,
+        weapon:equippedWeapon,
+        mastery,
+      }
+
+    const equippedIsBest =
+      bestOwnedWeapon.id ===
+      equipped
+
     const buildFocus =
       equippedWeapon.category === 'heavy'
         ? { label:'FORCE', value:num(brute.strength), icon:'strength' }
@@ -7282,6 +7588,19 @@ export async function mountBruteGame(root, options = {}) {
             '<div class="score"><b>'+mastery+'</b><small>/100</small></div>'+
             '<div><span>COMPATIBILITÉ DU BUILD</span><strong>'+masteryLabel+'</strong><small>Stat clé : '+buildFocus.label+' '+buildFocus.value+'</small></div>'+
             '<span class="glyph">'+uiGlyph(buildFocus.icon)+'</span>'+
+          '</div>'+
+          '<div class="brute-armory-recommendation '+(equippedIsBest?'equipped':'')+'">'+
+            '<span class="art">'+renderWeaponIconSvg(bestOwnedWeapon.weapon,{className:'recommended'})+'</span>'+
+            '<div>'+
+              '<small>MEILLEURE SYNERGIE DE TON INVENTAIRE</small>'+
+              '<b>'+esc(bestOwnedWeapon.weapon.name)+'</b>'+
+              '<em>MAÎTRISE '+bestOwnedWeapon.mastery+' · '+esc(weaponIdentity(bestOwnedWeapon.weapon))+'</em>'+
+            '</div>'+
+            (
+              equippedIsBest
+                ? '<strong>ÉQUIPÉE</strong>'
+                : '<button data-brute-equip="'+esc(bestOwnedWeapon.id)+'">ÉQUIPER</button>'
+            )+
           '</div>'+
           '<div class="brute-armory-v3-weapon-focus">'+
             '<div class="brute-armory-v3-weapon-orbit">'+
@@ -7797,6 +8116,7 @@ export async function mountBruteGame(root, options = {}) {
           : ''
       )+
       content+
+      globalGameNav()+
       (
         busy
           ? '<div class="brute-busy-overlay" role="status" aria-live="polite">'+
