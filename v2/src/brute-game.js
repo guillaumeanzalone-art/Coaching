@@ -2840,6 +2840,190 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · INTERFACE FLUIDITY V6
+   Screen transitions, tactile controls and progression feedback
+   ================================================================ */
+.brute-shell>section,
+.brute-shell>.brute-fight-shell{
+  animation:bruteScreenIn .34s cubic-bezier(.16,.84,.2,1) both;
+  transform-origin:50% 12%;
+}
+.brute-primary,
+.brute-secondary,
+.brute-camp-action,
+.brute-cell-action,
+.brute-fight-tool,
+.brute-armory-weapon-v3,
+.brute-choice,
+.brute-section-random,
+.brute-icon-button{
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transition:
+    transform .14s cubic-bezier(.2,.8,.2,1),
+    filter .14s ease,
+    box-shadow .14s ease,
+    border-color .14s ease,
+    background .14s ease;
+}
+.brute-primary:hover,
+.brute-camp-action:hover,
+.brute-cell-action:hover,
+.brute-fight-tool:hover,
+.brute-armory-weapon-v3:hover,
+.brute-secondary:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.055);
+}
+.brute-primary:active,
+.brute-secondary:active,
+.brute-camp-action:active,
+.brute-cell-action:active,
+.brute-fight-tool:active,
+.brute-armory-weapon-v3:active,
+.brute-choice:active,
+.brute-section-random:active,
+.brute-icon-button:active{
+  transform:translateY(1px) scale(.975);
+  filter:brightness(.98);
+  transition-duration:.06s;
+}
+.brute-primary:focus-visible,
+.brute-secondary:focus-visible,
+.brute-camp-action:focus-visible,
+.brute-cell-action:focus-visible,
+.brute-fight-tool:focus-visible,
+.brute-armory-weapon-v3:focus-visible,
+.brute-choice:focus-visible{
+  outline:2px solid rgba(255,216,95,.95);
+  outline-offset:3px;
+}
+.brute-camp-card,
+.brute-cell-shelf,
+.brute-cell-action,
+.brute-armory-v3-list,
+.brute-armory-v3-focus,
+.brute-tcg-pack,
+.brute-real-card{
+  will-change:transform;
+}
+.brute-camp-card,
+.brute-real-card,
+.brute-cell-shelf{
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
+}
+.brute-camp-card:hover,
+.brute-real-card:hover,
+.brute-cell-shelf:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.025);
+}
+.brute-track i,
+.brute-camp-energy-track i,
+.brute-stat-v3-progress i,
+.brute-weapon-mastery>i,
+.brute-weapon-metric i,
+.brute-hud-v3-hp i,
+.brute-fatigue i{
+  transition:
+    width .32s cubic-bezier(.16,.82,.2,1),
+    filter .2s ease,
+    box-shadow .2s ease;
+}
+.brute-cell-statline-v3>span{
+  transition:transform .16s ease,filter .16s ease,box-shadow .16s ease;
+}
+.brute-cell-statline-v3>span:hover{
+  transform:translateY(-3px) scale(1.012);
+  filter:brightness(1.035);
+}
+.brute-armory-v3-avatar .ga-brute-svg,
+.brute-menu-avatar .ga-brute-svg,
+.brute-camp-avatar .ga-brute-svg{
+  transform-origin:50% 100%;
+}
+.brute-armory-v3-avatar:hover .ga-brute-svg,
+.brute-menu-avatar:hover .ga-brute-svg,
+.brute-camp-avatar:hover .ga-brute-svg{
+  filter:drop-shadow(0 19px 12px rgba(70,36,18,.29)) brightness(1.025);
+}
+.brute-armory-v3-weapon-orbit{
+  will-change:transform;
+}
+.brute-armory-weapon-v3.active .brute-armory-weapon-art{
+  animation:bruteSelectedWeapon .34s cubic-bezier(.16,.86,.2,1);
+}
+.brute-choice{
+  perspective:600px;
+  transform-style:preserve-3d;
+}
+.brute-choice:hover .big.art{
+  transform:translateY(-3px) scale(1.055);
+}
+.brute-choice .big.art{
+  transition:transform .18s cubic-bezier(.16,.86,.2,1);
+}
+.brute-choice.rarity-legendary{
+  animation:bruteCardDeal .55s cubic-bezier(.16,.85,.25,1) both,bruteLegendPulse 2.4s ease-in-out .7s infinite;
+}
+.brute-fight-toolbar{
+  animation:bruteToolbarIn .34s cubic-bezier(.16,.84,.2,1) .08s both;
+}
+.brute-fight-tool.active{
+  transform:translateY(-1px);
+  box-shadow:0 0 0 1px rgba(255,218,118,.18),0 5px 16px rgba(0,0,0,.18);
+}
+.brute-selector-avatar.custom,
+.brute-duel-avatar.custom,
+.brute-podium-avatar.custom,
+.brute-ranking-v2-row .avatar.custom{
+  transition:transform .16s ease,filter .16s ease,box-shadow .16s ease;
+}
+.brute-duel-avatar.custom:hover,
+.brute-ranking-v2-row:hover .avatar.custom{
+  transform:scale(1.06);
+  filter:brightness(1.05);
+}
+.brute-row,
+.brute-ranking-v2-row{
+  transition:transform .14s ease,background .14s ease,border-color .14s ease;
+}
+.brute-row:hover,
+.brute-ranking-v2-row:hover{
+  transform:translateX(3px);
+}
+.brute-result-title,
+.brute-xp-gain.v3,
+.brute-fight-summary.v3{
+  animation:bruteResultIn .42s cubic-bezier(.16,.84,.2,1) both;
+}
+.brute-xp-gain.v3{animation-delay:.05s}
+.brute-fight-summary.v3{animation-delay:.1s}
+@keyframes bruteScreenIn{
+  0%{opacity:0;transform:translateY(10px) scale(.992)}
+  62%{opacity:1;transform:translateY(-1px) scale(1.002)}
+  100%{opacity:1;transform:none}
+}
+@keyframes bruteToolbarIn{
+  0%{opacity:0;transform:translateY(-7px)}
+  100%{opacity:1;transform:none}
+}
+@keyframes bruteSelectedWeapon{
+  0%{transform:scale(.86) rotate(-5deg)}
+  58%{transform:scale(1.08) rotate(2deg)}
+  100%{transform:none}
+}
+@keyframes bruteLegendPulse{
+  0%,100%{box-shadow:inset 0 1px rgba(255,255,255,.06),0 10px 28px rgba(0,0,0,.2),0 0 12px rgba(255,201,74,.08)}
+  50%{box-shadow:inset 0 1px rgba(255,255,255,.08),0 14px 34px rgba(0,0,0,.24),0 0 26px rgba(255,201,74,.18)}
+}
+@keyframes bruteResultIn{
+  0%{opacity:0;transform:translateY(12px) scale(.975)}
+  70%{opacity:1;transform:translateY(-2px) scale(1.008)}
+  100%{opacity:1;transform:none}
+}
+
+/* ================================================================
    GA BRUTE · MOTION / ARTICULATION V5
    Per-limb animation, camera follow, contact particles and pacing
    ================================================================ */
