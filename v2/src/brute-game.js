@@ -2840,6 +2840,117 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · READABILITY V17
+   Minimum readable type scale and safer touch targets
+   ================================================================ */
+.brute-cell-action small,
+.brute-menu-loadout em,
+.brute-cell-inventory-link small,
+.brute-menu-progress header span small,
+.brute-camp-v2-meter small,
+.brute-camp-priority p,
+.brute-duel-poster-title small,
+.brute-duel-record,
+.brute-duel-threat,
+.brute-ranking-v2-row .name small,
+.brute-sleep-v2-tip,
+.brute-pve-v2-note{
+  font-size:max(7px,.64rem);
+}
+.brute-cell-board-title>small,
+.brute-menu-status small,
+.brute-menu-record-grid small,
+.brute-cell-action-copy em,
+.brute-screen-intro small,
+.brute-screen-intro-kpis small,
+.brute-pve-readiness small,
+.brute-sleep-benefits small,
+.brute-armory-build-summary span,
+.brute-armory-build-summary small{
+  font-size:max(6.5px,.58rem);
+}
+.brute-cell-board-title>span,
+.brute-cell-action b,
+.brute-camp-v2-action,
+.brute-camp-v2-sleep,
+.brute-duel-fight,
+.brute-pve-v2-launch{
+  letter-spacing:.035em;
+}
+.brute-cell-action,
+.brute-cell-inventory-link,
+.brute-camp-v2-action,
+.brute-camp-v2-sleep,
+.brute-duel-fight,
+.brute-pve-v2-launch,
+.brute-secondary,
+.brute-primary,
+.brute-mini,
+.brute-back{
+  min-height:44px;
+}
+.brute-cell-small{
+  min-height:40px;
+}
+.brute-selector-list .brute-row{
+  min-height:66px;
+}
+.brute-ranking-v2-row{
+  min-height:48px;
+}
+.brute-duel-poster-title b{
+  font-size:12px;
+}
+.brute-menu-status b{
+  font-size:10px;
+}
+.brute-menu-record-grid b{
+  font-size:18px;
+}
+.brute-camp-v2-meter header{
+  font-size:8.5px;
+}
+.brute-cell-bars>div>header{
+  font-size:8.5px;
+}
+.brute-top-v2 .brute-top-title small{
+  font-size:7.5px;
+}
+@media(max-width:660px){
+  .brute-cell-action small,
+  .brute-menu-loadout em,
+  .brute-cell-inventory-link small,
+  .brute-camp-v2-meter small,
+  .brute-camp-priority p,
+  .brute-duel-poster-title small,
+  .brute-duel-record,
+  .brute-duel-threat,
+  .brute-ranking-v2-row .name small{
+    font-size:7px!important;
+  }
+  .brute-cell-board-title>small,
+  .brute-menu-status small,
+  .brute-menu-record-grid small,
+  .brute-cell-action-copy em,
+  .brute-screen-intro small,
+  .brute-screen-intro-kpis small{
+    font-size:6px!important;
+  }
+  .brute-mobile-dock b{
+    font-size:6.5px!important;
+  }
+  .brute-mobile-dock button{
+    min-height:56px;
+  }
+  .brute-selector-search input{
+    font-size:11px;
+  }
+  .brute-top-v2 .brute-top-title small{
+    font-size:6.5px;
+  }
+}
+
+/* ================================================================
    GA BRUTE · FEEDBACK / STATES V16
    Loading, notices, creation steps and clearer fight results
    ================================================================ */
