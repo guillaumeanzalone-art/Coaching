@@ -12,7 +12,12 @@ import {
   getBruteTheme,
   randomAppearance,
 } from './brute-config.js'
-import { renderBruteSvg, renderPetSvg } from './brute-svg.js'
+import {
+  renderBruteSvg,
+  renderPetSvg,
+  renderWeaponIconSvg,
+  renderSkillIconSvg,
+} from './brute-svg.js'
 import {
   createSeededRandom,
   generateFightTimeline,
@@ -1792,6 +1797,7 @@ export async function mountBruteGame(root, options = {}) {
   let playbackToken = 0
   let currentTimeline = null
   let currentFightMeta = null
+  let fightTelemetry = null
   let idleSnapshot = null
   let idleSnapshotAt = Date.now()
   let sleepMode = 'rain'
@@ -2259,54 +2265,435 @@ export async function mountBruteGame(root, options = {}) {
     '</section>'
   }
 
+  function uiGlyph(
+    name,
+    className = ''
+  ) {
+    const shapes = {
+      arena:'<path d="M18 73 Q50 44 82 73 M25 76 L18 40 L34 49 L50 28 L66 49 L82 40 L75 76Z" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/><path d="M31 77 H69" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>',
+      pve:'<path d="M19 59 H81 M27 48 V70 M73 48 V70 M37 42 V76 M63 42 V76" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><path d="M41 31 Q50 19 59 31" fill="none" stroke="currentColor" stroke-width="7"/>',
+      camp:'<path d="M17 78 L50 22 L83 78Z" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/><path d="M50 22 V80 M36 55 H64" stroke="currentColor" stroke-width="6"/>',
+      sleep:'<path d="M66 22 Q42 27 39 49 Q37 70 60 80 Q39 87 24 71 Q9 55 20 36 Q31 17 51 18 Q58 18 66 22Z" fill="currentColor"/>',
+      ranking:'<path d="M21 77 H79 M29 75 V48 H45 V75 M55 75 V33 H71 V75 M37 42 V24 H53 V42" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/>',
+      weapon:'<path d="M24 74 L68 30 M62 24 L76 20 L80 34 L36 78Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/><path d="M29 67 L40 78" stroke="currentColor" stroke-width="8"/>',
+      heart:'<path d="M50 80 Q15 59 18 35 Q20 19 36 19 Q46 19 50 31 Q55 19 66 19 Q81 20 82 35 Q84 58 50 80Z" fill="currentColor"/>',
+      strength:'<path d="M17 43 H83 M22 33 V53 M78 33 V53 M31 28 V58 M69 28 V58" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>',
+      agility:'<path d="M19 62 Q36 25 55 46 Q70 61 83 31 M58 25 L83 31 L75 52" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
+      speed:'<path d="M18 31 H52 M12 49 H45 M20 67 H56 M64 24 L47 53 H62 L49 80 L84 43 H68Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
+    }
+
+    return '<svg class="ga-ui-glyph '+esc(className)+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+      (shapes[name] || shapes.weapon)+
+    '</svg>'
+  }
+
+  function statTier(
+    value
+  ) {
+    const v =
+      Math.max(
+        0,
+        num(value)
+      )
+
+    return Math.max(
+      1,
+      Math.floor(
+        v / 5
+      )
+    )
+  }
+
+  function statCell(
+    kind,
+    value
+  ) {
+    const meta = {
+      hp:{
+        label:'PV',
+        effect:'SURVIE',
+        glyph:'heart',
+      },
+      strength:{
+        label:'FORCE',
+        effect:'DÉGÂTS · STUN',
+        glyph:'strength',
+      },
+      agility:{
+        label:'AGILITÉ',
+        effect:'ESQUIVE · CONTRE',
+        glyph:'agility',
+      },
+      speed:{
+        label:'VITESSE',
+        effect:'INITIATIVE · COMBO',
+        glyph:'speed',
+      },
+    }[kind]
+
+    const v =
+      Math.max(
+        0,
+        num(value)
+      )
+
+    const tier =
+      statTier(
+        kind === 'hp'
+          ? v / 6
+          : v
+      )
+
+    const normalized =
+      kind === 'hp'
+        ? v / 6
+        : v
+
+    const next =
+      (
+        Math.floor(
+          normalized / 5
+        ) +
+        1
+      ) *
+      5
+
+    const pct =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          (
+            normalized %
+            5
+          ) /
+          5 *
+          100
+        )
+      )
+
+    return (
+      '<span class="brute-stat-v3 tier-'+Math.min(6,tier)+'">'+
+        uiGlyph(
+          meta.glyph,
+          'brute-stat-v3-glyph'
+        )+
+        '<b>'+v+'</b>'+
+        '<small>'+meta.label+'</small>'+
+        '<em>'+meta.effect+'</em>'+
+        '<div class="brute-stat-v3-progress"><i style="width:'+pct+'%"></i></div>'+
+        '<u>PALIER '+tier+' · '+Math.ceil(next)+'</u>'+
+      '</span>'
+    )
+  }
+
+  function weaponRole(
+    weapon
+  ) {
+    const category =
+      weapon?.category ||
+      'unarmed'
+
+    if (category === 'heavy') {
+      return 'IMPACT'
+    }
+
+    if (category === 'flexible') {
+      return 'PRESSION'
+    }
+
+    if (category === 'ranged') {
+      return 'CONTRÔLE'
+    }
+
+    return 'COMBO'
+  }
+
+  function weaponHudMarkup(
+    weapon
+  ) {
+    const w =
+      weapon ||
+      BRUTE_WEAPONS.fists
+
+    return (
+      '<span class="brute-weapon-hud-icon">'+
+        renderWeaponIconSvg(
+          w,
+          {
+            className:'hud',
+          }
+        )+
+      '</span>'+
+      '<span class="brute-weapon-hud-copy">'+
+        '<b>'+esc(w.name)+'</b>'+
+        '<small>'+weaponRole(w)+' · DMG '+num(w.damage)+' · VIT '+Math.round(num(w.speed,1)*100)+'</small>'+
+      '</span>'
+    )
+  }
+
+  function fighterBuildTag(
+    fighter
+  ) {
+    const stats = [
+      ['FOR',num(fighter.strength)],
+      ['AGI',num(fighter.agility)],
+      ['VIT',num(fighter.speed)],
+    ]
+
+    const best =
+      stats
+        .slice()
+        .sort(
+          (a,b) =>
+            b[1] - a[1]
+        )[0]
+
+    return (
+      best[0] +
+      ' ' +
+      best[1]
+    )
+  }
+
+  function resetFightTelemetry(
+    tl
+  ) {
+    fightTelemetry = {
+      timeline:tl,
+      streak:{
+        left:0,
+        right:0,
+      },
+      maxCombo:{
+        left:1,
+        right:1,
+      },
+      damage:{
+        left:0,
+        right:0,
+      },
+      crits:{
+        left:0,
+        right:0,
+      },
+      lastAttacker:'',
+    }
+  }
+
+  function ensureFightTelemetry(
+    tl
+  ) {
+    if (
+      !fightTelemetry ||
+      fightTelemetry.timeline !== tl
+    ) {
+      resetFightTelemetry(
+        tl
+      )
+    }
+
+    return fightTelemetry
+  }
+
+  function updateFightTelemetry(
+    event,
+    tl
+  ) {
+    const telemetry =
+      ensureFightTelemetry(
+        tl
+      )
+
+    const actor =
+      event.actor
+
+    const target =
+      event.target
+
+    if (
+      (
+        event.type === 'ATTACK' ||
+        event.type === 'PET_ATTACK' ||
+        event.type === 'FINISHER'
+      ) &&
+      (
+        actor === 'left' ||
+        actor === 'right'
+      )
+    ) {
+      if (
+        telemetry.lastAttacker ===
+          actor
+      ) {
+        telemetry.streak[actor] += 1
+      } else {
+        telemetry.streak[actor] = 1
+      }
+
+      telemetry.lastAttacker =
+        actor
+
+      telemetry.damage[actor] +=
+        num(
+          event.damage
+        )
+
+      if (event.critical) {
+        telemetry.crits[actor] += 1
+      }
+
+      telemetry.maxCombo[actor] =
+        Math.max(
+          telemetry.maxCombo[actor],
+          telemetry.streak[actor]
+        )
+    }
+
+    if (
+      event.type === 'COMBO' &&
+      (
+        actor === 'left' ||
+        actor === 'right'
+      )
+    ) {
+      telemetry.streak[actor] =
+        Math.max(
+          2,
+          telemetry.streak[actor] +
+          1
+        )
+
+      telemetry.maxCombo[actor] =
+        Math.max(
+          telemetry.maxCombo[actor],
+          telemetry.streak[actor]
+        )
+    }
+
+    if (
+      event.type === 'MISS' &&
+      (
+        actor === 'left' ||
+        actor === 'right'
+      )
+    ) {
+      telemetry.streak[actor] = 0
+    }
+
+    if (
+      event.type === 'DODGE' &&
+      (
+        target === 'left' ||
+        target === 'right'
+      )
+    ) {
+      telemetry.streak[target] = 0
+    }
+
+    for (
+      const side of [
+        'left',
+        'right',
+      ]
+    ) {
+      const combo =
+        root.querySelector(
+          '[data-combo-'+side+']'
+        )
+
+      const damage =
+        root.querySelector(
+          '[data-fight-damage-'+side+']'
+        )
+
+      const crit =
+        root.querySelector(
+          '[data-fight-crits-'+side+']'
+        )
+
+      if (combo) {
+        const streak =
+          telemetry.streak[side]
+
+        combo.classList.toggle(
+          'active',
+          streak >= 2
+        )
+
+        combo.innerHTML =
+          '<b>x'+Math.max(1,streak)+'</b><small>CHAÎNE</small><i style="--chain:'+Math.min(5,Math.max(1,streak))+'"></i>'
+      }
+
+      if (damage) {
+        damage.textContent =
+          telemetry.damage[side]
+      }
+
+      if (crit) {
+        crit.textContent =
+          telemetry.crits[side]
+      }
+    }
+  }
+
   function inventoryTile(
     kind,
     id,
     active = false
   ) {
     let item
-    let icon = '•'
     let name = id
+    let art = ''
 
     if (kind === 'weapon') {
       item =
         BRUTE_WEAPONS[id] ||
         BRUTE_WEAPONS.fists
 
-      icon =
-        item?.icon ||
-        '⚔️'
-
       name =
         item?.name ||
         id
+
+      art =
+        renderWeaponIconSvg(
+          item,
+          {
+            className:'cell',
+          }
+        )
     } else if (kind === 'skill') {
       item =
         BRUTE_SKILLS[id]
 
-      icon =
-        item?.icon ||
-        '✨'
-
       name =
         item?.name ||
         id
+
+      art =
+        renderSkillIconSvg(
+          id,
+          {
+            className:'cell',
+          }
+        )
     } else {
       item =
         BRUTE_PETS[id]
 
-      icon =
-        item?.emoji ||
-        '🐾'
-
       name =
         item?.name ||
         id
+
+      art =
+        renderPetSvg(
+          item
+        )
     }
 
     return (
       '<span class="brute-cell-item '+(active?'active':'')+'" title="'+esc(name)+'">'+
-        '<b>'+esc(icon)+'</b>'+
+        '<b class="brute-cell-art">'+art+'</b>'+
         '<small>'+esc(name)+'</small>'+
       '</span>'
     )
