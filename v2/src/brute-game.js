@@ -2840,6 +2840,249 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · FEEDBACK / STATES V16
+   Loading, notices, creation steps and clearer fight results
+   ================================================================ */
+.brute-shell{position:relative}
+.brute-notice{
+  position:relative;
+  z-index:90;
+  display:grid;
+  grid-template-columns:26px minmax(0,1fr);
+  gap:8px;
+  align-items:center;
+  margin-bottom:9px;
+  padding:9px 11px;
+  border:1px solid color-mix(in srgb,var(--accent),transparent 58%);
+  border-radius:12px;
+  background:color-mix(in srgb,var(--accent),#0d1020 90%);
+  color:#e9eaf3;
+  font-size:9px;
+  font-weight:800;
+  line-height:1.35;
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
+  animation:bruteNoticeIn .28s cubic-bezier(.16,.84,.2,1);
+}
+.brute-notice-icon{
+  width:23px;
+  height:23px;
+  padding:4px;
+  border-radius:7px;
+  background:color-mix(in srgb,var(--accent),transparent 84%);
+  color:color-mix(in srgb,var(--accent),white 26%);
+}
+.brute-busy-overlay{
+  position:absolute;
+  z-index:200;
+  inset:0;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  border-radius:18px;
+  background:rgba(6,7,13,.43);
+  backdrop-filter:blur(3px);
+  animation:bruteBusyFade .16s ease;
+}
+.brute-busy-card{
+  min-width:190px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:18px 20px;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(27,31,52,.97),rgba(11,13,27,.98));
+  box-shadow:0 18px 50px rgba(0,0,0,.4);
+  text-align:center;
+}
+.brute-busy-card b{
+  margin-top:9px;
+  font-size:10px;
+  letter-spacing:.08em;
+}
+.brute-busy-card small{
+  margin-top:3px;
+  color:#858da9;
+  font-size:7px;
+}
+.brute-busy-spinner{
+  width:25px;
+  height:25px;
+  display:block;
+  border:3px solid rgba(255,255,255,.1);
+  border-top-color:var(--accent,#8b5cf6);
+  border-radius:50%;
+  animation:bruteSpinner .72s linear infinite;
+}
+.brute-busy-spinner.large{width:34px;height:34px;border-width:4px}
+.brute-loading-screen{
+  min-height:330px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:36px 20px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(20,24,44,.96),rgba(8,10,22,.98));
+  text-align:center;
+}
+.brute-loading-screen>small{
+  margin-top:13px;
+  color:#7f88a8;
+  font-size:7px;
+  font-weight:1000;
+  letter-spacing:.16em;
+}
+.brute-loading-screen h2{margin:4px 0 3px;font-size:20px}
+.brute-loading-screen p{margin:0;color:#838ba7;font-size:8px}
+.brute-loading-lines{
+  width:min(330px,72%);
+  display:grid;
+  gap:6px;
+  margin-top:20px;
+}
+.brute-loading-lines i{
+  height:8px;
+  border-radius:99px;
+  background:linear-gradient(90deg,rgba(255,255,255,.035),rgba(255,255,255,.11),rgba(255,255,255,.035));
+  background-size:200% 100%;
+  animation:bruteLoadingShimmer 1.25s linear infinite;
+}
+.brute-loading-lines i:nth-child(2){width:82%}
+.brute-loading-lines i:nth-child(3){width:61%}
+
+.brute-creator-steps{
+  display:grid;
+  grid-template-columns:auto 1fr auto 1fr auto;
+  gap:7px;
+  align-items:center;
+  margin-bottom:14px;
+}
+.brute-creator-steps>span{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  color:#7e684f;
+}
+.brute-creator-steps>span i{
+  width:20px;
+  height:20px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(93,58,36,.28);
+  border-radius:50%;
+  background:rgba(113,75,44,.08);
+  font-size:7px;
+  font-style:normal;
+  font-weight:1000;
+}
+.brute-creator-steps>span b{font-size:5.5px;letter-spacing:.07em}
+.brute-creator-steps>em{
+  height:2px;
+  border-radius:99px;
+  background:rgba(112,74,43,.15);
+}
+.brute-creator-steps>span.done,
+.brute-creator-steps>span.active{color:#6b371c}
+.brute-creator-steps>span.done i{
+  background:#7c4c2c;
+  color:#ffe8ac;
+}
+.brute-creator-steps>span.active i{
+  border-color:#9d6335;
+  background:#e5bd66;
+  box-shadow:0 0 0 3px rgba(205,151,58,.12);
+}
+.brute-mybrute-status{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+}
+.brute-creator-status-glyph{width:14px;height:14px}
+.brute-mybrute-status.locked{color:#5d7b45}
+.brute-mybrute-status.free{color:#8a6745}
+
+.brute-xp-result{
+  overflow:hidden;
+}
+.brute-result-title{
+  padding:14px 12px 8px;
+  text-align:left;
+}
+.brute-result-title>div small{
+  display:block;
+  color:#7f879f;
+  font-size:5.5px;
+  font-weight:1000;
+  letter-spacing:.13em;
+}
+.brute-result-title>div h2{margin-top:1px}
+.brute-result-message{
+  max-width:620px;
+  margin:0 auto 10px;
+  padding:0 14px;
+  color:#969bb1;
+  font-size:9px;
+  line-height:1.45;
+  text-align:center;
+}
+.brute-result-pve-meta{
+  width:min(620px,calc(100% - 24px));
+  display:flex;
+  justify-content:center;
+  gap:5px;
+  flex-wrap:wrap;
+  margin:8px auto 0;
+}
+.brute-result-pve-meta span,
+.brute-result-pve-meta b{
+  padding:4px 7px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:999px;
+  background:rgba(255,255,255,.03);
+  color:#8f96ad;
+  font-size:6px;
+}
+.brute-result-pve-meta span{color:#cfb667;font-weight:1000}
+.brute-result-bonuses{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  flex-wrap:wrap;
+  max-width:620px;
+  margin:9px auto 0;
+}
+.brute-xp-result>.brute-actions{
+  position:sticky;
+  z-index:8;
+  bottom:6px;
+  width:max-content;
+  max-width:calc(100% - 16px);
+  margin:14px auto 8px;
+  padding:6px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;
+  background:rgba(10,12,24,.86);
+  backdrop-filter:blur(10px);
+}
+@keyframes bruteSpinner{to{transform:rotate(360deg)}}
+@keyframes bruteBusyFade{from{opacity:0}to{opacity:1}}
+@keyframes bruteNoticeIn{0%{opacity:0;transform:translateY(-5px)}100%{opacity:1;transform:none}}
+@keyframes bruteLoadingShimmer{0%{background-position:180% 0}100%{background-position:-80% 0}}
+@media(max-width:660px){
+  .brute-busy-overlay{position:fixed;border-radius:0}
+  .brute-busy-card{min-width:170px}
+  .brute-result-title{justify-content:flex-start}
+  .brute-xp-result>.brute-actions{
+    width:calc(100% - 14px);
+    display:grid;
+    grid-template-columns:1fr;
+  }
+}
+
+/* ================================================================
    GA BRUTE · MICRO UX V15
    Better scan order, history labels and podium presentation
    ================================================================ */
@@ -4926,6 +5169,13 @@ export async function mountBruteGame(root, options = {}) {
 
     return '<section class="brute-mybrute-create">'+
       '<div class="brute-mybrute-paper">'+
+        '<div class="brute-creator-steps">'+
+          '<span class="done"><i>1</i><b>NOM</b></span>'+
+          '<em></em>'+
+          '<span class="'+(draftFixed?'done':'active')+'"><i>2</i><b>APPARENCE</b></span>'+
+          '<em></em>'+
+          '<span class="'+(draftFixed?'active':'')+'"><i>3</i><b>VALIDER</b></span>'+
+        '</div>'+
         '<div class="brute-mybrute-heading">'+
           '<span>Choisis ton nom</span>'+
           '<b>›</b>'+
@@ -4936,7 +5186,10 @@ export async function mountBruteGame(root, options = {}) {
             uiGlyph(draftFixed ? 'lock' : 'unlock','brute-lock-glyph')+
           '</button>'+
         '</div>'+
-        '<div class="brute-mybrute-status">'+esc(status)+'</div>'+
+        '<div class="brute-mybrute-status '+(draftFixed?'locked':'free')+'">'+
+          uiGlyph(draftFixed?'lock':'unlock','brute-creator-status-glyph')+
+          '<span>'+esc(status)+'</span>'+
+        '</div>'+
         '<div class="brute-mybrute-character" data-brute-creator-preview>'+
           renderBruteSvg(
             draft,
@@ -7423,9 +7676,27 @@ export async function mountBruteGame(root, options = {}) {
                           ? renderFight()
                           : renderMenu()
 
-    root.innerHTML = '<main class="brute-app" style="--accent:'+esc(t.accent)+'"><div class="brute-shell">'+
-      (notice ? '<div style="margin-bottom:9px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--accent),transparent 58%);border-radius:12px;background:color-mix(in srgb,var(--accent),transparent 91%);font-size:10px">'+esc(notice)+'</div>' : '')+
+    root.innerHTML = '<main class="brute-app '+(busy?'is-busy':'')+'" style="--accent:'+esc(t.accent)+'"><div class="brute-shell">'+
+      (
+        notice
+          ? '<div class="brute-notice" role="status" aria-live="polite">'+
+              '<span class="brute-notice-icon">'+uiGlyph('info')+'</span>'+
+              '<span>'+esc(notice)+'</span>'+
+            '</div>'
+          : ''
+      )+
       content+
+      (
+        busy
+          ? '<div class="brute-busy-overlay" role="status" aria-live="polite">'+
+              '<div class="brute-busy-card">'+
+                '<span class="brute-busy-spinner"></span>'+
+                '<b>MISE À JOUR…</b>'+
+                '<small>GA Brute synchronise les données</small>'+
+              '</div>'+
+            '</div>'
+          : ''
+      )+
     '</div></main>'
 
     syncMusic()
@@ -10105,13 +10376,13 @@ export async function mountBruteGame(root, options = {}) {
       '<div class="brute-panel brute-xp-result">'+
         '<div class="brute-result-title '+(won?'win':'loss')+'">'+
           '<span class="brute-result-glyph">'+uiGlyph(won?'ranking':'weapon')+'</span>'+
-          '<h2>'+(won?'VICTOIRE':'DÉFAITE')+'</h2>'+
+          '<div><small>RÉSULTAT DU COMBAT</small><h2>'+(won?'VICTOIRE':'DÉFAITE')+'</h2></div>'+
         '</div>'+
-        '<p style="color:#969bb1;font-size:10px">'+
+        '<p class="brute-result-message">'+
           (
             won
               ? esc(t.victory)
-              : 'Tu reviendras plus fort.'
+              : 'Analyse le résumé, adapte ton build et reviens plus fort.'
           )+
         '</p>'+
         (
@@ -10125,12 +10396,12 @@ export async function mountBruteGame(root, options = {}) {
           pve &&
           currentFightMeta
             ?.openpowerlifting
-            ? '<div style="margin-top:8px;color:#7e859f;font-size:8px;font-weight:900">OPENPOWERLIFTING · TOTAL '+num(currentFightMeta.openpowerlifting.total,0)+' KG · '+num(currentFightMeta.openpowerlifting.points,0)+' '+esc(currentFightMeta.openpowerlifting.metric || '')+' · ÉNERGIE -'+num(currentFightMeta?.energy?.cost,8)+'</div>'
+            ? '<div class="brute-result-pve-meta"><span>OPENPOWER</span><b>'+num(currentFightMeta.openpowerlifting.total,0)+' KG</b><b>'+num(currentFightMeta.openpowerlifting.points,0)+' '+esc(currentFightMeta.openpowerlifting.metric || '')+'</b><b>ÉNERGIE -'+num(currentFightMeta?.energy?.cost,8)+'</b></div>'
             : ''
         )+
         (
           xp && !practice && !replayOnly
-            ? '<div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:9px auto 0;max-width:620px">'+
+            ? '<div class="brute-result-bonuses">'+
                 '<span class="brute-activity-pill">BASE +'+num(xp.base_xp,0)+'</span>'+
                 '<span class="brute-activity-pill">STEPS +'+num(xp.steps_bonus,0)+'</span>'+
                 '<span class="brute-activity-pill">SOMMEIL +'+num(xp.sleep_bonus,0)+'</span>'+
@@ -10166,7 +10437,7 @@ export async function mountBruteGame(root, options = {}) {
               : ''
           )+
           '<button class="brute-secondary" data-brute-replay-current><span class="brute-inline-glyph">'+uiGlyph('replay')+'</span> Revoir le combat</button>'+
-          '<button class="brute-secondary" data-brute-after-fight>Retour au camp</button>'+
+          '<button class="brute-secondary" data-brute-after-fight><span class="brute-inline-glyph">'+uiGlyph('camp')+'</span> Retour au camp</button>'+
         '</div>'+
       '</div>'
 
@@ -10556,7 +10827,13 @@ export async function mountBruteGame(root, options = {}) {
       notice = ''
 
       root.innerHTML =
-        '<main class="brute-app"><div class="brute-shell"><section class="brute-panel brute-pad" style="text-align:center;padding:40px"><h2>Chargement de la brute…</h2><p style="color:#858ca8;font-size:10px">Connexion à Supabase</p></section></div></main>'
+        '<main class="brute-app"><div class="brute-shell"><section class="brute-loading-screen">'+
+          '<span class="brute-busy-spinner large"></span>'+
+          '<small>GA BRUTE</small>'+
+          '<h2>Chargement de la brute</h2>'+
+          '<p>Synchronisation du profil, de la progression et de l’inventaire.</p>'+
+          '<div class="brute-loading-lines"><i></i><i></i><i></i></div>'+
+        '</section></div></main>'
 
       await refreshData(false)
       busy = false
