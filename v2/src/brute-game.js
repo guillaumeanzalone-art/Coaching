@@ -2743,7 +2743,7 @@ export async function mountBruteGame(root, options = {}) {
   ) {
     return (
       '<button class="brute-cell-action '+esc(extra)+'" data-brute-screen="'+esc(screenName)+'">'+
-        '<span class="brute-cell-action-icon">'+esc(icon)+'</span>'+
+        '<span class="brute-cell-action-icon">'+uiGlyph(icon)+'</span>'+
         '<span><b>'+esc(title)+'</b><small>'+esc(subtitle)+'</small></span>'+
         '<i>›</i>'+
       '</button>'
@@ -2852,15 +2852,18 @@ export async function mountBruteGame(root, options = {}) {
               '</div>'+
               (
                 pet
-                  ? '<span class="brute-cell-pet-label">'+esc(pet.emoji+' '+pet.name)+'</span>'
+                  ? '<span class="brute-cell-pet-label">'+
+                      '<span class="brute-cell-pet-mini">'+renderPetSvg(pet)+'</span>'+
+                      '<b>'+esc(pet.name)+'</b>'+
+                    '</span>'
                   : ''
               )+
             '</div>'+
-            '<div class="brute-cell-statline">'+
-              '<span><i>❤️</i><b>'+num(brute.hp)+'</b><small>PV</small></span>'+
-              '<span><i>💪</i><b>'+num(brute.strength)+'</b><small>FORCE</small></span>'+
-              '<span><i>🌀</i><b>'+num(brute.agility)+'</b><small>AGILITÉ</small></span>'+
-              '<span><i>⚡</i><b>'+num(brute.speed)+'</b><small>VITESSE</small></span>'+
+            '<div class="brute-cell-statline brute-cell-statline-v3">'+
+              statCell('hp',brute.hp)+
+              statCell('strength',brute.strength)+
+              statCell('agility',brute.agility)+
+              statCell('speed',brute.speed)+
             '</div>'+
             '<div class="brute-cell-bars">'+
               '<div><header><span>EXPÉRIENCE</span><b>'+num(brute.xp)+' / '+xpNeeded()+'</b></header><div class="brute-cell-bar xp"><i style="width:'+xpPct+'%"></i></div></div>'+
@@ -2873,32 +2876,32 @@ export async function mountBruteGame(root, options = {}) {
             '<div class="brute-cell-fights"><span>COMBATS</span><b>'+num(daily.remaining,6)+' / '+num(daily.limit,6)+'</b></div>'+
             cellAction(
               'duel',
-              '⚔️',
+              'arena',
               'ARÈNE',
               'Affronter une autre brute',
               'primary'
             )+
             cellAction(
               'pve',
-              '🏋️',
+              'pve',
               'OPENPOWER',
               'PvE · 8 énergie'
             )+
             cellAction(
               'camp',
-              '⛺',
+              'camp',
               'CAMP',
               'Progression du jour'
             )+
             cellAction(
               'sleep',
-              '🌙',
+              'sleep',
               'SOMMEIL',
               'Bonus XP & récupération'
             )+
             cellAction(
               'ranking',
-              '🏆',
+              'ranking',
               'CLASSEMENT',
               'Toutes les brutes'
             )+
