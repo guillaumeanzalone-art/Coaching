@@ -2840,6 +2840,85 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · BUILD FEEDBACK V8
+   Visible mastery thresholds and fatigue without extra UI clutter
+   ================================================================ */
+.brute-fighter.power-tier-4 .fight-model{
+  filter:
+    drop-shadow(0 0 10px rgba(255,190,71,.26))
+    drop-shadow(0 18px 8px rgba(55,24,12,.27))!important;
+}
+.brute-fighter.power-tier-5 .fight-model{
+  filter:
+    drop-shadow(0 0 17px rgba(255,220,102,.42))
+    drop-shadow(0 18px 8px rgba(55,24,12,.27))
+    brightness(1.035)!important;
+}
+.brute-fighter.power-tier-5.committed .fight-model .brute-torso{
+  animation-duration:.88!important;
+}
+.brute-fighter.fatigue-mid .fight-model .brute-stage{
+  animation-duration:1.85s!important;
+}
+.brute-fighter.fatigue-mid .fight-model .brute-torso{
+  animation-name:bruteFatigueMid!important;
+  animation-duration:1.85s!important;
+}
+.brute-fighter.fatigue-high .fight-model .brute-stage{
+  animation-duration:1.25s!important;
+}
+.brute-fighter.fatigue-high .fight-model .brute-torso{
+  animation:bruteFatigueHigh 1.25s ease-in-out infinite!important;
+}
+.brute-fighter.fatigue-high .fight-model .brute-arm-left,
+.brute-fighter.fatigue-high .fight-model .brute-arm-right{
+  animation-duration:1.8s!important;
+}
+.brute-fighter.fatigue-high:not(.committed) .fight-model{
+  filter:
+    saturate(.9)
+    drop-shadow(0 18px 8px rgba(55,24,12,.27));
+}
+.brute-fatigue-v3{
+  position:relative;
+  overflow:visible!important;
+}
+.brute-fatigue-v3:after{
+  content:attr(data-fatigue-value);
+  position:absolute;
+  right:0;
+  top:-8px;
+  opacity:0;
+  color:#d7a56f;
+  font-size:4px;
+  font-weight:1000;
+  transition:opacity .18s ease;
+}
+.brute-fatigue-v3[data-fatigue-value="0"]:after{display:none}
+.brute-fatigue-v3:hover:after{opacity:.8}
+.brute-fatigue-v3 i{
+  box-shadow:0 0 calc(2px + 8px * var(--fatigue-level,0)) rgba(224,91,47,.22);
+}
+.brute-fighter.fatigue-high:before{
+  opacity:max(.18,var(--fatigue-level,.18));
+}
+.brute-contact-ring.heavy{
+  box-shadow:
+    0 0 12px rgba(255,124,39,.65),
+    0 0 28px rgba(255,82,31,.24);
+}
+@keyframes bruteFatigueMid{
+  0%,100%{transform:translateY(0) rotate(-.3deg) scale(1)}
+  45%{transform:translateY(3px) rotate(.4deg) scale(1.01,.99)}
+  65%{transform:translateY(1px) rotate(0) scale(1.004,.997)}
+}
+@keyframes bruteFatigueHigh{
+  0%,100%{transform:translateY(1px) rotate(-.5deg) scale(1)}
+  34%{transform:translateY(5px) rotate(.6deg) scale(1.015,.982)}
+  60%{transform:translateY(2px) rotate(-.2deg) scale(1.006,.994)}
+}
+
+/* ================================================================
    GA BRUTE · ARCADE FEEDBACK V7
    Damage lag bars, weapon signatures and cinematic callouts
    ================================================================ */
@@ -6299,7 +6378,9 @@ export async function mountBruteGame(root, options = {}) {
         'dashing',
         'recovery-step',
         'committed',
-        'hit-react'
+        'hit-react',
+        'power-tier-4',
+        'power-tier-5'
       )
     })
     root.querySelectorAll('.brute-float').forEach(el => el.remove())
@@ -7038,11 +7119,33 @@ export async function mountBruteGame(root, options = {}) {
       showArcadeCallout(
         event.actor,
         signature,
-        weaponMeta.name,
+        weaponMeta.name +
+        (
+          num(event.powerTier) >= 5
+            ? ' · MASTER'
+            : num(event.powerTier) >= 4
+              ? ' · ELITE'
+              : ''
+        ),
         event.critical
           ? 'critical'
           : category
       )
+
+      if (
+        num(event.powerTier) >= 4
+      ) {
+        actorEl?.classList.add(
+          'power-tier-'+
+          Math.min(
+            5,
+            num(
+              event.powerTier,
+              4
+            )
+          )
+        )
+      }
 
       if (
         category === 'heavy'
@@ -7796,9 +7899,23 @@ export async function mountBruteGame(root, options = {}) {
       )
 
       const debrisCount =
-        heavy
-          ? 9
-          : 5
+        Math.min(
+          14,
+          (
+            heavy
+              ? 9
+              : 5
+          ) +
+          Math.max(
+            0,
+            num(
+              event.powerTier,
+              1
+            ) -
+            3
+          ) *
+          2
+        )
 
       for (
         let debrisIndex = 0;
@@ -8053,12 +8170,103 @@ export async function mountBruteGame(root, options = {}) {
       const lWeapon = root.querySelector('[data-weapon-left]')
       const rWeapon = root.querySelector('[data-weapon-right]')
 
+      const syncFatigueState = (
+        fighterEl,
+        value
+      ) => {
+        if (!fighterEl) return
+
+        const fatigue =
+          Math.max(
+            0,
+            Math.min(
+              100,
+              num(
+                value,
+                0
+              )
+            )
+          )
+
+        fighterEl.classList.toggle(
+          'fatigue-mid',
+          fatigue >= 48 &&
+          fatigue < 74
+        )
+
+        fighterEl.classList.toggle(
+          'fatigue-high',
+          fatigue >= 74
+        )
+
+        fighterEl.style.setProperty(
+          '--fatigue-level',
+          String(
+            fatigue / 100
+          )
+        )
+      }
+
+      syncFatigueState(
+        leftEl,
+        event.state.leftFatigue
+      )
+
+      syncFatigueState(
+        rightEl,
+        event.state.rightFatigue
+      )
+
       if (lFatigue) {
-        lFatigue.style.width = Math.max(0,Math.min(100,num(event.state.leftFatigue)))+'%'
+        const value =
+          Math.max(
+            0,
+            Math.min(
+              100,
+              num(
+                event.state.leftFatigue
+              )
+            )
+          )
+
+        lFatigue.style.width =
+          value+
+          '%'
+
+        lFatigue.parentElement?.setAttribute(
+          'data-fatigue-value',
+          String(
+            Math.round(
+              value
+            )
+          )
+        )
       }
 
       if (rFatigue) {
-        rFatigue.style.width = Math.max(0,Math.min(100,num(event.state.rightFatigue)))+'%'
+        const value =
+          Math.max(
+            0,
+            Math.min(
+              100,
+              num(
+                event.state.rightFatigue
+              )
+            )
+          )
+
+        rFatigue.style.width =
+          value+
+          '%'
+
+        rFatigue.parentElement?.setAttribute(
+          'data-fatigue-value',
+          String(
+            Math.round(
+              value
+            )
+          )
+        )
       }
 
       if (lWeapon) {
