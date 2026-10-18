@@ -1,5 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import path from 'node:path'
 
 import {
   defaultRestSeconds,
@@ -74,5 +77,41 @@ test('rest timer remaining is based on absolute end time', () => {
       7_500
     ),
     0
+  )
+})
+
+
+test('uses the correct Capacitor and native permission methods', () => {
+  const here =
+    path.dirname(
+      fileURLToPath(
+        import.meta.url
+      )
+    )
+
+  const source =
+    readFileSync(
+      path.join(
+        here,
+        '..',
+        'src',
+        'rest-timer.js'
+      ),
+      'utf8'
+    )
+
+  assert.match(
+    source,
+    /LocalNotifications\s*\.requestPermissions\(\)/
+  )
+
+  assert.match(
+    source,
+    /RestTimerNative\s*\.requestTimerPermissions\(\)/
+  )
+
+  assert.doesNotMatch(
+    source,
+    /LocalNotifications\s*\.requestTimerPermissions\(\)/
   )
 })
