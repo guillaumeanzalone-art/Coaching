@@ -2840,6 +2840,139 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · CINEMATIC TENSION V9
+   Low-HP drama, crowd reaction and finish-frame presentation
+   ================================================================ */
+.brute-cinematic-bars{
+  position:absolute;
+  z-index:31;
+  inset:0;
+  pointer-events:none;
+}
+.brute-cinematic-bars i{
+  position:absolute;
+  left:0;
+  right:0;
+  height:0;
+  background:rgba(7,8,12,.96);
+  transition:height .18s cubic-bezier(.16,.84,.2,1);
+}
+.brute-cinematic-bars i:first-child{top:0}
+.brute-cinematic-bars i:last-child{bottom:0}
+.brute-arena.cinematic .brute-cinematic-bars i{height:8%}
+.brute-arena.cinematic-ko .brute-cinematic-bars i{height:11%}
+.brute-finisher-slice{
+  position:absolute;
+  z-index:30;
+  left:-15%;
+  top:50%;
+  width:130%;
+  height:9px;
+  opacity:0;
+  transform:rotate(-8deg) scaleX(.15);
+  background:linear-gradient(90deg,transparent,#fff 18% 46%,#ffcc58 48% 54%,#ff5b2c 56% 72%,transparent);
+  filter:blur(.2px) drop-shadow(0 0 18px rgba(255,105,44,.75));
+  pointer-events:none;
+}
+.brute-arena.cinematic .brute-finisher-slice{
+  animation:bruteFinisherSlice .52s cubic-bezier(.12,.78,.18,1) forwards;
+}
+.brute-arena.camera-finisher .brute-fighters{
+  animation:bruteCameraFinisher .56s cubic-bezier(.1,.74,.15,1);
+}
+.brute-arena.cinematic-ko .brute-fighters{
+  filter:saturate(.92) contrast(1.08);
+}
+.brute-hud-v3-side.hp-danger{
+  border-color:#d46b35;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,188,111,.18),
+    inset 0 -18px 28px rgba(74,14,12,.18),
+    0 5px 0 rgba(25,15,12,.46),
+    0 0 18px rgba(226,75,40,.14);
+}
+.brute-hud-v3-side.hp-danger .brute-hud-v3-hp{
+  box-shadow:
+    inset 0 0 0 1px rgba(255,235,179,.12),
+    0 0 13px rgba(234,68,33,.28);
+}
+.brute-hud-v3-side.hp-critical{
+  animation:bruteHudCritical 1s ease-in-out infinite;
+}
+.brute-fighter.hp-danger:not(.hit-react) .fight-model{
+  filter:
+    drop-shadow(0 0 8px rgba(224,61,40,.18))
+    drop-shadow(0 18px 8px rgba(55,24,12,.27));
+}
+.brute-fighter.hp-critical:not(.committed) .fight-model{
+  filter:
+    drop-shadow(0 0 12px rgba(255,70,45,.3))
+    drop-shadow(0 18px 8px rgba(55,24,12,.27))
+    saturate(.94);
+}
+.brute-arena.tension-left .brute-arena-v4-vignette{
+  background:
+    radial-gradient(circle at 22% 54%,rgba(133,24,25,.14),transparent 32%),
+    linear-gradient(90deg,rgba(71,13,20,.32),transparent 22% 88%,rgba(31,17,17,.2)),
+    linear-gradient(180deg,rgba(10,15,23,.1),transparent 22% 78%,rgba(29,13,10,.24));
+}
+.brute-arena.tension-right .brute-arena-v4-vignette{
+  background:
+    radial-gradient(circle at 78% 54%,rgba(133,24,25,.14),transparent 32%),
+    linear-gradient(90deg,rgba(31,17,17,.2),transparent 12% 78%,rgba(71,13,20,.32)),
+    linear-gradient(180deg,rgba(10,15,23,.1),transparent 22% 78%,rgba(29,13,10,.24));
+}
+.brute-arena.tension-left.tension-right .brute-arena-v4-vignette{
+  background:
+    radial-gradient(circle at 22% 54%,rgba(133,24,25,.13),transparent 30%),
+    radial-gradient(circle at 78% 54%,rgba(133,24,25,.13),transparent 30%),
+    linear-gradient(90deg,rgba(71,13,20,.25),transparent 24% 76%,rgba(71,13,20,.25));
+}
+.brute-arena.crowd-pop .brute-arena-v2-crowd{
+  animation:bruteCrowdPop .34s ease;
+}
+.brute-arena.crowd-roar .brute-arena-v2-crowd{
+  animation:bruteCrowdRoar .58s cubic-bezier(.14,.76,.2,1);
+}
+.brute-arena.crowd-roar .brute-arena-v4-banner{
+  animation:bruteBannerRoar .58s cubic-bezier(.14,.76,.2,1);
+}
+@keyframes bruteFinisherSlice{
+  0%{opacity:0;transform:rotate(-8deg) scaleX(.15)}
+  26%{opacity:1;transform:rotate(-8deg) scaleX(1.08)}
+  52%{opacity:.95;transform:rotate(-8deg) scaleX(.92)}
+  100%{opacity:0;transform:rotate(-8deg) translateY(-25px) scaleX(1.12)}
+}
+@keyframes bruteCameraFinisher{
+  0%{transform:scale(1)}
+  18%{transform:scale(1.075)}
+  42%{transform:translateY(-3px) scale(1.055)}
+  100%{transform:scale(1.02)}
+}
+@keyframes bruteHudCritical{
+  0%,100%{filter:brightness(1)}
+  50%{filter:brightness(1.12)}
+}
+@keyframes bruteCrowdPop{
+  0%,100%{transform:scaleY(1.18)}
+  35%{transform:translateY(-4px) scaleY(1.25)}
+  70%{transform:translateY(1px) scaleY(1.16)}
+}
+@keyframes bruteCrowdRoar{
+  0%,100%{transform:scaleY(1.18)}
+  18%{transform:translateY(-7px) scaleY(1.3)}
+  38%{transform:translateY(2px) scaleY(1.16)}
+  58%{transform:translateY(-4px) scaleY(1.24)}
+  78%{transform:translateY(1px) scaleY(1.18)}
+}
+@keyframes bruteBannerRoar{
+  0%,100%{transform:rotate(0)}
+  24%{transform:rotate(3deg)}
+  48%{transform:rotate(-3deg)}
+  72%{transform:rotate(1.5deg)}
+}
+
+/* ================================================================
    GA BRUTE · BUILD FEEDBACK V8
    Visible mastery thresholds and fatigue without extra UI clutter
    ================================================================ */
@@ -6033,6 +6166,8 @@ export async function mountBruteGame(root, options = {}) {
           '<div class="brute-arena-v2-crowd"></div>'+
           '<div class="brute-arena-v2-floor"></div>'+
           '<div class="brute-arena-v4-vignette"></div>'+
+          '<div class="brute-cinematic-bars" aria-hidden="true"><i></i><i></i></div>'+
+          '<div class="brute-finisher-slice" aria-hidden="true"></div>'+
           '<div class="brute-arena-v4-foreground"></div>'+
           '<div class="brute-versus-callout" aria-hidden="true"><b>FIGHT!</b><i></i></div>'+
           '<div class="brute-arcade-callouts" aria-hidden="true"><div data-arcade-callout-left></div><div data-arcade-callout-right></div></div>'+
@@ -6243,7 +6378,10 @@ export async function mountBruteGame(root, options = {}) {
     return new Promise(resolve => setTimeout(resolve,ms))
   }
 
-  function fightSfx(type) {
+  function fightSfx(
+    type,
+    options = {}
+  ) {
     const map = {
       hit: '/ragnarok-hit.mp3',
       miss: '/ragnarok-miss.mp3',
@@ -6256,7 +6394,63 @@ export async function mountBruteGame(root, options = {}) {
 
     try {
       const audio = new Audio(src)
-      audio.volume = type === 'critical' ? .32 : .20
+
+      const powerTier =
+        Math.max(
+          1,
+          Math.min(
+            5,
+            num(
+              options.powerTier,
+              1
+            )
+          )
+        )
+
+      const category =
+        String(
+          options.category ||
+          ''
+        )
+
+      const pitch =
+        type === 'critical'
+          ? .92
+          : category === 'heavy'
+            ? .86
+            : category === 'ranged'
+              ? 1.08
+              : category === 'flexible'
+                ? 1.04
+                : 1
+
+      audio.playbackRate =
+        Math.max(
+          .78,
+          Math.min(
+            1.18,
+            pitch +
+            (
+              powerTier - 3
+            ) *
+            .018
+          )
+        )
+
+      audio.volume =
+        Math.min(
+          .42,
+          (
+            type === 'critical'
+              ? .31
+              : type === 'perfect'
+                ? .34
+                : .18
+          ) +
+          powerTier *
+          .012
+        )
+
       void audio.play().catch(() => {})
     } catch {
       // Cosmetic sound only.
@@ -6404,7 +6598,12 @@ export async function mountBruteGame(root, options = {}) {
       'camera-attack-right',
       'camera-impact',
       'camera-critical',
-      'camera-ko'
+      'camera-ko',
+      'camera-finisher',
+      'cinematic',
+      'cinematic-ko',
+      'crowd-pop',
+      'crowd-roar'
     )
   }
 
@@ -7087,7 +7286,17 @@ export async function mountBruteGame(root, options = {}) {
         )
 
         arena?.classList.add(
-          'finisher'
+          'finisher',
+          'cinematic',
+          'camera-finisher',
+          'crowd-roar'
+        )
+
+        showArcadeCallout(
+          event.actor,
+          'FINISHER',
+          'NO MERCY',
+          'critical'
         )
       }
 
@@ -7789,7 +7998,8 @@ export async function mountBruteGame(root, options = {}) {
       if (heavy) {
         arena?.classList.add(
           'shake',
-          'camera-impact'
+          'camera-impact',
+          'crowd-pop'
         )
 
         const freezeDelay =
@@ -7840,7 +8050,8 @@ export async function mountBruteGame(root, options = {}) {
       ) {
         arena?.classList.add(
           'flash',
-          'camera-critical'
+          'camera-critical',
+          'crowd-roar'
         )
       }
 
@@ -8016,12 +8227,20 @@ export async function mountBruteGame(root, options = {}) {
       fightSfx(
         event.critical
           ? 'critical'
-          : 'hit'
+          : 'hit',
+        {
+          powerTier:event.powerTier,
+          category:event.category,
+        }
       )
     }
 
     if (event.type === 'KO') {
-      arena?.classList.add('camera-ko')
+      arena?.classList.add(
+        'camera-ko',
+        'cinematic-ko',
+        'crowd-roar'
+      )
 
       const koVariant =
         Math.abs(
@@ -8053,10 +8272,65 @@ export async function mountBruteGame(root, options = {}) {
         'critical'
       )
 
-      fightSfx('perfect')
+      fightSfx(
+        'perfect',
+        {
+          powerTier:5,
+          category:event.category,
+        }
+      )
     }
 
     if (event.state) {
+      const syncDangerState = (
+        side,
+        pct
+      ) => {
+        const hudSide =
+          root.querySelector(
+            '.brute-hud-v3-side.'+
+            side
+          )
+
+        const fighterEl =
+          root.querySelector(
+            '[data-fighter="'+
+            side+
+            '"]'
+          )
+
+        const danger =
+          pct <= 28
+
+        const critical =
+          pct <= 14
+
+        hudSide?.classList.toggle(
+          'hp-danger',
+          danger
+        )
+
+        hudSide?.classList.toggle(
+          'hp-critical',
+          critical
+        )
+
+        fighterEl?.classList.toggle(
+          'hp-danger',
+          danger
+        )
+
+        fighterEl?.classList.toggle(
+          'hp-critical',
+          critical
+        )
+
+        arena?.classList.toggle(
+          'tension-'+side,
+          danger
+        )
+      }
+
       const leftHp =
         num(event.state.leftHp)
 
@@ -8090,6 +8364,16 @@ export async function mountBruteGame(root, options = {}) {
             100
           )
         )
+
+      syncDangerState(
+        'left',
+        lPct
+      )
+
+      syncDangerState(
+        'right',
+        rPct
+      )
 
       const lBar =
         root.querySelector(
