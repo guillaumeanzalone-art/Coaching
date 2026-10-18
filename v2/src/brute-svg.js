@@ -285,6 +285,30 @@ function eyesSvg(style) {
   return map[s] || map[0]
 }
 
+function eyeLifeSvg(style) {
+  const s =
+    idx(
+      style,
+      BRUTE_PARTS.eyes.length
+    )
+
+  if (s === 5) {
+    return ''
+  }
+
+  const size =
+    s === 3
+      ? 2.3
+      : 1.8
+
+  return (
+    '<g class="brute-eye-life" fill="#ffffff" opacity=".84" pointer-events="none">'+
+      '<circle cx="'+(s===3?143:140)+'" cy="'+(s===3?96:99)+'" r="'+size+'"/>'+
+      '<circle cx="'+(s===3?178:182)+'" cy="'+(s===3?96:99)+'" r="'+size+'"/>'+
+    '</g>'
+  )
+}
+
 function noseSvg(style, tone) {
   const s =
     idx(
@@ -469,7 +493,9 @@ function faceModelSvg(
     '<g class="brute-face-model" pointer-events="none">'+
       '<path d="M123 108 Q128 127 139 140" fill="none" stroke="'+skinShadow+'" stroke-width="'+(strong?3.2:2.6)+'" opacity=".18" stroke-linecap="round"/>'+
       '<path d="M197 108 Q192 127 181 140" fill="none" stroke="'+skinShadow+'" stroke-width="'+(strong?3.2:2.6)+'" opacity=".18" stroke-linecap="round"/>'+
-      '<path d="M145 151 Q160 158 176 151" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".22" stroke-linecap="round"/>'+
+      '<path d="M145 151 Q160 158 176 151" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".26" stroke-linecap="round"/>'+
+      '<path d="M138 143 Q146 158 160 161 Q174 158 182 143" fill="none" stroke="'+skinShadow+'" stroke-width="'+(strong?3.2:2.6)+'" opacity=".16" stroke-linecap="round"/>'+
+      '<path d="M151 154 Q160 158 169 154" fill="none" stroke="'+skinHighlight+'" stroke-width="2.3" opacity=".2" stroke-linecap="round"/>'+
       '<path d="M150 72 Q160 67 171 72" fill="none" stroke="'+skinHighlight+'" stroke-width="3" opacity=".22" stroke-linecap="round"/>'+
       '<path d="M153 109 Q160 105 167 109" fill="none" stroke="'+skinHighlight+'" stroke-width="2.5" opacity=".23" stroke-linecap="round"/>'+
       (
@@ -1141,6 +1167,7 @@ export function renderBruteSvg(
         )+
         '<g data-brute-part="eyes">'+
           eyesSvg(a.eyes)+
+          eyeLifeSvg(a.eyes)+
         '</g>'+
         '<g data-brute-part="nose">'+
           noseSvg(
