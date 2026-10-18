@@ -194,6 +194,7 @@ export async function mountBruteGame(root, options = {}) {
   let busy = false
   let notice = ''
   let playbackSpeed = 1
+  let playbackPaused = false
   let playbackToken = 0
   let currentTimeline = null
   let currentFightMeta = null
@@ -664,41 +665,270 @@ export async function mountBruteGame(root, options = {}) {
     '</section>'
   }
 
+  function inventoryTile(
+    kind,
+    id,
+    active = false
+  ) {
+    let item
+    let icon = '•'
+    let name = id
+
+    if (kind === 'weapon') {
+      item =
+        BRUTE_WEAPONS[id] ||
+        BRUTE_WEAPONS.fists
+
+      icon =
+        item?.icon ||
+        '⚔️'
+
+      name =
+        item?.name ||
+        id
+    } else if (kind === 'skill') {
+      item =
+        BRUTE_SKILLS[id]
+
+      icon =
+        item?.icon ||
+        '✨'
+
+      name =
+        item?.name ||
+        id
+    } else {
+      item =
+        BRUTE_PETS[id]
+
+      icon =
+        item?.emoji ||
+        '🐾'
+
+      name =
+        item?.name ||
+        id
+    }
+
+    return (
+      '<span class="brute-cell-item '+(active?'active':'')+'" title="'+esc(name)+'">'+
+        '<b>'+esc(icon)+'</b>'+
+        '<small>'+esc(name)+'</small>'+
+      '</span>'
+    )
+  }
+
+  function renderInventoryShelf(
+    title,
+    kind,
+    ids,
+    activeId = ''
+  ) {
+    const list =
+      Array.isArray(ids)
+        ? ids
+        : []
+
+    return (
+      '<section class="brute-cell-shelf">'+
+        '<header><span>'+esc(title)+'</span><b>'+list.length+'</b></header>'+
+        '<div class="brute-cell-items">'+
+          (
+            list.length
+              ? list
+                  .slice(0,12)
+                  .map(
+                    id =>
+                      inventoryTile(
+                        kind,
+                        id,
+                        id === activeId
+                      )
+                  )
+                  .join('')
+              : '<span class="brute-cell-empty">—</span>'
+          )+
+        '</div>'+
+      '</section>'
+    )
+  }
+
+  function cellAction(
+    screenName,
+    icon,
+    title,
+    subtitle,
+    extra = ''
+  ) {
+    return (
+      '<button class="brute-cell-action '+esc(extra)+'" data-brute-screen="'+esc(screenName)+'">'+
+        '<span class="brute-cell-action-icon">'+esc(icon)+'</span>'+
+        '<span><b>'+esc(title)+'</b><small>'+esc(subtitle)+'</small></span>'+
+        '<i>›</i>'+
+      '</button>'
+    )
+  }
+
   function renderMenu() {
     const t = theme()
-    const weaponId = brute.loadout?.weapon || 'fists'
-    const weapon = BRUTE_WEAPONS[weaponId] || BRUTE_WEAPONS.fists
-    const pet = BRUTE_PETS[(brute.pets || [])[0]]
+    const weaponId =
+      brute.loadout?.weapon ||
+      'fists'
 
-    return '<section class="brute-title-screen">'+
-      '<button class="brute-mini brute-menu-music" data-brute-music-toggle>'+(musicEnabled ? '🔊 Musique' : '🔇 Muet')+'</button>'+
-      '<div class="brute-logo">IDLE TRAINING</div>'+
-      '<div class="brute-title-sub">GA BRUTE · TRAIN · WALK · SLEEP · FIGHT</div>'+
-      '<div class="brute-menu-grid">'+
-        '<div class="brute-menu-side">'+
-          '<button class="brute-wood" data-brute-screen="camp">⛺ CAMP<small>Séances · steps · sommeil · progression</small></button>'+
-          '<button class="brute-wood" data-brute-screen="pve">⚔️ PVE<small>Combat d’entraînement</small></button>'+
-          '<button class="brute-wood" data-brute-screen="ranking">🏆 CLASSEMENT<small>Toutes les brutes</small></button>'+
-        '</div>'+
-        '<div class="brute-menu-avatar">'+
-          renderBruteSvg(brute.appearance,{label:brute.name,weapon,pet})+
-          '<div class="brute-nameplate">'+esc(t.emoji)+' '+esc(brute.name)+'</div>'+
-          '<div class="brute-menu-stats">'+
-            '<div class="brute-menu-stat"><b>'+num(brute.level,1)+'</b><span>Niveau</span></div>'+
-            '<div class="brute-menu-stat"><b>'+num(idleSnapshot?.steps,0)+'</b><span>Steps</span></div>'+
-            '<div class="brute-menu-stat"><b>'+Math.round(num(idleSnapshot?.sleep_seconds,0)/3600*10)/10+'h</b><span>Sommeil</span></div>'+
+    const weapon =
+      BRUTE_WEAPONS[weaponId] ||
+      BRUTE_WEAPONS.fists
+
+    const petId =
+      (brute.pets || [])[0]
+
+    const pet =
+      BRUTE_PETS[petId]
+
+    const xpPct =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          num(brute.xp) /
+            Math.max(
+              1,
+              xpNeeded()
+            ) *
+            100
+        )
+      )
+
+    const energy =
+      passiveEnergyNow()
+
+    const energyPct =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          energy / 500 * 100
+        )
+      )
+
+    return (
+      '<section class="brute-cell-v2">'+
+        '<div class="brute-cell-sky"></div>'+
+        '<header class="brute-cell-header">'+
+          '<button class="brute-cell-small" data-brute-exit>← GA</button>'+
+          '<div class="brute-cell-name">'+
+            '<span>'+esc(t.emoji)+' GA BRUTE</span>'+
+            '<h1>'+esc(brute.name)+'</h1>'+
           '</div>'+
+          '<div class="brute-cell-header-actions">'+
+            '<button class="brute-cell-small" data-brute-music-toggle>'+(musicEnabled ? '🔊' : '🔇')+'</button>'+
+            (
+              options.allowAthleteSelection
+                ? '<button class="brute-cell-small" data-brute-switch>Changer</button>'
+                : ''
+            )+
+          '</div>'+
+        '</header>'+
+        '<div class="brute-cell-grid-v2">'+
+          '<aside class="brute-cell-inventory">'+
+            '<div class="brute-cell-board-title">ARSENAL</div>'+
+            renderInventoryShelf(
+              'ARMES',
+              'weapon',
+              brute.weapons || [],
+              weaponId
+            )+
+            renderInventoryShelf(
+              'COMPÉTENCES',
+              'skill',
+              brute.skills || []
+            )+
+            renderInventoryShelf(
+              'FAMILIERS',
+              'pet',
+              brute.pets || [],
+              petId
+            )+
+            '<button class="brute-cell-inventory-link" data-brute-screen="equipment">GÉRER L’ÉQUIPEMENT</button>'+
+          '</aside>'+
+          '<main class="brute-cell-main">'+
+            '<div class="brute-cell-level-ribbon">'+
+              '<span>NIVEAU</span><b>'+num(brute.level,1)+'</b>'+
+              '<i>Cote '+num(brute.rating,1000)+'</i>'+
+            '</div>'+
+            '<div class="brute-cell-avatar-stage">'+
+              '<div class="brute-cell-window"></div>'+
+              '<div class="brute-cell-avatar-shadow"></div>'+
+              '<div class="brute-cell-avatar">'+
+                renderBruteSvg(
+                  brute.appearance,
+                  {
+                    label:brute.name,
+                    weapon,
+                    pet,
+                  }
+                )+
+              '</div>'+
+              (
+                pet
+                  ? '<span class="brute-cell-pet-label">'+esc(pet.emoji+' '+pet.name)+'</span>'
+                  : ''
+              )+
+            '</div>'+
+            '<div class="brute-cell-statline">'+
+              '<span><i>❤️</i><b>'+num(brute.hp)+'</b><small>PV</small></span>'+
+              '<span><i>💪</i><b>'+num(brute.strength)+'</b><small>FORCE</small></span>'+
+              '<span><i>🌀</i><b>'+num(brute.agility)+'</b><small>AGILITÉ</small></span>'+
+              '<span><i>⚡</i><b>'+num(brute.speed)+'</b><small>VITESSE</small></span>'+
+            '</div>'+
+            '<div class="brute-cell-bars">'+
+              '<div><header><span>EXPÉRIENCE</span><b>'+num(brute.xp)+' / '+xpNeeded()+'</b></header><div class="brute-cell-bar xp"><i style="width:'+xpPct+'%"></i></div></div>'+
+              '<div><header><span>ÉNERGIE · +1/MIN</span><b data-brute-energy-value>'+energy+' / 500</b></header><div class="brute-cell-bar energy"><i data-brute-energy-bar style="width:'+energyPct+'%"></i></div></div>'+
+            '</div>'+
+            renderChoices()+
+          '</main>'+
+          '<aside class="brute-cell-actions">'+
+            '<div class="brute-cell-board-title">AUJOURD’HUI</div>'+
+            '<div class="brute-cell-fights"><span>COMBATS</span><b>'+num(daily.remaining,6)+' / '+num(daily.limit,6)+'</b></div>'+
+            cellAction(
+              'duel',
+              '⚔️',
+              'ARÈNE',
+              'Affronter une autre brute',
+              'primary'
+            )+
+            cellAction(
+              'pve',
+              '🏋️',
+              'OPENPOWER',
+              'PvE · 8 énergie'
+            )+
+            cellAction(
+              'camp',
+              '⛺',
+              'CAMP',
+              'Progression du jour'
+            )+
+            cellAction(
+              'sleep',
+              '🌙',
+              'SOMMEIL',
+              'Bonus XP & récupération'
+            )+
+            cellAction(
+              'ranking',
+              '🏆',
+              'CLASSEMENT',
+              'Toutes les brutes'
+            )+
+            '<div class="brute-cell-record">'+
+              '<span>PALMARÈS</span>'+
+              '<div><b>'+num(brute.wins)+'</b><small>V</small><b>'+num(brute.losses)+'</b><small>D</small></div>'+
+            '</div>'+
+          '</aside>'+
         '</div>'+
-        '<div class="brute-menu-side">'+
-          '<button class="brute-wood" data-brute-screen="duel">🥊 DUEL<small>6 combats par jour</small></button>'+
-          '<button class="brute-wood" data-brute-screen="equipment">🎒 ÉQUIPEMENT / SKIN<small>Armes · skills · familiers</small></button>'+
-          '<button class="brute-wood" data-brute-screen="sleep">🌙 SOMMEIL<small>Timer · récupération</small></button>'+
-        '</div>'+
-      '</div>'+
-      '<div style="position:absolute;right:12px;bottom:10px;z-index:6">'+
-        '<button class="brute-mini" data-brute-exit>← Jeu</button>'+
-      '</div>'+
-    '</section>'
+      '</section>'
+    )
   }
 
   function statCard(label,value,icon) {
@@ -962,7 +1192,7 @@ export async function mountBruteGame(root, options = {}) {
       )
 
     const recent =
-      history.slice(0,6)
+      history.slice(0,5)
 
     const energy =
       passiveEnergyNow()
@@ -994,32 +1224,66 @@ export async function mountBruteGame(root, options = {}) {
         (brute.pets || [])[0]
       ]
 
-    return topBar('Camp','Idle Training')+
-      '<section class="brute-camp-scene">'+
-        '<div class="brute-camp-sign">⛺ CAMP</div>'+
-        '<div class="brute-camp-grid">'+
-          '<div class="brute-camp-column">'+
-            '<div class="brute-camp-card">'+
-              '<h3>🏋️ ENTRAÎNEMENT</h3>'+
-              '<div class="brute-camp-kpi">'+
-                '<div><span>Séries</span><b>'+num(idleSnapshot?.training_sets,0)+'</b></div>'+
-                '<div><span>Score</span><b>'+num(idleSnapshot?.training_score,0)+'/100</b></div>'+
-              '</div>'+
-              '<small>Les séances terminées renforcent ta puissance de combat.</small>'+
-            '</div>'+
-            '<div class="brute-camp-card">'+
-              '<h3>🚶 ACTIVITÉ</h3>'+
-              '<div class="brute-camp-kpi">'+
-                '<div><span>Steps</span><b>'+num(idleSnapshot?.steps,0)+'</b></div>'+
-                '<div><span>Score</span><b>'+num(idleSnapshot?.steps_score,0)+'/100</b></div>'+
-              '</div>'+
-              '<small>Les pas améliorent agilité/vitesse et ajoutent jusqu’à +18 XP sur une victoire. Bonus actuel : +'+Math.round(num(idleSnapshot?.steps_score,0)*.18)+' XP.</small>'+
-            '</div>'+
-            '<button class="brute-camp-action" data-brute-screen="equipment">🎒 ÉQUIPEMENT</button>'+
-            '<button class="brute-camp-action" data-brute-screen="duel">🥊 ALLER AU DUEL</button>'+
-          '</div>'+
+    const scoreMeter =
+      (
+        label,
+        value,
+        icon,
+        note
+      ) => {
+        const score =
+          Math.max(
+            0,
+            Math.min(
+              100,
+              num(value)
+            )
+          )
 
-          '<div class="brute-camp-avatar">'+
+        return (
+          '<div class="brute-camp-v2-meter">'+
+            '<header><span>'+esc(icon+' '+label)+'</span><b>'+score+'/100</b></header>'+
+            '<div><i style="width:'+score+'%"></i></div>'+
+            '<small>'+esc(note)+'</small>'+
+          '</div>'
+        )
+      }
+
+    return (
+      topBar(
+        'Camp',
+        'Cellule · progression'
+      )+
+      '<section class="brute-camp-v2">'+
+        '<div class="brute-camp-v2-left">'+
+          '<div class="brute-parchment-panel">'+
+            '<h3>JOURNÉE</h3>'+
+            scoreMeter(
+              'Entraînement',
+              idleSnapshot?.training_score,
+              '🏋️',
+              num(idleSnapshot?.training_sets,0)+' séries enregistrées'
+            )+
+            scoreMeter(
+              'Activité',
+              idleSnapshot?.steps_score,
+              '🚶',
+              num(idleSnapshot?.steps,0)+' pas'
+            )+
+            scoreMeter(
+              'Sommeil',
+              sleepScoreNow(),
+              '🌙',
+              Math.round(num(idleSnapshot?.sleep_seconds,0)/360)/10+' h · bonus XP +'+sleepXpBonusNow()
+            )+
+          '</div>'+
+          '<button class="brute-camp-v2-action" data-brute-screen="equipment">🎒 Arsenal & apparence</button>'+
+          '<button class="brute-camp-v2-action main" data-brute-screen="duel">⚔️ Aller à l’arène</button>'+
+        '</div>'+
+        '<div class="brute-camp-v2-center">'+
+          '<div class="brute-camp-v2-sign">CAMP DE '+esc(brute.name)+'</div>'+
+          '<div class="brute-camp-v2-avatar">'+
+            '<div class="brute-cell-avatar-shadow"></div>'+
             renderBruteSvg(
               brute.appearance,
               {
@@ -1028,66 +1292,56 @@ export async function mountBruteGame(root, options = {}) {
                 pet,
               }
             )+
-            '<div class="brute-nameplate">'+esc(brute.name)+' · NIV. '+num(brute.level,1)+'</div>'+
-            '<div class="brute-camp-energy">'+
-              '<div class="brute-camp-energy-head"><span>⚡ ÉNERGIE · +1 / MIN</span><span data-brute-energy-value>'+energy+' / 500</span></div>'+
-              '<div class="brute-camp-energy-track"><i data-brute-energy-bar style="width:'+energyPct+'%"></i></div>'+
-              '<div class="brute-camp-xp">'+
-                '<div class="brute-camp-energy-head"><span>✨ XP</span><span>'+num(brute.xp)+' / '+xpNeeded()+'</span></div>'+
-                '<div class="brute-track"><i style="width:'+pct+'%"></i></div>'+
-              '</div>'+
-            '</div>'+
-            '<small style="margin-top:7px;color:#744725;font-weight:900">Régénération passive : 1 énergie chaque minute, même hors de l’app.</small>'+
-            renderChoices()+
           '</div>'+
-
-          '<div class="brute-camp-column">'+
-            '<div class="brute-camp-card">'+
-              '<h3>🌙 RÉCUPÉRATION</h3>'+
-              '<div class="brute-camp-kpi">'+
-                '<div><span>Sommeil</span><b>'+Math.round(num(idleSnapshot?.sleep_seconds,0)/3600*10)/10+' h</b></div>'+
-                '<div><span>Score</span><b>'+num(idleSnapshot?.sleep_score,0)+'/100</b></div>'+
-              '</div>'+
-              '<small>Le sommeil sert uniquement à l’XP. Jusqu’à +22 XP par victoire. Bonus actuel : +'+Math.round(num(idleSnapshot?.sleep_score,0)*.22)+' XP.</small>'+
-            '</div>'+
-            '<button class="brute-camp-action sleep" data-brute-go-sleep>'+
-              (
-                asleep
-                  ? '🌙 SOMMEIL EN COURS · XP +'+sleepXpBonusNow()
-                  : '🌙 ALLER SE COUCHER'
-              )+
-            '</button>'+
-            '<div class="brute-camp-card">'+
-              '<h3>⚡ PUISSANCE DU JOUR</h3>'+
-              '<div class="brute-camp-kpi">'+
-                '<div><span>Puissance</span><b>'+num(idleSnapshot?.power,35)+'</b></div>'+
-                '<div><span>Énergie</span><b>+1/min</b></div>'+
-              '</div>'+
-              '<small>Entraînement + steps influencent le combat. Le sommeil influence uniquement l’XP gagnée.</small>'+
-            '</div>'+
-            '<div class="brute-camp-card brute-camp-history">'+
-              '<h3>⚔️ DERNIERS COMBATS</h3>'+
-              '<div class="brute-list">'+
-                (
-                  recent.length
-                    ? recent.map(f => {
-                        const opp =
-                          f.attacker_slug === selectedSlug
-                            ? f.defender_slug
-                            : f.attacker_slug
-
-                        const win =
-                          f.winner_slug === selectedSlug
-
-                        return '<div class="brute-row"><span class="icon">'+(win?'🏆':'💀')+'</span><span><b>'+esc(opp)+'</b><small>+'+num(f.xp_gained)+' XP</small></span><button class="brute-mini" data-brute-replay="'+esc(f.id)+'">Replay</button></div>'
-                      }).join('')
-                    : '<small>Aucun combat depuis le reset.</small>'
-                )+
-              '</div>'+
-            '</div>'+
+          '<div class="brute-camp-v2-name">NIV. '+num(brute.level,1)+' · '+esc(brute.name)+'</div>'+
+          '<div class="brute-cell-bars compact">'+
+            '<div><header><span>⚡ ÉNERGIE</span><b data-brute-energy-value>'+energy+' / 500</b></header><div class="brute-cell-bar energy"><i data-brute-energy-bar style="width:'+energyPct+'%"></i></div></div>'+
+            '<div><header><span>✨ XP</span><b>'+num(brute.xp)+' / '+xpNeeded()+'</b></header><div class="brute-cell-bar xp"><i style="width:'+pct+'%"></i></div></div>'+
           '</div>'+
+          (
+            asleep
+              ? '<button class="brute-camp-v2-sleep active" data-brute-go-sleep>🌙 SOMMEIL EN COURS · XP +'+sleepXpBonusNow()+'</button>'
+              : '<button class="brute-camp-v2-sleep" data-brute-go-sleep>🌙 ALLER SE COUCHER</button>'
+          )+
+          renderChoices()+
         '</div>'+
+        '<aside class="brute-camp-v2-right">'+
+          '<div class="brute-parchment-panel">'+
+            '<h3>PUISSANCE</h3>'+
+            '<div class="brute-camp-v2-power"><b>'+num(idleSnapshot?.power,35)+'</b><span>PUISSANCE DU JOUR</span></div>'+
+            '<div class="brute-cell-statline mini">'+
+              '<span><i>💪</i><b>'+num(brute.strength)+'</b></span>'+
+              '<span><i>🌀</i><b>'+num(brute.agility)+'</b></span>'+
+              '<span><i>⚡</i><b>'+num(brute.speed)+'</b></span>'+
+            '</div>'+
+          '</div>'+
+          '<div class="brute-parchment-panel history">'+
+            '<h3>DERNIERS COMBATS</h3>'+
+            (
+              recent.length
+                ? recent.map(f => {
+                    const opp =
+                      f.attacker_slug === selectedSlug
+                        ? f.defender_slug
+                        : f.attacker_slug
+
+                    const win =
+                      f.winner_slug === selectedSlug
+
+                    return (
+                      '<div class="brute-camp-v2-history-row">'+
+                        '<span>'+(win?'🏆':'✖')+'</span>'+
+                        '<div><b>'+esc(opp)+'</b><small>+'+num(f.xp_gained)+' XP</small></div>'+
+                        '<button class="brute-mini" data-brute-replay="'+esc(f.id)+'">↻</button>'+
+                      '</div>'
+                    )
+                  }).join('')
+                : '<small class="brute-cell-empty">Aucun combat.</small>'
+            )+
+          '</div>'+
+        '</aside>'+
       '</section>'
+    )
   }
 
   function renderDuel() {
@@ -1363,50 +1617,38 @@ export async function mountBruteGame(root, options = {}) {
       brute.loadout?.weapon ||
       'fists'
 
-    return topBar(
-      'Équipement / Skin',
-      'Build'
-    )+
-      '<div class="brute-equipment">'+
-        '<section class="brute-panel brute-equipment-preview">'+
-          renderBruteSvg(
-            brute.appearance,
-            {
-              label:brute.name,
-              weapon:
-                BRUTE_WEAPONS[
-                  equipped
-                ],
-              pet:
-                BRUTE_PETS[
-                  (brute.pets || [])[0]
-                ],
-            }
-          )+
-          '<div class="brute-actions" style="justify-content:center;padding:0 14px 16px">'+
-            '<button class="brute-primary" data-brute-reroll-skin '+(busy ? 'disabled' : '')+'>🎲 NOUVEAU SKIN ALÉATOIRE</button>'+
-            '<button class="brute-secondary" data-brute-reroll-colors '+(busy ? 'disabled' : '')+'>🎨 COULEURS ALÉATOIRES</button>'+
-          '</div>'+
-        '</section>'+
-        '<section class="brute-panel brute-pad">'+
-          '<small style="color:var(--accent);font-weight:1000">STYLE MODIFIABLE À VOLONTÉ</small>'+
-          '<h2 style="margin:5px 0 8px">'+esc(brute.name)+'</h2>'+
-          '<p style="color:#858ca8;font-size:10px;line-height:1.55">Tu peux relancer ton apparence autant de fois que tu veux. Cela ne change ni ton niveau, ni tes stats, ni tes armes, ni tes compétences.</p>'+
-          '<h3>Armes équipables</h3>'+
-          '<div class="brute-chip-row">'+
-            (brute.weapons || []).map(id => {
-              const w =
-                BRUTE_WEAPONS[id] ||
-                {
-                  name:id,
-                  icon:'⚔️',
-                }
+    return (
+      topBar(
+        'Arsenal',
+        'Armes · compétences · familiers'
+      )+
+      '<section class="brute-armory-v2">'+
+        '<aside class="brute-armory-board">'+
+          '<div class="brute-cell-board-title">RÂTELIER D’ARMES</div>'+
+          '<div class="brute-armory-weapons">'+
+            (
+              (brute.weapons || [])
+                .map(id => {
+                  const w =
+                    BRUTE_WEAPONS[id] ||
+                    {
+                      name:id,
+                      icon:'⚔️',
+                    }
 
-              return '<button class="brute-chip '+(equipped===id?'active':'')+'" data-brute-equip="'+esc(id)+'">'+esc(w.icon+' '+w.name)+'</button>'
-            }).join('')+
+                  return (
+                    '<button class="brute-armory-weapon '+(equipped===id?'active':'')+'" data-brute-equip="'+esc(id)+'">'+
+                      '<span>'+esc(w.icon)+'</span>'+
+                      '<b>'+esc(w.name)+'</b>'+
+                      '<small>'+(equipped===id?'ÉQUIPÉE':'ÉQUIPER')+'</small>'+
+                    '</button>'
+                  )
+                })
+                .join('')
+            )+
           '</div>'+
-          '<h3>Compétences</h3>'+
-          '<div class="brute-chip-row">'+
+          '<div class="brute-armory-subtitle">COMPÉTENCES</div>'+
+          '<div class="brute-armory-perks">'+
             (
               (brute.skills || []).length
                 ? (brute.skills || []).map(id => {
@@ -1417,13 +1659,13 @@ export async function mountBruteGame(root, options = {}) {
                         icon:'✨',
                       }
 
-                    return '<span class="brute-chip">'+esc(s.icon+' '+s.name)+'</span>'
+                    return '<span title="'+esc(s.name)+'"><b>'+esc(s.icon)+'</b><small>'+esc(s.name)+'</small></span>'
                   }).join('')
-                : '<span style="color:#747c98;font-size:9px">Aucune pour le moment.</span>'
+                : '<small class="brute-cell-empty">Aucune compétence.</small>'
             )+
           '</div>'+
-          '<h3>Familiers</h3>'+
-          '<div class="brute-chip-row">'+
+          '<div class="brute-armory-subtitle">FAMILIERS</div>'+
+          '<div class="brute-armory-perks pets">'+
             (
               (brute.pets || []).length
                 ? (brute.pets || []).map(id => {
@@ -1434,18 +1676,44 @@ export async function mountBruteGame(root, options = {}) {
                         emoji:'🐾',
                       }
 
-                    return '<span class="brute-chip">'+esc(p.emoji+' '+p.name)+'</span>'
+                    return '<span title="'+esc(p.name)+'"><b>'+esc(p.emoji)+'</b><small>'+esc(p.name)+'</small></span>'
                   }).join('')
-                : '<span style="color:#747c98;font-size:9px">0 / 3</span>'
+                : '<small class="brute-cell-empty">0 / 3</small>'
             )+
+          '</div>'+
+        '</aside>'+
+        '<main class="brute-armory-character">'+
+          '<div class="brute-armory-name">'+esc(brute.name)+' · NIV. '+num(brute.level,1)+'</div>'+
+          '<div class="brute-armory-avatar">'+
+            '<div class="brute-cell-avatar-shadow"></div>'+
+            renderBruteSvg(
+              brute.appearance,
+              {
+                label:brute.name,
+                weapon:
+                  BRUTE_WEAPONS[
+                    equipped
+                  ],
+                pet:
+                  BRUTE_PETS[
+                    (brute.pets || [])[0]
+                  ],
+              }
+            )+
+          '</div>'+
+          '<div class="brute-armory-equipped">ÉQUIPÉ · '+esc((BRUTE_WEAPONS[equipped]||BRUTE_WEAPONS.fists).icon+' '+(BRUTE_WEAPONS[equipped]||BRUTE_WEAPONS.fists).name)+'</div>'+
+          '<div class="brute-armory-actions">'+
+            '<button class="brute-primary" data-brute-reroll-skin '+(busy?'disabled':'')+'>🎲 NOUVEAU SKIN</button>'+
+            '<button class="brute-secondary" data-brute-reroll-colors '+(busy?'disabled':'')+'>🎨 COULEURS</button>'+
           '</div>'+
           (
             options.isCoach
-              ? '<div class="brute-actions"><button class="brute-secondary" data-brute-reset>♻️ Refaire la création complète</button></div>'
+              ? '<button class="brute-secondary" data-brute-reset>♻️ Refaire la création complète</button>'
               : ''
           )+
-        '</section>'+
-      '</div>'
+        '</main>'+
+      '</section>'
+    )
   }
 
   function renderRanking() {
@@ -1596,35 +1864,94 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function renderFight() {
-    const tl = currentTimeline
+    const tl =
+      currentTimeline
+
     if (!tl) return ''
 
-    const left = tl.left
-    const right = tl.right
-    const leftWeapon = BRUTE_WEAPONS[left.loadout?.weapon] || BRUTE_WEAPONS[(left.weapons||[])[0]] || BRUTE_WEAPONS.fists
-    const rightWeapon = BRUTE_WEAPONS[right.loadout?.weapon] || BRUTE_WEAPONS[(right.weapons||[])[0]] || BRUTE_WEAPONS.fists
-    const leftPet = BRUTE_PETS[(left.pets||[])[0]]
-    const rightPet = BRUTE_PETS[(right.pets||[])[0]]
+    const left =
+      tl.left
 
-    return '<div class="brute-arena" data-brute-arena>'+
-      '<div class="brute-stagefx" data-brute-stagefx></div>'+
-      '<div class="brute-hud">'+
-        '<div class="brute-hud-side"><div class="brute-hud-name">'+esc(left.name)+' · Niv. '+num(left.level,1)+'</div><div class="brute-hp"><i data-hp-left style="width:100%"></i></div><div class="brute-hud-name" data-hp-text-left>'+num(left.hpMax)+' / '+num(left.hpMax)+'</div><div class="brute-fatigue"><i data-fatigue-left></i></div><div class="brute-hud-meta"><span class="brute-activity-pill">🏋️ '+num(left.activity?.training,0)+'</span><span class="brute-activity-pill">🚶 '+num(left.activity?.steps,0)+'</span><span class="brute-activity-pill">🌙 '+num(left.activity?.sleep,0)+'</span></div><div class="brute-weapon-label" data-weapon-left>'+esc(leftWeapon.icon+' '+leftWeapon.name)+'</div></div>'+
-        '<div class="brute-round" data-brute-round>GO</div>'+
-        '<div class="brute-hud-side right"><div class="brute-hud-name">'+esc(right.name)+' · Niv. '+num(right.level,1)+'</div><div class="brute-hp"><i data-hp-right style="width:100%"></i></div><div class="brute-hud-name" data-hp-text-right>'+num(right.hpMax)+' / '+num(right.hpMax)+'</div><div class="brute-fatigue"><i data-fatigue-right></i></div><div class="brute-hud-meta"><span class="brute-activity-pill">🏋️ '+num(right.activity?.training,0)+'</span><span class="brute-activity-pill">🚶 '+num(right.activity?.steps,0)+'</span><span class="brute-activity-pill">🌙 '+num(right.activity?.sleep,0)+'</span></div><div class="brute-weapon-label" data-weapon-right>'+esc(rightWeapon.icon+' '+rightWeapon.name)+'</div></div>'+
-      '</div>'+
-      '<div class="brute-fighters">'+
-        '<div class="brute-fighter left" data-fighter="left" data-weapon-current="'+esc(leftWeapon.id)+'">'+fighterGraphic(left,'left',leftWeapon.id)+'</div>'+
-        '<div class="brute-fighter right" data-fighter="right" data-weapon-current="'+esc(rightWeapon.id)+'">'+fighterGraphic(right,'right',rightWeapon.id)+'</div>'+
-      '</div>'+
-      '<div class="brute-log" data-brute-log>Combat déterministe · '+esc(replayFingerprint(tl))+'</div>'+
-    '</div>'+
-    '<div class="brute-controls">'+
-      '<button class="brute-secondary '+(playbackSpeed===1?'active':'')+'" data-brute-speed="1">x1</button>'+
-      '<button class="brute-secondary '+(playbackSpeed===2?'active':'')+'" data-brute-speed="2">x2</button>'+
-      '<button class="brute-secondary" data-brute-skip>Passer</button>'+
-    '</div>'+
-    '<div data-brute-fight-result></div>'
+    const right =
+      tl.right
+
+    const leftWeapon =
+      BRUTE_WEAPONS[
+        left.loadout?.weapon
+      ] ||
+      BRUTE_WEAPONS[
+        (left.weapons || [])[0]
+      ] ||
+      BRUTE_WEAPONS.fists
+
+    const rightWeapon =
+      BRUTE_WEAPONS[
+        right.loadout?.weapon
+      ] ||
+      BRUTE_WEAPONS[
+        (right.weapons || [])[0]
+      ] ||
+      BRUTE_WEAPONS.fists
+
+    const hud =
+      (
+        fighter,
+        side,
+        weapon
+      ) => (
+        '<div class="brute-hud-v2-side '+side+'">'+
+          '<div class="brute-hud-v2-head">'+
+            '<div class="brute-hud-v2-medal">'+esc(getBruteTheme(fighter.slug).emoji || '⚔️')+'</div>'+
+            '<div><b>'+esc(fighter.name)+'</b><small>NIV. '+num(fighter.level,1)+'</small></div>'+
+          '</div>'+
+          '<div class="brute-hud-v2-hp"><i data-hp-'+side+' style="width:100%"></i></div>'+
+          '<div class="brute-hud-v2-meta">'+
+            '<span data-hp-text-'+side+'>'+num(fighter.hpMax)+' / '+num(fighter.hpMax)+'</span>'+
+            '<span data-weapon-'+side+'>'+esc(weapon.icon+' '+weapon.name)+'</span>'+
+          '</div>'+
+          '<div class="brute-fatigue v2"><i data-fatigue-'+side+'></i></div>'+
+        '</div>'
+      )
+
+    return (
+      '<section class="brute-fight-shell">'+
+        '<div class="brute-arena brute-arena-v2" data-brute-arena>'+
+          '<div class="brute-stagefx" data-brute-stagefx></div>'+
+          '<div class="brute-arena-v2-cloud c1"></div>'+
+          '<div class="brute-arena-v2-cloud c2"></div>'+
+          '<div class="brute-arena-v2-wall">'+
+            '<i></i><i></i><i></i><i></i><i></i>'+
+          '</div>'+
+          '<div class="brute-arena-v2-crowd"></div>'+
+          '<div class="brute-arena-v2-floor"></div>'+
+          '<div class="brute-hud brute-hud-v2">'+
+            hud(left,'left',leftWeapon)+
+            '<div class="brute-round brute-round-v2" data-brute-round>GO</div>'+
+            hud(right,'right',rightWeapon)+
+          '</div>'+
+          '<div class="brute-fighters brute-fighters-v2">'+
+            '<div class="brute-fighter left" data-fighter="left" data-weapon-current="'+esc(leftWeapon.id)+'">'+
+              '<span class="brute-fighter-shadow"></span>'+
+              fighterGraphic(left,'left',leftWeapon.id)+
+            '</div>'+
+            '<div class="brute-fighter right" data-fighter="right" data-weapon-current="'+esc(rightWeapon.id)+'">'+
+              '<span class="brute-fighter-shadow"></span>'+
+              fighterGraphic(right,'right',rightWeapon.id)+
+            '</div>'+
+          '</div>'+
+          '<div class="brute-log brute-log-v2" data-brute-log>PRÊTS ?</div>'+
+        '</div>'+
+        '<div class="brute-fight-toolbar">'+
+          '<button class="brute-fight-tool '+(playbackPaused?'active':'')+'" data-brute-pause>'+(playbackPaused?'▶':'Ⅱ')+'<small>'+(playbackPaused?'JOUER':'PAUSE')+'</small></button>'+
+          '<button class="brute-fight-tool '+(playbackSpeed===1?'active':'')+'" data-brute-speed="1">×1<small>NORMAL</small></button>'+
+          '<button class="brute-fight-tool '+(playbackSpeed===2?'active':'')+'" data-brute-speed="2">×2<small>RAPIDE</small></button>'+
+          '<button class="brute-fight-tool '+(playbackSpeed===3?'active':'')+'" data-brute-speed="3">×3<small>TURBO</small></button>'+
+          '<button class="brute-fight-tool" data-brute-music-toggle>'+(musicEnabled?'🔊':'🔇')+'<small>MUSIQUE</small></button>'+
+          '<button class="brute-fight-tool danger" data-brute-skip>»<small>PASSER</small></button>'+
+        '</div>'+
+        '<div data-brute-fight-result></div>'+
+      '</section>'
+    )
   }
 
   function render() {
@@ -3250,15 +3577,30 @@ export async function mountBruteGame(root, options = {}) {
 
   async function playTimeline(tl) {
     const token = ++playbackToken
+    playbackPaused = false
     await wait(80)
+
     for (const event of tl.events) {
       if (token !== playbackToken) return
+
+      while (
+        playbackPaused &&
+        token === playbackToken
+      ) {
+        await wait(80)
+      }
+
+      if (token !== playbackToken) return
+
       applyEvent(event,tl)
+
       if (event.type === 'END') break
+
       await wait(
         eventDelay(event)
       )
     }
+
     if (token !== playbackToken) return
     finishFightPlayback(tl)
   }
@@ -4032,6 +4374,39 @@ export async function mountBruteGame(root, options = {}) {
       return
     }
 
+    if (event.target.closest('[data-brute-pause]')) {
+      playbackPaused =
+        !playbackPaused
+
+      const button =
+        root.querySelector(
+          '[data-brute-pause]'
+        )
+
+      if (button) {
+        button.classList.toggle(
+          'active',
+          playbackPaused
+        )
+
+        button.innerHTML =
+          (
+            playbackPaused
+              ? '▶'
+              : 'Ⅱ'
+          ) +
+          '<small>' +
+          (
+            playbackPaused
+              ? 'JOUER'
+              : 'PAUSE'
+          ) +
+          '</small>'
+      }
+
+      return
+    }
+
     const speedBtn = event.target.closest('[data-brute-speed]')
     if (speedBtn) {
       playbackSpeed = num(speedBtn.dataset.bruteSpeed,1)
@@ -4045,6 +4420,7 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.target.closest('[data-brute-skip]')) {
+      playbackPaused = false
       playbackToken += 1
       const finalEvent = currentTimeline?.events?.[currentTimeline.events.length-2]
       if (finalEvent) applyEvent(finalEvent,currentTimeline)
