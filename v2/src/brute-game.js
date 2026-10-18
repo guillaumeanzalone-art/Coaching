@@ -3689,30 +3689,63 @@ export async function mountBruteGame(root, options = {}) {
       brute.loadout?.weapon ||
       'fists'
 
+    const equippedWeapon =
+      BRUTE_WEAPONS[equipped] ||
+      BRUTE_WEAPONS.fists
+
+    const metricBar = (
+      label,
+      value,
+      max,
+      suffix = ''
+    ) => {
+      const pct =
+        Math.max(
+          3,
+          Math.min(
+            100,
+            num(value) /
+            Math.max(
+              1,
+              num(max)
+            ) *
+            100
+          )
+        )
+
+      return (
+        '<div class="brute-weapon-metric">'+
+          '<header><span>'+esc(label)+'</span><b>'+esc(value)+esc(suffix)+'</b></header>'+
+          '<div><i style="width:'+pct+'%"></i></div>'+
+        '</div>'
+      )
+    }
+
     return (
       topBar(
         'Arsenal',
         'Armes · compétences · familiers'
       )+
-      '<section class="brute-armory-v2">'+
-        '<aside class="brute-armory-board">'+
+      '<section class="brute-armory-v3">'+
+        '<aside class="brute-armory-v3-list">'+
           '<div class="brute-cell-board-title">RÂTELIER D’ARMES</div>'+
-          '<div class="brute-armory-weapons">'+
+          '<div class="brute-armory-weapons-v3">'+
             (
               (brute.weapons || [])
                 .map(id => {
                   const w =
                     BRUTE_WEAPONS[id] ||
-                    {
-                      name:id,
-                      icon:'⚔️',
-                    }
+                    BRUTE_WEAPONS.fists
 
                   return (
-                    '<button class="brute-armory-weapon '+(equipped===id?'active':'')+'" data-brute-equip="'+esc(id)+'">'+
-                      '<span>'+esc(w.icon)+'</span>'+
-                      '<b>'+esc(w.name)+'</b>'+
-                      '<small>'+(equipped===id?'ÉQUIPÉE':'ÉQUIPER')+'</small>'+
+                    '<button class="brute-armory-weapon-v3 '+(equipped===id?'active':'')+'" data-brute-equip="'+esc(id)+'">'+
+                      '<span class="brute-armory-weapon-art">'+renderWeaponIconSvg(w,{className:'armory'})+'</span>'+
+                      '<span class="brute-armory-weapon-copy">'+
+                        '<b>'+esc(w.name)+'</b>'+
+                        '<small>'+weaponRole(w)+'</small>'+
+                        '<em>DMG '+num(w.damage)+' · VIT '+Math.round(num(w.speed,1)*100)+' · PORTÉE '+num(w.reach,1)+'</em>'+
+                      '</span>'+
+                      '<i>'+(equipped===id?'ÉQUIPÉE':'ÉQUIPER')+'</i>'+
                     '</button>'
                   )
                 })
@@ -3720,7 +3753,7 @@ export async function mountBruteGame(root, options = {}) {
             )+
           '</div>'+
           '<div class="brute-armory-subtitle">COMPÉTENCES</div>'+
-          '<div class="brute-armory-perks">'+
+          '<div class="brute-armory-perks-v3">'+
             (
               (brute.skills || []).length
                 ? (brute.skills || []).map(id => {
@@ -3728,44 +3761,85 @@ export async function mountBruteGame(root, options = {}) {
                       BRUTE_SKILLS[id] ||
                       {
                         name:id,
-                        icon:'✨',
+                        description:'',
                       }
 
-                    return '<span title="'+esc(s.name)+'"><b>'+esc(s.icon)+'</b><small>'+esc(s.name)+'</small></span>'
+                    return (
+                      '<span class="brute-armory-perk-v3" title="'+esc(s.name)+'">'+
+                        renderSkillIconSvg(id,{className:'armory'})+
+                        '<b>'+esc(s.name)+'</b>'+
+                        '<small>'+esc(s.description || '')+'</small>'+
+                      '</span>'
+                    )
                   }).join('')
                 : '<small class="brute-cell-empty">Aucune compétence.</small>'
             )+
           '</div>'+
           '<div class="brute-armory-subtitle">FAMILIERS</div>'+
-          '<div class="brute-armory-perks pets">'+
+          '<div class="brute-armory-perks-v3 pets">'+
             (
               (brute.pets || []).length
                 ? (brute.pets || []).map(id => {
                     const p =
                       BRUTE_PETS[id] ||
                       {
+                        id,
                         name:id,
-                        emoji:'🐾',
                       }
 
-                    return '<span title="'+esc(p.name)+'"><b>'+esc(p.emoji)+'</b><small>'+esc(p.name)+'</small></span>'
+                    return (
+                      '<span class="brute-armory-perk-v3 pet" title="'+esc(p.name)+'">'+
+                        renderPetSvg(p)+
+                        '<b>'+esc(p.name)+'</b>'+
+                        '<small>PV '+num(p.hp)+' · FOR '+num(p.strength)+' · AGI '+num(p.agility)+' · VIT '+num(p.speed)+'</small>'+
+                      '</span>'
+                    )
                   }).join('')
                 : '<small class="brute-cell-empty">0 / 3</small>'
             )+
           '</div>'+
         '</aside>'+
-        '<main class="brute-armory-character">'+
+        '<main class="brute-armory-v3-focus">'+
           '<div class="brute-armory-name">'+esc(brute.name)+' · NIV. '+num(brute.level,1)+'</div>'+
-          '<div class="brute-armory-avatar">'+
+          '<div class="brute-armory-v3-weapon-focus">'+
+            '<div class="brute-armory-v3-weapon-orbit">'+
+              renderWeaponIconSvg(
+                equippedWeapon,
+                {
+                  className:'focus',
+                }
+              )+
+            '</div>'+
+            '<div class="brute-armory-v3-weapon-title">'+
+              '<span>'+weaponRole(equippedWeapon)+'</span>'+
+              '<h2>'+esc(equippedWeapon.name)+'</h2>'+
+              '<p>'+
+                (
+                  equippedWeapon.category === 'heavy'
+                    ? 'Arme lente mais très forte en impact. La Force amplifie particulièrement son potentiel.'
+                    : equippedWeapon.category === 'flexible'
+                      ? 'Arme de pression et d’enchaînement. Agilité et Vitesse la rendent plus dangereuse.'
+                      : equippedWeapon.category === 'ranged'
+                        ? 'Arme de contrôle à distance. Vitesse et précision comptent davantage.'
+                        : 'Style rapide et polyvalent. Excellent pour construire des chaînes.'
+                )+
+              '</p>'+
+            '</div>'+
+          '</div>'+
+          '<div class="brute-armory-v3-metrics">'+
+            metricBar('DÉGÂTS',equippedWeapon.damage,22)+
+            metricBar('VITESSE',Math.round(num(equippedWeapon.speed,1)*100),125)+
+            metricBar('PORTÉE',num(equippedWeapon.reach,1),1.6)+
+            metricBar('CRITIQUE',Math.round(num(equippedWeapon.crit)*100),12,'%')+
+            metricBar('COMBO',Math.round((num(equippedWeapon.combo)+.08)*100),22)+
+          '</div>'+
+          '<div class="brute-armory-v3-avatar">'+
             '<div class="brute-cell-avatar-shadow"></div>'+
             renderBruteSvg(
               brute.appearance,
               {
                 label:brute.name,
-                weapon:
-                  BRUTE_WEAPONS[
-                    equipped
-                  ],
+                weapon:equippedWeapon,
                 pet:
                   BRUTE_PETS[
                     (brute.pets || [])[0]
@@ -3773,14 +3847,13 @@ export async function mountBruteGame(root, options = {}) {
               }
             )+
           '</div>'+
-          '<div class="brute-armory-equipped">ÉQUIPÉ · '+esc((BRUTE_WEAPONS[equipped]||BRUTE_WEAPONS.fists).icon+' '+(BRUTE_WEAPONS[equipped]||BRUTE_WEAPONS.fists).name)+'</div>'+
           '<div class="brute-armory-actions">'+
-            '<button class="brute-primary" data-brute-reroll-skin '+(busy?'disabled':'')+'>🎲 NOUVEAU SKIN</button>'+
-            '<button class="brute-secondary" data-brute-reroll-colors '+(busy?'disabled':'')+'>🎨 COULEURS</button>'+
+            '<button class="brute-primary" data-brute-reroll-skin '+(busy?'disabled':'')+'>NOUVEAU SKIN</button>'+
+            '<button class="brute-secondary" data-brute-reroll-colors '+(busy?'disabled':'')+'>COULEURS</button>'+
           '</div>'+
           (
             options.isCoach
-              ? '<button class="brute-secondary" data-brute-reset>♻️ Refaire la création complète</button>'
+              ? '<button class="brute-secondary" data-brute-reset>Refaire la création complète</button>'
               : ''
           )+
         '</main>'+
