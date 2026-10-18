@@ -91,7 +91,8 @@ function ensureStyles() {
     '.brute-fight-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:620px;margin:12px auto 0}.brute-fight-summary-side{padding:10px;border:1px solid rgba(255,255,255,.07);border-radius:14px;background:rgba(255,255,255,.025)}.brute-fight-summary-side h4{margin:0 0 7px;font-size:10px;color:#d8d9e6}.brute-fight-summary-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.brute-fight-summary-stats span{padding:6px;border-radius:9px;background:rgba(255,255,255,.035);font-size:7px;color:#858ba5;text-transform:uppercase;font-weight:900}.brute-fight-summary-stats b{display:block;margin-top:2px;color:#fff;font-size:12px}.brute-weapon-label{display:inline-flex;gap:4px;align-items:center;margin-top:3px;padding:2px 6px;border-radius:99px;background:rgba(255,244,191,.45);color:#6b3a1d;font-size:7px;font-weight:1000}.brute-resting .ga-brute-svg{animation:bruteBreathe .7s ease}.brute-switching .ga-brute-svg{animation:bruteWeaponSwitch .48s ease}.brute-blocking.left .ga-brute-svg{animation:bruteBlockLeft .42s ease}.brute-blocking.right .ga-brute-svg{animation:bruteBlockRight .42s ease}.brute-equipment{display:grid;grid-template-columns:minmax(250px,.85fr) minmax(0,1.15fr);gap:12px}.brute-equipment-preview{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:430px;padding:18px}.brute-equipment-preview .ga-brute-svg{width:min(210px,72%)}.brute-equipment-preview .brute-actions{width:100%}.brute-chip-row{display:flex;gap:7px;flex-wrap:wrap}.brute-chip{border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(255,255,255,.04);color:#d8dae6;padding:8px 10px;font-size:9px;font-weight:900}.brute-chip.active{border-color:var(--accent);color:#fff;background:color-mix(in srgb,var(--accent),transparent 86%)}',
     '.brute-ranking{display:grid;gap:7px}.brute-rank-row{display:grid;grid-template-columns:34px 1fr repeat(3,auto);gap:9px;align-items:center;padding:10px;border-bottom:1px solid rgba(255,255,255,.055)}.brute-rank-row .rank{font-size:17px;font-weight:1000;color:var(--accent)}',
     '.brute-sleep{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.7fr);gap:12px}.brute-sleep-energy{margin-top:12px;padding:10px 12px;border:2px solid rgba(127,112,208,.32);border-radius:13px;background:rgba(104,91,176,.12);color:#d9d2ff}.brute-sleep-energy b{display:block;font-size:18px}.brute-sleep-energy small{color:#8f88bc;font-size:8px}.brute-moon{min-height:390px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 50% 32%,rgba(131,112,255,.28),transparent 25%),#0a0d21}.brute-moon .moon{font-size:100px;filter:drop-shadow(0 0 25px rgba(129,109,255,.38));animation:bruteIdle 4s ease-in-out infinite}.brute-sleep-time{font-size:40px;font-weight:1000;font-variant-numeric:tabular-nums}.brute-sound-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}',
-    '@keyframes bruteCardDeal{0%{opacity:0;transform:translateY(28px) rotateY(-12deg) scale(.88)}58%{opacity:1;transform:translateY(-4px) rotateY(3deg) scale(1.025)}100%{opacity:1;transform:translateY(0) rotateY(0) scale(1)}}@keyframes bruteIdle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.01)}}@keyframes bruteAttackFastLeft{0%,100%{transform:translateX(0) rotate(0)}40%{transform:translateX(24%) rotate(2deg)}56%{transform:translateX(34%) rotate(-2deg)}}@keyframes bruteAttackFastRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}40%{transform:scaleX(-1) translateX(24%) rotate(2deg)}56%{transform:scaleX(-1) translateX(34%) rotate(-2deg)}}@keyframes bruteAttackHeavyLeft{0%{transform:translateX(0) rotate(0)}27%{transform:translateX(-5%) rotate(-5deg)}62%{transform:translateX(34%) rotate(5deg)}100%{transform:translateX(0) rotate(0)}}@keyframes bruteAttackHeavyRight{0%{transform:scaleX(-1) translateX(0) rotate(0)}27%{transform:scaleX(-1) translateX(-5%) rotate(-5deg)}62%{transform:scaleX(-1) translateX(34%) rotate(5deg)}100%{transform:scaleX(-1) translateX(0) rotate(0)}}@keyframes bruteAttackRangedLeft{0%,100%{transform:translateX(0)}35%{transform:translateX(-6%) rotate(-3deg)}65%{transform:translateX(9%) rotate(2deg)}}@keyframes bruteAttackRangedRight{0%,100%{transform:scaleX(-1) translateX(0)}35%{transform:scaleX(-1) translateX(-6%) rotate(-3deg)}65%{transform:scaleX(-1) translateX(9%) rotate(2deg)}}@keyframes bruteAttackFlexibleLeft{0%,100%{transform:translateX(0) rotate(0)}28%{transform:translateX(-4%) rotate(-7deg)}58%{transform:translateX(22%) rotate(8deg)}78%{transform:translateX(12%) rotate(-4deg)}}@keyframes bruteAttackFlexibleRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}28%{transform:scaleX(-1) translateX(-4%) rotate(-7deg)}58%{transform:scaleX(-1) translateX(22%) rotate(8deg)}78%{transform:scaleX(-1) translateX(12%) rotate(-4deg)}}@keyframes bruteHitLeft{0%,100%{filter:none;transform:translate(0,0) rotate(0)}22%{filter:brightness(1.75) saturate(1.4);transform:translate(-8px,var(--hit-y)) rotate(var(--hit-tilt))}55%{transform:translate(7px,0) rotate(0)}}@keyframes bruteHitRight{0%,100%{filter:none;transform:scaleX(-1) translate(0,0) rotate(0)}22%{filter:brightness(1.75) saturate(1.4);transform:scaleX(-1) translate(-8px,var(--hit-y)) rotate(var(--hit-tilt))}55%{transform:scaleX(-1) translate(7px,0) rotate(0)}}@keyframes bruteHitHeavyLeft{0%,100%{filter:none;transform:translate(0,0) rotate(0)}18%{filter:brightness(2) saturate(1.5);transform:translate(-18px,var(--hit-y)) rotate(var(--hit-tilt))}48%{transform:translate(13px,0) rotate(2deg)}72%{transform:translate(-5px,0)}}@keyframes bruteHitHeavyRight{0%,100%{filter:none;transform:scaleX(-1) translate(0,0) rotate(0)}18%{filter:brightness(2) saturate(1.5);transform:scaleX(-1) translate(-18px,var(--hit-y)) rotate(var(--hit-tilt))}48%{transform:scaleX(-1) translate(13px,0) rotate(2deg)}72%{transform:scaleX(-1) translate(-5px,0)}}@keyframes bruteDodgeLeft{0%,100%{transform:translate(0,0)}42%{transform:translate(-38px,-38px) rotate(-4deg)}70%{transform:translate(-22px,-9px)}}@keyframes bruteDodgeRight{0%,100%{transform:scaleX(-1) translate(0,0)}42%{transform:scaleX(-1) translate(-38px,-38px) rotate(-4deg)}70%{transform:scaleX(-1) translate(-22px,-9px)}}@keyframes bruteKoLeft{0%{transform:rotate(0) translate(0,0);opacity:1}38%{transform:rotate(18deg) translate(12px,-8px);opacity:1}100%{transform:rotate(78deg) translate(35px,34px);opacity:.45}}@keyframes bruteKoRight{0%{transform:scaleX(-1) rotate(0) translate(0,0);opacity:1}38%{transform:scaleX(-1) rotate(18deg) translate(12px,-8px);opacity:1}100%{transform:scaleX(-1) rotate(78deg) translate(35px,34px);opacity:.45}}@keyframes bruteGuard{0%,100%{filter:none}45%{filter:drop-shadow(0 0 18px rgba(101,167,255,.95)) brightness(1.25)}}@keyframes bruteStun{0%,100%{filter:none}25%{filter:saturate(.2) brightness(1.3)}50%{filter:saturate(.2) brightness(.75)}75%{filter:saturate(.2) brightness(1.2)}}@keyframes bruteArmHeavy{0%,100%{transform:rotate(0)}30%{transform:rotate(-38deg)}62%{transform:rotate(62deg)}}@keyframes bruteArmFast{0%,100%{transform:rotate(0)}45%{transform:rotate(52deg)}}@keyframes bruteGuardArm{0%,100%{transform:rotate(0)}50%{transform:rotate(-55deg) translate(-5px,-6px)}}@keyframes bruteHeadStun{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}50%{transform:rotate(9deg)}75%{transform:rotate(-5deg)}}@keyframes bruteFloat{0%{opacity:0;transform:translateY(12px) scale(.7)}35%{opacity:1;transform:translateY(-10px) scale(1.12)}100%{opacity:0;transform:translateY(-44px) scale(.92)}}@keyframes bruteImpact{0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(0)}35%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(18deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.45) rotate(36deg)}}@keyframes bruteDust{0%{opacity:0;transform:scale(.45)}35%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.45)}}@keyframes bruteSkillBanner{0%{opacity:0;transform:translate(-50%,-30%) scale(.65)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}78%{opacity:1;transform:translate(-50%,-60%) scale(1)}100%{opacity:0;transform:translate(-50%,-85%) scale(.9)}}@keyframes bruteProjectileLR{0%{left:24%;transform:rotate(-20deg) scale(.75)}100%{left:73%;transform:rotate(220deg) scale(1.08)}}@keyframes bruteProjectileRL{0%{left:73%;transform:rotate(20deg) scale(.75)}100%{left:24%;transform:rotate(-220deg) scale(1.08)}}@keyframes bruteArenaShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,-1px)}80%{transform:translate(3px,2px)}}@keyframes bruteFlash{0%{opacity:0}30%{opacity:.85}100%{opacity:0}}@keyframes bruteLevelUp{0%{opacity:0;transform:translateY(12px) scale(.8)}45%{opacity:1;transform:translateY(-3px) scale(1.08)}100%{transform:translateY(0) scale(1)}}@keyframes bruteBreathe{0%,100%{transform:scale(1)}50%{transform:scale(.985) translateY(3px)}}@keyframes bruteWeaponSwitch{0%,100%{transform:rotate(0)}35%{transform:rotate(-5deg) translateY(-6px)}70%{transform:rotate(4deg)}}@keyframes bruteBlockLeft{0%,100%{transform:translateX(0)}45%{transform:translateX(-7px) scale(.97);filter:drop-shadow(0 0 14px rgba(92,165,255,.9))}}@keyframes bruteBlockRight{0%,100%{transform:scaleX(-1) translateX(0)}45%{transform:scaleX(-1) translateX(-7px) scale(.97);filter:drop-shadow(0 0 14px rgba(92,165,255,.9))}}@keyframes bruteArriveLeft{0%{transform:translate(-78%,-90px) rotate(-8deg) scale(.9);opacity:0}58%{transform:translate(5%,8px) rotate(2deg) scale(1.02);opacity:1}100%{transform:translate(0,0) rotate(0) scale(1)}}@keyframes bruteArriveRight{0%{transform:scaleX(-1) translate(-78%,-90px) rotate(-8deg) scale(.9);opacity:0}58%{transform:scaleX(-1) translate(5%,8px) rotate(2deg) scale(1.02);opacity:1}100%{transform:scaleX(-1) translate(0,0) rotate(0) scale(1)}}@keyframes bruteWindupFast{0%{transform:rotate(0)}100%{transform:rotate(-32deg) translate(-4px,-2px)}}@keyframes bruteWindupHeavy{0%{transform:rotate(0)}55%{transform:rotate(-58deg) translate(-8px,-6px)}100%{transform:rotate(-45deg) translate(-5px,-4px)}}@keyframes bruteWindupRanged{0%{transform:rotate(0)}100%{transform:rotate(-38deg) translate(-8px,-8px)}}@keyframes bruteWindupFlexible{0%{transform:rotate(0)}55%{transform:rotate(-46deg) translate(-5px,-4px)}100%{transform:rotate(-22deg) translate(3px,-2px)}}@keyframes bruteStaggerLeft{0%,100%{transform:translateX(0)}13%{transform:translateX(calc(var(--knock) * -1)) rotate(-2deg);filter:brightness(1.9)}30%{transform:translateX(calc(var(--knock) * -.55)) rotate(1deg)}46%{transform:translateX(calc(var(--knock) * -.76))}64%{transform:translateX(calc(var(--knock) * -.34))}82%{transform:translateX(calc(var(--knock) * -.14))}}@keyframes bruteStaggerRight{0%,100%{transform:scaleX(-1) translateX(0)}13%{transform:scaleX(-1) translateX(calc(var(--knock) * -1)) rotate(-2deg);filter:brightness(1.9)}30%{transform:scaleX(-1) translateX(calc(var(--knock) * -.55)) rotate(1deg)}46%{transform:scaleX(-1) translateX(calc(var(--knock) * -.76))}64%{transform:scaleX(-1) translateX(calc(var(--knock) * -.34))}82%{transform:scaleX(-1) translateX(calc(var(--knock) * -.14))}}',
+    '.brute-fighter.windup-stance-0 .brute-torso{transform-box:fill-box;transform-origin:center bottom;animation:bruteWindupBodyA .32s ease}.brute-fighter.windup-stance-1 .brute-head{transform-box:fill-box;transform-origin:center;animation:bruteWindupHead .32s ease}.brute-fighter.windup-stance-2 .brute-leg-left,.brute-fighter.windup-stance-2 .brute-leg-right{transform-box:fill-box;transform-origin:center top;animation:bruteWindupLegs .32s ease}.brute-fighter.attack-v0.left .ga-brute-svg{animation:bruteAttackJabLeft .31s cubic-bezier(.16,.9,.22,1)}.brute-fighter.attack-v0.right .ga-brute-svg{animation:bruteAttackJabRight .31s cubic-bezier(.16,.9,.22,1)}.brute-fighter.attack-v1.left .ga-brute-svg{animation:bruteAttackHookLeft .38s cubic-bezier(.16,.82,.2,1)}.brute-fighter.attack-v1.right .ga-brute-svg{animation:bruteAttackHookRight .38s cubic-bezier(.16,.82,.2,1)}.brute-fighter.attack-v2.left .ga-brute-svg{animation:bruteAttackUpperLeft .39s cubic-bezier(.18,.82,.2,1)}.brute-fighter.attack-v2.right .ga-brute-svg{animation:bruteAttackUpperRight .39s cubic-bezier(.18,.82,.2,1)}.brute-fighter.attack-v3.left .ga-brute-svg{animation:bruteAttackSpinLeft .43s cubic-bezier(.18,.8,.22,1)}.brute-fighter.attack-v3.right .ga-brute-svg{animation:bruteAttackSpinRight .43s cubic-bezier(.18,.8,.22,1)}.brute-fighter.attack-v4.left .ga-brute-svg{animation:bruteAttackSlamLeft .48s cubic-bezier(.14,.75,.2,1)}.brute-fighter.attack-v4.right .ga-brute-svg{animation:bruteAttackSlamRight .48s cubic-bezier(.14,.75,.2,1)}.brute-fighter.attack-v5.left .ga-brute-svg{animation:bruteAttackSweepLeft .40s cubic-bezier(.2,.84,.22,1)}.brute-fighter.attack-v5.right .ga-brute-svg{animation:bruteAttackSweepRight .40s cubic-bezier(.2,.84,.22,1)}.brute-fighter.dodge-v0.left .ga-brute-svg{animation:bruteDodgeStepLeft .46s ease}.brute-fighter.dodge-v0.right .ga-brute-svg{animation:bruteDodgeStepRight .46s ease}.brute-fighter.dodge-v1.left .ga-brute-svg{animation:bruteDodgeDuckLeft .46s ease}.brute-fighter.dodge-v1.right .ga-brute-svg{animation:bruteDodgeDuckRight .46s ease}.brute-fighter.dodge-v2.left .ga-brute-svg{animation:bruteDodgeHopLeft .49s cubic-bezier(.2,.85,.2,1)}.brute-fighter.dodge-v2.right .ga-brute-svg{animation:bruteDodgeHopRight .49s cubic-bezier(.2,.85,.2,1)}.brute-fighter.block-v0 .brute-arm-left{transform-box:fill-box;transform-origin:80% 20%;animation:bruteParryArm .38s ease}.brute-fighter.block-v1 .brute-torso{transform-box:fill-box;transform-origin:center bottom;animation:bruteBraceBody .4s ease}.brute-fighter.block-v2 .brute-head{transform-box:fill-box;transform-origin:center;animation:bruteGuardHead .38s ease}.brute-fighter.miss-v0.left .ga-brute-svg{animation:bruteMissOverLeft .33s ease}.brute-fighter.miss-v0.right .ga-brute-svg{animation:bruteMissOverRight .33s ease}.brute-fighter.miss-v1.left .ga-brute-svg{animation:bruteMissLowLeft .34s ease}.brute-fighter.miss-v1.right .ga-brute-svg{animation:bruteMissLowRight .34s ease}.brute-fighter.miss-v2.left .ga-brute-svg{animation:bruteMissSpinLeft .38s ease}.brute-fighter.miss-v2.right .ga-brute-svg{animation:bruteMissSpinRight .38s ease}.brute-fighter.critical-burst .ga-brute-svg{filter:drop-shadow(0 0 17px rgba(255,210,70,.9)) brightness(1.12)}.brute-fighter.finisher .ga-brute-svg{filter:drop-shadow(0 0 24px rgba(255,235,143,.95))}.brute-fighter.ko-v0.left .ga-brute-svg{animation:bruteKoFallLeft .82s cubic-bezier(.18,.75,.25,1) forwards}.brute-fighter.ko-v0.right .ga-brute-svg{animation:bruteKoFallRight .82s cubic-bezier(.18,.75,.25,1) forwards}.brute-fighter.ko-v1.left .ga-brute-svg{animation:bruteKoSpinLeft .86s cubic-bezier(.18,.72,.25,1) forwards}.brute-fighter.ko-v1.right .ga-brute-svg{animation:bruteKoSpinRight .86s cubic-bezier(.18,.72,.25,1) forwards}.brute-fighter.ko-v2.left .ga-brute-svg{animation:bruteKoLaunchLeft .9s cubic-bezier(.12,.75,.25,1) forwards}.brute-fighter.ko-v2.right .ga-brute-svg{animation:bruteKoLaunchRight .9s cubic-bezier(.12,.75,.25,1) forwards}.brute-speedline{position:absolute;z-index:10;top:45%;left:23%;width:47%;height:44px;background:repeating-linear-gradient(0deg,transparent 0 6px,rgba(255,246,199,.75) 7px 9px,transparent 10px 15px);clip-path:polygon(0 35%,100% 0,100% 100%,0 65%);filter:blur(.3px);animation:bruteSpeedlineLR .34s ease forwards}.brute-speedline.right{left:auto;right:23%;transform:scaleX(-1)}.brute-slash-fx{position:absolute;z-index:17;left:29%;top:38%;width:45%;height:115px;border-top:7px solid rgba(255,242,175,.9);border-radius:50%;transform:rotate(-15deg) scale(.4);filter:drop-shadow(0 0 7px rgba(255,155,63,.85));animation:bruteSlashLR .42s ease forwards}.brute-slash-fx.right{transform:rotate(195deg) scale(.4)}.brute-shockwave{position:absolute;z-index:16;width:45px;height:24px;border:5px solid rgba(255,237,174,.82);border-radius:50%;transform:translate(-50%,-50%) scale(.2);box-shadow:0 0 20px rgba(255,122,44,.55);animation:bruteShockwave .48s ease forwards}.brute-crit-burst{position:absolute;z-index:26;width:30px;height:30px;transform:translate(-50%,-50%);background:radial-gradient(circle,#fff 0 10%,#ffe66d 11% 24%,#ff612e 25% 35%,transparent 36%);animation:bruteCritBurst .58s ease forwards}.brute-crit-burst:before,.brute-crit-burst:after{content:"";position:absolute;left:50%;top:50%;width:120px;height:4px;background:linear-gradient(90deg,transparent,#fff7bc,transparent);transform:translate(-50%,-50%) rotate(45deg)}.brute-crit-burst:after{transform:translate(-50%,-50%) rotate(-45deg)}.brute-miss-swoosh{position:absolute;z-index:15;left:32%;top:43%;width:33%;height:70px;border-top:4px solid rgba(255,255,255,.55);border-radius:50%;transform:rotate(-12deg);animation:bruteMissSwoosh .4s ease forwards}.brute-miss-swoosh.right{transform:scaleX(-1) rotate(-12deg)}.brute-parry-spark{position:absolute;z-index:22;width:22px;height:22px;transform:translate(-50%,-50%);background:radial-gradient(circle,#fff 0 12%,#a9d8ff 13% 30%,transparent 32%);filter:drop-shadow(0 0 8px rgba(88,175,255,.9));animation:bruteParrySpark .45s ease forwards}.brute-finisher-flare{position:absolute;z-index:24;top:15%;bottom:10%;width:8px;background:linear-gradient(180deg,transparent,#fff9bd 22%,#ff9d39 50%,#fff9bd 78%,transparent);filter:blur(1px) drop-shadow(0 0 14px rgba(255,186,56,.9));transform:translateX(-50%) scaleY(.1);animation:bruteFinisherFlare .68s ease forwards}.brute-arena.finisher{animation:bruteFinisherArena .62s ease}.brute-arena.finisher:after{color:rgba(255,255,255,.16);text-shadow:0 0 22px rgba(255,220,92,.35)}.brute-arena.impact-heavy .brute-fighters{animation:bruteGroundBump .34s ease}.brute-arena.impact-ranged .brute-stagefx{filter:saturate(1.25)}',
+    '@keyframes bruteWindupBodyA{0%,100%{transform:rotate(0) scale(1)}55%{transform:rotate(-3deg) scale(.97,1.03)}}@keyframes bruteWindupHead{0%,100%{transform:rotate(0)}55%{transform:rotate(-7deg) translateY(2px)}}@keyframes bruteWindupLegs{0%,100%{transform:translateY(0)}55%{transform:translateY(4px) scaleY(.96)}}@keyframes bruteAttackJabLeft{0%,100%{transform:translate(0,0) rotate(0)}42%{transform:translate(23%,-2px) rotate(-1deg)}58%{transform:translate(35%,-1px) rotate(2deg)}}@keyframes bruteAttackJabRight{0%,100%{transform:scaleX(-1) translate(0,0) rotate(0)}42%{transform:scaleX(-1) translate(23%,-2px) rotate(-1deg)}58%{transform:scaleX(-1) translate(35%,-1px) rotate(2deg)}}@keyframes bruteAttackHookLeft{0%,100%{transform:translateX(0) rotate(0)}30%{transform:translateX(-4%) rotate(-9deg)}62%{transform:translateX(30%) rotate(11deg)}80%{transform:translateX(14%) rotate(3deg)}}@keyframes bruteAttackHookRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}30%{transform:scaleX(-1) translateX(-4%) rotate(-9deg)}62%{transform:scaleX(-1) translateX(30%) rotate(11deg)}80%{transform:scaleX(-1) translateX(14%) rotate(3deg)}}@keyframes bruteAttackUpperLeft{0%,100%{transform:translate(0,0) rotate(0)}32%{transform:translate(-2%,8px) rotate(-5deg) scaleY(.96)}62%{transform:translate(27%,-18px) rotate(5deg) scaleY(1.03)}80%{transform:translate(13%,-4px)}}@keyframes bruteAttackUpperRight{0%,100%{transform:scaleX(-1) translate(0,0) rotate(0)}32%{transform:scaleX(-1) translate(-2%,8px) rotate(-5deg) scaleY(.96)}62%{transform:scaleX(-1) translate(27%,-18px) rotate(5deg) scaleY(1.03)}80%{transform:scaleX(-1) translate(13%,-4px)}}@keyframes bruteAttackSpinLeft{0%,100%{transform:translateX(0) rotate(0)}28%{transform:translateX(-7%) rotate(-14deg)}55%{transform:translateX(25%) rotate(18deg)}72%{transform:translateX(31%) rotate(7deg)}}@keyframes bruteAttackSpinRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}28%{transform:scaleX(-1) translateX(-7%) rotate(-14deg)}55%{transform:scaleX(-1) translateX(25%) rotate(18deg)}72%{transform:scaleX(-1) translateX(31%) rotate(7deg)}}@keyframes bruteAttackSlamLeft{0%,100%{transform:translate(0,0) rotate(0)}24%{transform:translate(-4%,-16px) rotate(-7deg)}55%{transform:translate(28%,10px) rotate(8deg)}72%{transform:translate(17%,3px)}}@keyframes bruteAttackSlamRight{0%,100%{transform:scaleX(-1) translate(0,0) rotate(0)}24%{transform:scaleX(-1) translate(-4%,-16px) rotate(-7deg)}55%{transform:scaleX(-1) translate(28%,10px) rotate(8deg)}72%{transform:scaleX(-1) translate(17%,3px)}}@keyframes bruteAttackSweepLeft{0%,100%{transform:translate(0,0) rotate(0)}28%{transform:translate(-3%,6px) rotate(-5deg)}58%{transform:translate(29%,5px) rotate(6deg) scaleY(.96)}76%{transform:translate(14%,1px)}}@keyframes bruteAttackSweepRight{0%,100%{transform:scaleX(-1) translate(0,0) rotate(0)}28%{transform:scaleX(-1) translate(-3%,6px) rotate(-5deg)}58%{transform:scaleX(-1) translate(29%,5px) rotate(6deg) scaleY(.96)}76%{transform:scaleX(-1) translate(14%,1px)}}@keyframes bruteDodgeStepLeft{0%,100%{transform:translate(0,0)}45%{transform:translate(-42px,-8px) rotate(-3deg)}}@keyframes bruteDodgeStepRight{0%,100%{transform:scaleX(-1) translate(0,0)}45%{transform:scaleX(-1) translate(-42px,-8px) rotate(-3deg)}}@keyframes bruteDodgeDuckLeft{0%,100%{transform:translate(0,0) scaleY(1)}42%{transform:translate(-18px,26px) scaleY(.82) rotate(-2deg)}}@keyframes bruteDodgeDuckRight{0%,100%{transform:scaleX(-1) translate(0,0) scaleY(1)}42%{transform:scaleX(-1) translate(-18px,26px) scaleY(.82) rotate(-2deg)}}@keyframes bruteDodgeHopLeft{0%,100%{transform:translate(0,0)}38%{transform:translate(-34px,-44px) rotate(-6deg)}68%{transform:translate(-24px,-12px)}}@keyframes bruteDodgeHopRight{0%,100%{transform:scaleX(-1) translate(0,0)}38%{transform:scaleX(-1) translate(-34px,-44px) rotate(-6deg)}68%{transform:scaleX(-1) translate(-24px,-12px)}}@keyframes bruteParryArm{0%,100%{transform:rotate(0)}42%{transform:rotate(-68deg) translate(-8px,-8px)}70%{transform:rotate(-28deg)}}@keyframes bruteBraceBody{0%,100%{transform:scale(1) translateY(0)}42%{transform:scale(.94,1.04) translateY(5px)}}@keyframes bruteGuardHead{0%,100%{transform:rotate(0)}40%{transform:rotate(-11deg) translate(-2px,4px)}}@keyframes bruteMissOverLeft{0%,100%{transform:translate(0,0) rotate(0)}55%{transform:translate(28%,-10px) rotate(9deg)}}@keyframes bruteMissOverRight{0%,100%{transform:scaleX(-1) translate(0,0) rotate(0)}55%{transform:scaleX(-1) translate(28%,-10px) rotate(9deg)}}@keyframes bruteMissLowLeft{0%,100%{transform:translate(0,0) rotate(0)}55%{transform:translate(27%,16px) rotate(-6deg)}}@keyframes bruteMissLowRight{0%,100%{transform:scaleX(-1) translate(0,0) rotate(0)}55%{transform:scaleX(-1) translate(27%,16px) rotate(-6deg)}}@keyframes bruteMissSpinLeft{0%,100%{transform:translateX(0) rotate(0)}55%{transform:translateX(26%) rotate(15deg)}}@keyframes bruteMissSpinRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}55%{transform:scaleX(-1) translateX(26%) rotate(15deg)}}@keyframes bruteKoFallLeft{0%{transform:rotate(0) translate(0,0);opacity:1}45%{transform:rotate(28deg) translate(14px,5px);opacity:1}100%{transform:rotate(88deg) translate(44px,35px);opacity:.4}}@keyframes bruteKoFallRight{0%{transform:scaleX(-1) rotate(0) translate(0,0);opacity:1}45%{transform:scaleX(-1) rotate(28deg) translate(14px,5px);opacity:1}100%{transform:scaleX(-1) rotate(88deg) translate(44px,35px);opacity:.4}}@keyframes bruteKoSpinLeft{0%{transform:rotate(0) translate(0,0);opacity:1}45%{transform:rotate(-34deg) translate(-10px,-12px);opacity:1}100%{transform:rotate(-104deg) translate(-48px,30px);opacity:.38}}@keyframes bruteKoSpinRight{0%{transform:scaleX(-1) rotate(0) translate(0,0);opacity:1}45%{transform:scaleX(-1) rotate(-34deg) translate(-10px,-12px);opacity:1}100%{transform:scaleX(-1) rotate(-104deg) translate(-48px,30px);opacity:.38}}@keyframes bruteKoLaunchLeft{0%{transform:translate(0,0) rotate(0);opacity:1}36%{transform:translate(-12px,-46px) rotate(-8deg);opacity:1}100%{transform:translate(-58px,46px) rotate(-78deg);opacity:.34}}@keyframes bruteKoLaunchRight{0%{transform:scaleX(-1) translate(0,0) rotate(0);opacity:1}36%{transform:scaleX(-1) translate(-12px,-46px) rotate(-8deg);opacity:1}100%{transform:scaleX(-1) translate(-58px,46px) rotate(-78deg);opacity:.34}}@keyframes bruteSpeedlineLR{0%{opacity:0;transform:translateX(-20%) scaleX(.5)}30%{opacity:.8}100%{opacity:0;transform:translateX(42%) scaleX(1.2)}}@keyframes bruteSlashLR{0%{opacity:0;transform:rotate(-15deg) scale(.3)}42%{opacity:1;transform:rotate(-7deg) scale(1)}100%{opacity:0;transform:rotate(2deg) scale(1.25)}}@keyframes bruteShockwave{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}38%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(3.8)}}@keyframes bruteCritBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(0)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.3) rotate(20deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.4) rotate(52deg)}}@keyframes bruteMissSwoosh{0%{opacity:0;transform:translateX(-20%) rotate(-12deg) scale(.6)}38%{opacity:.7}100%{opacity:0;transform:translateX(35%) rotate(-5deg) scale(1.15)}}@keyframes bruteParrySpark{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}35%{opacity:1;transform:translate(-50%,-50%) scale(1.35)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.2)}}@keyframes bruteFinisherFlare{0%{opacity:0;transform:translateX(-50%) scaleY(.1)}38%{opacity:1;transform:translateX(-50%) scaleY(1)}100%{opacity:0;transform:translateX(-50%) scaleY(1.2)}}@keyframes bruteFinisherArena{0%,100%{filter:none}24%{filter:contrast(1.3) saturate(1.4)}45%{filter:brightness(1.25) saturate(1.7)}70%{filter:contrast(1.15)}}@keyframes bruteGroundBump{0%,100%{transform:translateY(0)}30%{transform:translateY(5px)}55%{transform:translateY(-2px)}}@keyframes bruteCardDeal{0%{opacity:0;transform:translateY(28px) rotateY(-12deg) scale(.88)}58%{opacity:1;transform:translateY(-4px) rotateY(3deg) scale(1.025)}100%{opacity:1;transform:translateY(0) rotateY(0) scale(1)}}@keyframes bruteIdle{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.01)}}@keyframes bruteAttackFastLeft{0%,100%{transform:translateX(0) rotate(0)}40%{transform:translateX(24%) rotate(2deg)}56%{transform:translateX(34%) rotate(-2deg)}}@keyframes bruteAttackFastRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}40%{transform:scaleX(-1) translateX(24%) rotate(2deg)}56%{transform:scaleX(-1) translateX(34%) rotate(-2deg)}}@keyframes bruteAttackHeavyLeft{0%{transform:translateX(0) rotate(0)}27%{transform:translateX(-5%) rotate(-5deg)}62%{transform:translateX(34%) rotate(5deg)}100%{transform:translateX(0) rotate(0)}}@keyframes bruteAttackHeavyRight{0%{transform:scaleX(-1) translateX(0) rotate(0)}27%{transform:scaleX(-1) translateX(-5%) rotate(-5deg)}62%{transform:scaleX(-1) translateX(34%) rotate(5deg)}100%{transform:scaleX(-1) translateX(0) rotate(0)}}@keyframes bruteAttackRangedLeft{0%,100%{transform:translateX(0)}35%{transform:translateX(-6%) rotate(-3deg)}65%{transform:translateX(9%) rotate(2deg)}}@keyframes bruteAttackRangedRight{0%,100%{transform:scaleX(-1) translateX(0)}35%{transform:scaleX(-1) translateX(-6%) rotate(-3deg)}65%{transform:scaleX(-1) translateX(9%) rotate(2deg)}}@keyframes bruteAttackFlexibleLeft{0%,100%{transform:translateX(0) rotate(0)}28%{transform:translateX(-4%) rotate(-7deg)}58%{transform:translateX(22%) rotate(8deg)}78%{transform:translateX(12%) rotate(-4deg)}}@keyframes bruteAttackFlexibleRight{0%,100%{transform:scaleX(-1) translateX(0) rotate(0)}28%{transform:scaleX(-1) translateX(-4%) rotate(-7deg)}58%{transform:scaleX(-1) translateX(22%) rotate(8deg)}78%{transform:scaleX(-1) translateX(12%) rotate(-4deg)}}@keyframes bruteHitLeft{0%,100%{filter:none;transform:translate(0,0) rotate(0)}22%{filter:brightness(1.75) saturate(1.4);transform:translate(-8px,var(--hit-y)) rotate(var(--hit-tilt))}55%{transform:translate(7px,0) rotate(0)}}@keyframes bruteHitRight{0%,100%{filter:none;transform:scaleX(-1) translate(0,0) rotate(0)}22%{filter:brightness(1.75) saturate(1.4);transform:scaleX(-1) translate(-8px,var(--hit-y)) rotate(var(--hit-tilt))}55%{transform:scaleX(-1) translate(7px,0) rotate(0)}}@keyframes bruteHitHeavyLeft{0%,100%{filter:none;transform:translate(0,0) rotate(0)}18%{filter:brightness(2) saturate(1.5);transform:translate(-18px,var(--hit-y)) rotate(var(--hit-tilt))}48%{transform:translate(13px,0) rotate(2deg)}72%{transform:translate(-5px,0)}}@keyframes bruteHitHeavyRight{0%,100%{filter:none;transform:scaleX(-1) translate(0,0) rotate(0)}18%{filter:brightness(2) saturate(1.5);transform:scaleX(-1) translate(-18px,var(--hit-y)) rotate(var(--hit-tilt))}48%{transform:scaleX(-1) translate(13px,0) rotate(2deg)}72%{transform:scaleX(-1) translate(-5px,0)}}@keyframes bruteDodgeLeft{0%,100%{transform:translate(0,0)}42%{transform:translate(-38px,-38px) rotate(-4deg)}70%{transform:translate(-22px,-9px)}}@keyframes bruteDodgeRight{0%,100%{transform:scaleX(-1) translate(0,0)}42%{transform:scaleX(-1) translate(-38px,-38px) rotate(-4deg)}70%{transform:scaleX(-1) translate(-22px,-9px)}}@keyframes bruteKoLeft{0%{transform:rotate(0) translate(0,0);opacity:1}38%{transform:rotate(18deg) translate(12px,-8px);opacity:1}100%{transform:rotate(78deg) translate(35px,34px);opacity:.45}}@keyframes bruteKoRight{0%{transform:scaleX(-1) rotate(0) translate(0,0);opacity:1}38%{transform:scaleX(-1) rotate(18deg) translate(12px,-8px);opacity:1}100%{transform:scaleX(-1) rotate(78deg) translate(35px,34px);opacity:.45}}@keyframes bruteGuard{0%,100%{filter:none}45%{filter:drop-shadow(0 0 18px rgba(101,167,255,.95)) brightness(1.25)}}@keyframes bruteStun{0%,100%{filter:none}25%{filter:saturate(.2) brightness(1.3)}50%{filter:saturate(.2) brightness(.75)}75%{filter:saturate(.2) brightness(1.2)}}@keyframes bruteArmHeavy{0%,100%{transform:rotate(0)}30%{transform:rotate(-38deg)}62%{transform:rotate(62deg)}}@keyframes bruteArmFast{0%,100%{transform:rotate(0)}45%{transform:rotate(52deg)}}@keyframes bruteGuardArm{0%,100%{transform:rotate(0)}50%{transform:rotate(-55deg) translate(-5px,-6px)}}@keyframes bruteHeadStun{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}50%{transform:rotate(9deg)}75%{transform:rotate(-5deg)}}@keyframes bruteFloat{0%{opacity:0;transform:translateY(12px) scale(.7)}35%{opacity:1;transform:translateY(-10px) scale(1.12)}100%{opacity:0;transform:translateY(-44px) scale(.92)}}@keyframes bruteImpact{0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(0)}35%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(18deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.45) rotate(36deg)}}@keyframes bruteDust{0%{opacity:0;transform:scale(.45)}35%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.45)}}@keyframes bruteSkillBanner{0%{opacity:0;transform:translate(-50%,-30%) scale(.65)}28%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}78%{opacity:1;transform:translate(-50%,-60%) scale(1)}100%{opacity:0;transform:translate(-50%,-85%) scale(.9)}}@keyframes bruteProjectileLR{0%{left:24%;transform:rotate(-20deg) scale(.75)}100%{left:73%;transform:rotate(220deg) scale(1.08)}}@keyframes bruteProjectileRL{0%{left:73%;transform:rotate(20deg) scale(.75)}100%{left:24%;transform:rotate(-220deg) scale(1.08)}}@keyframes bruteArenaShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,-1px)}80%{transform:translate(3px,2px)}}@keyframes bruteFlash{0%{opacity:0}30%{opacity:.85}100%{opacity:0}}@keyframes bruteLevelUp{0%{opacity:0;transform:translateY(12px) scale(.8)}45%{opacity:1;transform:translateY(-3px) scale(1.08)}100%{transform:translateY(0) scale(1)}}@keyframes bruteBreathe{0%,100%{transform:scale(1)}50%{transform:scale(.985) translateY(3px)}}@keyframes bruteWeaponSwitch{0%,100%{transform:rotate(0)}35%{transform:rotate(-5deg) translateY(-6px)}70%{transform:rotate(4deg)}}@keyframes bruteBlockLeft{0%,100%{transform:translateX(0)}45%{transform:translateX(-7px) scale(.97);filter:drop-shadow(0 0 14px rgba(92,165,255,.9))}}@keyframes bruteBlockRight{0%,100%{transform:scaleX(-1) translateX(0)}45%{transform:scaleX(-1) translateX(-7px) scale(.97);filter:drop-shadow(0 0 14px rgba(92,165,255,.9))}}@keyframes bruteArriveLeft{0%{transform:translate(-78%,-90px) rotate(-8deg) scale(.9);opacity:0}58%{transform:translate(5%,8px) rotate(2deg) scale(1.02);opacity:1}100%{transform:translate(0,0) rotate(0) scale(1)}}@keyframes bruteArriveRight{0%{transform:scaleX(-1) translate(-78%,-90px) rotate(-8deg) scale(.9);opacity:0}58%{transform:scaleX(-1) translate(5%,8px) rotate(2deg) scale(1.02);opacity:1}100%{transform:scaleX(-1) translate(0,0) rotate(0) scale(1)}}@keyframes bruteWindupFast{0%{transform:rotate(0)}100%{transform:rotate(-32deg) translate(-4px,-2px)}}@keyframes bruteWindupHeavy{0%{transform:rotate(0)}55%{transform:rotate(-58deg) translate(-8px,-6px)}100%{transform:rotate(-45deg) translate(-5px,-4px)}}@keyframes bruteWindupRanged{0%{transform:rotate(0)}100%{transform:rotate(-38deg) translate(-8px,-8px)}}@keyframes bruteWindupFlexible{0%{transform:rotate(0)}55%{transform:rotate(-46deg) translate(-5px,-4px)}100%{transform:rotate(-22deg) translate(3px,-2px)}}@keyframes bruteStaggerLeft{0%,100%{transform:translateX(0)}13%{transform:translateX(calc(var(--knock) * -1)) rotate(-2deg);filter:brightness(1.9)}30%{transform:translateX(calc(var(--knock) * -.55)) rotate(1deg)}46%{transform:translateX(calc(var(--knock) * -.76))}64%{transform:translateX(calc(var(--knock) * -.34))}82%{transform:translateX(calc(var(--knock) * -.14))}}@keyframes bruteStaggerRight{0%,100%{transform:scaleX(-1) translateX(0)}13%{transform:scaleX(-1) translateX(calc(var(--knock) * -1)) rotate(-2deg);filter:brightness(1.9)}30%{transform:scaleX(-1) translateX(calc(var(--knock) * -.55)) rotate(1deg)}46%{transform:scaleX(-1) translateX(calc(var(--knock) * -.76))}64%{transform:scaleX(-1) translateX(calc(var(--knock) * -.34))}82%{transform:scaleX(-1) translateX(calc(var(--knock) * -.14))}}',
     '@media(max-width:760px){.brute-choice-grid{grid-template-columns:1fr}.brute-tcg-head{align-items:flex-start;flex-direction:column}.brute-choice{min-height:178px}.brute-app{padding:9px}.brute-menu-grid{grid-template-columns:1fr;padding:14px;min-height:0}.brute-camp-grid{grid-template-columns:1fr}.brute-camp-avatar{order:-1;min-height:320px}.brute-camp-avatar .ga-brute-svg{width:260px}.brute-camp-scene{padding:11px}.brute-camp-sign{font-size:21px}.brute-menu-avatar{order:-1}.brute-menu-side{grid-template-columns:1fr 1fr}.brute-title-screen{min-height:0}.brute-logo{font-size:32px}.brute-create,.brute-dashboard,.brute-equipment,.brute-sleep{grid-template-columns:1fr}.brute-create-preview{min-height:350px}.brute-create-preview .ga-brute-svg{width:280px}.brute-create-controls{max-height:none}.brute-stat-grid{grid-template-columns:1fr 1fr}.brute-arena{min-height:440px}.brute-fighters{padding:0 0%;bottom:43px}.brute-fighter .ga-brute-svg{width:220px}.brute-hud{inset:8px 7px auto;grid-template-columns:1fr 39px 1fr;gap:5px}.brute-round{height:34px}.brute-choice-grid{grid-template-columns:1fr}.brute-rank-row{grid-template-columns:30px 1fr auto}.brute-rank-row .extra{display:none}.brute-real-grid{grid-template-columns:1fr 1fr}.brute-selector-avatar{width:44px;height:44px}.brute-fight-summary{grid-template-columns:1fr}}',
     '.brute-mybrute-create{width:min(420px,100%);margin:22px auto 0;padding:0 0 28px}.brute-mybrute-paper{position:relative;min-height:500px;padding:18px 26px 24px;border:4px solid #6e3a1f;border-radius:12px;background:radial-gradient(circle at 50% 17%,rgba(255,248,201,.95),rgba(239,214,154,.97) 34%,rgba(205,158,88,.98) 100%);box-shadow:inset 0 0 0 3px rgba(255,244,196,.58),0 8px 0 #4d2513,0 20px 42px rgba(0,0,0,.28);color:#65361e}.brute-mybrute-paper:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.14;background:repeating-linear-gradient(0deg,transparent 0 8px,rgba(87,45,20,.14) 9px 10px)}.brute-mybrute-heading{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:7px;font-size:12px;font-weight:1000;text-transform:uppercase;letter-spacing:.06em}.brute-mybrute-heading b{font-size:18px;transform:rotate(10deg)}.brute-mybrute-name-row{position:relative;z-index:3;display:grid;grid-template-columns:1fr 42px;gap:7px;width:min(245px,100%);margin:0 auto}.brute-mybrute-name{min-width:0;border:3px solid #6a361c;border-radius:5px;background:#fff4c5;color:#60321b;padding:8px 9px;text-align:center;font-size:13px;font-weight:1000;box-shadow:inset 0 0 0 2px rgba(147,83,36,.14)}.brute-mybrute-lock{border:3px solid #6a361c;border-radius:6px;background:linear-gradient(#e7b65f,#bb6b2c);color:#542710;font-size:18px;cursor:pointer}.brute-mybrute-lock.locked{background:linear-gradient(#8ed88d,#4d9d58)}.brute-mybrute-status{position:relative;z-index:2;margin:7px auto 0;text-align:center;font-size:7px;font-weight:1000;letter-spacing:.12em;color:#8b5a35}.brute-mybrute-character{position:relative;z-index:2;height:238px;display:flex;align-items:flex-start;justify-content:center;padding-top:10px}.brute-mybrute-character .ga-brute-svg{width:116px;max-height:218px;filter:drop-shadow(0 8px 6px rgba(74,39,18,.22));animation:bruteIdle 2.8s ease-in-out infinite}.brute-mybrute-tools{position:relative;z-index:3;display:flex;justify-content:space-between;gap:34px;width:min(300px,100%);margin:-8px auto 0}.brute-mybrute-tool{width:112px;height:86px;border:3px solid #6b371c;border-radius:11px;background:linear-gradient(180deg,#f2d98f,#c88a41);box-shadow:inset 0 0 0 2px rgba(255,249,204,.48),0 4px 0 #5a2a16;color:#65331a;font-size:8px;font-weight:1000;text-transform:uppercase;cursor:pointer}.brute-mybrute-tool:hover{filter:brightness(1.07);transform:translateY(-1px)}.brute-mybrute-tool .icon{display:block;margin-bottom:3px;font-size:31px}.brute-mybrute-help{position:relative;z-index:2;width:min(300px,100%);margin:15px auto 10px;text-align:center;color:#80512f;font-size:8px;line-height:1.45;font-weight:800}.brute-mybrute-validate{position:relative;z-index:3;display:block;width:min(245px,100%);margin:0 auto;border:4px solid #6a361b;border-radius:8px;padding:11px 12px;background:linear-gradient(180deg,#d98d3f,#9f4f24);box-shadow:inset 0 0 0 3px rgba(255,214,125,.4),0 5px 0 #4d2412;color:#fff2b1;font-size:11px;font-weight:1000;letter-spacing:.06em;text-shadow:0 2px #4e2410;cursor:pointer}.brute-mybrute-validate:disabled{opacity:.5;cursor:wait}',
     '.brute-menu-avatar .ga-brute-svg{width:min(185px,72%)}.brute-camp-avatar .ga-brute-svg{width:min(190px,72%)}.brute-fighter .ga-brute-svg{width:min(190px,58%)}',
@@ -1818,18 +1819,45 @@ export async function mountBruteGame(root, options = {}) {
         'windup-heavy',
         'windup-ranged',
         'windup-flexible',
+        'windup-stance-0',
+        'windup-stance-1',
+        'windup-stance-2',
+        'attack-v0',
+        'attack-v1',
+        'attack-v2',
+        'attack-v3',
+        'attack-v4',
+        'attack-v5',
+        'dodge-v0',
+        'dodge-v1',
+        'dodge-v2',
+        'block-v0',
+        'block-v1',
+        'block-v2',
+        'miss-v0',
+        'miss-v1',
+        'miss-v2',
+        'ko-v0',
+        'ko-v1',
+        'ko-v2',
+        'finisher',
+        'critical-burst',
         'staggering'
       )
     })
     root.querySelectorAll('.brute-float').forEach(el => el.remove())
-    root.querySelectorAll('.brute-impact,.brute-dust,.brute-skill-banner,.brute-projectile').forEach(el => el.remove())
+    root.querySelectorAll('.brute-impact,.brute-dust,.brute-skill-banner,.brute-projectile,.brute-speedline,.brute-slash-fx,.brute-shockwave,.brute-crit-burst,.brute-miss-swoosh,.brute-parry-spark,.brute-finisher-flare').forEach(el => el.remove())
 
     const arena =
       root.querySelector('[data-brute-arena]')
 
     arena?.classList.remove(
       'shake',
-      'flash'
+      'flash',
+      'finisher',
+      'impact-heavy',
+      'impact-flexible',
+      'impact-ranged'
     )
   }
 
@@ -1991,7 +2019,20 @@ export async function mountBruteGame(root, options = {}) {
               ? 'windup-flexible'
               : 'windup-fast'
 
-      actorEl?.classList.add(cls)
+      actorEl?.classList.add(
+        cls,
+        'windup-stance-' +
+        (
+          Math.abs(
+            Math.floor(
+              num(
+                event.animationVariant,
+                0
+              )
+            )
+          ) % 3
+        )
+      )
     }
 
     if (event.type === 'REPOSITION') {
@@ -2077,7 +2118,21 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.type === 'BLOCK') {
-      actorEl?.classList.add('blocking')
+      const blockVariant =
+        Math.abs(
+          Math.floor(
+            num(
+              event.animationVariant,
+              0
+            )
+          )
+        ) % 3
+
+      actorEl?.classList.add(
+        'blocking',
+        'block-v' +
+          blockVariant
+      )
 
       nudgeFightOffset(
         actorEl,
@@ -2097,6 +2152,27 @@ export async function mountBruteGame(root, options = {}) {
       floater.className = 'brute-float skill'
       floater.textContent = 'BLOQUÉ'
       actorEl?.appendChild(floater)
+
+      const spark =
+        document.createElement(
+          'span'
+        )
+
+      spark.className =
+        'brute-parry-spark variant-' +
+        blockVariant
+
+      spark.style.left =
+        event.actor === 'left'
+          ? '36%'
+          : '64%'
+
+      spark.style.top =
+        '53%'
+
+      fx?.appendChild(
+        spark
+      )
     }
 
     if (event.type === 'COUNTER') {
@@ -2128,11 +2204,36 @@ export async function mountBruteGame(root, options = {}) {
         ) ||
         'fists'
 
+      const attackVariant =
+        Math.abs(
+          Math.floor(
+            num(
+              event.attackVariant,
+              event.animationVariant
+            )
+          )
+        ) % 6
+
       actorEl?.classList.add(
         weaponAnimationClass(
           weaponId
-        )
+        ),
+        'attack-v' +
+          attackVariant
       )
+
+      if (
+        event.type ===
+          'FINISHER'
+      ) {
+        actorEl?.classList.add(
+          'finisher'
+        )
+
+        arena?.classList.add(
+          'finisher'
+        )
+      }
 
       if (event.counter) {
         actorEl?.classList.add(
@@ -2140,8 +2241,89 @@ export async function mountBruteGame(root, options = {}) {
         )
       }
 
+      const category =
+        event.category ||
+        BRUTE_WEAPONS[
+          weaponId
+        ]?.category ||
+        'unarmed'
+
       if (
-        event.category === 'ranged' &&
+        category === 'heavy'
+      ) {
+        arena?.classList.add(
+          'impact-heavy'
+        )
+
+        const shockwave =
+          document.createElement(
+            'span'
+          )
+
+        shockwave.className =
+          'brute-shockwave'
+
+        shockwave.style.left =
+          event.target === 'left'
+            ? '31%'
+            : '69%'
+
+        shockwave.style.top =
+          '58%'
+
+        fx?.appendChild(
+          shockwave
+        )
+      } else if (
+        category === 'flexible'
+      ) {
+        arena?.classList.add(
+          'impact-flexible'
+        )
+
+        const slash =
+          document.createElement(
+            'span'
+          )
+
+        slash.className =
+          'brute-slash-fx ' +
+          (
+            event.actor === 'right'
+              ? 'right'
+              : ''
+          )
+
+        fx?.appendChild(
+          slash
+        )
+      } else if (
+        category === 'ranged'
+      ) {
+        arena?.classList.add(
+          'impact-ranged'
+        )
+      } else {
+        const speedline =
+          document.createElement(
+            'span'
+          )
+
+        speedline.className =
+          'brute-speedline ' +
+          (
+            event.actor === 'right'
+              ? 'right'
+              : ''
+          )
+
+        fx?.appendChild(
+          speedline
+        )
+      }
+
+      if (
+        category === 'ranged' &&
         !event.thrown
       ) {
         const projectile =
@@ -2163,6 +2345,54 @@ export async function mountBruteGame(root, options = {}) {
 
         fx?.appendChild(
           projectile
+        )
+      }
+
+      if (event.critical) {
+        actorEl?.classList.add(
+          'critical-burst'
+        )
+
+        const burst =
+          document.createElement(
+            'span'
+          )
+
+        burst.className =
+          'brute-crit-burst'
+
+        burst.style.left =
+          event.target === 'left'
+            ? '30%'
+            : '70%'
+
+        burst.style.top =
+          '50%'
+
+        fx?.appendChild(
+          burst
+        )
+      }
+
+      if (
+        event.type ===
+          'FINISHER'
+      ) {
+        const flare =
+          document.createElement(
+            'span'
+          )
+
+        flare.className =
+          'brute-finisher-flare'
+
+        flare.style.left =
+          event.actor === 'left'
+            ? '42%'
+            : '58%'
+
+        fx?.appendChild(
+          flare
         )
       }
     }
@@ -2237,8 +2467,20 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.type === 'DODGE') {
+      const dodgeVariant =
+        Math.abs(
+          Math.floor(
+            num(
+              event.animationVariant,
+              0
+            )
+          )
+        ) % 3
+
       actorEl?.classList.add(
-        'dodge'
+        'dodge',
+        'dodge-v' +
+          dodgeVariant
       )
 
       nudgeFightOffset(
@@ -2273,6 +2515,38 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.type === 'MISS') {
+      const missVariant =
+        Math.abs(
+          Math.floor(
+            num(
+              event.animationVariant,
+              0
+            )
+          )
+        ) % 3
+
+      actorEl?.classList.add(
+        'miss-v' +
+          missVariant
+      )
+
+      const swoosh =
+        document.createElement(
+          'span'
+        )
+
+      swoosh.className =
+        'brute-miss-swoosh ' +
+        (
+          event.actor === 'right'
+            ? 'right'
+            : ''
+        )
+
+      fx?.appendChild(
+        swoosh
+      )
+
       const floater =
         document.createElement(
           'span'
@@ -2463,7 +2737,11 @@ export async function mountBruteGame(root, options = {}) {
         )
 
       impact.className =
-        'brute-impact' +
+        'brute-impact ' +
+        esc(
+          event.impactStyle ||
+          ''
+        ) +
         (
           event.critical
             ? ' crit'
@@ -2490,8 +2768,20 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.type === 'KO') {
+      const koVariant =
+        Math.abs(
+          Math.floor(
+            num(
+              event.animationVariant,
+              0
+            )
+          )
+        ) % 3
+
       targetEl?.classList.add(
-        'ko'
+        'ko',
+        'ko-v' +
+          koVariant
       )
 
       targetEl?.style.setProperty(
