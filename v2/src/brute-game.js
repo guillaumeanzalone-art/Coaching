@@ -2839,6 +2839,218 @@ function ensureStyles() {
 @keyframes bruteForegroundImpact{0%,100%{transform:translate(0,0)}28%{transform:translate(-4px,2px)}52%{transform:translate(5px,-1px)}76%{transform:translate(-2px,1px)}}
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
+/* ================================================================
+   GA BRUTE · MOTION / ARTICULATION V5
+   Per-limb animation, camera follow, contact particles and pacing
+   ================================================================ */
+.brute-arena-v3,
+.brute-fighters-v2,
+.brute-fighters-v2 .brute-fighter,
+.brute-fighters-v2 .ga-brute-svg,
+.brute-fighters-v2 .ga-brute-svg *{
+  backface-visibility:hidden;
+}
+.brute-arena-v3{contain:layout paint}
+.brute-fighters-v2{
+  transform-origin:50% 76%;
+  transition:transform .18s cubic-bezier(.16,.82,.22,1),filter .18s ease;
+  will-change:transform;
+}
+.brute-fighters-v2 .brute-fighter{
+  will-change:transform;
+  transition:transform .2s cubic-bezier(.16,.86,.2,1),filter .12s ease;
+}
+.brute-fighters-v2 .fight-model .brute-torso,
+.brute-fighters-v2 .fight-model .brute-head,
+.brute-fighters-v2 .fight-model .brute-arm,
+.brute-fighters-v2 .fight-model .brute-leg,
+.brute-fighters-v2 .fight-model .brute-bottom,
+.brute-fighters-v2 .fight-model .brute-weapon{
+  transform-box:fill-box;
+  will-change:transform,filter;
+}
+.brute-fighters-v2 .fight-model .brute-torso{transform-origin:50% 85%;animation:bruteFighterTorsoIdle 1.55s ease-in-out infinite}
+.brute-fighters-v2 .fight-model .brute-arm-left{transform-origin:82% 58%;animation:bruteGuardIdleLeft 1.35s ease-in-out infinite}
+.brute-fighters-v2 .fight-model .brute-arm-right{transform-origin:18% 58%;animation:bruteGuardIdleRight 1.35s ease-in-out infinite -.18s}
+.brute-fighters-v2 .fight-model .brute-leg-left{transform-origin:70% 12%;animation:bruteRearLegIdle 1.55s ease-in-out infinite}
+.brute-fighters-v2 .fight-model .brute-leg-right{transform-origin:30% 12%;animation:bruteLeadLegIdle 1.55s ease-in-out infinite}
+.brute-fighters-v2 .fight-model .brute-bottom{transform-origin:50% 10%;animation:bruteHipIdle 1.55s ease-in-out infinite}
+.brute-fighter.dashing .fight-model .brute-stage{animation:bruteDashBody .22s ease-out!important}
+.brute-fighter.dashing .fight-model .brute-leg-left{animation:bruteDashRear .22s ease-out!important}
+.brute-fighter.dashing .fight-model .brute-leg-right{animation:bruteDashLead .22s ease-out!important}
+.brute-fighter.dashing .fight-model .brute-arm-left,
+.brute-fighter.dashing .fight-model .brute-arm-right{animation:bruteDashGuard .22s ease-out!important}
+.brute-fighter.recovery-step .fight-model .brute-stage{animation:bruteRecoveryBody .24s ease-out!important}
+.brute-fighter.windup-fast .fight-model .brute-torso{animation:bruteWindupTorsoFast .22s ease!important}
+.brute-fighter.windup-fast .fight-model .brute-arm-right{animation:bruteWindupGuardFast .22s ease!important}
+.brute-fighter.windup-heavy .fight-model .brute-torso{animation:bruteWindupTorsoHeavy .34s ease!important}
+.brute-fighter.windup-heavy .fight-model .brute-arm-right{animation:bruteWindupGuardHeavy .34s ease!important}
+.brute-fighter.windup-heavy .fight-model .brute-leg-left{animation:bruteWindupRearHeavy .34s ease!important}
+.brute-fighter.windup-flexible .fight-model .brute-torso{animation:bruteWindupTorsoFlex .27s ease!important}
+.brute-fighter.windup-ranged .fight-model .brute-arm-right{animation:bruteWindupRangedArm .28s ease!important}
+
+/* Jab */
+.brute-fighter.attack-v0 .fight-model .brute-arm-right{animation:bruteLimbJab .31s cubic-bezier(.12,.86,.18,1)!important}
+.brute-fighter.attack-v0 .fight-model .brute-torso{animation:bruteTorsoJab .31s cubic-bezier(.12,.86,.18,1)!important}
+.brute-fighter.attack-v0 .fight-model .brute-leg-left{animation:bruteRearDrive .31s ease!important}
+/* Hook */
+.brute-fighter.attack-v1 .fight-model .brute-arm-right{animation:bruteLimbHook .38s cubic-bezier(.12,.82,.2,1)!important}
+.brute-fighter.attack-v1 .fight-model .brute-arm-left{animation:bruteGuardCounterbalance .38s ease!important}
+.brute-fighter.attack-v1 .fight-model .brute-torso{animation:bruteTorsoHook .38s ease!important}
+.brute-fighter.attack-v1 .fight-model .brute-bottom{animation:bruteHipHook .38s ease!important}
+/* Uppercut */
+.brute-fighter.attack-v2 .fight-model .brute-arm-right{animation:bruteLimbUpper .39s cubic-bezier(.13,.8,.18,1)!important}
+.brute-fighter.attack-v2 .fight-model .brute-torso{animation:bruteTorsoUpper .39s ease!important}
+.brute-fighter.attack-v2 .fight-model .brute-leg-left,
+.brute-fighter.attack-v2 .fight-model .brute-leg-right{animation:bruteLegUpper .39s ease!important}
+/* Spin / cross */
+.brute-fighter.attack-v3 .fight-model .brute-arm-right{animation:bruteLimbSpin .43s ease!important}
+.brute-fighter.attack-v3 .fight-model .brute-arm-left{animation:bruteLimbSpinGuard .43s ease!important}
+.brute-fighter.attack-v3 .fight-model .brute-torso{animation:bruteTorsoSpin .43s ease!important}
+.brute-fighter.attack-v3 .fight-model .brute-bottom{animation:bruteHipSpin .43s ease!important}
+/* Heavy slam */
+.brute-fighter.attack-v4 .fight-model .brute-arm-right{animation:bruteLimbSlam .48s cubic-bezier(.13,.74,.18,1)!important}
+.brute-fighter.attack-v4 .fight-model .brute-arm-left{animation:bruteLimbSlamGuard .48s ease!important}
+.brute-fighter.attack-v4 .fight-model .brute-torso{animation:bruteTorsoSlam .48s ease!important}
+.brute-fighter.attack-v4 .fight-model .brute-leg-left{animation:bruteRearDriveHeavy .48s ease!important}
+/* Low sweep */
+.brute-fighter.attack-v5 .fight-model .brute-torso{animation:bruteTorsoSweep .4s ease!important}
+.brute-fighter.attack-v5 .fight-model .brute-leg-right{animation:bruteLeadSweep .4s cubic-bezier(.18,.8,.2,1)!important}
+.brute-fighter.attack-v5 .fight-model .brute-arm-left,
+.brute-fighter.attack-v5 .fight-model .brute-arm-right{animation:bruteSweepGuard .4s ease!important}
+
+.brute-fighter.dodge-v0 .fight-model .brute-torso{animation:bruteDodgeTorsoStep .46s ease!important}
+.brute-fighter.dodge-v0 .fight-model .brute-leg-left,
+.brute-fighter.dodge-v0 .fight-model .brute-leg-right{animation:bruteDodgeLegStep .46s ease!important}
+.brute-fighter.dodge-v1 .fight-model .brute-torso{animation:bruteDodgeTorsoDuck .46s ease!important}
+.brute-fighter.dodge-v1 .fight-model .brute-arm-left,
+.brute-fighter.dodge-v1 .fight-model .brute-arm-right{animation:bruteDodgeGuardDuck .46s ease!important}
+.brute-fighter.dodge-v2 .fight-model .brute-leg-left,
+.brute-fighter.dodge-v2 .fight-model .brute-leg-right{animation:bruteDodgeLegHop .49s ease!important}
+.brute-fighter.blocking .fight-model .brute-arm-left{animation:bruteBlockGuardLeft .38s ease!important}
+.brute-fighter.blocking .fight-model .brute-arm-right{animation:bruteBlockGuardRight .38s ease!important}
+.brute-fighter.blocking .fight-model .brute-torso{animation:bruteBlockTorso .38s ease!important}
+.brute-fighter.hit-react .fight-model .brute-head{animation:bruteHitHead .34s ease!important}
+.brute-fighter.hit-react .fight-model .brute-arm-left,
+.brute-fighter.hit-react .fight-model .brute-arm-right{animation:bruteHitGuardBreak .34s ease!important}
+.brute-fighter.hit-heavy.hit-react .fight-model .brute-torso{animation:bruteHitTorsoHeavy .46s ease!important}
+.brute-fighter.hit-heavy.hit-react .fight-model .brute-head{animation:bruteHitHeadHeavy .46s ease!important}
+
+.brute-arena.camera-intro .brute-fighters{animation:bruteCameraIntro .54s cubic-bezier(.16,.86,.2,1)}
+.brute-arena.camera-left .brute-fighters{transform:translateX(1.1%) scale(1.012)}
+.brute-arena.camera-right .brute-fighters{transform:translateX(-1.1%) scale(1.012)}
+.brute-arena.camera-attack-left .brute-fighters{transform:translateX(1.9%) scale(1.025)}
+.brute-arena.camera-attack-right .brute-fighters{transform:translateX(-1.9%) scale(1.025)}
+.brute-arena.camera-impact .brute-fighters{animation:bruteCameraImpact .32s cubic-bezier(.12,.72,.2,1)}
+.brute-arena.camera-critical .brute-fighters{animation:bruteCameraCritical .38s cubic-bezier(.12,.76,.18,1)}
+.brute-arena.camera-ko .brute-fighters{animation:bruteCameraKo .7s cubic-bezier(.12,.74,.18,1) forwards}
+.brute-arena.camera-left .brute-arena-v2-wall,
+.brute-arena.camera-attack-left .brute-arena-v2-wall{transform:translateX(-.5%) scale(1.004)}
+.brute-arena.camera-right .brute-arena-v2-wall,
+.brute-arena.camera-attack-right .brute-arena-v2-wall{transform:translateX(.5%) scale(1.004)}
+.brute-arena-v2-wall{transition:transform .2s ease;transform-origin:50% 50%}
+
+.brute-floor-streak{
+  position:absolute;z-index:6;bottom:78px;width:165px;height:10px;border-radius:50%;
+  background:linear-gradient(90deg,transparent,rgba(255,226,157,.8),rgba(102,55,31,.34),transparent);
+  filter:blur(2px);animation:bruteFloorStreak .32s ease-out forwards;
+}
+.brute-floor-streak.left{left:12%}
+.brute-floor-streak.right{right:12%;transform:scaleX(-1)}
+.brute-dust.secondary{opacity:.58;transform:scale(.72);animation-delay:.05s}
+.brute-contact-ring{
+  position:absolute;z-index:21;width:64px;height:64px;border:4px solid rgba(255,244,184,.9);border-radius:50%;
+  transform:translate(-50%,-50%) scale(.22);box-shadow:0 0 12px rgba(255,124,39,.65);
+  animation:bruteContactRing .34s ease-out forwards;
+}
+.brute-contact-ring.heavy{width:92px;height:92px;border-width:6px}
+.brute-debris{
+  position:absolute;z-index:22;width:9px;height:5px;border-radius:1px;
+  background:linear-gradient(90deg,#fff0a5,#e66d2b);
+  box-shadow:0 0 7px rgba(255,111,39,.65);
+  transform:translate(-50%,-50%);
+  animation:bruteDebris .46s cubic-bezier(.12,.7,.2,1) forwards;
+}
+.brute-afterimage{
+  animation-delay:calc(var(--ghost-index,0) * .025s)!important;
+  opacity:calc(.34 - var(--ghost-index,0) * .07);
+}
+.brute-hud-v3-hp i.damage-tick{animation:bruteHpDamage .28s ease}
+.brute-log.brute-log-v3.pulse{animation:bruteLogPulse .24s ease}
+
+@keyframes bruteFighterTorsoIdle{0%,100%{transform:translateY(0) rotate(-.4deg) scale(1)}50%{transform:translateY(2px) rotate(.5deg) scale(1.008,.994)}}
+@keyframes bruteGuardIdleLeft{0%,100%{transform:rotate(-1deg) translateY(0)}50%{transform:rotate(2.2deg) translateY(1px)}}
+@keyframes bruteGuardIdleRight{0%,100%{transform:rotate(1deg) translateY(0)}50%{transform:rotate(-2deg) translateY(-1px)}}
+@keyframes bruteRearLegIdle{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(-1.2deg) translateY(1px)}}
+@keyframes bruteLeadLegIdle{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(1deg) translateY(-1px)}}
+@keyframes bruteHipIdle{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(1px) rotate(.6deg)}}
+@keyframes bruteDashBody{0%{transform:translateX(-7px) skewX(-2deg)}55%{transform:translateX(9px) skewX(2deg)}100%{transform:none}}
+@keyframes bruteDashRear{0%{transform:rotate(-8deg) translateX(-4px)}55%{transform:rotate(9deg) translateX(6px)}100%{transform:none}}
+@keyframes bruteDashLead{0%{transform:rotate(6deg) translateX(4px)}55%{transform:rotate(-7deg) translateX(-4px)}100%{transform:none}}
+@keyframes bruteDashGuard{0%{transform:translateX(-3px)}55%{transform:translateX(6px)}100%{transform:none}}
+@keyframes bruteRecoveryBody{0%{transform:translateX(7px)}55%{transform:translateX(-3px)}100%{transform:none}}
+@keyframes bruteWindupTorsoFast{0%{transform:none}100%{transform:translateX(-3px) rotate(-4deg) scale(.99,1.015)}}
+@keyframes bruteWindupGuardFast{0%{transform:none}100%{transform:rotate(-23deg) translate(-5px,-2px)}}
+@keyframes bruteWindupTorsoHeavy{0%{transform:none}55%,100%{transform:translate(-5px,3px) rotate(-8deg) scale(.97,1.025)}}
+@keyframes bruteWindupGuardHeavy{0%{transform:none}55%,100%{transform:rotate(-44deg) translate(-8px,-6px)}}
+@keyframes bruteWindupRearHeavy{0%{transform:none}55%,100%{transform:rotate(-5deg) translate(-4px,3px)}}
+@keyframes bruteWindupTorsoFlex{0%{transform:none}55%,100%{transform:rotate(-6deg) translateX(-4px)}}
+@keyframes bruteWindupRangedArm{0%{transform:none}100%{transform:rotate(-32deg) translate(-8px,-8px)}}
+@keyframes bruteLimbJab{0%,100%{transform:none}30%{transform:rotate(-6deg) translateX(-4px)}56%{transform:rotate(12deg) translate(31px,-2px)}72%{transform:rotate(5deg) translateX(15px)}}
+@keyframes bruteTorsoJab{0%,100%{transform:none}30%{transform:rotate(-2deg) translateX(-2px)}56%{transform:rotate(5deg) translateX(8px)}}
+@keyframes bruteRearDrive{0%,100%{transform:none}42%{transform:rotate(-4deg) translateX(-3px)}60%{transform:rotate(3deg) translateX(3px)}}
+@keyframes bruteLimbHook{0%,100%{transform:none}24%{transform:rotate(-38deg) translate(-7px,2px)}58%{transform:rotate(58deg) translate(24px,-4px)}76%{transform:rotate(28deg) translate(12px,-2px)}}
+@keyframes bruteGuardCounterbalance{0%,100%{transform:none}55%{transform:rotate(-13deg) translate(-5px,-2px)}}
+@keyframes bruteTorsoHook{0%,100%{transform:none}25%{transform:rotate(-8deg) translateX(-4px)}58%{transform:rotate(15deg) translateX(10px)}76%{transform:rotate(5deg)}}
+@keyframes bruteHipHook{0%,100%{transform:none}58%{transform:rotate(11deg) translateX(5px)}}
+@keyframes bruteLimbUpper{0%,100%{transform:none}25%{transform:rotate(-22deg) translate(-5px,9px)}58%{transform:rotate(-72deg) translate(17px,-24px)}75%{transform:rotate(-38deg) translate(10px,-10px)}}
+@keyframes bruteTorsoUpper{0%,100%{transform:none}26%{transform:translateY(8px) scaleY(.96)}58%{transform:translate(7px,-13px) rotate(5deg) scaleY(1.035)}}
+@keyframes bruteLegUpper{0%,100%{transform:none}28%{transform:translateY(5px) scaleY(.96)}58%{transform:translateY(-4px) scaleY(1.02)}}
+@keyframes bruteLimbSpin{0%,100%{transform:none}24%{transform:rotate(-55deg) translate(-8px,2px)}58%{transform:rotate(72deg) translate(25px,-2px)}}
+@keyframes bruteLimbSpinGuard{0%,100%{transform:none}55%{transform:rotate(-24deg) translate(-8px,-3px)}}
+@keyframes bruteTorsoSpin{0%,100%{transform:none}25%{transform:rotate(-13deg)}58%{transform:rotate(20deg) translateX(8px)}}
+@keyframes bruteHipSpin{0%,100%{transform:none}58%{transform:rotate(14deg) translateX(5px)}}
+@keyframes bruteLimbSlam{0%,100%{transform:none}22%{transform:rotate(-64deg) translate(-8px,-16px)}54%{transform:rotate(44deg) translate(27px,16px)}75%{transform:rotate(15deg) translate(12px,5px)}}
+@keyframes bruteLimbSlamGuard{0%,100%{transform:none}26%{transform:rotate(-28deg) translate(-6px,-10px)}56%{transform:rotate(18deg) translate(8px,7px)}}
+@keyframes bruteTorsoSlam{0%,100%{transform:none}22%{transform:translate(-4px,-10px) rotate(-7deg)}54%{transform:translate(9px,9px) rotate(9deg) scaleY(.98)}}
+@keyframes bruteRearDriveHeavy{0%,100%{transform:none}24%{transform:rotate(-7deg) translate(-4px,-2px)}54%{transform:rotate(5deg) translate(5px,4px)}}
+@keyframes bruteTorsoSweep{0%,100%{transform:none}25%{transform:translateY(9px) rotate(-5deg) scaleY(.95)}58%{transform:translate(7px,12px) rotate(7deg) scaleY(.94)}}
+@keyframes bruteLeadSweep{0%,100%{transform:none}28%{transform:rotate(-5deg) translateY(2px)}58%{transform:rotate(46deg) translate(25px,8px)}74%{transform:rotate(18deg) translate(9px,3px)}}
+@keyframes bruteSweepGuard{0%,100%{transform:none}55%{transform:rotate(-12deg) translateY(7px)}}
+@keyframes bruteDodgeTorsoStep{0%,100%{transform:none}42%{transform:rotate(-8deg) translate(-8px,-2px)}}
+@keyframes bruteDodgeLegStep{0%,100%{transform:none}42%{transform:rotate(-6deg) translateX(-5px)}}
+@keyframes bruteDodgeTorsoDuck{0%,100%{transform:none}42%{transform:translateY(18px) scaleY(.84) rotate(-3deg)}}
+@keyframes bruteDodgeGuardDuck{0%,100%{transform:none}42%{transform:translateY(11px) rotate(-12deg)}}
+@keyframes bruteDodgeLegHop{0%,100%{transform:none}38%{transform:translateY(-8px) rotate(-4deg)}68%{transform:translateY(-2px)}}
+@keyframes bruteBlockGuardLeft{0%,100%{transform:none}42%{transform:rotate(-52deg) translate(-8px,-7px)}}
+@keyframes bruteBlockGuardRight{0%,100%{transform:none}42%{transform:rotate(-24deg) translate(-4px,-5px)}}
+@keyframes bruteBlockTorso{0%,100%{transform:none}42%{transform:scale(.95,1.03) translateY(4px)}}
+@keyframes bruteHitHead{0%,100%{transform:none}20%{transform:rotate(-10deg) translate(-3px,1px)}48%{transform:rotate(4deg)}}
+@keyframes bruteHitGuardBreak{0%,100%{transform:none}18%{transform:rotate(15deg) translate(7px,3px)}50%{transform:rotate(-5deg)}}
+@keyframes bruteHitTorsoHeavy{0%,100%{transform:none}18%{transform:rotate(-14deg) translate(-8px,4px) scale(.96,1.03)}48%{transform:rotate(6deg) translate(4px,-1px)}}
+@keyframes bruteHitHeadHeavy{0%,100%{transform:none}16%{transform:rotate(-18deg) translate(-5px,1px)}50%{transform:rotate(8deg)}}
+@keyframes bruteCameraIntro{0%{transform:scale(.94);filter:blur(.8px)}65%{transform:scale(1.025);filter:blur(0)}100%{transform:scale(1)}}
+@keyframes bruteCameraImpact{0%,100%{transform:scale(1)}22%{transform:translate(-4px,2px) scale(1.025)}42%{transform:translate(5px,-2px) scale(1.035)}68%{transform:translate(-2px,1px) scale(1.018)}}
+@keyframes bruteCameraCritical{0%{transform:scale(1)}28%{transform:scale(1.06)}52%{transform:translate(4px,-3px) scale(1.045)}100%{transform:scale(1)}}
+@keyframes bruteCameraKo{0%{transform:scale(1)}35%{transform:scale(1.055)}100%{transform:scale(1.035) translateY(-4px)}}
+@keyframes bruteFloorStreak{0%{opacity:0;transform:scaleX(.25)}35%{opacity:.9}100%{opacity:0;transform:translateX(42px) scaleX(1.2)}}
+@keyframes bruteContactRing{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}35%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(2.2)}}
+@keyframes bruteDebris{0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(0)}24%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--debris-x)),calc(-50% + var(--debris-y))) scale(.2) rotate(var(--debris-r))}}
+@keyframes bruteHpDamage{0%,100%{filter:none}28%{filter:brightness(2) saturate(1.6)}58%{filter:brightness(.8) saturate(1.4)}}
+@keyframes bruteLogPulse{0%{transform:translateX(-50%) scale(.98);opacity:.68}55%{transform:translateX(-50%) scale(1.018);opacity:1}100%{transform:translateX(-50%) scale(1);opacity:1}}
+
+@media (prefers-reduced-motion: reduce){
+  .brute-fighters-v2 .fight-model .brute-stage,
+  .brute-fighters-v2 .fight-model .brute-torso,
+  .brute-fighters-v2 .fight-model .brute-arm,
+  .brute-fighters-v2 .fight-model .brute-leg,
+  .brute-fighters-v2 .fight-model .brute-bottom,
+  .brute-fighters-v2 .fight-model .brute-head,
+  .brute-arena-v4-banner,
+  .brute-arena-v2-cloud,
+  .brute-versus-callout{animation-duration:.001ms!important;animation-iteration-count:1!important}
+}
+
 @media(max-width:900px){
   .brute-armory-v3{grid-template-columns:1fr}
   .brute-armory-v3-focus{min-height:520px}
@@ -5706,38 +5918,38 @@ export async function mountBruteGame(root, options = {}) {
 
   function eventDelay(event) {
     const delays = {
-      START: 180,
-      ARRIVE: 620,
+      START: 120,
+      ARRIVE: 520,
       WINDUP:
         event?.category === 'heavy'
-          ? 360
+          ? 320
           : event?.category === 'ranged'
-            ? 300
+            ? 260
             : event?.category === 'flexible'
-              ? 285
-              : 225,
-      MOVE: 190,
-      MOVE_BACK: 210,
-      REPOSITION: 260,
-      WEAPON_SWITCH: 430,
-      WEAPON_THROW: 260,
-      BLOCK: 390,
-      COUNTER: 250,
-      REST: 430,
-      SKILL_ACTIVATE: 520,
-      ATTACK: event?.critical ? 560 : 400,
-      DODGE: 480,
-      MISS: 330,
-      COUNTER_READY: 300,
-      COMBO: 210,
-      DISARM: 480,
-      GRIND: 540,
-      PET_ATTACK: 410,
-      PET_DODGE: 320,
-      STUN_SKIP: 480,
-      FINISHER: 620,
-      KO: 760,
-      END: 80,
+              ? 245
+              : 190,
+      MOVE: 150,
+      MOVE_BACK: 165,
+      REPOSITION: 190,
+      WEAPON_SWITCH: 360,
+      WEAPON_THROW: 230,
+      BLOCK: 340,
+      COUNTER: 210,
+      REST: 360,
+      SKILL_ACTIVATE: 430,
+      ATTACK: event?.critical ? 480 : 350,
+      DODGE: 390,
+      MISS: 280,
+      COUNTER_READY: 240,
+      COMBO: 170,
+      DISARM: 400,
+      GRIND: 460,
+      PET_ATTACK: 350,
+      PET_DODGE: 270,
+      STUN_SKIP: 390,
+      FINISHER: 540,
+      KO: 700,
+      END: 70,
     }
 
     return Math.max(
@@ -5793,11 +6005,15 @@ export async function mountBruteGame(root, options = {}) {
         'finisher',
         'critical-burst',
         'staggering',
-        'hitstop'
+        'hitstop',
+        'dashing',
+        'recovery-step',
+        'committed',
+        'hit-react'
       )
     })
     root.querySelectorAll('.brute-float').forEach(el => el.remove())
-    root.querySelectorAll('.brute-impact,.brute-dust,.brute-skill-banner,.brute-projectile,.brute-speedline,.brute-slash-fx,.brute-shockwave,.brute-crit-burst,.brute-miss-swoosh,.brute-parry-spark,.brute-finisher-flare,.brute-afterimage,.brute-stat-spark,.brute-combo-burst').forEach(el => el.remove())
+    root.querySelectorAll('.brute-impact,.brute-dust,.brute-skill-banner,.brute-projectile,.brute-speedline,.brute-slash-fx,.brute-shockwave,.brute-crit-burst,.brute-miss-swoosh,.brute-parry-spark,.brute-finisher-flare,.brute-afterimage,.brute-stat-spark,.brute-combo-burst,.brute-floor-streak,.brute-debris,.brute-contact-ring').forEach(el => el.remove())
 
     const arena =
       root.querySelector('[data-brute-arena]')
@@ -5809,7 +6025,15 @@ export async function mountBruteGame(root, options = {}) {
       'impact-heavy',
       'impact-flexible',
       'impact-ranged',
-      'stat-strength'
+      'stat-strength',
+      'camera-intro',
+      'camera-left',
+      'camera-right',
+      'camera-attack-left',
+      'camera-attack-right',
+      'camera-impact',
+      'camera-critical',
+      'camera-ko'
     )
   }
 
@@ -5969,11 +6193,13 @@ export async function mountBruteGame(root, options = {}) {
       )
       leftEl?.style.setProperty('--fight-y','0px')
       rightEl?.style.setProperty('--fight-y','0px')
+      arena?.classList.add('camera-intro')
     }
 
     if (event.type === 'ARRIVE') {
       leftEl?.classList.add('arriving')
       rightEl?.classList.add('arriving')
+      arena?.classList.add('camera-intro')
       leftEl?.style.setProperty('--fight-y',num(event.leftY,0)+'px')
       rightEl?.style.setProperty('--fight-y',num(event.rightY,0)+'px')
 
@@ -6019,6 +6245,12 @@ export async function mountBruteGame(root, options = {}) {
               ? 'windup-flexible'
               : 'windup-fast'
 
+      arena?.classList.add(
+        event.actor === 'left'
+          ? 'camera-left'
+          : 'camera-right'
+      )
+
       actorEl?.classList.add(
         cls,
         'windup-stance-' +
@@ -6059,6 +6291,13 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.type === 'MOVE') {
+      actorEl?.classList.add('dashing')
+      arena?.classList.add(
+        event.actor === 'left'
+          ? 'camera-left'
+          : 'camera-right'
+      )
+
       const reach =
         num(event.reach,1)
 
@@ -6090,9 +6329,35 @@ export async function mountBruteGame(root, options = {}) {
           : '70%'
 
       fx?.appendChild(dust)
+
+      const streak =
+        document.createElement('span')
+
+      streak.className =
+        'brute-floor-streak ' +
+        (
+          event.actor === 'right'
+            ? 'right'
+            : 'left'
+        )
+
+      fx?.appendChild(streak)
+
+      const dust2 =
+        document.createElement('span')
+
+      dust2.className = 'brute-dust secondary'
+      dust2.style.left =
+        event.actor === 'left'
+          ? '18%'
+          : '76%'
+
+      fx?.appendChild(dust2)
     }
 
     if (event.type === 'MOVE_BACK') {
+      actorEl?.classList.add('recovery-step')
+
       setFightOffset(
         actorEl,
         0
@@ -6267,7 +6532,14 @@ export async function mountBruteGame(root, options = {}) {
           weaponId
         ),
         'attack-v' +
-          attackVariant
+          attackVariant,
+        'committed'
+      )
+
+      arena?.classList.add(
+        event.actor === 'left'
+          ? 'camera-attack-left'
+          : 'camera-attack-right'
       )
 
       actorEl?.style.setProperty(
@@ -6286,25 +6558,43 @@ export async function mountBruteGame(root, options = {}) {
         actorSpeed >= 17 &&
         actorEl
       ) {
-        const ghost =
-          actorEl
-            .querySelector(
-              '.ga-brute-svg'
-            )
-            ?.cloneNode(
-              true
+        for (
+          let ghostIndex = 0;
+          ghostIndex < (
+            actorSpeed >= 23
+              ? 3
+              : 2
+          );
+          ghostIndex += 1
+        ) {
+          const ghost =
+            actorEl
+              .querySelector(
+                '.ga-brute-svg'
+              )
+              ?.cloneNode(
+                true
+              )
+
+          if (ghost) {
+            ghost.classList.add(
+              'brute-afterimage',
+              event.actor === 'right'
+                ? 'right'
+                : 'left'
             )
 
-        if (ghost) {
-          ghost.classList.add(
-            'brute-afterimage',
-            event.actor === 'right'
-              ? 'right'
-              : 'left'
-          )
-          actorEl.appendChild(
-            ghost
-          )
+            ghost.style.setProperty(
+              '--ghost-index',
+              String(
+                ghostIndex
+              )
+            )
+
+            actorEl.appendChild(
+              ghost
+            )
+          }
         }
       }
 
@@ -6847,7 +7137,8 @@ export async function mountBruteGame(root, options = {}) {
       targetEl?.classList.add(
         heavy
           ? 'hit-heavy'
-          : 'hit'
+          : 'hit',
+        'hit-react'
       )
 
       const impactVariant =
@@ -6930,7 +7221,8 @@ export async function mountBruteGame(root, options = {}) {
 
       if (heavy) {
         arena?.classList.add(
-          'shake'
+          'shake',
+          'camera-impact'
         )
 
         const freezeDelay =
@@ -6980,7 +7272,8 @@ export async function mountBruteGame(root, options = {}) {
         event.type === 'FINISHER'
       ) {
         arena?.classList.add(
-          'flash'
+          'flash',
+          'camera-critical'
         )
       }
 
@@ -7013,6 +7306,132 @@ export async function mountBruteGame(root, options = {}) {
         impact
       )
 
+      const ring =
+        document.createElement(
+          'span'
+        )
+
+      ring.className =
+        'brute-contact-ring' +
+        (
+          heavy
+            ? ' heavy'
+            : ''
+        )
+
+      ring.style.left =
+        event.target === 'left'
+          ? '30%'
+          : '70%'
+
+      ring.style.top =
+        '53%'
+
+      fx?.appendChild(
+        ring
+      )
+
+      const debrisCount =
+        heavy
+          ? 9
+          : 5
+
+      for (
+        let debrisIndex = 0;
+        debrisIndex < debrisCount;
+        debrisIndex += 1
+      ) {
+        const debris =
+          document.createElement(
+            'span'
+          )
+
+        debris.className =
+          'brute-debris'
+
+        const direction =
+          event.target === 'left'
+            ? -1
+            : 1
+
+        const spread =
+          (
+            debrisIndex -
+            (
+              debrisCount - 1
+            ) / 2
+          )
+
+        debris.style.left =
+          event.target === 'left'
+            ? '30%'
+            : '70%'
+
+        debris.style.top =
+          (
+            50 +
+            (
+              debrisIndex % 3
+            ) * 2
+          ) +
+          '%'
+
+        debris.style.setProperty(
+          '--debris-x',
+          (
+            direction *
+            (
+              24 +
+              Math.abs(spread) * 9
+            )
+          ) +
+          'px'
+        )
+
+        debris.style.setProperty(
+          '--debris-y',
+          (
+            -18 -
+            (
+              debrisIndex % 4
+            ) *
+            9
+          ) +
+          'px'
+        )
+
+        debris.style.setProperty(
+          '--debris-r',
+          (
+            spread * 24
+          ) +
+          'deg'
+        )
+
+        fx?.appendChild(
+          debris
+        )
+      }
+
+      const hpBar =
+        root.querySelector(
+          '[data-hp-'+
+          event.target+
+          ']'
+        )
+
+      if (hpBar) {
+        hpBar.classList.remove(
+          'damage-tick'
+        )
+
+        void hpBar.offsetWidth
+
+        hpBar.classList.add(
+          'damage-tick'
+        )
+      }
+
       fightSfx(
         event.critical
           ? 'critical'
@@ -7021,6 +7440,8 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.type === 'KO') {
+      arena?.classList.add('camera-ko')
+
       const koVariant =
         Math.abs(
           Math.floor(
@@ -7215,8 +7636,18 @@ export async function mountBruteGame(root, options = {}) {
       )
 
     if (log) {
+      log.classList.remove(
+        'pulse'
+      )
+
+      void log.offsetWidth
+
       log.textContent =
         eventText(event,tl)
+
+      log.classList.add(
+        'pulse'
+      )
     }
 
     const round =
