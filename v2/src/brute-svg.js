@@ -883,19 +883,37 @@ export function renderBruteSvg(
           '<circle cx="'+(armRightX+26)+'" cy="249" r="'+Math.max(14,metrics.armW*.58)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
         '</g>'
 
+  const legLeftMarkup =
+    fightModel
+      ? '<g class="brute-limb brute-leg brute-leg-left brute-leg-rear" data-brute-part="leg-left">'+
+          '<path d="M'+(center-metrics.thighW-1)+' 279 L'+(center-7)+' 282 L'+(center-26)+' 334 L'+(center-metrics.thighW-31)+' 343Z" fill="'+skin+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
+          '<path d="M'+(center-metrics.thighW-38)+' 337 Q'+(center-metrics.thighW-12)+' 330 '+(center-22)+' 335 L'+(center-17)+' 352 L'+(center-metrics.thighW-46)+' 356 Q'+(center-metrics.thighW-54)+' 347 '+(center-metrics.thighW-38)+' 337Z" fill="'+shoe+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
+          '<path d="M'+(center-metrics.thighW-11)+' 292 L'+(center-19)+' 327" fill="none" stroke="'+skinHighlight+'" stroke-width="3" opacity=".22" stroke-linecap="round"/>'+
+        '</g>'
+      : '<g class="brute-limb brute-leg brute-leg-left" data-brute-part="leg-left">'+
+          '<path d="M'+(center-metrics.thighW-4)+' 282 L'+(center-5)+' 282 L'+(center-10)+' 341 L'+(center-metrics.thighW-7)+' 341Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+          '<path d="M'+(center-metrics.thighW-15)+' 335 Q'+(center-metrics.thighW+4)+' 325 '+(center-7)+' 336 L'+(center-9)+' 354 L'+(center-metrics.thighW-20)+' 354 Q'+(center-metrics.thighW-27)+' 344 '+(center-metrics.thighW-15)+' 335Z" fill="'+shoe+'" stroke="#171717" stroke-width="5"/>'+
+        '</g>'
+
+  const legRightMarkup =
+    fightModel
+      ? '<g class="brute-limb brute-leg brute-leg-right brute-leg-lead" data-brute-part="leg-right">'+
+          '<path d="M'+(center+4)+' 282 L'+(center+metrics.thighW+5)+' 278 L'+(center+metrics.thighW+30)+' 330 L'+(center+21)+' 339Z" fill="'+skin+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
+          '<path d="M'+(center+15)+' 334 Q'+(center+metrics.thighW+13)+' 325 '+(center+metrics.thighW+41)+' 335 Q'+(center+metrics.thighW+53)+' 344 '+(center+metrics.thighW+45)+' 354 L'+(center+18)+' 352Z" fill="'+shoe+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
+          '<path d="M'+(center+13)+' 292 L'+(center+metrics.thighW+22)+' 324" fill="none" stroke="'+skinHighlight+'" stroke-width="3" opacity=".22" stroke-linecap="round"/>'+
+        '</g>'
+      : '<g class="brute-limb brute-leg brute-leg-right" data-brute-part="leg-right">'+
+          '<path d="M'+(center+5)+' 282 L'+(center+metrics.thighW+4)+' 282 L'+(center+metrics.thighW+7)+' 341 L'+(center+10)+' 341Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+          '<path d="M'+(center+8)+' 336 Q'+(center+metrics.thighW-4)+' 325 '+(center+metrics.thighW+15)+' 335 Q'+(center+metrics.thighW+27)+' 344 '+(center+metrics.thighW+20)+' 354 L'+(center+9)+' 354Z" fill="'+shoe+'" stroke="#171717" stroke-width="5"/>'+
+        '</g>'
+
   return '<svg class="ga-brute-svg '+String(options.className || '')+'" data-side="'+String(options.side || 'right')+'" data-body="'+bodyId+'" viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+label+'">'+
     '<g class="brute-stage" transform="'+mirror+'">'+
       '<ellipse class="brute-shadow" cx="160" cy="355" rx="'+(76+bodyId*4)+'" ry="14" fill="rgba(0,0,0,.2)"/>'+
 
-      '<g class="brute-limb brute-leg brute-leg-left" data-brute-part="leg-left">'+
-        '<path d="M'+(center-metrics.thighW-4)+' 282 L'+(center-5)+' 282 L'+(center-10)+' 341 L'+(center-metrics.thighW-7)+' 341Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-        '<path d="M'+(center-metrics.thighW-15)+' 335 Q'+(center-metrics.thighW+4)+' 325 '+(center-7)+' 336 L'+(center-9)+' 354 L'+(center-metrics.thighW-20)+' 354 Q'+(center-metrics.thighW-27)+' 344 '+(center-metrics.thighW-15)+' 335Z" fill="'+shoe+'" stroke="#171717" stroke-width="5"/>'+
-      '</g>'+
+      legLeftMarkup+
 
-      '<g class="brute-limb brute-leg brute-leg-right" data-brute-part="leg-right">'+
-        '<path d="M'+(center+5)+' 282 L'+(center+metrics.thighW+4)+' 282 L'+(center+metrics.thighW+7)+' 341 L'+(center+10)+' 341Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-        '<path d="M'+(center+8)+' 336 Q'+(center+metrics.thighW-4)+' 325 '+(center+metrics.thighW+15)+' 335 Q'+(center+metrics.thighW+27)+' 344 '+(center+metrics.thighW+20)+' 354 L'+(center+9)+' 354Z" fill="'+shoe+'" stroke="#171717" stroke-width="5"/>'+
-      '</g>'+
+      legRightMarkup+
 
       '<g class="brute-bottom" data-brute-part="bottom">'+
         bottomSvg(
