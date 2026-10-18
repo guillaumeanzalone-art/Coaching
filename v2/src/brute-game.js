@@ -1698,6 +1698,946 @@ function ensureStyles() {
 }
 `
 
+  style.textContent += `
+/* ================================================================
+   GA BRUTE · GAME FEEL V3
+   Custom SVG art, progression HUD, combo feedback and stat effects
+   ================================================================ */
+
+.ga-ui-glyph{
+  display:block;
+  width:100%;
+  height:100%;
+}
+.ga-weapon-icon,
+.ga-skill-icon,
+.ga-brute-pet-svg{
+  display:block;
+  width:100%;
+  height:100%;
+}
+.ga-weapon-icon{
+  overflow:visible;
+  filter:drop-shadow(0 4px 5px rgba(0,0,0,.18));
+}
+.ga-skill-icon{
+  color:#8d6be4;
+  filter:drop-shadow(0 4px 6px rgba(55,39,100,.2));
+}
+.brute-cell-art{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  margin:0 auto;
+}
+.brute-cell-art .ga-weapon-icon,
+.brute-cell-art .ga-skill-icon,
+.brute-cell-art .ga-brute-pet-svg{
+  width:38px;
+  height:38px;
+}
+.brute-cell-item{
+  position:relative;
+  overflow:hidden;
+}
+.brute-cell-item:after{
+  content:"";
+  position:absolute;
+  inset:auto 7px 4px;
+  height:2px;
+  border-radius:99px;
+  background:rgba(107,58,29,.15);
+}
+.brute-cell-item.active:after{
+  background:#d6902f;
+  box-shadow:0 0 8px rgba(214,144,47,.5);
+}
+.brute-cell-pet-label{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:3px 8px 3px 3px;
+}
+.brute-cell-pet-label b{
+  font-size:7px;
+}
+.brute-cell-pet-mini{
+  width:26px;
+  height:26px;
+  display:block;
+}
+.brute-cell-pet-mini .ga-brute-pet-svg{
+  width:26px;
+  height:26px;
+}
+.brute-cell-action-icon{
+  width:27px;
+  height:27px;
+  color:#ffe7a7;
+}
+.brute-cell-action.primary .brute-cell-action-icon{
+  color:#fff0b5;
+  filter:drop-shadow(0 0 7px rgba(255,210,93,.35));
+}
+.brute-cell-statline-v3{
+  width:min(520px,100%);
+  gap:7px;
+}
+.brute-cell-statline-v3>span{
+  position:relative;
+  overflow:hidden;
+  min-height:108px;
+  padding:8px 5px 7px;
+  border:2px solid #6b3b20;
+  border-radius:10px;
+  background:
+    radial-gradient(circle at 50% 5%,rgba(255,255,255,.42),transparent 36%),
+    linear-gradient(#f6df9f,#d6a354);
+  color:#62371c;
+  text-align:center;
+  box-shadow:0 3px 0 rgba(78,37,17,.25);
+}
+.brute-stat-v3:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  opacity:0;
+  pointer-events:none;
+  background:radial-gradient(circle at 50% 28%,rgba(255,255,255,.55),transparent 36%);
+  transition:opacity .2s ease;
+}
+.brute-stat-v3:hover:before{opacity:.55}
+.brute-stat-v3-glyph{
+  width:24px;
+  height:24px;
+  margin:0 auto 2px;
+  color:#6f4023;
+}
+.brute-stat-v3 b{
+  display:block;
+  font-size:18px;
+  line-height:1;
+}
+.brute-stat-v3 small{
+  display:block;
+  margin-top:3px;
+  font-size:6px;
+  font-weight:1000;
+  letter-spacing:.08em;
+}
+.brute-stat-v3 em{
+  display:block;
+  min-height:16px;
+  margin-top:3px;
+  color:#8a5a37;
+  font-size:5px;
+  font-style:normal;
+  font-weight:900;
+  line-height:1.2;
+}
+.brute-stat-v3-progress{
+  height:5px;
+  margin:5px 3px 3px;
+  overflow:hidden;
+  border:1px solid rgba(91,45,22,.45);
+  border-radius:99px;
+  background:rgba(87,44,21,.18);
+}
+.brute-stat-v3-progress i{
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#ce7c34,#ffd164);
+  box-shadow:0 0 8px rgba(255,192,68,.35);
+}
+.brute-stat-v3 u{
+  display:block;
+  color:#7d4d2c;
+  font-size:5px;
+  font-weight:1000;
+  text-decoration:none;
+}
+.brute-stat-v3.tier-3{
+  box-shadow:0 3px 0 rgba(78,37,17,.25),0 0 12px rgba(237,177,69,.15);
+}
+.brute-stat-v3.tier-4{
+  border-color:#a9602c;
+  box-shadow:0 3px 0 rgba(78,37,17,.25),0 0 15px rgba(234,143,51,.24);
+}
+.brute-stat-v3.tier-5,
+.brute-stat-v3.tier-6{
+  border-color:#86492b;
+  background:
+    radial-gradient(circle at 50% 5%,rgba(255,242,163,.62),transparent 38%),
+    linear-gradient(#f6d67f,#c9813d);
+  box-shadow:0 3px 0 rgba(78,37,17,.25),0 0 20px rgba(255,151,50,.32);
+}
+.brute-armory-v3{
+  display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(340px,.95fr);
+  gap:13px;
+}
+.brute-armory-v3-list,
+.brute-armory-v3-focus{
+  border:3px solid #63351c;
+  border-radius:16px;
+  box-shadow:inset 0 0 0 2px rgba(255,240,184,.28),0 7px 0 rgba(70,33,15,.32);
+}
+.brute-armory-v3-list{
+  padding:12px;
+  background:
+    repeating-linear-gradient(90deg,rgba(96,49,24,.08) 0 2px,transparent 2px 82px),
+    linear-gradient(#e0bd78,#b67339);
+}
+.brute-armory-weapons-v3{
+  display:grid;
+  gap:8px;
+}
+.brute-armory-weapon-v3{
+  display:grid;
+  grid-template-columns:68px minmax(0,1fr) auto;
+  gap:9px;
+  align-items:center;
+  min-height:78px;
+  padding:7px 9px;
+  border:2px solid rgba(95,49,23,.38);
+  border-radius:10px;
+  background:rgba(255,239,190,.48);
+  color:#63361c;
+  text-align:left;
+  cursor:pointer;
+  transition:transform .14s ease,filter .14s ease,box-shadow .14s ease;
+}
+.brute-armory-weapon-v3:hover{
+  transform:translateX(3px);
+  filter:brightness(1.04);
+}
+.brute-armory-weapon-v3.active{
+  border-color:#f3b43c;
+  background:linear-gradient(90deg,#ffe6a0,#efc66f);
+  box-shadow:inset 4px 0 #c97d2f,0 0 18px rgba(243,180,60,.22);
+}
+.brute-armory-weapon-art{
+  width:58px;
+  height:58px;
+  display:grid;
+  place-items:center;
+}
+.brute-armory-weapon-art .ga-weapon-icon{
+  width:58px;
+  height:58px;
+}
+.brute-armory-weapon-copy b{
+  display:block;
+  font-size:10px;
+}
+.brute-armory-weapon-copy small{
+  display:block;
+  margin-top:2px;
+  color:#9b5d2c;
+  font-size:6px;
+  font-weight:1000;
+  letter-spacing:.08em;
+}
+.brute-armory-weapon-copy em{
+  display:block;
+  margin-top:4px;
+  color:#80502f;
+  font-size:6px;
+  font-style:normal;
+  font-weight:850;
+}
+.brute-armory-weapon-v3>i{
+  font-size:6px;
+  font-style:normal;
+  font-weight:1000;
+}
+.brute-armory-perks-v3{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+}
+.brute-armory-perk-v3{
+  min-height:90px;
+  display:grid;
+  grid-template-columns:46px 1fr;
+  grid-template-rows:auto auto;
+  gap:1px 7px;
+  align-items:center;
+  padding:7px;
+  border:2px solid rgba(97,51,25,.25);
+  border-radius:9px;
+  background:rgba(255,240,190,.44);
+  color:#65381d;
+}
+.brute-armory-perk-v3 .ga-skill-icon,
+.brute-armory-perk-v3 .ga-brute-pet-svg{
+  grid-row:1/3;
+  width:46px;
+  height:46px;
+}
+.brute-armory-perk-v3 b{
+  font-size:8px;
+}
+.brute-armory-perk-v3 small{
+  align-self:start;
+  color:#845636;
+  font-size:6px;
+  line-height:1.35;
+  font-weight:800;
+}
+.brute-armory-v3-focus{
+  position:relative;
+  min-height:610px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:12px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 16%,rgba(255,245,184,.68),transparent 27%),
+    linear-gradient(180deg,#e5d09a 0 72%,#a96835 72%);
+}
+.brute-armory-v3-weapon-focus{
+  position:relative;
+  z-index:4;
+  width:100%;
+  display:grid;
+  grid-template-columns:126px 1fr;
+  gap:10px;
+  align-items:center;
+  margin-top:10px;
+  padding:10px;
+  border:2px solid rgba(93,48,23,.34);
+  border-radius:12px;
+  background:rgba(255,239,189,.57);
+}
+.brute-armory-v3-weapon-orbit{
+  width:118px;
+  height:118px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:radial-gradient(circle,#fff5c9 0 41%,rgba(255,223,129,.45) 42% 55%,transparent 56%);
+  animation:bruteWeaponOrbit 4.5s ease-in-out infinite;
+}
+.brute-armory-v3-weapon-orbit .ga-weapon-icon{
+  width:110px;
+  height:110px;
+}
+.brute-armory-v3-weapon-title span{
+  color:#a0602d;
+  font-size:7px;
+  font-weight:1000;
+  letter-spacing:.11em;
+}
+.brute-armory-v3-weapon-title h2{
+  margin:2px 0 4px;
+  color:#61341b;
+  font-size:20px;
+}
+.brute-armory-v3-weapon-title p{
+  margin:0;
+  color:#7b4e2d;
+  font-size:7px;
+  line-height:1.5;
+  font-weight:800;
+}
+.brute-armory-v3-metrics{
+  position:relative;
+  z-index:4;
+  width:100%;
+  display:grid;
+  gap:5px;
+  margin-top:9px;
+}
+.brute-weapon-metric header{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  font-size:6px;
+  font-weight:1000;
+  color:#63361c;
+}
+.brute-weapon-metric>div{
+  height:6px;
+  overflow:hidden;
+  border:1px solid #62331a;
+  border-radius:99px;
+  background:rgba(82,42,21,.18);
+}
+.brute-weapon-metric i{
+  display:block;
+  height:100%;
+  border-radius:99px;
+  background:linear-gradient(90deg,#bd6a2d,#f0b943,#ffe27c);
+}
+.brute-armory-v3-avatar{
+  position:relative;
+  z-index:3;
+  flex:1;
+  width:100%;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  min-height:260px;
+}
+.brute-armory-v3-avatar .ga-brute-svg{
+  width:min(210px,62%);
+  max-height:305px;
+  margin-bottom:4px;
+  animation:bruteCellIdle 3s ease-in-out infinite;
+  filter:drop-shadow(0 14px 9px rgba(70,36,18,.26));
+}
+.brute-hud-v3{
+  grid-template-columns:minmax(0,1fr) 68px minmax(0,1fr)!important;
+  align-items:start;
+}
+.brute-hud-v3-side{
+  min-width:0;
+  padding:6px 7px 7px;
+  border:2px solid #4d2a17;
+  background:
+    linear-gradient(180deg,rgba(250,224,162,.98),rgba(185,122,63,.98));
+  box-shadow:
+    inset 0 0 0 2px rgba(255,247,206,.25),
+    0 4px 0 rgba(72,34,15,.34),
+    0 7px 16px rgba(0,0,0,.13);
+}
+.brute-hud-v3-head{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr) 50px;
+  gap:6px;
+  align-items:center;
+}
+.brute-hud-v3-side.right .brute-hud-v3-head{
+  grid-template-columns:50px minmax(0,1fr) 42px;
+}
+.brute-hud-v3-side.right .brute-hud-v3-portrait{grid-column:3}
+.brute-hud-v3-side.right .brute-hud-v3-name{grid-column:2;grid-row:1;text-align:right}
+.brute-hud-v3-side.right .brute-combo-meter{grid-column:1;grid-row:1}
+.brute-hud-v3-portrait{
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  overflow:hidden;
+  border:2px solid #60331b;
+  border-radius:50%;
+  background:#f9e6ae;
+}
+.brute-hud-v3-portrait .ga-brute-svg{
+  width:42px;
+  height:50px;
+  margin-top:2px;
+  transform:scale(1.35) translateY(8px);
+  transform-origin:50% 20%;
+}
+.brute-hud-v3-name b{
+  display:block;
+  overflow:hidden;
+  font-size:10px;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.brute-hud-v3-name small{
+  display:block;
+  margin-top:2px;
+  color:#81502e;
+  font-size:6px;
+  font-weight:1000;
+}
+.brute-hud-v3-hp{
+  position:relative;
+  height:17px!important;
+  margin-top:5px;
+}
+.brute-hud-v3-hp span{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  display:grid;
+  place-items:center;
+  color:#fff7d7;
+  text-shadow:0 1px 2px #5c2914;
+  font-size:6px;
+  font-weight:1000;
+  pointer-events:none;
+}
+.brute-hud-v3-live{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:3px;
+  margin-top:4px;
+}
+.brute-hud-v3-live span{
+  min-width:0;
+  padding:3px 2px;
+  border:1px solid rgba(95,48,22,.2);
+  border-radius:4px;
+  background:rgba(255,242,191,.38);
+  color:#784928;
+  text-align:center;
+  font-size:5px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.brute-hud-v3-live b{font-size:6px}
+.brute-hud-v3-weapon{
+  min-height:35px;
+  display:grid;
+  grid-template-columns:33px 1fr;
+  gap:5px;
+  align-items:center;
+  margin-top:4px;
+  padding:3px 5px;
+  border:1px solid rgba(94,48,24,.22);
+  border-radius:6px;
+  background:rgba(255,245,205,.35);
+}
+.brute-hud-v3-side.right .brute-hud-v3-weapon{
+  grid-template-columns:1fr 33px;
+  text-align:right;
+}
+.brute-hud-v3-side.right .brute-weapon-hud-icon{grid-column:2}
+.brute-hud-v3-side.right .brute-weapon-hud-copy{grid-column:1;grid-row:1}
+.brute-weapon-hud-icon{
+  width:30px;
+  height:30px;
+  display:block;
+}
+.brute-weapon-hud-icon .ga-weapon-icon{
+  width:30px;
+  height:30px;
+}
+.brute-weapon-hud-copy b{
+  display:block;
+  font-size:7px;
+  line-height:1.1;
+}
+.brute-weapon-hud-copy small{
+  display:block;
+  margin-top:2px;
+  color:#865534;
+  font-size:5px;
+  font-weight:900;
+}
+.brute-fatigue-v3{
+  margin-top:4px;
+}
+.brute-combo-meter{
+  position:relative;
+  min-width:46px;
+  height:37px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  border:1px solid rgba(91,45,21,.22);
+  border-radius:6px;
+  background:rgba(255,242,188,.32);
+  color:#8b5c37;
+  opacity:.45;
+  transform:scale(.93);
+  transition:opacity .16s ease,transform .16s ease,box-shadow .16s ease;
+}
+.brute-combo-meter.active{
+  opacity:1;
+  transform:scale(1);
+  color:#ad4f1f;
+  background:linear-gradient(#ffe69a,#f4b745);
+  box-shadow:0 0 14px rgba(255,179,51,.42);
+  animation:bruteComboMeter .28s ease;
+}
+.brute-combo-meter b{
+  position:relative;
+  z-index:2;
+  font-size:12px;
+  line-height:1;
+}
+.brute-combo-meter small{
+  position:relative;
+  z-index:2;
+  margin-top:1px;
+  font-size:4.5px;
+  font-weight:1000;
+  letter-spacing:.08em;
+}
+.brute-combo-meter i{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:3px;
+  background:
+    linear-gradient(90deg,#d06722,#ffd15c);
+  transform:scaleX(calc(var(--chain,1) / 5));
+  transform-origin:left;
+}
+.brute-round-stack{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+}
+.brute-fight-xp-preview{
+  min-width:54px;
+  padding:4px 5px;
+  border:1px solid rgba(255,228,132,.35);
+  border-radius:6px;
+  background:rgba(36,31,54,.84);
+  color:#f6db75;
+  text-align:center;
+  box-shadow:0 0 12px rgba(238,198,73,.12);
+}
+.brute-fight-xp-preview span{
+  display:block;
+  font-size:5px;
+  font-weight:1000;
+  letter-spacing:.12em;
+}
+.brute-fight-xp-preview b{
+  display:block;
+  font-size:10px;
+}
+.brute-combo-stage{
+  position:absolute;
+  z-index:28;
+  top:43%;
+  width:22%;
+  pointer-events:none;
+}
+.brute-combo-stage.left{left:8%}
+.brute-combo-stage.right{right:8%}
+.brute-combo-burst{
+  display:block;
+  text-align:center;
+  color:#fff4b1;
+  text-shadow:0 2px 0 #9c451b,0 0 18px rgba(255,174,54,.65);
+  animation:bruteComboBurst .5s cubic-bezier(.15,.9,.2,1) forwards;
+}
+.brute-combo-burst b{
+  display:block;
+  font-size:28px;
+  line-height:1;
+}
+.brute-combo-burst small{
+  display:block;
+  font-size:7px;
+  font-weight:1000;
+  letter-spacing:.13em;
+}
+.brute-banner-art{
+  width:40px;
+  height:40px;
+  display:block;
+  flex:0 0 auto;
+}
+.brute-banner-art .ga-weapon-icon,
+.brute-banner-art .ga-skill-icon{
+  width:40px;
+  height:40px;
+}
+.brute-skill-banner.weapon,
+.brute-skill-banner.skill-art{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-width:180px;
+  padding:7px 10px;
+  text-align:left;
+}
+.brute-skill-banner.weapon span:last-child b,
+.brute-skill-banner.skill-art span:last-child b{
+  display:block;
+  font-size:10px;
+}
+.brute-skill-banner.weapon span:last-child small,
+.brute-skill-banner.skill-art span:last-child small{
+  display:block;
+  margin-top:2px;
+  color:#b8bdd0;
+  font-size:6px;
+  font-weight:900;
+}
+.brute-skill-banner.combo{
+  min-width:150px;
+  text-align:center;
+  background:linear-gradient(135deg,rgba(124,57,22,.94),rgba(232,145,38,.96));
+  border-color:#ffcf5d;
+  color:#fff2b5;
+}
+.brute-skill-banner.combo b{
+  display:block;
+  font-size:16px;
+}
+.brute-skill-banner.combo small{
+  display:block;
+  font-size:6px;
+  letter-spacing:.12em;
+}
+.brute-projectile.weapon-art{
+  width:74px;
+  height:74px;
+  display:grid;
+  place-items:center;
+  background:none!important;
+  font-size:0!important;
+}
+.brute-projectile.weapon-art .ga-weapon-icon,
+.brute-projectile .ga-weapon-icon.projectile{
+  width:68px;
+  height:68px;
+}
+.brute-afterimage{
+  position:absolute!important;
+  z-index:1!important;
+  left:50%!important;
+  bottom:0!important;
+  width:min(190px,58%)!important;
+  max-height:278px!important;
+  transform:translateX(-50%);
+  opacity:0;
+  pointer-events:none;
+  filter:saturate(1.4) brightness(1.2);
+  animation:bruteAfterimage .34s ease forwards!important;
+}
+.brute-afterimage.windup{
+  animation-duration:.28s!important;
+}
+.brute-afterimage.dodge-ghost{
+  filter:hue-rotate(25deg) saturate(1.5) brightness(1.3);
+}
+.brute-stat-spark{
+  position:absolute;
+  z-index:25;
+  width:7px;
+  height:22px;
+  border-radius:50%;
+  background:linear-gradient(#fff4a9,#f08d32,transparent);
+  transform:rotate(28deg);
+  filter:drop-shadow(0 0 6px rgba(255,163,55,.85));
+  animation:bruteStatSpark .45s ease forwards;
+}
+.brute-arena.stat-strength .brute-arena-v2-floor{
+  filter:saturate(1.18) brightness(1.04);
+}
+.brute-fighter[class*="attack-v"] .ga-brute-svg{
+  animation-duration:calc(.39s * var(--motion-boost,1))!important;
+}
+.brute-fighter.attack-heavy .weapon-olympic_bar .brute-weapon-shape{
+  transform-box:fill-box;
+  transform-origin:50% 70%;
+  animation:bruteWeaponBarStrike .46s cubic-bezier(.16,.84,.22,1);
+}
+.brute-fighter.attack-heavy .weapon-kettlebell .brute-weapon-shape{
+  transform-box:fill-box;
+  transform-origin:50% 20%;
+  animation:bruteWeaponKettleSwing .46s cubic-bezier(.16,.82,.22,1);
+}
+.brute-fighter.attack-heavy .weapon-plate20 .brute-weapon-shape{
+  transform-box:fill-box;
+  transform-origin:center;
+  animation:bruteWeaponPlateSpin .43s cubic-bezier(.18,.84,.22,1);
+}
+.brute-fighter.attack-flexible .weapon-belt .brute-weapon-shape{
+  transform-box:fill-box;
+  transform-origin:50% 90%;
+  animation:bruteWeaponBeltWhip .43s ease;
+}
+.brute-fighter.attack-flexible .weapon-straps .brute-weapon-shape{
+  transform-box:fill-box;
+  transform-origin:50% 90%;
+  animation:bruteWeaponStrapWhip .42s ease;
+}
+.brute-fighter.attack-ranged .weapon-chalk .brute-weapon-shape{
+  transform-box:fill-box;
+  transform-origin:center;
+  animation:bruteWeaponChalkBurst .38s ease;
+}
+.brute-fight-summary.v3{
+  gap:9px;
+}
+.brute-fight-summary-side.v3{
+  display:grid;
+  grid-template-columns:58px 1fr;
+  gap:10px;
+  align-items:center;
+  padding:10px;
+}
+.brute-fight-grade{
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  border:2px solid rgba(255,255,255,.12);
+  border-radius:50%;
+  background:#202538;
+  color:#c8cedf;
+  font-size:23px;
+  font-weight:1000;
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.025);
+}
+.brute-fight-grade.grade-s{
+  color:#ffe17c;
+  border-color:#f0c64e;
+  background:radial-gradient(circle,#6d531d,#2f2819);
+  box-shadow:0 0 22px rgba(240,198,78,.3);
+}
+.brute-fight-grade.grade-a{
+  color:#9fd8ff;
+  border-color:#65aee1;
+}
+.brute-fight-grade.grade-b{color:#b8e8c4;border-color:#70b985}
+.brute-fight-summary-copy h4{
+  margin:0 0 6px;
+}
+.brute-result-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+}
+.brute-result-title h2{margin:0}
+.brute-result-glyph{
+  width:34px;
+  height:34px;
+  display:block;
+}
+.brute-result-title.win .brute-result-glyph{
+  color:#f2cf58;
+  filter:drop-shadow(0 0 10px rgba(242,207,88,.35));
+}
+.brute-result-title.loss .brute-result-glyph{
+  color:#bf7181;
+}
+.brute-xp-gain.v3{
+  width:min(420px,100%);
+  display:grid;
+  grid-template-columns:1fr auto;
+  grid-template-rows:auto auto;
+  gap:1px 8px;
+  align-items:center;
+  margin:10px auto;
+  padding:9px 12px;
+  border:1px solid rgba(239,206,91,.28);
+  border-radius:10px;
+  background:
+    radial-gradient(circle at 50% 0,rgba(244,211,83,.12),transparent 48%),
+    rgba(255,255,255,.025);
+  text-align:left;
+}
+.brute-xp-gain.v3 span{
+  color:#8f95aa;
+  font-size:6px;
+  font-weight:1000;
+  letter-spacing:.12em;
+}
+.brute-xp-gain.v3 b{
+  grid-row:1/3;
+  grid-column:2;
+  color:#f5d660;
+  font-size:21px;
+  text-shadow:0 0 14px rgba(245,214,96,.2);
+}
+.brute-xp-gain.v3 small{
+  color:#686f89;
+  font-size:6px;
+  font-weight:900;
+}
+@keyframes bruteWeaponOrbit{
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  50%{transform:translateY(-5px) rotate(1deg)}
+}
+@keyframes bruteComboMeter{
+  0%{transform:scale(.72)}
+  55%{transform:scale(1.12)}
+  100%{transform:scale(1)}
+}
+@keyframes bruteComboBurst{
+  0%{opacity:0;transform:translateY(12px) scale(.55) rotate(-4deg)}
+  45%{opacity:1;transform:translateY(-8px) scale(1.18) rotate(2deg)}
+  100%{opacity:0;transform:translateY(-28px) scale(.92)}
+}
+@keyframes bruteAfterimage{
+  0%{opacity:.42;transform:translateX(-52%) scale(.99)}
+  45%{opacity:.2;transform:translateX(-63%) scale(.98)}
+  100%{opacity:0;transform:translateX(-74%) scale(.96)}
+}
+@keyframes bruteStatSpark{
+  0%{opacity:0;transform:translateY(8px) scale(.4) rotate(28deg)}
+  35%{opacity:1}
+  100%{opacity:0;transform:translateY(-30px) scale(1.15) rotate(42deg)}
+}
+@keyframes bruteWeaponBarStrike{
+  0%,100%{transform:rotate(-28deg)}
+  28%{transform:rotate(-68deg) translateY(-5px)}
+  62%{transform:rotate(36deg) translateY(4px)}
+}
+@keyframes bruteWeaponKettleSwing{
+  0%,100%{transform:rotate(0)}
+  28%{transform:rotate(-42deg) translate(-4px,-8px)}
+  62%{transform:rotate(52deg) translate(6px,5px)}
+}
+@keyframes bruteWeaponPlateSpin{
+  0%{transform:rotate(0) scale(1)}
+  55%{transform:rotate(190deg) scale(1.08)}
+  100%{transform:rotate(360deg) scale(1)}
+}
+@keyframes bruteWeaponBeltWhip{
+  0%,100%{transform:rotate(-18deg) skewX(0)}
+  28%{transform:rotate(-58deg) skewX(-8deg)}
+  62%{transform:rotate(44deg) skewX(10deg)}
+}
+@keyframes bruteWeaponStrapWhip{
+  0%,100%{transform:rotate(0) scaleY(1)}
+  25%{transform:rotate(-36deg) scaleY(1.08)}
+  60%{transform:rotate(48deg) scaleY(.96)}
+}
+@keyframes bruteWeaponChalkBurst{
+  0%,100%{transform:rotate(0) scale(1)}
+  35%{transform:rotate(-18deg) scale(.92)}
+  62%{transform:rotate(20deg) scale(1.1)}
+}
+@media(max-width:900px){
+  .brute-armory-v3{grid-template-columns:1fr}
+  .brute-armory-v3-focus{min-height:520px}
+}
+@media(max-width:660px){
+  .brute-cell-statline-v3{grid-template-columns:repeat(2,1fr)}
+  .brute-stat-v3{min-height:96px}
+  .brute-armory-weapon-v3{grid-template-columns:55px 1fr auto}
+  .brute-armory-weapon-art,
+  .brute-armory-weapon-art .ga-weapon-icon{width:48px;height:48px}
+  .brute-armory-perks-v3{grid-template-columns:1fr}
+  .brute-armory-v3-weapon-focus{grid-template-columns:92px 1fr}
+  .brute-armory-v3-weapon-orbit{width:88px;height:88px}
+  .brute-armory-v3-weapon-orbit .ga-weapon-icon{width:84px;height:84px}
+  .brute-hud-v3{grid-template-columns:1fr 42px 1fr!important}
+  .brute-hud-v3-side{padding:4px}
+  .brute-hud-v3-head{grid-template-columns:30px minmax(0,1fr) 38px}
+  .brute-hud-v3-side.right .brute-hud-v3-head{grid-template-columns:38px minmax(0,1fr) 30px}
+  .brute-hud-v3-portrait{width:29px;height:29px}
+  .brute-hud-v3-portrait .ga-brute-svg{width:31px;height:38px}
+  .brute-hud-v3-name b{font-size:7px}
+  .brute-hud-v3-name small{font-size:4.5px}
+  .brute-combo-meter{min-width:35px;height:29px}
+  .brute-combo-meter b{font-size:9px}
+  .brute-combo-meter small{font-size:3.5px}
+  .brute-hud-v3-live span:nth-child(n+4){display:none}
+  .brute-hud-v3-live{grid-template-columns:repeat(3,1fr)}
+  .brute-hud-v3-weapon{grid-template-columns:25px 1fr;min-height:28px}
+  .brute-hud-v3-side.right .brute-hud-v3-weapon{grid-template-columns:1fr 25px}
+  .brute-weapon-hud-icon,
+  .brute-weapon-hud-icon .ga-weapon-icon{width:23px;height:23px}
+  .brute-weapon-hud-copy small{display:none}
+  .brute-fight-xp-preview{display:none}
+  .brute-afterimage{width:min(140px,56%)!important}
+}
+`
+
   document.head.appendChild(style)
 }
 
@@ -6139,6 +7079,9 @@ export async function mountBruteGame(root, options = {}) {
   async function playTimeline(tl) {
     const token = ++playbackToken
     playbackPaused = false
+    resetFightTelemetry(
+      tl
+    )
     await wait(80)
 
     for (const event of tl.events) {
