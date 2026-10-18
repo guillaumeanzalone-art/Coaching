@@ -2273,8 +2273,8 @@ function ensureStyles() {
   height:3px;
   background:
     linear-gradient(90deg,#d06722,#ffd15c);
-  transform:scaleX(calc(var(--chain,1) / 5));
   transform-origin:left;
+  transition:width .18s ease;
 }
 .brute-round-stack{
   display:flex;
@@ -3289,7 +3289,7 @@ export async function mountBruteGame(root, options = {}) {
         ? v / 6
         : v
 
-    const next =
+    const nextNormalized =
       (
         Math.floor(
           normalized / 5
@@ -3297,6 +3297,11 @@ export async function mountBruteGame(root, options = {}) {
         1
       ) *
       5
+
+    const next =
+      kind === 'hp'
+        ? nextNormalized * 6
+        : nextNormalized
 
     const pct =
       Math.max(
@@ -3562,7 +3567,7 @@ export async function mountBruteGame(root, options = {}) {
         )
 
         combo.innerHTML =
-          '<b>x'+Math.max(1,streak)+'</b><small>CHAÎNE</small><i style="--chain:'+Math.min(5,Math.max(1,streak))+'"></i>'
+          '<b>x'+Math.max(1,streak)+'</b><small>CHAÎNE</small><i style="width:'+Math.min(100,Math.max(20,streak*20))+'%"></i>'
       }
 
       if (damage) {
