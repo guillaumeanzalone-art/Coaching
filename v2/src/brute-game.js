@@ -81,6 +81,7 @@ function ensureStyles() {
     '.brute-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.brute-primary,.brute-secondary{border:0;border-radius:13px;padding:12px 15px;font-weight:1000;cursor:pointer}.brute-primary{background:linear-gradient(135deg,var(--accent),#47c7f7);color:white}.brute-secondary{border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:#e7e8f0}.brute-primary:disabled,.brute-secondary:disabled{opacity:.38;cursor:not-allowed}',
     '.brute-dashboard{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:12px}.brute-camp-scene{position:relative;overflow:hidden;border:2px solid #65401f;border-radius:24px;background:radial-gradient(circle at 50% 13%,rgba(255,246,188,.75),transparent 25%),linear-gradient(180deg,#8fc9d7 0 21%,#dec786 21% 28%,#bd7d3d 28% 100%);box-shadow:0 26px 70px rgba(0,0,0,.34);padding:18px}.brute-camp-scene:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(79,64,46,.20) 0 4%,transparent 4% 96%,rgba(79,64,46,.20) 96%),linear-gradient(180deg,transparent 0 69%,rgba(91,50,22,.12) 69%);pointer-events:none}.brute-camp-sign{position:relative;z-index:2;width:max-content;margin:0 auto 16px;padding:7px 21px;border:4px solid #6a361a;border-radius:8px;background:linear-gradient(180deg,#e8ba64,#bd6e2c);box-shadow:inset 0 0 0 3px #f7d993,0 6px 0 #512613;color:#562817;font-size:26px;font-weight:1000;letter-spacing:.08em;text-shadow:1px 1px 0 #f8db91}.brute-camp-grid{position:relative;z-index:2;display:grid;grid-template-columns:minmax(220px,.85fr) minmax(260px,1fr) minmax(220px,.85fr);gap:14px;align-items:start}.brute-camp-column{display:grid;gap:10px}.brute-camp-card{border:3px solid #6a381d;border-radius:10px;padding:12px;background:linear-gradient(180deg,rgba(248,220,153,.97),rgba(211,160,88,.97));box-shadow:inset 0 0 0 2px rgba(255,247,200,.43),0 5px 0 #512713,0 9px 16px rgba(70,34,14,.19);color:#63361d}.brute-camp-card h3{margin:0 0 6px;font-size:12px;color:#5b2d16}.brute-camp-card small{color:#80522f;font-size:8px;font-weight:800}.brute-camp-kpi{display:grid;grid-template-columns:1fr 1fr;gap:6px}.brute-camp-kpi div{padding:8px;border:2px solid rgba(107,57,29,.24);border-radius:8px;background:rgba(255,245,198,.55)}.brute-camp-kpi span{display:block;font-size:7px;font-weight:1000;text-transform:uppercase}.brute-camp-kpi b{display:block;margin-top:2px;font-size:15px}.brute-camp-avatar{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:390px}.brute-camp-avatar .ga-brute-svg{width:min(300px,100%);filter:drop-shadow(0 16px 12px rgba(76,40,20,.22));animation:bruteIdle 2.7s ease-in-out infinite}.brute-camp-energy{margin-top:8px;width:min(330px,100%)}.brute-camp-energy-head{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#66351b;font-size:9px;font-weight:1000}.brute-camp-energy-track{height:12px;margin-top:5px;padding:2px;border:2px solid #6a371d;border-radius:999px;background:#3d2116}.brute-camp-energy-track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#66d56f,#f1dc54,#f49a38);transition:width .35s ease}.brute-camp-action{width:100%;border:3px solid #6e391b;border-radius:9px;padding:11px 12px;background:linear-gradient(180deg,#b96b30,#7f3d1d);box-shadow:inset 0 0 0 2px rgba(255,221,148,.30),0 4px 0 #4e2512;color:#fff0b5;font-size:10px;font-weight:1000;letter-spacing:.04em;text-shadow:0 2px 0 #48220f;cursor:pointer}.brute-camp-action.sleep{background:linear-gradient(180deg,#6f64b9,#403879);border-color:#372e68;box-shadow:inset 0 0 0 2px rgba(214,204,255,.25),0 4px 0 #282151;color:#f4eeff}.brute-camp-action:disabled{opacity:.48;cursor:not-allowed}.brute-camp-history{max-height:280px;overflow:auto}.brute-camp-history .brute-row{background:rgba(255,246,206,.44);border-color:rgba(104,56,28,.22);color:#63361d}.brute-camp-history .brute-row small{color:#845632}.brute-camp-xp{margin-top:8px}.brute-camp-xp .brute-track{height:10px;border:2px solid #6a381d;background:#3b2116}.brute-camp-xp .brute-track i{background:linear-gradient(90deg,#7d54cb,#4fc4e8,#f0d85c)}.brute-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.brute-stat-card{padding:12px;border:1px solid rgba(255,255,255,.06);border-radius:15px;background:rgba(255,255,255,.03)}.brute-stat-card b{display:block;font-size:22px}.brute-stat-card span{font-size:8px;color:#8087a2;text-transform:uppercase;font-weight:900}',
     '.brute-xp{margin-top:13px}.brute-track{height:8px;border-radius:999px;background:#060812;overflow:hidden}.brute-track i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#4ec6ff);border-radius:inherit}.brute-list{display:grid;gap:7px}.brute-row{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(255,255,255,.025)}.brute-row .icon{font-size:25px}.brute-row b{font-size:11px}.brute-row small{display:block;margin-top:2px;color:#747c98;font-size:8px}.brute-selector-avatar{width:48px;height:48px;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.12);background:#0b0f21;display:grid;place-items:center;font-size:25px}.brute-selector-avatar img{width:100%;height:100%;object-fit:cover}.brute-real-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.brute-real-card{padding:11px;border:1px solid rgba(255,255,255,.06);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.018))}.brute-real-card b{display:block;font-size:18px}.brute-real-card span{font-size:8px;color:#858ca8;text-transform:uppercase;font-weight:900}.brute-real-card small{display:block;margin-top:3px;color:#68708b;font-size:7px}.brute-real-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;padding:10px 12px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(255,255,255,.025)}',
+    '.brute-row-self{border-color:rgba(255,205,74,.38)!important;background:linear-gradient(90deg,rgba(255,202,68,.08),rgba(255,255,255,.025))!important;box-shadow:inset 3px 0 #f2c24d}.brute-self-pill{display:inline-flex;margin-left:6px;padding:2px 5px;border:1px solid rgba(255,205,74,.32);border-radius:999px;background:rgba(255,196,42,.08);color:#ffd568;font-size:7px;font-style:normal;letter-spacing:.05em}.brute-menu-music{position:absolute;z-index:10;right:12px;top:12px;background:rgba(80,43,22,.72);border-color:rgba(255,236,177,.28);color:#fff0b0;backdrop-filter:blur(7px)}',
     '.brute-choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.brute-tcg-pack{position:relative;margin-top:15px;padding:16px;border:1px solid rgba(255,255,255,.08);border-radius:20px;background:radial-gradient(circle at 50% -20%,color-mix(in srgb,var(--accent),transparent 72%),transparent 45%),linear-gradient(180deg,rgba(15,18,39,.98),rgba(7,9,21,.98));overflow:hidden}.brute-tcg-pack:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 0 38%,rgba(255,255,255,.035) 48%,transparent 58%)}.brute-tcg-head{position:relative;z-index:2;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:11px}.brute-tcg-head span{display:block;color:var(--accent);font-size:8px;font-weight:1000;letter-spacing:.13em;text-transform:uppercase}.brute-tcg-head h3{margin:3px 0 0;font-size:18px}.brute-tcg-head small{color:#7d849f;font-size:8px;font-weight:800}.brute-choice{--card:#7d879c;--glow:rgba(125,135,156,.2);position:relative;min-height:214px;padding:13px;border:1px solid color-mix(in srgb,var(--card),transparent 42%);border-radius:17px;background:radial-gradient(circle at 50% 6%,color-mix(in srgb,var(--card),transparent 70%),transparent 38%),linear-gradient(160deg,rgba(28,31,52,.98),rgba(10,12,27,.99));color:#fff;cursor:pointer;text-align:left;box-shadow:inset 0 1px rgba(255,255,255,.06),0 10px 28px rgba(0,0,0,.2);overflow:hidden;animation:bruteCardDeal .55s cubic-bezier(.16,.85,.25,1) both;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.brute-choice:nth-child(2){animation-delay:.08s}.brute-choice:nth-child(3){animation-delay:.16s}.brute-choice:hover{transform:translateY(-7px) rotateX(2deg);box-shadow:0 18px 38px rgba(0,0,0,.34),0 0 26px var(--glow);border-color:var(--card)}.brute-choice.rarity-common{--card:#96a0b4;--glow:rgba(150,160,180,.16)}.brute-choice.rarity-rare{--card:#45a3ff;--glow:rgba(69,163,255,.28)}.brute-choice.rarity-epic{--card:#a766ff;--glow:rgba(167,102,255,.34)}.brute-choice.rarity-legendary{--card:#ffc94a;--glow:rgba(255,201,74,.36);background:radial-gradient(circle at 50% 5%,rgba(255,205,73,.3),transparent 40%),linear-gradient(160deg,#33240f,#111020 70%)}.brute-choice:before{content:"";position:absolute;inset:-40% -55%;background:linear-gradient(110deg,transparent 43%,rgba(255,255,255,.15) 49%,transparent 55%);transform:translateX(-45%) rotate(8deg);transition:transform .38s ease}.brute-choice:hover:before{transform:translateX(45%) rotate(8deg)}.brute-card-rarity{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:7px;color:var(--card);font-size:7px;font-weight:1000;letter-spacing:.1em}.brute-card-rarity i{width:7px;height:7px;border-radius:50%;background:var(--card);box-shadow:0 0 10px var(--card)}.brute-choice .big{position:relative;z-index:2;display:block;margin-top:17px;font-size:42px;filter:drop-shadow(0 5px 8px rgba(0,0,0,.25))}.brute-choice b{position:relative;z-index:2;display:block;margin-top:8px;font-size:15px}.brute-choice small{position:relative;z-index:2;display:block;margin-top:5px;color:#a8abc1;font-size:8px;line-height:1.45}.brute-card-type{position:relative;z-index:2;display:inline-flex;margin-top:11px;padding:4px 7px;border:1px solid color-mix(in srgb,var(--card),transparent 58%);border-radius:999px;background:color-mix(in srgb,var(--card),transparent 88%);color:var(--card);font-size:7px;font-weight:1000;text-transform:uppercase}.brute-card-current{position:relative;z-index:2;margin-top:8px;color:#6f7793;font-size:7px;font-weight:900}.brute-card-pick{position:absolute;z-index:2;right:10px;bottom:9px;color:var(--card);font-size:8px;font-weight:1000}.brute-tcg-pack.compact{max-width:760px;margin:14px auto 0}.brute-tcg-pack.compact .brute-choice{min-height:196px}',
     '.brute-arena{position:relative;min-height:560px;overflow:hidden;background:radial-gradient(circle at 50% 24%,rgba(255,246,189,.72),transparent 25%),linear-gradient(180deg,#88c4d1 0 27%,#d6bd78 27% 34%,#b77638 34% 100%);border:2px solid #65401f;border-radius:21px}.brute-arena:after{content:"GA BRUTE";position:absolute;left:50%;top:58%;transform:translate(-50%,-50%) rotate(-7deg);font-size:65px;font-weight:1000;letter-spacing:.08em;color:rgba(87,43,18,.07);white-space:nowrap}',
     '.brute-hud{position:absolute;z-index:8;inset:12px 14px auto;display:grid;grid-template-columns:1fr 55px 1fr;gap:10px}.brute-hud-meta{display:flex;gap:5px;align-items:center;margin-top:3px;font-size:7px;font-weight:900;color:#6b3a1d}.brute-hud-side.right .brute-hud-meta{justify-content:flex-end}.brute-fatigue{height:4px;margin-top:3px;border-radius:99px;background:rgba(76,40,20,.28);overflow:hidden}.brute-fatigue i{display:block;height:100%;width:0;background:linear-gradient(90deg,#55d979,#f0cf3c,#e34f2f);transition:width .22s linear}.brute-activity-pill{padding:2px 5px;border:1px solid rgba(108,58,28,.25);border-radius:99px;background:rgba(255,244,191,.45)}.brute-hud-side.right{text-align:right}.brute-hud-name{font-size:10px;font-weight:1000;color:#fff4bd;text-shadow:0 2px #563018}.brute-hp{height:18px;padding:3px;border:2px solid #633719;border-radius:5px;background:#392216}.brute-hp i{display:block;height:100%;background:linear-gradient(180deg,#ffe646,#ffaf22 55%,#e6531d);transition:width .25s linear}.brute-round{display:grid;place-items:center;height:43px;border:3px solid #8e4d22;border-radius:50%;background:#fff0ae;color:#7b3d1d;font-size:9px;font-weight:1000}',
@@ -201,6 +202,18 @@ export async function mountBruteGame(root, options = {}) {
   let sleepMode = 'rain'
   let sleepTimer = null
   let music = null
+  let musicEnabled =
+    (() => {
+      try {
+        return (
+          localStorage.getItem(
+            'ga-brute-music-v1'
+          ) !== 'off'
+        )
+      } catch {
+        return true
+      }
+    })()
   const ambient = makeAmbient()
 
   function selectedAthlete() {
@@ -230,7 +243,11 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function syncMusic() {
-    if (screen === 'sleep' || screen === 'fight') {
+    if (
+      !musicEnabled ||
+      screen === 'sleep' ||
+      screen === 'fight'
+    ) {
       stopMusic()
       return
     }
@@ -412,6 +429,7 @@ export async function mountBruteGame(root, options = {}) {
       '<button class="brute-back" data-brute-menu>← Menu</button>'+
       '<div><small>'+esc(subtitle || 'GA BRUTE')+'</small><h1>'+esc(title)+'</h1></div>'+
       '<div class="spacer"></div>'+
+      '<button class="brute-mini" data-brute-music-toggle>'+(musicEnabled ? '🔊 Musique' : '🔇 Muet')+'</button>'+
       (options.allowAthleteSelection ? '<button class="brute-mini" data-brute-switch>Changer</button>' : '')+
     '</header>'
   }
@@ -441,16 +459,80 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function renderSelector() {
+    const preferred =
+      String(
+        options.preferredSlug ||
+        ''
+      )
+        .trim()
+        .toLowerCase()
+
+    const ordered =
+      athletes
+        .slice()
+        .sort(
+          (a,b) => {
+            const aSlug =
+              athleteSlug(a)
+                .toLowerCase()
+
+            const bSlug =
+              athleteSlug(b)
+                .toLowerCase()
+
+            const aOwn =
+              preferred &&
+              aSlug === preferred
+                ? 1
+                : 0
+
+            const bOwn =
+              preferred &&
+              bSlug === preferred
+                ? 1
+                : 0
+
+            if (aOwn !== bOwn) {
+              return bOwn - aOwn
+            }
+
+            return String(
+              a?.name ||
+              ''
+            ).localeCompare(
+              String(
+                b?.name ||
+                ''
+              ),
+              'fr',
+              {
+                sensitivity:'base',
+              }
+            )
+          }
+        )
+
     return '<div class="brute-panel brute-pad">'+
-      '<div><small style="color:#858ca8;font-weight:900">IDLE TRAINING · GA BRUTE</small><h2>Choisir un athlète</h2><p style="margin:4px 0 13px;color:#747c98;font-size:9px">Sommeil · steps · séances · personnage · PvE · Duel</p></div>'+
+      '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'+
+        '<div><small style="color:#858ca8;font-weight:900">IDLE TRAINING · GA BRUTE</small><h2>Choisir un athlète</h2><p style="margin:4px 0 13px;color:#747c98;font-size:9px">Sommeil · steps · séances · personnage · PvE · Duel</p></div>'+
+        '<button class="brute-mini" data-brute-music-toggle>'+(musicEnabled ? '🔊 Musique' : '🔇 Muet')+'</button>'+
+      '</div>'+
       '<div class="brute-list">'+
-        athletes.map(a =>
-          '<button class="brute-row brute-secondary" data-brute-select="'+esc(athleteSlug(a))+'">'+
+        ordered.map(a => {
+          const slug =
+            athleteSlug(a)
+
+          const mine =
+            preferred &&
+            slug.toLowerCase() ===
+              preferred
+
+          return '<button class="brute-row brute-secondary '+(mine?'brute-row-self':'')+'" data-brute-select="'+esc(slug)+'">'+
             athleteAvatarMarkup(a)+
-            '<span><b>'+esc(a.name || a.id)+'</b><small>Ouvrir son Idle Training</small></span>'+
+            '<span><b>'+esc(a.name || a.id)+(mine?' <em class="brute-self-pill">★ MOI</em>':'')+'</b><small>'+(mine?'Ton profil · ':'')+'Ouvrir son Idle Training</small></span>'+
             '<span>›</span>'+
           '</button>'
-        ).join('')+
+        }).join('')+
       '</div>'+
     '</div>'
   }
@@ -589,6 +671,7 @@ export async function mountBruteGame(root, options = {}) {
     const pet = BRUTE_PETS[(brute.pets || [])[0]]
 
     return '<section class="brute-title-screen">'+
+      '<button class="brute-mini brute-menu-music" data-brute-music-toggle>'+(musicEnabled ? '🔊 Musique' : '🔇 Muet')+'</button>'+
       '<div class="brute-logo">IDLE TRAINING</div>'+
       '<div class="brute-title-sub">GA BRUTE · TRAIN · WALK · SLEEP · FIGHT</div>'+
       '<div class="brute-menu-grid">'+
@@ -3139,7 +3222,13 @@ export async function mountBruteGame(root, options = {}) {
         )+
         renderFightSummary(tl)+
         '<div class="brute-actions" style="justify-content:center">'+
-          '<button class="brute-primary" data-brute-replay-current>↻ Revoir</button>'+
+          (
+            !replayOnly &&
+            !practice
+              ? '<button class="brute-primary" data-brute-rematch>⚔️ Recombattre</button>'
+              : ''
+          )+
+          '<button class="brute-secondary" data-brute-replay-current>↻ Revoir le combat</button>'+
           '<button class="brute-secondary" data-brute-after-fight>Retour au camp</button>'+
         '</div>'+
       '</div>'
@@ -3963,6 +4052,33 @@ export async function mountBruteGame(root, options = {}) {
       return
     }
 
+    if (event.target.closest('[data-brute-rematch]')) {
+      if (busy) return
+
+      const pve =
+        Boolean(
+          currentFightMeta?.pve
+        )
+
+      const defenderSlug =
+        currentFightMeta
+          ?.fight
+          ?.defender_slug ||
+        currentTimeline
+          ?.right
+          ?.slug ||
+        ''
+
+      if (pve) {
+        await startPve()
+      } else {
+        await startServerDuel(
+          defenderSlug || null
+        )
+      }
+      return
+    }
+
     if (event.target.closest('[data-brute-replay-current]')) {
       if (!currentTimeline) return
       render()
@@ -3973,6 +4089,31 @@ export async function mountBruteGame(root, options = {}) {
     if (event.target.closest('[data-brute-after-fight]')) {
       await refreshData(false)
       screen = 'camp'
+      render()
+      return
+    }
+
+    if (event.target.closest('[data-brute-music-toggle]')) {
+      musicEnabled =
+        !musicEnabled
+
+      try {
+        localStorage.setItem(
+          'ga-brute-music-v1',
+          musicEnabled
+            ? 'on'
+            : 'off'
+        )
+      } catch {
+        // Preference is optional.
+      }
+
+      if (musicEnabled) {
+        syncMusic()
+      } else {
+        stopMusic()
+      }
+
       render()
       return
     }
