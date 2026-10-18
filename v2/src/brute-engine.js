@@ -285,6 +285,81 @@ function activityDamageMultiplier(fighter) {
   )
 }
 
+function weaponStatMultiplier(
+  attacker,
+  weapon
+) {
+  const category =
+    weapon?.category ||
+    'unarmed'
+
+  if (category === 'heavy') {
+    return clamp(
+      1 +
+      (
+        attacker.strength - 10
+      ) *
+      .0085 +
+      (
+        attacker.speed - 10
+      ) *
+      .0018,
+      .92,
+      1.22
+    )
+  }
+
+  if (category === 'flexible') {
+    return clamp(
+      1 +
+      (
+        attacker.agility - 10
+      ) *
+      .0052 +
+      (
+        attacker.speed - 10
+      ) *
+      .004,
+      .93,
+      1.18
+    )
+  }
+
+  if (category === 'ranged') {
+    return clamp(
+      1 +
+      (
+        attacker.speed - 10
+      ) *
+      .0047 +
+      (
+        attacker.agility - 10
+      ) *
+      .0038,
+      .94,
+      1.17
+    )
+  }
+
+  return clamp(
+    1 +
+    (
+      attacker.speed - 10
+    ) *
+    .0045 +
+    (
+      attacker.agility - 10
+    ) *
+    .0036 +
+    (
+      attacker.strength - 10
+    ) *
+    .0022,
+    .94,
+    1.18
+  )
+}
+
 function attackDamage(
   attacker,
   defender,
@@ -319,6 +394,10 @@ function attackDamage(
       variance *
       activityDamageMultiplier(
         attacker
+      ) *
+      weaponStatMultiplier(
+        attacker,
+        weapon
       ) *
       fatiguePenalty
     )
@@ -386,17 +465,44 @@ function comboChance(
   attacker,
   weapon
 ) {
+  const category =
+    weapon?.category ||
+    'unarmed'
+
+  const statBonus =
+    category === 'heavy'
+      ? (
+          attacker.speed * .0021 +
+          attacker.strength * .0009
+        )
+      : category === 'flexible'
+        ? (
+            attacker.speed * .0036 +
+            attacker.agility * .0024
+          )
+        : category === 'ranged'
+          ? (
+              attacker.speed * .0035 +
+              attacker.agility * .002
+            )
+          : (
+              attacker.speed * .0044 +
+              attacker.agility * .0019
+            )
+
   return clamp(
-    .03 +
-    attacker.speed * .0042 +
+    .025 +
+    statBonus +
     (weapon.combo || 0) +
     (
       weapon.speed -
       .75
-    ) * .07 -
+    ) * .065 -
     attacker.fatigue * .0012,
     .025,
-    .36
+    category === 'heavy'
+      ? .27
+      : .40
   )
 }
 
@@ -404,12 +510,36 @@ function critChance(
   attacker,
   weapon
 ) {
+  const category =
+    weapon?.category ||
+    'unarmed'
+
+  const statBonus =
+    category === 'heavy'
+      ? attacker.strength * .0035
+      : category === 'flexible'
+        ? (
+            attacker.strength * .0016 +
+            attacker.agility * .0014
+          )
+        : category === 'ranged'
+          ? (
+              attacker.agility * .0018 +
+              attacker.speed * .001
+            )
+          : (
+              attacker.strength * .002 +
+              attacker.speed * .001
+            )
+
   return clamp(
-    .045 +
-    attacker.strength * .0026 +
+    .04 +
+    statBonus +
     (weapon.crit || 0),
-    .05,
-    .28
+    .045,
+    category === 'heavy'
+      ? .32
+      : .27
   )
 }
 
@@ -429,9 +559,25 @@ function accuracyChance(
     attacker.activity.sleep *
     .00035
 
+  const category =
+    weapon?.category ||
+    'unarmed'
+
+  const controlBonus =
+    category === 'heavy'
+      ? attacker.agility * .0007
+      : category === 'ranged'
+        ? (
+            attacker.agility * .0017 +
+            attacker.speed * .0008
+          )
+        : category === 'flexible'
+          ? attacker.agility * .0015
+          : attacker.agility * .0013
+
   return clamp(
     weapon.accuracy +
-    attacker.agility * .0013 +
+    controlBonus +
     sleepBonus -
     blindPenalty -
     fatiguePenalty,
@@ -793,8 +939,9 @@ function maybeThrowWeapon(
     weapon.id === 'fists' ||
     !chance(
       random,
-      .14 +
-      attacker.agility * .0014
+      .10 +
+      attacker.agility * .002 +
+      attacker.speed * .0008
     )
   ) {
     return false
@@ -1289,6 +1436,48 @@ function turnAttack(
       category:
         weapon.category ||
         'unarmed',
+      statSignature:
+        weapon.category === 'heavy'
+          ? 'strength'
+          : weapon.category === 'flexible'
+            ? 'agility'
+            : weapon.category === 'ranged'
+              ? 'speed'
+              : (
+                  attacker.speed >=
+                  attacker.strength
+                    ? 'speed'
+                    : 'strength'
+                ),
+      powerTier:
+        Math.max(
+          1,
+          Math.min(
+            5,
+            Math.floor(
+              (
+                weapon.category === 'heavy'
+                  ? attacker.strength
+                  : weapon.category === 'flexible'
+                    ? (
+                        attacker.agility +
+                        attacker.speed
+                      ) / 2
+                    : weapon.category === 'ranged'
+                      ? (
+                          attacker.speed +
+                          attacker.agility
+                        ) / 2
+                      : (
+                          attacker.speed +
+                          attacker.agility +
+                          attacker.strength
+                        ) / 3
+              ) /
+              5
+            )
+          )
+        ),
       attackVariant:
         (
           attacker.attacks +
@@ -1358,8 +1547,21 @@ function turnAttack(
                   ) +
                   (
                     weapon.category === 'heavy'
-                      ? 7
-                      : 0
+                      ? (
+                          7 +
+                          Math.max(
+                            0,
+                            attacker.strength - 15
+                          ) *
+                          .55
+                        )
+                      : weapon.category === 'flexible'
+                        ? Math.max(
+                            0,
+                            attacker.agility - 18
+                          ) *
+                          .22
+                        : 0
                   )
                 )
               )
