@@ -115,36 +115,14 @@ function normalizeSlug(value) {
 }
 
 function resolveAthleteIdFromMember() {
-  if (
-    !currentMember ||
-    currentMember.role !== 'athlete'
-  ) {
+  if (!currentMember) {
     return null
-  }
-
-  const requested =
-    normalizeSlug(
-      currentMember.athlete_slug
-    )
-
-  const exact =
-    athletes.find(
-      (athlete) =>
-        normalizeSlug(
-          athlete.id
-        ) === requested ||
-        normalizeSlug(
-          athlete.cloudSlug
-        ) === requested
-    )
-
-  if (exact) {
-    return exact.id
   }
 
   const aliases = {
     anzalone: 'guillaume',
     guillaume: 'guillaume',
+    guillaumeanzalone: 'guillaume',
     yannick: 'yann',
     yann: 'yann',
     theflop: 'flop',
@@ -152,7 +130,62 @@ function resolveAthleteIdFromMember() {
     clarametaknight: 'metaknight',
   }
 
-  return aliases[requested] || null
+  const candidates = [
+    currentMember.athlete_slug,
+    currentMember.display_name,
+    String(
+      currentMember.email ||
+      ''
+    ).split('@')[0],
+  ]
+    .map(normalizeSlug)
+    .filter(Boolean)
+
+  for (const candidate of candidates) {
+    const requested =
+      aliases[candidate] ||
+      candidate
+
+    const exact =
+      athletes.find(
+        (athlete) => {
+          const values = [
+            athlete.id,
+            athlete.slug,
+            athlete.cloudSlug,
+            athlete.name,
+          ]
+            .map(normalizeSlug)
+
+          return (
+            values.includes(
+              requested
+            ) ||
+            values.includes(
+              candidate
+            )
+          )
+        }
+      )
+
+    if (exact) {
+      return exact.id
+    }
+  }
+
+  return null
+}
+
+function isOwnAthlete(
+  athlete
+) {
+  const ownId =
+    resolveAthleteIdFromMember()
+
+  return Boolean(
+    ownId &&
+    athlete?.id === ownId
+  )
 }
 
 function visibleAthletes() {
@@ -160,15 +193,43 @@ function visibleAthletes() {
     currentMember?.role === 'coach' ||
     currentMember?.role === 'athlete'
   ) {
+    const ownId =
+      resolveAthleteIdFromMember()
+
     return athletes
       .slice()
-      .sort((a, b) =>
-        String(a?.name || '').localeCompare(
-          String(b?.name || ''),
+      .sort((a, b) => {
+        const aOwn =
+          ownId &&
+          a?.id === ownId
+            ? 1
+            : 0
+
+        const bOwn =
+          ownId &&
+          b?.id === ownId
+            ? 1
+            : 0
+
+        if (aOwn !== bOwn) {
+          return bOwn - aOwn
+        }
+
+        return String(
+          a?.name ||
+          ''
+        ).localeCompare(
+          String(
+            b?.name ||
+            ''
+          ),
           'fr',
-          { sensitivity: 'base' }
+          {
+            sensitivity:
+              'base',
+          }
         )
-      )
+      })
   }
 
   return []
@@ -1700,6 +1761,9 @@ async function renderBruteGameScreen() {
           ? ''
           : ownSlug,
 
+      preferredSlug:
+        ownSlug,
+
       allowAthleteSelection:
         isCoach,
 
@@ -2374,7 +2438,7 @@ async function renderAthletes() {
         ${list.map(
           (athlete) => `
             <button
-              class="card athlete-card"
+              class="card athlete-card ${isOwnAthlete(athlete) ? 'athlete-card--self' : ''}"
               data-action="athlete"
               data-athlete-id="${athlete.id}"
             >
@@ -2387,6 +2451,13 @@ async function renderAthletes() {
               <div class="athlete-card-copy">
                 <strong>
                   ${athlete.name}
+                  ${
+                    isOwnAthlete(
+                      athlete
+                    )
+                      ? '<span class="athlete-self-badge">★ MON PROFIL</span>'
+                      : ''
+                  }
                 </strong>
 
                 <span class="athlete-card-program">
