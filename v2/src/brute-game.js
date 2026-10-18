@@ -2656,6 +2656,189 @@ function ensureStyles() {
   35%{transform:rotate(-18deg) scale(.92)}
   62%{transform:rotate(20deg) scale(1.1)}
 }
+/* ================================================================
+   GA BRUTE · ARCADE FIGHT PASS V4
+   Deeper stage, stronger silhouettes, hit-stop and versus-fighter HUD
+   ================================================================ */
+.brute-arena.brute-arena-v3{
+  min-height:620px;
+  isolation:isolate;
+  overflow:hidden;
+  border:3px solid #24170f;
+  background:
+    radial-gradient(circle at 50% 23%,rgba(255,216,122,.3),transparent 24%),
+    linear-gradient(180deg,#4f9fc1 0 28%,#d0a85f 28% 34%,#9b5b31 34% 100%);
+  box-shadow:inset 0 0 0 2px rgba(255,222,141,.18),inset 0 -55px 90px rgba(43,20,12,.2),0 24px 70px rgba(0,0,0,.4);
+}
+.brute-arena-v4-sun{
+  position:absolute;z-index:0;left:50%;top:115px;width:330px;height:170px;transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,241,181,.7) 0 11%,rgba(255,198,102,.28) 27%,transparent 70%);
+  pointer-events:none;
+}
+.brute-arena-v4-banner{
+  position:absolute;z-index:2;top:31%;width:54px;height:185px;border:3px solid rgba(72,31,22,.72);border-top:0;
+  background:linear-gradient(90deg,rgba(255,255,255,.08),transparent 25% 72%,rgba(0,0,0,.15)),linear-gradient(#8f2b27,#541a1e);
+  box-shadow:0 12px 25px rgba(45,19,14,.28);transform-origin:50% 0;animation:bruteBannerSway 3.8s ease-in-out infinite;
+}
+.brute-arena-v4-banner.left{left:8%;transform:rotate(2deg)}
+.brute-arena-v4-banner.right{right:8%;transform:rotate(-2deg);animation-delay:-1.8s}
+.brute-arena-v4-banner:after{
+  content:"";position:absolute;left:50%;bottom:-18px;width:34px;height:34px;transform:translateX(-50%) rotate(45deg);
+  background:#541a1e;border-right:3px solid rgba(72,31,22,.72);border-bottom:3px solid rgba(72,31,22,.72);
+}
+.brute-arena-v4-banner i{
+  position:absolute;left:50%;top:45px;width:28px;height:28px;transform:translateX(-50%) rotate(45deg);
+  border:3px solid rgba(255,222,144,.65);opacity:.7;
+}
+.brute-arena-v4-gong{
+  position:absolute;z-index:2;left:50%;top:37%;width:108px;height:108px;transform:translate(-50%,-50%);
+  border:8px solid rgba(64,34,22,.7);border-radius:50%;
+  background:radial-gradient(circle at 50% 46%,#d4a555 0 12%,#8c562d 13% 20%,#ba7b3d 21% 42%,#633a25 43% 48%,#b1773c 49% 100%);
+  box-shadow:inset 0 0 0 4px rgba(255,226,153,.18),0 8px 20px rgba(44,20,12,.24);opacity:.78;
+}
+.brute-arena-v4-gong:before,.brute-arena-v4-gong:after{
+  content:"";position:absolute;left:50%;top:50%;width:58px;height:7px;border-radius:99px;background:rgba(64,34,22,.52);
+  transform:translate(-50%,-50%) rotate(38deg);
+}
+.brute-arena-v4-gong:after{transform:translate(-50%,-50%) rotate(-38deg)}
+.brute-arena-v2-crowd{opacity:.28;filter:blur(.2px);transform:scaleY(1.18);transform-origin:50% 100%}
+.brute-arena-v2-floor{
+  inset:46% 0 0;
+  background:radial-gradient(ellipse at 50% 12%,rgba(255,222,142,.48),transparent 43%),
+    linear-gradient(90deg,transparent 49.7%,rgba(65,34,22,.22) 49.8% 50.2%,transparent 50.3%),
+    repeating-linear-gradient(90deg,rgba(70,35,22,.14) 0 2px,transparent 2px 106px),linear-gradient(#b9773f,#814426);
+}
+.brute-arena-v2-floor:before{
+  content:"";position:absolute;inset:0;opacity:.28;
+  background:linear-gradient(77deg,transparent 0 24%,rgba(54,28,18,.42) 24.2% 24.5%,transparent 24.8%),
+    linear-gradient(103deg,transparent 0 24%,rgba(54,28,18,.42) 24.2% 24.5%,transparent 24.8%),
+    repeating-linear-gradient(0deg,transparent 0 62px,rgba(52,27,18,.28) 63px 65px);
+  clip-path:polygon(0 0,100% 0,91% 100%,9% 100%);
+}
+.brute-arena-v4-vignette{
+  position:absolute;z-index:9;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(31,17,17,.2),transparent 14% 86%,rgba(31,17,17,.2)),
+    linear-gradient(180deg,rgba(10,15,23,.1),transparent 22% 78%,rgba(29,13,10,.24));
+  mix-blend-mode:multiply;
+}
+.brute-arena-v4-foreground{
+  position:absolute;z-index:10;left:-4%;right:-4%;bottom:-22px;height:74px;opacity:.72;pointer-events:none;
+  background:radial-gradient(ellipse at 7% 100%,#1d1718 0 28px,transparent 30px),
+    radial-gradient(ellipse at 93% 100%,#1d1718 0 34px,transparent 36px),
+    linear-gradient(86deg,transparent 0 8%,#1d1718 8.2% 8.8%,transparent 9% 91%,#1d1718 91.2% 91.8%,transparent 92%);
+}
+.brute-versus-callout{
+  position:absolute;z-index:27;left:50%;top:57%;width:min(360px,52%);transform:translate(-50%,-50%) rotate(-4deg) scale(.7);
+  text-align:center;pointer-events:none;opacity:0;animation:bruteFightCallout 1.05s cubic-bezier(.15,.86,.2,1) .16s forwards;
+}
+.brute-versus-callout:before{
+  content:"";position:absolute;z-index:-1;left:0;right:0;top:50%;height:70px;transform:translateY(-50%) skewX(-15deg);
+  background:linear-gradient(90deg,transparent,#0c0d12 12% 88%,transparent);filter:drop-shadow(0 7px 8px rgba(0,0,0,.35));
+}
+.brute-versus-callout b{
+  display:block;color:#ffe36b;font-size:48px;font-style:italic;line-height:.9;letter-spacing:-.06em;
+  text-shadow:3px 3px 0 #cf3f1d,-2px -2px 0 #f5f0d3,0 0 18px rgba(255,160,46,.68);transform:skewX(-8deg);
+}
+.brute-versus-callout i{
+  display:block;width:75%;height:5px;margin:5px auto 0;
+  background:linear-gradient(90deg,transparent,#ff6a24,#ffe46e,#ff6a24,transparent);box-shadow:0 0 12px rgba(255,118,35,.5);
+}
+.brute-hud.brute-hud-v3{inset:11px 12px auto;grid-template-columns:minmax(0,1fr) 78px minmax(0,1fr)!important;gap:9px}
+.brute-hud-v3-side{
+  position:relative;overflow:hidden;padding:7px 9px 8px;border:2px solid #d1903a;border-radius:8px;
+  background:linear-gradient(105deg,rgba(11,16,26,.97),rgba(27,28,36,.96) 60%,rgba(58,34,25,.95));color:#fff2ca;
+  box-shadow:inset 0 0 0 1px rgba(255,236,176,.16),inset 0 -18px 28px rgba(0,0,0,.18),0 5px 0 rgba(25,15,12,.46),0 10px 22px rgba(0,0,0,.18);
+}
+.brute-hud-v3-side:before{
+  content:"";position:absolute;left:-18%;top:-25px;width:48%;height:75px;transform:rotate(-14deg);
+  background:linear-gradient(90deg,transparent,rgba(255,171,59,.13),transparent);pointer-events:none;
+}
+.brute-hud-v3-side.right:before{left:auto;right:-18%;transform:rotate(14deg)}
+.brute-hud-v3-portrait{
+  width:46px;height:46px;border:2px solid #efaa48;border-radius:8px 15px 8px 15px;
+  background:radial-gradient(circle at 50% 20%,rgba(255,218,130,.36),transparent 52%),#171d29;box-shadow:0 0 12px rgba(238,153,53,.24);
+}
+.brute-hud-v3-portrait .ga-brute-svg{width:47px;height:56px;margin-top:1px}
+.brute-hud-v3-name b{color:#fff4d4;font-size:12px;font-style:italic;letter-spacing:.02em;text-shadow:0 1px 0 #000}
+.brute-hud-v3-name small{color:#d7b17c;font-size:6px}
+.brute-hud-v3-hp{
+  height:18px!important;padding:2px;border:2px solid #0b0d12!important;background:#1b1110!important;
+  box-shadow:inset 0 0 0 1px rgba(255,235,179,.15),0 0 8px rgba(0,0,0,.35);
+}
+.brute-hud-v3-hp i{
+  background:linear-gradient(180deg,#fff17b 0 20%,#ffb027 21% 56%,#e35224 57% 100%)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.46),0 0 10px rgba(255,140,33,.34);
+}
+.brute-hud-v3-hp span{color:#fff;font-size:6.5px;text-shadow:0 1px 2px #000,0 0 3px #000}
+.brute-hud-v3-live span{border-color:rgba(255,205,124,.18);background:rgba(255,255,255,.055);color:#d7b889}
+.brute-hud-v3-live b{color:#fff4d2}
+.brute-hud-v3-weapon{border-color:rgba(255,195,98,.19);background:linear-gradient(90deg,rgba(255,188,80,.07),rgba(255,255,255,.035))}
+.brute-weapon-hud-copy b{color:#fff0c5}.brute-weapon-hud-copy small{color:#c9a779}.brute-weapon-identity{color:#dfa853!important}
+.brute-weapon-mastery{background:rgba(0,0,0,.38)}.brute-weapon-mastery>em{color:#fff0c6;text-shadow:0 1px #000}
+.brute-combo-meter{border-color:rgba(255,183,75,.28);background:rgba(255,169,54,.06);color:#b68d64}
+.brute-combo-meter.active{color:#3f1f12;border-color:#ffbe3d;background:linear-gradient(#ffe986,#f09a25);box-shadow:0 0 18px rgba(255,160,39,.52)}
+.brute-round-v2{
+  width:58px;height:58px;border:3px solid #e6a344;border-radius:50%;
+  background:radial-gradient(circle,#25202a 0 56%,#0f1118 57% 100%);color:#ffd95f;font-size:17px;text-shadow:0 0 9px rgba(255,190,61,.48);
+  box-shadow:inset 0 0 0 3px rgba(255,218,124,.12),0 5px 0 rgba(24,12,10,.48),0 0 16px rgba(255,149,42,.2);
+}
+.brute-fight-xp-preview{border-color:rgba(85,167,255,.35);background:linear-gradient(#1f304b,#142239);color:#ffe072}
+.brute-fighters.brute-fighters-v2{z-index:7;bottom:34px;padding:0 3.2%}
+.brute-fighters-v2 .brute-fighter{min-height:365px}
+.brute-fighters-v2 .brute-fighter .ga-brute-svg.fight-model{
+  width:min(276px,76%);max-height:345px;overflow:visible;
+  filter:drop-shadow(0 18px 8px rgba(55,24,12,.27)) drop-shadow(0 0 1px rgba(255,240,192,.25));transform-origin:50% 100%;
+}
+.brute-fighter.right .ga-brute-svg.fight-model{transform:scaleX(-1)}
+.brute-fighters-v2 .fight-model .brute-stage{transform-origin:50% 100%;animation:bruteArcadeBreath 1.55s ease-in-out infinite}
+.brute-fighters-v2 .fight-model .brute-head{transform-origin:50% 100%;animation:bruteArcadeHead 2.1s ease-in-out infinite}
+.brute-fighters-v2 .fight-model .brute-shadow{opacity:.25}
+.brute-fighters-v2 .brute-fighter-shadow{
+  bottom:7px;width:160px;height:25px;opacity:.78;filter:blur(1px);background:radial-gradient(ellipse,rgba(39,20,15,.52),transparent 70%);
+}
+.brute-fighter.hitstop .ga-brute-svg,.brute-fighter.hitstop .ga-brute-svg *{animation-play-state:paused!important}
+.brute-fighter.windup-heavy .ga-brute-svg.fight-model{filter:drop-shadow(0 0 12px rgba(255,120,43,.45)) drop-shadow(0 18px 8px rgba(55,24,12,.27))}
+.brute-fighter.windup-fast .ga-brute-svg.fight-model,.brute-fighter.windup-flexible .ga-brute-svg.fight-model{filter:drop-shadow(0 0 10px rgba(255,222,105,.3)) drop-shadow(0 18px 8px rgba(55,24,12,.27))}
+.brute-fighter.attack-heavy .brute-fighter-shadow,.brute-fighter.hit-heavy .brute-fighter-shadow{animation:bruteShadowImpact .4s ease}
+.brute-speedline{
+  top:42%;height:70px;opacity:.9;background:repeating-linear-gradient(0deg,transparent 0 8px,rgba(255,243,184,.82) 9px 11px,transparent 12px 18px);
+  filter:blur(.45px) drop-shadow(0 0 7px rgba(255,164,54,.5));
+}
+.brute-impact{
+  width:104px;height:104px;border:0;border-radius:0;
+  background:radial-gradient(circle,#fff 0 8%,#ffe26b 9% 18%,#ff7a2d 19% 31%,rgba(255,67,31,.35) 32% 40%,transparent 41%),
+    conic-gradient(from 8deg,transparent 0 6%,#fff4af 7% 10%,transparent 11% 19%,#ff9c3e 20% 23%,transparent 24% 33%,#fff4af 34% 37%,transparent 38% 48%,#ff7a2d 49% 52%,transparent 53% 62%,#fff4af 63% 66%,transparent 67% 78%,#ff9c3e 79% 82%,transparent 83%);
+  clip-path:polygon(50% 0,58% 31%,78% 8%,69% 37%,100% 28%,73% 49%,100% 62%,67% 60%,84% 92%,59% 68%,50% 100%,42% 69%,18% 92%,34% 61%,0 64%,28% 50%,0 31%,32% 38%,22% 8%,43% 31%);
+  box-shadow:none;filter:drop-shadow(0 0 16px rgba(255,99,32,.82));
+}
+.brute-impact.crit{
+  width:146px;height:146px;
+  background:radial-gradient(circle,#fff 0 9%,#fff27d 10% 18%,#ff5e2d 19% 31%,transparent 44%),
+    conic-gradient(from 4deg,transparent 0 5%,#fff 6% 9%,transparent 10% 18%,#ffca55 19% 23%,transparent 24% 35%,#fff 36% 39%,transparent 40% 49%,#ff5e2d 50% 54%,transparent 55% 64%,#fff 65% 68%,transparent 69%);
+  filter:drop-shadow(0 0 23px rgba(255,65,32,.95));
+}
+.brute-dust{bottom:65px;width:130px;height:42px;opacity:.9}
+.brute-log.brute-log-v3{
+  z-index:29;bottom:9px;width:min(560px,61%);padding:8px 18px;border:1px solid rgba(244,177,68,.78);border-radius:3px;
+  background:linear-gradient(90deg,transparent,rgba(11,14,20,.91) 8% 92%,transparent);color:#fff0c4;font-size:9px;letter-spacing:.04em;
+  text-shadow:0 1px 2px #000;box-shadow:0 0 18px rgba(0,0,0,.2);
+}
+.brute-arena.shake .brute-arena-v4-foreground{animation:bruteForegroundImpact .34s ease}
+.brute-arena.flash .brute-arena-v4-vignette{animation:bruteVignetteFlash .26s ease}
+@keyframes bruteArcadeBreath{0%,100%{transform:translateY(0) scale(1,1)}48%{transform:translateY(2px) scale(1.012,.992)}}
+@keyframes bruteArcadeHead{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(1px) rotate(-1.2deg)}}
+@keyframes bruteBannerSway{0%,100%{filter:brightness(.96)}50%{filter:brightness(1.08)}}
+@keyframes bruteFightCallout{
+  0%{opacity:0;transform:translate(-50%,-50%) rotate(-7deg) scale(.42)}
+  34%{opacity:1;transform:translate(-50%,-50%) rotate(-3deg) scale(1.16)}
+  61%{opacity:1;transform:translate(-50%,-50%) rotate(-4deg) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) rotate(-2deg) scale(1.22)}
+}
+@keyframes bruteShadowImpact{0%,100%{transform:scale(1)}35%{transform:scale(1.35,.72);opacity:.9}}
+@keyframes bruteForegroundImpact{0%,100%{transform:translate(0,0)}28%{transform:translate(-4px,2px)}52%{transform:translate(5px,-1px)}76%{transform:translate(-2px,1px)}}
+@keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
+
 @media(max-width:900px){
   .brute-armory-v3{grid-template-columns:1fr}
   .brute-armory-v3-focus{min-height:520px}
@@ -2690,6 +2873,14 @@ function ensureStyles() {
   .brute-weapon-hud-copy small{display:none}
   .brute-fight-xp-preview{display:none}
   .brute-afterimage{width:min(140px,56%)!important}
+  .brute-arena.brute-arena-v3{min-height:500px}
+  .brute-fighters-v2 .brute-fighter{min-height:285px}
+  .brute-fighters-v2 .brute-fighter .ga-brute-svg.fight-model{width:min(178px,68%);max-height:255px}
+  .brute-arena-v4-banner{width:34px;height:118px}
+  .brute-arena-v4-gong{width:72px;height:72px;border-width:5px}
+  .brute-versus-callout{width:58%}
+  .brute-versus-callout b{font-size:32px}
+  .brute-log.brute-log-v3{width:72%;font-size:7px;padding:6px 10px}
 }
 `
 
@@ -5099,6 +5290,7 @@ export async function mountBruteGame(root, options = {}) {
       {
         label:fighter.name,
         weapon,
+        className:'fight-model',
       }
     )+
     (
@@ -5249,13 +5441,20 @@ export async function mountBruteGame(root, options = {}) {
       '<section class="brute-fight-shell">'+
         '<div class="brute-arena brute-arena-v2 brute-arena-v3" data-brute-arena>'+
           '<div class="brute-stagefx" data-brute-stagefx></div>'+
+          '<div class="brute-arena-v4-sun"></div>'+
           '<div class="brute-arena-v2-cloud c1"></div>'+
           '<div class="brute-arena-v2-cloud c2"></div>'+
+          '<div class="brute-arena-v4-banner left"><i></i></div>'+
+          '<div class="brute-arena-v4-banner right"><i></i></div>'+
+          '<div class="brute-arena-v4-gong"></div>'+
           '<div class="brute-arena-v2-wall">'+
             '<i></i><i></i><i></i><i></i><i></i>'+
           '</div>'+
           '<div class="brute-arena-v2-crowd"></div>'+
           '<div class="brute-arena-v2-floor"></div>'+
+          '<div class="brute-arena-v4-vignette"></div>'+
+          '<div class="brute-arena-v4-foreground"></div>'+
+          '<div class="brute-versus-callout" aria-hidden="true"><b>FIGHT!</b><i></i></div>'+
           '<div class="brute-hud brute-hud-v2 brute-hud-v3">'+
             hud(left,'left',leftWeapon)+
             '<div class="brute-round-stack">'+
@@ -5593,7 +5792,8 @@ export async function mountBruteGame(root, options = {}) {
         'ko-v2',
         'finisher',
         'critical-burst',
-        'staggering'
+        'staggering',
+        'hitstop'
       )
     })
     root.querySelectorAll('.brute-float').forEach(el => el.remove())
@@ -6731,6 +6931,47 @@ export async function mountBruteGame(root, options = {}) {
       if (heavy) {
         arena?.classList.add(
           'shake'
+        )
+
+        const freezeDelay =
+          Math.max(
+            55,
+            118 /
+            Math.max(
+              .5,
+              playbackSpeed
+            )
+          )
+
+        const freezeTime =
+          Math.max(
+            34,
+            (
+              event.critical ||
+              event.type === 'FINISHER'
+                ? 82
+                : 58
+            ) /
+            Math.max(
+              .5,
+              playbackSpeed
+            )
+          )
+
+        setTimeout(
+          () => {
+            actorEl?.classList.add('hitstop')
+            targetEl?.classList.add('hitstop')
+
+            setTimeout(
+              () => {
+                actorEl?.classList.remove('hitstop')
+                targetEl?.classList.remove('hitstop')
+              },
+              freezeTime
+            )
+          },
+          freezeDelay
         )
       }
 
