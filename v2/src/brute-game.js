@@ -2840,6 +2840,94 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · NAVIGATION / PRIORITY V14
+   Search behaviour, sticky information and smart daily priority
+   ================================================================ */
+.brute-camp-priority{
+  display:grid;
+  grid-template-columns:36px minmax(0,1fr) auto;
+  gap:8px;
+  align-items:center;
+  padding:9px 10px;
+  border:2px solid #6a381d;
+  border-radius:10px;
+  background:linear-gradient(180deg,#f1d784,#cf9145);
+  color:#63361d;
+  box-shadow:inset 0 0 0 2px rgba(255,244,190,.34),0 4px 0 #512713;
+}
+.brute-camp-priority-icon{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  padding:6px;
+  border-radius:9px;
+  background:rgba(102,54,27,.1);
+}
+.brute-camp-priority small{
+  display:block;
+  color:#87552f;
+  font-size:5.5px;
+  font-weight:1000;
+  letter-spacing:.1em;
+}
+.brute-camp-priority b{
+  display:block;
+  margin-top:1px;
+  font-size:10px;
+}
+.brute-camp-priority p{
+  margin:2px 0 0;
+  color:#7b4b2a;
+  font-size:6.5px;
+  font-weight:800;
+  line-height:1.3;
+}
+.brute-camp-priority strong{
+  align-self:start;
+  padding:4px 6px;
+  border-radius:999px;
+  background:rgba(101,54,27,.12);
+  font-size:7px;
+}
+.brute-camp-average{
+  float:right;
+  padding:2px 5px;
+  border-radius:999px;
+  background:rgba(106,56,29,.1);
+  color:#7c4d2a;
+  font-size:6px;
+  font-weight:1000;
+}
+@media(min-width:901px){
+  .brute-cell-inventory-v3,
+  .brute-cell-actions-v3{
+    position:sticky;
+    top:12px;
+  }
+  .brute-armory-v3-list{
+    position:sticky;
+    top:76px;
+    max-height:calc(100vh - 92px);
+    overflow:auto;
+    scrollbar-width:thin;
+  }
+  .brute-ranking-v2-header{
+    position:sticky;
+    z-index:4;
+    top:0;
+  }
+}
+@media(max-width:660px){
+  .brute-camp-priority{
+    grid-template-columns:32px minmax(0,1fr) auto;
+    padding:8px;
+  }
+  .brute-camp-priority-icon{width:30px;height:30px;padding:5px}
+  .brute-camp-priority p{font-size:6px}
+}
+
+/* ================================================================
    GA BRUTE · INFORMATION ARCHITECTURE V13
    Selector search, duel recommendations, build fit, ranking and recovery
    ================================================================ */
@@ -6037,6 +6125,57 @@ export async function mountBruteGame(root, options = {}) {
         (brute.pets || [])[0]
       ]
 
+    const dayScores = [
+      {
+        key:'training',
+        label:'ENTRAÎNEMENT',
+        value:num(
+          idleSnapshot?.training_score,
+          0
+        ),
+        icon:'strength',
+        action:'Enregistre ta séance pour améliorer ta progression du jour.',
+      },
+      {
+        key:'steps',
+        label:'ACTIVITÉ',
+        value:num(
+          idleSnapshot?.steps_score,
+          0
+        ),
+        icon:'speed',
+        action:'Bouge davantage aujourd’hui pour augmenter ton bonus d’activité.',
+      },
+      {
+        key:'sleep',
+        label:'SOMMEIL',
+        value:num(
+          sleepScoreNow(),
+          0
+        ),
+        icon:'sleep',
+        action:'Passe par la récupération pour améliorer ton bonus sommeil.',
+      },
+    ]
+
+    const dayPriority =
+      dayScores
+        .slice()
+        .sort(
+          (a,b) =>
+            a.value - b.value
+        )[0]
+
+    const dayAverage =
+      Math.round(
+        dayScores.reduce(
+          (sum,item) =>
+            sum + item.value,
+          0
+        ) /
+        dayScores.length
+      )
+
     const scoreMeter =
       (
         label,
@@ -6069,8 +6208,13 @@ export async function mountBruteGame(root, options = {}) {
       )+
       '<section class="brute-camp-v2">'+
         '<div class="brute-camp-v2-left">'+
+          '<div class="brute-camp-priority">'+
+            '<div class="brute-camp-priority-icon">'+uiGlyph(dayPriority?.icon || 'camp')+'</div>'+
+            '<div><small>PRIORITÉ DU JOUR</small><b>'+esc(dayPriority?.label || 'PROGRESSION')+'</b><p>'+esc(dayPriority?.action || '')+'</p></div>'+
+            '<strong>'+Math.round(num(dayPriority?.value))+'/100</strong>'+
+          '</div>'+
           '<div class="brute-parchment-panel">'+
-            '<h3>JOURNÉE</h3>'+
+            '<h3>JOURNÉE <span class="brute-camp-average">'+dayAverage+'/100</span></h3>'+
             scoreMeter(
               'Entraînement',
               idleSnapshot?.training_score,
@@ -10923,6 +11067,71 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   root.oninput = event => {
+    const athleteSearch =
+      event.target.closest(
+        '[data-brute-athlete-search]'
+      )
+
+    if (athleteSearch) {
+      const query =
+        String(
+          athleteSearch.value ||
+          ''
+        )
+          .trim()
+          .toLowerCase()
+
+      const rows =
+        Array.from(
+          root.querySelectorAll(
+            '[data-brute-athlete-name]'
+          )
+        )
+
+      let visible = 0
+
+      rows.forEach(
+        row => {
+          const name =
+            String(
+              row.dataset
+                .bruteAthleteName ||
+              ''
+            )
+
+          const show =
+            !query ||
+            name.includes(
+              query
+            )
+
+          row.hidden =
+            !show
+
+          if (show) {
+            visible += 1
+          }
+        }
+      )
+
+      const count =
+        root.querySelector(
+          '[data-brute-athlete-count]'
+        )
+
+      if (count) {
+        count.textContent =
+          visible +
+          (
+            visible > 1
+              ? ' PROFILS'
+              : ' PROFIL'
+          )
+      }
+
+      return
+    }
+
     const input =
       event.target.closest(
         '[data-brute-name]'
