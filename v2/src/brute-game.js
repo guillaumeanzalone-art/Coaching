@@ -2417,20 +2417,86 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function renderDuel() {
-    const opponents = roster
-      .filter(row => row.athlete_slug !== selectedSlug && row.appearance_locked_at)
-      .sort((a,b) => Math.abs(a.level-brute.level)-Math.abs(b.level-brute.level))
-      .slice(0,12)
+    const opponents =
+      roster
+        .filter(
+          row =>
+            row.athlete_slug !==
+              selectedSlug &&
+            row.appearance_locked_at
+        )
+        .sort(
+          (a,b) =>
+            Math.abs(
+              a.level -
+              brute.level
+            ) -
+            Math.abs(
+              b.level -
+              brute.level
+            )
+        )
+        .slice(0,12)
 
-    return topBar('Duel','Arène PvP')+
-      '<section class="brute-panel brute-pad">'+
-        '<div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><small style="color:#858ca8;font-weight:900">COMBATS DU JOUR</small><h2 style="margin:3px 0">'+num(daily.remaining,6)+' / 6 restants</h2></div><button class="brute-primary" data-brute-random-duel '+(num(daily.remaining)<=0?'disabled':'')+'>⚔️ Adversaire aléatoire</button></div>'+
-        '<div class="brute-list" style="margin-top:12px">'+
-          (opponents.length ? opponents.map(o =>
-            '<div class="brute-row"><span class="icon">'+esc(getBruteTheme(o.athlete_slug).emoji)+'</span><span><b>'+esc(o.name)+'</b><small>Niv. '+num(o.level)+' · Cote '+num(o.rating)+' · '+num(o.wins)+'V/'+num(o.losses)+'D</small></span><button class="brute-secondary" data-brute-duel="'+esc(o.athlete_slug)+'" '+(num(daily.remaining)<=0?'disabled':'')+'>Combattre</button></div>'
-          ).join('') : '<div style="color:#7f859e">Aucune autre brute validée pour le moment.</div>')+
+    const threat =
+      opponent => {
+        const delta =
+          num(opponent.level) -
+          num(brute.level)
+
+        if (delta >= 2) return 'DANGER'
+        if (delta === 1) return 'FORT'
+        if (delta <= -2) return 'FACILE'
+        return 'ÉQUILIBRÉ'
+      }
+
+    return (
+      topBar(
+        'Arène',
+        'Choisis ton adversaire'
+      )+
+      '<section class="brute-duel-v2">'+
+        '<header class="brute-duel-v2-head">'+
+          '<div><span>COMBATS DU JOUR</span><b>'+num(daily.remaining,6)+' / '+num(daily.limit,6)+'</b><small>restants</small></div>'+
+          '<button class="brute-cell-action primary random" data-brute-random-duel '+(num(daily.remaining)<=0?'disabled':'')+'>'+
+            '<span class="brute-cell-action-icon">⚔️</span>'+
+            '<span><b>ADVERSAIRE ALÉATOIRE</b><small>Entrer directement dans l’arène</small></span>'+
+            '<i>›</i>'+
+          '</button>'+
+        '</header>'+
+        '<div class="brute-duel-posters">'+
+          (
+            opponents.length
+              ? opponents.map(o => {
+                  const ratio =
+                    num(o.wins) +
+                    num(o.losses) > 0
+                      ? Math.round(
+                          num(o.wins) /
+                          (
+                            num(o.wins) +
+                            num(o.losses)
+                          ) *
+                          100
+                        )
+                      : 0
+
+                  return (
+                    '<article class="brute-duel-poster">'+
+                      '<div class="brute-duel-pin"></div>'+
+                      '<span class="brute-duel-avatar">'+esc(getBruteTheme(o.athlete_slug).emoji || '⚔️')+'</span>'+
+                      '<div class="brute-duel-poster-title"><b>'+esc(o.name)+'</b><small>NIV. '+num(o.level)+' · COTE '+num(o.rating)+'</small></div>'+
+                      '<div class="brute-duel-threat '+threat(o).toLowerCase()+'">'+threat(o)+'</div>'+
+                      '<div class="brute-duel-record"><span>'+num(o.wins)+' V</span><span>'+num(o.losses)+' D</span><span>'+ratio+'%</span></div>'+
+                      '<button class="brute-duel-fight" data-brute-duel="'+esc(o.athlete_slug)+'" '+(num(daily.remaining)<=0?'disabled':'')+'>COMBATTRE</button>'+
+                    '</article>'
+                  )
+                }).join('')
+              : '<div class="brute-duel-empty">Aucune autre brute validée pour le moment.</div>'
+          )+
         '</div>'+
       '</section>'
+    )
   }
 
   function normalizedRivalScore(rival) {
@@ -2666,22 +2732,44 @@ export async function mountBruteGame(root, options = {}) {
     const canFight =
       energy >= 8
 
-    return topBar('PvE','Entraînement')+
-      '<section class="brute-panel brute-pad" style="text-align:center">'+
-        '<div style="font-size:54px">🏋️</div><h2>OpenPower PvE</h2>'+
-        '<p style="max-width:620px;margin:0 auto;color:#858ca8;font-size:10px;line-height:1.6">Tu affrontes des profils générés à partir de noms et performances FFForce présents dans OpenPowerlifting. Les meilleurs GL Points / DOTS apparaissent progressivement, mais le PvE est volontairement plus accessible que le Duel.</p>'+
-        '<div style="display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:12px 0 4px">'+
-          '<span class="brute-activity-pill">⚡ Coût 8 énergie</span>'+
-          '<span class="brute-activity-pill">🔋 <b data-brute-pve-energy>'+energy+'</b> / 500</span>'+
-          '<span class="brute-activity-pill">⏱️ +1/min</span>'+
+    const progress =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          energy / 500 * 100
+        )
+      )
+
+    return (
+      topBar(
+        'OpenPower',
+        'Entraînement PvE'
+      )+
+      '<section class="brute-pve-v2">'+
+        '<div class="brute-pve-v2-stage">'+
+          '<div class="brute-pve-v2-sign">OPENPOWER TRAINING PIT</div>'+
+          '<div class="brute-pve-v2-plates"><i></i><i></i><i></i><i></i></div>'+
+          '<div class="brute-pve-v2-icon">🏋️</div>'+
+          '<h2>Affronte les monstres du total</h2>'+
+          '<p>Les adversaires sont construits à partir de performances FFForce présentes dans OpenPowerlifting. Plus tu montes de niveau, plus les profils deviennent dangereux.</p>'+
         '</div>'+
-        '<p style="max-width:560px;margin:8px auto 0;color:#858ca8;font-size:9px;line-height:1.5">Victoire : XP de base + bonus steps + sommeil + entraînement. Le Duel reste plus rentable.</p>'+
-        '<div class="brute-actions" style="justify-content:center"><button class="brute-primary" data-brute-pve '+(canFight ? '' : 'disabled')+'>'+(
-          canFight
-            ? '⚔️ Lancer le combat'
-            : '⚡ Énergie insuffisante'
-        )+'</button></div>'+
+        '<aside class="brute-pve-v2-board">'+
+          '<div class="brute-cell-board-title">PRÉPARATION</div>'+
+          '<div class="brute-pve-v2-energy"><span>⚡ ÉNERGIE</span><b data-brute-pve-energy>'+energy+'</b><small>/ 500</small></div>'+
+          '<div class="brute-cell-bar energy"><i data-brute-energy-bar style="width:'+progress+'%"></i></div>'+
+          '<div class="brute-pve-v2-rules">'+
+            '<span><b>8</b><small>énergie / combat</small></span>'+
+            '<span><b>+1</b><small>énergie / min</small></span>'+
+            '<span><b>XP</b><small>steps + sommeil + training</small></span>'+
+          '</div>'+
+          '<button class="brute-pve-v2-launch" data-brute-pve '+(canFight?'':'disabled')+'>'+
+            (canFight ? '⚔️ ENTRER DANS LA FOSSE' : '⚡ ÉNERGIE INSUFFISANTE')+
+          '</button>'+
+          '<small class="brute-pve-v2-note">Le Duel reste plus rentable en XP. Le PvE sert à progresser régulièrement et tester ton build.</small>'+
+        '</aside>'+
       '</section>'
+    )
   }
 
   function renderEquipment() {
@@ -2789,17 +2877,57 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function renderRanking() {
-    return topBar('Classement','Toutes les brutes')+
-      '<section class="brute-panel brute-pad"><div class="brute-ranking">'+
-        roster.slice(0,100).map((row,index) =>
-          '<div class="brute-rank-row"><span class="rank">#'+(index+1)+'</span><span><b>'+esc(getBruteTheme(row.athlete_slug).emoji+' '+row.name)+'</b><small>Niv. '+num(row.level)+' · '+num(row.wins)+'V / '+num(row.losses)+'D</small></span><b>'+num(row.rating)+'</b><span class="extra">💪 '+num(row.strength)+'</span><span class="extra">⚡ '+num(row.speed)+'</span></div>'
-        ).join('')+
-      '</div></section>'
+    const top =
+      roster.slice(0,3)
+
+    const rest =
+      roster.slice(3,100)
+
+    return (
+      topBar(
+        'Classement',
+        'Hall des brutes'
+      )+
+      '<section class="brute-ranking-v2">'+
+        '<div class="brute-ranking-v2-podium">'+
+          top.map(
+            (row,index) => {
+              const place =
+                index + 1
+
+              return (
+                '<div class="brute-podium place-'+place+'">'+
+                  '<span class="brute-podium-crown">'+(place===1?'♛':place===2?'♜':'♝')+'</span>'+
+                  '<span class="brute-podium-avatar">'+esc(getBruteTheme(row.athlete_slug).emoji || '⚔️')+'</span>'+
+                  '<b>'+esc(row.name)+'</b>'+
+                  '<small>Niv. '+num(row.level)+' · '+num(row.rating)+'</small>'+
+                  '<div><span>'+num(row.wins)+'V</span><span>'+num(row.losses)+'D</span></div>'+
+                '</div>'
+              )
+            }
+          ).join('')+
+        '</div>'+
+        '<div class="brute-ranking-v2-board">'+
+          rest.map(
+            (row,index) =>
+              '<div class="brute-ranking-v2-row '+(row.athlete_slug===selectedSlug?'self':'')+'">'+
+                '<span class="rank">#'+(index+4)+'</span>'+
+                '<span class="avatar">'+esc(getBruteTheme(row.athlete_slug).emoji || '⚔️')+'</span>'+
+                '<span class="name"><b>'+esc(row.name)+'</b><small>Niv. '+num(row.level)+' · '+num(row.wins)+'V / '+num(row.losses)+'D</small></span>'+
+                '<b class="rating">'+num(row.rating)+'</b>'+
+                '<span class="stat">💪 '+num(row.strength)+'</span>'+
+                '<span class="stat">⚡ '+num(row.speed)+'</span>'+
+              '</div>'
+          ).join('')+
+        '</div>'+
+      '</section>'
+    )
   }
 
   function renderSleep() {
     const active =
-      idleSnapshot?.active_sleep_started_at
+      idleSnapshot
+        ?.active_sleep_started_at
 
     const baseSeconds =
       num(
@@ -2812,51 +2940,50 @@ export async function mountBruteGame(root, options = {}) {
             0,
             (
               Date.now() -
-              new Date(active).getTime()
+              new Date(active)
+                .getTime()
             ) / 1000
           )
         : 0
 
-    return topBar('Sommeil','Récupération')+
-      '<div class="brute-sleep">'+
-        '<section class="brute-panel brute-moon">'+
-          '<div class="moon">☾</div>'+
-          '<div class="brute-sleep-time" data-brute-sleep-time>'+
+    return (
+      topBar(
+        'Sommeil',
+        'Chambre de récupération'
+      )+
+      '<section class="brute-sleep-v2">'+
+        '<div class="brute-sleep-v2-room">'+
+          '<div class="brute-sleep-v2-window"><span>☾</span><i></i><i></i><i></i></div>'+
+          '<div class="brute-sleep-v2-bed">'+
+            '<div class="pillow"></div>'+
+            '<div class="blanket"></div>'+
+          '</div>'+
+          '<div class="brute-sleep-v2-clock" data-brute-sleep-time>'+
             sleepLabel(
               active
                 ? liveSeconds
                 : baseSeconds
             )+
           '</div>'+
-          '<small style="color:#858ca8">'+
-            (
-              active
-                ? 'Sommeil en cours'
-                : 'Sommeil enregistré aujourd’hui'
-            )+
-          '</small>'+
-          '<div class="brute-sleep-energy">'+
-            '<b data-brute-sleep-xp>✨ Bonus XP +'+sleepXpBonusNow()+'</b>'+
-            '<small>8 h de sommeil = score 100/100 = jusqu’à +22 XP par victoire. Aucun gain d’énergie ici.</small>'+
-          '</div>'+
-          '<button class="brute-primary" style="margin-top:18px" data-brute-sleep-toggle>'+
-            (
-              active
-                ? '☀️ Je me réveille'
-                : '🌙 Démarrer mon sommeil'
-            )+
+          '<div class="brute-sleep-v2-status">'+(active?'SOMMEIL EN COURS':'SOMMEIL DU JOUR')+'</div>'+
+          '<div class="brute-sleep-v2-xp" data-brute-sleep-xp>✨ Bonus XP +'+sleepXpBonusNow()+'</div>'+
+          '<button class="brute-sleep-v2-toggle '+(active?'wake':'')+'" data-brute-sleep-toggle>'+
+            (active?'☀️ JE ME RÉVEILLE':'🌙 ALLER SE COUCHER')+
           '</button>'+
-        '</section>'+
-        '<aside class="brute-panel brute-pad">'+
-          '<h3>Ambiance</h3>'+
-          '<p style="color:#858ca8;font-size:10px;line-height:1.6">Le chrono tourne côté serveur même si tu fermes l’app. Le sommeil augmente uniquement ton bonus d’XP. L’énergie, elle, revient automatiquement à raison de +1 par minute.</p>'+
-          '<div class="brute-sound-grid">'+
+        '</div>'+
+        '<aside class="brute-sleep-v2-panel">'+
+          '<div class="brute-cell-board-title">AMBIANCE</div>'+
+          '<p>Le sommeil fait progresser ton bonus d’XP. L’énergie revient indépendamment à +1 par minute, même quand l’application est fermée.</p>'+
+          '<div class="brute-sleep-v2-score"><b>'+Math.round(sleepScoreNow())+'</b><span>/ 100</span><small>SCORE SOMMEIL</small></div>'+
+          '<div class="brute-sound-grid v2">'+
             [['rain','🌧️ Pluie'],['brown','🟤 Bruit brun'],['temple','🕯️ Temple'],['none','🔇 Silence']].map(([key,label]) =>
               '<button class="brute-secondary '+(sleepMode===key?'active':'')+'" data-brute-sound="'+key+'">'+label+'</button>'
             ).join('')+
           '</div>'+
+          '<div class="brute-sleep-v2-tip">8 h ≈ score 100/100 · jusqu’à +22 XP sur une victoire.</div>'+
         '</aside>'+
-      '</div>'
+      '</section>'
+    )
   }
 
   function fighterGraphic(
