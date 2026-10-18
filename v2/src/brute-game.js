@@ -4054,6 +4054,10 @@ export async function mountBruteGame(root, options = {}) {
 
     if (!tl) return ''
 
+    ensureFightTelemetry(
+      tl
+    )
+
     const left =
       tl.left
 
@@ -4078,29 +4082,62 @@ export async function mountBruteGame(root, options = {}) {
       ] ||
       BRUTE_WEAPONS.fists
 
+    const potentialXp =
+      num(
+        currentFightMeta
+          ?.xp_progress
+          ?.xp_gained,
+        currentFightMeta
+          ?.fight
+          ?.xp_gained ||
+        0
+      )
+
     const hud =
       (
         fighter,
         side,
         weapon
       ) => (
-        '<div class="brute-hud-v2-side '+side+'">'+
-          '<div class="brute-hud-v2-head">'+
-            '<div class="brute-hud-v2-medal">'+esc(getBruteTheme(fighter.slug).emoji || '⚔️')+'</div>'+
-            '<div><b>'+esc(fighter.name)+'</b><small>NIV. '+num(fighter.level,1)+'</small></div>'+
+        '<div class="brute-hud-v2-side brute-hud-v3-side '+side+'">'+
+          '<div class="brute-hud-v3-head">'+
+            '<div class="brute-hud-v3-portrait">'+
+              renderBruteSvg(
+                fighter.appearance,
+                {
+                  label:fighter.name,
+                  className:'hud-portrait-svg',
+                }
+              )+
+            '</div>'+
+            '<div class="brute-hud-v3-name">'+
+              '<b>'+esc(fighter.name)+'</b>'+
+              '<small>NIV. '+num(fighter.level,1)+' · '+esc(fighterBuildTag(fighter))+'</small>'+
+            '</div>'+
+            '<div class="brute-combo-meter" data-combo-'+side+'>'+
+              '<b>x1</b><small>CHAÎNE</small><i style="--chain:1"></i>'+
+            '</div>'+
           '</div>'+
-          '<div class="brute-hud-v2-hp"><i data-hp-'+side+' style="width:100%"></i></div>'+
-          '<div class="brute-hud-v2-meta">'+
-            '<span data-hp-text-'+side+'>'+num(fighter.hpMax)+' / '+num(fighter.hpMax)+'</span>'+
-            '<span data-weapon-'+side+'>'+esc(weapon.icon+' '+weapon.name)+'</span>'+
+          '<div class="brute-hud-v2-hp brute-hud-v3-hp"><i data-hp-'+side+' style="width:100%"></i><span data-hp-text-'+side+'>'+num(fighter.hpMax)+' / '+num(fighter.hpMax)+'</span></div>'+
+          '<div class="brute-hud-v3-live">'+
+            '<span>DÉGÂTS <b data-fight-damage-'+side+'>0</b></span>'+
+            '<span>CRIT <b data-fight-crits-'+side+'>0</b></span>'+
+            '<span>FOR <b>'+num(fighter.strength)+'</b></span>'+
+            '<span>AGI <b>'+num(fighter.agility)+'</b></span>'+
+            '<span>VIT <b>'+num(fighter.speed)+'</b></span>'+
           '</div>'+
-          '<div class="brute-fatigue v2"><i data-fatigue-'+side+'></i></div>'+
+          '<div class="brute-hud-v3-weapon" data-weapon-'+side+'>'+
+            weaponHudMarkup(
+              weapon
+            )+
+          '</div>'+
+          '<div class="brute-fatigue v2 brute-fatigue-v3"><i data-fatigue-'+side+'></i></div>'+
         '</div>'
       )
 
     return (
       '<section class="brute-fight-shell">'+
-        '<div class="brute-arena brute-arena-v2" data-brute-arena>'+
+        '<div class="brute-arena brute-arena-v2 brute-arena-v3" data-brute-arena>'+
           '<div class="brute-stagefx" data-brute-stagefx></div>'+
           '<div class="brute-arena-v2-cloud c1"></div>'+
           '<div class="brute-arena-v2-cloud c2"></div>'+
@@ -4109,9 +4146,16 @@ export async function mountBruteGame(root, options = {}) {
           '</div>'+
           '<div class="brute-arena-v2-crowd"></div>'+
           '<div class="brute-arena-v2-floor"></div>'+
-          '<div class="brute-hud brute-hud-v2">'+
+          '<div class="brute-hud brute-hud-v2 brute-hud-v3">'+
             hud(left,'left',leftWeapon)+
-            '<div class="brute-round brute-round-v2" data-brute-round>GO</div>'+
+            '<div class="brute-round-stack">'+
+              '<div class="brute-round brute-round-v2" data-brute-round>GO</div>'+
+              (
+                potentialXp > 0
+                  ? '<div class="brute-fight-xp-preview"><span>XP</span><b>+'+potentialXp+'</b></div>'
+                  : ''
+              )+
+            '</div>'+
             hud(right,'right',rightWeapon)+
           '</div>'+
           '<div class="brute-fighters brute-fighters-v2">'+
@@ -4124,14 +4168,16 @@ export async function mountBruteGame(root, options = {}) {
               fighterGraphic(right,'right',rightWeapon.id)+
             '</div>'+
           '</div>'+
-          '<div class="brute-log brute-log-v2" data-brute-log>PRÊTS ?</div>'+
+          '<div class="brute-combo-stage left" data-combo-stage-left></div>'+
+          '<div class="brute-combo-stage right" data-combo-stage-right></div>'+
+          '<div class="brute-log brute-log-v2 brute-log-v3" data-brute-log>PRÊTS ?</div>'+
         '</div>'+
         '<div class="brute-fight-toolbar">'+
           '<button class="brute-fight-tool '+(playbackPaused?'active':'')+'" data-brute-pause>'+(playbackPaused?'▶':'Ⅱ')+'<small>'+(playbackPaused?'JOUER':'PAUSE')+'</small></button>'+
           '<button class="brute-fight-tool '+(playbackSpeed===1?'active':'')+'" data-brute-speed="1">×1<small>NORMAL</small></button>'+
           '<button class="brute-fight-tool '+(playbackSpeed===2?'active':'')+'" data-brute-speed="2">×2<small>RAPIDE</small></button>'+
           '<button class="brute-fight-tool '+(playbackSpeed===3?'active':'')+'" data-brute-speed="3">×3<small>TURBO</small></button>'+
-          '<button class="brute-fight-tool" data-brute-music-toggle>'+(musicEnabled?'🔊':'🔇')+'<small>MUSIQUE</small></button>'+
+          '<button class="brute-fight-tool" data-brute-music-toggle>'+(musicEnabled?'SON':'MUET')+'<small>AUDIO</small></button>'+
           '<button class="brute-fight-tool danger" data-brute-skip>»<small>PASSER</small></button>'+
         '</div>'+
         '<div data-brute-fight-result></div>'+
