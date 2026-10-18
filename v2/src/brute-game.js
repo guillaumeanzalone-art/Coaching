@@ -2951,6 +2951,248 @@ function ensureStyles() {
 }
 
 /* ================================================================
+   GA BRUTE · CHARACTER ART DIRECTION V23
+   Hero framing, archetype emblems and showcase presentation
+   ================================================================ */
+.ga-brute-svg.chara-v3{
+  shape-rendering:geometricPrecision;
+}
+.ga-brute-svg.chara-v3 .brute-face-model,
+.ga-brute-svg.chara-v3 .brute-muscle-model,
+.ga-brute-svg.chara-v3 .brute-cloth-model,
+.ga-brute-svg.chara-v3 .brute-bottom-model{
+  mix-blend-mode:multiply;
+}
+.ga-brute-svg.chara-v3 .brute-eye-life{
+  filter:drop-shadow(0 0 1px rgba(255,255,255,.65));
+}
+.ga-brute-svg.showcase-model{
+  overflow:visible;
+  filter:
+    drop-shadow(0 18px 10px rgba(49,26,17,.26))
+    drop-shadow(0 0 1px rgba(255,247,210,.34));
+}
+.ga-brute-svg.showcase-model .brute-stage{
+  transform-origin:50% 100%;
+  animation:bruteShowcaseIdle 3.1s ease-in-out infinite;
+}
+.brute-chara-showcase{
+  position:relative;
+  isolation:isolate;
+}
+.brute-chara-showcase:before{
+  content:"";
+  position:absolute;
+  z-index:0;
+  left:50%;
+  bottom:7%;
+  width:74%;
+  height:78%;
+  transform:translateX(-50%);
+  border-radius:50% 50% 38% 38%;
+  background:
+    radial-gradient(ellipse at 50% 24%,rgba(255,242,183,.58),rgba(255,204,106,.13) 38%,transparent 68%);
+  pointer-events:none;
+}
+.brute-chara-showcase:after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  left:50%;
+  bottom:4%;
+  width:68%;
+  height:16%;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(73,39,21,.3),transparent 67%);
+  filter:blur(2px);
+  pointer-events:none;
+}
+.brute-chara-rays{
+  position:absolute;
+  z-index:0;
+  inset:8% 8% 18%;
+  overflow:hidden;
+  pointer-events:none;
+  opacity:.34;
+}
+.brute-chara-rays i{
+  position:absolute;
+  left:50%;
+  top:46%;
+  width:9px;
+  height:120%;
+  transform-origin:50% 0;
+  background:linear-gradient(rgba(255,230,160,.7),transparent 78%);
+  filter:blur(.5px);
+}
+.brute-chara-rays i:nth-child(1){transform:translate(-50%,-10%) rotate(-28deg)}
+.brute-chara-rays i:nth-child(2){transform:translate(-50%,-10%) rotate(0)}
+.brute-chara-rays i:nth-child(3){transform:translate(-50%,-10%) rotate(28deg)}
+.brute-chara-showcase .brute-cell-avatar,
+.brute-chara-showcase>.ga-brute-svg,
+.brute-chara-showcase .ga-brute-svg{
+  position:relative;
+  z-index:2;
+}
+.brute-chara-showcase .brute-cell-avatar-shadow{
+  z-index:1;
+  width:54%;
+  height:8%;
+  background:radial-gradient(ellipse,rgba(56,29,19,.5),transparent 68%);
+  filter:blur(2px);
+}
+.brute-chara-badge{
+  position:absolute;
+  z-index:6;
+  left:8px;
+  bottom:10px;
+  display:grid;
+  grid-template-columns:28px auto;
+  gap:6px;
+  align-items:center;
+  padding:5px 8px 5px 5px;
+  border:2px solid rgba(89,45,23,.42);
+  border-radius:10px;
+  background:rgba(246,220,159,.88);
+  color:#66381e;
+  box-shadow:0 4px 0 rgba(72,35,17,.16),0 8px 16px rgba(77,39,20,.1);
+  backdrop-filter:blur(5px);
+}
+.brute-chara-badge>i{
+  width:27px;
+  height:27px;
+  display:grid;
+  place-items:center;
+  padding:5px;
+  border-radius:8px;
+  background:rgba(95,48,25,.1);
+}
+.brute-chara-badge>i .ga-ui-glyph{width:100%;height:100%}
+.brute-chara-badge small{
+  display:block;
+  color:#8c5d38;
+  font-size:4.8px;
+  font-weight:1000;
+  letter-spacing:.1em;
+}
+.brute-chara-badge b{
+  display:block;
+  margin-top:1px;
+  font-size:7px;
+  letter-spacing:.03em;
+}
+.brute-chara-badge.power{
+  border-color:#8b4a29;
+  background:linear-gradient(135deg,rgba(245,205,123,.94),rgba(212,132,68,.9));
+}
+.brute-chara-badge.rush{
+  border-color:#48757b;
+  background:linear-gradient(135deg,rgba(204,239,223,.94),rgba(114,186,180,.88));
+  color:#31545b;
+}
+.brute-chara-badge.rush small{color:#51747b}
+.brute-chara-badge.technique{
+  border-color:#65508a;
+  background:linear-gradient(135deg,rgba(224,211,244,.94),rgba(151,126,197,.88));
+  color:#463966;
+}
+.brute-chara-badge.technique small{color:#66567f}
+.brute-chara-badge.balanced{
+  border-color:#626c78;
+  background:linear-gradient(135deg,rgba(229,232,226,.94),rgba(168,177,177,.88));
+  color:#454e56;
+}
+.brute-chara-badge.balanced small{color:#667078}
+.brute-chara-badge.compact{
+  grid-template-columns:20px auto;
+  gap:4px;
+  padding:3px 6px 3px 3px;
+  border-width:1px;
+  border-radius:7px;
+}
+.brute-chara-badge.compact>i{
+  width:20px;
+  height:20px;
+  padding:4px;
+  border-radius:6px;
+}
+.brute-chara-badge.compact small{font-size:4px}
+.brute-chara-badge.compact b{font-size:5.5px}
+.brute-duel-poster>.brute-chara-badge.compact{
+  position:relative;
+  left:auto;
+  bottom:auto;
+  width:max-content;
+  max-width:100%;
+  margin:5px auto 2px;
+  box-shadow:none;
+}
+.brute-duel-avatar.custom{
+  position:relative;
+  isolation:isolate;
+  background:
+    radial-gradient(circle at 50% 28%,rgba(255,244,195,.82),transparent 44%),
+    linear-gradient(#efd59a,#bc7f45);
+}
+.brute-duel-avatar.custom:after{
+  content:"";
+  position:absolute;
+  z-index:0;
+  left:50%;
+  bottom:6px;
+  width:62%;
+  height:10px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:rgba(68,35,20,.2);
+  filter:blur(1px);
+}
+.brute-duel-avatar.custom .ga-brute-svg{
+  position:relative;
+  z-index:1;
+  filter:drop-shadow(0 8px 5px rgba(71,37,20,.22));
+}
+.brute-duel-avatar.archetype-strength{
+  box-shadow:inset 0 0 18px rgba(195,91,45,.15);
+}
+.brute-duel-avatar.archetype-speed{
+  box-shadow:inset 0 0 18px rgba(68,164,159,.16);
+}
+.brute-duel-avatar.archetype-agility{
+  box-shadow:inset 0 0 18px rgba(113,85,177,.16);
+}
+.brute-armory-v3-avatar.brute-chara-showcase{
+  overflow:visible;
+}
+.brute-armory-v3-avatar .brute-chara-badge{
+  left:50%;
+  bottom:3px;
+  transform:translateX(-50%);
+}
+.brute-camp-v2-avatar .brute-chara-badge{
+  left:50%;
+  bottom:-2px;
+  transform:translateX(-50%);
+}
+@keyframes bruteShowcaseIdle{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-2px) scale(1.006,.997)}
+}
+@media(max-width:660px){
+  .brute-chara-badge{
+    left:5px;
+    bottom:6px;
+    transform:scale(.9);
+    transform-origin:left bottom;
+  }
+  .brute-armory-v3-avatar .brute-chara-badge,
+  .brute-camp-v2-avatar .brute-chara-badge{
+    transform:translateX(-50%) scale(.88);
+  }
+}
+
+/* ================================================================
    GA BRUTE · REWARD CLARITY V22
    Immediate impact preview for level-up choices
    ================================================================ */
@@ -6332,6 +6574,32 @@ export async function mountBruteGame(root, options = {}) {
     }
   }
 
+  function characterIdentityBadge(
+    fighter,
+    compact = false
+  ) {
+    const archetype =
+      fighterArchetype(
+        fighter
+      )
+
+    const tone =
+      archetype.glyph === 'strength'
+        ? 'power'
+        : archetype.glyph === 'speed'
+          ? 'rush'
+          : archetype.glyph === 'agility'
+            ? 'technique'
+            : 'balanced'
+
+    return (
+      '<span class="brute-chara-badge '+tone+(compact?' compact':'')+'">'+
+        '<i>'+uiGlyph(archetype.glyph)+'</i>'+
+        '<span><small>ARCHÉTYPE</small><b>'+archetype.label+'</b></span>'+
+      '</span>'
+    )
+  }
+
   function fighterBuildTag(
     fighter
   ) {
@@ -6934,9 +7202,11 @@ export async function mountBruteGame(root, options = {}) {
               '<b>'+num(brute.level,1)+'</b>'+
               '<i><small>COTE</small><strong>'+num(brute.rating,1000)+'</strong></i>'+
             '</div>'+
-            '<div class="brute-cell-avatar-stage">'+
+            '<div class="brute-cell-avatar-stage brute-chara-showcase">'+
               '<div class="brute-cell-window"></div>'+
+              '<div class="brute-chara-rays"><i></i><i></i><i></i></div>'+
               '<div class="brute-cell-avatar-shadow"></div>'+
+              characterIdentityBadge(brute)+
               '<div class="brute-cell-avatar">'+
                 renderBruteSvg(
                   brute.appearance,
@@ -6944,6 +7214,7 @@ export async function mountBruteGame(root, options = {}) {
                     label:brute.name,
                     weapon,
                     pet,
+                    className:'showcase-model',
                   }
                 )+
               '</div>'+
@@ -7560,14 +7831,17 @@ export async function mountBruteGame(root, options = {}) {
         '</div>'+
         '<div class="brute-camp-v2-center">'+
           '<div class="brute-camp-v2-sign">CAMP DE '+esc(brute.name)+'</div>'+
-          '<div class="brute-camp-v2-avatar">'+
+          '<div class="brute-camp-v2-avatar brute-chara-showcase">'+
+            '<div class="brute-chara-rays"><i></i><i></i><i></i></div>'+
             '<div class="brute-cell-avatar-shadow"></div>'+
+            characterIdentityBadge(brute,true)+
             renderBruteSvg(
               brute.appearance,
               {
                 label:brute.name,
                 weapon,
                 pet,
+                className:'showcase-model',
               }
             )+
           '</div>'+
@@ -7786,7 +8060,8 @@ export async function mountBruteGame(root, options = {}) {
                     '<article class="brute-duel-poster '+(recommended?.athlete_slug===o.athlete_slug?'recommended':'')+'">'+
                       (recommended?.athlete_slug===o.athlete_slug?'<div class="brute-duel-recommended">RECOMMANDÉ</div>':'')+
                       '<div class="brute-duel-pin"></div>'+
-                      '<span class="brute-duel-avatar custom">'+renderBruteSvg(o.appearance,{label:o.name,className:'duel-mini'})+'</span>'+
+                      '<span class="brute-duel-avatar custom archetype-'+fighterArchetype(o).glyph+'">'+renderBruteSvg(o.appearance,{label:o.name,className:'duel-mini chara-card'})+'</span>'+
+                      characterIdentityBadge(o,true)+
                       '<div class="brute-duel-poster-title"><b>'+esc(o.name)+'</b><small>NIV. '+num(o.level)+' · COTE '+num(o.rating)+'</small></div>'+
                       '<div class="brute-duel-threat '+threat(o).toLowerCase()+'">'+threat(o)+'</div>'+
                       '<div class="brute-duel-record"><span>'+num(o.wins)+' V</span><span>'+num(o.losses)+' D</span><span>'+ratio+'%</span></div>'+
@@ -8332,8 +8607,10 @@ export async function mountBruteGame(root, options = {}) {
             metricBar('COMBO',Math.round((num(equippedWeapon.combo)+.08)*100),22)+
             metricBar('MAÎTRISE BUILD',mastery,100,'%')+
           '</div>'+
-          '<div class="brute-armory-v3-avatar">'+
+          '<div class="brute-armory-v3-avatar brute-chara-showcase">'+
+            '<div class="brute-chara-rays"><i></i><i></i><i></i></div>'+
             '<div class="brute-cell-avatar-shadow"></div>'+
+            characterIdentityBadge(brute,true)+
             renderBruteSvg(
               brute.appearance,
               {
@@ -8343,6 +8620,7 @@ export async function mountBruteGame(root, options = {}) {
                   BRUTE_PETS[
                     (brute.pets || [])[0]
                   ],
+                className:'showcase-model',
               }
             )+
           '</div>'+
