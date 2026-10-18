@@ -2840,6 +2840,79 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · KO RESOLUTION V11
+   Winner pose, loser fade and cleaner end-of-fight read
+   ================================================================ */
+.brute-fighter.victory-pose{
+  z-index:9;
+}
+.brute-fighter.victory-pose .fight-model{
+  animation:bruteWinnerLift .78s cubic-bezier(.14,.78,.18,1) forwards!important;
+  filter:
+    drop-shadow(0 0 16px rgba(255,212,84,.28))
+    drop-shadow(0 18px 8px rgba(55,24,12,.27))
+    brightness(1.04)!important;
+}
+.brute-fighter.victory-pose .fight-model .brute-arm-left{
+  animation:bruteWinnerGuardLeft .78s cubic-bezier(.14,.78,.18,1) forwards!important;
+}
+.brute-fighter.victory-pose .fight-model .brute-arm-right{
+  animation:bruteWinnerGuardRight .78s cubic-bezier(.14,.78,.18,1) forwards!important;
+}
+.brute-fighter.victory-pose .fight-model .brute-head{
+  animation:bruteWinnerHead .78s ease forwards!important;
+}
+.brute-fighter.victory-pose .fight-model .brute-torso{
+  animation:bruteWinnerTorso .78s ease forwards!important;
+}
+.brute-fighter.defeated .brute-fighter-shadow{
+  animation:bruteDefeatedShadow .8s ease forwards!important;
+}
+.brute-fighter.defeated .brute-pet-slot{
+  animation:brutePetRetreat .55s ease forwards;
+}
+.brute-arena.cinematic-ko .brute-fighter.defeated{
+  filter:saturate(.72) brightness(.9);
+}
+.brute-arena.cinematic-ko .brute-fighter.victory-pose{
+  filter:saturate(1.08);
+}
+@keyframes bruteWinnerLift{
+  0%{transform:translateY(0) scale(1)}
+  35%{transform:translateY(-7px) scale(1.025)}
+  68%{transform:translateY(-3px) scale(1.018)}
+  100%{transform:translateY(-4px) scale(1.02)}
+}
+@keyframes bruteWinnerGuardLeft{
+  0%{transform:none}
+  42%{transform:rotate(-14deg) translate(-3px,-3px)}
+  100%{transform:rotate(-8deg) translate(-1px,-2px)}
+}
+@keyframes bruteWinnerGuardRight{
+  0%{transform:none}
+  42%{transform:rotate(19deg) translate(4px,-8px)}
+  100%{transform:rotate(12deg) translate(3px,-5px)}
+}
+@keyframes bruteWinnerHead{
+  0%{transform:none}
+  48%{transform:translateY(-2px) rotate(-3deg)}
+  100%{transform:translateY(-1px) rotate(-2deg)}
+}
+@keyframes bruteWinnerTorso{
+  0%{transform:none}
+  45%{transform:translateY(-3px) rotate(2deg) scale(1.015)}
+  100%{transform:translateY(-2px) rotate(1deg) scale(1.01)}
+}
+@keyframes bruteDefeatedShadow{
+  0%{transform:scale(1);opacity:.78}
+  100%{transform:scale(.65,1.1);opacity:.34}
+}
+@keyframes brutePetRetreat{
+  0%{opacity:1;transform:translateX(0)}
+  100%{opacity:.15;transform:translateX(20px)}
+}
+
+/* ================================================================
    GA BRUTE · STAGE LIFE / HIT ZONES V10
    Ambient movement, parallax and attack-specific contact placement
    ================================================================ */
@@ -6654,7 +6727,9 @@ export async function mountBruteGame(root, options = {}) {
         'committed',
         'hit-react',
         'power-tier-4',
-        'power-tier-5'
+        'power-tier-5',
+        'victory-pose',
+        'defeated'
       )
     })
     root.querySelectorAll('.brute-float').forEach(el => el.remove())
@@ -8380,7 +8455,12 @@ export async function mountBruteGame(root, options = {}) {
       targetEl?.classList.add(
         'ko',
         'ko-v' +
-          koVariant
+          koVariant,
+        'defeated'
+      )
+
+      actorEl?.classList.add(
+        'victory-pose'
       )
 
       targetEl?.style.setProperty(
