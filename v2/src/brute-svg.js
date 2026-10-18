@@ -496,6 +496,166 @@ function weaponSvg(weapon) {
   return '<circle r="24" fill="#777" stroke="'+stroke+'" stroke-width="5"/>'
 }
 
+function fistIconSvg() {
+  return '<g class="brute-weapon-shape brute-weapon-fist">'+
+    '<path d="M-34 -2 Q-34 -24 -19 -27 Q-8 -31 -2 -22 Q5 -31 16 -27 Q30 -24 30 -8 L31 12 Q28 34 4 40 Q-20 35 -30 18Z" fill="#d39a72" stroke="#171717" stroke-width="6"/>'+
+    '<rect x="-29" y="-27" width="17" height="30" rx="8" fill="#e8b98f" stroke="#171717" stroke-width="5"/>'+
+    '<rect x="-12" y="-31" width="17" height="31" rx="8" fill="#efc39b" stroke="#171717" stroke-width="5"/>'+
+    '<rect x="5" y="-29" width="17" height="30" rx="8" fill="#e8b98f" stroke="#171717" stroke-width="5"/>'+
+    '<path d="M-28 11 Q-7 2 22 10" fill="none" stroke="#9d684d" stroke-width="4" opacity=".65"/>'+
+  '</g>'
+}
+
+function petShapeSvg(pet) {
+  const id =
+    String(
+      pet?.id ||
+      'gym_rat'
+    )
+
+  const stroke =
+    '#171717'
+
+  if (id === 'gym_rat') {
+    return '<g class="brute-pet-shape brute-pet-rat">'+
+      '<path d="M-39 13 Q-35 -24 -7 -35 Q25 -38 40 -4 Q41 31 8 39 Q-26 41 -39 13Z" fill="#8d837c" stroke="'+stroke+'" stroke-width="6"/>'+
+      '<circle cx="-18" cy="-31" r="12" fill="#bfa9a1" stroke="'+stroke+'" stroke-width="5"/>'+
+      '<circle cx="9" cy="-35" r="12" fill="#bfa9a1" stroke="'+stroke+'" stroke-width="5"/>'+
+      '<circle cx="-12" cy="-2" r="4" fill="#151515"/><circle cx="13" cy="-4" r="4" fill="#151515"/>'+
+      '<path d="M0 7 Q6 12 0 16 Q-6 12 0 7Z" fill="#df7d83" stroke="'+stroke+'" stroke-width="3"/>'+
+      '<path d="M39 14 Q72 6 66 32 Q61 48 47 42" fill="none" stroke="#d99ca2" stroke-width="7" stroke-linecap="round"/>'+
+    '</g>'
+  }
+
+  if (id === 'chalk_goblin') {
+    return '<g class="brute-pet-shape brute-pet-goblin">'+
+      '<path d="M-33 -22 L-50 -39 L-43 -4 Q-45 29 -9 40 Q30 39 42 8 L49 -39 L29 -23 Q3 -43 -33 -22Z" fill="#86a94c" stroke="'+stroke+'" stroke-width="6"/>'+
+      '<path d="M-20 -4 L-5 -9 L-12 3Z M14 -8 L28 -2 L18 5Z" fill="#fff0c4" stroke="'+stroke+'" stroke-width="3"/>'+
+      '<circle cx="-11" cy="-2" r="3" fill="#131313"/><circle cx="20" cy="1" r="3" fill="#131313"/>'+
+      '<path d="M-7 18 Q7 25 20 15" fill="none" stroke="#5d6b32" stroke-width="4"/>'+
+      '<g fill="#fff" opacity=".72"><circle cx="-40" cy="28" r="7"/><circle cx="-28" cy="38" r="5"/><circle cx="40" cy="31" r="6"/></g>'+
+    '</g>'
+  }
+
+  if (id === 'rack_hound') {
+    return '<g class="brute-pet-shape brute-pet-hound">'+
+      '<path d="M-38 -4 Q-30 -35 0 -35 Q31 -34 38 -2 L35 29 Q8 43 -20 34 Q-40 25 -38 -4Z" fill="#9f6d47" stroke="'+stroke+'" stroke-width="6"/>'+
+      '<path d="M-28 -28 L-46 -45 L-43 -6Z M26 -29 L46 -45 L42 -6Z" fill="#70482f" stroke="'+stroke+'" stroke-width="6"/>'+
+      '<path d="M-12 7 Q0 -2 13 7 L8 20 Q0 26 -8 20Z" fill="#2b2624" stroke="'+stroke+'" stroke-width="4"/>'+
+      '<circle cx="-14" cy="-7" r="4" fill="#111"/><circle cx="16" cy="-7" r="4" fill="#111"/>'+
+      '<path d="M31 25 Q50 14 62 28" fill="none" stroke="#70482f" stroke-width="8" stroke-linecap="round"/>'+
+    '</g>'
+  }
+
+  if (id === 'mini_spotter') {
+    return '<g class="brute-pet-shape brute-pet-spotter">'+
+      '<circle cx="0" cy="-31" r="17" fill="#e4b18d" stroke="'+stroke+'" stroke-width="5"/>'+
+      '<path d="M-24 -7 Q0 -19 24 -7 L20 27 Q0 39 -20 27Z" fill="#2f405d" stroke="'+stroke+'" stroke-width="6"/>'+
+      '<path d="M-22 2 L-41 21 M22 2 L41 21" stroke="#e4b18d" stroke-width="11" stroke-linecap="round"/>'+
+      '<path d="M-12 28 L-18 45 M12 28 L18 45" stroke="#30363d" stroke-width="12" stroke-linecap="round"/>'+
+      '<path d="M-18 -38 Q0 -50 18 -38" fill="#503829" stroke="'+stroke+'" stroke-width="5"/>'+
+    '</g>'
+  }
+
+  return '<g class="brute-pet-shape brute-pet-plate">'+
+    '<circle r="40" fill="#d9b62f" stroke="'+stroke+'" stroke-width="7"/>'+
+    '<circle r="15" fill="#4e5662" stroke="'+stroke+'" stroke-width="5"/>'+
+    '<path d="M-20 -18 A29 29 0 0 1 20 -18" fill="none" stroke="#f0d96f" stroke-width="5"/>'+
+    '<circle cx="-12" cy="3" r="3.5" fill="#171717"/><circle cx="12" cy="3" r="3.5" fill="#171717"/>'+
+    '<path d="M-10 17 Q0 23 10 17" fill="none" stroke="#171717" stroke-width="3.5"/>'+
+  '</g>'
+}
+
+export function renderWeaponIconSvg(
+  weaponInput,
+  options = {}
+) {
+  const weapon =
+    typeof weaponInput === 'string'
+      ? { id:weaponInput }
+      : (
+          weaponInput ||
+          { id:'fists' }
+        )
+
+  const id =
+    String(
+      weapon.id ||
+      'fists'
+    )
+
+  const category =
+    String(
+      weapon.category ||
+      options.category ||
+      (
+        id === 'olympic_bar' ||
+        id === 'kettlebell' ||
+        id === 'plate20'
+          ? 'heavy'
+          : id === 'belt' ||
+            id === 'straps'
+            ? 'flexible'
+            : id === 'chalk'
+              ? 'ranged'
+              : 'unarmed'
+      )
+    )
+
+  const accent =
+    category === 'heavy'
+      ? '#f29a38'
+      : category === 'flexible'
+        ? '#8e6ad8'
+        : category === 'ranged'
+          ? '#55b8c9'
+          : '#d66f50'
+
+  const shape =
+    id === 'fists'
+      ? fistIconSvg()
+      : weaponSvg({
+          ...weapon,
+          id,
+        })
+
+  return '<svg class="ga-weapon-icon '+String(options.className || '')+'" data-weapon-id="'+id+'" data-category="'+category+'" viewBox="-70 -70 140 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+    (
+      options.bare
+        ? ''
+        : '<circle r="61" fill="#161b23" stroke="'+accent+'" stroke-width="4"/><circle r="51" fill="none" stroke="'+accent+'" stroke-width="2" opacity=".24"/>'
+    )+
+    '<g transform="scale(.72)">'+shape+'</g>'+
+  '</svg>'
+}
+
+export function renderSkillIconSvg(
+  skillId,
+  options = {}
+) {
+  const id =
+    String(
+      skillId ||
+      ''
+    )
+
+  const glyphs = {
+    leg_drive:'<path d="M-8 -39 Q8 -24 1 -4 L-13 18 L13 39" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M-21 13 L9 13" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>',
+    arch:'<path d="M-42 29 Q0 -38 42 29" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/><path d="M-31 27 L-31 4 M31 27 L31 4" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>',
+    lockout:'<path d="M0 -43 L34 -28 L29 11 Q23 35 0 46 Q-23 35 -29 11 L-34 -28Z" fill="none" stroke="currentColor" stroke-width="8"/><path d="M-15 2 L-2 16 L19 -11" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>',
+    pause_bench:'<rect x="-29" y="-39" width="18" height="78" rx="5" fill="currentColor"/><rect x="11" y="-39" width="18" height="78" rx="5" fill="currentColor"/>',
+    grind:'<path d="M5 -44 Q-24 -14 -3 4 Q-31 18 -10 43 Q26 35 30 5 Q32 -19 5 -44Z" fill="currentColor"/><path d="M5 -19 Q-6 -4 3 6 Q-10 15 -1 27 Q14 18 14 3 Q14 -8 5 -19Z" fill="#171717"/>',
+  }
+
+  return '<svg class="ga-skill-icon '+String(options.className || '')+'" viewBox="-56 -56 112 112" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+    '<circle r="48" fill="#191f2b" stroke="currentColor" stroke-width="4"/>'+
+    '<g>'+(
+      glyphs[id] ||
+      '<path d="M0 -35 L10 -10 L36 0 L10 10 L0 35 L-10 10 L-36 0 L-10 -10Z" fill="currentColor"/>'
+    )+'</g>'+
+  '</svg>'
+}
+
 export function renderBruteSvg(
   input = {},
   options = {}
@@ -664,7 +824,9 @@ export function renderBruteSvg(
 
   const petMarkup =
     pet
-      ? '<g class="brute-pet" data-brute-part="pet" transform="translate(262 315)"><circle r="30" fill="#fff4c3" stroke="#171717" stroke-width="5"/><text x="0" y="10" text-anchor="middle" font-size="31">'+String(pet.emoji || '🐀')+'</text></g>'
+      ? '<g class="brute-pet" data-brute-part="pet" transform="translate(262 315) scale(.62)">'+
+          petShapeSvg(pet)+
+        '</g>'
       : ''
 
   return '<svg class="ga-brute-svg '+String(options.className || '')+'" data-side="'+String(options.side || 'right')+'" data-body="'+bodyId+'" viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+label+'">'+
@@ -794,12 +956,6 @@ export function renderPetSvg(
   pet,
   side = 'right'
 ) {
-  const emoji =
-    String(
-      pet?.emoji ||
-      '🐀'
-    )
-
   const name =
     String(
       pet?.name ||
@@ -817,8 +973,9 @@ export function renderPetSvg(
   return '<svg class="ga-brute-pet-svg" data-side="'+side+'" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="'+name+'">'+
     '<g transform="'+mirror+'">'+
       '<ellipse cx="60" cy="103" rx="39" ry="8" fill="rgba(0,0,0,.17)"/>'+
-      '<path d="M25 65 Q30 25 60 18 Q91 25 95 65 Q90 94 60 100 Q30 94 25 65Z" fill="#fff4c3" stroke="#171717" stroke-width="6"/>'+
-      '<text x="60" y="77" text-anchor="middle" font-size="49">'+emoji+'</text>'+
+      '<g transform="translate(60 64) scale(.82)">'+
+        petShapeSvg(pet)+
+      '</g>'+
     '</g>'+
   '</svg>'
 }
