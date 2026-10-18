@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101722">
+  <title>GA Coaching — Boîte à outils technique</title>
+  <style>
+    :root{
+      --ink:#101722;
+      --paper:#f4f0e7;
+      --card:#fffdf7;
+      --muted:#69717d;
+      --line:#d8d0c0;
+      --orange:#f27a2a;
+      --teal:#007d82;
+      --green:#2a9d69;
+      --red:#d64a3b;
+      --blue:#4a78c9;
+      --yellow:#f1c84b;
+      --shadow:0 18px 50px rgba(16,23,34,.12);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--ink);
+      background:
+        linear-gradient(rgba(0,125,130,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,125,130,.035) 1px,transparent 1px),
+        var(--paper);
+      background-size:28px 28px;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    button,input{font:inherit}
+    .hero{
+      position:relative;
+      overflow:hidden;
+      padding:64px 20px 76px;
+      color:white;
+      background:
+        radial-gradient(circle at 82% 18%,rgba(242,122,42,.42),transparent 26%),
+        radial-gradient(circle at 14% 24%,rgba(0,125,130,.42),transparent 30%),
+        linear-gradient(135deg,#101722,#17293a 58%,#0a3538);
+    }
+    .hero:after{
+      content:"";
+      position:absolute;left:-10%;right:-10%;bottom:-22px;height:44px;
+      transform:rotate(-1deg);
+      background:var(--paper);
+    }
+    .wrap{width:min(1120px,calc(100% - 30px));margin:auto}
+    .eyebrow{
+      display:inline-flex;gap:8px;align-items:center;
+      padding:6px 10px;border:1px solid rgba(255,255,255,.18);border-radius:999px;
+      background:rgba(255,255,255,.08);font-size:11px;font-weight:900;letter-spacing:.12em;
+    }
+    h1{max-width:860px;margin:17px 0 10px;font-size:clamp(38px,7vw,82px);line-height:.94;letter-spacing:-.055em}
+    .hero p{max-width:720px;margin:0;color:#d8e2e8;font-size:clamp(14px,2vw,18px);line-height:1.6}
+    .nav{
+      position:sticky;top:0;z-index:30;
+      border-bottom:1px solid rgba(16,23,34,.09);
+      background:rgba(244,240,231,.9);backdrop-filter:blur(14px);
+    }
+    .nav .wrap{display:flex;gap:7px;overflow:auto;padding:9px 0}
+    .nav a{
+      flex:0 0 auto;padding:8px 11px;border-radius:999px;color:var(--ink);
+      text-decoration:none;font-size:11px;font-weight:850;background:white;border:1px solid var(--line);
+    }
+    main{padding:36px 0 80px}
+    .intro{
+      display:grid;grid-template-columns:1.3fr .7fr;gap:18px;margin-bottom:28px;
+    }
+    .intro-card,.quick{
+      border:1px solid var(--line);border-radius:24px;background:rgba(255,253,247,.92);box-shadow:var(--shadow);
+    }
+    .intro-card{padding:25px}
+    .intro-card h2,.quick h2{margin:0 0 9px;font-size:20px}
+    .intro-card p{margin:0;color:var(--muted);line-height:1.7}
+    .quick{padding:20px}
+    .quick-grid{display:grid;gap:7px}
+    .quick-grid span{
+      display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:12px;
+      background:#f2eee4;font-size:12px;font-weight:760;
+    }
+    .tool{
+      scroll-margin-top:74px;
+      margin:22px 0;border:1px solid var(--line);border-radius:28px;background:var(--card);box-shadow:var(--shadow);overflow:hidden;
+    }
+    .tool-head{
+      display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;padding:22px 24px 14px;border-bottom:1px solid var(--line);
+    }
+    .tool-tag{color:var(--teal);font-size:10px;font-weight:950;letter-spacing:.14em;text-transform:uppercase}
+    .tool-head h2{margin:4px 0 0;font-size:clamp(22px,4vw,36px);letter-spacing:-.035em}
+    .source{font-size:10px;font-weight:850;color:var(--muted);text-align:right}
+    .tool-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:0}
+    .viz{
+      min-height:380px;display:flex;align-items:center;justify-content:center;padding:20px;
+      background:
+        linear-gradient(rgba(0,125,130,.04) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,125,130,.04) 1px,transparent 1px),
+        #fbfaf5;
+      background-size:22px 22px;
+      border-right:1px solid var(--line);
+    }
+    .notes{padding:22px}
+    .notes h3{margin:0 0 10px;font-size:14px}
+    .notes p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.65}
+    .cue-list{display:grid;gap:8px;margin:14px 0 0;padding:0;list-style:none}
+    .cue-list li{
+      position:relative;padding:9px 10px 9px 32px;border-radius:12px;background:#f2eee4;font-size:12px;line-height:1.45;font-weight:700;
+    }
+    .cue-list li:before{content:"→";position:absolute;left:11px;top:8px;color:var(--orange);font-weight:1000}
+    .controls{
+      display:grid;gap:10px;margin:0 0 16px;padding:12px;border:1px solid var(--line);border-radius:16px;background:#faf7ef;
+    }
+    .control-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+    .control-row label{font-size:11px;font-weight:850}
+    .control-row output{font-size:11px;color:var(--teal);font-weight:950}
+    input[type="range"]{width:100%;accent-color:var(--teal)}
+    .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+    .seg button,.toggle2 button{
+      border:1px solid var(--line);border-radius:9px;padding:8px 6px;background:white;color:var(--ink);font-size:10px;font-weight:850;cursor:pointer;
+    }
+    .seg button.active,.toggle2 button.active{border-color:var(--teal);background:#e6f2f1;color:#005f63}
+    .toggle2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    svg{max-width:100%;height:auto}
+    .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+    .legend span{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:780;color:var(--muted)}
+    .dot{width:8px;height:8px;border-radius:50%}
+    .mini-badge{
+      display:inline-flex;margin-top:4px;padding:4px 7px;border-radius:999px;background:#e8f2f2;color:#006b70;font-size:9px;font-weight:900;
+    }
+    .whip-bar{transform-origin:center}
+    .whip-on .whip-bar{animation:whip 1s ease-in-out infinite}
+    @keyframes whip{
+      0%,100%{transform:rotate(0deg) scaleY(1)}
+      25%{transform:rotate(.8deg) scaleY(.98)}
+      50%{transform:rotate(-.8deg) scaleY(1.02)}
+      75%{transform:rotate(.45deg)}
+    }
+    .pulse{animation:pulse 1.4s ease-in-out infinite}
+    @keyframes pulse{50%{opacity:.38}}
+    .footer{
+      padding:28px 0 45px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.6;
+    }
+    @media(max-width:820px){
+      .intro,.tool-body{grid-template-columns:1fr}
+      .viz{border-right:0;border-bottom:1px solid var(--line);min-height:320px}
+      .tool-head{grid-template-columns:1fr}
+      .source{text-align:left}
+    }
+    @media(max-width:520px){
+      .hero{padding-top:44px}
+      .wrap{width:min(100% - 18px,1120px)}
+      .tool-head,.notes{padding-left:15px;padding-right:15px}
+      .viz{padding:9px}
+      .seg{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <div class="eyebrow">GA COACHING · TECHNIQUE</div>
+      <h1>Boîte à outils technique</h1>
+      <p>Les schémas et outils pédagogiques réunis à partir des retours techniques de Lou et Timothée : squat, deadlift / sumo et bench, dans une page réutilisable pour les prochains feedbacks.</p>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <div class="wrap">
+      <a href="#whip">Whip bumpers</a>
+      <a href="#coudes">Coudes / épaule</a>
+      <a href="#midfoot">Barre / milieu du pied</a>
+      <a href="#pendule">Pendule deadlift</a>
+      <a href="#sumo">Wedge sumo</a>
+      <a href="#bench">Pontage bench</a>
+    </div>
+  </nav>
+
+  <main class="wrap">
+    <section class="intro">
+      <article class="intro-card">
+        <h2>Une page, six outils</h2>
+        <p>Le but n’est pas de remplacer le retour vidéo. Ces schémas servent à isoler une idée biomécanique, la rendre visuelle et donner un cue simple à tester dès la série suivante. Les contrôles permettent de montrer ce qui change quand on modifie un paramètre.</p>
+      </article>
+      <aside class="quick">
+        <h2>Lecture rapide</h2>
+        <div class="quick-grid">
+          <span>🟧 Orange = correction / intention</span>
+          <span>🟩 Vert = position recherchée</span>
+          <span>🟥 Rouge = contrainte / dérive</span>
+          <span>🟦 Bleu = trajectoire / référence</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="tool" id="whip">
+      <header class="tool-head">
+        <div><span class="tool-tag">Squat · matériel</span><h2>Barre qui fouette avec des bumpers</h2></div>
+        <div class="source">Outil issu du retour Timothée</div>
+      </header>
+      <div class="tool-body">
+        <div class="viz">
+          <svg id="whipSvg" viewBox="0 0 720 360" role="img" aria-label="Schéma du whip de barre">
+            <defs>
+              <linearGradient id="plate" x1="0" x2="1"><stop stop-color="#303945"/><stop offset="1" stop-color="#151b22"/></linearGradient>
+            </defs>
+            <g id="whipGroup">
+              <line x1="145" y1="178" x2="575" y2="178" stroke="#222b34" stroke-width="12" stroke-linecap="round" class="whip-bar"/>
+              <g fill="url(#plate)" stroke="#0e1318" stroke-width="5">
+                <circle cx="120" cy="178" r="70"/><circle cx="600" cy="178" r="70"/>
+                <circle cx="80" cy="178" r="54"/><circle cx="640" cy="178" r="54"/>
+              </g>
+              <circle cx="120" cy="178" r="13" fill="#adb6c0"/><circle cx="600" cy="178" r="13" fill="#adb6c0"/>
+              <path id="whipCurve" d="M145 178 Q360 178 575 178" fill="none" stroke="#f27a2a" stroke-width="4" stroke-dasharray="8 8" opacity=".9"/>
+              <path d="M360 70 V125" stroke="#d64a3b" stroke-width="4"/><path d="M352 115 L360 128 L368 115" fill="#d64a3b"/>
+              <text x="360" y="53" text-anchor="middle" font-size="18" font-weight="900" fill="#d64a3b">rebond / oscillation au dérack</text>
+              <text x="360" y="298" text-anchor="middle" font-size="18" font-weight="850" fill="#101722">Plus la masse est éloignée → plus le système peut osciller</text>
+              <text x="360" y="325" text-anchor="middle" font-size="13" font-weight="700" fill="#69717d">Descendre pendant l’oscillation = stabilisation parasite</text>
+            </g>
+          </svg>
+        </div>
+        <aside class="notes">
+          <div class="controls">
+            <div class="control-row"><label for="whipLoad">Amplitude du whip</label><output id="whipOut">50%</output></div>
+            <input id="whipLoad" type="range" min="0" max="100" value="50">
+            <button id="whipToggle" style="border:1px solid var(--line);border-radius:10px;padding:9px;background:white;font-size:11px;font-weight:850;cursor:pointer">▶ Animer le whip</button>
+          </div>
+          <h3>Ce qu’on veut montrer</h3>
+          <p>Des bumpers larges éloignent une partie de la masse du centre de la barre. Au dérack, la barre peut accumuler une oscillation qui te suit dans la descente.</p>
+          <ul class="cue-list">
+            <li>Finir le dérack, laisser la barre se calmer, puis lancer la descente.</li>
+            <li>Éviter de « courir » après le rebond avec les adducteurs ou le bassin.</li>
+            <li>Sur les séries techniques, privilégier un montage stable quand c’est possible.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tool" id="coudes">
+      <header class="tool-head">
+        <div><span class="tool-tag">Squat · setup haut du corps</span><h2>Coudes, poignets et chaîne d’épaule</h2></div>
+        <div class="source">Outil issu du retour Timothée</div>
+      </header>
+      <div class="tool-body">
+        <div class="viz">
+          <svg viewBox="0 0 760 400" role="img" aria-label="Comparaison coudes le long du corps et coudes trop en arrière">
+            <g transform="translate(55 35)">
+              <rect x="0" y="0" width="300" height="320" rx="28" fill="#eef6ef" stroke="#2a9d69" stroke-width="3"/>
+              <text x="150" y="34" text-anchor="middle" font-weight="950" font-size="18" fill="#2a7f59">COUDES LE LONG DU CORPS</text>
+              <circle cx="150" cy="84" r="30" fill="#efc59c"/>
+              <path d="M105 120 Q150 102 195 120 L210 255 Q150 282 90 255 Z" fill="#29323c"/>
+              <line x1="105" y1="128" x2="76" y2="205" stroke="#efc59c" stroke-width="19" stroke-linecap="round"/>
+              <line x1="195" y1="128" x2="224" y2="205" stroke="#efc59c" stroke-width="19" stroke-linecap="round"/>
+              <circle cx="78" cy="205" r="10" fill="#2a9d69"/><circle cx="222" cy="205" r="10" fill="#2a9d69"/>
+              <line x1="53" y1="107" x2="247" y2="107" stroke="#101722" stroke-width="9" stroke-linecap="round"/>
+              <path d="M58 236 Q80 250 99 224" fill="none" stroke="#2a9d69" stroke-width="4"/>
+              <text x="150" y="300" text-anchor="middle" font-size="13" font-weight="850" fill="#52606c">poignet plus neutre · coude sous la barre</text>
+            </g>
+            <g transform="translate(405 35)">
+              <rect x="0" y="0" width="300" height="320" rx="28" fill="#fbefed" stroke="#d64a3b" stroke-width="3"/>
+              <text x="150" y="34" text-anchor="middle" font-weight="950" font-size="18" fill="#b73d32">COUDES TROP EN ARRIÈRE</text>
+              <circle cx="150" cy="84" r="30" fill="#efc59c"/>
+              <path d="M105 120 Q150 102 195 120 L210 255 Q150 282 90 255 Z" fill="#29323c"/>
+              <line x1="108" y1="130" x2="55" y2="170" stroke="#efc59c" stroke-width="19" stroke-linecap="round"/>
+              <line x1="192" y1="130" x2="245" y2="170" stroke="#efc59c" stroke-width="19" stroke-linecap="round"/>
+              <circle cx="57" cy="170" r="10" fill="#d64a3b"/><circle cx="243" cy="170" r="10" fill="#d64a3b"/>
+              <line x1="53" y1="107" x2="247" y2="107" stroke="#101722" stroke-width="9" stroke-linecap="round"/>
+              <path d="M238 160 Q265 120 236 100" fill="none" stroke="#d64a3b" stroke-width="4"/>
+              <text x="150" y="290" text-anchor="middle" font-size="12" font-weight="850" fill="#b73d32">poignet → coude → glène / acromion</text>
+              <text x="150" y="310" text-anchor="middle" font-size="12" font-weight="850" fill="#b73d32">→ trapèze supérieur · cou</text>
+            </g>
+          </svg>
+        </div>
+        <aside class="notes">
+          <h3>Chaîne de contrainte</h3>
+          <p>Quand le coude part fortement derrière et que la main « tient » la barre, la contrainte remonte du poignet vers le coude puis l’épaule, avec souvent une compensation jusque dans le trapèze supérieur.</p>
+          <ul class="cue-list">
+            <li>Avant de déracker : coudes le long du corps.</li>
+            <li>Redresser les mains plutôt que casser fortement les poignets.</li>
+            <li>Prise légèrement plus large au début si elle permet de garder l’épaule plus propre.</li>
+            <li>Repère simple : « arrête de lever tes coudes ».</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tool" id="midfoot">
+      <header class="tool-head">
+        <div><span class="tool-tag">Squat · équilibre</span><h2>Alignement barre ↔ milieu du pied</h2></div>
+        <div class="source">Outil issu du retour Timothée</div>
+      </header>
+      <div class="tool-body">
+        <div class="viz">
+          <svg id="midSvg" viewBox="0 0 720 420" role="img" aria-label="Alignement de la barre au milieu du pied">
+            <line x1="100" y1="355" x2="630" y2="355" stroke="#9c8f7a" stroke-width="5"/>
+            <rect x="280" y="345" width="170" height="18" rx="9" fill="#2b3139"/>
+            <circle cx="365" cy="336" r="8" fill="#f27a2a"/>
+            <text x="365" y="390" text-anchor="middle" font-size="14" font-weight="900" fill="#f27a2a">milieu du pied</text>
+            <g id="squatBody">
+              <circle cx="345" cy="102" r="28" fill="#efc59c"/>
+              <path d="M320 135 Q352 124 377 144 L412 235 L350 254 L300 195 Z" fill="#303a45"/>
+              <line x1="342" y1="250" x2="300" y2="324" stroke="#efc59c" stroke-width="20" stroke-linecap="round"/>
+              <line x1="375" y1="247" x2="425" y2="328" stroke="#efc59c" stroke-width="20" stroke-linecap="round"/>
+              <line x1="300" y1="324" x2="285" y2="345" stroke="#efc59c" stroke-width="17" stroke-linecap="round"/>
+              <line x1="425" y1="328" x2="444" y2="345" stroke="#efc59c" stroke-width="17" stroke-linecap="round"/>
+            </g>
+            <g id="barGroup">
+              <line id="barLine" x1="215" y1="128" x2="495" y2="128" stroke="#202730" stroke-width="10" stroke-linecap="round"/>
+              <circle id="barPlateL" cx="205" cy="128" r="31" fill="#4a78c9"/><circle id="barPlateR" cx="505" cy="128" r="31" fill="#4a78c9"/>
+              <line id="plumb" x1="355" y1="145" x2="355" y2="335" stroke="#4a78c9" stroke-width="4" stroke-dasharray="8 7"/>
+            </g>
+            <line x1="365" y1="310" x2="365" y2="345" stroke="#f27a2a" stroke-width="5"/>
+            <text id="offsetLabel" x="485" y="300" font-size="17" font-weight="900" fill="#007d82">aligné</text>
+          </svg>
+        </div>
+        <aside class="notes">
+          <div class="controls">
+            <div class="control-row"><label for="barOffset">Position de la barre</label><output id="barOffsetOut">0 cm</output></div>
+            <input id="barOffset" type="range" min="-30" max="45" value="0">
+          </div>
+          <h3>Principe</h3>
+          <p>Le système doit garder la charge globalement au-dessus de la zone d’appui du pied. Quand la barre part devant, le corps doit créer une compensation pour ne pas tomber.</p>
+          <ul class="cue-list">
+            <li>Pousse au milieu du pied, pied fixe du début à la fin.</li>
+            <li>Low / mid / high bar ne sont pas une fin en soi : la position doit servir ton alignement.</li>
+            <li>Si le pied bouge à la remontée, vérifier d’abord où se trouve la charge par rapport au pied.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tool" id="pendule">
+      <header class="tool-head">
+        <div><span class="tool-tag">Deadlift · wedge</span><h2>Pendule du soulevé de terre</h2></div>
+        <div class="source">Outil issu du retour Timothée</div>
+      </header>
+      <div class="tool-body">
+        <div class="viz">
+          <svg id="pendulumSvg" viewBox="0 0 760 430" role="img" aria-label="Comparaison deadlift sans wedge et avec wedge">
+            <line x1="80" y1="355" x2="680" y2="355" stroke="#a79b88" stroke-width="4"/>
+            <line x1="250" y1="110" x2="250" y2="350" stroke="#4a78c9" stroke-width="3" stroke-dasharray="7 7" opacity=".55"/>
+            <g id="dlBody">
+              <circle id="dlHead" cx="340" cy="128" r="25" fill="#efc59c"/>
+              <line id="dlTorso" x1="330" y1="155" x2="285" y2="235" stroke="#2f3944" stroke-width="28" stroke-linecap="round"/>
+              <circle id="dlHip" cx="285" cy="235" r="13" fill="#f27a2a"/>
+              <line id="dlFemur" x1="285" y1="240" x2="330" y2="300" stroke="#efc59c" stroke-width="20" stroke-linecap="round"/>
+              <line id="dlShin" x1="330" y1="300" x2="310" y2="350" stroke="#efc59c" stroke-width="18" stroke-linecap="round"/>
+              <line id="dlArm" x1="320" y1="170" x2="250" y2="310" stroke="#efc59c" stroke-width="14" stroke-linecap="round"/>
+            </g>
+            <line x1="195" y1="310" x2="305" y2="310" stroke="#202730" stroke-width="9" stroke-linecap="round"/>
+            <circle cx="186" cy="310" r="28" fill="#37404a"/><circle cx="314" cy="310" r="28" fill="#37404a"/>
+            <path id="pendPath" d="M285 235 Q360 185 395 145" fill="none" stroke="#d64a3b" stroke-width="5" stroke-dasharray="9 8"/>
+            <path id="wedgeArrow" d="M335 290 Q305 250 292 226" fill="none" stroke="#2a9d69" stroke-width="5"/>
+            <path d="M292 226 l-3 17 -13 -10" fill="#2a9d69"/>
+            <text id="pendText1" x="435" y="128" font-size="17" font-weight="900" fill="#d64a3b">les fesses montent…</text>
+            <text id="pendText2" x="435" y="154" font-size="17" font-weight="900" fill="#d64a3b">…les épaules partent devant</text>
+            <text x="250" y="388" text-anchor="middle" font-size="13" font-weight="850" fill="#4a78c9">barre proche du pied</text>
+          </svg>
+        </div>
+        <aside class="notes">
+          <div class="controls">
+            <div class="toggle2">
+              <button id="pendBad" class="active">Ce que tu fais</button>
+              <button id="pendGood">Avec le wedge</button>
+            </div>
+          </div>
+          <h3>Le problème du pendule</h3>
+          <p>Si les hanches montent avant que la barre décolle, les épaules partent devant. Tu crées un bras de levier plus long et tu perds la proximité avec la barre.</p>
+          <ul class="cue-list">
+            <li>Hanches un peu plus hautes : ne pas « s’asseoir » dans le setup.</li>
+            <li>Recule les genoux pour ramener le bassin vers la barre.</li>
+            <li>Sous les genoux : pousse l’avant du pied pour continuer à ramener le bassin.</li>
+            <li>Fin de mouvement : le bassin vient verrouiller — « bam ».</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tool" id="sumo">
+      <header class="tool-head">
+        <div><span class="tool-tag">Sumo · friction / wedge</span><h2>Reculer les genoux : créer de la friction</h2></div>
+        <div class="source">Outil issu du retour Lou</div>
+      </header>
+      <div class="tool-body">
+        <div class="viz">
+          <svg id="sumoSvg" viewBox="0 0 760 400" role="img" aria-label="Comparaison pousser droit et reculer les genoux au sumo">
+            <g transform="translate(25 28)">
+              <rect x="0" y="0" width="335" height="330" rx="24" fill="#fbefed" stroke="#d64a3b" stroke-width="3"/>
+              <text x="168" y="34" text-anchor="middle" font-size="17" font-weight="950" fill="#b73d32">POUSSER DROIT</text>
+              <circle cx="168" cy="91" r="24" fill="#efc59c"/>
+              <line x1="168" y1="116" x2="168" y2="205" stroke="#303a45" stroke-width="28" stroke-linecap="round"/>
+              <line x1="168" y1="200" x2="92" y2="272" stroke="#efc59c" stroke-width="18" stroke-linecap="round"/>
+              <line x1="168" y1="200" x2="244" y2="272" stroke="#efc59c" stroke-width="18" stroke-linecap="round"/>
+              <line x1="92" y1="272" x2="75" y2="305" stroke="#efc59c" stroke-width="16" stroke-linecap="round"/>
+              <line x1="244" y1="272" x2="261" y2="305" stroke="#efc59c" stroke-width="16" stroke-linecap="round"/>
+              <path d="M80 278 V320" stroke="#d64a3b" stroke-width="6"/><path d="M72 308 L80 323 L88 308" fill="#d64a3b"/>
+              <path d="M256 278 V320" stroke="#d64a3b" stroke-width="6"/><path d="M248 308 L256 323 L264 308" fill="#d64a3b"/>
+              <text x="168" y="318" text-anchor="middle" font-size="12" font-weight="850" fill="#b73d32">force surtout verticale</text>
+            </g>
+            <g transform="translate(400 28)">
+              <rect x="0" y="0" width="335" height="330" rx="24" fill="#eef6ef" stroke="#2a9d69" stroke-width="3"/>
+              <text x="168" y="34" text-anchor="middle" font-size="17" font-weight="950" fill="#2a7f59">RECULER LES GENOUX</text>
+              <circle cx="168" cy="91" r="24" fill="#efc59c"/>
+              <line x1="168" y1="116" x2="158" y2="205" stroke="#303a45" stroke-width="28" stroke-linecap="round"/>
+              <line x1="158" y1="200" x2="83" y2="263" stroke="#efc59c" stroke-width="18" stroke-linecap="round"/>
+              <line x1="158" y1="200" x2="253" y2="263" stroke="#efc59c" stroke-width="18" stroke-linecap="round"/>
+              <line x1="83" y1="263" x2="71" y2="305" stroke="#efc59c" stroke-width="16" stroke-linecap="round"/>
+              <line x1="253" y1="263" x2="265" y2="305" stroke="#efc59c" stroke-width="16" stroke-linecap="round"/>
+              <path d="M74 290 Q100 270 123 257" fill="none" stroke="#2a9d69" stroke-width="6"/><path d="M113 253 L128 254 L120 267" fill="#2a9d69"/>
+              <path d="M262 290 Q235 270 212 257" fill="none" stroke="#2a9d69" stroke-width="6"/><path d="M222 253 L207 254 L215 267" fill="#2a9d69"/>
+              <path d="M162 204 Q160 178 178 160" fill="none" stroke="#f27a2a" stroke-width="5"/>
+              <text x="168" y="318" text-anchor="middle" font-size="12" font-weight="850" fill="#2a7f59">friction → pression vers le talon</text>
+            </g>
+          </svg>
+        </div>
+        <aside class="notes">
+          <h3>Le deal</h3>
+          <p>Reculer les genoux dès le départ n’est pas juste un changement esthétique : l’intention crée une composante horizontale contre le sol. Le pied « accroche », la pression se déplace et le bassin peut venir davantage vers la barre.</p>
+          <ul class="cue-list">
+            <li>Intention : reculer les genoux, pas pousser uniquement droit dans le sol.</li>
+            <li>Le sol retient le pied → la poussée part en diagonale.</li>
+            <li>La pression glisse vers le talon et le bassin vient à la barre : c’est le wedge.</li>
+            <li>Objectif visuel : éviter de finir trop verticale avant que la barre soit prête à décoller.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tool" id="bench">
+      <header class="tool-head">
+        <div><span class="tool-tag">Bench · pontage / trajectoire</span><h2>Pontage, point de touche et tuck</h2></div>
+        <div class="source">Outil issu du retour Lou</div>
+      </header>
+      <div class="tool-body">
+        <div class="viz">
+          <svg id="benchSvg" viewBox="0 0 760 420" role="img" aria-label="Influence du pontage sur la trajectoire au bench">
+            <line x1="110" y1="315" x2="650" y2="315" stroke="#2d343b" stroke-width="18" stroke-linecap="round"/>
+            <line x1="188" y1="315" x2="188" y2="360" stroke="#2d343b" stroke-width="14"/><line x1="574" y1="315" x2="574" y2="360" stroke="#2d343b" stroke-width="14"/>
+            <path id="benchBody" d="M170 285 Q305 260 470 282 Q535 291 590 280" fill="none" stroke="#efc59c" stroke-width="32" stroke-linecap="round"/>
+            <circle cx="585" cy="268" r="25" fill="#efc59c"/>
+            <g id="benchArm">
+              <line id="upperArm" x1="407" y1="270" x2="430" y2="207" stroke="#efc59c" stroke-width="18" stroke-linecap="round"/>
+              <line id="foreArm" x1="430" y1="207" x2="430" y2="145" stroke="#efc59c" stroke-width="16" stroke-linecap="round"/>
+            </g>
+            <line id="benchBar" x1="325" y1="142" x2="535" y2="142" stroke="#202730" stroke-width="10" stroke-linecap="round"/>
+            <circle cx="315" cy="142" r="25" fill="#4a78c9"/><circle cx="545" cy="142" r="25" fill="#4a78c9"/>
+            <path id="barPath" d="M430 142 Q420 194 407 263" fill="none" stroke="#4a78c9" stroke-width="4" stroke-dasharray="8 7"/>
+            <circle id="touchPoint" cx="407" cy="263" r="9" fill="#f27a2a"/>
+            <circle id="oldTouch" cx="449" cy="254" r="7" fill="#d64a3b" opacity=".6"/>
+            <text x="464" y="246" font-size="12" font-weight="850" fill="#d64a3b">ancien point</text>
+            <text id="benchTouchText" x="372" y="294" font-size="13" font-weight="900" fill="#f27a2a">point adapté</text>
+            <text id="benchForearmText" x="470" y="190" font-size="12" font-weight="900" fill="#2a9d69">avant-bras vertical ✓</text>
+            <path id="tuckArc" d="M407 268 A60 60 0 0 0 451 224" fill="none" stroke="#f27a2a" stroke-width="4"/>
+            <text id="tuckText" x="468" y="225" font-size="13" font-weight="900" fill="#f27a2a">Tuck 45°</text>
+          </svg>
+        </div>
+        <aside class="notes">
+          <div class="controls">
+            <div class="seg" id="archSeg">
+              <button data-arch="0" class="active">Pontage léger</button>
+              <button data-arch="1">Pontage moyen</button>
+              <button data-arch="2">Gros pontage</button>
+            </div>
+            <div class="control-row"><label>Conséquence</label><output id="benchDelta">ROM standard</output></div>
+          </div>
+          <h3>Plus tu pontes, plus tout change</h3>
+          <p>Augmenter le pontage change la hauteur du thorax, donc la ROM et la trajectoire. Le point de touche et le degré de tuck doivent suivre ce changement pour garder une géométrie efficace.</p>
+          <ul class="cue-list">
+            <li>Plus de pontage → point de touche généralement plus bas.</li>
+            <li>Le tuck et la rotation interne demandée changent avec la trajectoire.</li>
+            <li>Le repère reste l’avant-bras cohérent avec la barre au point de touche.</li>
+            <li>Ne pas conserver automatiquement l’ancien point de touche après avoir changé le setup.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">GA Coaching · Boîte à outils technique · Synthèse des schémas présents dans les retours Lou (18/10/2026) et Timothée (09/10/2026). Les schémas sont pédagogiques : ils servent à illustrer les intentions techniques et non à imposer une géométrie identique à tous les athlètes.</div>
+  </footer>
+
+  <script>
+    const $ = (s) => document.querySelector(s);
+
+    // WHIP
+    const whipRange = $('#whipLoad');
+    const whipOut = $('#whipOut');
+    const whipCurve = $('#whipCurve');
+    const whipGroup = $('#whipGroup');
+    $('#whipToggle').addEventListener('click', (e) => {
+      whipGroup.classList.toggle('whip-on');
+      e.currentTarget.textContent = whipGroup.classList.contains('whip-on') ? 'Ⅱ Stopper l’animation' : '▶ Animer le whip';
+    });
+    function updateWhip(){
+      const v = Number(whipRange.value);
+      const bend = 178 + (v/100)*54;
+      whipCurve.setAttribute('d', 'M145 178 Q360 '+bend+' 575 178');
+      whipOut.value = v + '%';
+    }
+    whipRange.addEventListener('input', updateWhip); updateWhip();
+
+    // MIDFOOT
+    const offset = $('#barOffset');
+    const offsetOut = $('#barOffsetOut');
+    const barGroup = $('#barGroup');
+    const offsetLabel = $('#offsetLabel');
+    function updateMid(){
+      const v = Number(offset.value);
+      const px = v * 2.15;
+      barGroup.setAttribute('transform','translate('+px+' 0)');
+      offsetOut.value = (v>0?'+':'')+v+' cm';
+      offsetLabel.textContent = Math.abs(v) < 4 ? 'aligné' : (v > 0 ? 'barre +'+v+' cm devant' : 'barre '+Math.abs(v)+' cm derrière');
+      offsetLabel.setAttribute('fill', Math.abs(v)<4 ? '#2a9d69' : '#d64a3b');
+    }
+    offset.addEventListener('input', updateMid); updateMid();
+
+    // DEADLIFT PENDULUM
+    const bad = $('#pendBad'), good = $('#pendGood');
+    function setPendulum(mode){
+      const goodMode = mode === 'good';
+      bad.classList.toggle('active',!goodMode); good.classList.toggle('active',goodMode);
+      $('#dlHead').setAttribute('cx', goodMode ? 315 : 340);
+      $('#dlTorso').setAttribute('x1', goodMode ? 309 : 330);
+      $('#dlTorso').setAttribute('x2', goodMode ? 282 : 285);
+      $('#dlHip').setAttribute('cx', goodMode ? 282 : 285);
+      $('#dlHip').setAttribute('cy', goodMode ? 220 : 235);
+      $('#dlFemur').setAttribute('x1', goodMode ? 282 : 285);
+      $('#dlFemur').setAttribute('y1', goodMode ? 225 : 240);
+      $('#pendPath').style.opacity = goodMode ? .12 : 1;
+      $('#wedgeArrow').style.opacity = goodMode ? 1 : .25;
+      $('#pendText1').textContent = goodMode ? 'hanches un peu plus hautes' : 'les fesses montent…';
+      $('#pendText2').textContent = goodMode ? 'genoux reculent → bassin vers la barre' : '…les épaules partent devant';
+      $('#pendText1').setAttribute('fill',goodMode?'#2a9d69':'#d64a3b');
+      $('#pendText2').setAttribute('fill',goodMode?'#2a9d69':'#d64a3b');
+    }
+    bad.addEventListener('click',()=>setPendulum('bad'));
+    good.addEventListener('click',()=>setPendulum('good'));
+
+    // BENCH
+    const archData = [
+      {body:'M170 285 Q305 260 470 282 Q535 291 590 280', touch:[407,263], fore:[430,207,430,145], tuck:45, delta:'ROM standard'},
+      {body:'M170 285 Q305 225 470 270 Q535 289 590 280', touch:[393,246], fore:[416,193,416,142], tuck:52, delta:'ROM ↓ · touche un peu plus bas'},
+      {body:'M170 285 Q305 190 470 258 Q535 286 590 280', touch:[374,226], fore:[397,178,397,140], tuck:60, delta:'ROM ↓↓ · touche plus bas'}
+    ];
+    document.querySelectorAll('[data-arch]').forEach(btn=>btn.addEventListener('click',()=>{
+      const i = Number(btn.dataset.arch), d = archData[i];
+      document.querySelectorAll('[data-arch]').forEach(b=>b.classList.toggle('active',b===btn));
+      $('#benchBody').setAttribute('d',d.body);
+      $('#touchPoint').setAttribute('cx',d.touch[0]); $('#touchPoint').setAttribute('cy',d.touch[1]);
+      $('#barPath').setAttribute('d','M430 142 Q410 '+(180-i*7)+' '+d.touch[0]+' '+d.touch[1]);
+      $('#upperArm').setAttribute('x1',d.touch[0]); $('#upperArm').setAttribute('y1',d.touch[1]+7);
+      $('#upperArm').setAttribute('x2',d.fore[0]); $('#upperArm').setAttribute('y2',d.fore[1]);
+      $('#foreArm').setAttribute('x1',d.fore[0]); $('#foreArm').setAttribute('y1',d.fore[1]);
+      $('#foreArm').setAttribute('x2',d.fore[2]); $('#foreArm').setAttribute('y2',d.fore[3]);
+      $('#tuckText').textContent='Tuck '+d.tuck+'°';
+      $('#benchDelta').value=d.delta;
+      $('#benchTouchText').setAttribute('x',d.touch[0]-35); $('#benchTouchText').setAttribute('y',d.touch[1]+31);
+      $('#tuckArc').setAttribute('d','M'+d.touch[0]+' '+(d.touch[1]+5)+' A60 60 0 0 0 '+(d.touch[0]+44)+' '+(d.touch[1]-39));
+      $('#tuckText').setAttribute('x',d.touch[0]+58); $('#tuckText').setAttribute('y',d.touch[1]-28);
+    }));
+  </script>
+</body>
+</html>
