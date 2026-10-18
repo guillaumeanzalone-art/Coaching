@@ -1719,7 +1719,11 @@ function ensureStyles() {
 .ga-weapon-icon{
   overflow:visible;
   filter:drop-shadow(0 4px 5px rgba(0,0,0,.18));
+  transition:filter .18s ease,transform .18s ease;
 }
+.ga-weapon-icon[data-category="heavy"]{filter:drop-shadow(0 4px 5px rgba(0,0,0,.18)) drop-shadow(0 0 5px rgba(242,154,56,.18))}
+.ga-weapon-icon[data-category="flexible"]{filter:drop-shadow(0 4px 5px rgba(0,0,0,.18)) drop-shadow(0 0 5px rgba(142,106,216,.20))}
+.ga-weapon-icon[data-category="ranged"]{filter:drop-shadow(0 4px 5px rgba(0,0,0,.18)) drop-shadow(0 0 5px rgba(85,184,201,.22))}
 .ga-skill-icon{
   color:#8d6be4;
   filter:drop-shadow(0 4px 6px rgba(55,39,100,.2));
@@ -2547,6 +2551,57 @@ function ensureStyles() {
   font-size:6px;
   font-weight:900;
 }
+.brute-brand-mark,.brute-meter-label,.brute-bar-label{display:inline-flex;align-items:center;gap:5px}
+.brute-brand-glyph{width:15px;height:15px;color:#ffe4a0}
+.brute-meter-glyph{width:13px;height:13px;color:#86502c}
+.brute-bar-glyph{width:11px;height:11px;color:currentColor}
+.brute-inline-glyph{width:15px;height:15px;display:inline-grid;place-items:center;vertical-align:-3px;margin-right:4px}
+.brute-inline-glyph .ga-ui-glyph{width:100%;height:100%}
+.brute-selector-avatar.custom,.brute-pve-v2-icon.custom{display:grid;place-items:center}
+.brute-selector-glyph{width:38px;height:38px;color:#6e3d21}
+.brute-random-glyph,.brute-lock-glyph,.brute-creator-tool-glyph{width:22px;height:22px}
+.brute-section-random .ga-ui-glyph{width:18px;height:18px}
+.brute-history-glyph{width:20px;height:20px;display:grid;place-items:center;color:#8e5a2b}
+.brute-history-glyph .ga-ui-glyph{width:18px;height:18px}
+.brute-icon-button{width:28px;height:28px;display:grid!important;place-items:center;padding:5px!important}
+.brute-icon-button .ga-ui-glyph{width:16px;height:16px}
+.brute-pve-glyph{width:55px;height:55px;color:#66361c}
+.brute-duel-avatar.custom,.brute-podium-avatar.custom,.brute-ranking-v2-row .avatar.custom{overflow:hidden;display:flex;align-items:flex-start;justify-content:center;background:linear-gradient(#f6dfa6,#ca8c4b);border:2px solid rgba(92,47,23,.55)}
+.brute-duel-avatar.custom .ga-brute-svg{width:76px;height:94px;transform:scale(1.35) translateY(13px);transform-origin:50% 20%}
+.brute-podium-avatar.custom .ga-brute-svg{width:54px;height:68px;transform:scale(1.32) translateY(10px);transform-origin:50% 20%}
+.brute-ranking-v2-row .avatar.custom .ga-brute-svg{width:30px;height:38px;transform:scale(1.28) translateY(6px);transform-origin:50% 20%}
+.brute-podium-crown{width:23px;height:23px;display:grid!important;place-items:center}
+.brute-podium-crown .ga-ui-glyph{width:21px;height:21px}
+.brute-rank-stat-glyph{width:10px;height:10px;display:inline-block;vertical-align:-2px}
+.brute-sleep-moon{width:68px;height:68px;display:grid;place-items:center;color:#f5e9bd;filter:drop-shadow(0 0 14px rgba(225,214,255,.34))}
+.brute-sleep-moon .ga-ui-glyph{width:100%;height:100%}
+.brute-choice .big.art{width:62px;height:62px;display:grid;place-items:center;margin:4px auto 7px;font-size:0}
+.brute-choice .big.art .ga-weapon-icon,.brute-choice .big.art .ga-skill-icon,.brute-choice .big.art .ga-brute-pet-svg,.brute-choice .big.art .ga-ui-glyph{width:58px;height:58px}
+.brute-reward-stat-glyph{color:#ffe69a;filter:drop-shadow(0 0 9px rgba(255,205,82,.32))}
+.brute-weapon-identity{display:block;margin-top:5px;color:#6f3c20;font-size:7px;letter-spacing:.08em}
+.brute-weapon-mastery{position:relative;display:block;height:8px;margin-top:4px;overflow:hidden;border-radius:99px;background:rgba(79,40,20,.18)}
+.brute-weapon-mastery>i{position:absolute;inset:0 auto 0 0;display:block;border-radius:inherit;background:linear-gradient(90deg,#b7622a,#f5be47,#ffe582);box-shadow:0 0 8px rgba(244,183,65,.38)}
+.brute-weapon-mastery>em{position:absolute;inset:0;display:grid;place-items:center;color:#5f3119;font-size:4.5px;font-style:normal;font-weight:1000;letter-spacing:.07em;text-shadow:0 1px rgba(255,245,205,.48)}
+.brute-combo-meter[data-tier="3"]{border-color:#e49235;box-shadow:0 0 18px rgba(244,158,50,.45)}
+.brute-combo-meter[data-tier="4"]{border-color:#ffb62f;background:linear-gradient(#fff0a7,#ef9e2f);box-shadow:0 0 23px rgba(255,161,31,.58)}
+.brute-combo-meter[data-tier="5"]{border-color:#fff0a4;color:#7c2f10;background:linear-gradient(#fff8be,#ffae32);box-shadow:0 0 30px rgba(255,191,58,.72);animation:bruteComboOverdrive .42s ease infinite alternate}
+.brute-combo-burst.tier-4,.brute-combo-burst.tier-5{filter:drop-shadow(0 0 15px rgba(255,195,66,.72))}
+.brute-combo-burst.tier-5 b{font-size:36px}
+.brute-fighter:before{content:"";position:absolute;z-index:-1;left:50%;bottom:5%;width:56%;height:74%;border-radius:50%;transform:translateX(-50%) scale(.78);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+.brute-fighter.stat-force:before{opacity:.14;background:radial-gradient(ellipse,rgba(255,147,52,.55),rgba(255,95,27,.12) 48%,transparent 72%)}
+.brute-fighter.stat-force-elite:before{opacity:.27;transform:translateX(-50%) scale(.9);filter:drop-shadow(0 0 18px rgba(255,129,42,.38))}
+.brute-fighter.stat-agility .ga-brute-svg{filter:drop-shadow(0 0 5px rgba(98,223,255,.20))}
+.brute-fighter.stat-agility-elite .ga-brute-svg{filter:drop-shadow(0 0 9px rgba(98,223,255,.32))}
+.brute-fighter.stat-speed:after{content:"";position:absolute;z-index:-2;left:23%;right:23%;bottom:28%;height:3px;opacity:.22;background:linear-gradient(90deg,transparent,rgba(245,235,164,.75),transparent);box-shadow:0 -12px rgba(245,235,164,.16),0 12px rgba(245,235,164,.12);animation:bruteSpeedAura 1.05s linear infinite}
+.brute-fighter.stat-speed-elite:after{opacity:.42;height:4px;box-shadow:0 -16px rgba(245,235,164,.22),0 16px rgba(245,235,164,.18),0 -30px rgba(245,235,164,.10);animation-duration:.7s}
+.brute-fighter.stat-apex{filter:drop-shadow(0 0 7px rgba(255,226,121,.18))}
+.brute-arena-v3.impact-heavy .brute-stagefx:after,.brute-arena-v3.impact-flexible .brute-stagefx:after,.brute-arena-v3.impact-ranged .brute-stagefx:after{content:"";position:absolute;inset:0;pointer-events:none;animation:bruteArenaPulse .34s ease forwards}
+.brute-arena-v3.impact-heavy .brute-stagefx:after{background:radial-gradient(circle at 50% 62%,rgba(255,175,70,.12),transparent 35%)}
+.brute-arena-v3.impact-flexible .brute-stagefx:after{background:linear-gradient(110deg,transparent 35%,rgba(169,123,255,.12) 48%,transparent 62%)}
+.brute-arena-v3.impact-ranged .brute-stagefx:after{background:radial-gradient(circle at 50% 45%,rgba(110,224,239,.16),transparent 29%)}
+@keyframes bruteComboOverdrive{from{transform:scale(1);filter:brightness(1)}to{transform:scale(1.045);filter:brightness(1.14)}}
+@keyframes bruteSpeedAura{0%{transform:translateX(-18px);opacity:.05}50%{opacity:.42}100%{transform:translateX(18px);opacity:.05}}
+@keyframes bruteArenaPulse{0%{opacity:0}35%{opacity:1}100%{opacity:0}}
 @keyframes bruteWeaponOrbit{
   0%,100%{transform:translateY(0) rotate(-1deg)}
   50%{transform:translateY(-5px) rotate(1deg)}
@@ -2970,7 +3025,7 @@ export async function mountBruteGame(root, options = {}) {
       '<button class="brute-back" data-brute-menu>← Menu</button>'+
       '<div><small>'+esc(subtitle || 'GA BRUTE')+'</small><h1>'+esc(title)+'</h1></div>'+
       '<div class="spacer"></div>'+
-      '<button class="brute-mini" data-brute-music-toggle>'+(musicEnabled ? '🔊 Musique' : '🔇 Muet')+'</button>'+
+      '<button class="brute-mini" data-brute-music-toggle>'+(musicEnabled ? 'MUSIQUE' : 'MUET')+'</button>'+
       (options.allowAthleteSelection ? '<button class="brute-mini" data-brute-switch>Changer</button>' : '')+
     '</header>'
   }
@@ -2996,7 +3051,7 @@ export async function mountBruteGame(root, options = {}) {
 
     return src
       ? '<span class="brute-selector-avatar"><img src="' + esc(src) + '" alt=""></span>'
-      : '<span class="brute-selector-avatar">' + esc(athlete?.emoji || '🏋️') + '</span>'
+      : '<span class="brute-selector-avatar custom">' + uiGlyph('profile','brute-selector-glyph') + '</span>'
   }
 
   function renderSelector() {
@@ -3056,7 +3111,7 @@ export async function mountBruteGame(root, options = {}) {
     return '<div class="brute-panel brute-pad">'+
       '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'+
         '<div><small style="color:#858ca8;font-weight:900">IDLE TRAINING · GA BRUTE</small><h2>Choisir un athlète</h2><p style="margin:4px 0 13px;color:#747c98;font-size:9px">Sommeil · steps · séances · personnage · PvE · Duel</p></div>'+
-        '<button class="brute-mini" data-brute-music-toggle>'+(musicEnabled ? '🔊 Musique' : '🔇 Muet')+'</button>'+
+        '<button class="brute-mini" data-brute-music-toggle>'+(musicEnabled ? 'MUSIQUE' : 'MUET')+'</button>'+
       '</div>'+
       '<div class="brute-list">'+
         ordered.map(a => {
@@ -3070,7 +3125,7 @@ export async function mountBruteGame(root, options = {}) {
 
           return '<button class="brute-row brute-secondary '+(mine?'brute-row-self':'')+'" data-brute-select="'+esc(slug)+'">'+
             athleteAvatarMarkup(a)+
-            '<span><b>'+esc(a.name || a.id)+(mine?' <em class="brute-self-pill">★ MOI</em>':'')+'</b><small>'+(mine?'Ton profil · ':'')+'Ouvrir son Idle Training</small></span>'+
+            '<span><b>'+esc(a.name || a.id)+(mine?' <em class="brute-self-pill">MOI</em>':'')+'</b><small>'+(mine?'Ton profil · ':'')+'Ouvrir son Idle Training</small></span>'+
             '<span>›</span>'+
           '</button>'
         }).join('')+
@@ -3107,10 +3162,10 @@ export async function mountBruteGame(root, options = {}) {
     randomKey = ''
   ) {
     return '<div class="brute-creator-section">'+
-      '<div class="brute-creator-section-title"><span>'+esc(icon+' '+title)+'</span>'+
+      '<div class="brute-creator-section-title"><span>'+esc(title)+'</span>'+
         (
           randomKey
-            ? '<button type="button" class="brute-section-random" data-brute-random-section="'+esc(randomKey)+'" title="Randomiser cette partie">🎲</button>'
+            ? '<button type="button" class="brute-section-random" data-brute-random-section="'+esc(randomKey)+'" title="Randomiser cette partie">'+uiGlyph('random','brute-random-glyph')+'</button>'
             : ''
         )+
       '</div>'+
@@ -3170,12 +3225,12 @@ export async function mountBruteGame(root, options = {}) {
       '<div class="brute-mybrute-paper">'+
         '<div class="brute-mybrute-heading">'+
           '<span>Choisis ton nom</span>'+
-          '<b>➜</b>'+
+          '<b>›</b>'+
         '</div>'+
         '<div class="brute-mybrute-name-row">'+
           '<input class="brute-mybrute-name" maxlength="28" data-brute-name value="'+esc(draftName)+'" placeholder="Nom de la brute">'+
           '<button type="button" class="brute-mybrute-lock '+(draftFixed ? 'locked' : '')+'" data-brute-lock title="'+esc(status)+'">'+
-            (draftFixed ? '🔒' : '🔓')+
+            uiGlyph(draftFixed ? 'lock' : 'unlock','brute-lock-glyph')+
           '</button>'+
         '</div>'+
         '<div class="brute-mybrute-status">'+esc(status)+'</div>'+
@@ -3189,11 +3244,11 @@ export async function mountBruteGame(root, options = {}) {
         '</div>'+
         '<div class="brute-mybrute-tools">'+
           '<button type="button" class="brute-mybrute-tool" data-brute-change-appearance>'+
-            '<span class="icon">👤</span>'+
+            '<span class="icon">'+uiGlyph('profile','brute-creator-tool-glyph')+'</span>'+
             '<span>Changer<br>l’apparence</span>'+
           '</button>'+
           '<button type="button" class="brute-mybrute-tool" data-brute-change-colors>'+
-            '<span class="icon">🎨</span>'+
+            '<span class="icon">'+uiGlyph('palette','brute-creator-tool-glyph')+'</span>'+
             '<span>Changer<br>les couleurs</span>'+
           '</button>'+
         '</div>'+
@@ -3220,6 +3275,16 @@ export async function mountBruteGame(root, options = {}) {
       strength:'<path d="M17 43 H83 M22 33 V53 M78 33 V53 M31 28 V58 M69 28 V58" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>',
       agility:'<path d="M19 62 Q36 25 55 46 Q70 61 83 31 M58 25 L83 31 L75 52" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
       speed:'<path d="M18 31 H52 M12 49 H45 M20 67 H56 M64 24 L47 53 H62 L49 80 L84 43 H68Z" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
+      profile:'<circle cx="50" cy="34" r="17" fill="none" stroke="currentColor" stroke-width="7"/><path d="M20 82 Q25 57 50 57 Q75 57 80 82" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>',
+      palette:'<path d="M50 18 Q79 18 84 43 Q88 64 70 72 Q61 76 55 68 Q51 61 43 66 Q32 74 22 65 Q12 56 17 41 Q23 19 50 18Z" fill="none" stroke="currentColor" stroke-width="7"/><circle cx="34" cy="36" r="5" fill="currentColor"/><circle cx="51" cy="29" r="5" fill="currentColor"/><circle cx="67" cy="39" r="5" fill="currentColor"/>',
+      random:'<path d="M18 30 H32 Q42 30 49 42 L59 58 Q66 70 78 70 H84 M74 61 L84 70 L74 79 M18 70 H31 Q41 70 48 58 L58 42 Q65 30 78 30 H84 M74 21 L84 30 L74 39" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
+      lock:'<rect x="24" y="43" width="52" height="39" rx="8" fill="none" stroke="currentColor" stroke-width="7"/><path d="M34 43 V34 Q34 18 50 18 Q66 18 66 34 V43" fill="none" stroke="currentColor" stroke-width="7"/><circle cx="50" cy="61" r="5" fill="currentColor"/>',
+      unlock:'<rect x="24" y="43" width="52" height="39" rx="8" fill="none" stroke="currentColor" stroke-width="7"/><path d="M34 43 V34 Q34 18 50 18 Q62 18 66 28" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><circle cx="50" cy="61" r="5" fill="currentColor"/>',
+      energy:'<path d="M57 15 L28 54 H48 L42 84 L74 43 H54Z" fill="currentColor"/>',
+      xp:'<path d="M50 14 L59 38 L85 39 L64 55 L71 81 L50 66 L29 81 L36 55 L15 39 L41 38Z" fill="currentColor"/>',
+      trophy:'<path d="M31 19 H69 V39 Q69 59 50 64 Q31 59 31 39Z M31 28 H18 V38 Q18 51 33 53 M69 28 H82 V38 Q82 51 67 53 M50 64 V76 M35 82 H65" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
+      replay:'<path d="M29 31 Q43 18 61 24 Q79 30 82 49 Q84 69 67 79 Q47 90 29 76 Q18 67 18 53 M18 32 V53 H39" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>',
+      loss:'<path d="M27 27 L73 73 M73 27 L27 73" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>',
     }
 
     return '<svg class="ga-ui-glyph '+esc(className)+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
@@ -3354,12 +3419,77 @@ export async function mountBruteGame(root, options = {}) {
     return 'COMBO'
   }
 
-  function weaponHudMarkup(
+  function weaponIdentity(
     weapon
+  ) {
+    const labels = {
+      fists:'RAPIDE · PRÉCIS · CHAÎNES',
+      olympic_bar:'PORTÉE · IMPACT · CRITIQUE',
+      kettlebell:'SWING · IMPACT · POLYVALENT',
+      plate20:'LOURD · LANCER · KNOCKBACK',
+      belt:'FOUET · PRESSION · CONTRE',
+      chalk:'AVEUGLE · RAPIDE · COMBO',
+      straps:'GRIP · CADENCE · COMBO',
+    }
+
+    return labels[weapon?.id || 'fists'] || weaponRole(weapon)
+  }
+
+  function weaponMastery(
+    fighter,
+    weapon
+  ) {
+    const f = fighter || brute || {}
+    const strength = num(f.strength)
+    const agility = num(f.agility)
+    const speed = num(f.speed)
+    const category = weapon?.category || 'unarmed'
+
+    const weighted =
+      category === 'heavy'
+        ? strength * .62 + speed * .23 + agility * .15
+        : category === 'flexible'
+          ? agility * .44 + speed * .36 + strength * .20
+          : category === 'ranged'
+            ? speed * .48 + agility * .38 + strength * .14
+            : speed * .40 + agility * .35 + strength * .25
+
+    return Math.max(8,Math.min(100,Math.round(weighted / 30 * 100)))
+  }
+
+  function comboTier(streak) {
+    if (streak >= 8) return { label:'OVERDRIVE', level:5 }
+    if (streak >= 6) return { label:'FURY', level:4 }
+    if (streak >= 4) return { label:'RUSH', level:3 }
+    if (streak >= 2) return { label:'FLOW', level:2 }
+    return { label:'CHAÎNE', level:1 }
+  }
+
+  function fighterAuraClass(fighter) {
+    const classes = []
+    if (num(fighter?.strength) >= 15) classes.push('stat-force')
+    if (num(fighter?.strength) >= 22) classes.push('stat-force-elite')
+    if (num(fighter?.agility) >= 15) classes.push('stat-agility')
+    if (num(fighter?.agility) >= 22) classes.push('stat-agility-elite')
+    if (num(fighter?.speed) >= 15) classes.push('stat-speed')
+    if (num(fighter?.speed) >= 22) classes.push('stat-speed-elite')
+    if (num(fighter?.strength) >= 20 && num(fighter?.agility) >= 20 && num(fighter?.speed) >= 20) classes.push('stat-apex')
+    return classes.join(' ')
+  }
+
+  function weaponHudMarkup(
+    weapon,
+    fighter = null
   ) {
     const w =
       weapon ||
       BRUTE_WEAPONS.fists
+
+    const mastery =
+      weaponMastery(
+        fighter,
+        w
+      )
 
     return (
       '<span class="brute-weapon-hud-icon">'+
@@ -3372,7 +3502,8 @@ export async function mountBruteGame(root, options = {}) {
       '</span>'+
       '<span class="brute-weapon-hud-copy">'+
         '<b>'+esc(w.name)+'</b>'+
-        '<small>'+weaponRole(w)+' · DMG '+num(w.damage)+' · VIT '+Math.round(num(w.speed,1)*100)+'</small>'+
+        '<small>'+esc(weaponIdentity(w))+'</small>'+
+        '<span class="brute-weapon-mastery"><i style="width:'+mastery+'%"></i><em>MAÎTRISE '+mastery+'</em></span>'+
       '</span>'
     )
   }
@@ -3566,8 +3697,18 @@ export async function mountBruteGame(root, options = {}) {
           streak >= 2
         )
 
+        const tier =
+          comboTier(
+            streak
+          )
+
+        combo.dataset.tier =
+          String(
+            tier.level
+          )
+
         combo.innerHTML =
-          '<b>x'+Math.max(1,streak)+'</b><small>CHAÎNE</small><i style="width:'+Math.min(100,Math.max(20,streak*20))+'%"></i>'
+          '<b>x'+Math.max(1,streak)+'</b><small>'+tier.label+'</small><i style="width:'+Math.min(100,Math.max(16,streak*12.5))+'%"></i>'
       }
 
       if (damage) {
@@ -3743,11 +3884,11 @@ export async function mountBruteGame(root, options = {}) {
         '<header class="brute-cell-header">'+
           '<button class="brute-cell-small" data-brute-exit>← GA</button>'+
           '<div class="brute-cell-name">'+
-            '<span>'+esc(t.emoji)+' GA BRUTE</span>'+
+            '<span class="brute-brand-mark">'+uiGlyph('strength','brute-brand-glyph')+' GA BRUTE</span>'+
             '<h1>'+esc(brute.name)+'</h1>'+
           '</div>'+
           '<div class="brute-cell-header-actions">'+
-            '<button class="brute-cell-small" data-brute-music-toggle>'+(musicEnabled ? '🔊' : '🔇')+'</button>'+
+            '<button class="brute-cell-small" data-brute-music-toggle>'+(musicEnabled ? 'SON' : 'MUET')+'</button>'+
             (
               options.allowAthleteSelection
                 ? '<button class="brute-cell-small" data-brute-switch>Changer</button>'
@@ -3925,6 +4066,27 @@ export async function mountBruteGame(root, options = {}) {
     )
   }
 
+  function rewardArt(choice) {
+    if (choice?.type === 'weapon') {
+      return renderWeaponIconSvg(BRUTE_WEAPONS[choice.id] || BRUTE_WEAPONS.fists,{ className:'reward' })
+    }
+    if (choice?.type === 'skill') {
+      return renderSkillIconSvg(choice.id,{ className:'reward' })
+    }
+    if (choice?.type === 'pet') {
+      return renderPetSvg(BRUTE_PETS[choice.id] || { id:choice.id, name:choice.name })
+    }
+    const glyph =
+      choice?.id === 'strength'
+        ? 'strength'
+        : choice?.id === 'agility'
+          ? 'agility'
+          : choice?.id === 'speed'
+            ? 'speed'
+            : 'heart'
+    return uiGlyph(glyph,'brute-reward-stat-glyph')
+  }
+
   function renderRewardCard(
     choice,
     index
@@ -3950,7 +4112,7 @@ export async function mountBruteGame(root, options = {}) {
     return (
       '<button class="brute-choice rarity-'+esc(rarity)+'" data-brute-choice="'+index+'">'+
         '<span class="brute-card-rarity"><span>'+esc(rarityLabel)+'</span><i></i></span>'+
-        '<span class="big">'+esc(choice?.icon || '⭐')+'</span>'+
+        '<span class="big art">'+rewardArt(choice)+'</span>'+
         '<b>'+esc(choice?.name || 'Bonus')+'</b>'+
         '<small>'+esc(choice?.description || 'Amélioration permanente de ta brute.')+'</small>'+
         '<span class="brute-card-type">'+esc(rewardTypeLabel(choice))+'</span>'+
@@ -4171,7 +4333,7 @@ export async function mountBruteGame(root, options = {}) {
 
         return (
           '<div class="brute-camp-v2-meter">'+
-            '<header><span>'+esc(icon+' '+label)+'</span><b>'+score+'/100</b></header>'+
+            '<header><span class="brute-meter-label">'+uiGlyph(icon,'brute-meter-glyph')+esc(label)+'</span><b>'+score+'/100</b></header>'+
             '<div><i style="width:'+score+'%"></i></div>'+
             '<small>'+esc(note)+'</small>'+
           '</div>'
@@ -4190,24 +4352,24 @@ export async function mountBruteGame(root, options = {}) {
             scoreMeter(
               'Entraînement',
               idleSnapshot?.training_score,
-              '🏋️',
+              'strength',
               num(idleSnapshot?.training_sets,0)+' séries enregistrées'
             )+
             scoreMeter(
               'Activité',
               idleSnapshot?.steps_score,
-              '🚶',
+              'speed',
               num(idleSnapshot?.steps,0)+' pas'
             )+
             scoreMeter(
               'Sommeil',
               sleepScoreNow(),
-              '🌙',
+              'sleep',
               Math.round(num(idleSnapshot?.sleep_seconds,0)/360)/10+' h · bonus XP +'+sleepXpBonusNow()
             )+
           '</div>'+
-          '<button class="brute-camp-v2-action" data-brute-screen="equipment">🎒 Arsenal & apparence</button>'+
-          '<button class="brute-camp-v2-action main" data-brute-screen="duel">⚔️ Aller à l’arène</button>'+
+          '<button class="brute-camp-v2-action" data-brute-screen="equipment"><span class="brute-inline-glyph">'+uiGlyph('weapon')+'</span> Arsenal & apparence</button>'+
+          '<button class="brute-camp-v2-action main" data-brute-screen="duel"><span class="brute-inline-glyph">'+uiGlyph('arena')+'</span> Aller à l’arène</button>'+
         '</div>'+
         '<div class="brute-camp-v2-center">'+
           '<div class="brute-camp-v2-sign">CAMP DE '+esc(brute.name)+'</div>'+
@@ -4224,13 +4386,13 @@ export async function mountBruteGame(root, options = {}) {
           '</div>'+
           '<div class="brute-camp-v2-name">NIV. '+num(brute.level,1)+' · '+esc(brute.name)+'</div>'+
           '<div class="brute-cell-bars compact">'+
-            '<div><header><span>⚡ ÉNERGIE</span><b data-brute-energy-value>'+energy+' / 500</b></header><div class="brute-cell-bar energy"><i data-brute-energy-bar style="width:'+energyPct+'%"></i></div></div>'+
-            '<div><header><span>✨ XP</span><b>'+num(brute.xp)+' / '+xpNeeded()+'</b></header><div class="brute-cell-bar xp"><i style="width:'+pct+'%"></i></div></div>'+
+            '<div><header><span class="brute-bar-label">'+uiGlyph('energy','brute-bar-glyph')+' ÉNERGIE</span><b data-brute-energy-value>'+energy+' / 500</b></header><div class="brute-cell-bar energy"><i data-brute-energy-bar style="width:'+energyPct+'%"></i></div></div>'+
+            '<div><header><span class="brute-bar-label">'+uiGlyph('xp','brute-bar-glyph')+' XP</span><b>'+num(brute.xp)+' / '+xpNeeded()+'</b></header><div class="brute-cell-bar xp"><i style="width:'+pct+'%"></i></div></div>'+
           '</div>'+
           (
             asleep
-              ? '<button class="brute-camp-v2-sleep active" data-brute-go-sleep>🌙 SOMMEIL EN COURS · XP +'+sleepXpBonusNow()+'</button>'
-              : '<button class="brute-camp-v2-sleep" data-brute-go-sleep>🌙 ALLER SE COUCHER</button>'
+              ? '<button class="brute-camp-v2-sleep active" data-brute-go-sleep><span class="brute-inline-glyph">'+uiGlyph('sleep')+'</span> SOMMEIL EN COURS · XP +'+sleepXpBonusNow()+'</button>'
+              : '<button class="brute-camp-v2-sleep" data-brute-go-sleep><span class="brute-inline-glyph">'+uiGlyph('sleep')+'</span> ALLER SE COUCHER</button>'
           )+
           renderChoices()+
         '</div>'+
@@ -4239,9 +4401,9 @@ export async function mountBruteGame(root, options = {}) {
             '<h3>PUISSANCE</h3>'+
             '<div class="brute-camp-v2-power"><b>'+num(idleSnapshot?.power,35)+'</b><span>PUISSANCE DU JOUR</span></div>'+
             '<div class="brute-cell-statline mini">'+
-              '<span><i>💪</i><b>'+num(brute.strength)+'</b></span>'+
-              '<span><i>🌀</i><b>'+num(brute.agility)+'</b></span>'+
-              '<span><i>⚡</i><b>'+num(brute.speed)+'</b></span>'+
+              '<span><i>'+uiGlyph('strength')+'</i><b>'+num(brute.strength)+'</b></span>'+
+              '<span><i>'+uiGlyph('agility')+'</i><b>'+num(brute.agility)+'</b></span>'+
+              '<span><i>'+uiGlyph('speed')+'</i><b>'+num(brute.speed)+'</b></span>'+
             '</div>'+
           '</div>'+
           '<div class="brute-parchment-panel history">'+
@@ -4259,9 +4421,9 @@ export async function mountBruteGame(root, options = {}) {
 
                     return (
                       '<div class="brute-camp-v2-history-row">'+
-                        '<span>'+(win?'🏆':'✖')+'</span>'+
+                        '<span class="brute-history-glyph">'+uiGlyph(win?'trophy':'loss')+'</span>'+
                         '<div><b>'+esc(opp)+'</b><small>+'+num(f.xp_gained)+' XP</small></div>'+
-                        '<button class="brute-mini" data-brute-replay="'+esc(f.id)+'">↻</button>'+
+                        '<button class="brute-mini brute-icon-button" data-brute-replay="'+esc(f.id)+'">'+uiGlyph('replay')+'</button>'+
                       '</div>'
                     )
                   }).join('')
@@ -4316,7 +4478,7 @@ export async function mountBruteGame(root, options = {}) {
         '<header class="brute-duel-v2-head">'+
           '<div><span>COMBATS DU JOUR</span><b>'+num(daily.remaining,6)+' / '+num(daily.limit,6)+'</b><small>restants</small></div>'+
           '<button class="brute-cell-action primary random" data-brute-random-duel '+(num(daily.remaining)<=0?'disabled':'')+'>'+
-            '<span class="brute-cell-action-icon">⚔️</span>'+
+            '<span class="brute-cell-action-icon">'+uiGlyph('arena')+'</span>'+
             '<span><b>ADVERSAIRE ALÉATOIRE</b><small>Entrer directement dans l’arène</small></span>'+
             '<i>›</i>'+
           '</button>'+
@@ -4341,7 +4503,7 @@ export async function mountBruteGame(root, options = {}) {
                   return (
                     '<article class="brute-duel-poster">'+
                       '<div class="brute-duel-pin"></div>'+
-                      '<span class="brute-duel-avatar">'+esc(getBruteTheme(o.athlete_slug).emoji || '⚔️')+'</span>'+
+                      '<span class="brute-duel-avatar custom">'+renderBruteSvg(o.appearance,{label:o.name,className:'duel-mini'})+'</span>'+
                       '<div class="brute-duel-poster-title"><b>'+esc(o.name)+'</b><small>NIV. '+num(o.level)+' · COTE '+num(o.rating)+'</small></div>'+
                       '<div class="brute-duel-threat '+threat(o).toLowerCase()+'">'+threat(o)+'</div>'+
                       '<div class="brute-duel-record"><span>'+num(o.wins)+' V</span><span>'+num(o.losses)+' D</span><span>'+ratio+'%</span></div>'+
@@ -4607,13 +4769,13 @@ export async function mountBruteGame(root, options = {}) {
         '<div class="brute-pve-v2-stage">'+
           '<div class="brute-pve-v2-sign">OPENPOWER TRAINING PIT</div>'+
           '<div class="brute-pve-v2-plates"><i></i><i></i><i></i><i></i></div>'+
-          '<div class="brute-pve-v2-icon">🏋️</div>'+
+          '<div class="brute-pve-v2-icon custom">'+uiGlyph('strength','brute-pve-glyph')+'</div>'+
           '<h2>Affronte les monstres du total</h2>'+
           '<p>Les adversaires sont construits à partir de performances FFForce présentes dans OpenPowerlifting. Plus tu montes de niveau, plus les profils deviennent dangereux.</p>'+
         '</div>'+
         '<aside class="brute-pve-v2-board">'+
           '<div class="brute-cell-board-title">PRÉPARATION</div>'+
-          '<div class="brute-pve-v2-energy"><span>⚡ ÉNERGIE</span><b data-brute-pve-energy>'+energy+'</b><small>/ 500</small></div>'+
+          '<div class="brute-pve-v2-energy"><span class="brute-bar-label">'+uiGlyph('energy','brute-bar-glyph')+' ÉNERGIE</span><b data-brute-pve-energy>'+energy+'</b><small>/ 500</small></div>'+
           '<div class="brute-cell-bar energy"><i data-brute-energy-bar style="width:'+progress+'%"></i></div>'+
           '<div class="brute-pve-v2-rules">'+
             '<span><b>8</b><small>énergie / combat</small></span>'+
@@ -4621,7 +4783,7 @@ export async function mountBruteGame(root, options = {}) {
             '<span><b>XP</b><small>steps + sommeil + training</small></span>'+
           '</div>'+
           '<button class="brute-pve-v2-launch" data-brute-pve '+(canFight?'':'disabled')+'>'+
-            (canFight ? '⚔️ ENTRER DANS LA FOSSE' : '⚡ ÉNERGIE INSUFFISANTE')+
+            (canFight ? 'ENTRER DANS LA FOSSE' : 'ÉNERGIE INSUFFISANTE')+
           '</button>'+
           '<small class="brute-pve-v2-note">Le Duel reste plus rentable en XP. Le PvE sert à progresser régulièrement et tester ton build.</small>'+
         '</aside>'+
@@ -4688,7 +4850,7 @@ export async function mountBruteGame(root, options = {}) {
                       '<span class="brute-armory-weapon-copy">'+
                         '<b>'+esc(w.name)+'</b>'+
                         '<small>'+weaponRole(w)+'</small>'+
-                        '<em>DMG '+num(w.damage)+' · VIT '+Math.round(num(w.speed,1)*100)+' · PORTÉE '+num(w.reach,1)+'</em>'+
+                        '<em>'+esc(weaponIdentity(w))+' · MAÎTRISE '+weaponMastery(brute,w)+'</em>'+
                       '</span>'+
                       '<i>'+(equipped===id?'ÉQUIPÉE':'ÉQUIPER')+'</i>'+
                     '</button>'
@@ -4766,8 +4928,9 @@ export async function mountBruteGame(root, options = {}) {
                       ? 'Arme de pression et d’enchaînement. Agilité et Vitesse la rendent plus dangereuse.'
                       : equippedWeapon.category === 'ranged'
                         ? 'Arme de contrôle à distance. Vitesse et précision comptent davantage.'
-                        : 'Style rapide et polyvalent. Excellent pour construire des chaînes.'
+                        : 'Combat rapproché : précis, rapide et idéal pour transformer la Vitesse en longues chaînes.'
                 )+
+                '<strong class="brute-weapon-identity">'+esc(weaponIdentity(equippedWeapon))+'</strong>'+
               '</p>'+
             '</div>'+
           '</div>'+
@@ -4777,6 +4940,7 @@ export async function mountBruteGame(root, options = {}) {
             metricBar('PORTÉE',num(equippedWeapon.reach,1),1.6)+
             metricBar('CRITIQUE',Math.round(num(equippedWeapon.crit)*100),12,'%')+
             metricBar('COMBO',Math.round((num(equippedWeapon.combo)+.08)*100),22)+
+            metricBar('MAÎTRISE BUILD',weaponMastery(brute,equippedWeapon),100,'%')+
           '</div>'+
           '<div class="brute-armory-v3-avatar">'+
             '<div class="brute-cell-avatar-shadow"></div>'+
@@ -4827,8 +4991,8 @@ export async function mountBruteGame(root, options = {}) {
 
               return (
                 '<div class="brute-podium place-'+place+'">'+
-                  '<span class="brute-podium-crown">'+(place===1?'♛':place===2?'♜':'♝')+'</span>'+
-                  '<span class="brute-podium-avatar">'+esc(getBruteTheme(row.athlete_slug).emoji || '⚔️')+'</span>'+
+                  '<span class="brute-podium-crown">'+uiGlyph(place===1?'trophy':'ranking')+'</span>'+
+                  '<span class="brute-podium-avatar custom">'+renderBruteSvg(row.appearance,{label:row.name,className:'ranking-mini'})+'</span>'+
                   '<b>'+esc(row.name)+'</b>'+
                   '<small>Niv. '+num(row.level)+' · '+num(row.rating)+'</small>'+
                   '<div><span>'+num(row.wins)+'V</span><span>'+num(row.losses)+'D</span></div>'+
@@ -4842,11 +5006,11 @@ export async function mountBruteGame(root, options = {}) {
             (row,index) =>
               '<div class="brute-ranking-v2-row '+(row.athlete_slug===selectedSlug?'self':'')+'">'+
                 '<span class="rank">#'+(index+4)+'</span>'+
-                '<span class="avatar">'+esc(getBruteTheme(row.athlete_slug).emoji || '⚔️')+'</span>'+
+                '<span class="avatar custom">'+renderBruteSvg(row.appearance,{label:row.name,className:'ranking-row-mini'})+'</span>'+
                 '<span class="name"><b>'+esc(row.name)+'</b><small>Niv. '+num(row.level)+' · '+num(row.wins)+'V / '+num(row.losses)+'D</small></span>'+
                 '<b class="rating">'+num(row.rating)+'</b>'+
-                '<span class="stat">💪 '+num(row.strength)+'</span>'+
-                '<span class="stat">⚡ '+num(row.speed)+'</span>'+
+                '<span class="stat">'+uiGlyph('strength','brute-rank-stat-glyph')+' '+num(row.strength)+'</span>'+
+                '<span class="stat">'+uiGlyph('speed','brute-rank-stat-glyph')+' '+num(row.speed)+'</span>'+
               '</div>'
           ).join('')+
         '</div>'+
@@ -4883,7 +5047,7 @@ export async function mountBruteGame(root, options = {}) {
       )+
       '<section class="brute-sleep-v2">'+
         '<div class="brute-sleep-v2-room">'+
-          '<div class="brute-sleep-v2-window"><span>☾</span><i></i><i></i><i></i></div>'+
+          '<div class="brute-sleep-v2-window"><span class="brute-sleep-moon">'+uiGlyph('sleep')+'</span><i></i><i></i><i></i></div>'+
           '<div class="brute-sleep-v2-bed">'+
             '<div class="pillow"></div>'+
             '<div class="blanket"></div>'+
@@ -4896,9 +5060,9 @@ export async function mountBruteGame(root, options = {}) {
             )+
           '</div>'+
           '<div class="brute-sleep-v2-status">'+(active?'SOMMEIL EN COURS':'SOMMEIL DU JOUR')+'</div>'+
-          '<div class="brute-sleep-v2-xp" data-brute-sleep-xp>✨ Bonus XP +'+sleepXpBonusNow()+'</div>'+
+          '<div class="brute-sleep-v2-xp" data-brute-sleep-xp>Bonus XP +'+sleepXpBonusNow()+'</div>'+
           '<button class="brute-sleep-v2-toggle '+(active?'wake':'')+'" data-brute-sleep-toggle>'+
-            (active?'☀️ JE ME RÉVEILLE':'🌙 ALLER SE COUCHER')+
+            (active?'JE ME RÉVEILLE':'ALLER SE COUCHER')+
           '</button>'+
         '</div>'+
         '<aside class="brute-sleep-v2-panel">'+
@@ -4906,7 +5070,7 @@ export async function mountBruteGame(root, options = {}) {
           '<p>Le sommeil fait progresser ton bonus d’XP. L’énergie revient indépendamment à +1 par minute, même quand l’application est fermée.</p>'+
           '<div class="brute-sleep-v2-score"><b>'+Math.round(sleepScoreNow())+'</b><span>/ 100</span><small>SCORE SOMMEIL</small></div>'+
           '<div class="brute-sound-grid v2">'+
-            [['rain','🌧️ Pluie'],['brown','🟤 Bruit brun'],['temple','🕯️ Temple'],['none','🔇 Silence']].map(([key,label]) =>
+            [['rain','Pluie'],['brown','Bruit brun'],['temple','Temple'],['none','Silence']].map(([key,label]) =>
               '<button class="brute-secondary '+(sleepMode===key?'active':'')+'" data-brute-sound="'+key+'">'+label+'</button>'
             ).join('')+
           '</div>'+
@@ -5073,7 +5237,8 @@ export async function mountBruteGame(root, options = {}) {
           '</div>'+
           '<div class="brute-hud-v3-weapon" data-weapon-'+side+'>'+
             weaponHudMarkup(
-              weapon
+              weapon,
+              fighter
             )+
           '</div>'+
           '<div class="brute-fatigue v2 brute-fatigue-v3"><i data-fatigue-'+side+'></i></div>'+
@@ -5104,11 +5269,11 @@ export async function mountBruteGame(root, options = {}) {
             hud(right,'right',rightWeapon)+
           '</div>'+
           '<div class="brute-fighters brute-fighters-v2">'+
-            '<div class="brute-fighter left" data-fighter="left" data-weapon-current="'+esc(leftWeapon.id)+'">'+
+            '<div class="brute-fighter left '+fighterAuraClass(left)+'" data-fighter="left" data-weapon-current="'+esc(leftWeapon.id)+'">'+
               '<span class="brute-fighter-shadow"></span>'+
               fighterGraphic(left,'left',leftWeapon.id)+
             '</div>'+
-            '<div class="brute-fighter right" data-fighter="right" data-weapon-current="'+esc(rightWeapon.id)+'">'+
+            '<div class="brute-fighter right '+fighterAuraClass(right)+'" data-fighter="right" data-weapon-current="'+esc(rightWeapon.id)+'">'+
               '<span class="brute-fighter-shadow"></span>'+
               fighterGraphic(right,'right',rightWeapon.id)+
             '</div>'+
@@ -5258,7 +5423,7 @@ export async function mountBruteGame(root, options = {}) {
 
           if (sleepXpEl) {
             sleepXpEl.textContent =
-              '✨ Bonus XP +' +
+              'Bonus XP +' +
               sleepXpBonusNow()
           }
         },
@@ -6196,8 +6361,13 @@ export async function mountBruteGame(root, options = {}) {
       banner.className =
         'brute-skill-banner combo'
 
+      const comboRank =
+        comboTier(
+          streak
+        )
+
       banner.innerHTML =
-        '<b>COMBO x'+streak+'</b><small>ENCHAÎNEMENT</small>'
+        '<b>COMBO x'+streak+'</b><small>'+comboRank.label+'</small>'
 
       fx?.appendChild(
         banner
@@ -6212,7 +6382,7 @@ export async function mountBruteGame(root, options = {}) {
 
       if (stage) {
         stage.innerHTML =
-          '<span class="brute-combo-burst"><b>x'+streak+'</b><small>COMBO</small></span>'
+          '<span class="brute-combo-burst tier-'+comboRank.level+'"><b>x'+streak+'</b><small>'+comboRank.label+'</small></span>'
       }
     }
 
@@ -6434,7 +6604,7 @@ export async function mountBruteGame(root, options = {}) {
         'brute-skill-banner'
 
       banner.textContent =
-        '💥 DÉSARMÉ'
+        'DÉSARMÉ'
 
       fx?.appendChild(banner)
     }
@@ -6453,7 +6623,7 @@ export async function mountBruteGame(root, options = {}) {
         'brute-skill-banner'
 
       banner.textContent =
-        '🔥 GRIND · 1 PV'
+        'GRIND · 1 PV'
 
       fx?.appendChild(banner)
     }
@@ -6735,7 +6905,8 @@ export async function mountBruteGame(root, options = {}) {
 
         lWeapon.innerHTML =
           weaponHudMarkup(
-            w
+            w,
+            tl.left
           )
       }
 
@@ -6748,7 +6919,8 @@ export async function mountBruteGame(root, options = {}) {
 
         rWeapon.innerHTML =
           weaponHudMarkup(
-            w
+            w,
+            tl.right
           )
       }
 
@@ -7021,7 +7193,7 @@ export async function mountBruteGame(root, options = {}) {
           pve &&
           currentFightMeta
             ?.openpowerlifting
-            ? '<div style="margin-top:8px;color:#7e859f;font-size:8px;font-weight:900">OPENPOWERLIFTING · TOTAL '+num(currentFightMeta.openpowerlifting.total,0)+' KG · '+num(currentFightMeta.openpowerlifting.points,0)+' '+esc(currentFightMeta.openpowerlifting.metric || '')+' · ⚡ -'+num(currentFightMeta?.energy?.cost,8)+'</div>'
+            ? '<div style="margin-top:8px;color:#7e859f;font-size:8px;font-weight:900">OPENPOWERLIFTING · TOTAL '+num(currentFightMeta.openpowerlifting.total,0)+' KG · '+num(currentFightMeta.openpowerlifting.points,0)+' '+esc(currentFightMeta.openpowerlifting.metric || '')+' · ÉNERGIE -'+num(currentFightMeta?.energy?.cost,8)+'</div>'
             : ''
         )+
         (
@@ -7058,10 +7230,10 @@ export async function mountBruteGame(root, options = {}) {
           (
             !replayOnly &&
             !practice
-              ? '<button class="brute-primary" data-brute-rematch>⚔️ Recombattre</button>'
+              ? '<button class="brute-primary" data-brute-rematch><span class="brute-inline-glyph">'+uiGlyph('arena')+'</span> Recombattre</button>'
               : ''
           )+
-          '<button class="brute-secondary" data-brute-replay-current>↻ Revoir le combat</button>'+
+          '<button class="brute-secondary" data-brute-replay-current><span class="brute-inline-glyph">'+uiGlyph('replay')+'</span> Revoir le combat</button>'+
           '<button class="brute-secondary" data-brute-after-fight>Retour au camp</button>'+
         '</div>'+
       '</div>'
