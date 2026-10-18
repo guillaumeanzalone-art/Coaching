@@ -4487,7 +4487,7 @@ export async function mountBruteGame(root, options = {}) {
       )
     })
     root.querySelectorAll('.brute-float').forEach(el => el.remove())
-    root.querySelectorAll('.brute-impact,.brute-dust,.brute-skill-banner,.brute-projectile,.brute-speedline,.brute-slash-fx,.brute-shockwave,.brute-crit-burst,.brute-miss-swoosh,.brute-parry-spark,.brute-finisher-flare').forEach(el => el.remove())
+    root.querySelectorAll('.brute-impact,.brute-dust,.brute-skill-banner,.brute-projectile,.brute-speedline,.brute-slash-fx,.brute-shockwave,.brute-crit-burst,.brute-miss-swoosh,.brute-parry-spark,.brute-finisher-flare,.brute-afterimage,.brute-stat-spark,.brute-combo-burst').forEach(el => el.remove())
 
     const arena =
       root.querySelector('[data-brute-arena]')
@@ -4592,6 +4592,10 @@ export async function mountBruteGame(root, options = {}) {
 
   function applyEvent(event,tl) {
     clearAnimClasses()
+    updateFightTelemetry(
+      event,
+      tl
+    )
 
     const arena =
       root.querySelector(
@@ -4623,6 +4627,26 @@ export async function mountBruteGame(root, options = {}) {
         ? leftEl
         : rightEl
 
+    const actorFighter =
+      event.actor === 'left'
+        ? tl.left
+        : tl.right
+
+    const actorSpeed =
+      num(
+        actorFighter?.speed
+      )
+
+    const actorAgility =
+      num(
+        actorFighter?.agility
+      )
+
+    const actorStrength =
+      num(
+        actorFighter?.strength
+      )
+
     if (event.type === 'START') {
       setFightOffset(
         leftEl,
@@ -4651,6 +4675,30 @@ export async function mountBruteGame(root, options = {}) {
     }
 
     if (event.type === 'WINDUP') {
+      if (
+        actorSpeed >= 15 &&
+        actorEl
+      ) {
+        const ghost =
+          actorEl
+            .querySelector(
+              '.ga-brute-svg'
+            )
+            ?.cloneNode(
+              true
+            )
+
+        if (ghost) {
+          ghost.classList.add(
+            'brute-afterimage',
+            'windup'
+          )
+          actorEl.appendChild(
+            ghost
+          )
+        }
+      }
+
       const cls =
         event.category === 'heavy'
           ? 'windup-heavy'
@@ -4743,19 +4791,67 @@ export async function mountBruteGame(root, options = {}) {
     if (event.type === 'WEAPON_SWITCH') {
       actorEl?.classList.add('switching')
 
-      const banner = document.createElement('span')
-      banner.className = 'brute-skill-banner'
-      const meta = BRUTE_WEAPONS[event.weapon]
-      banner.textContent = (meta?.icon || '⚔️') + ' ' + (meta?.name || 'ARME')
-      fx?.appendChild(banner)
+      const banner =
+        document.createElement(
+          'span'
+        )
+
+      banner.className =
+        'brute-skill-banner weapon'
+
+      const meta =
+        BRUTE_WEAPONS[
+          event.weapon
+        ] ||
+        BRUTE_WEAPONS.fists
+
+      banner.innerHTML =
+        '<span class="brute-banner-art">'+
+          renderWeaponIconSvg(
+            meta,
+            {
+              className:'banner',
+            }
+          )+
+        '</span>'+
+        '<span><b>'+esc(meta.name)+'</b><small>'+weaponRole(meta)+'</small></span>'
+
+      fx?.appendChild(
+        banner
+      )
     }
 
     if (event.type === 'WEAPON_THROW') {
       actorEl?.classList.add('attack-ranged')
-      const projectile = document.createElement('span')
-      projectile.className = 'brute-projectile ' + (event.actor === 'right' ? 'right' : '')
-      projectile.textContent = BRUTE_WEAPONS[event.weapon]?.icon || '⭕'
-      fx?.appendChild(projectile)
+
+      const projectile =
+        document.createElement(
+          'span'
+        )
+
+      projectile.className =
+        'brute-projectile weapon-art ' +
+        (
+          event.actor === 'right'
+            ? 'right'
+            : ''
+        )
+
+      projectile.innerHTML =
+        renderWeaponIconSvg(
+          BRUTE_WEAPONS[
+            event.weapon
+          ] ||
+          BRUTE_WEAPONS.fists,
+          {
+            bare:true,
+            className:'projectile',
+          }
+        )
+
+      fx?.appendChild(
+        projectile
+      )
     }
 
     if (event.type === 'BLOCK') {
@@ -4862,6 +4958,91 @@ export async function mountBruteGame(root, options = {}) {
         'attack-v' +
           attackVariant
       )
+
+      actorEl?.style.setProperty(
+        '--motion-boost',
+        Math.max(
+          .82,
+          Math.min(
+            1.35,
+            1.18 -
+            actorSpeed * .012
+          )
+        )
+      )
+
+      if (
+        actorSpeed >= 17 &&
+        actorEl
+      ) {
+        const ghost =
+          actorEl
+            .querySelector(
+              '.ga-brute-svg'
+            )
+            ?.cloneNode(
+              true
+            )
+
+        if (ghost) {
+          ghost.classList.add(
+            'brute-afterimage',
+            event.actor === 'right'
+              ? 'right'
+              : 'left'
+          )
+          actorEl.appendChild(
+            ghost
+          )
+        }
+      }
+
+      if (
+        actorStrength >= 17
+      ) {
+        arena?.classList.add(
+          'stat-strength'
+        )
+
+        for (
+          let i = 0;
+          i < Math.min(
+            5,
+            Math.floor(
+              actorStrength / 5
+            )
+          );
+          i += 1
+        ) {
+          const spark =
+            document.createElement(
+              'span'
+            )
+
+          spark.className =
+            'brute-stat-spark'
+
+          spark.style.left =
+            (
+              event.target === 'left'
+                ? 27
+                : 67
+            ) +
+            i * 2 +
+            '%'
+
+          spark.style.top =
+            (
+              49 +
+              i * 3
+            ) +
+            '%'
+
+          fx?.appendChild(
+            spark
+          )
+        }
+      }
 
       if (
         event.type ===
@@ -4980,9 +5161,17 @@ export async function mountBruteGame(root, options = {}) {
               : ''
           )
 
-        projectile.textContent =
-          BRUTE_WEAPONS[weaponId]?.icon ||
-          '•'
+        projectile.innerHTML =
+          renderWeaponIconSvg(
+            BRUTE_WEAPONS[
+              weaponId
+            ] ||
+            BRUTE_WEAPONS.fists,
+            {
+              bare:true,
+              className:'projectile',
+            }
+          )
 
         fx?.appendChild(
           projectile
@@ -5043,18 +5232,42 @@ export async function mountBruteGame(root, options = {}) {
         'comboing'
       )
 
+      const streak =
+        Math.max(
+          2,
+          fightTelemetry
+            ?.streak?.[
+              event.actor
+            ] ||
+          2
+        )
+
       const banner =
         document.createElement(
           'span'
         )
 
       banner.className =
-        'brute-skill-banner'
+        'brute-skill-banner combo'
 
-      banner.textContent =
-        '⚡ ENCHAÎNEMENT'
+      banner.innerHTML =
+        '<b>COMBO x'+streak+'</b><small>ENCHAÎNEMENT</small>'
 
-      fx?.appendChild(banner)
+      fx?.appendChild(
+        banner
+      )
+
+      const stage =
+        root.querySelector(
+          '[data-combo-stage-'+
+          event.actor+
+          ']'
+        )
+
+      if (stage) {
+        stage.innerHTML =
+          '<span class="brute-combo-burst"><b>x'+streak+'</b><small>COMBO</small></span>'
+      }
     }
 
     if (event.type === 'COUNTER_READY') {
@@ -5099,15 +5312,49 @@ export async function mountBruteGame(root, options = {}) {
       banner.className =
         'brute-skill-banner'
 
-      banner.textContent =
-        (skill?.icon || '✨') +
-        ' ' +
-        (skill?.name || event.skill)
+      banner.classList.add(
+        'skill-art'
+      )
+
+      banner.innerHTML =
+        '<span class="brute-banner-art">'+
+          renderSkillIconSvg(
+            event.skill,
+            {
+              className:'banner',
+            }
+          )+
+        '</span>'+
+        '<span><b>'+esc(skill?.name || event.skill)+'</b><small>SKILL ACTIVÉ</small></span>'
 
       fx?.appendChild(banner)
     }
 
     if (event.type === 'DODGE') {
+      if (
+        actorAgility >= 15 &&
+        actorEl
+      ) {
+        const ghost =
+          actorEl
+            .querySelector(
+              '.ga-brute-svg'
+            )
+            ?.cloneNode(
+              true
+            )
+
+        if (ghost) {
+          ghost.classList.add(
+            'brute-afterimage',
+            'dodge-ghost'
+          )
+          actorEl.appendChild(
+            ghost
+          )
+        }
+      }
+
       const dodgeVariant =
         Math.abs(
           Math.floor(
@@ -5526,13 +5773,29 @@ export async function mountBruteGame(root, options = {}) {
       }
 
       if (lWeapon) {
-        const w = BRUTE_WEAPONS[event.state.leftWeapon] || BRUTE_WEAPONS.fists
-        lWeapon.textContent = w.icon+' '+w.name
+        const w =
+          BRUTE_WEAPONS[
+            event.state.leftWeapon
+          ] ||
+          BRUTE_WEAPONS.fists
+
+        lWeapon.innerHTML =
+          weaponHudMarkup(
+            w
+          )
       }
 
       if (rWeapon) {
-        const w = BRUTE_WEAPONS[event.state.rightWeapon] || BRUTE_WEAPONS.fists
-        rWeapon.textContent = w.icon+' '+w.name
+        const w =
+          BRUTE_WEAPONS[
+            event.state.rightWeapon
+          ] ||
+          BRUTE_WEAPONS.fists
+
+        rWeapon.innerHTML =
+          weaponHudMarkup(
+            w
+          )
       }
 
       syncFightWeapon(
