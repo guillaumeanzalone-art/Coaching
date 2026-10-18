@@ -1,6 +1,7 @@
 name: GA Brute Check
 
-# check signed-in athlete + rematch + music
+# mybrute-ui-overhaul v2
+
 
 on:
   push:
