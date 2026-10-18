@@ -455,6 +455,89 @@ function accessorySvg(
   return map[s] || ''
 }
 
+function faceModelSvg(
+  body,
+  hair,
+  skinShadow,
+  skinHighlight,
+  fightModel
+) {
+  const strong =
+    body >= 3
+
+  return (
+    '<g class="brute-face-model" pointer-events="none">'+
+      '<path d="M123 108 Q128 127 139 140" fill="none" stroke="'+skinShadow+'" stroke-width="'+(strong?3.2:2.6)+'" opacity=".18" stroke-linecap="round"/>'+
+      '<path d="M197 108 Q192 127 181 140" fill="none" stroke="'+skinShadow+'" stroke-width="'+(strong?3.2:2.6)+'" opacity=".18" stroke-linecap="round"/>'+
+      '<path d="M145 151 Q160 158 176 151" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".22" stroke-linecap="round"/>'+
+      '<path d="M150 72 Q160 67 171 72" fill="none" stroke="'+skinHighlight+'" stroke-width="3" opacity=".22" stroke-linecap="round"/>'+
+      '<path d="M153 109 Q160 105 167 109" fill="none" stroke="'+skinHighlight+'" stroke-width="2.5" opacity=".23" stroke-linecap="round"/>'+
+      (
+        fightModel
+          ? '<path d="M126 86 Q139 79 151 86 M169 86 Q182 79 195 86" fill="none" stroke="'+hair+'" stroke-width="4.2" opacity=".64" stroke-linecap="round"/>'+
+            '<path d="M128 119 Q138 125 148 122 M172 122 Q182 125 192 119" fill="none" stroke="'+skinShadow+'" stroke-width="2.4" opacity=".2" stroke-linecap="round"/>'
+          : ''
+      )+
+    '</g>'
+  )
+}
+
+function torsoSurfaceSvg(
+  top,
+  body,
+  primaryShadow,
+  primaryHighlight,
+  skinShadow,
+  skinHighlight,
+  torsoX,
+  torsoRight,
+  torsoBottom
+) {
+  const bare =
+    idx(
+      top,
+      BRUTE_PARTS.tops.length
+    ) === 3
+
+  const wide =
+    body >= 3
+
+  if (bare) {
+    return (
+      '<g class="brute-muscle-model" pointer-events="none">'+
+        '<path d="M'+(torsoX+15)+' 191 Q160 '+(wide?175:180)+' '+(torsoRight-15)+' 191" fill="none" stroke="'+skinShadow+'" stroke-width="'+(wide?4:3.2)+'" opacity=".32" stroke-linecap="round"/>'+
+        '<path d="M160 193 L160 '+(torsoBottom-14)+'" stroke="'+skinShadow+'" stroke-width="2.8" opacity=".24" stroke-linecap="round"/>'+
+        '<path d="M'+(torsoX+26)+' 207 Q143 216 151 209 M'+(torsoRight-26)+' 207 Q177 216 169 209" fill="none" stroke="'+skinShadow+'" stroke-width="2.5" opacity=".24" stroke-linecap="round"/>'+
+        '<path d="M'+(torsoX+28)+' 230 Q144 239 151 232 M'+(torsoRight-28)+' 230 Q176 239 169 232" fill="none" stroke="'+skinShadow+'" stroke-width="2.4" opacity=".2" stroke-linecap="round"/>'+
+        '<path d="M'+(torsoX+19)+' 184 Q142 173 151 180 M'+(torsoRight-19)+' 184 Q178 173 169 180" fill="none" stroke="'+skinHighlight+'" stroke-width="3" opacity=".23" stroke-linecap="round"/>'+
+      '</g>'
+    )
+  }
+
+  return (
+    '<g class="brute-cloth-model" pointer-events="none">'+
+      '<path d="M'+(torsoX+13)+' 188 Q160 171 '+(torsoRight-13)+' 188" fill="none" stroke="'+primaryHighlight+'" stroke-width="3.5" opacity=".2" stroke-linecap="round"/>'+
+      '<path d="M'+(torsoX+19)+' 207 Q'+(torsoX+31)+' 220 '+(torsoX+25)+' 238 M'+(torsoRight-19)+' 207 Q'+(torsoRight-31)+' 220 '+(torsoRight-25)+' 238" fill="none" stroke="'+primaryShadow+'" stroke-width="2.6" opacity=".24" stroke-linecap="round"/>'+
+      '<path d="M160 202 Q154 226 159 '+(torsoBottom-14)+'" fill="none" stroke="'+primaryShadow+'" stroke-width="2.2" opacity=".18" stroke-linecap="round"/>'+
+      '<path d="M'+(torsoX+25)+' '+(torsoBottom-17)+' Q160 '+(torsoBottom-9)+' '+(torsoRight-25)+' '+(torsoBottom-17)+'" fill="none" stroke="'+primaryHighlight+'" stroke-width="2.4" opacity=".16" stroke-linecap="round"/>'+
+    '</g>'
+  )
+}
+
+function bottomSurfaceSvg(
+  primaryHighlight,
+  primaryShadow,
+  secondaryHighlight
+) {
+  return (
+    '<g class="brute-bottom-model" pointer-events="none">'+
+      '<path d="M121 290 Q136 299 150 294 M170 294 Q184 299 199 290" fill="none" stroke="'+secondaryHighlight+'" stroke-width="2.5" opacity=".24" stroke-linecap="round"/>'+
+      '<path d="M128 309 Q139 315 149 311 M171 311 Q181 315 192 309" fill="none" stroke="'+primaryShadow+'" stroke-width="2.2" opacity=".22" stroke-linecap="round"/>'+
+      '<path d="M119 276 L148 276 M172 276 L201 276" stroke="'+primaryHighlight+'" stroke-width="2.2" opacity=".2" stroke-linecap="round"/>'+
+    '</g>'
+  )
+}
+
 function weaponSvg(weapon) {
   const id =
     String(
@@ -470,27 +553,67 @@ function weaponSvg(weapon) {
   }
 
   if (id === 'olympic_bar') {
-    return '<g class="brute-weapon-shape" transform="rotate(-28)"><rect x="-7" y="-80" width="14" height="160" rx="5" fill="#aeb7c3" stroke="'+stroke+'" stroke-width="4"/><rect x="-21" y="-72" width="42" height="12" rx="4" fill="#505866" stroke="'+stroke+'" stroke-width="4"/><rect x="-21" y="60" width="42" height="12" rx="4" fill="#505866" stroke="'+stroke+'" stroke-width="4"/></g>'
+    return '<g class="brute-weapon-shape" transform="rotate(-28)">'+
+      '<rect x="-7" y="-80" width="14" height="160" rx="5" fill="#aeb7c3" stroke="'+stroke+'" stroke-width="4"/>'+
+      '<path d="M-2 -72 V72" stroke="#e8edf2" stroke-width="3" opacity=".55"/>'+
+      '<g stroke="#626b78" stroke-width="2.2" opacity=".72"><path d="M-7 -28 H7"/><path d="M-7 -20 H7"/><path d="M-7 -12 H7"/><path d="M-7 12 H7"/><path d="M-7 20 H7"/><path d="M-7 28 H7"/></g>'+
+      '<rect x="-24" y="-74" width="48" height="13" rx="4" fill="#4a5360" stroke="'+stroke+'" stroke-width="4"/>'+
+      '<rect x="-24" y="61" width="48" height="13" rx="4" fill="#4a5360" stroke="'+stroke+'" stroke-width="4"/>'+
+      '<rect x="-18" y="-70" width="36" height="4" rx="2" fill="#7b8593" opacity=".7"/>'+
+      '<rect x="-18" y="65" width="36" height="4" rx="2" fill="#7b8593" opacity=".7"/>'+
+    '</g>'
   }
 
   if (id === 'kettlebell') {
-    return '<g class="brute-weapon-shape"><path d="M-17 -19 Q-17 -43 0 -43 Q17 -43 17 -19" fill="none" stroke="'+stroke+'" stroke-width="8"/><path d="M-28 -9 Q0 -25 28 -9 L23 32 Q0 50 -23 32Z" fill="#454c58" stroke="'+stroke+'" stroke-width="5"/><circle cx="0" cy="14" r="11" fill="#7b8492" opacity=".55"/></g>'
+    return '<g class="brute-weapon-shape">'+
+      '<path d="M-18 -17 Q-18 -45 0 -45 Q18 -45 18 -17" fill="none" stroke="'+stroke+'" stroke-width="9"/>'+
+      '<path d="M-14 -18 Q-14 -38 0 -38 Q14 -38 14 -18" fill="none" stroke="#747d88" stroke-width="4" opacity=".75"/>'+
+      '<path d="M-30 -8 Q0 -27 30 -8 L24 33 Q0 52 -24 33Z" fill="#414955" stroke="'+stroke+'" stroke-width="5"/>'+
+      '<path d="M-21 -1 Q0 -14 21 -1" fill="none" stroke="#6d7683" stroke-width="4" opacity=".7"/>'+
+      '<ellipse cx="-7" cy="7" rx="8" ry="16" fill="#8a939f" opacity=".22"/>'+
+      '<path d="M-13 29 Q0 38 13 29" fill="none" stroke="#262c34" stroke-width="3" opacity=".8"/>'+
+    '</g>'
   }
 
   if (id === 'plate20') {
-    return '<g class="brute-weapon-shape"><circle r="34" fill="#2d3441" stroke="'+stroke+'" stroke-width="5"/><circle r="15" fill="#c4ccd5" stroke="'+stroke+'" stroke-width="4"/><path d="M-19 -21 A29 29 0 0 1 19 -21" fill="none" stroke="#606a79" stroke-width="5"/></g>'
+    return '<g class="brute-weapon-shape">'+
+      '<circle r="35" fill="#29313d" stroke="'+stroke+'" stroke-width="5"/>'+
+      '<circle r="28" fill="none" stroke="#515c69" stroke-width="3"/>'+
+      '<circle r="15" fill="#c4ccd5" stroke="'+stroke+'" stroke-width="4"/>'+
+      '<circle r="8" fill="#6b7480" stroke="#252b31" stroke-width="3"/>'+
+      '<path d="M-21 -22 A30 30 0 0 1 20 -22" fill="none" stroke="#788392" stroke-width="4" opacity=".75"/>'+
+      '<path d="M-22 20 A30 30 0 0 0 21 20" fill="none" stroke="#171c23" stroke-width="4" opacity=".7"/>'+
+      '<text x="0" y="-19" text-anchor="middle" fill="#9aa4b0" font-size="8" font-weight="900">20</text>'+
+    '</g>'
   }
 
   if (id === 'belt') {
-    return '<g class="brute-weapon-shape" transform="rotate(-18)"><path d="M-10 -72 Q18 -23 5 66" fill="none" stroke="#633c24" stroke-width="14" stroke-linecap="round"/><rect x="-17" y="-11" width="30" height="23" rx="4" fill="#d3a73b" stroke="'+stroke+'" stroke-width="4"/></g>'
+    return '<g class="brute-weapon-shape" transform="rotate(-18)">'+
+      '<path d="M-10 -72 Q18 -23 5 66" fill="none" stroke="#603923" stroke-width="15" stroke-linecap="round"/>'+
+      '<path d="M-7 -69 Q19 -22 8 62" fill="none" stroke="#9d6845" stroke-width="4" stroke-linecap="round" opacity=".68"/>'+
+      '<path d="M-5 -60 Q16 -21 8 55" fill="none" stroke="#39241a" stroke-width="2" stroke-dasharray="5 6" opacity=".6"/>'+
+      '<rect x="-18" y="-12" width="32" height="25" rx="4" fill="#cf9d34" stroke="'+stroke+'" stroke-width="4"/>'+
+      '<rect x="-10" y="-5" width="16" height="11" rx="2" fill="none" stroke="#7d5c1f" stroke-width="3"/>'+
+    '</g>'
   }
 
   if (id === 'chalk') {
-    return '<g class="brute-weapon-shape"><rect x="-24" y="-28" width="48" height="55" rx="8" fill="#f1efe8" stroke="'+stroke+'" stroke-width="5"/><path d="M-19 -12 Q0 -21 19 -12" fill="none" stroke="#cbc9c2" stroke-width="4"/><g fill="#fff" opacity=".8"><circle cx="29" cy="-19" r="6"/><circle cx="36" cy="-5" r="4"/><circle cx="27" cy="7" r="5"/></g></g>'
+    return '<g class="brute-weapon-shape">'+
+      '<rect x="-25" y="-29" width="50" height="57" rx="8" fill="#f0eee6" stroke="'+stroke+'" stroke-width="5"/>'+
+      '<path d="M-20 -12 Q0 -21 20 -12" fill="none" stroke="#c8c5bc" stroke-width="4"/>'+
+      '<path d="M-17 14 Q0 20 17 14" fill="none" stroke="#d8d4ca" stroke-width="3"/>'+
+      '<path d="M-16 -24 H16" stroke="#ffffff" stroke-width="3" opacity=".7"/>'+
+      '<g fill="#fff" opacity=".82"><circle cx="29" cy="-19" r="6"/><circle cx="36" cy="-5" r="4"/><circle cx="27" cy="7" r="5"/><circle cx="-31" cy="-8" r="3.5"/></g>'+
+    '</g>'
   }
 
   if (id === 'straps') {
-    return '<g class="brute-weapon-shape"><path d="M0 -62 Q31 -31 8 5 Q-14 39 19 65" fill="none" stroke="#5b3a2b" stroke-width="12" stroke-linecap="round"/><path d="M-4 -61 Q-33 -31 -9 4 Q13 39 -20 64" fill="none" stroke="#9a6549" stroke-width="7" stroke-linecap="round"/></g>'
+    return '<g class="brute-weapon-shape">'+
+      '<path d="M0 -62 Q31 -31 8 5 Q-14 39 19 65" fill="none" stroke="#553529" stroke-width="13" stroke-linecap="round"/>'+
+      '<path d="M-4 -61 Q-33 -31 -9 4 Q13 39 -20 64" fill="none" stroke="#8f6048" stroke-width="8" stroke-linecap="round"/>'+
+      '<path d="M2 -58 Q26 -29 5 4 Q-12 36 16 61" fill="none" stroke="#b17a5b" stroke-width="2.5" stroke-dasharray="4 5" opacity=".75"/>'+
+      '<path d="M-6 -57 Q-29 -30 -7 4 Q11 35 -17 60" fill="none" stroke="#c18c6c" stroke-width="2.2" stroke-dasharray="4 5" opacity=".7"/>'+
+    '</g>'
   }
 
   return '<circle r="24" fill="#777" stroke="'+stroke+'" stroke-width="5"/>'
@@ -880,6 +1003,8 @@ export function renderBruteSvg(
           '<path d="M'+(armLeftX+1)+' 188 Q'+(armLeftX-8)+' 202 '+(armLeftX-6)+' 208" fill="none" stroke="'+skinHighlight+'" stroke-width="3" stroke-linecap="round" opacity=".28"/>'+
           '<circle cx="'+fightLeftFistX+'" cy="172" r="'+fightFistRadius+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
           '<path d="M'+(fightLeftFistX-8)+' 170 Q'+fightLeftFistX+' 164 '+(fightLeftFistX+8)+' 170" fill="none" stroke="'+skinShadow+'" stroke-width="2.6" opacity=".45"/>'+
+          '<path d="M'+(fightLeftFistX-10)+' 176 Q'+fightLeftFistX+' 181 '+(fightLeftFistX+10)+' 176" fill="none" stroke="'+secondary+'" stroke-width="5.5" opacity=".92" stroke-linecap="round"/>'+
+          '<path d="M'+(fightLeftFistX-8)+' 168 L'+(fightLeftFistX-3)+' 166 M'+fightLeftFistX+' 166 L'+(fightLeftFistX+4)+' 165 M'+(fightLeftFistX+7)+' 167 L'+(fightLeftFistX+10)+' 168" stroke="'+skinHighlight+'" stroke-width="2" opacity=".42" stroke-linecap="round"/>'+
         '</g>'
       : '<g class="brute-limb brute-arm brute-arm-left" data-brute-part="arm-left">'+
           '<path d="M'+armLeftX+' 187 Q'+(armLeftX-38-metrics.armW*.15)+' 192 '+(armLeftX-31)+' 238 Q'+(armLeftX-23)+' 261 '+(armLeftX-9)+' 249 L'+(armLeftX+metrics.armW)+' 204Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
@@ -895,6 +1020,8 @@ export function renderBruteSvg(
           '<path d="M'+(armRightX+2)+' 188 Q'+(armRightX+17)+' 197 '+(armRightX+17)+' 205" fill="none" stroke="'+skinHighlight+'" stroke-width="3" stroke-linecap="round" opacity=".28"/>'+
           '<circle cx="'+fightRightFistX+'" cy="171" r="'+fightFistRadius+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
           '<path d="M'+(fightRightFistX-8)+' 169 Q'+fightRightFistX+' 163 '+(fightRightFistX+8)+' 169" fill="none" stroke="'+skinShadow+'" stroke-width="2.6" opacity=".45"/>'+
+          '<path d="M'+(fightRightFistX-10)+' 175 Q'+fightRightFistX+' 180 '+(fightRightFistX+10)+' 175" fill="none" stroke="'+primary+'" stroke-width="5.5" opacity=".92" stroke-linecap="round"/>'+
+          '<path d="M'+(fightRightFistX-8)+' 167 L'+(fightRightFistX-3)+' 165 M'+fightRightFistX+' 165 L'+(fightRightFistX+4)+' 164 M'+(fightRightFistX+7)+' 166 L'+(fightRightFistX+10)+' 167" stroke="'+skinHighlight+'" stroke-width="2" opacity=".42" stroke-linecap="round"/>'+
         '</g>'
       : '<g class="brute-limb brute-arm brute-arm-right" data-brute-part="arm-right">'+
           '<path d="M'+armRightX+' 187 Q'+(armRightX+38+metrics.armW*.15)+' 192 '+(armRightX+31)+' 238 Q'+(armRightX+23)+' 261 '+(armRightX+9)+' 249 L'+(armRightX-metrics.armW)+' 204Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
@@ -908,6 +1035,8 @@ export function renderBruteSvg(
           '<path d="M'+(center-metrics.thighW-1)+' 279 L'+(center-7)+' 282 L'+(center-26)+' 334 L'+(center-metrics.thighW-31)+' 343Z" fill="'+skin+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
           '<path d="M'+(center-metrics.thighW-38)+' 337 Q'+(center-metrics.thighW-12)+' 330 '+(center-22)+' 335 L'+(center-17)+' 352 L'+(center-metrics.thighW-46)+' 356 Q'+(center-metrics.thighW-54)+' 347 '+(center-metrics.thighW-38)+' 337Z" fill="'+shoe+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
           '<path d="M'+(center-metrics.thighW-11)+' 292 L'+(center-19)+' 327" fill="none" stroke="'+skinHighlight+'" stroke-width="3" opacity=".22" stroke-linecap="round"/>'+
+          '<path d="M'+(center-31)+' 337 Q'+(center-43)+' 344 '+(center-54)+' 346" fill="none" stroke="'+primaryShadow+'" stroke-width="3" opacity=".42" stroke-linecap="round"/>'+
+          '<path d="M'+(center-37)+' 351 L'+(center-57)+' 354" stroke="#171717" stroke-width="3" opacity=".75" stroke-linecap="round"/>'+
         '</g>'
       : '<g class="brute-limb brute-leg brute-leg-left" data-brute-part="leg-left">'+
           '<path d="M'+(center-metrics.thighW-4)+' 282 L'+(center-5)+' 282 L'+(center-10)+' 341 L'+(center-metrics.thighW-7)+' 341Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
@@ -920,13 +1049,15 @@ export function renderBruteSvg(
           '<path d="M'+(center+4)+' 282 L'+(center+metrics.thighW+5)+' 278 L'+(center+metrics.thighW+30)+' 330 L'+(center+21)+' 339Z" fill="'+skin+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
           '<path d="M'+(center+15)+' 334 Q'+(center+metrics.thighW+13)+' 325 '+(center+metrics.thighW+41)+' 335 Q'+(center+metrics.thighW+53)+' 344 '+(center+metrics.thighW+45)+' 354 L'+(center+18)+' 352Z" fill="'+shoe+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
           '<path d="M'+(center+13)+' 292 L'+(center+metrics.thighW+22)+' 324" fill="none" stroke="'+skinHighlight+'" stroke-width="3" opacity=".22" stroke-linecap="round"/>'+
+          '<path d="M'+(center+31)+' 337 Q'+(center+43)+' 344 '+(center+54)+' 346" fill="none" stroke="'+primaryShadow+'" stroke-width="3" opacity=".42" stroke-linecap="round"/>'+
+          '<path d="M'+(center+37)+' 351 L'+(center+57)+' 354" stroke="#171717" stroke-width="3" opacity=".75" stroke-linecap="round"/>'+
         '</g>'
       : '<g class="brute-limb brute-leg brute-leg-right" data-brute-part="leg-right">'+
           '<path d="M'+(center+5)+' 282 L'+(center+metrics.thighW+4)+' 282 L'+(center+metrics.thighW+7)+' 341 L'+(center+10)+' 341Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
           '<path d="M'+(center+8)+' 336 Q'+(center+metrics.thighW-4)+' 325 '+(center+metrics.thighW+15)+' 335 Q'+(center+metrics.thighW+27)+' 344 '+(center+metrics.thighW+20)+' 354 L'+(center+9)+' 354Z" fill="'+shoe+'" stroke="#171717" stroke-width="5"/>'+
         '</g>'
 
-  return '<svg class="ga-brute-svg '+String(options.className || '')+'" data-side="'+String(options.side || 'right')+'" data-body="'+bodyId+'" viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+label+'">'+
+  return '<svg class="ga-brute-svg chara-v3 '+String(options.className || '')+'" data-side="'+String(options.side || 'right')+'" data-body="'+bodyId+'" viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+label+'">'+
     '<g class="brute-stage" transform="'+mirror+'">'+
       '<ellipse class="brute-shadow" cx="160" cy="355" rx="'+(76+bodyId*4)+'" ry="14" fill="rgba(0,0,0,.2)"/>'+
 
@@ -942,6 +1073,11 @@ export function renderBruteSvg(
           bodyId
         )+
         '<path d="M119 279 L150 279 M170 279 L201 279" stroke="'+secondaryHighlight+'" stroke-width="3.5" stroke-linecap="round" opacity=".34"/>'+
+        bottomSurfaceSvg(
+          primaryHighlight,
+          primaryShadow,
+          secondaryHighlight
+        )+
       '</g>'+
 
       armLeftMarkup+
@@ -961,6 +1097,17 @@ export function renderBruteSvg(
           skin,
           torsoX,
           metrics.shoulder,
+          torsoBottom
+        )+
+        torsoSurfaceSvg(
+          a.top,
+          bodyId,
+          primaryShadow,
+          primaryHighlight,
+          skinShadow,
+          skinHighlight,
+          torsoX,
+          torsoRight,
           torsoBottom
         )+
         (
@@ -985,6 +1132,13 @@ export function renderBruteSvg(
         '<path d="M126 77 Q146 61 166 62" fill="none" stroke="'+skinHighlight+'" stroke-width="4" stroke-linecap="round" opacity=".28"/>'+
         '<path d="M112 106 Q99 100 101 118 Q105 132 117 128 M208 106 Q221 100 219 118 Q215 132 203 128" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
         '<path d="M105 113 Q111 110 115 119 M215 113 Q209 110 205 119" fill="none" stroke="'+skinShadow+'" stroke-width="2.5" opacity=".4"/>'+
+        faceModelSvg(
+          bodyId,
+          hair,
+          skinShadow,
+          skinHighlight,
+          fightModel
+        )+
         '<g data-brute-part="eyes">'+
           eyesSvg(a.eyes)+
         '</g>'+
