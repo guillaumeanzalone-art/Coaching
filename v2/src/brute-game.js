@@ -4498,7 +4498,8 @@ export async function mountBruteGame(root, options = {}) {
       'finisher',
       'impact-heavy',
       'impact-flexible',
-      'impact-ranged'
+      'impact-ranged',
+      'stat-strength'
     )
   }
 
@@ -5539,10 +5540,10 @@ export async function mountBruteGame(root, options = {}) {
           Math.floor(
             num(
               event.impactVariant,
-              num(event.damage,0) % 3
+              num(event.damage,0) % 5
             )
           )
-        ) % 3
+        ) % 5
 
       const hitMotion = [
         {
@@ -5556,6 +5557,14 @@ export async function mountBruteGame(root, options = {}) {
         {
           y:'-6px',
           tilt:'-1deg',
+        },
+        {
+          y:'5px',
+          tilt:'6deg',
+        },
+        {
+          y:'-9px',
+          tilt:'-7deg',
         },
       ][impactVariant]
 
@@ -5868,23 +5877,84 @@ export async function mountBruteGame(root, options = {}) {
   }
 
   function renderFightSummary(tl) {
-    const left = tl.summary?.left || {}
-    const right = tl.summary?.right || {}
+    const left =
+      tl.summary?.left ||
+      {}
 
-    const side = (title,data) =>
-      '<div class="brute-fight-summary-side"><h4>'+esc(title)+'</h4><div class="brute-fight-summary-stats">'+
-        '<span>Dégâts<b>'+num(data.damage)+'</b></span>'+
-        '<span>Critiques<b>'+num(data.crits)+'</b></span>'+
-        '<span>Esquives<b>'+num(data.dodges)+'</b></span>'+
-        '<span>Blocks<b>'+num(data.blocks)+'</b></span>'+
-        '<span>Contres<b>'+num(data.counters)+'</b></span>'+
-        '<span>Combos<b>'+num(data.combos)+'</b></span>'+
-      '</div></div>'
+    const right =
+      tl.summary?.right ||
+      {}
 
-    return '<div class="brute-fight-summary">'+
-      side(tl.left.name,left)+
-      side(tl.right.name,right)+
-    '</div>'
+    const gradeFor =
+      data => {
+        const score =
+          num(data.damage) +
+          num(data.crits) * 22 +
+          num(data.dodges) * 10 +
+          num(data.blocks) * 9 +
+          num(data.counters) * 13 +
+          num(data.combos) * 18 +
+          num(data.disarms) * 15
+
+        if (score >= 280) return 'S'
+        if (score >= 200) return 'A'
+        if (score >= 135) return 'B'
+        if (score >= 85) return 'C'
+        return 'D'
+      }
+
+    const side = (
+      title,
+      data,
+      sideKey
+    ) => {
+      const grade =
+        gradeFor(
+          data
+        )
+
+      const maxCombo =
+        Math.max(
+          1,
+          fightTelemetry
+            ?.maxCombo?.[
+              sideKey
+            ] ||
+          num(data.combos) + 1
+        )
+
+      return (
+        '<div class="brute-fight-summary-side v3">'+
+          '<div class="brute-fight-grade grade-'+grade.toLowerCase()+'">'+grade+'</div>'+
+          '<div class="brute-fight-summary-copy">'+
+            '<h4>'+esc(title)+'</h4>'+
+            '<div class="brute-fight-summary-stats">'+
+              '<span>Dégâts<b>'+num(data.damage)+'</b></span>'+
+              '<span>Critiques<b>'+num(data.crits)+'</b></span>'+
+              '<span>Esquives<b>'+num(data.dodges)+'</b></span>'+
+              '<span>Blocks<b>'+num(data.blocks)+'</b></span>'+
+              '<span>Contres<b>'+num(data.counters)+'</b></span>'+
+              '<span>Meilleur combo<b>x'+maxCombo+'</b></span>'+
+            '</div>'+
+          '</div>'+
+        '</div>'
+      )
+    }
+
+    return (
+      '<div class="brute-fight-summary v3">'+
+        side(
+          tl.left.name,
+          left,
+          'left'
+        )+
+        side(
+          tl.right.name,
+          right,
+          'right'
+        )+
+      '</div>'
+    )
   }
 
   function finishFightPlayback(tl) {
@@ -5984,13 +6054,10 @@ export async function mountBruteGame(root, options = {}) {
 
     result.innerHTML =
       '<div class="brute-panel brute-xp-result">'+
-        '<h2 style="margin:0">'+
-          (
-            won
-              ? '🏆 VICTOIRE'
-              : '💀 DÉFAITE'
-          )+
-        '</h2>'+
+        '<div class="brute-result-title '+(won?'win':'loss')+'">'+
+          '<span class="brute-result-glyph">'+uiGlyph(won?'ranking':'weapon')+'</span>'+
+          '<h2>'+(won?'VICTOIRE':'DÉFAITE')+'</h2>'+
+        '</div>'+
         '<p style="color:#969bb1;font-size:10px">'+
           (
             won
@@ -6000,10 +6067,10 @@ export async function mountBruteGame(root, options = {}) {
         '</p>'+
         (
           practice
-            ? '<div class="brute-xp-gain">ENTRAÎNEMENT · 0 XP</div>'
+            ? '<div class="brute-xp-gain v3">ENTRAÎNEMENT · 0 XP</div>'
             : replayOnly
-              ? '<div class="brute-xp-gain">↻ Replay · XP déjà attribuée</div>'
-              : '<div class="brute-xp-gain">'+(pve ? '🏋️ OPENPOWER PVE · ' : '✨ ')+'+'+gained+' XP</div>'
+              ? '<div class="brute-xp-gain v3">REPLAY · XP DÉJÀ ATTRIBUÉE</div>'
+              : '<div class="brute-xp-gain v3"><span>EXPÉRIENCE</span><b>+'+gained+' XP</b><small>'+(pve?'OPENPOWER PVE':'DUEL')+'</small></div>'
         )+
         (
           pve &&
@@ -6015,10 +6082,10 @@ export async function mountBruteGame(root, options = {}) {
         (
           xp && !practice && !replayOnly
             ? '<div style="display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:9px auto 0;max-width:620px">'+
-                '<span class="brute-activity-pill">Base +'+num(xp.base_xp,0)+'</span>'+
-                '<span class="brute-activity-pill">🚶 Steps +'+num(xp.steps_bonus,0)+'</span>'+
-                '<span class="brute-activity-pill">🌙 Sommeil +'+num(xp.sleep_bonus,0)+'</span>'+
-                '<span class="brute-activity-pill">🏋️ Training +'+num(xp.training_bonus,0)+'</span>'+
+                '<span class="brute-activity-pill">BASE +'+num(xp.base_xp,0)+'</span>'+
+                '<span class="brute-activity-pill">STEPS +'+num(xp.steps_bonus,0)+'</span>'+
+                '<span class="brute-activity-pill">SOMMEIL +'+num(xp.sleep_bonus,0)+'</span>'+
+                '<span class="brute-activity-pill">TRAINING +'+num(xp.training_bonus,0)+'</span>'+
               '</div>'
             : ''
         )+
