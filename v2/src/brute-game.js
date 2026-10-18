@@ -2840,6 +2840,45 @@ function ensureStyles() {
 @keyframes bruteVignetteFlash{0%,100%{filter:none}35%{filter:brightness(1.45) saturate(1.35)}}
 
 /* ================================================================
+   GA BRUTE · INFORMATION ARCHITECTURE V13
+   Selector search, duel recommendations, build fit, ranking and recovery
+   ================================================================ */
+.brute-selector-v2{max-width:820px;margin:0 auto}
+.brute-selector-v2-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding-bottom:13px;border-bottom:1px solid rgba(255,255,255,.07)}
+.brute-selector-v2-head small{color:#8f98b5;font-size:8px;font-weight:1000;letter-spacing:.13em}
+.brute-selector-v2-head h2{margin:4px 0 3px;font-size:24px}
+.brute-selector-v2-head p{margin:0;color:#858da9;font-size:9px;line-height:1.45}
+.brute-selector-tools{display:flex;align-items:center;gap:9px;margin:13px 0 10px}
+.brute-selector-search{flex:1;min-width:0;display:grid;grid-template-columns:24px minmax(0,1fr);gap:7px;align-items:center;min-height:42px;padding:0 11px;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.035)}
+.brute-selector-search>span{width:19px;height:19px;color:#7e87a7}
+.brute-selector-search input{width:100%;border:0;outline:0;background:transparent;color:#f4f5fa;font:inherit;font-size:10px;font-weight:800}
+.brute-selector-search input::placeholder{color:#68718d}
+.brute-selector-count{flex:none;padding:7px 9px;border:1px solid rgba(255,255,255,.07);border-radius:999px;color:#838ba7;font-size:7px;font-weight:1000;letter-spacing:.08em}
+.brute-selector-list .brute-row{min-height:62px;grid-template-columns:auto minmax(0,1fr) 22px;text-align:left}
+.brute-selector-copy b{font-size:11px}.brute-selector-copy small{font-size:7.5px}.brute-selector-arrow{color:#8d95af;font-size:20px;text-align:center}.brute-selector-list .brute-row[hidden]{display:none!important}
+
+.brute-screen-intro{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;padding:12px 13px;border:2px solid rgba(93,48,24,.28);border-radius:11px;background:rgba(255,240,191,.58);color:#60341b}
+.brute-screen-intro>div:first-child{min-width:0}.brute-screen-intro small{color:#895a35;font-size:6.5px;font-weight:1000;letter-spacing:.11em}.brute-screen-intro h2{margin:2px 0;font-size:18px}.brute-screen-intro p{margin:0;color:#80522f;font-size:8px;font-weight:800;line-height:1.35}
+.brute-screen-intro-kpis{flex:none;display:grid;grid-template-columns:repeat(3,minmax(72px,1fr));gap:5px}.brute-screen-intro-kpis span{min-width:72px;padding:7px 8px;border:1px solid rgba(97,50,25,.24);border-radius:8px;background:rgba(255,249,218,.55);text-align:center}.brute-screen-intro-kpis small{font-size:5.5px}.brute-screen-intro-kpis b{display:block;margin-top:1px;font-size:14px}
+.brute-duel-poster{transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}.brute-duel-poster:hover{transform:translateY(-4px) rotate(0);box-shadow:2px 7px 0 rgba(79,42,20,.18),0 16px 28px rgba(75,39,17,.18)}
+.brute-duel-poster.recommended{border-color:#b87c28;box-shadow:0 0 0 3px rgba(255,205,72,.23),2px 5px 0 rgba(79,42,20,.2),0 12px 25px rgba(117,70,23,.18)}
+.brute-duel-recommended{position:absolute;z-index:4;left:50%;top:-9px;transform:translateX(-50%);padding:3px 8px;border:2px solid #6c3c1d;border-radius:999px;background:linear-gradient(#ffe87a,#d49a33);color:#593018;font-size:5.5px;font-weight:1000;letter-spacing:.08em;white-space:nowrap}
+.brute-duel-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:7px 0 8px}.brute-duel-stats span{display:flex;align-items:center;justify-content:center;gap:2px;padding:3px;border-radius:5px;background:rgba(255,247,210,.38)}.brute-duel-stats .ga-ui-glyph{width:11px;height:11px}.brute-duel-stats b{font-size:7px}.brute-duel-poster.recommended .brute-duel-fight{background:linear-gradient(#dc8d37,#93451f);box-shadow:0 3px 0 #4b2412,0 0 14px rgba(231,160,46,.24)}
+
+.brute-pve-readiness{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center;margin:8px 0 12px;padding:9px;border:2px solid rgba(96,48,24,.28);border-radius:9px;background:rgba(255,245,206,.5)}.brute-pve-readiness>span{width:30px;height:30px;padding:5px;border-radius:8px;background:rgba(96,48,24,.08)}.brute-pve-readiness small{display:block;font-size:5.5px;font-weight:1000;letter-spacing:.1em}.brute-pve-readiness b{display:block;margin-top:1px;font-size:9px}.brute-pve-readiness.ready{border-color:#68824a;background:rgba(228,238,168,.54)}.brute-pve-readiness.low{border-color:#a06043;background:rgba(238,189,142,.5)}
+
+.brute-armory-build-summary{width:min(620px,100%);display:grid;grid-template-columns:70px minmax(0,1fr) 42px;gap:10px;align-items:center;margin-bottom:13px;padding:10px 12px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:linear-gradient(120deg,rgba(255,255,255,.045),rgba(255,255,255,.018))}
+.brute-armory-build-summary .score{display:flex;align-items:baseline;justify-content:center;min-height:55px;border-radius:10px;background:rgba(0,0,0,.2)}.brute-armory-build-summary .score b{font-size:27px}.brute-armory-build-summary .score small{font-size:7px;color:#8990aa}.brute-armory-build-summary span{color:#838ba8;font-size:6px;font-weight:1000;letter-spacing:.1em}.brute-armory-build-summary strong{display:block;margin:2px 0;font-size:11px}.brute-armory-build-summary small{color:#868ea9;font-size:7px}.brute-armory-build-summary .glyph{width:38px;height:38px}.brute-armory-build-summary.mastery-great{border-color:rgba(255,207,78,.34);box-shadow:0 0 20px rgba(255,190,55,.08)}.brute-armory-build-summary.mastery-good{border-color:rgba(84,194,155,.28)}.brute-armory-build-summary.mastery-mid{border-color:rgba(92,147,216,.22)}.brute-armory-build-summary.mastery-low{border-color:rgba(216,104,74,.26)}
+
+.brute-ranking-v2-header{display:grid;grid-template-columns:44px 34px minmax(0,1fr) 70px 65px 65px;gap:6px;align-items:center;min-height:32px;padding:5px 9px;border-bottom:2px solid rgba(98,52,26,.28);background:rgba(105,57,28,.12);color:#7a4927;font-size:5.5px;font-weight:1000;letter-spacing:.08em}.brute-ranking-v2-header span:nth-child(n+4){text-align:right}
+.brute-ranking-v2-row.self{position:relative}.brute-ranking-v2-row.self:after{content:"TOI";position:absolute;right:7px;top:4px;padding:2px 4px;border-radius:999px;background:#855327;color:#ffe7a4;font-size:4.5px;font-weight:1000}
+
+.brute-sleep-v2-progress{position:relative;z-index:3;width:min(360px,72%);margin-top:11px}.brute-sleep-v2-progress header{display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;color:#c5bbdf;font-size:6.5px;font-weight:1000}.brute-sleep-v2-progress>div{position:relative;height:13px;padding:2px;overflow:hidden;border:1px solid rgba(175,159,215,.4);border-radius:999px;background:rgba(8,8,21,.45)}.brute-sleep-v2-progress i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6257a8,#9a88d4,#e4d77b)}.brute-sleep-v2-progress em{position:absolute;inset:0;display:grid;place-items:center;color:#fff5cd;font-size:5.5px;font-style:normal;font-weight:1000}
+.brute-sleep-benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0 12px}.brute-sleep-benefits span{padding:8px 6px;border:1px solid rgba(255,255,255,.08);border-radius:9px;background:rgba(255,255,255,.035);text-align:center}.brute-sleep-benefits small{display:block;color:#8f87b1;font-size:5.5px;font-weight:1000;letter-spacing:.06em}.brute-sleep-benefits b{display:block;margin-top:2px;color:#efe8ff;font-size:13px}.brute-sleep-section-title{margin:14px 0 7px;color:#b3a8d0;font-size:7px;font-weight:1000;letter-spacing:.11em}
+@media(max-width:720px){.brute-selector-v2{padding:12px}.brute-selector-v2-head h2{font-size:20px}.brute-selector-tools{align-items:stretch}.brute-selector-count{display:none}.brute-screen-intro{align-items:flex-start;flex-direction:column}.brute-screen-intro-kpis{width:100%;grid-template-columns:repeat(3,1fr)}.brute-screen-intro-kpis span{min-width:0}.brute-armory-build-summary{grid-template-columns:58px minmax(0,1fr) 34px;padding:8px}.brute-armory-build-summary .score b{font-size:22px}.brute-sleep-benefits{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:620px){.brute-ranking-v2-header{grid-template-columns:34px 26px minmax(0,1fr) 55px}.brute-ranking-v2-header span:nth-child(n+5){display:none}.brute-sleep-v2-progress{width:80%}.brute-sleep-benefits{grid-template-columns:1fr}}
+
+/* ================================================================
    GA BRUTE · MENU / ERGONOMY V12
    Clearer hierarchy, readable status, action priority and mobile dock
    ================================================================ */
@@ -4628,12 +4667,16 @@ export async function mountBruteGame(root, options = {}) {
           }
         )
 
-    return '<div class="brute-panel brute-pad">'+
-      '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'+
-        '<div><small style="color:#858ca8;font-weight:900">IDLE TRAINING · GA BRUTE</small><h2>Choisir un athlète</h2><p style="margin:4px 0 13px;color:#747c98;font-size:9px">Sommeil · steps · séances · personnage · PvE · Duel</p></div>'+
-        '<button class="brute-mini" data-brute-music-toggle>'+(musicEnabled ? 'MUSIQUE' : 'MUET')+'</button>'+
+    return '<div class="brute-panel brute-pad brute-selector-v2">'+
+      '<div class="brute-selector-v2-head">'+
+        '<div><small>GA BRUTE · PROFILS</small><h2>Choisir un athlète</h2><p>Ouvre sa brute, son activité, sa progression et ses combats.</p></div>'+
+        '<button class="brute-mini brute-nav-button" data-brute-music-toggle>'+uiGlyph('sound','brute-nav-glyph')+'<span>'+(musicEnabled ? 'SON' : 'MUET')+'</span></button>'+
       '</div>'+
-      '<div class="brute-list">'+
+      '<div class="brute-selector-tools">'+
+        '<label class="brute-selector-search"><span>'+uiGlyph('profile','brute-selector-search-glyph')+'</span><input type="search" data-brute-athlete-search placeholder="Rechercher un athlète…" autocomplete="off"></label>'+
+        '<span class="brute-selector-count" data-brute-athlete-count>'+ordered.length+' PROFILS</span>'+
+      '</div>'+
+      '<div class="brute-list brute-selector-list">'+
         ordered.map(a => {
           const slug =
             athleteSlug(a)
@@ -4643,10 +4686,10 @@ export async function mountBruteGame(root, options = {}) {
             slug.toLowerCase() ===
               preferred
 
-          return '<button class="brute-row brute-secondary '+(mine?'brute-row-self':'')+'" data-brute-select="'+esc(slug)+'">'+
+          return '<button class="brute-row brute-secondary '+(mine?'brute-row-self':'')+'" data-brute-select="'+esc(slug)+'" data-brute-athlete-name="'+esc(String(a.name || a.id || '').toLowerCase())+'">'+
             athleteAvatarMarkup(a)+
-            '<span><b>'+esc(a.name || a.id)+(mine?' <em class="brute-self-pill">MOI</em>':'')+'</b><small>'+(mine?'Ton profil · ':'')+'Ouvrir son Idle Training</small></span>'+
-            '<span>›</span>'+
+            '<span class="brute-selector-copy"><b>'+esc(a.name || a.id)+(mine?' <em class="brute-self-pill">MOI</em>':'')+'</b><small>'+(mine?'Ton profil · ':'')+'Brute · activité · progression</small></span>'+
+            '<span class="brute-selector-arrow">›</span>'+
           '</button>'
         }).join('')+
       '</div>'+
@@ -6148,12 +6191,42 @@ export async function mountBruteGame(root, options = {}) {
         return 'ÉQUILIBRÉ'
       }
 
+    const recommended =
+      opponents
+        .slice()
+        .sort(
+          (a,b) =>
+            (
+              Math.abs(num(a.level)-num(brute.level))*120 +
+              Math.abs(num(a.rating)-num(brute.rating))
+            ) -
+            (
+              Math.abs(num(b.level)-num(brute.level))*120 +
+              Math.abs(num(b.rating)-num(brute.rating))
+            )
+        )[0]
+
+    const duelAdvice =
+      num(daily.remaining,6) <= 0
+        ? 'Tu as utilisé tous tes combats du jour.'
+        : recommended
+          ? 'Adversaire conseillé : '+recommended.name+' · '+threat(recommended)
+          : 'Aucun adversaire disponible actuellement.'
+
     return (
       topBar(
         'Arène',
         'Choisis ton adversaire'
       )+
       '<section class="brute-duel-v2">'+
+        '<div class="brute-screen-intro brute-duel-intro">'+
+          '<div><small>ARÈNE PVP</small><h2>Choisis ton prochain combat</h2><p>'+esc(duelAdvice)+'</p></div>'+
+          '<div class="brute-screen-intro-kpis">'+
+            '<span><small>TON NIVEAU</small><b>'+num(brute.level,1)+'</b></span>'+
+            '<span><small>TA COTE</small><b>'+num(brute.rating,1000)+'</b></span>'+
+            '<span><small>RESTANTS</small><b>'+num(daily.remaining,6)+'/'+num(daily.limit,6)+'</b></span>'+
+          '</div>'+
+        '</div>'+
         '<header class="brute-duel-v2-head">'+
           '<div><span>COMBATS DU JOUR</span><b>'+num(daily.remaining,6)+' / '+num(daily.limit,6)+'</b><small>restants</small></div>'+
           '<button class="brute-cell-action primary random" data-brute-random-duel '+(num(daily.remaining)<=0?'disabled':'')+'>'+
@@ -6180,13 +6253,15 @@ export async function mountBruteGame(root, options = {}) {
                       : 0
 
                   return (
-                    '<article class="brute-duel-poster">'+
+                    '<article class="brute-duel-poster '+(recommended?.athlete_slug===o.athlete_slug?'recommended':'')+'">'+
+                      (recommended?.athlete_slug===o.athlete_slug?'<div class="brute-duel-recommended">RECOMMANDÉ</div>':'')+
                       '<div class="brute-duel-pin"></div>'+
                       '<span class="brute-duel-avatar custom">'+renderBruteSvg(o.appearance,{label:o.name,className:'duel-mini'})+'</span>'+
                       '<div class="brute-duel-poster-title"><b>'+esc(o.name)+'</b><small>NIV. '+num(o.level)+' · COTE '+num(o.rating)+'</small></div>'+
                       '<div class="brute-duel-threat '+threat(o).toLowerCase()+'">'+threat(o)+'</div>'+
                       '<div class="brute-duel-record"><span>'+num(o.wins)+' V</span><span>'+num(o.losses)+' D</span><span>'+ratio+'%</span></div>'+
-                      '<button class="brute-duel-fight" data-brute-duel="'+esc(o.athlete_slug)+'" '+(num(daily.remaining)<=0?'disabled':'')+'>COMBATTRE</button>'+
+                      '<div class="brute-duel-stats"><span>'+uiGlyph('strength')+'<b>'+num(o.strength)+'</b></span><span>'+uiGlyph('agility')+'<b>'+num(o.agility)+'</b></span><span>'+uiGlyph('speed')+'<b>'+num(o.speed)+'</b></span></div>'+
+                      '<button class="brute-duel-fight" data-brute-duel="'+esc(o.athlete_slug)+'" '+(num(daily.remaining)<=0?'disabled':'')+'>'+(recommended?.athlete_slug===o.athlete_slug?'COMBAT CONSEILLÉ':'COMBATTRE')+'</button>'+
                     '</article>'
                   )
                 }).join('')
@@ -6439,6 +6514,17 @@ export async function mountBruteGame(root, options = {}) {
         )
       )
 
+    const fightsAvailable =
+      Math.floor(
+        energy / 8
+      )
+
+    const energyAfter =
+      Math.max(
+        0,
+        energy - 8
+      )
+
     return (
       topBar(
         'OpenPower',
@@ -6453,13 +6539,14 @@ export async function mountBruteGame(root, options = {}) {
           '<p>Les adversaires sont construits à partir de performances FFForce présentes dans OpenPowerlifting. Plus tu montes de niveau, plus les profils deviennent dangereux.</p>'+
         '</div>'+
         '<aside class="brute-pve-v2-board">'+
-          '<div class="brute-cell-board-title">PRÉPARATION</div>'+
+          '<div class="brute-cell-board-title"><span>PRÉPARATION</span><small>AVANT D’ENTRER</small></div>'+
+          '<div class="brute-pve-readiness '+(canFight?'ready':'low')+'"><span>'+uiGlyph(canFight?'arena':'sleep')+'</span><div><small>ÉTAT</small><b>'+(canFight?'PRÊT POUR LE PVE':'ÉNERGIE TROP BASSE')+'</b></div></div>'+
           '<div class="brute-pve-v2-energy"><span class="brute-bar-label">'+uiGlyph('energy','brute-bar-glyph')+' ÉNERGIE</span><b data-brute-pve-energy>'+energy+'</b><small>/ 500</small></div>'+
           '<div class="brute-cell-bar energy"><i data-brute-energy-bar style="width:'+progress+'%"></i></div>'+
           '<div class="brute-pve-v2-rules">'+
-            '<span><b>8</b><small>énergie / combat</small></span>'+
+            '<span><b>'+fightsAvailable+'</b><small>combats possibles</small></span>'+
+            '<span><b>'+energyAfter+'</b><small>énergie après combat</small></span>'+
             '<span><b>+1</b><small>énergie / min</small></span>'+
-            '<span><b>XP</b><small>steps + sommeil + training</small></span>'+
           '</div>'+
           '<button class="brute-pve-v2-launch" data-brute-pve '+(canFight?'':'disabled')+'>'+
             (canFight ? 'ENTRER DANS LA FOSSE' : 'ÉNERGIE INSUFFISANTE')+
@@ -6478,6 +6565,30 @@ export async function mountBruteGame(root, options = {}) {
     const equippedWeapon =
       BRUTE_WEAPONS[equipped] ||
       BRUTE_WEAPONS.fists
+
+    const mastery =
+      weaponMastery(
+        brute,
+        equippedWeapon
+      )
+
+    const buildFocus =
+      equippedWeapon.category === 'heavy'
+        ? { label:'FORCE', value:num(brute.strength), icon:'strength' }
+        : equippedWeapon.category === 'flexible'
+          ? { label:'AGILITÉ + VITESSE', value:Math.round((num(brute.agility)+num(brute.speed))/2), icon:'agility' }
+          : equippedWeapon.category === 'ranged'
+            ? { label:'VITESSE + AGILITÉ', value:Math.round((num(brute.speed)+num(brute.agility))/2), icon:'speed' }
+            : { label:'VITESSE', value:num(brute.speed), icon:'speed' }
+
+    const masteryLabel =
+      mastery >= 82
+        ? 'EXCELLENTE SYNERGIE'
+        : mastery >= 65
+          ? 'BONNE SYNERGIE'
+          : mastery >= 48
+            ? 'SYNERGIE CORRECTE'
+            : 'BUILD À OPTIMISER'
 
     const metricBar = (
       label,
@@ -6587,6 +6698,11 @@ export async function mountBruteGame(root, options = {}) {
         '</aside>'+
         '<main class="brute-armory-v3-focus">'+
           '<div class="brute-armory-name">'+esc(brute.name)+' · NIV. '+num(brute.level,1)+'</div>'+
+          '<div class="brute-armory-build-summary mastery-'+(mastery>=82?'great':mastery>=65?'good':mastery>=48?'mid':'low')+'">'+
+            '<div class="score"><b>'+mastery+'</b><small>/100</small></div>'+
+            '<div><span>COMPATIBILITÉ DU BUILD</span><strong>'+masteryLabel+'</strong><small>Stat clé : '+buildFocus.label+' '+buildFocus.value+'</small></div>'+
+            '<span class="glyph">'+uiGlyph(buildFocus.icon)+'</span>'+
+          '</div>'+
           '<div class="brute-armory-v3-weapon-focus">'+
             '<div class="brute-armory-v3-weapon-orbit">'+
               renderWeaponIconSvg(
@@ -6619,7 +6735,7 @@ export async function mountBruteGame(root, options = {}) {
             metricBar('PORTÉE',num(equippedWeapon.reach,1),1.6)+
             metricBar('CRITIQUE',Math.round(num(equippedWeapon.crit)*100),12,'%')+
             metricBar('COMBO',Math.round((num(equippedWeapon.combo)+.08)*100),22)+
-            metricBar('MAÎTRISE BUILD',weaponMastery(brute,equippedWeapon),100,'%')+
+            metricBar('MAÎTRISE BUILD',mastery,100,'%')+
           '</div>'+
           '<div class="brute-armory-v3-avatar">'+
             '<div class="brute-cell-avatar-shadow"></div>'+
@@ -6656,12 +6772,47 @@ export async function mountBruteGame(root, options = {}) {
     const rest =
       roster.slice(3,100)
 
+    const myIndex =
+      roster.findIndex(
+        row =>
+          row.athlete_slug ===
+          selectedSlug
+      )
+
+    const myRank =
+      myIndex >= 0
+        ? myIndex + 1
+        : 0
+
+    const ahead =
+      myIndex > 0
+        ? roster[myIndex - 1]
+        : null
+
+    const ratingGap =
+      ahead
+        ? Math.max(
+            0,
+            num(ahead.rating) -
+            num(brute.rating) +
+            1
+          )
+        : 0
+
     return (
       topBar(
         'Classement',
         'Hall des brutes'
       )+
       '<section class="brute-ranking-v2">'+
+        '<div class="brute-screen-intro brute-ranking-intro">'+
+          '<div><small>HALL DES BRUTES</small><h2>Classement général</h2><p>'+(myRank===1?'Tu es actuellement numéro 1.':myRank>0?'Tu es #'+myRank+(ahead?' · '+ratingGap+' points pour dépasser '+ahead.name:''):'Classement en cours de chargement.')+'</p></div>'+
+          '<div class="brute-screen-intro-kpis">'+
+            '<span><small>TON RANG</small><b>'+(myRank?'#'+myRank:'—')+'</b></span>'+
+            '<span><small>TA COTE</small><b>'+num(brute.rating,1000)+'</b></span>'+
+            '<span><small>VICTOIRES</small><b>'+num(brute.wins)+'</b></span>'+
+          '</div>'+
+        '</div>'+
         '<div class="brute-ranking-v2-podium">'+
           top.map(
             (row,index) => {
@@ -6681,6 +6832,7 @@ export async function mountBruteGame(root, options = {}) {
           ).join('')+
         '</div>'+
         '<div class="brute-ranking-v2-board">'+
+          '<div class="brute-ranking-v2-header"><span>RANG</span><span></span><span>BRUTE</span><span>COTE</span><span>FOR</span><span>VIT</span></div>'+
           rest.map(
             (row,index) =>
               '<div class="brute-ranking-v2-row '+(row.athlete_slug===selectedSlug?'self':'')+'">'+
@@ -6719,6 +6871,38 @@ export async function mountBruteGame(root, options = {}) {
           )
         : 0
 
+    const totalSeconds =
+      Math.max(
+        0,
+        baseSeconds +
+        liveSeconds
+      )
+
+    const sleepHours =
+      totalSeconds / 3600
+
+    const sleepProgress =
+      Math.max(
+        0,
+        Math.min(
+          100,
+          sleepHours / 8 * 100
+        )
+      )
+
+    const remainingHours =
+      Math.max(
+        0,
+        8 - sleepHours
+      )
+
+    const sleepState =
+      sleepProgress >= 100
+        ? 'OBJECTIF ATTEINT'
+        : active
+          ? 'RÉCUPÉRATION EN COURS'
+          : 'RÉCUPÉRATION DISPONIBLE'
+
     return (
       topBar(
         'Sommeil',
@@ -6738,16 +6922,22 @@ export async function mountBruteGame(root, options = {}) {
                 : baseSeconds
             )+
           '</div>'+
-          '<div class="brute-sleep-v2-status">'+(active?'SOMMEIL EN COURS':'SOMMEIL DU JOUR')+'</div>'+
+          '<div class="brute-sleep-v2-status">'+sleepState+'</div>'+
+          '<div class="brute-sleep-v2-progress"><header><span>OBJECTIF 8 H</span><b>'+sleepHours.toFixed(1)+' h</b></header><div><i style="width:'+sleepProgress+'%"></i><em>'+Math.round(sleepProgress)+'%</em></div></div>'+
           '<div class="brute-sleep-v2-xp" data-brute-sleep-xp>Bonus XP +'+sleepXpBonusNow()+'</div>'+
           '<button class="brute-sleep-v2-toggle '+(active?'wake':'')+'" data-brute-sleep-toggle>'+
             (active?'JE ME RÉVEILLE':'ALLER SE COUCHER')+
           '</button>'+
         '</div>'+
         '<aside class="brute-sleep-v2-panel">'+
-          '<div class="brute-cell-board-title">AMBIANCE</div>'+
-          '<p>Le sommeil fait progresser ton bonus d’XP. L’énergie revient indépendamment à +1 par minute, même quand l’application est fermée.</p>'+
-          '<div class="brute-sleep-v2-score"><b>'+Math.round(sleepScoreNow())+'</b><span>/ 100</span><small>SCORE SOMMEIL</small></div>'+
+          '<div class="brute-cell-board-title"><span>RÉCUPÉRATION</span><small>IMPACT SUR TA PROGRESSION</small></div>'+
+          '<div class="brute-sleep-benefits">'+
+            '<span><small>SCORE ACTUEL</small><b>'+Math.round(sleepScoreNow())+'/100</b></span>'+
+            '<span><small>BONUS XP</small><b>+'+sleepXpBonusNow()+'</b></span>'+
+            '<span><small>RESTE POUR 8 H</small><b>'+remainingHours.toFixed(1)+' h</b></span>'+
+          '</div>'+
+          '<p>Le sommeil améliore directement ton bonus d’XP. L’énergie revient indépendamment à +1 par minute, même quand l’application est fermée.</p>'+
+          '<div class="brute-sleep-section-title">AMBIANCE SONORE</div>'+
           '<div class="brute-sound-grid v2">'+
             [['rain','Pluie'],['brown','Bruit brun'],['temple','Temple'],['none','Silence']].map(([key,label]) =>
               '<button class="brute-secondary '+(sleepMode===key?'active':'')+'" data-brute-sound="'+key+'">'+label+'</button>'
