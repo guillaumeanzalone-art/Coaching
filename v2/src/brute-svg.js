@@ -817,7 +817,7 @@ export function renderBruteSvg(
 
   const weaponMarkup =
     weapon
-      ? '<g class="brute-limb brute-weapon" data-brute-part="weapon" transform="translate('+weaponAnchorX+' '+weaponAnchorY+')">'+
+      ? '<g class="brute-limb brute-weapon weapon-'+String(weapon.id || 'fists')+' category-'+String(weapon.category || 'unarmed')+'" data-brute-part="weapon" data-weapon-id="'+String(weapon.id || 'fists')+'" data-weapon-category="'+String(weapon.category || 'unarmed')+'" transform="translate('+weaponAnchorX+' '+weaponAnchorY+')">'+
           weaponSvg(weapon)+
         '</g>'
       : ''
