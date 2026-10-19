@@ -134,7 +134,7 @@ function bodyMetrics(body) {
       armW: 19,
       thighW: 25,
       neckW: 27,
-      headScale: 1.18,
+      headScale: 1.14,
     },
     {
       shoulder: 91,
@@ -161,7 +161,7 @@ function bodyMetrics(body) {
       armW: 28,
       thighW: 34,
       neckW: 34,
-      headScale: 1.12,
+      headScale: 1.18,
     },
     {
       shoulder: 121,
@@ -197,7 +197,7 @@ function bodyMetrics(body) {
       armW: 33,
       thighW: 36,
       neckW: 37,
-      headScale: 1.12,
+      headScale: 1.18,
     },
   ]
 
