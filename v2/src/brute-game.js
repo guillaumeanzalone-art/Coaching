@@ -2951,6 +2951,57 @@ function ensureStyles() {
 }
 
 /* ================================================================
+   GA BRUTE · CUTE SILHOUETTE POLISH V26
+   Bigger hair/accessories and softer toy-like presentation
+   ================================================================ */
+.ga-brute-svg.cute-v4:not(.fight-model) [data-brute-part="hair"]{
+  animation:bruteCuteHairFollowBig 2.8s ease-in-out infinite!important;
+}
+.ga-brute-svg.cute-v4:not(.fight-model) [data-brute-part="accessory"]{
+  animation:bruteCuteAccessoryFollowBig 2.8s ease-in-out infinite!important;
+}
+.ga-brute-svg.cute-v4.fight-model [data-brute-part="hair"]{
+  transform-box:fill-box;
+  transform-origin:50% 88%;
+  transform:scale(1.035);
+}
+.ga-brute-svg.cute-v4.fight-model [data-brute-part="accessory"]{
+  transform-box:fill-box;
+  transform-origin:50% 50%;
+  transform:scale(1.04);
+}
+.brute-duel-avatar.custom .ga-brute-svg.cute-v4 [data-brute-part="hair"],
+.brute-podium-avatar.custom .ga-brute-svg.cute-v4 [data-brute-part="hair"],
+.brute-ranking-v2-row .avatar.custom .ga-brute-svg.cute-v4 [data-brute-part="hair"]{
+  transform-box:fill-box;
+  transform-origin:50% 90%;
+}
+.brute-cell-avatar-stage .ga-brute-svg.cute-v4,
+.brute-camp-v2-avatar .ga-brute-svg.cute-v4,
+.brute-armory-v3-avatar .ga-brute-svg.cute-v4{
+  transform-origin:50% 100%;
+}
+.brute-cell-avatar-stage:hover .ga-brute-svg.cute-v4{
+  transform:translateY(-2px) scale(1.01);
+}
+@keyframes bruteCuteHairFollowBig{
+  0%,100%{transform:scale(1.045) rotate(0) translateY(0)}
+  45%{transform:scale(1.055) rotate(-.8deg) translateY(-1px)}
+  57%{transform:scale(1.05) rotate(.7deg) translateY(-.4px)}
+}
+@keyframes bruteCuteAccessoryFollowBig{
+  0%,100%{transform:scale(1.045) translateY(0)}
+  49%{transform:scale(1.055) translateY(-1.4px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .ga-brute-svg.cute-v4:not(.fight-model) [data-brute-part="hair"],
+  .ga-brute-svg.cute-v4:not(.fight-model) [data-brute-part="accessory"]{
+    animation:none!important;
+    transform:scale(1.045);
+  }
+}
+
+/* ================================================================
    GA BRUTE · CUTE COMBAT EXPRESSIONS V25
    Cartoon reactions, squash/stretch and toy-like impact readability
    ================================================================ */
