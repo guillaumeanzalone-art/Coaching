@@ -333,12 +333,12 @@ function noseSvg(style, tone) {
     )
 
   const map = [
-    '<path d="M160 100 L154 119 Q160 124 167 119" fill="none" stroke="'+tone+'" stroke-width="4" stroke-linecap="round"/>',
-    '<path d="M160 105 Q155 116 158 119 Q163 122 168 118" fill="none" stroke="'+tone+'" stroke-width="4" stroke-linecap="round"/>',
-    '<path d="M155 103 L151 119 Q160 128 171 119 L166 103" fill="none" stroke="'+tone+'" stroke-width="4" stroke-linecap="round"/>',
-    '<path d="M158 99 Q166 110 154 122 Q162 126 170 120" fill="none" stroke="'+tone+'" stroke-width="4" stroke-linecap="round"/>',
-    '<path d="M158 101 L153 113 L159 117 L154 122 Q162 127 169 120" fill="none" stroke="'+tone+'" stroke-width="4" stroke-linecap="round"/>',
-    '<path d="M159 107 Q155 117 160 121 Q165 121 168 117" fill="none" stroke="'+tone+'" stroke-width="3.5" stroke-linecap="round"/>',
+    '<path d="M159 106 Q155 117 160 120 Q165 120 168 117" fill="none" stroke="'+tone+'" stroke-width="3.2" stroke-linecap="round"/>',
+    '<path d="M158 108 Q155 116 160 120 Q164 122 168 117" fill="none" stroke="'+tone+'" stroke-width="3.1" stroke-linecap="round"/>',
+    '<path d="M157 107 Q153 117 160 122 Q167 122 170 117" fill="none" stroke="'+tone+'" stroke-width="3.2" stroke-linecap="round"/>',
+    '<path d="M159 105 Q164 112 157 120 Q162 123 168 119" fill="none" stroke="'+tone+'" stroke-width="3.1" stroke-linecap="round"/>',
+    '<path d="M158 108 L155 116 Q160 122 166 118" fill="none" stroke="'+tone+'" stroke-width="3.1" stroke-linecap="round"/>',
+    '<path d="M158 110 Q156 117 160 120 Q164 120 167 117" fill="none" stroke="'+tone+'" stroke-width="2.8" stroke-linecap="round"/>',
   ]
 
   return map[s] || map[0]
@@ -352,14 +352,14 @@ function mouthSvg(style) {
     )
 
   const map = [
-    '<path d="M144 133 Q160 136 176 133" fill="none" stroke="#5b2e24" stroke-width="5" stroke-linecap="round"/>',
-    '<path d="M143 130 Q160 145 178 129 Q161 153 143 130Z" fill="#fff" stroke="#5b2e24" stroke-width="4"/>',
-    '<path d="M143 138 Q160 122 178 139" fill="none" stroke="#5b2e24" stroke-width="5" stroke-linecap="round"/>',
-    '<ellipse cx="160" cy="137" rx="14" ry="12" fill="#6d2929" stroke="#4a1e1e" stroke-width="4"/>',
-    '<path d="M143 136 Q160 141 177 129" fill="none" stroke="#5b2e24" stroke-width="5" stroke-linecap="round"/>',
-    '<path d="M143 135 L178 135" stroke="#5b2e24" stroke-width="5" stroke-linecap="round"/><path d="M152 135 L155 142 M166 135 L166 142" stroke="#fff" stroke-width="3"/>',
-    '<path d="M145 135 Q160 131 176 135" fill="none" stroke="#4f2922" stroke-width="6" stroke-linecap="round"/>',
-    '<path d="M144 133 Q160 144 178 130" fill="none" stroke="#5b2e24" stroke-width="5" stroke-linecap="round"/><path d="M170 132 Q175 136 179 131" fill="none" stroke="#5b2e24" stroke-width="3"/>',
+    '<path d="M147 134 Q160 139 173 134" fill="none" stroke="#5b2e24" stroke-width="4" stroke-linecap="round"/>',
+    '<path d="M146 132 Q160 145 175 132 Q160 149 146 132Z" fill="#fff" stroke="#5b2e24" stroke-width="3.5"/>',
+    '<path d="M147 138 Q160 128 174 138" fill="none" stroke="#5b2e24" stroke-width="4" stroke-linecap="round"/>',
+    '<ellipse cx="160" cy="137" rx="10" ry="9" fill="#6d2929" stroke="#4a1e1e" stroke-width="3.5"/><ellipse cx="160" cy="140" rx="5" ry="2.5" fill="#d86e79" opacity=".75"/>',
+    '<path d="M147 136 Q159 142 173 132" fill="none" stroke="#5b2e24" stroke-width="4" stroke-linecap="round"/>',
+    '<path d="M148 135 L173 135" stroke="#5b2e24" stroke-width="4" stroke-linecap="round"/><path d="M154 135 L156 140 M165 135 L165 140" stroke="#fff" stroke-width="2.5"/>',
+    '<path d="M148 135 Q160 131 173 135" fill="none" stroke="#4f2922" stroke-width="4.5" stroke-linecap="round"/>',
+    '<path d="M147 133 Q160 143 174 131" fill="none" stroke="#5b2e24" stroke-width="4" stroke-linecap="round"/><path d="M169 133 Q173 136 176 132" fill="none" stroke="#5b2e24" stroke-width="2.5"/>',
   ]
 
   return map[s] || map[0]
@@ -1075,28 +1075,28 @@ export function renderBruteSvg(
     fightModel
       ? '<g class="brute-limb brute-leg brute-leg-left brute-leg-rear" data-brute-part="leg-left">'+
           '<path d="M'+(center-metrics.thighW-1)+' 279 L'+(center-7)+' 282 L'+(center-26)+' 334 L'+(center-metrics.thighW-31)+' 343Z" fill="'+skin+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
-          '<path d="M'+(center-metrics.thighW-38)+' 337 Q'+(center-metrics.thighW-12)+' 330 '+(center-22)+' 335 L'+(center-17)+' 352 L'+(center-metrics.thighW-46)+' 356 Q'+(center-metrics.thighW-54)+' 347 '+(center-metrics.thighW-38)+' 337Z" fill="'+shoe+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
+          '<path d="M'+(center-metrics.thighW-40)+' 337 Q'+(center-metrics.thighW-13)+' 328 '+(center-20)+' 334 Q'+(center-14)+' 339 '+(center-17)+' 350 Q'+(center-20)+' 356 '+(center-metrics.thighW-48)+' 357 Q'+(center-metrics.thighW-60)+' 355 '+(center-metrics.thighW-60)+' 349 Q'+(center-metrics.thighW-58)+' 341 '+(center-metrics.thighW-40)+' 337Z" fill="'+shoe+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
           '<path d="M'+(center-metrics.thighW-11)+' 292 L'+(center-19)+' 327" fill="none" stroke="'+skinHighlight+'" stroke-width="3" opacity=".22" stroke-linecap="round"/>'+
           '<path d="M'+(center-31)+' 337 Q'+(center-43)+' 344 '+(center-54)+' 346" fill="none" stroke="'+primaryShadow+'" stroke-width="3" opacity=".42" stroke-linecap="round"/>'+
           '<path d="M'+(center-37)+' 351 L'+(center-57)+' 354" stroke="#171717" stroke-width="3" opacity=".75" stroke-linecap="round"/>'+
         '</g>'
       : '<g class="brute-limb brute-leg brute-leg-left" data-brute-part="leg-left">'+
           '<path d="M'+(center-metrics.thighW-4)+' 282 L'+(center-5)+' 282 L'+(center-10)+' 341 L'+(center-metrics.thighW-7)+' 341Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-          '<path d="M'+(center-metrics.thighW-15)+' 335 Q'+(center-metrics.thighW+4)+' 325 '+(center-7)+' 336 L'+(center-9)+' 354 L'+(center-metrics.thighW-20)+' 354 Q'+(center-metrics.thighW-27)+' 344 '+(center-metrics.thighW-15)+' 335Z" fill="'+shoe+'" stroke="#171717" stroke-width="5"/>'+
+          '<path d="M'+(center-metrics.thighW-18)+' 335 Q'+(center-metrics.thighW+5)+' 325 '+(center-5)+' 335 Q'+(center+1)+' 340 '+(center-7)+' 354 L'+(center-metrics.thighW-23)+' 356 Q'+(center-metrics.thighW-34)+' 352 '+(center-metrics.thighW-18)+' 335Z" fill="'+shoe+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
         '</g>'
 
   const legRightMarkup =
     fightModel
       ? '<g class="brute-limb brute-leg brute-leg-right brute-leg-lead" data-brute-part="leg-right">'+
           '<path d="M'+(center+4)+' 282 L'+(center+metrics.thighW+5)+' 278 L'+(center+metrics.thighW+30)+' 330 L'+(center+21)+' 339Z" fill="'+skin+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
-          '<path d="M'+(center+15)+' 334 Q'+(center+metrics.thighW+13)+' 325 '+(center+metrics.thighW+41)+' 335 Q'+(center+metrics.thighW+53)+' 344 '+(center+metrics.thighW+45)+' 354 L'+(center+18)+' 352Z" fill="'+shoe+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
+          '<path d="M'+(center+15)+' 334 Q'+(center+metrics.thighW+15)+' 326 '+(center+metrics.thighW+43)+' 334 Q'+(center+metrics.thighW+59)+' 339 '+(center+metrics.thighW+61)+' 348 Q'+(center+metrics.thighW+61)+' 355 '+(center+metrics.thighW+49)+' 357 L'+(center+20)+' 353 Q'+(center+15)+' 347 '+(center+15)+' 334Z" fill="'+shoe+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
           '<path d="M'+(center+13)+' 292 L'+(center+metrics.thighW+22)+' 324" fill="none" stroke="'+skinHighlight+'" stroke-width="3" opacity=".22" stroke-linecap="round"/>'+
           '<path d="M'+(center+31)+' 337 Q'+(center+43)+' 344 '+(center+54)+' 346" fill="none" stroke="'+primaryShadow+'" stroke-width="3" opacity=".42" stroke-linecap="round"/>'+
           '<path d="M'+(center+37)+' 351 L'+(center+57)+' 354" stroke="#171717" stroke-width="3" opacity=".75" stroke-linecap="round"/>'+
         '</g>'
       : '<g class="brute-limb brute-leg brute-leg-right" data-brute-part="leg-right">'+
           '<path d="M'+(center+5)+' 282 L'+(center+metrics.thighW+4)+' 282 L'+(center+metrics.thighW+7)+' 341 L'+(center+10)+' 341Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
-          '<path d="M'+(center+8)+' 336 Q'+(center+metrics.thighW-4)+' 325 '+(center+metrics.thighW+15)+' 335 Q'+(center+metrics.thighW+27)+' 344 '+(center+metrics.thighW+20)+' 354 L'+(center+9)+' 354Z" fill="'+shoe+'" stroke="#171717" stroke-width="5"/>'+
+          '<path d="M'+(center+6)+' 335 Q'+(center+metrics.thighW-5)+' 325 '+(center+metrics.thighW+18)+' 335 Q'+(center+metrics.thighW+34)+' 352 '+(center+metrics.thighW+23)+' 356 L'+(center+7)+' 354 Q'+(center-1)+' 340 '+(center+6)+' 335Z" fill="'+shoe+'" stroke="#171717" stroke-width="5" stroke-linejoin="round"/>'+
         '</g>'
 
   return '<svg class="ga-brute-svg chara-v3 cute-v4 '+String(options.className || '')+'" data-side="'+String(options.side || 'right')+'" data-body="'+bodyId+'" viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+label+'">'+
