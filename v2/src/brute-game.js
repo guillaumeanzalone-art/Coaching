@@ -2951,6 +2951,189 @@ function ensureStyles() {
 }
 
 /* ================================================================
+   GA BRUTE · CUTE COMBAT EXPRESSIONS V25
+   Cartoon reactions, squash/stretch and toy-like impact readability
+   ================================================================ */
+.brute-fighters-v2 .ga-brute-svg.cute-v4.fight-model [data-brute-part="mouth"],
+.brute-fighters-v2 .ga-brute-svg.cute-v4.fight-model [data-brute-part="eyes"],
+.brute-fighters-v2 .ga-brute-svg.cute-v4.fight-model .brute-head,
+.brute-fighters-v2 .ga-brute-svg.cute-v4.fight-model .brute-cheeks{
+  transform-box:fill-box;
+  transform-origin:center;
+}
+.brute-fighter.windup-fast .ga-brute-svg.cute-v4 [data-brute-part="eyes"],
+.brute-fighter.attack-v0 .ga-brute-svg.cute-v4 [data-brute-part="eyes"],
+.brute-fighter.attack-v1 .ga-brute-svg.cute-v4 [data-brute-part="eyes"]{
+  animation:bruteCuteFocusEyes .28s ease!important;
+}
+.brute-fighter.windup-heavy .ga-brute-svg.cute-v4 [data-brute-part="eyes"],
+.brute-fighter.attack-v4 .ga-brute-svg.cute-v4 [data-brute-part="eyes"]{
+  animation:bruteCutePowerEyes .42s ease!important;
+}
+.brute-fighter.attack-v2 .ga-brute-svg.cute-v4 [data-brute-part="mouth"]{
+  animation:bruteCuteUpperMouth .4s ease!important;
+}
+.brute-fighter.attack-v5 .ga-brute-svg.cute-v4 .brute-head{
+  animation:bruteCuteSweepHead .4s ease!important;
+}
+.brute-fighter.dodge .ga-brute-svg.cute-v4 [data-brute-part="eyes"]{
+  animation:bruteCuteDodgeEyes .46s ease!important;
+}
+.brute-fighter.dodge .ga-brute-svg.cute-v4 [data-brute-part="mouth"]{
+  animation:bruteCuteDodgeMouth .46s ease!important;
+}
+.brute-fighter.blocking .ga-brute-svg.cute-v4 [data-brute-part="eyes"]{
+  animation:bruteCuteBraceEyes .38s ease!important;
+}
+.brute-fighter.countering .ga-brute-svg.cute-v4 .brute-head{
+  animation:bruteCuteCounterHead .34s ease!important;
+}
+.brute-fighter.hit-react .ga-brute-svg.cute-v4 [data-brute-part="eyes"]{
+  animation:bruteCuteOuchEyes .34s ease!important;
+}
+.brute-fighter.hit-react .ga-brute-svg.cute-v4 [data-brute-part="mouth"]{
+  animation:bruteCuteOuchMouth .34s ease!important;
+}
+.brute-fighter.hit-react .ga-brute-svg.cute-v4 .brute-cheeks{
+  animation:bruteCuteCheekPop .34s ease!important;
+}
+.brute-fighter.hit-heavy.hit-react .ga-brute-svg.cute-v4 .brute-head{
+  animation:bruteCuteHeavyHeadSquash .46s cubic-bezier(.14,.74,.18,1)!important;
+}
+.brute-fighter.critical-burst .ga-brute-svg.cute-v4 .brute-cheeks{
+  opacity:.28!important;
+}
+.brute-fighter.ko .ga-brute-svg.cute-v4 [data-brute-part="eyes"]{
+  animation:bruteCuteKoEyes .78s ease forwards!important;
+}
+.brute-fighter.ko .ga-brute-svg.cute-v4 [data-brute-part="mouth"]{
+  animation:bruteCuteKoMouth .78s ease forwards!important;
+}
+.brute-fighter.victory-pose .ga-brute-svg.cute-v4 [data-brute-part="mouth"]{
+  animation:bruteCuteWinMouth .78s ease forwards!important;
+}
+.brute-fighter.victory-pose .ga-brute-svg.cute-v4 .brute-head{
+  animation:bruteCuteWinHead .78s ease forwards!important;
+}
+.brute-fighter.comboing .ga-brute-svg.cute-v4{
+  filter:
+    drop-shadow(0 0 10px rgba(255,214,87,.4))
+    drop-shadow(0 14px 7px rgba(48,25,15,.2))
+    saturate(1.04)!important;
+}
+.brute-fighter.comboing .ga-brute-svg.cute-v4 .brute-head{
+  animation:bruteCuteComboNod .32s ease!important;
+}
+.brute-fighter .ga-brute-svg.cute-v4 .brute-weapon{
+  transform-box:fill-box;
+  transform-origin:center;
+}
+.brute-fighter.attack-heavy .ga-brute-svg.cute-v4 .brute-weapon,
+.brute-fighter.attack-v4 .ga-brute-svg.cute-v4 .brute-weapon{
+  filter:drop-shadow(0 3px 2px rgba(0,0,0,.2));
+}
+.brute-fighter.hit-react .ga-brute-svg.cute-v4 .brute-torso{
+  transform-origin:50% 60%;
+}
+.brute-fighter.hit-react:not(.hit-heavy) .ga-brute-svg.cute-v4 .brute-torso{
+  animation:bruteCuteBodySquish .34s ease!important;
+}
+@keyframes bruteCuteFocusEyes{
+  0%,100%{transform:scaleY(1)}
+  45%{transform:scaleY(.68) translateY(2px)}
+}
+@keyframes bruteCutePowerEyes{
+  0%,100%{transform:scaleY(1)}
+  36%{transform:scale(1.05,.56) translateY(3px)}
+  62%{transform:scale(1.02,.72)}
+}
+@keyframes bruteCuteUpperMouth{
+  0%,100%{transform:none}
+  42%{transform:scale(1.12,1.3) translateY(1px)}
+}
+@keyframes bruteCuteSweepHead{
+  0%,100%{transform:none}
+  40%{transform:translateY(6px) rotate(-7deg) scale(1.04,.94)}
+  70%{transform:translateY(2px) rotate(3deg)}
+}
+@keyframes bruteCuteDodgeEyes{
+  0%,100%{transform:scale(1)}
+  35%{transform:scale(1.14,1.18)}
+  65%{transform:scale(1.04)}
+}
+@keyframes bruteCuteDodgeMouth{
+  0%,100%{transform:none}
+  38%{transform:scale(.82,1.1) translateY(1px)}
+}
+@keyframes bruteCuteBraceEyes{
+  0%,100%{transform:scaleY(1)}
+  45%{transform:scaleY(.42) translateY(3px)}
+}
+@keyframes bruteCuteCounterHead{
+  0%,100%{transform:none}
+  38%{transform:translateY(-4px) rotate(-5deg) scale(1.03)}
+  70%{transform:translateY(-1px) rotate(2deg)}
+}
+@keyframes bruteCuteOuchEyes{
+  0%,100%{transform:scaleY(1)}
+  18%{transform:scale(1.16,.2) translateY(4px)}
+  48%{transform:scale(1.04,.55) translateY(2px)}
+}
+@keyframes bruteCuteOuchMouth{
+  0%,100%{transform:none}
+  20%{transform:scale(.72,1.45) translateY(3px)}
+  52%{transform:scale(.88,1.12)}
+}
+@keyframes bruteCuteCheekPop{
+  0%,100%{opacity:.2;transform:scale(1)}
+  22%{opacity:.34;transform:scale(1.18)}
+  55%{opacity:.24;transform:scale(1.05)}
+}
+@keyframes bruteCuteHeavyHeadSquash{
+  0%,100%{transform:none}
+  16%{transform:translate(-4px,4px) rotate(-10deg) scale(1.13,.82)}
+  42%{transform:translate(2px,-2px) rotate(5deg) scale(.96,1.08)}
+  70%{transform:translate(0,1px) rotate(-2deg) scale(1.02,.98)}
+}
+@keyframes bruteCuteKoEyes{
+  0%{transform:scaleY(1)}
+  30%{transform:scale(1.12,.16) rotate(-4deg)}
+  100%{transform:scale(.9,.08) rotate(7deg)}
+}
+@keyframes bruteCuteKoMouth{
+  0%{transform:none}
+  28%{transform:scale(.74,1.55) translateY(4px)}
+  100%{transform:scale(.82,1.25) translateY(3px)}
+}
+@keyframes bruteCuteWinMouth{
+  0%{transform:none}
+  50%,100%{transform:scale(1.16,.9) translateY(-1px)}
+}
+@keyframes bruteCuteWinHead{
+  0%{transform:none}
+  38%{transform:translateY(-5px) rotate(-4deg) scale(1.035)}
+  100%{transform:translateY(-2px) rotate(-2deg) scale(1.02)}
+}
+@keyframes bruteCuteComboNod{
+  0%,100%{transform:none}
+  45%{transform:translateY(-3px) rotate(3deg) scale(1.025)}
+}
+@keyframes bruteCuteBodySquish{
+  0%,100%{transform:none}
+  18%{transform:scale(1.06,.91) translateY(4px)}
+  46%{transform:scale(.97,1.05) translateY(-2px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .brute-fighter .ga-brute-svg.cute-v4 [data-brute-part="mouth"],
+  .brute-fighter .ga-brute-svg.cute-v4 [data-brute-part="eyes"],
+  .brute-fighter .ga-brute-svg.cute-v4 .brute-head,
+  .brute-fighter .ga-brute-svg.cute-v4 .brute-cheeks{
+    animation-duration:.001ms!important;
+    animation-iteration-count:1!important;
+  }
+}
+
+/* ================================================================
    GA BRUTE · CUTE CHARACTER MOTION V24
    Softer rendering, blinking, squash/stretch and playful follow-through
    ================================================================ */
