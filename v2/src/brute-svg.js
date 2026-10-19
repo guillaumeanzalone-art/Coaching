@@ -996,20 +996,20 @@ export function renderBruteSvg(
     fightModel
       ? (
           weapon?.id === 'olympic_bar'
-            ? ' rotate(9) translate(1 -8)'
+            ? ' rotate(9) translate(1 -8) scale(1.10)'
             : weapon?.id === 'kettlebell'
-              ? ' rotate(-12) translate(2 5)'
+              ? ' rotate(-12) translate(2 5) scale(1.13)'
               : weapon?.id === 'plate20'
-                ? ' rotate(-7) translate(0 3)'
+                ? ' rotate(-7) translate(0 3) scale(1.12)'
                 : weapon?.id === 'belt'
-                  ? ' rotate(12) translate(1 4)'
+                  ? ' rotate(12) translate(1 4) scale(1.10)'
                   : weapon?.id === 'chalk'
-                    ? ' translate(2 -7) scale(.86)'
+                    ? ' translate(2 -7) scale(.94)'
                     : weapon?.id === 'straps'
-                      ? ' rotate(9) translate(1 5)'
-                      : ''
+                      ? ' rotate(9) translate(1 5) scale(1.11)'
+                      : ' scale(1.08)'
         )
-      : ''
+      : ' scale(1.05)'
 
   const weaponMarkup =
     weapon
