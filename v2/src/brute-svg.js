@@ -128,76 +128,76 @@ function normalizeAppearance(input = {}) {
 function bodyMetrics(body) {
   const list = [
     {
-      shoulder: 84,
-      waist: 68,
-      torsoH: 102,
+      shoulder: 80,
+      waist: 66,
+      torsoH: 94,
       armW: 19,
       thighW: 25,
-      neckW: 29,
-      headScale: .94,
+      neckW: 27,
+      headScale: 1.06,
     },
     {
-      shoulder: 96,
-      waist: 76,
-      torsoH: 104,
+      shoulder: 91,
+      waist: 73,
+      torsoH: 96,
       armW: 22,
       thighW: 28,
-      neckW: 32,
-      headScale: 1,
+      neckW: 29,
+      headScale: 1.10,
     },
     {
-      shoulder: 106,
-      waist: 82,
-      torsoH: 98,
+      shoulder: 101,
+      waist: 79,
+      torsoH: 92,
       armW: 25,
       thighW: 31,
-      neckW: 34,
-      headScale: 1.02,
+      neckW: 31,
+      headScale: 1.11,
     },
     {
-      shoulder: 118,
-      waist: 88,
-      torsoH: 108,
+      shoulder: 111,
+      waist: 85,
+      torsoH: 99,
       armW: 28,
       thighW: 34,
-      neckW: 37,
-      headScale: 1.02,
+      neckW: 34,
+      headScale: 1.12,
+    },
+    {
+      shoulder: 121,
+      waist: 90,
+      torsoH: 101,
+      armW: 31,
+      thighW: 37,
+      neckW: 36,
+      headScale: 1.13,
     },
     {
       shoulder: 130,
-      waist: 92,
-      torsoH: 110,
-      armW: 31,
-      thighW: 37,
-      neckW: 40,
-      headScale: 1.04,
-    },
-    {
-      shoulder: 140,
-      waist: 104,
-      torsoH: 112,
+      waist: 99,
+      torsoH: 102,
       armW: 34,
       thighW: 40,
-      neckW: 43,
-      headScale: 1.07,
+      neckW: 39,
+      headScale: 1.15,
     },
     {
-      shoulder: 90,
-      waist: 66,
-      torsoH: 116,
+      shoulder: 87,
+      waist: 65,
+      torsoH: 103,
       armW: 20,
       thighW: 24,
-      neckW: 29,
-      headScale: .98,
+      neckW: 27,
+      headScale: 1.09,
     },
     {
-      shoulder: 124,
-      waist: 98,
-      torsoH: 96,
+      shoulder: 116,
+      waist: 94,
+      torsoH: 91,
       armW: 33,
       thighW: 36,
-      neckW: 41,
-      headScale: .99,
+      neckW: 37,
+      headScale: 1.12,
     },
   ]
 
@@ -217,14 +217,14 @@ function headShapeSvg(style, skin) {
     )
 
   const map = [
-    '<path d="M111 78 Q118 48 160 46 Q202 48 209 79 L203 124 Q193 154 160 162 Q126 154 117 126Z" fill="'+skin+'" stroke="#171717" stroke-width="6"/>',
-    '<path d="M111 75 Q117 48 160 45 Q202 47 209 75 L207 126 Q196 157 160 163 Q124 157 113 126Z" fill="'+skin+'" stroke="#171717" stroke-width="6" stroke-linejoin="round"/>',
-    '<path d="M111 82 Q116 49 160 46 Q204 49 209 82 L204 126 Q192 160 160 162 Q127 160 116 126Z" fill="'+skin+'" stroke="#171717" stroke-width="6"/>',
-    '<path d="M117 77 Q125 49 160 47 Q195 49 203 78 L198 124 Q190 151 160 159 Q130 151 122 124Z" fill="'+skin+'" stroke="#171717" stroke-width="6"/>',
-    '<path d="M108 75 Q116 47 160 44 Q205 47 213 76 L208 122 Q203 143 185 158 L160 169 L135 158 Q117 143 112 122Z" fill="'+skin+'" stroke="#171717" stroke-width="6"/>',
-    '<path d="M112 78 Q119 48 160 45 Q201 48 208 79 L201 116 Q190 121 184 145 Q173 160 160 163 Q145 160 135 145 Q129 121 119 116Z" fill="'+skin+'" stroke="#171717" stroke-width="6"/>',
-    '<path d="M108 76 Q119 45 160 43 Q201 45 212 76 L205 118 Q193 147 160 171 Q126 147 115 118Z" fill="'+skin+'" stroke="#171717" stroke-width="6" stroke-linejoin="round"/>',
-    '<path d="M105 82 Q108 47 160 44 Q212 47 215 82 L211 123 Q202 158 160 166 Q118 158 109 123Z" fill="'+skin+'" stroke="#171717" stroke-width="6"/>',
+    '<path d="M109 80 Q116 47 160 45 Q204 47 211 80 L208 121 Q205 144 188 157 Q176 167 160 169 Q144 167 132 157 Q115 144 112 121Z" fill="'+skin+'" stroke="#171717" stroke-width="5.5"/>',
+    '<path d="M108 78 Q116 45 160 44 Q204 46 212 78 L210 123 Q205 148 185 160 Q174 168 160 169 Q145 168 134 160 Q115 148 110 123Z" fill="'+skin+'" stroke="#171717" stroke-width="5.5"/>',
+    '<path d="M108 83 Q114 48 160 45 Q206 48 212 83 L208 125 Q203 151 183 162 Q173 168 160 168 Q147 168 137 162 Q117 151 112 125Z" fill="'+skin+'" stroke="#171717" stroke-width="5.5"/>',
+    '<path d="M115 80 Q122 49 160 47 Q198 49 205 80 L202 123 Q198 147 181 158 Q171 164 160 165 Q149 164 139 158 Q122 147 118 123Z" fill="'+skin+'" stroke="#171717" stroke-width="5.5"/>',
+    '<path d="M106 78 Q114 44 160 43 Q207 44 214 79 L211 120 Q208 144 190 158 Q177 169 160 171 Q143 169 130 158 Q112 144 109 120Z" fill="'+skin+'" stroke="#171717" stroke-width="5.5"/>',
+    '<path d="M110 80 Q117 46 160 44 Q203 46 210 80 L206 119 Q202 143 184 158 Q174 166 160 168 Q146 166 136 158 Q118 143 114 119Z" fill="'+skin+'" stroke="#171717" stroke-width="5.5"/>',
+    '<path d="M106 79 Q116 44 160 42 Q204 44 214 79 L210 118 Q205 145 187 159 Q175 169 160 172 Q145 169 133 159 Q115 145 110 118Z" fill="'+skin+'" stroke="#171717" stroke-width="5.5"/>',
+    '<path d="M103 84 Q107 45 160 43 Q213 45 217 84 L214 123 Q209 151 186 163 Q174 170 160 171 Q146 170 134 163 Q111 151 106 123Z" fill="'+skin+'" stroke="#171717" stroke-width="5.5"/>',
   ]
 
   return map[s] || map[0]
@@ -269,17 +269,17 @@ function eyesSvg(style) {
     )
 
   const pupils =
-    '<circle cx="139" cy="101" r="4" fill="#111"/><circle cx="181" cy="101" r="4" fill="#111"/>'
+    '<circle cx="139" cy="101" r="5.2" fill="#151515"/><circle cx="181" cy="101" r="5.2" fill="#151515"/>'
 
   const map = [
-    '<path d="M122 92 Q139 84 153 92" fill="none" stroke="#171717" stroke-width="5" stroke-linecap="round"/><path d="M167 92 Q182 84 198 92" fill="none" stroke="#171717" stroke-width="5" stroke-linecap="round"/>'+pupils,
-    '<path d="M122 85 L153 94 M198 85 L167 94" stroke="#171717" stroke-width="6" stroke-linecap="round"/>'+pupils,
-    '<path d="M122 98 L153 98 M168 98 L198 98" stroke="#171717" stroke-width="5" stroke-linecap="round"/><circle cx="139" cy="102" r="3" fill="#111"/><circle cx="181" cy="102" r="3" fill="#111"/>',
-    '<circle cx="139" cy="100" r="10" fill="#fff" stroke="#171717" stroke-width="4"/><circle cx="181" cy="100" r="10" fill="#fff" stroke="#171717" stroke-width="4"/><circle cx="142" cy="99" r="4" fill="#111"/><circle cx="178" cy="99" r="4" fill="#111"/>',
-    '<path d="M124 89 Q139 82 153 90 M168 90 Q182 82 197 89" fill="none" stroke="#171717" stroke-width="5"/><ellipse cx="139" cy="101" rx="4" ry="6" fill="#111"/><ellipse cx="181" cy="101" rx="4" ry="6" fill="#111"/>',
-    '<path d="M124 98 Q139 106 153 98 M168 98 Q181 106 196 98" fill="none" stroke="#171717" stroke-width="4"/>',
-    '<path d="M123 96 Q139 93 153 97 M168 97 Q181 93 197 96" fill="none" stroke="#171717" stroke-width="5"/><circle cx="139" cy="102" r="3" fill="#111"/><circle cx="181" cy="102" r="3" fill="#111"/><path d="M124 85 Q138 89 152 86 M169 86 Q183 89 196 85" fill="none" stroke="#171717" stroke-width="3"/>',
-    '<path d="M122 88 Q139 80 154 91 M198 91 Q182 80 167 91" fill="none" stroke="#171717" stroke-width="6"/><circle cx="141" cy="101" r="4" fill="#111"/><circle cx="179" cy="101" r="4" fill="#111"/>',
+    '<ellipse cx="139" cy="101" rx="9" ry="7" fill="#fff" stroke="#171717" stroke-width="3.5"/><ellipse cx="181" cy="101" rx="9" ry="7" fill="#fff" stroke="#171717" stroke-width="3.5"/>'+pupils,
+    '<path d="M123 91 Q139 83 153 92 M167 92 Q181 83 197 91" fill="none" stroke="#171717" stroke-width="4.5" stroke-linecap="round"/>'+pupils,
+    '<path d="M124 98 Q139 94 153 98 M168 98 Q181 94 196 98" fill="none" stroke="#171717" stroke-width="4.2" stroke-linecap="round"/><circle cx="139" cy="102" r="4.4" fill="#111"/><circle cx="181" cy="102" r="4.4" fill="#111"/>',
+    '<circle cx="139" cy="100" r="11.5" fill="#fff" stroke="#171717" stroke-width="3.5"/><circle cx="181" cy="100" r="11.5" fill="#fff" stroke="#171717" stroke-width="3.5"/><circle cx="142" cy="100" r="5.2" fill="#111"/><circle cx="178" cy="100" r="5.2" fill="#111"/>',
+    '<ellipse cx="139" cy="101" rx="8" ry="10" fill="#fff" stroke="#171717" stroke-width="3.4"/><ellipse cx="181" cy="101" rx="8" ry="10" fill="#fff" stroke="#171717" stroke-width="3.4"/><ellipse cx="140" cy="102" rx="4.2" ry="5.5" fill="#111"/><ellipse cx="180" cy="102" rx="4.2" ry="5.5" fill="#111"/>',
+    '<path d="M124 99 Q139 108 153 99 M168 99 Q181 108 196 99" fill="none" stroke="#171717" stroke-width="4.2" stroke-linecap="round"/>',
+    '<path d="M124 96 Q139 92 153 97 M168 97 Q181 92 196 96" fill="none" stroke="#171717" stroke-width="4.2" stroke-linecap="round"/><circle cx="139" cy="102" r="4.2" fill="#111"/><circle cx="181" cy="102" r="4.2" fill="#111"/>',
+    '<path d="M123 91 Q139 84 154 93 M197 93 Q181 84 166 93" fill="none" stroke="#171717" stroke-width="4.8" stroke-linecap="round"/><circle cx="141" cy="101" r="5" fill="#111"/><circle cx="179" cy="101" r="5" fill="#111"/>',
   ]
 
   return map[s] || map[0]
@@ -298,13 +298,29 @@ function eyeLifeSvg(style) {
 
   const size =
     s === 3
-      ? 2.3
-      : 1.8
+      ? 2.7
+      : 2.15
 
   return (
     '<g class="brute-eye-life" fill="#ffffff" opacity=".84" pointer-events="none">'+
       '<circle cx="'+(s===3?143:140)+'" cy="'+(s===3?96:99)+'" r="'+size+'"/>'+
       '<circle cx="'+(s===3?178:182)+'" cy="'+(s===3?96:99)+'" r="'+size+'"/>'+
+    '</g>'
+  )
+}
+
+function cheekSvg(skin) {
+  const blush =
+    mixColor(
+      skin,
+      '#ef7f7a',
+      .46
+    )
+
+  return (
+    '<g class="brute-cheeks" fill="'+blush+'" opacity=".16" pointer-events="none">'+
+      '<ellipse cx="128" cy="119" rx="10" ry="5"/>'+
+      '<ellipse cx="192" cy="119" rx="10" ry="5"/>'+
     '</g>'
   )
 }
@@ -490,7 +506,7 @@ function faceModelSvg(
     body >= 3
 
   return (
-    '<g class="brute-face-model" pointer-events="none">'+
+    '<g class="brute-face-model" pointer-events="none" opacity=".58">'+
       '<path d="M123 108 Q128 127 139 140" fill="none" stroke="'+skinShadow+'" stroke-width="'+(strong?3.2:2.6)+'" opacity=".18" stroke-linecap="round"/>'+
       '<path d="M197 108 Q192 127 181 140" fill="none" stroke="'+skinShadow+'" stroke-width="'+(strong?3.2:2.6)+'" opacity=".18" stroke-linecap="round"/>'+
       '<path d="M145 151 Q160 158 176 151" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".26" stroke-linecap="round"/>'+
@@ -530,7 +546,7 @@ function torsoSurfaceSvg(
 
   if (bare) {
     return (
-      '<g class="brute-muscle-model" pointer-events="none">'+
+      '<g class="brute-muscle-model" pointer-events="none" opacity=".48">'+
         '<path d="M'+(torsoX+15)+' 191 Q160 '+(wide?175:180)+' '+(torsoRight-15)+' 191" fill="none" stroke="'+skinShadow+'" stroke-width="'+(wide?4:3.2)+'" opacity=".32" stroke-linecap="round"/>'+
         '<path d="M160 193 L160 '+(torsoBottom-14)+'" stroke="'+skinShadow+'" stroke-width="2.8" opacity=".24" stroke-linecap="round"/>'+
         '<path d="M'+(torsoX+26)+' 207 Q143 216 151 209 M'+(torsoRight-26)+' 207 Q177 216 169 209" fill="none" stroke="'+skinShadow+'" stroke-width="2.5" opacity=".24" stroke-linecap="round"/>'+
@@ -541,7 +557,7 @@ function torsoSurfaceSvg(
   }
 
   return (
-    '<g class="brute-cloth-model" pointer-events="none">'+
+    '<g class="brute-cloth-model" pointer-events="none" opacity=".7">'+
       '<path d="M'+(torsoX+13)+' 188 Q160 171 '+(torsoRight-13)+' 188" fill="none" stroke="'+primaryHighlight+'" stroke-width="3.5" opacity=".2" stroke-linecap="round"/>'+
       '<path d="M'+(torsoX+19)+' 207 Q'+(torsoX+31)+' 220 '+(torsoX+25)+' 238 M'+(torsoRight-19)+' 207 Q'+(torsoRight-31)+' 220 '+(torsoRight-25)+' 238" fill="none" stroke="'+primaryShadow+'" stroke-width="2.6" opacity=".24" stroke-linecap="round"/>'+
       '<path d="M160 202 Q154 226 159 '+(torsoBottom-14)+'" fill="none" stroke="'+primaryShadow+'" stroke-width="2.2" opacity=".18" stroke-linecap="round"/>'+
@@ -1017,8 +1033,8 @@ export function renderBruteSvg(
 
   const fightFistRadius =
     Math.max(
-      13,
-      metrics.armW * .54
+      15,
+      metrics.armW * .62
     )
 
   const armLeftMarkup =
@@ -1035,7 +1051,7 @@ export function renderBruteSvg(
       : '<g class="brute-limb brute-arm brute-arm-left" data-brute-part="arm-left">'+
           '<path d="M'+armLeftX+' 187 Q'+(armLeftX-38-metrics.armW*.15)+' 192 '+(armLeftX-31)+' 238 Q'+(armLeftX-23)+' 261 '+(armLeftX-9)+' 249 L'+(armLeftX+metrics.armW)+' 204Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
           '<path d="M'+(armLeftX-30)+' 238 Q'+(armLeftX-16)+' 246 '+(armLeftX-8)+' 251" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".45"/>'+
-          '<circle cx="'+(armLeftX-26)+'" cy="249" r="'+Math.max(14,metrics.armW*.58)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+          '<circle cx="'+(armLeftX-26)+'" cy="249" r="'+Math.max(16,metrics.armW*.64)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
         '</g>'
 
   const armRightMarkup =
@@ -1052,7 +1068,7 @@ export function renderBruteSvg(
       : '<g class="brute-limb brute-arm brute-arm-right" data-brute-part="arm-right">'+
           '<path d="M'+armRightX+' 187 Q'+(armRightX+38+metrics.armW*.15)+' 192 '+(armRightX+31)+' 238 Q'+(armRightX+23)+' 261 '+(armRightX+9)+' 249 L'+(armRightX-metrics.armW)+' 204Z" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
           '<path d="M'+(armRightX+30)+' 238 Q'+(armRightX+16)+' 246 '+(armRightX+8)+' 251" fill="none" stroke="'+skinShadow+'" stroke-width="3" opacity=".45"/>'+
-          '<circle cx="'+(armRightX+26)+'" cy="249" r="'+Math.max(14,metrics.armW*.58)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
+          '<circle cx="'+(armRightX+26)+'" cy="249" r="'+Math.max(16,metrics.armW*.64)+'" fill="'+skin+'" stroke="#171717" stroke-width="5"/>'+
         '</g>'
 
   const legLeftMarkup =
@@ -1083,7 +1099,7 @@ export function renderBruteSvg(
           '<path d="M'+(center+8)+' 336 Q'+(center+metrics.thighW-4)+' 325 '+(center+metrics.thighW+15)+' 335 Q'+(center+metrics.thighW+27)+' 344 '+(center+metrics.thighW+20)+' 354 L'+(center+9)+' 354Z" fill="'+shoe+'" stroke="#171717" stroke-width="5"/>'+
         '</g>'
 
-  return '<svg class="ga-brute-svg chara-v3 '+String(options.className || '')+'" data-side="'+String(options.side || 'right')+'" data-body="'+bodyId+'" viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+label+'">'+
+  return '<svg class="ga-brute-svg chara-v3 cute-v4 '+String(options.className || '')+'" data-side="'+String(options.side || 'right')+'" data-body="'+bodyId+'" viewBox="0 0 320 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+label+'">'+
     '<g class="brute-stage" transform="'+mirror+'">'+
       '<ellipse class="brute-shadow" cx="160" cy="355" rx="'+(76+bodyId*4)+'" ry="14" fill="rgba(0,0,0,.2)"/>'+
 
@@ -1164,6 +1180,9 @@ export function renderBruteSvg(
           skinShadow,
           skinHighlight,
           fightModel
+        )+
+        cheekSvg(
+          skin
         )+
         '<g data-brute-part="eyes">'+
           eyesSvg(a.eyes)+
