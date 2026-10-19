@@ -2951,6 +2951,126 @@ function ensureStyles() {
 }
 
 /* ================================================================
+   GA BRUTE · CUTE CHARACTER MOTION V24
+   Softer rendering, blinking, squash/stretch and playful follow-through
+   ================================================================ */
+.ga-brute-svg.cute-v4{
+  overflow:visible;
+  filter:
+    drop-shadow(0 10px 7px rgba(50,27,18,.2))
+    saturate(.96)
+    brightness(1.015);
+}
+.ga-brute-svg.cute-v4:not(.fight-model) .brute-stage{
+  transform-origin:50% 94%;
+}
+.ga-brute-svg.cute-v4:not(.fight-model) .brute-head{
+  transform-box:fill-box;
+  transform-origin:50% 80%;
+  animation:bruteCuteHeadBob 2.8s ease-in-out infinite;
+}
+.ga-brute-svg.cute-v4:not(.fight-model) [data-brute-part="hair"]{
+  transform-box:fill-box;
+  transform-origin:50% 90%;
+  animation:bruteCuteHairFollow 2.8s ease-in-out infinite;
+}
+.ga-brute-svg.cute-v4:not(.fight-model) [data-brute-part="accessory"]{
+  transform-box:fill-box;
+  transform-origin:50% 50%;
+  animation:bruteCuteAccessoryFollow 2.8s ease-in-out infinite;
+}
+.ga-brute-svg.cute-v4 [data-brute-part="eyes"]{
+  transform-box:fill-box;
+  transform-origin:center;
+  animation:bruteCuteBlink 4.9s ease-in-out infinite;
+}
+.ga-brute-svg.cute-v4 .brute-cheeks{
+  opacity:.2;
+}
+.ga-brute-svg.cute-v4 .brute-face-model{
+  opacity:.34!important;
+  mix-blend-mode:normal!important;
+}
+.ga-brute-svg.cute-v4 .brute-muscle-model{
+  opacity:.26!important;
+  mix-blend-mode:normal!important;
+}
+.ga-brute-svg.cute-v4 .brute-cloth-model{
+  opacity:.52!important;
+  mix-blend-mode:normal!important;
+}
+.ga-brute-svg.cute-v4 .brute-bottom-model{
+  opacity:.5!important;
+  mix-blend-mode:normal!important;
+}
+.ga-brute-svg.cute-v4 .brute-eye-life{
+  opacity:.92;
+  filter:drop-shadow(0 0 1.8px rgba(255,255,255,.85));
+}
+.ga-brute-svg.cute-v4 .brute-shadow{
+  opacity:.16;
+  filter:blur(.7px);
+}
+.brute-cell-avatar .ga-brute-svg.cute-v4,
+.brute-camp-v2-avatar .ga-brute-svg.cute-v4,
+.brute-armory-v3-avatar .ga-brute-svg.cute-v4{
+  transition:filter .18s ease,transform .18s ease;
+}
+.brute-cell-avatar-stage:hover .ga-brute-svg.cute-v4,
+.brute-camp-v2-avatar:hover .ga-brute-svg.cute-v4,
+.brute-armory-v3-avatar:hover .ga-brute-svg.cute-v4{
+  filter:
+    drop-shadow(0 14px 9px rgba(50,27,18,.24))
+    saturate(1)
+    brightness(1.035);
+}
+.brute-duel-avatar.custom .ga-brute-svg.cute-v4{
+  filter:
+    drop-shadow(0 7px 5px rgba(72,40,22,.18))
+    saturate(.98)
+    brightness(1.025);
+}
+.brute-fighters-v2 .ga-brute-svg.cute-v4.fight-model{
+  filter:
+    drop-shadow(0 16px 8px rgba(47,24,15,.24))
+    saturate(.98);
+}
+.brute-fighters-v2 .ga-brute-svg.cute-v4.fight-model [data-brute-part="eyes"]{
+  animation-duration:5.7s;
+}
+.brute-fighter:not(.committed):not(.hit-react):not(.ko) .ga-brute-svg.cute-v4.fight-model .brute-head{
+  transform-box:fill-box;
+  transform-origin:50% 85%;
+}
+@keyframes bruteCuteBlink{
+  0%,43%,46%,100%{transform:scaleY(1)}
+  44%{transform:scaleY(.14)}
+  45%{transform:scaleY(.22)}
+}
+@keyframes bruteCuteHeadBob{
+  0%,100%{transform:translateY(0) rotate(-.5deg)}
+  48%{transform:translateY(-2.6px) rotate(.7deg)}
+  58%{transform:translateY(-2px) rotate(.35deg)}
+}
+@keyframes bruteCuteHairFollow{
+  0%,100%{transform:rotate(0) translateY(0)}
+  45%{transform:rotate(-.7deg) translateY(-.7px)}
+  57%{transform:rotate(.6deg) translateY(-.2px)}
+}
+@keyframes bruteCuteAccessoryFollow{
+  0%,100%{transform:translateY(0)}
+  49%{transform:translateY(-1.2px)}
+}
+@media(prefers-reduced-motion:reduce){
+  .ga-brute-svg.cute-v4:not(.fight-model) .brute-head,
+  .ga-brute-svg.cute-v4:not(.fight-model) [data-brute-part="hair"],
+  .ga-brute-svg.cute-v4:not(.fight-model) [data-brute-part="accessory"],
+  .ga-brute-svg.cute-v4 [data-brute-part="eyes"]{
+    animation:none!important;
+  }
+}
+
+/* ================================================================
    GA BRUTE · CHARACTER ART DIRECTION V23
    Hero framing, archetype emblems and showcase presentation
    ================================================================ */
