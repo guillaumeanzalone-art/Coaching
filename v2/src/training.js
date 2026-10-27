@@ -49,6 +49,11 @@ import {
 } from './sbd-pr.js'
 
 import {
+  loadAthletePrHistory,
+  renderPrStatsPanel,
+} from './pr-stats.js'
+
+import {
   createRpgHealthState,
   handleRpgHealthAction,
   loadRpgHealth,
@@ -602,6 +607,11 @@ export function mountTraining(
     deadlift: {},
   }
 
+  let prStatsRows = []
+  let prStatsLoaded = false
+  let prStatsLoading = false
+  let prStatsError = ''
+
   const ATHLETE_INSIGHT_KEY =
     `ga-v2-athlete-insight:${cloudAthleteSlug}`
 
@@ -640,9 +650,15 @@ export function mountTraining(
     )
   }
 
+  const storedAthleteInsight =
+    localStorage.getItem(
+      ATHLETE_INSIGHT_KEY
+    )
+
   let activeAthleteInsight =
-    localStorage.getItem(ATHLETE_INSIGHT_KEY) === 'wellness'
-      ? 'wellness'
+    storedAthleteInsight === 'wellness' ||
+    storedAthleteInsight === 'stats'
+      ? storedAthleteInsight
       : 'prs'
 
   const healthState =
@@ -7107,6 +7123,17 @@ export function mountTraining(
           <button
             type="button"
             role="tab"
+            class="${activeAthleteInsight === 'stats' ? 'active' : ''}"
+            aria-selected="${activeAthleteInsight === 'stats' ? 'true' : 'false'}"
+            data-action="athlete-insight-tab"
+            data-insight="stats"
+          >
+            📈 Statistiques
+          </button>
+
+          <button
+            type="button"
+            role="tab"
             class="${activeAthleteInsight === 'wellness' ? 'active' : ''}"
             aria-selected="${activeAthleteInsight === 'wellness' ? 'true' : 'false'}"
             data-action="athlete-insight-tab"
@@ -7129,7 +7156,23 @@ export function mountTraining(
                   canEdit,
                 })}
               `
-            : renderSbdPrPanel()}
+            : activeAthleteInsight === 'stats'
+              ? renderPrStatsPanel({
+                  athleteName:
+                    program.athlete?.name ||
+                    cloudAthleteSlug,
+                  rows:
+                    prStatsRows,
+                  reps:
+                    selectedSbdReps,
+                  loading:
+                    prStatsLoading ||
+                    !prStatsLoaded &&
+                    !prStatsError,
+                  error:
+                    prStatsError,
+                })
+              : renderSbdPrPanel()}
         </div>
       </section>
     `
@@ -7253,6 +7296,52 @@ export function mountTraining(
     }
   }
 
+  async function hydratePrStats(
+    rerender = true,
+    force = false
+  ) {
+    if (
+      prStatsLoading ||
+      (
+        prStatsLoaded &&
+        !force
+      )
+    ) {
+      return
+    }
+
+    prStatsLoading = true
+    prStatsError = ''
+
+    if (rerender) {
+      render()
+    }
+
+    try {
+      prStatsRows =
+        await loadAthletePrHistory(
+          cloudAthleteSlug
+        )
+
+      prStatsLoaded = true
+    } catch (error) {
+      console.error(
+        'PR STATS LOAD ERROR',
+        error
+      )
+
+      prStatsError =
+        error?.message ||
+        'Impossible de charger l’historique des PR.'
+    } finally {
+      prStatsLoading = false
+
+      if (rerender) {
+        render()
+      }
+    }
+  }
+
   function capturePrForFound(
     found
   ) {
@@ -7305,6 +7394,13 @@ export function mountTraining(
             await loadAthleteSbdRepPrs(
               cloudAthleteSlug
             )
+
+          if (prStatsLoaded) {
+            void hydratePrStats(
+              false,
+              true
+            )
+          }
 
           prFlash = {
             lift:
@@ -10290,6 +10386,7 @@ export function mountTraining(
 
       if (
         next === 'prs' ||
+        next === 'stats' ||
         next === 'wellness'
       ) {
         activeAthleteInsight = next
@@ -10297,9 +10394,31 @@ export function mountTraining(
           ATHLETE_INSIGHT_KEY,
           next
         )
+
         render()
+
+        if (
+          next === 'stats' &&
+          !prStatsLoaded
+        ) {
+          void hydratePrStats(
+            true
+          )
+        }
       }
 
+      return
+    }
+
+    if (
+      actionName ===
+        'reload-pr-stats'
+    ) {
+      prStatsLoaded = false
+      void hydratePrStats(
+        true,
+        true
+      )
       return
     }
 
@@ -10405,6 +10524,14 @@ export function mountTraining(
         )
 
         sbdPrs = await loadAthleteSbdRepPrs(cloudAthleteSlug)
+
+        if (prStatsLoaded) {
+          await hydratePrStats(
+            false,
+            true
+          )
+        }
+
         editingSbdPrs = false
         prFlash = null
       } catch (error) {
@@ -11370,6 +11497,16 @@ if (
             ) {
               void hydrateSbdPrs()
               void hydrateAthleteSteps()
+
+              if (
+                prStatsLoaded ||
+                activeAthleteInsight === 'stats'
+              ) {
+                void hydratePrStats(
+                  true,
+                  true
+                )
+              }
             }
           }
         )
@@ -11447,5 +11584,12 @@ if (
   void hydrateSbdPrs()
   void hydrateAthleteSteps()
   void hydrateAthleteGlMultiplier()
+
+  if (
+    activeAthleteInsight === 'stats'
+  ) {
+    void hydratePrStats()
+  }
+
   void flushSbdPrOutbox()
 }
