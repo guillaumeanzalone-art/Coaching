@@ -1,0 +1,46 @@
+name: Trigger Store Release from Push
+
+on:
+  push:
+    branches:
+      - v2-refactor
+    paths:
+      - ".github/release-trigger.txt"
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  dispatch-store-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout trigger
+        uses: actions/checkout@v7
+
+      - name: Read release version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(tr -d '[:space:]' < .github/release-trigger.txt)"
+          if [ -z "$VERSION" ]; then
+            echo "::error::Version vide dans .github/release-trigger.txt"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch Store Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run store-release.yml \
+            --repo "${{ github.repository }}" \
+            --ref v2-refactor \
+            -f source_ref=v2-refactor \
+            -f version="$VERSION" \
+            -f platform=ios \
+            -f publish=true
