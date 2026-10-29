@@ -71,6 +71,39 @@ const ARCHETYPES = [
   },
 ]
 
+const PROCEDURAL_CHARACTER_THEMES = [
+  {
+    id: 'titan',
+    sigil: '◆',
+    hue: 28,
+  },
+  {
+    id: 'storm',
+    sigil: 'ϟ',
+    hue: 218,
+  },
+  {
+    id: 'arcane',
+    sigil: '✦',
+    hue: 274,
+  },
+  {
+    id: 'shadow',
+    sigil: '◐',
+    hue: 326,
+  },
+  {
+    id: 'solar',
+    sigil: '✧',
+    hue: 48,
+  },
+  {
+    id: 'crown',
+    sigil: '♛',
+    hue: 352,
+  },
+]
+
 const CHARACTER_DESIGNS = {
   louis: {
     family: 'psychic-lifter',
@@ -677,6 +710,17 @@ function ensureStyles() {
     .tcg-card--illustrated .tcg-card-stats span{padding:4px 5px;border-radius:7px;background:rgba(255,255,255,.055);font-size:6px}
     .tcg-card--illustrated .tcg-card-stats b{font-size:11px}
     .tcg-card--illustrated .tcg-card-copy{z-index:10;right:9px;bottom:48px}
+    .tcg-card--procedural{--char:hsl(var(--character-hue) 88% 66%)}
+    .tcg-card--procedural .tcg-card-art{background:radial-gradient(circle at 50% 20%,hsl(var(--character-hue) 50% 26%),#080a13 72%)}
+    .tcg-card--procedural[data-rarity="uncommon"] .tcg-card-art img{filter:saturate(1.05) contrast(1.04) drop-shadow(0 0 7px hsla(var(--character-hue),90%,65%,.28))}
+    .tcg-card--procedural[data-rarity="rare"] .tcg-card-art img{filter:saturate(1.12) contrast(1.07) drop-shadow(0 0 10px hsla(var(--character-hue),90%,65%,.42));transform:scale(1.025)}
+    .tcg-card--procedural[data-rarity="ultra"] .tcg-card-art img{filter:saturate(1.2) contrast(1.1) drop-shadow(0 0 14px hsla(var(--character-hue),95%,68%,.55));transform:scale(1.055)}
+    .tcg-card--procedural[data-rarity="secret"] .tcg-card-art img{filter:saturate(1.3) contrast(1.12) drop-shadow(0 0 18px hsla(var(--character-hue),95%,72%,.72));transform:scale(1.075)}
+    .tcg-card--procedural .tcg-psi-ring{border-color:hsla(var(--character-hue),92%,72%,.68);box-shadow:0 0 13px hsla(var(--character-hue),92%,60%,.48),inset 0 0 10px hsla(var(--character-hue),96%,70%,.24)}
+    .tcg-card--procedural .tcg-psi-sigil{color:hsl(var(--character-hue) 92% 82%);text-shadow:0 0 12px hsl(var(--character-hue) 94% 62%),0 0 27px hsla(var(--character-hue),90%,55%,.72)}
+    .tcg-card--procedural .tcg-psi-particle{color:hsl(var(--character-hue) 92% 84%);text-shadow:0 0 9px hsl(var(--character-hue) 94% 61%)}
+    .tcg-card--procedural[data-rarity="rare"] .tcg-power-vfx:after,.tcg-card--procedural[data-rarity="ultra"] .tcg-power-vfx:after,.tcg-card--procedural[data-rarity="secret"] .tcg-power-vfx:after{content:"◇  ✦  ◇";position:absolute;left:50%;bottom:11%;transform:translateX(-50%);color:hsl(var(--character-hue) 90% 82%);font-size:15px;letter-spacing:7px;text-shadow:0 0 10px hsl(var(--character-hue) 92% 62%);animation:tcgPsiLift 2.4s ease-in-out infinite}
+    .tcg-card--procedural[data-rarity="ultra"]:before,.tcg-card--procedural[data-rarity="secret"]:before{content:"";position:absolute;inset:-48%;z-index:7;pointer-events:none;background:linear-gradient(105deg,transparent 36%,rgba(255,255,255,0) 43%,hsla(var(--character-hue),95%,88%,.34) 49%,hsla(var(--character-hue),90%,65%,.18) 53%,transparent 61%);transform:translateX(-55%) rotate(8deg);animation:tcgHoloSweep 4.4s ease-in-out infinite}
     .tcg-card--signature .tcg-card-art{isolation:isolate}.tcg-card--signature .tcg-card-art:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(circle at 52% 40%,transparent 22%,rgba(20,8,44,.15) 58%,rgba(4,3,13,.46) 100%);mix-blend-mode:screen}
     .tcg-card--signature[data-rarity="common"] .tcg-card-art img{filter:none}
     .tcg-card--signature[data-rarity="uncommon"] .tcg-card-art img{filter:saturate(1.04) contrast(1.04) drop-shadow(0 0 7px rgba(104,103,255,.32))}
@@ -707,6 +751,63 @@ function ensureStyles() {
   document.head.appendChild(
     style
   )
+}
+
+function characterDesignFor(
+  slug
+) {
+  const explicit =
+    CHARACTER_DESIGNS[
+      slug
+    ]
+
+  if (explicit) {
+    return {
+      ...explicit,
+      procedural: false,
+      hue:
+        explicit.hue ??
+        270,
+    }
+  }
+
+  const seed =
+    hashString(
+      slug
+    )
+
+  const theme =
+    PROCEDURAL_CHARACTER_THEMES[
+      seed %
+      PROCEDURAL_CHARACTER_THEMES.length
+    ]
+
+  return {
+    family:
+      'procedural-' +
+      theme.id,
+    sigil:
+      theme.sigil,
+    hue:
+      (
+        theme.hue +
+        seed % 34
+      ) %
+      360,
+    procedural: true,
+    stages: {
+      common:
+        'Forme initiale',
+      uncommon:
+        'Éveil',
+      rare:
+        'Maîtrise',
+      ultra:
+        'Ascension',
+      secret:
+        'Forme mythique',
+    },
+  }
 }
 
 function dedicatedCardArt(
@@ -779,10 +880,9 @@ function renderCard(
         )
 
   const design =
-    CHARACTER_DESIGNS[
+    characterDesignFor(
       card.slug
-    ] ||
-    null
+    )
 
   const stageLabel =
     design?.stages?.[
@@ -812,12 +912,18 @@ function renderCard(
       ? 'tcg-card--illustrated'
       : ''
 
+  const proceduralClass =
+    design?.procedural
+      ? 'tcg-card--procedural'
+      : ''
+
   return `
     <article
-      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
+      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
       data-rarity="${esc(card.rarity)}"
       data-character="${esc(card.slug)}"
       data-design="${esc(design?.family || '')}"
+      style="--character-hue:${Number(design?.hue || 270)}"
       ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}"` : ''}
     >
       <div class="tcg-card-art">
