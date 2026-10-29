@@ -71,6 +71,32 @@ const ARCHETYPES = [
   },
 ]
 
+const CHARACTER_DESIGNS = {
+  louis: {
+    family: 'psychic-lifter',
+    sigil: 'Ψ',
+    stages: {
+      common: 'Force latente',
+      uncommon: 'Éveil psychique',
+      rare: 'Télékinésie',
+      ultra: 'Œil astral',
+      secret: 'Maître de la gravité',
+    },
+  },
+
+  rudy: {
+    family: 'psychic-savant',
+    sigil: 'Ψ',
+    stages: {
+      common: 'Esprit analytique',
+      uncommon: 'Focus psychique',
+      rare: 'Télékinésie vectorielle',
+      ultra: 'Cortex astral',
+      secret: 'Singularité mentale',
+    },
+  },
+}
+
 const BOOSTER_TEMPLATES = [
   ['forge', 'Forge', '🔥', 18],
   ['titan', 'Titan', '🗿', 38],
@@ -588,6 +614,19 @@ function ensureStyles() {
     .tcg-open-stage{display:grid;gap:14px;padding:18px}.tcg-pack-big{--h:48;width:min(260px,72vw);aspect-ratio:.72;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid hsla(var(--h),85%,70%,.38);border-radius:22px;background:radial-gradient(circle at 50% 28%,hsla(var(--h),90%,70%,.3),transparent 28%),linear-gradient(145deg,hsl(var(--h) 40% 20%),#090c17);box-shadow:0 28px 70px rgba(0,0,0,.42),inset 0 0 60px rgba(255,255,255,.035)}.tcg-pack-big i{font-style:normal;font-size:58px}.tcg-pack-big strong{margin-top:18px;font-size:24px}.tcg-pack-big small{margin-top:4px;color:#9ca5ba}.tcg-open-btn,.tcg-primary,.tcg-secondary{border:0;border-radius:13px;padding:12px 16px;font-weight:1000;cursor:pointer}.tcg-open-btn,.tcg-primary{background:linear-gradient(135deg,#f6c554,#e38b34);color:#1a1207}.tcg-open-btn:disabled,.tcg-primary:disabled{opacity:.35;cursor:not-allowed}.tcg-secondary{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#e8ebf5}
     .tcg-reveal{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.tcg-card{--rarity:#8a94aa;position:relative;min-width:0;overflow:hidden;border:2px solid color-mix(in srgb,var(--rarity),transparent 18%);border-radius:16px;background:radial-gradient(circle at 50% 12%,color-mix(in srgb,var(--rarity),transparent 78%),transparent 34%),linear-gradient(180deg,#20263a,#0d1120 72%);box-shadow:0 15px 35px rgba(0,0,0,.28);color:#fff}.tcg-card[data-rarity="common"]{--rarity:#9ca4b4}.tcg-card[data-rarity="uncommon"]{--rarity:#5bd195}.tcg-card[data-rarity="rare"]{--rarity:#6ea7ff}.tcg-card[data-rarity="ultra"]{--rarity:#d46fff}.tcg-card[data-rarity="secret"]{--rarity:#ffd45f}.tcg-card.is-reveal{animation:tcgReveal .46s cubic-bezier(.2,.8,.2,1) both}.tcg-card:nth-child(2){animation-delay:.08s}.tcg-card:nth-child(3){animation-delay:.16s}.tcg-card:nth-child(4){animation-delay:.24s}.tcg-card:nth-child(5){animation-delay:.32s}
     .tcg-card-art{position:relative;aspect-ratio:1.08;overflow:hidden;background:linear-gradient(135deg,color-mix(in srgb,var(--rarity),#111 68%),#090b13)}.tcg-card-art img{width:100%;height:100%;object-fit:cover;object-position:center 22%;filter:saturate(.92) contrast(1.03)}.tcg-card-art .fallback{height:100%;display:grid;place-items:center;font-size:50px}.tcg-card-rarity{position:absolute;left:7px;top:7px;padding:4px 6px;border:1px solid color-mix(in srgb,var(--rarity),white 28%);border-radius:999px;background:rgba(7,9,16,.8);color:var(--rarity);font-size:7px;font-weight:1000}.tcg-card-cost{position:absolute;right:7px;top:7px;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:var(--rarity);color:#0c0d13;font-size:12px;font-weight:1000}.tcg-card-body{padding:9px}.tcg-card-name{display:block;overflow:hidden;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.tcg-card-type{margin-top:2px;color:var(--rarity);font-size:7px;font-weight:950;text-transform:uppercase}.tcg-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.tcg-card-stats span{padding:6px;border-radius:8px;background:rgba(255,255,255,.04);color:#8c96ad;font-size:7px}.tcg-card-stats b{display:block;margin-top:1px;color:#fff;font-size:13px}.tcg-card-skill{min-height:38px;margin-top:7px;color:#838ca3;font-size:7px;line-height:1.35}.tcg-card-copy{position:absolute;right:7px;bottom:7px;padding:3px 5px;border-radius:7px;background:rgba(0,0,0,.55);font-size:8px;font-weight:950}
+    .tcg-card-evolution{position:absolute;left:7px;bottom:7px;max-width:70%;padding:4px 7px;border:1px solid color-mix(in srgb,var(--rarity),transparent 30%);border-radius:999px;background:rgba(7,8,18,.72);backdrop-filter:blur(6px);color:#fff;font-size:6.5px;font-weight:1000;letter-spacing:.05em;text-transform:uppercase;z-index:5}
+    .tcg-card--signature .tcg-card-art{isolation:isolate}.tcg-card--signature .tcg-card-art:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(circle at 52% 40%,transparent 22%,rgba(20,8,44,.15) 58%,rgba(4,3,13,.46) 100%);mix-blend-mode:screen}
+    .tcg-card--signature[data-rarity="common"] .tcg-card-art img{filter:none}
+    .tcg-card--signature[data-rarity="uncommon"] .tcg-card-art img{filter:saturate(1.04) contrast(1.04) drop-shadow(0 0 7px rgba(104,103,255,.32))}
+    .tcg-card--signature[data-rarity="rare"] .tcg-card-art img{filter:saturate(1.12) contrast(1.07) drop-shadow(0 0 10px rgba(145,79,255,.45));transform:scale(1.03)}
+    .tcg-card--signature[data-rarity="ultra"] .tcg-card-art img{filter:saturate(1.2) contrast(1.09) drop-shadow(0 0 14px rgba(177,77,255,.58));transform:scale(1.06)}
+    .tcg-card--signature[data-rarity="secret"] .tcg-card-art img{filter:saturate(1.28) contrast(1.12) drop-shadow(0 0 18px rgba(255,215,94,.55));transform:scale(1.08)}
+    .tcg-power-vfx{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:3}.tcg-psi-ring{position:absolute;left:50%;top:44%;width:58%;aspect-ratio:1;border:1.5px solid rgba(154,116,255,.65);border-radius:50%;box-shadow:0 0 12px rgba(117,80,255,.45),inset 0 0 10px rgba(193,125,255,.25);transform:translate(-50%,-50%);animation:tcgPsiSpin 8s linear infinite}.tcg-psi-ring--b{width:78%;border-style:dashed;opacity:.62;animation-duration:13s;animation-direction:reverse}.tcg-psi-sigil{position:absolute;left:50%;top:16%;transform:translateX(-50%);color:rgba(215,192,255,.82);font-size:30px;text-shadow:0 0 12px #8f56ff,0 0 26px #4b33ff;animation:tcgPsiPulse 2.2s ease-in-out infinite}.tcg-psi-particle{position:absolute;color:#d9c4ff;text-shadow:0 0 8px #8d5bff;font-size:10px;animation:tcgPsiFloat 3.2s ease-in-out infinite}.tcg-psi-particle.p1{left:18%;top:28%}.tcg-psi-particle.p2{right:15%;top:36%;animation-delay:-.8s}.tcg-psi-particle.p3{left:29%;bottom:18%;animation-delay:-1.4s}.tcg-psi-particle.p4{right:28%;bottom:24%;animation-delay:-2s}
+    .tcg-card[data-design="psychic-lifter"][data-rarity="rare"] .tcg-power-vfx:after,.tcg-card[data-design="psychic-lifter"][data-rarity="ultra"] .tcg-power-vfx:after,.tcg-card[data-design="psychic-lifter"][data-rarity="secret"] .tcg-power-vfx:after{content:"◉  ◌  ◉";position:absolute;left:50%;bottom:10%;transform:translateX(-50%) rotate(-7deg);color:rgba(220,206,255,.78);font-size:18px;letter-spacing:9px;text-shadow:0 0 10px #7f4cff;animation:tcgPsiLift 2.5s ease-in-out infinite}
+    .tcg-card[data-design="psychic-savant"][data-rarity="rare"] .tcg-power-vfx:after,.tcg-card[data-design="psychic-savant"][data-rarity="ultra"] .tcg-power-vfx:after,.tcg-card[data-design="psychic-savant"][data-rarity="secret"] .tcg-power-vfx:after{content:"⌁  ◇  ⌁";position:absolute;left:50%;bottom:12%;transform:translateX(-50%);color:rgba(191,219,255,.85);font-size:16px;letter-spacing:7px;text-shadow:0 0 11px #605bff;animation:tcgPsiLift 2.2s ease-in-out infinite}
+    .tcg-card--full-art{min-height:330px}.tcg-card--full-art .tcg-card-art{position:absolute;inset:0;aspect-ratio:auto}.tcg-card--full-art .tcg-card-art img{object-position:center 24%}.tcg-card--full-art .tcg-card-body{position:relative;z-index:6;margin-top:205px;padding:42px 10px 10px;background:linear-gradient(180deg,transparent,rgba(9,7,19,.88) 28%,rgba(8,9,18,.98) 66%)}.tcg-card--full-art .tcg-card-name{font-size:14px;text-shadow:0 2px 8px #000}.tcg-card--full-art .tcg-card-stats span{background:rgba(12,10,24,.62);backdrop-filter:blur(6px)}.tcg-card--full-art[data-rarity="secret"]{box-shadow:0 0 0 1px rgba(255,227,116,.5),0 0 28px rgba(177,72,255,.36),0 18px 44px rgba(0,0,0,.45)}
+    .tcg-card--signature[data-rarity="ultra"]:before,.tcg-card--signature[data-rarity="secret"]:before{content:"";position:absolute;inset:-45%;z-index:7;pointer-events:none;background:linear-gradient(105deg,transparent 36%,rgba(255,255,255,.0) 43%,rgba(255,255,255,.3) 49%,rgba(188,126,255,.18) 53%,transparent 61%);transform:translateX(-55%) rotate(8deg);animation:tcgHoloSweep 4.2s ease-in-out infinite}
+    @keyframes tcgPsiSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}@keyframes tcgPsiPulse{50%{opacity:.55;transform:translateX(-50%) scale(1.12)}}@keyframes tcgPsiFloat{50%{transform:translateY(-9px) rotate(16deg);opacity:.5}}@keyframes tcgPsiLift{50%{transform:translateX(-50%) translateY(-9px) rotate(4deg)}}@keyframes tcgHoloSweep{0%,22%{transform:translateX(-70%) rotate(8deg)}55%,100%{transform:translateX(70%) rotate(8deg)}}
     .tcg-collection-toolbar{display:flex;gap:7px;flex-wrap:wrap}.tcg-collection-toolbar button{border:1px solid rgba(255,255,255,.08);border-radius:9px;background:#11172a;color:#7e88a2;padding:7px 9px;font-size:9px;font-weight:900;cursor:pointer}.tcg-collection-toolbar button.active{border-color:#eab74d;color:#fff;background:#2c2416}.tcg-card-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.tcg-card-grid .tcg-card{cursor:pointer;transition:.14s transform,.14s filter}.tcg-card-grid .tcg-card:hover{transform:translateY(-3px);filter:brightness(1.06)}
     .tcg-deck-layout{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:12px}.tcg-deck-list{display:grid;gap:7px}.tcg-deck-row{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:11px;background:#101629}.tcg-deck-row .mini{width:38px;height:38px;display:grid;place-items:center;border-radius:9px;background:#181f35;font-weight:950}.tcg-deck-row strong{display:block;font-size:10px}.tcg-deck-row small{display:block;color:#76819a;font-size:8px}.tcg-deck-row button{border:0;border-radius:8px;background:#311b24;color:#ff9aab;padding:7px 8px;cursor:pointer}.tcg-deck-summary{padding:14px;border:1px solid rgba(255,255,255,.07);border-radius:15px;background:#0d1222}.tcg-deck-summary h4{margin:0}.tcg-curve{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:11px}.tcg-curve div{text-align:center;padding:7px 3px;border-radius:8px;background:#141b2d}.tcg-curve b{display:block}.tcg-curve span{font-size:7px;color:#707b94}
     .tcg-duel{display:grid;gap:12px}.tcg-duel-board{position:relative;overflow:hidden;min-height:420px;padding:14px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:radial-gradient(circle at 50% 50%,rgba(103,73,184,.17),transparent 36%),linear-gradient(180deg,#151a31,#090c17)}.tcg-hp-row{display:flex;justify-content:space-between;gap:12px}.tcg-hp{width:44%;padding:9px;border-radius:11px;background:rgba(0,0,0,.28)}.tcg-hp header{display:flex;justify-content:space-between;font-size:9px;font-weight:900}.tcg-hp-track{height:7px;margin-top:5px;border-radius:999px;background:#272d42;overflow:hidden}.tcg-hp-track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#ff625f,#ffb157);transition:width .25s ease}.tcg-battle-center{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;min-height:250px}.tcg-battle-slot{min-width:0}.tcg-battle-slot .tcg-card{width:min(190px,100%);margin:auto}.tcg-versus{font-size:18px;font-weight:1000;color:#6f7891}.tcg-battle-log{min-height:36px;padding:9px 11px;border-radius:11px;background:rgba(0,0,0,.25);color:#9da6ba;font-size:9px;text-align:center}.tcg-hand{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.tcg-hand .tcg-card{cursor:pointer;transition:.14s transform,.14s opacity}.tcg-hand .tcg-card:hover{transform:translateY(-4px)}.tcg-hand .tcg-card.is-locked{opacity:.34;cursor:not-allowed;filter:grayscale(.6)}.tcg-energy{text-align:center;color:#ffd66d;font-size:10px;font-weight:950}.tcg-duel-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
@@ -616,10 +655,38 @@ function renderCard(
       card.athlete
     )
 
+  const design =
+    CHARACTER_DESIGNS[
+      card.slug
+    ] ||
+    null
+
+  const stageLabel =
+    design?.stages?.[
+      card.rarity
+    ] ||
+    ''
+
+  const signatureClass =
+    design
+      ? 'tcg-card--signature'
+      : ''
+
+  const fullArtClass =
+    design &&
+    (
+      card.rarity === 'ultra' ||
+      card.rarity === 'secret'
+    )
+      ? 'tcg-card--full-art'
+      : ''
+
   return `
     <article
-      class="tcg-card ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
+      class="tcg-card ${signatureClass} ${fullArtClass} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
       data-rarity="${esc(card.rarity)}"
+      data-character="${esc(card.slug)}"
+      data-design="${esc(design?.family || '')}"
       ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}"` : ''}
     >
       <div class="tcg-card-art">
@@ -637,9 +704,35 @@ function renderCard(
           `
         }
 
+        ${design && card.rarity !== 'common'
+          ? `
+            <div class="tcg-power-vfx" aria-hidden="true">
+              <i class="tcg-psi-ring tcg-psi-ring--a"></i>
+              <i class="tcg-psi-ring tcg-psi-ring--b"></i>
+              <b class="tcg-psi-sigil">
+                ${esc(design.sigil)}
+              </b>
+              <span class="tcg-psi-particle p1">✦</span>
+              <span class="tcg-psi-particle p2">◈</span>
+              <span class="tcg-psi-particle p3">✧</span>
+              <span class="tcg-psi-particle p4">●</span>
+            </div>
+          `
+          : ''
+        }
+
         <span class="tcg-card-rarity">
           ${esc(card.rarityMeta.label)}
         </span>
+
+        ${stageLabel
+          ? `
+            <span class="tcg-card-evolution">
+              ${esc(stageLabel)}
+            </span>
+          `
+          : ''
+        }
 
         <span class="tcg-card-cost">
           ${card.cost}
