@@ -1501,24 +1501,64 @@ export async function mountTcgGame(
         )
       )
 
+    const dealOpeningHand =
+      deckCardsValue => {
+        const hand =
+          deckCardsValue.splice(
+            0,
+            4
+          )
+
+        if (
+          !hand.some(
+            card =>
+              card.cost <= 2
+          )
+        ) {
+          const playableIndex =
+            deckCardsValue
+              .findIndex(
+                card =>
+                  card.cost <= 2
+              )
+
+          if (
+            playableIndex >= 0 &&
+            hand.length
+          ) {
+            const playable =
+              deckCardsValue[
+                playableIndex
+              ]
+
+            deckCardsValue[
+              playableIndex
+            ] = hand[0]
+
+            hand[0] =
+              playable
+          }
+        }
+
+        return hand
+      }
+
     battle = {
       playerHp:
         START_HP,
       aiHp:
         START_HP,
       turn: 1,
-      energy: 1,
+      energy: 2,
       playerDeck,
       aiDeck,
       playerHand:
-        playerDeck.splice(
-          0,
-          4
+        dealOpeningHand(
+          playerDeck
         ),
       aiHand:
-        aiDeck.splice(
-          0,
-          4
+        dealOpeningHand(
+          aiDeck
         ),
       playerCard: null,
       aiCard: null,
@@ -1649,52 +1689,58 @@ export async function mountTcgGame(
 
     const aiCard =
       affordableAi[0] ||
-      battle.aiHand
-        .slice()
-        .sort(
-          (a, b) =>
-            a.cost -
-            b.cost
-        )[0]
-
-    if (!aiCard) {
-      finishBattle()
-      render()
-      return
-    }
+      null
 
     const aiIndex =
-      battle.aiHand
-        .findIndex(
-          card =>
-            card === aiCard
-        )
+      aiCard
+        ? battle.aiHand
+            .findIndex(
+              card =>
+                card === aiCard
+            )
+        : -1
+
+    const emptyOpponent = {
+      cost: 0,
+      attack: 0,
+      guard: 0,
+    }
 
     const playerStats =
       appliedStats(
         playerCard,
-        aiCard
+        aiCard ||
+          emptyOpponent
       )
 
     const aiStats =
-      appliedStats(
-        aiCard,
-        playerCard
-      )
+      aiCard
+        ? appliedStats(
+            aiCard,
+            playerCard
+          )
+        : {
+            attack: 0,
+            guard: 0,
+          }
 
     let damageToAi =
-      Math.max(
-        0,
-        playerStats.attack -
-        aiStats.guard
-      )
+      aiCard
+        ? Math.max(
+            0,
+            playerStats.attack -
+            aiStats.guard
+          )
+        : playerStats.attack
 
     let damageToPlayer =
-      Math.max(
-        0,
-        aiStats.attack -
-        playerStats.guard
-      )
+      aiCard
+        ? Math.max(
+            0,
+            aiStats.attack -
+            playerStats.guard
+          )
+        : 0
 
     if (
       damageToAi === 0 &&
@@ -1738,13 +1784,19 @@ export async function mountTcgGame(
       1
     )
 
-    battle.aiHand.splice(
-      aiIndex,
-      1
-    )
+    if (
+      aiIndex >= 0
+    ) {
+      battle.aiHand.splice(
+        aiIndex,
+        1
+      )
+    }
 
     battle.log =
-      `${playerCard.athlete.name} inflige ${damageToAi} · ${aiCard.athlete.name} inflige ${damageToPlayer}.`
+      aiCard
+        ? `${playerCard.athlete.name} inflige ${damageToAi} · ${aiCard.athlete.name} inflige ${damageToPlayer}.`
+        : `GA Rival passe · ${playerCard.athlete.name} frappe directement pour ${damageToAi}.`
 
     if (
       battle.playerHp <= 0 ||
@@ -1772,7 +1824,7 @@ export async function mountTcgGame(
     battle.energy =
       Math.min(
         5,
-        battle.turn
+        battle.turn + 1
       )
 
     if (
