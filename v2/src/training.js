@@ -54,6 +54,11 @@ import {
 } from './pr-stats.js'
 
 import {
+  claimTcgWorkoutPack,
+  flushTcgWorkoutPackOutbox,
+} from './tcg-rewards.js'
+
+import {
   createRpgHealthState,
   handleRpgHealthAction,
   loadRpgHealth,
@@ -8886,14 +8891,66 @@ export function mountTraining(
         sourceSet.id
       )
 
+    let sessionWasCompleted =
+      false
+    let sessionIsCompleted =
+      false
+
     if (found) {
+      sessionWasCompleted =
+        getSessionState(
+          found.weekIndex,
+          found.dayIndex
+        ).status ===
+          'completed'
+
       reconcileSessionClock(
         found.weekIndex,
         found.dayIndex
       )
+
+      sessionIsCompleted =
+        getSessionState(
+          found.weekIndex,
+          found.dayIndex
+        ).status ===
+          'completed'
     }
 
     persist()
+
+    if (
+      found &&
+      !sessionWasCompleted &&
+      sessionIsCompleted
+    ) {
+      void claimTcgWorkoutPack({
+        athleteSlug:
+          cloudAthleteSlug,
+        programKey:
+          programKey(),
+        weekIndex:
+          found.weekIndex,
+        dayIndex:
+          found.dayIndex,
+      })
+        .then(result => {
+          if (
+            result?.awarded
+          ) {
+            console.log(
+              'TCG BOOSTER EARNED',
+              result
+            )
+          }
+        })
+        .catch(error => {
+          console.error(
+            'TCG BOOSTER CLAIM ERROR',
+            error
+          )
+        })
+    }
 
     if (found) {
       queueFoundSet(
@@ -11489,6 +11546,14 @@ if (
         setSyncStatus
       )
 
+      void flushTcgWorkoutPackOutbox()
+        .catch(error => {
+          console.error(
+            'TCG BOOSTER OUTBOX ERROR',
+            error
+          )
+        })
+
       void flushSbdPrOutbox()
         .then(
           (result) => {
@@ -11591,5 +11656,6 @@ if (
     void hydratePrStats()
   }
 
+  void flushTcgWorkoutPackOutbox()
   void flushSbdPrOutbox()
 }
