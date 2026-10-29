@@ -1,7 +1,7 @@
 import { mountProgramEditor } from './program-editor.js'
 import { mountRpg } from './rpg.js'
 import { mountIdleGame } from './idle-game.js'
-import { mountBruteGame } from './brute-game.js'
+import { mountTcgGame } from './tcg-game.js'
 import { mountCut } from './cut.js'
 import { getAthleteProgress, xpProgressFromTotal } from './xp.js'
 import './style.css'
@@ -921,7 +921,7 @@ function renderHome() {
             </strong>
 
             <span>
-              RPG · Idle Training · Sommeil · PvE / PvP
+              RPG · TCG · Boosters · Collection · Duels
             </span>
           </div>
 
@@ -1652,20 +1652,20 @@ function renderGameHubScreen() {
 
         <button
           class="card"
-          data-action="game-idle"
+          data-action="game-tcg"
           type="button"
         >
           <span class="card-icon">
-            ⚡
+            🎴
           </span>
 
           <div>
             <strong>
-              Idle Training
+              GA TCG
             </strong>
 
             <span>
-              Séances · steps · sommeil · avatar · PvE · Duel · classement
+              Boosters · cartes athlètes · collection · deck · duel
             </span>
           </div>
 
@@ -1677,9 +1677,9 @@ function renderGameHubScreen() {
 
       <section class="home-live-dashboard home-live-dashboard--bottom">
         <div class="home-live-loading">
-          RPG pour la progression classique · Idle Training regroupe
-          maintenant séances, steps, sommeil, création de personnage,
-          PvE, Duel, équipement et classement.
+          RPG pour la progression classique · GA TCG transforme les athlètes
+          en cartes à collectionner. Termine tes séances pour gagner des boosters
+          puis construis ton deck et affronte le rival GA.
         </div>
       </section>
     </main>
@@ -1716,15 +1716,15 @@ function renderGameHubScreen() {
 
       if (
         action.dataset.action ===
-          'game-idle'
+          'game-tcg'
       ) {
-        await renderBruteGameScreen()
+        await renderTcgGameScreen()
       }
     }
 }
 
 
-async function renderBruteGameScreen() {
+async function renderTcgGameScreen() {
   clearAppHandlers()
 
   const list =
@@ -1751,14 +1751,19 @@ async function renderBruteGameScreen() {
   const isCoach =
     currentMember?.role === 'coach'
 
-  await mountBruteGame(
+  await mountTcgGame(
     app,
     {
       athletes: list,
 
       initialSlug:
         isCoach
-          ? ''
+          ? (
+              ownSlug ||
+              list[0]?.cloudSlug ||
+              list[0]?.id ||
+              ''
+            )
           : ownSlug,
 
       preferredSlug:
@@ -1768,18 +1773,6 @@ async function renderBruteGameScreen() {
         isCoach,
 
       isCoach,
-
-      canEditAthlete:
-        slug => {
-          if (isCoach) {
-            return true
-          }
-
-          return (
-            normalizeSlug(slug) ===
-            normalizeSlug(ownSlug)
-          )
-        },
 
       onBack:
         renderGameHubScreen,
