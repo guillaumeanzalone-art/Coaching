@@ -97,6 +97,19 @@ const CHARACTER_DESIGNS = {
   },
 }
 
+const CHARACTER_CARD_ART = {
+  rudy: {
+    sprite: '/tcg/rudy-evolution.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
+}
+
 const BOOSTER_TEMPLATES = [
   ['forge', 'Forge', '🔥', 18],
   ['titan', 'Titan', '🗿', 38],
@@ -615,6 +628,17 @@ function ensureStyles() {
     .tcg-reveal{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.tcg-card{--rarity:#8a94aa;position:relative;min-width:0;overflow:hidden;border:2px solid color-mix(in srgb,var(--rarity),transparent 18%);border-radius:16px;background:radial-gradient(circle at 50% 12%,color-mix(in srgb,var(--rarity),transparent 78%),transparent 34%),linear-gradient(180deg,#20263a,#0d1120 72%);box-shadow:0 15px 35px rgba(0,0,0,.28);color:#fff}.tcg-card[data-rarity="common"]{--rarity:#9ca4b4}.tcg-card[data-rarity="uncommon"]{--rarity:#5bd195}.tcg-card[data-rarity="rare"]{--rarity:#6ea7ff}.tcg-card[data-rarity="ultra"]{--rarity:#d46fff}.tcg-card[data-rarity="secret"]{--rarity:#ffd45f}.tcg-card.is-reveal{animation:tcgReveal .46s cubic-bezier(.2,.8,.2,1) both}.tcg-card:nth-child(2){animation-delay:.08s}.tcg-card:nth-child(3){animation-delay:.16s}.tcg-card:nth-child(4){animation-delay:.24s}.tcg-card:nth-child(5){animation-delay:.32s}
     .tcg-card-art{position:relative;aspect-ratio:1.08;overflow:hidden;background:linear-gradient(135deg,color-mix(in srgb,var(--rarity),#111 68%),#090b13)}.tcg-card-art img{width:100%;height:100%;object-fit:cover;object-position:center 22%;filter:saturate(.92) contrast(1.03)}.tcg-card-art .fallback{height:100%;display:grid;place-items:center;font-size:50px}.tcg-card-rarity{position:absolute;left:7px;top:7px;padding:4px 6px;border:1px solid color-mix(in srgb,var(--rarity),white 28%);border-radius:999px;background:rgba(7,9,16,.8);color:var(--rarity);font-size:7px;font-weight:1000}.tcg-card-cost{position:absolute;right:7px;top:7px;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:var(--rarity);color:#0c0d13;font-size:12px;font-weight:1000}.tcg-card-body{padding:9px}.tcg-card-name{display:block;overflow:hidden;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.tcg-card-type{margin-top:2px;color:var(--rarity);font-size:7px;font-weight:950;text-transform:uppercase}.tcg-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.tcg-card-stats span{padding:6px;border-radius:8px;background:rgba(255,255,255,.04);color:#8c96ad;font-size:7px}.tcg-card-stats b{display:block;margin-top:1px;color:#fff;font-size:13px}.tcg-card-skill{min-height:38px;margin-top:7px;color:#838ca3;font-size:7px;line-height:1.35}.tcg-card-copy{position:absolute;right:7px;bottom:7px;padding:3px 5px;border-radius:7px;background:rgba(0,0,0,.55);font-size:8px;font-weight:950}
     .tcg-card-evolution{position:absolute;left:7px;bottom:7px;max-width:70%;padding:4px 7px;border:1px solid color-mix(in srgb,var(--rarity),transparent 30%);border-radius:999px;background:rgba(7,8,18,.72);backdrop-filter:blur(6px);color:#fff;font-size:6.5px;font-weight:1000;letter-spacing:.05em;text-transform:uppercase;z-index:5}
+    .tcg-card--illustrated{aspect-ratio:2/3;min-height:0;background:#070811}
+    .tcg-card--illustrated .tcg-card-art{position:absolute;inset:0;aspect-ratio:auto;background:#080812}
+    .tcg-illustration-sprite{position:absolute;inset:0;background-repeat:no-repeat;background-size:500% 100%;background-position-y:center}
+    .tcg-card--illustrated .tcg-card-rarity,.tcg-card--illustrated .tcg-card-evolution{display:none}
+    .tcg-card--illustrated .tcg-card-cost{top:40px;right:9px;z-index:8;width:25px;height:25px;border:1px solid rgba(255,255,255,.38);box-shadow:0 4px 14px rgba(0,0,0,.42)}
+    .tcg-card--illustrated .tcg-card-body{position:absolute;left:7px;right:7px;bottom:7px;z-index:8;margin:0;padding:5px;border:1px solid color-mix(in srgb,var(--rarity),transparent 48%);border-radius:10px;background:rgba(7,8,18,.78);backdrop-filter:blur(8px)}
+    .tcg-card--illustrated .tcg-card-name,.tcg-card--illustrated .tcg-card-type,.tcg-card--illustrated .tcg-card-skill{display:none}
+    .tcg-card--illustrated .tcg-card-stats{grid-template-columns:1fr 1fr;gap:4px;margin:0}
+    .tcg-card--illustrated .tcg-card-stats span{padding:4px 5px;border-radius:7px;background:rgba(255,255,255,.055);font-size:6px}
+    .tcg-card--illustrated .tcg-card-stats b{font-size:11px}
+    .tcg-card--illustrated .tcg-card-copy{z-index:10;right:9px;bottom:48px}
     .tcg-card--signature .tcg-card-art{isolation:isolate}.tcg-card--signature .tcg-card-art:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(circle at 52% 40%,transparent 22%,rgba(20,8,44,.15) 58%,rgba(4,3,13,.46) 100%);mix-blend-mode:screen}
     .tcg-card--signature[data-rarity="common"] .tcg-card-art img{filter:none}
     .tcg-card--signature[data-rarity="uncommon"] .tcg-card-art img{filter:saturate(1.04) contrast(1.04) drop-shadow(0 0 7px rgba(104,103,255,.32))}
@@ -641,6 +665,39 @@ function ensureStyles() {
   )
 }
 
+function dedicatedCardArt(
+  card
+) {
+  const art =
+    CHARACTER_CARD_ART[
+      card?.slug
+    ]
+
+  if (!art) {
+    return null
+  }
+
+  const index =
+    art.rarityIndex?.[
+      card?.rarity
+    ]
+
+  if (
+    !Number.isInteger(
+      index
+    )
+  ) {
+    return null
+  }
+
+  return {
+    sprite: art.sprite,
+    index,
+    position:
+      index * 25,
+  }
+}
+
 function renderCard(
   card,
   {
@@ -650,10 +707,17 @@ function renderCard(
     locked = false,
   } = {}
 ) {
-  const image =
-    imageSrc(
-      card.athlete
+  const dedicatedArt =
+    dedicatedCardArt(
+      card
     )
+
+  const image =
+    dedicatedArt
+      ? ''
+      : imageSrc(
+          card.athlete
+        )
 
   const design =
     CHARACTER_DESIGNS[
@@ -673,38 +737,54 @@ function renderCard(
       : ''
 
   const fullArtClass =
-    design &&
+    dedicatedArt ||
     (
-      card.rarity === 'ultra' ||
-      card.rarity === 'secret'
+      design &&
+      (
+        card.rarity === 'ultra' ||
+        card.rarity === 'secret'
+      )
     )
       ? 'tcg-card--full-art'
       : ''
 
+  const illustratedClass =
+    dedicatedArt
+      ? 'tcg-card--illustrated'
+      : ''
+
   return `
     <article
-      class="tcg-card ${signatureClass} ${fullArtClass} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
+      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
       data-rarity="${esc(card.rarity)}"
       data-character="${esc(card.slug)}"
       data-design="${esc(design?.family || '')}"
       ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}"` : ''}
     >
       <div class="tcg-card-art">
-        ${image
+        ${dedicatedArt
           ? `
-            <img
-              src="${esc(image)}"
-              alt=""
-            >
+            <div
+              class="tcg-illustration-sprite"
+              aria-hidden="true"
+              style="background-image:url('${esc(dedicatedArt.sprite)}');background-position:${dedicatedArt.position}% center"
+            ></div>
           `
-          : `
-            <div class="fallback">
-              ${esc(card.athlete?.emoji || '🏋️')}
-            </div>
-          `
+          : image
+            ? `
+              <img
+                src="${esc(image)}"
+                alt=""
+              >
+            `
+            : `
+              <div class="fallback">
+                ${esc(card.athlete?.emoji || '🏋️')}
+              </div>
+            `
         }
 
-        ${design && card.rarity !== 'common'
+        ${design && card.rarity !== 'common' && !dedicatedArt
           ? `
             <div class="tcg-power-vfx" aria-hidden="true">
               <i class="tcg-psi-ring tcg-psi-ring--a"></i>
