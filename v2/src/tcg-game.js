@@ -95,11 +95,34 @@ const CHARACTER_DESIGNS = {
       secret: 'Singularité mentale',
     },
   },
+
+  guillaume: {
+    family: 'sovereign-lifter',
+    sigil: '♛',
+    stages: {
+      common: 'Discipline',
+      uncommon: 'Commandement',
+      rare: 'Domination',
+      ultra: 'Souverain',
+      secret: 'Ascension',
+    },
+  },
 }
 
 const CHARACTER_CARD_ART = {
   rudy: {
     sprite: '/tcg/rudy-evolution.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
+
+  guillaume: {
+    sprite: 'data:image/webp;base64,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',
     rarityIndex: {
       common: 0,
       uncommon: 1,
@@ -625,7 +648,22 @@ function ensureStyles() {
     .tcg-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.018)}.tcg-panel-head h3{margin:0;font-size:16px}.tcg-panel-head p{margin:3px 0 0;color:#77809a;font-size:9px}.tcg-panel-pad{padding:14px}
     .tcg-booster-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.tcg-booster{--h:48;position:relative;min-height:190px;overflow:hidden;padding:13px;border:1px solid hsla(var(--h),80%,65%,.26);border-radius:18px;background:radial-gradient(circle at 75% 20%,hsla(var(--h),80%,65%,.2),transparent 38%),linear-gradient(145deg,hsl(var(--h) 36% 18%),#0d1120 72%);color:white;text-align:left;cursor:pointer;transition:.16s transform,.16s border-color}.tcg-booster:hover{transform:translateY(-3px);border-color:hsla(var(--h),90%,70%,.55)}.tcg-booster-icon{font-size:34px}.tcg-booster strong{display:block;margin-top:28px;font-size:16px}.tcg-booster small{display:block;margin-top:4px;color:#a8afc1;font-size:9px;line-height:1.4}.tcg-booster span{display:inline-block;margin-top:9px;padding:4px 7px;border-radius:999px;background:hsla(var(--h),80%,60%,.15);color:hsl(var(--h) 90% 78%);font-size:8px;font-weight:950}
     .tcg-open-stage{display:grid;gap:14px;padding:18px}.tcg-pack-big{--h:48;width:min(260px,72vw);aspect-ratio:.72;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid hsla(var(--h),85%,70%,.38);border-radius:22px;background:radial-gradient(circle at 50% 28%,hsla(var(--h),90%,70%,.3),transparent 28%),linear-gradient(145deg,hsl(var(--h) 40% 20%),#090c17);box-shadow:0 28px 70px rgba(0,0,0,.42),inset 0 0 60px rgba(255,255,255,.035)}.tcg-pack-big i{font-style:normal;font-size:58px}.tcg-pack-big strong{margin-top:18px;font-size:24px}.tcg-pack-big small{margin-top:4px;color:#9ca5ba}.tcg-open-btn,.tcg-primary,.tcg-secondary{border:0;border-radius:13px;padding:12px 16px;font-weight:1000;cursor:pointer}.tcg-open-btn,.tcg-primary{background:linear-gradient(135deg,#f6c554,#e38b34);color:#1a1207}.tcg-open-btn:disabled,.tcg-primary:disabled{opacity:.35;cursor:not-allowed}.tcg-secondary{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#e8ebf5}
-    .tcg-reveal{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.tcg-card{--rarity:#8a94aa;position:relative;min-width:0;overflow:hidden;border:2px solid color-mix(in srgb,var(--rarity),transparent 18%);border-radius:16px;background:radial-gradient(circle at 50% 12%,color-mix(in srgb,var(--rarity),transparent 78%),transparent 34%),linear-gradient(180deg,#20263a,#0d1120 72%);box-shadow:0 15px 35px rgba(0,0,0,.28);color:#fff}.tcg-card[data-rarity="common"]{--rarity:#9ca4b4}.tcg-card[data-rarity="uncommon"]{--rarity:#5bd195}.tcg-card[data-rarity="rare"]{--rarity:#6ea7ff}.tcg-card[data-rarity="ultra"]{--rarity:#d46fff}.tcg-card[data-rarity="secret"]{--rarity:#ffd45f}.tcg-card.is-reveal{animation:tcgReveal .46s cubic-bezier(.2,.8,.2,1) both}.tcg-card:nth-child(2){animation-delay:.08s}.tcg-card:nth-child(3){animation-delay:.16s}.tcg-card:nth-child(4){animation-delay:.24s}.tcg-card:nth-child(5){animation-delay:.32s}
+    .tcg-reveal-scene{--reveal:#9ca4b4;position:relative;overflow:hidden;padding:16px;border:1px solid color-mix(in srgb,var(--reveal),transparent 68%);border-radius:18px;background:radial-gradient(circle at 50% -10%,color-mix(in srgb,var(--reveal),transparent 77%),transparent 38%),linear-gradient(180deg,rgba(18,20,36,.96),rgba(7,9,17,.98));box-shadow:inset 0 0 55px color-mix(in srgb,var(--reveal),transparent 92%)}
+    .tcg-reveal-scene[data-reveal-rarity="uncommon"]{--reveal:#5bd195}
+    .tcg-reveal-scene[data-reveal-rarity="rare"]{--reveal:#6ea7ff}
+    .tcg-reveal-scene[data-reveal-rarity="ultra"]{--reveal:#d46fff;box-shadow:0 0 34px rgba(212,111,255,.22),inset 0 0 65px rgba(212,111,255,.08)}
+    .tcg-reveal-scene[data-reveal-rarity="secret"]{--reveal:#ffd45f;box-shadow:0 0 48px rgba(255,212,95,.3),0 0 85px rgba(179,83,255,.16),inset 0 0 75px rgba(255,212,95,.08)}
+    .tcg-reveal-scene:before{content:"";position:absolute;inset:-70%;pointer-events:none;background:conic-gradient(from 20deg,transparent 0 38%,color-mix(in srgb,var(--reveal),transparent 78%) 44%,transparent 50% 100%);animation:tcgRevealAura 9s linear infinite}
+    .tcg-reveal-announcement{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:13px;text-align:center}.tcg-reveal-announcement span{font-size:9px;font-weight:1000;letter-spacing:.18em;color:#8992aa}.tcg-reveal-announcement strong{font-size:13px;letter-spacing:.12em;color:var(--reveal);text-shadow:0 0 16px color-mix(in srgb,var(--reveal),transparent 28%)}
+    .tcg-reveal{position:relative;z-index:2;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+    .tcg-card.is-reveal[data-rarity="common"]{animation-duration:.4s}
+    .tcg-card.is-reveal[data-rarity="uncommon"]{animation-name:tcgRevealUncommon;animation-duration:.52s}
+    .tcg-card.is-reveal[data-rarity="rare"]{animation-name:tcgRevealRare;animation-duration:.62s}
+    .tcg-card.is-reveal[data-rarity="ultra"]{animation-name:tcgRevealUltra;animation-duration:.78s}
+    .tcg-card.is-reveal[data-rarity="secret"]{animation-name:tcgRevealSecret;animation-duration:1s}
+    .tcg-card.is-reveal[data-rarity="rare"]:after,.tcg-card.is-reveal[data-rarity="ultra"]:after,.tcg-card.is-reveal[data-rarity="secret"]:after{content:"";position:absolute;inset:-55%;z-index:9;pointer-events:none;background:linear-gradient(110deg,transparent 39%,rgba(255,255,255,.0) 44%,rgba(255,255,255,.58) 49%,transparent 55%);transform:translateX(-65%) rotate(8deg);animation:tcgRevealShine 1.65s .35s ease-out both}
+    .tcg-card.is-reveal[data-rarity="secret"]{box-shadow:0 0 0 1px rgba(255,232,133,.66),0 0 30px rgba(255,212,95,.38),0 0 55px rgba(180,75,255,.28),0 18px 44px rgba(0,0,0,.46)}
+.tcg-card{--rarity:#8a94aa;position:relative;min-width:0;overflow:hidden;border:2px solid color-mix(in srgb,var(--rarity),transparent 18%);border-radius:16px;background:radial-gradient(circle at 50% 12%,color-mix(in srgb,var(--rarity),transparent 78%),transparent 34%),linear-gradient(180deg,#20263a,#0d1120 72%);box-shadow:0 15px 35px rgba(0,0,0,.28);color:#fff}.tcg-card[data-rarity="common"]{--rarity:#9ca4b4}.tcg-card[data-rarity="uncommon"]{--rarity:#5bd195}.tcg-card[data-rarity="rare"]{--rarity:#6ea7ff}.tcg-card[data-rarity="ultra"]{--rarity:#d46fff}.tcg-card[data-rarity="secret"]{--rarity:#ffd45f}.tcg-card.is-reveal{animation:tcgReveal .46s cubic-bezier(.2,.8,.2,1) both}.tcg-card:nth-child(2){animation-delay:.08s}.tcg-card:nth-child(3){animation-delay:.16s}.tcg-card:nth-child(4){animation-delay:.24s}.tcg-card:nth-child(5){animation-delay:.32s}
     .tcg-card-art{position:relative;aspect-ratio:1.08;overflow:hidden;background:linear-gradient(135deg,color-mix(in srgb,var(--rarity),#111 68%),#090b13)}.tcg-card-art img{width:100%;height:100%;object-fit:cover;object-position:center 22%;filter:saturate(.92) contrast(1.03)}.tcg-card-art .fallback{height:100%;display:grid;place-items:center;font-size:50px}.tcg-card-rarity{position:absolute;left:7px;top:7px;padding:4px 6px;border:1px solid color-mix(in srgb,var(--rarity),white 28%);border-radius:999px;background:rgba(7,9,16,.8);color:var(--rarity);font-size:7px;font-weight:1000}.tcg-card-cost{position:absolute;right:7px;top:7px;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:var(--rarity);color:#0c0d13;font-size:12px;font-weight:1000}.tcg-card-body{padding:9px}.tcg-card-name{display:block;overflow:hidden;font-size:12px;text-overflow:ellipsis;white-space:nowrap}.tcg-card-type{margin-top:2px;color:var(--rarity);font-size:7px;font-weight:950;text-transform:uppercase}.tcg-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.tcg-card-stats span{padding:6px;border-radius:8px;background:rgba(255,255,255,.04);color:#8c96ad;font-size:7px}.tcg-card-stats b{display:block;margin-top:1px;color:#fff;font-size:13px}.tcg-card-skill{min-height:38px;margin-top:7px;color:#838ca3;font-size:7px;line-height:1.35}.tcg-card-copy{position:absolute;right:7px;bottom:7px;padding:3px 5px;border-radius:7px;background:rgba(0,0,0,.55);font-size:8px;font-weight:950}
     .tcg-card-evolution{position:absolute;left:7px;bottom:7px;max-width:70%;padding:4px 7px;border:1px solid color-mix(in srgb,var(--rarity),transparent 30%);border-radius:999px;background:rgba(7,8,18,.72);backdrop-filter:blur(6px);color:#fff;font-size:6.5px;font-weight:1000;letter-spacing:.05em;text-transform:uppercase;z-index:5}
     .tcg-card--illustrated{aspect-ratio:2/3;min-height:0;background:#070811}
@@ -656,6 +694,12 @@ function ensureStyles() {
     .tcg-duel{display:grid;gap:12px}.tcg-duel-board{position:relative;overflow:hidden;min-height:420px;padding:14px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:radial-gradient(circle at 50% 50%,rgba(103,73,184,.17),transparent 36%),linear-gradient(180deg,#151a31,#090c17)}.tcg-hp-row{display:flex;justify-content:space-between;gap:12px}.tcg-hp{width:44%;padding:9px;border-radius:11px;background:rgba(0,0,0,.28)}.tcg-hp header{display:flex;justify-content:space-between;font-size:9px;font-weight:900}.tcg-hp-track{height:7px;margin-top:5px;border-radius:999px;background:#272d42;overflow:hidden}.tcg-hp-track i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#ff625f,#ffb157);transition:width .25s ease}.tcg-battle-center{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;min-height:250px}.tcg-battle-slot{min-width:0}.tcg-battle-slot .tcg-card{width:min(190px,100%);margin:auto}.tcg-versus{font-size:18px;font-weight:1000;color:#6f7891}.tcg-battle-log{min-height:36px;padding:9px 11px;border-radius:11px;background:rgba(0,0,0,.25);color:#9da6ba;font-size:9px;text-align:center}.tcg-hand{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.tcg-hand .tcg-card{cursor:pointer;transition:.14s transform,.14s opacity}.tcg-hand .tcg-card:hover{transform:translateY(-4px)}.tcg-hand .tcg-card.is-locked{opacity:.34;cursor:not-allowed;filter:grayscale(.6)}.tcg-energy{text-align:center;color:#ffd66d;font-size:10px;font-weight:950}.tcg-duel-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
     .tcg-empty{padding:28px;text-align:center;color:#77829b}.tcg-empty b{display:block;color:#dce1ee;margin-bottom:5px}.tcg-error{margin:10px 0;padding:9px 11px;border:1px solid rgba(255,87,102,.24);border-radius:10px;background:rgba(111,28,37,.18);color:#ff9fac;font-size:9px}
     @keyframes tcgReveal{from{opacity:0;transform:translateY(22px) rotateY(80deg) scale(.9)}to{opacity:1;transform:none}}
+    @keyframes tcgRevealAura{to{transform:rotate(360deg)}}
+    @keyframes tcgRevealShine{0%{transform:translateX(-75%) rotate(8deg);opacity:0}20%{opacity:1}100%{transform:translateX(75%) rotate(8deg);opacity:0}}
+    @keyframes tcgRevealUncommon{0%{opacity:0;transform:translateY(26px) scale(.88)}65%{transform:translateY(-4px) scale(1.025)}100%{opacity:1;transform:none}}
+    @keyframes tcgRevealRare{0%{opacity:0;filter:brightness(2);transform:translateY(30px) scale(.82) rotateY(72deg)}58%{filter:brightness(1.35);transform:translateY(-6px) scale(1.045)}100%{opacity:1;filter:none;transform:none}}
+    @keyframes tcgRevealUltra{0%{opacity:0;filter:brightness(3) saturate(1.8);transform:scale(.68) rotateY(100deg)}48%{opacity:1;filter:brightness(1.65) saturate(1.35);transform:scale(1.09) rotateY(-7deg)}72%{transform:scale(.98) rotateY(3deg)}100%{filter:none;transform:none}}
+    @keyframes tcgRevealSecret{0%{opacity:0;filter:brightness(4) saturate(2);transform:scale(.55) rotateY(120deg)}35%{opacity:1;filter:brightness(2.2) saturate(1.7);transform:scale(1.13) rotateY(-9deg)}58%{transform:scale(.97) rotateY(4deg)}78%{transform:scale(1.025)}100%{filter:none;transform:none}}
     @media(max-width:900px){.tcg-booster-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.tcg-card-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.tcg-reveal{grid-template-columns:repeat(3,minmax(0,1fr))}.tcg-reveal .tcg-card:nth-child(4),.tcg-reveal .tcg-card:nth-child(5){grid-column:auto}.tcg-deck-layout{grid-template-columns:1fr}}
     @media(max-width:650px){.tcg-app{padding:8px}.tcg-top{flex-wrap:wrap}.tcg-top h1{font-size:19px}.tcg-athlete-select{order:5;width:100%}.tcg-hero{grid-template-columns:1fr;padding:13px}.tcg-hero h2{font-size:30px}.tcg-nav{grid-template-columns:repeat(2,1fr)}.tcg-booster-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tcg-booster{min-height:160px}.tcg-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tcg-reveal{grid-template-columns:repeat(2,minmax(0,1fr))}.tcg-reveal .tcg-card:last-child{grid-column:1/-1;width:50%;justify-self:center}.tcg-hand{grid-template-columns:repeat(2,minmax(0,1fr))}.tcg-battle-center{grid-template-columns:1fr 28px 1fr;gap:5px}.tcg-card-skill{display:none}.tcg-hp{width:48%}}
   `
@@ -696,6 +740,21 @@ function dedicatedCardArt(
     position:
       index * 25,
   }
+}
+
+function highestRarity(
+  cards
+) {
+  return (
+    cards
+      .slice()
+      .sort(
+        (a, b) =>
+          b.rarityMeta.rank -
+          a.rarityMeta.rank
+      )[0]?.rarity ||
+    'common'
+  )
 }
 
 function renderCard(
@@ -2021,6 +2080,11 @@ export async function mountTcgGame(
 
   function renderBoosters() {
     if (lastOpened.length) {
+      const revealRarity =
+        highestRarity(
+          lastOpened
+        )
+
       return `
         <section class="tcg-panel">
           <header class="tcg-panel-head">
@@ -2043,7 +2107,18 @@ export async function mountTcgGame(
           </header>
 
           <div class="tcg-panel-pad">
-            <div class="tcg-reveal">
+            <div
+              class="tcg-reveal-scene"
+              data-reveal-rarity="${esc(revealRarity)}"
+            >
+              <div class="tcg-reveal-announcement">
+                <span>MEILLEURE PIOCHE</span>
+                <strong>
+                  ${esc(rarityMeta(revealRarity).label)}
+                </strong>
+              </div>
+
+              <div class="tcg-reveal">
               ${lastOpened
                 .map(
                   card =>
@@ -2055,6 +2130,7 @@ export async function mountTcgGame(
                     )
                 )
                 .join('')}
+              </div>
             </div>
           </div>
         </section>
