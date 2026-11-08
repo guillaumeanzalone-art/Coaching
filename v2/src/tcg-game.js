@@ -1,5 +1,6 @@
 import { supabase } from './supabase.js'
 import './tcg-arena.css'
+import './tcg-spider-theme.css'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
@@ -2385,156 +2386,157 @@ export async function mountTcgGame(
 }
 
   function render() {
-    const athlete =
-      currentAthlete()
+    const athlete = currentAthlete()
+    const menuItems = [
+      { id: 'duel', label: 'Arène', glyph: '⚔' },
+      { id: 'collection', label: 'Collection', glyph: '◇' },
+      { id: 'deck', label: 'Équipe', glyph: '♜' },
+      { id: 'boosters', label: 'Boosters', glyph: '✦' },
+    ]
+    const pageLabels = {
+      duel: battle && !battle.finished ? 'Choisis ton combattant' : 'Arène des Ombres',
+      collection: 'Les cartes de la Toile',
+      deck: 'Compose ta troupe',
+      boosters: 'Les sceaux de la Toile',
+    }
+    const pageDetails = {
+      duel: 'Quatre manches · Pillz · Fury · capacités',
+      collection: 'Cinq évolutions de chaque athlète',
+      deck: 'Douze cartes · quatre combattants',
+      boosters: 'Une séance terminée = un booster',
+    }
+    const pageInfo = tab === 'duel'
+      ? battle && !battle.finished
+        ? `${battle.playerHand.length} CARTES RESTANTES`
+        : '4 MANCHES'
+      : tab === 'collection'
+        ? `${uniqueOwned()} / ${catalog.size} CARTES`
+        : tab === 'deck'
+          ? `${deck.length} / ${DECK_SIZE} CARTES`
+          : `${boosters.length} BOOSTERS`
+    const navHtml = (side = false) => menuItems.map(item => `
+      <button
+        type="button"
+        class="${side ? 'tcg-spider-side-tab ' : ''}${tab === item.id ? 'active' : ''}"
+        data-action="tcg-tab"
+        data-tab="${esc(item.id)}"
+        aria-pressed="${tab === item.id ? 'true' : 'false'}"
+      >
+        <span class="tcg-spider-tab-symbol" aria-hidden="true">${esc(item.glyph)}</span>
+        <span>${esc(item.label)}</span>
+      </button>
+    `).join('')
 
     root.innerHTML = `
-      <main class="tcg-app">
+      <main class="tcg-app tcg-spider">
         <div class="tcg-shell">
-          <header class="tcg-top">
+          <header class="tcg-top tcg-spider-top">
             <button
               class="tcg-back"
               data-action="tcg-back"
               type="button"
-            >
-              ← Arcade
-            </button>
+            >← Arcade</button>
 
-            <div>
-              <small>
-                GA COACHING · TCG
-              </small>
-
-              <h1>
-                GA Trading Card Game
-              </h1>
+            <div class="tcg-spider-brand">
+              <img class="tcg-spider-mark" src="/tcg/spider-sigil.svg" alt="" aria-hidden="true" />
+              <div class="tcg-spider-brand-text">
+                <small class="tcg-spider-eyebrow">GA COACHING · TCG</small>
+                <h1 class="tcg-spider-title">
+                  LA TOILE
+                  <span>DES OMBRES</span>
+                </h1>
+                <span class="tcg-spider-subtitle">Arène · cartes · collection</span>
+              </div>
             </div>
 
             <div class="tcg-spacer"></div>
-
-            ${options.allowAthleteSelection
-              ? `
-                <select
-                  class="tcg-athlete-select"
-                  data-action="tcg-athlete"
-                >
-                  ${athletes
-                    .map(
-                      item => {
-                        const slug =
-                          athleteSlug(
-                            item
-                          )
-
-                        return `
-                          <option
-                            value="${esc(slug)}"
-                            ${slug === activeSlug ? 'selected' : ''}
-                          >
-                            ${esc(item.name)}
-                          </option>
-                        `
-                      }
-                    )
-                    .join('')}
-                </select>
-              `
-              : ''
-            }
-
-            <div class="tcg-chip">
-              🎴
-              <b>
-                ${Number(profile.unopened_packs) || 0}
-              </b>
+            <div class="tcg-spider-status">
+              ${options.allowAthleteSelection
+                ? `
+                  <select
+                    class="tcg-athlete-select"
+                    data-action="tcg-athlete"
+                    aria-label="Choisir un athlète"
+                  >
+                    ${athletes.map(item => {
+                      const slug = athleteSlug(item)
+                      return `<option value="${esc(slug)}" ${slug === activeSlug ? 'selected' : ''}>${esc(item.name)}</option>`
+                    }).join('')}
+                  </select>
+                `
+                : `<div class="tcg-chip">${esc(athlete?.name || 'Athlète')}</div>`
+              }
+              <div class="tcg-chip" title="Boosters disponibles">
+                <span aria-hidden="true">✦</span>
+                <b>${Number(profile.unopened_packs) || 0}</b>
+                <span>boosters</span>
+              </div>
             </div>
           </header>
 
-          <section class="tcg-hero">
-            <div>
-              <span class="tcg-kicker">
-                ENTRAÎNE-TOI · OUVRE · COLLECTIONNE · JOUE
-              </span>
-
-              <h2>
-                Les athlètes deviennent des cartes.
-              </h2>
-
-              <p>
-                Une séance terminée = un booster gagné. Collectionne les cinq évolutions de chaque athlète, crée ton équipe et dispute des duels tactiques de quatre manches : Pillz, Fury, capacités et synergies.
-              </p>
-            </div>
-
-            <div class="tcg-hero-stats">
-              <div class="tcg-hero-stat">
-                <span>Booster(s)</span>
-                <b><em>${Number(profile.unopened_packs) || 0}</em></b>
+          <div class="tcg-spider-grid">
+            <aside class="tcg-spider-sidebar" aria-label="Navigation TCG">
+              <nav class="tcg-spider-side-nav" aria-label="Sections du jeu">
+                ${navHtml(true)}
+              </nav>
+              <div class="tcg-spider-side-sigil" aria-hidden="true">
+                <img src="/tcg/spider-sigil.svg" alt="" />
+                LA TOILE
               </div>
+            </aside>
 
-              <div class="tcg-hero-stat">
-                <span>Ouverts</span>
-                <b>${Number(profile.opened_packs) || 0}</b>
-              </div>
-
-              <div class="tcg-hero-stat">
-                <span>Cartes uniques</span>
-                <b>${uniqueOwned()}</b>
-              </div>
-
-              <div class="tcg-hero-stat">
-                <span>Copies</span>
-                <b>${totalCopies()}</b>
-              </div>
-            </div>
-          </section>
-
-          <nav class="tcg-nav">
-            ${[
-              ['boosters','🎴 Boosters'],
-              ['collection','✦ Collection'],
-              ['deck','▦ Deck'],
-              ['duel','⚔ Duel'],
-            ]
-              .map(
-                ([id,label]) => `
-                  <button
-                    class="${tab === id ? 'active' : ''}"
-                    data-action="tcg-tab"
-                    data-tab="${id}"
-                    type="button"
-                  >
-                    ${label}
-                  </button>
-                `
-              )
-              .join('')}
-          </nav>
-
-          ${error
-            ? `
-              <div class="tcg-error">
-                ${esc(error)}
-              </div>
-            `
-            : ''
-          }
-
-          ${loading
-            ? `
-              <section class="tcg-panel">
-                <div class="tcg-empty">
-                  <b>Chargement du TCG…</b>
+            <div class="tcg-spider-main">
+              <nav class="tcg-nav tcg-spider-nav" aria-label="Navigation principale du jeu">
+                ${navHtml(false)}
+              </nav>
+              <div class="tcg-spider-sectionbar">
+                <div>
+                  <h2>${esc(pageLabels[tab] || pageLabels.boosters)}</h2>
+                  <small>${esc(pageDetails[tab] || '')}</small>
                 </div>
-              </section>
-            `
-            : tab === 'boosters'
-              ? renderBoosters()
-              : tab === 'collection'
-                ? renderCollection()
-                : tab === 'deck'
-                  ? renderDeck()
-                  : renderDuel()
-          }
+                <span class="tcg-spider-section-info">${esc(pageInfo)}</span>
+              </div>
+
+              ${tab === 'boosters'
+                ? `
+                  <section class="tcg-hero">
+                    <div>
+                      <span class="tcg-kicker">ENTRAÎNE-TOI · OUVRE · COLLECTIONNE · JOUE</span>
+                      <h2>Chaque carte appartient à la Toile.</h2>
+                      <p>Termine tes séances pour gagner des boosters. Collectionne les cinq évolutions des athlètes, compose ta troupe et affronte le rival dans une arène à quatre manches.</p>
+                    </div>
+                    <div class="tcg-hero-stats">
+                      <div class="tcg-hero-stat"><span>Boosters</span><b><em>${Number(profile.unopened_packs) || 0}</em></b></div>
+                      <div class="tcg-hero-stat"><span>Ouverts</span><b>${Number(profile.opened_packs) || 0}</b></div>
+                      <div class="tcg-hero-stat"><span>Cartes uniques</span><b>${uniqueOwned()}</b></div>
+                      <div class="tcg-hero-stat"><span>Copies</span><b>${totalCopies()}</b></div>
+                    </div>
+                  </section>
+                `
+                : ''
+              }
+
+              ${error
+                ? `<div class="tcg-error" role="alert">${esc(error)}</div>`
+                : ''
+              }
+
+              ${loading
+                ? `
+                  <section class="tcg-panel">
+                    <div class="tcg-empty"><b>Chargement de la Toile…</b></div>
+                  </section>
+                `
+                : tab === 'boosters'
+                  ? renderBoosters()
+                  : tab === 'collection'
+                    ? renderCollection()
+                    : tab === 'deck'
+                      ? renderDeck()
+                      : renderDuel()
+              }
+            </div>
+          </div>
         </div>
       </main>
     `
