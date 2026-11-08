@@ -4769,6 +4769,45 @@ export function mountTraining(
 
     if (
       athleteTheme?.variant ===
+      'camille-abyss-sanctuary'
+    ) {
+      const athleteName = String(
+        program.athlete?.name || 'Camille'
+      ).trim()
+
+      return `
+        <section
+          class="athlete-theme-banner athlete-theme-banner--camille-abyss"
+          aria-label="Sanctuaire aquatique de ${escapeHtml(athleteName)}"
+        >
+          <div class="camille-abyss__art" aria-hidden="true"></div>
+          <div class="camille-abyss__rays" aria-hidden="true"></div>
+          <div class="camille-abyss__bubbles" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div class="camille-abyss__content">
+            <div class="camille-abyss__eyebrow">
+              <span class="camille-abyss__mark" aria-hidden="true">◈</span>
+              LES CHRONIQUES DU SANCTUAIRE
+            </div>
+            <h2>${escapeHtml(athleteName)}<span>Les Abysses</span></h2>
+            <p>Plonge au cœur de ta progression.</p>
+            <div class="camille-abyss__emblems" aria-label="Les trois mouvements de force athlétique">
+              <span>01 <b>SQUAT</b></span>
+              <span>02 <b>BENCH</b></span>
+              <span>03 <b>TERRE</b></span>
+            </div>
+          </div>
+          <div class="camille-abyss__depth" aria-hidden="true">
+            <span>DEEP WATER</span>
+            <strong>∞</strong>
+          </div>
+        </section>
+      `
+    }
+
+    if (
+      athleteTheme?.variant ===
       'metaknight-moonlit-constellation'
     ) {
       const heroImage =
