@@ -183,91 +183,20 @@
   padding: 7px 4px;
   color: #eafffc;
 }
-.camille-abyss__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: #b0f7ed;
-  font-weight: 900;
-  font-size: 10px;
-  letter-spacing: .19em;
-  text-transform: uppercase;
-}
-.camille-abyss__mark {
-  display: inline-grid;
-  place-items: center;
-  color: #e3fff7;
-  font-family: Georgia, serif;
-  font-size: 24px;
-  text-shadow: 0 0 13px rgba(140, 243, 231, .75);
-}
 .camille-abyss__content h2 {
-  margin: 10px 0 11px;
+  margin: 0;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(34px, 5.2vw, 62px);
+  font-size: clamp(48px, 7vw, 84px);
   letter-spacing: -.045em;
-  line-height: .96;
+  line-height: 1.05;
   font-weight: 700;
   color: #f3fffc;
-  text-shadow: 0 3px 24px rgba(0,11,22,.65);
+  text-shadow: 0 4px 28px rgba(0,11,22,.7), 0 0 25px rgba(99,237,230,.3);
 }
-.camille-abyss__content h2 span {
-  display: block;
-  margin-top: 8px;
-  color: #8fe7e9;
-  font-size: .62em;
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: .02em;
+/* All decorative text is intentionally absent except the word Camille. */
+.training-page[data-athlete-theme="camille"] .training-kicker {
+  display: none;
 }
-.camille-abyss__content p {
-  color: #d2edf1;
-  font-size: clamp(12px, 1.7vw, 15px);
-  line-height: 1.5;
-  margin: 0 0 18px;
-  text-shadow: 0 2px 8px #061e2c;
-}
-.camille-abyss__emblems {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-.camille-abyss__emblems span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 11px;
-  border: 1px solid rgba(154,241,235,.35);
-  border-radius: 30px;
-  background: rgba(3,27,47,.63);
-  color: #75bac8;
-  font-weight: 900;
-  font-size: 9px;
-  letter-spacing: .03em;
-  box-shadow: inset 0 1px 0 rgba(217,255,245,.1);
-  backdrop-filter: blur(6px);
-}
-.camille-abyss__emblems span b { color: #e4fff8; letter-spacing: .1em; }
-.camille-abyss__depth {
-  position: absolute;
-  right: 23px;
-  bottom: 20px;
-  z-index: 3;
-  display: grid;
-  gap: 1px;
-  justify-items: center;
-  color: #a4e8e8;
-  text-shadow: 0 1px 7px #04192d;
-  opacity: .7;
-}
-.camille-abyss__depth span {
-  font-size: 8px;
-  font-weight: 900;
-  letter-spacing: .28em;
-  writing-mode: vertical-rl;
-}
-.camille-abyss__depth strong {font: normal 37px Georgia,serif}
 /* Training tab navigation: ocean glass / clear selected state. */
 .training-page[data-athlete-theme="camille"] .week-tab,
 .training-page[data-athlete-theme="camille"] .day-tab-v2 {
@@ -397,12 +326,7 @@
   }
   .camille-abyss__art {background-position:61% center}
   .camille-abyss__content {max-width:94%}
-  .camille-abyss__eyebrow {font-size:9px;letter-spacing:.12em}
-  .camille-abyss__content h2 {font-size:clamp(32px,8.4vw,48px)}
-  .camille-abyss__content p {max-width:245px}
-  .camille-abyss__depth {right:10px;bottom:13px;opacity:.45}
-  .camille-abyss__depth span {font-size:7px}
-  .camille-abyss__emblems span {padding:6px 9px;font-size:8px}
+  .camille-abyss__content h2 {font-size:clamp(44px,11vw,62px)}
 }
 @media(prefers-reduced-motion:reduce) {
   .training-page[data-athlete-theme="camille"] *,
