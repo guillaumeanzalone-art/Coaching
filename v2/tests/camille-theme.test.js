@@ -52,5 +52,5 @@ test('The styles load after base styles and only affect Camille training', () =>
 test('No scripts or controls are added by decorative aquatic visuals', () => {
   assert.doesNotMatch(art, /<script|onload=|onclick=/i)
   assert.doesNotMatch(css, /https?:\/\//)
-  assert.match(training, /aria-hidden="true"><i><\/i>/)
+  assert.match(training, /camille-abyss__bubbles" aria-hidden="true">[\s\S]*?<i><\/i>/)
 })
