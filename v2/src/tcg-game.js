@@ -73,13 +73,14 @@ const ARCHETYPES = [
     icon: '✦',
     text: 'Variation de -1 à +2 ATK à chaque duel.',
   },
-  {
-    id: 'poison',
-    label: 'Poison',
-    icon: '☣',
-    text: 'Miasmes : l’odeur inflige un poison progressif après un round gagné.',
-  },
 ]
+
+const POISON_ARCHETYPE = {
+  id: 'poison',
+  label: 'Poison',
+  icon: '☣',
+  text: 'Miasmes : un round gagné empoisonne l’adversaire. Les niveaux élevés prolongent les dégâts.',
+}
 
 const PROCEDURAL_CHARACTER_THEMES = [
   {
@@ -320,7 +321,7 @@ function rarityMeta(rarity) {
 }
 
 function archetypeFor(slug) {
-  if (slug === 'alexandre') return ARCHETYPES.find(a => a.id === 'poison')
+  if (slug === 'alexandre') return POISON_ARCHETYPE
   return ARCHETYPES[
     hashString(slug) %
     ARCHETYPES.length
