@@ -58,3 +58,6 @@
 @media(max-width:700px){.tcg-arena-controls{grid-template-columns:1fr}.tcg-arena-attack{min-height:46px}.tcg-arena-clash{grid-template-columns:minmax(0,1fr) 26px minmax(0,1fr);gap:4px;min-height:190px}.tcg-arena-versus{width:26px;height:26px;font-size:11px}.tcg-arena-board{padding:9px}.tcg-arena-fighter .tcg-card--full-art{min-height:180px}.tcg-arena-side header{font-size:9px}.tcg-arena-side header b{font-size:12px}.tcg-arena-hand{gap:5px}.tcg-arena-choice{padding:3px}}
 @media(max-width:430px){.tcg-arena-hand{grid-template-columns:repeat(2,minmax(0,1fr))}.tcg-arena-placeholder{min-height:150px}.tcg-arena-card-meta{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.tcg-arena-fighter,.tcg-arena-fighter--win .tcg-card,.tcg-arena-choice{animation:none;transition:none}}
+
+/* Le coût des anciennes cartes ne sert pas de ressource en arène. */
+.tcg-arena-board .tcg-card-cost,.tcg-arena-hand .tcg-card-cost{display:none}
