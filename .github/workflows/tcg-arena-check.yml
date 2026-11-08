@@ -24,7 +24,7 @@ jobs:
           cache-dependency-path: v2/package-lock.json
       - name: Install dependencies
         working-directory: v2
-        run: npm ci --no-audit
+        run: npm ci --ignore-scripts --no-audit
       - name: Test tactical arena
         working-directory: v2
         run: npm run test:tcg
