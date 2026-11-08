@@ -1,0 +1,194 @@
+/* Hugo · Fire dwarf-forger. Sprite is intentionally positioned as a full-height
+   illustration to prevent the invisible-card regression seen in older card themes. */
+.tcg-app.tcg-spider .tcg-card--hugo{
+  --forge-color:#fbb46b;
+  --forge-glow:rgba(245,116,25,.15);
+  --forge-intensity:.35;
+  position:relative;
+  isolation:isolate;
+  border:1px solid var(--forge-color);
+  border-radius:8px;
+  overflow:hidden;
+  aspect-ratio:2/3;
+  background:#160b0c;
+  box-shadow:0 0 0 1px #2d140a,0 0 18px var(--forge-glow),0 14px 30px #0009;
+}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-card-art{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  min-height:100%;
+  overflow:hidden;
+  aspect-ratio:auto;
+  background:radial-gradient(circle at 50% 80%,#9a330c,#1b0e0e 60%,#09080b);
+}
+.tcg-app.tcg-spider .tcg-card--hugo.tcg-card--illustrated .tcg-illustration-sprite{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  width:100%;
+  height:100%;
+  display:block;
+  background-repeat:no-repeat;
+  background-size:500% 100%;
+  background-position-y:center;
+  opacity:1;
+  visibility:visible;
+}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-card-art:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:linear-gradient(180deg,transparent 52%,#13080912 74%,#1207086b);
+}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-card-body,
+.tcg-app.tcg-spider .tcg-card--hugo.tcg-card--full-art .tcg-card-body{
+  position:absolute;
+  z-index:8;
+  left:7px;
+  right:7px;
+  bottom:7px;
+  margin:0;
+  padding:5px;
+  border:1px solid color-mix(in srgb,var(--forge-color),transparent 50%);
+  border-radius:6px;
+  background:rgba(14,9,13,.75);
+  backdrop-filter:blur(5px);
+}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-card-stats span{
+  background:rgba(17,12,10,.68);
+  border:1px solid #f1a45a3a;
+}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-card-stats b{color:#ffdbad}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-card-rarity,
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-card-cost,
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-card-evolution{
+  display:none;
+}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-forge-lvl{
+  position:absolute;
+  top:8px;
+  right:8px;
+  z-index:10;
+  display:inline-block;
+  padding:4px 7px;
+  border:1px solid var(--forge-color);
+  border-radius:3px;
+  background:linear-gradient(135deg,#461c0eee,#100b0cee);
+  color:#ffe0a0;
+  text-shadow:0 0 7px #ef6918;
+  font-family:Georgia,serif;
+  font-weight:900;
+  font-size:clamp(10px,1vw,13px);
+  letter-spacing:.09em;
+  box-shadow:0 0 14px var(--forge-glow);
+}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-forge-embers{
+  position:absolute;
+  z-index:5;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-forge-embers i{
+  position:absolute;
+  bottom:5%;
+  left:16%;
+  display:block;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:#fff1a3;
+  box-shadow:0 0 5px 2px #f76e19,0 0 18px 4px #fa381480;
+  opacity:var(--forge-intensity);
+  animation:hugoEmberRise 3.8s ease-out infinite both;
+}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-forge-embers i:nth-child(2){left:35%;bottom:18%;animation-delay:-.8s;animation-duration:5.2s}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-forge-embers i:nth-child(3){left:77%;bottom:12%;animation-delay:-2.1s;animation-duration:3.4s}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-forge-embers i:nth-child(4){left:89%;bottom:30%;animation-delay:-1.3s;animation-duration:4.4s}
+.tcg-app.tcg-spider .tcg-card--hugo .tcg-forge-embers i:nth-child(5){left:53%;bottom:8%;animation-delay:-3.3s;animation-duration:5.6s}
+.tcg-app.tcg-spider .tcg-card--hugo.tcg-forge-lvl-1{--forge-color:#d78e57;--forge-glow:#d674253d;--forge-intensity:.23}
+.tcg-app.tcg-spider .tcg-card--hugo.tcg-forge-lvl-2{--forge-color:#f9a054;--forge-glow:#ed792f65;--forge-intensity:.38}
+.tcg-app.tcg-spider .tcg-card--hugo.tcg-forge-lvl-3{--forge-color:#ffb04e;--forge-glow:#fb73298c;--forge-intensity:.58}
+.tcg-app.tcg-spider .tcg-card--hugo.tcg-forge-lvl-4{--forge-color:#ffcb65;--forge-glow:#fa5e21aa;--forge-intensity:.78;box-shadow:0 0 0 1px #efbf67,0 0 24px #ef701599,0 0 39px #c8371960}
+.tcg-app.tcg-spider .tcg-card--hugo.tcg-forge-lvl-5{--forge-color:#ffe7a0;--forge-glow:#fb8a18df;--forge-intensity:1;box-shadow:0 0 0 2px #f6d387,0 0 35px #ff9618c7,0 0 55px #a5352888}
+.tcg-app.tcg-spider .tcg-card--hugo.tcg-forge-lvl-5 .tcg-forge-lvl{
+  color:#471c0b;background:linear-gradient(120deg,#fff0b5,#ec9a35);text-shadow:none;
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery{
+  margin:0 0 16px;
+  border-color:#8f4d257b;
+  background:linear-gradient(145deg,#1d100f,#0b0b14);
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery .tcg-panel-head{
+  border-bottom:1px solid #c178487d;
+  background:linear-gradient(115deg,#4d241872,#160d15);
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery .tcg-panel-head h3{
+  color:#ffdfbb;
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery .tcg-panel-head strong{
+  font-size:13px;color:#ffb66b;white-space:nowrap;
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  padding:16px;
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery-slot{
+  min-width:0;
+  padding:7px;
+  border:1px solid #aa6b3f7a;
+  border-radius:9px;
+  background:linear-gradient(180deg,#21140f,#0d0d13);
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery-slot.is-owned{border-color:#f0ad62}
+.tcg-app.tcg-spider .tcg-hugo-gallery-slot.is-unowned .tcg-hugo-gallery-card{
+  opacity:.88;
+  filter:saturate(.72);
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery-card,
+.tcg-app.tcg-spider .tcg-hugo-gallery-card .tcg-card{
+  min-width:0;
+  width:100%;
+  box-sizing:border-box;
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery-caption{
+  display:grid;
+  gap:4px;
+  padding:8px 2px 3px;
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery-caption strong{
+  color:#ffce9c;
+  font-weight:900;
+  font-size:10px;
+  line-height:1.3;
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery-caption span{
+  color:#a39ba5;
+  font-size:9px;
+  letter-spacing:.03em;
+  font-weight:900;
+}
+.tcg-app.tcg-spider .tcg-hugo-gallery-slot.is-owned .tcg-hugo-gallery-caption span{color:#edba76}
+@keyframes hugoEmberRise {
+  0%{transform:translate(0,0) scale(.4);opacity:0}
+  13%{opacity:var(--forge-intensity)}
+  80%{opacity:calc(var(--forge-intensity)*.7)}
+  100%{transform:translate(25px,-150px) scale(1.5);opacity:0}
+}
+@media(max-width:1000px){
+  .tcg-app.tcg-spider .tcg-hugo-gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .tcg-app.tcg-spider .tcg-hugo-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:8px}
+  .tcg-app.tcg-spider .tcg-card--hugo .tcg-forge-lvl{font-size:10px;padding:3px 5px}
+}
+@media(prefers-reduced-motion:reduce){
+  .tcg-app.tcg-spider .tcg-card--hugo .tcg-forge-embers i{animation:none}
+}
