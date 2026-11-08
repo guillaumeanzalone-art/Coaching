@@ -1,4 +1,6 @@
 import { supabase } from './supabase.js'
+import './tcg-arena.css'
+import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
   common: {
@@ -1797,118 +1799,44 @@ export async function mountTcgGame(
   }
 
   function beginBattle() {
-    let ids =
-      deck.slice()
-
-    if (
-      ids.length !==
-        DECK_SIZE
-    ) {
-      ids =
-        autoDeck(
-          collection,
-          catalog
-        )
-    }
-
-    if (
-      ids.length <
-        DECK_SIZE
-    ) {
-      error =
-        'Il faut au moins 12 cartes disponibles pour lancer un duel.'
-      render()
-      return
-    }
-
-    const playerDeck =
-      shuffled(
-        ids
-          .map(
-            id =>
-              catalog.get(id)
-          )
-          .filter(Boolean)
-      )
-
-    const aiDeck =
-      shuffled(
-        buildAiDeck(
-          athletes,
-          playerDeck
-        )
-      )
-
-    const dealOpeningHand =
-      deckCardsValue => {
-        const hand =
-          deckCardsValue.splice(
-            0,
-            4
-          )
-
-        if (
-          !hand.some(
-            card =>
-              card.cost <= 2
-          )
-        ) {
-          const playableIndex =
-            deckCardsValue
-              .findIndex(
-                card =>
-                  card.cost <= 2
-              )
-
-          if (
-            playableIndex >= 0 &&
-            hand.length
-          ) {
-            const playable =
-              deckCardsValue[
-                playableIndex
-              ]
-
-            deckCardsValue[
-              playableIndex
-            ] = hand[0]
-
-            hand[0] =
-              playable
-          }
-        }
-
-        return hand
-      }
-
-    battle = {
-      playerHp:
-        START_HP,
-      aiHp:
-        START_HP,
-      turn: 1,
-      energy: 2,
-      playerDeck,
-      aiDeck,
-      playerHand:
-        dealOpeningHand(
-          playerDeck
-        ),
-      aiHand:
-        dealOpeningHand(
-          aiDeck
-        ),
-      playerCard: null,
-      aiCard: null,
-      log:
-        'Choisis une carte pour le premier duel.',
-      finished: false,
-      result: '',
-    }
-
-    error = ''
-    render()
+  let ids = deck.slice();
+  if (ids.length !== DECK_SIZE) ids = autoDeck(collection, catalog);
+  if (ids.length < DECK_SIZE) {
+    error = 'Il faut au moins 12 cartes disponibles pour lancer un duel.';
+    render();
+    return;
   }
+  const playerCards = shuffled(ids.map(id => catalog.get(id)).filter(Boolean));
+  const aiCards = shuffled(buildAiDeck(athletes, playerCards));
+  try {
+    battle = createTcgArena(playerCards, aiCards);
+    error = '';
+  } catch (err) {
+    error = err?.message || 'Impossible de préparer le duel.';
+  }
+  render();
+}
+
+  function selectArenaCard(index) {
+  if (!battle || battle.finished) return;
+  if (!Number.isInteger(index) || index < 0 || index >= battle.playerHand.length) return;
+  battle.selectedIndex = index;
+  render();
+}
+
+  function changeArenaBid(delta) {
+  if (!battle || battle.finished) return;
+  const maxBid = Math.max(0, battle.playerPillz - (battle.playerFury ? ARENA_FURY_COST : 0));
+  battle.playerBid = Math.min(maxBid, Math.max(0, battle.playerBid + delta));
+  render();
+}
+
+  function toggleArenaFury() {
+  if (!battle || battle.finished) return;
+  if (!battle.playerFury && battle.playerBid + ARENA_FURY_COST > battle.playerPillz) return;
+  battle.playerFury = !battle.playerFury;
+  render();
+}
 
   async function persistBattle(
     result
@@ -1942,247 +1870,21 @@ export async function mountTcgGame(
     }
   }
 
-  function finishBattle() {
-    if (!battle) {
-      return
-    }
-
-    let result = 'draw'
-
-    if (
-      battle.playerHp >
-      battle.aiHp
-    ) {
-      result = 'win'
-    } else if (
-      battle.aiHp >
-      battle.playerHp
-    ) {
-      result = 'loss'
-    }
-
-    battle.finished = true
-    battle.result = result
-    battle.log =
-      result === 'win'
-        ? 'VICTOIRE · ton deck prend le dessus.'
-        : result === 'loss'
-          ? 'DÉFAITE · ajuste ta courbe de coût et tes matchups.'
-          : 'ÉGALITÉ · duel parfaitement serré.'
-
-    void persistBattle(
-      result
-    )
+  function playBattleCard() {
+  if (!battle || battle.finished) return;
+  try {
+    battle = resolveTcgArenaRound(battle, {
+      index: battle.selectedIndex,
+      pillz: battle.playerBid,
+      fury: battle.playerFury,
+    });
+    error = '';
+    if (battle.finished) void persistBattle(battle.result);
+  } catch (err) {
+    error = err?.message || "L'attaque n'a pas pu être validée.";
   }
-
-  function playBattleCard(
-    cardIdValue
-  ) {
-    if (
-      !battle ||
-      battle.finished
-    ) {
-      return
-    }
-
-    const playerIndex =
-      battle.playerHand
-        .findIndex(
-          card =>
-            card.id ===
-            cardIdValue
-        )
-
-    const playerCard =
-      battle.playerHand[
-        playerIndex
-      ]
-
-    if (
-      !playerCard ||
-      playerCard.cost >
-        battle.energy
-    ) {
-      return
-    }
-
-    const affordableAi =
-      battle.aiHand
-        .filter(
-          card =>
-            card.cost <=
-            battle.energy
-        )
-        .sort(
-          (a, b) =>
-            (
-              b.attack +
-              b.guard * .8
-            ) -
-            (
-              a.attack +
-              a.guard * .8
-            )
-        )
-
-    const aiCard =
-      affordableAi[0] ||
-      null
-
-    const aiIndex =
-      aiCard
-        ? battle.aiHand
-            .findIndex(
-              card =>
-                card === aiCard
-            )
-        : -1
-
-    const emptyOpponent = {
-      cost: 0,
-      attack: 0,
-      guard: 0,
-    }
-
-    const playerStats =
-      appliedStats(
-        playerCard,
-        aiCard ||
-          emptyOpponent
-      )
-
-    const aiStats =
-      aiCard
-        ? appliedStats(
-            aiCard,
-            playerCard
-          )
-        : {
-            attack: 0,
-            guard: 0,
-          }
-
-    let damageToAi =
-      aiCard
-        ? Math.max(
-            0,
-            playerStats.attack -
-            aiStats.guard
-          )
-        : playerStats.attack
-
-    let damageToPlayer =
-      aiCard
-        ? Math.max(
-            0,
-            aiStats.attack -
-            playerStats.guard
-          )
-        : 0
-
-    if (
-      damageToAi === 0 &&
-      damageToPlayer === 0
-    ) {
-      if (
-        playerStats.attack >
-        aiStats.attack
-      ) {
-        damageToAi = 1
-      } else if (
-        aiStats.attack >
-        playerStats.attack
-      ) {
-        damageToPlayer = 1
-      }
-    }
-
-    battle.playerHp =
-      Math.max(
-        0,
-        battle.playerHp -
-        damageToPlayer
-      )
-
-    battle.aiHp =
-      Math.max(
-        0,
-        battle.aiHp -
-        damageToAi
-      )
-
-    battle.playerCard =
-      playerCard
-
-    battle.aiCard =
-      aiCard
-
-    battle.playerHand.splice(
-      playerIndex,
-      1
-    )
-
-    if (
-      aiIndex >= 0
-    ) {
-      battle.aiHand.splice(
-        aiIndex,
-        1
-      )
-    }
-
-    battle.log =
-      aiCard
-        ? `${playerCard.athlete.name} inflige ${damageToAi} · ${aiCard.athlete.name} inflige ${damageToPlayer}.`
-        : `GA Rival passe · ${playerCard.athlete.name} frappe directement pour ${damageToAi}.`
-
-    if (
-      battle.playerHp <= 0 ||
-      battle.aiHp <= 0
-    ) {
-      finishBattle()
-      render()
-      return
-    }
-
-    if (
-      battle.turn >=
-        MAX_TURNS ||
-      (
-        !battle.playerDeck.length &&
-        !battle.playerHand.length
-      )
-    ) {
-      finishBattle()
-      render()
-      return
-    }
-
-    battle.turn += 1
-    battle.energy =
-      Math.min(
-        5,
-        battle.turn + 1
-      )
-
-    if (
-      battle.playerDeck.length
-    ) {
-      battle.playerHand.push(
-        battle.playerDeck.shift()
-      )
-    }
-
-    if (
-      battle.aiDeck.length
-    ) {
-      battle.aiHand.push(
-        battle.aiDeck.shift()
-      )
-    }
-
-    render()
-  }
+  render();
+}
 
   function renderBoosters() {
     if (lastOpened.length) {
@@ -2567,140 +2269,131 @@ export async function mountTcgGame(
     `
   }
 
+  function renderArenaCard(card, side = 'player', className = '') {
+  if (!card) return `<div class="tcg-arena-placeholder">Sélectionne une carte</div>`;
+  const stats = arenaBaseStats(card);
+  const synergy = battle && arenaTeamActive(battle, side, card);
+  return `
+    <div class="tcg-arena-fighter ${className}">
+      ${renderCard(card)}
+      <div class="tcg-arena-power">
+        <span>⚔ PUI ${stats.power}</span>
+        <span>✦ DÉG ${stats.damage}</span>
+      </div>
+      ${synergy ? `<div class="tcg-arena-synergy">BONUS D'ÉQUIPE · ${esc(card.archetype.label)}</div>` : ''}
+    </div>
+  `;
+}
+
   function renderDuel() {
-    if (!battle) {
-      return `
-        <section class="tcg-panel">
-          <div class="tcg-panel-pad tcg-duel">
-            <div class="tcg-empty">
-              <b>
-                Duel TCG · 24 PV
-              </b>
-
-              12 cartes · énergie 1→5 · un affrontement de cartes par tour.
-              Le coût compense la puissance des raretés élevées.
-            </div>
-
-            <div class="tcg-duel-actions">
-              <button
-                class="tcg-primary"
-                data-action="tcg-start-duel"
-                type="button"
-                ${ownedRows().reduce((sum,row)=>sum+Math.min(Number(row.copies)||0,MAX_COPY_IN_DECK),0) >= DECK_SIZE ? '' : 'disabled'}
-              >
-                LANCER UN DUEL
-              </button>
-            </div>
-          </div>
-        </section>
-      `
-    }
-
+  if (!battle) {
     return `
       <section class="tcg-panel">
         <div class="tcg-panel-pad tcg-duel">
-          <div class="tcg-energy">
-            TOUR ${battle.turn} · ÉNERGIE ${battle.energy}/5
-          </div>
-
-          <div class="tcg-duel-board">
-            <div class="tcg-hp-row">
-              <div class="tcg-hp">
-                <header>
-                  <span>
-                    ${esc(currentAthlete()?.name || 'Toi')}
-                  </span>
-                  <b>
-                    ${battle.playerHp} PV
-                  </b>
-                </header>
-
-                <div class="tcg-hp-track">
-                  <i style="width:${Math.max(0,battle.playerHp/START_HP*100)}%"></i>
-                </div>
-              </div>
-
-              <div class="tcg-hp">
-                <header>
-                  <span>
-                    GA Rival
-                  </span>
-                  <b>
-                    ${battle.aiHp} PV
-                  </b>
-                </header>
-
-                <div class="tcg-hp-track">
-                  <i style="width:${Math.max(0,battle.aiHp/START_HP*100)}%"></i>
-                </div>
-              </div>
-            </div>
-
-            <div class="tcg-battle-center">
-              <div class="tcg-battle-slot">
-                ${battle.playerCard
-                  ? renderCard(
-                      battle.playerCard
-                    )
-                  : ''
-                }
-              </div>
-
-              <div class="tcg-versus">
-                VS
-              </div>
-
-              <div class="tcg-battle-slot">
-                ${battle.aiCard
-                  ? renderCard(
-                      battle.aiCard
-                    )
-                  : ''
-                }
-              </div>
-            </div>
-
-            <div class="tcg-battle-log">
-              ${esc(battle.log)}
+          <div class="tcg-arena-intro">
+            <h3>ARÈNE · 4 ROUNDS</h3>
+            <p>Compose ton deck de 12 cartes puis tire quatre combattants. Chaque duel repose sur une mise secrète de Pillz : la puissance multipliée par ta mise décide du vainqueur. Les cinq familles apportent leurs propres capacités et bonus d'équipe.</p>
+            <div class="tcg-arena-rules">
+              <span>4 manches</span><span>12 PV</span><span>12 Pillz</span><span>Fury +2 dégâts / 3 Pillz</span><span>Synergies ×2</span>
             </div>
           </div>
-
-          ${battle.finished
-            ? `
-              <div class="tcg-duel-actions">
-                <button
-                  class="tcg-primary"
-                  data-action="tcg-start-duel"
-                  type="button"
-                >
-                  REVANCHE
-                </button>
-              </div>
-            `
-            : `
-              <div class="tcg-hand">
-                ${battle.playerHand
-                  .map(
-                    card =>
-                      renderCard(
-                        card,
-                        {
-                          action:
-                            'tcg-play-card',
-                          locked:
-                            card.cost >
-                            battle.energy,
-                        }
-                      )
-                  )
-                  .join('')}
-              </div>
-            `
-          }
+          <div class="tcg-duel-actions">
+            <button class="tcg-arena-attack" data-action="tcg-start-duel" type="button"
+              ${ownedRows().reduce((sum, row) => sum + Math.min(Number(row.copies) || 0, MAX_COPY_IN_DECK), 0) >= DECK_SIZE ? '' : 'disabled'}>
+              ENTRER DANS L'ARÈNE
+            </button>
+          </div>
+          <p style="font-size:11px;color:#8f96b8;text-align:center">Tes cartes et boosters restent associés à ton profil Supabase. La partie utilise uniquement ta collection.</p>
         </div>
       </section>
-    `
+    `;
   }
+  const last = battle.history[battle.history.length - 1] || null;
+  const playerName = currentAthlete()?.name || 'Toi';
+  const remainingBid = Math.max(0, battle.playerPillz - (battle.playerFury ? ARENA_FURY_COST : 0));
+  const spent = battle.playerBid + (battle.playerFury ? ARENA_FURY_COST : 0);
+  const playerVictory = last?.winner === 'player';
+  const aiVictory = last?.winner === 'ai';
+  return `
+    <section class="tcg-panel">
+      <div class="tcg-panel-pad tcg-duel">
+        <div class="tcg-arena-board">
+          <div class="tcg-arena-head">
+            <span class="tcg-arena-round">ROUND ${battle.round} / 4</span>
+            <span>${battle.finished ? 'DUEL TERMINÉ' : 'Mises cachées · résolution simultanée'}</span>
+          </div>
+          <div class="tcg-arena-sides">
+            <div class="tcg-arena-side">
+              <header><span>${esc(playerName)}</span><b>${battle.playerHp} / ${ARENA_START_HP} PV</b></header>
+              <div class="tcg-arena-track"><i style="width:${100 * battle.playerHp / ARENA_START_HP}%"></i></div>
+              <div class="tcg-arena-resource">◆ <b>${battle.playerPillz}</b> Pillz</div>
+            </div>
+            <div class="tcg-arena-side tcg-arena-side--ai">
+              <header><span>GA RIVAL</span><b>${battle.aiHp} / ${ARENA_START_HP} PV</b></header>
+              <div class="tcg-arena-track"><i style="width:${100 * battle.aiHp / ARENA_START_HP}%"></i></div>
+              <div class="tcg-arena-resource">◆ <b>${battle.aiPillz}</b> Pillz</div>
+            </div>
+          </div>
+          <div class="tcg-arena-clash" aria-live="polite">
+            ${battle.playerCard
+              ? renderArenaCard(battle.playerCard, 'player', playerVictory ? 'tcg-arena-fighter--win' : 'tcg-arena-fighter--lose')
+              : `<div class="tcg-arena-placeholder">TON COMBATTANT</div>`}
+            <div class="tcg-arena-versus">VS</div>
+            ${battle.aiCard
+              ? renderArenaCard(battle.aiCard, 'ai', aiVictory ? 'tcg-arena-fighter--win tcg-arena-fighter--ai' : 'tcg-arena-fighter--lose tcg-arena-fighter--ai')
+              : `<div class="tcg-arena-placeholder">RIVAL MASQUÉ</div>`}
+          </div>
+          <div class="tcg-arena-log ${last ? (playerVictory ? 'tcg-arena-log--win' : 'tcg-arena-log--lose') : ''}">
+            ${esc(battle.log)}
+          </div>
+          ${last ? `<div class="tcg-arena-history">
+            ${battle.history.map(entry => `<span class="${entry.winner === 'player' ? 'won' : 'lost'}">
+              R${entry.round} · ${entry.playerAttack} — ${entry.aiAttack} ATQ · ${entry.playerBid}/${entry.aiBid} Pillz
+            </span>`).join('')}
+          </div>` : ''}
+        </div>
+        ${battle.finished ? `
+          <div class="tcg-arena-end">
+            <h3>${battle.result === 'win' ? 'VICTOIRE' : battle.result === 'loss' ? 'DÉFAITE' : 'ÉGALITÉ'}</h3>
+            <p>Score final ${battle.playerHp} — ${battle.aiHp} PV · ${battle.history.filter(entry => entry.winner === 'player').length} manche(s) gagnée(s) sur ${battle.history.length}.</p>
+            <button class="tcg-arena-attack" type="button" data-action="tcg-start-duel">REVANCHE</button>
+          </div>
+        ` : `
+          <div class="tcg-arena-controls">
+            <div>
+              <div class="tcg-arena-bidding">
+                <strong>TA MISE</strong>
+                <div class="tcg-arena-counter">
+                  <button type="button" data-action="tcg-bid-down" aria-label="Retirer un Pillz" ${battle.playerBid <= 0 ? 'disabled' : ''}>−</button>
+                  <b>${battle.playerBid}</b>
+                  <button type="button" data-action="tcg-bid-up" aria-label="Ajouter un Pillz" ${battle.playerBid >= remainingBid ? 'disabled' : ''}>+</button>
+                </div>
+                <button class="tcg-arena-fury" type="button" data-action="tcg-toggle-fury"
+                  aria-pressed="${battle.playerFury ? 'true' : 'false'}"
+                  ${!battle.playerFury && battle.playerBid + ARENA_FURY_COST > battle.playerPillz ? 'disabled' : ''}>
+                  🔥 FURY ${battle.playerFury ? 'ACTIVÉE' : '(+2 DÉG)'}
+                </button>
+              </div>
+              <div class="tcg-arena-spend">${spent} Pillz engagés sur ${battle.playerPillz} disponibles. Fury coûte 3 Pillz supplémentaires. L'IA mise sans voir ton choix.</div>
+            </div>
+            <button class="tcg-arena-attack" type="button" data-action="tcg-play-card">LANCER L'ATTAQUE</button>
+          </div>
+          <div class="tcg-arena-hand-head">
+            <strong>CHOISIS TON COMBATTANT</strong><small>${battle.playerHand.length} cartes restantes</small>
+          </div>
+          <div class="tcg-arena-hand">
+            ${battle.playerHand.map((card, index) => `
+              <button type="button" class="tcg-arena-choice" data-action="tcg-pick-card" data-index="${index}"
+                aria-pressed="${battle.selectedIndex === index ? 'true' : 'false'}">
+                ${renderArenaCard(card, 'player')}
+              </button>
+            `).join('')}
+          </div>
+        `}
+      </div>
+    </section>
+  `;
+}
 
   function render() {
     const athlete =
@@ -2940,10 +2633,20 @@ export async function mountTcgGame(
           beginBattle()
           return
 
+        case 'tcg-pick-card':
+          selectArenaCard(Number(action.dataset.index))
+          return
+        case 'tcg-bid-down':
+          changeArenaBid(-1)
+          return
+        case 'tcg-bid-up':
+          changeArenaBid(1)
+          return
+        case 'tcg-toggle-fury':
+          toggleArenaFury()
+          return
         case 'tcg-play-card':
-          playBattleCard(
-            action.dataset.cardId
-          )
+          playBattleCard()
           return
       }
     }
