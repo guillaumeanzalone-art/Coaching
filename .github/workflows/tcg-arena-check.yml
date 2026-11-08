@@ -1,0 +1,33 @@
+name: GA TCG Arena checks
+
+on:
+  push:
+    branches: [v2-refactor]
+    paths:
+      - 'v2/src/tcg-game.js'
+      - 'v2/src/tcg-arena.js'
+      - 'v2/src/tcg-arena.css'
+      - 'v2/tests/tcg-arena.test.js'
+      - 'v2/package.json'
+      - '.github/workflows/tcg-arena-check.yml'
+  workflow_dispatch:
+
+jobs:
+  tcg-arena:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+      - name: Install dependencies
+        working-directory: v2
+        run: npm ci --no-audit
+      - name: Test tactical arena
+        working-directory: v2
+        run: npm run test:tcg
+      - name: Verify production build
+        working-directory: v2
+        run: npm run build
