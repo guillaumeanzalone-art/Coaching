@@ -193,8 +193,6 @@ const BOOSTER_TEMPLATES = [
 
 const DECK_SIZE = 12
 const MAX_COPY_IN_DECK = 2
-const START_HP = 24
-const MAX_TURNS = 14
 
 function esc(value) {
   return String(value ?? '')
@@ -2079,7 +2077,7 @@ export async function mountTcgGame(
               Collection
             </h3>
             <p>
-              Chaque athlète existe en 5 raretés avec un coût et des stats équilibrés.
+              Chaque athlète existe en 5 raretés, avec des statistiques et des pouvoirs évolutifs.
             </p>
           </div>
 
@@ -2203,8 +2201,8 @@ export async function mountTcgGame(
 
                           <small>
                             ${esc(card.archetype.label)}
-                            · coût ${card.cost}
-                            · ${card.attack}/${card.guard}
+                            · PUI ${arenaBaseStats(card).power}
+                            · DÉG ${arenaBaseStats(card).damage}
                           </small>
                         </div>
 
