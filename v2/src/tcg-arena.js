@@ -44,6 +44,8 @@ function arenaCombatStats(card, opposingCard, bid, opposingBid, fury, teamActive
   if (family === "technique" && enemyBase.power > base.power) attackBonus += 3;
   if (family === "chaos" && bid >= 4) damage += 1;
   if (family === "poison" && bid >= 2) attackBonus += 2;
+  // Hugo: molten hammer attack builds power once at least two Pillz are committed.
+  if (family === "fire" && bid >= 2) attackBonus += 2;
   if (teamActive) {
     if (family === "power") power += 1;
     if (family === "guard") shield += 1;
@@ -51,8 +53,10 @@ function arenaCombatStats(card, opposingCard, bid, opposingBid, fury, teamActive
     if (family === "technique" && enemyBase.power >= base.power) power += 1;
     if (family === "chaos") damage += 1;
     if (family === "poison") shield += 1;
+    if (family === "fire") power += 1;
   }
   if (fury) damage += 2;
+  if (fury && family === "fire") damage += 1;
   return {
     power,
     damage: arenaClamp(damage, 1, 11),
