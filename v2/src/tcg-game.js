@@ -167,6 +167,18 @@ const CHARACTER_DESIGNS = {
 }
 
 const CHARACTER_CARD_ART = {
+  alexandre: {
+    // Each panel of this five-frame sprite is a distinct image generation.
+    // Ordered from Common (LVL 1) to Secret (LVL 5).
+    sprite: '/tcg/alexandre-evolutions.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
   rudy: {
     sprite: '/tcg/rudy-evolution.webp',
     rarityIndex: {
