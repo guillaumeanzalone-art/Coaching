@@ -43,12 +43,14 @@ function arenaCombatStats(card, opposingCard, bid, opposingBid, fury, teamActive
   if (family === "tempo" && bid <= 3) attackBonus += 3;
   if (family === "technique" && enemyBase.power > base.power) attackBonus += 3;
   if (family === "chaos" && bid >= 4) damage += 1;
+  if (family === "poison" && bid >= 2) attackBonus += 2;
   if (teamActive) {
     if (family === "power") power += 1;
     if (family === "guard") shield += 1;
     if (family === "tempo") attackBonus += 2;
     if (family === "technique" && enemyBase.power >= base.power) power += 1;
     if (family === "chaos") damage += 1;
+    if (family === "poison") shield += 1;
   }
   if (fury) damage += 2;
   return {
@@ -57,6 +59,29 @@ function arenaCombatStats(card, opposingCard, bid, opposingBid, fury, teamActive
     shield,
     attack: power * (bid + 1) + attackBonus,
     attackBonus,
+  };
+}
+
+// Poison is a status effect, applied only when Alexandre wins a round.
+// No instant tick on the application round; subsequent rounds drain HP.
+// Stronger evolutions extend the duration and intensity, capped to avoid stacking abuse.
+function arenaVenomForCard(card) {
+  if (card?.archetype?.id !== "poison") return { damage: 0, turns: 0 };
+  const level = arenaClamp(card?.rarityMeta?.rank ?? 1, 1, 5);
+  return { damage: level >= 4 ? 2 : 1, turns: level >= 5 ? 3 : level >= 3 ? 2 : 1 };
+}
+function arenaTickVenom(status) {
+  const turns = Math.max(0, Number(status?.turns) || 0);
+  const damage = arenaClamp(status?.damage ?? 0, 0, 2);
+  return {
+    tick: turns > 0 ? damage : 0,
+    next: { damage: turns > 1 ? damage : 0, turns: Math.max(0, turns - 1) }
+  };
+}
+function arenaMergeVenom(existing, incoming) {
+  return {
+    damage: Math.max(existing?.damage || 0, incoming?.damage || 0),
+    turns: Math.max(existing?.turns || 0, incoming?.turns || 0),
   };
 }
 
@@ -72,6 +97,8 @@ function createTcgArena(playerCards, opponentCards) {
     playerPillz: ARENA_START_PILLZ,
     aiPillz: ARENA_START_PILLZ,
     playerTeams: arenaTeamBonuses(playerHand),
+    playerVenom: { damage: 0, turns: 0 },
+    aiVenom: { damage: 0, turns: 0 },
     aiTeams: arenaTeamBonuses(aiHand),
     playerHand,
     aiHand,
@@ -137,15 +164,28 @@ function resolveTcgArenaRound(state, selection, random = Math.random, opponentMo
   const damage = winner === "player"
     ? Math.max(1, playerStats.damage - aiStats.shield)
     : Math.max(1, aiStats.damage - playerStats.shield);
-  const playerHp = Math.max(0, state.playerHp - (winner === "ai" ? damage : 0));
-  const aiHp = Math.max(0, state.aiHp - (winner === "player" ? damage : 0));
+  const playerVenomTick = arenaTickVenom(state.playerVenom);
+  const aiVenomTick = arenaTickVenom(state.aiVenom);
+  const playerHp = Math.max(0, state.playerHp - (winner === "ai" ? damage : 0) - playerVenomTick.tick);
+  const aiHp = Math.max(0, state.aiHp - (winner === "player" ? damage : 0) - aiVenomTick.tick);
+  let playerVenom = playerVenomTick.next;
+  let aiVenom = aiVenomTick.next;
+  // A toxic victory infects the survivor. New poison starts ticking next round.
+  if (winner === "player" && playerCard?.archetype?.id === "poison" && aiHp > 0) {
+    aiVenom = arenaMergeVenom(aiVenom, arenaVenomForCard(playerCard));
+  }
+  if (winner === "ai" && aiCard?.archetype?.id === "poison" && playerHp > 0) {
+    playerVenom = arenaMergeVenom(playerVenom, arenaVenomForCard(aiCard));
+  }
   const playerHand = state.playerHand.filter((_, i) => i !== index);
   const aiHand = state.aiHand.filter((_, i) => i !== choice.index);
   const finished = playerHp === 0 || aiHp === 0 || state.round >= ARENA_MAX_ROUNDS ||
     playerHand.length === 0 || aiHand.length === 0;
   const result = !finished ? "" : playerHp > aiHp ? "win" : aiHp > playerHp ? "loss" : "draw";
   const name = (card) => String(card?.athlete?.name || card?.slug || "Combattant");
-  const log = `${winner === "player" ? name(playerCard) : name(aiCard)} remporte le round · ${damage} dégâts · ATQ ${playerStats.attack} contre ${aiStats.attack}.`;
+  const venomExtra = (playerVenomTick.tick || aiVenomTick.tick) ? ` · ☣ poison : ${playerVenomTick.tick} / ${aiVenomTick.tick}` : "";
+  const venomInflicted = (winner === "player" && playerCard?.archetype?.id === "poison") || (winner === "ai" && aiCard?.archetype?.id === "poison");
+  const log = `${winner === "player" ? name(playerCard) : name(aiCard)} remporte le round · ${damage} dégâts · ATQ ${playerStats.attack} contre ${aiStats.attack}.${venomInflicted ? " ☣ Miasmes empoisonnés !" : ""}${venomExtra}`;
   const history = [...state.history, {
     round: state.round,
     playerCardId: playerCard.id,
@@ -159,11 +199,16 @@ function resolveTcgArenaRound(state, selection, random = Math.random, opponentMo
     playerAttack: playerStats.attack,
     aiAttack: aiStats.attack,
     damage,
+    venomDamageToPlayer: playerVenomTick.tick,
+    venomDamageToAi: aiVenomTick.tick,
+    playerVenomTurns: playerVenom.turns,
+    aiVenomTurns: aiVenom.turns,
     winner,
   }];
   return {
     ...state,
     playerHand, aiHand, playerCard, aiCard, playerHp, aiHp,
+    playerVenom, aiVenom,
     playerPillz: state.playerPillz - pillz - (fury ? ARENA_FURY_COST : 0),
     aiPillz: state.aiPillz - choice.pillz - (choice.fury ? ARENA_FURY_COST : 0),
     playerBid: 0,
@@ -175,4 +220,4 @@ function resolveTcgArenaRound(state, selection, random = Math.random, opponentMo
   };
 }
 
-export { ARENA_MAX_ROUNDS, ARENA_START_HP, ARENA_START_PILLZ, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, arenaCombatStats, createTcgArena, chooseTcgArenaAiMove, resolveTcgArenaRound };
+export { ARENA_MAX_ROUNDS, ARENA_START_HP, ARENA_START_PILLZ, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, arenaCombatStats, arenaVenomForCard, createTcgArena, chooseTcgArenaAiMove, resolveTcgArenaRound };
