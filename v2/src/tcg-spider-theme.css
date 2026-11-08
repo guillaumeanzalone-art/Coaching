@@ -1,0 +1,277 @@
+/* GA TCG / La Toile — original spider-guild visual system.
+   Scope is strictly .tcg-app.tcg-spider: never affects training or the archived RPG. */
+.tcg-app.tcg-spider {
+  --spider-ink:#08070e;
+  --spider-violet:#b779fb;
+  --spider-red:#ba3456;
+  --spider-gold:#e4b99d;
+  --spider-line:#775883;
+  --spider-soft:#c6b4d6;
+  --tcg-accent:#c896f0;
+  position:relative;
+  isolation:isolate;
+  min-height:100vh;
+  padding:0 18px 35px;
+  color:#efe7f7;
+  background:
+    radial-gradient(circle at 86% 4%,#642a4935,transparent 30%),
+    radial-gradient(circle at 3% 50%,#4a26732d,transparent 46%),
+    repeating-linear-gradient(98deg,transparent 0 83px,#ad8bb008 84px 85px),
+    linear-gradient(180deg,#08070e 0%,#110d1c 47%,#08070c 100%);
+  font-family:Inter,system-ui,sans-serif;
+}
+.tcg-app.tcg-spider:before,
+.tcg-app.tcg-spider:after {
+  content:"";position:fixed;z-index:-1;pointer-events:none;opacity:.33;width:350px;height:350px;
+  background:repeating-radial-gradient(circle at 0 0,transparent 0 22px,#9579aa77 23px 24px,transparent 25px 47px),
+    repeating-conic-gradient(from -2deg at 0 0,transparent 0 14deg,#8f6e9b70 14.4deg 15deg,transparent 15.5deg 30deg);
+  -webkit-mask:radial-gradient(circle at 0 0,#000,transparent 75%);
+  mask:radial-gradient(circle at 0 0,#000,transparent 75%);
+}
+.tcg-app.tcg-spider:before {top:0;left:0}
+.tcg-app.tcg-spider:after {bottom:0;right:0;transform:rotate(180deg)}
+.tcg-spider .tcg-shell {width:min(1720px,100%);max-width:none;margin:0 auto}
+.tcg-spider .tcg-top.tcg-spider-top {
+  position:relative;min-height:175px;display:flex;align-items:flex-start;gap:15px;
+  margin:0 -18px 10px;padding:22px max(18px,calc((100vw - 1720px)/2 + 18px)) 36px;
+  border-bottom:1px solid #8a53707d;
+  background:
+    linear-gradient(90deg,#07070dfb 0%,#100c19e8 33%,#120c1b64 68%,#0a080ea8 100%),
+    url('/tcg/spider-arena.svg') center 42%/cover no-repeat;
+  box-shadow:0 18px 34px #0008;
+}
+.tcg-spider .tcg-top.tcg-spider-top:after {
+  content:"";position:absolute;left:2%;right:2%;bottom:7px;height:1px;opacity:.65;
+  background:linear-gradient(90deg,transparent,#985b8b 19%,#a4456177 59%,transparent);
+}
+.tcg-spider .tcg-back {
+  flex:0 0 auto;min-height:36px;padding:8px 12px;border-radius:6px;
+  color:#e9ccf7;background:#130e1cc7;border:1px solid #6a54759c;
+  font-size:10px;letter-spacing:.06em;transition:border-color .18s,background .18s;
+}
+.tcg-spider .tcg-back:hover {background:#30213c;border-color:#b984d3}
+.tcg-spider-brand {display:flex;gap:16px;align-items:center;min-width:0}
+.tcg-spider-mark {width:82px;height:82px;flex:none;object-fit:contain;filter:drop-shadow(0 0 13px #af64d68c)}
+.tcg-spider-brand-text {min-width:0}
+.tcg-spider .tcg-spider-eyebrow {display:block;color:#cb8f9e;font-size:10px;letter-spacing:.22em;font-weight:900}
+.tcg-spider .tcg-top h1.tcg-spider-title {
+  margin:3px 0;font-family:Georgia,'Times New Roman',serif;font-size:clamp(25px,3.4vw,49px);
+  letter-spacing:.035em;font-weight:700;line-height:.97;color:#f2e5f7;
+  text-shadow:0 4px 25px #000,0 0 23px #9a5ca04d;
+}
+.tcg-spider .tcg-top h1.tcg-spider-title span {display:block;font-style:italic;color:#cba4d9}
+.tcg-spider-subtitle {display:block;color:#a58aa9;font-size:9px;letter-spacing:.23em;text-transform:uppercase;margin-top:10px}
+.tcg-spider-status {display:flex;gap:7px;align-items:center;flex-wrap:wrap;justify-content:flex-end;align-self:flex-start}
+.tcg-spider-status .tcg-chip {display:flex;gap:7px;align-items:center;min-height:36px;border-radius:5px;border-color:#805580;background:#110d1cd5;color:#c0a2cb;font-size:10px;white-space:nowrap}
+.tcg-spider-status .tcg-chip b {color:#f4d3fb;font-size:14px}
+.tcg-spider-status .tcg-athlete-select {min-height:36px;max-width:230px;border-radius:5px;border-color:#6a526e;background:#100b18e0}
+.tcg-spider .tcg-spider-grid {display:grid;grid-template-columns:92px minmax(0,1fr);gap:22px;min-width:0}
+.tcg-spider-sidebar {
+  position:relative;min-width:0;display:flex;flex-direction:column;gap:12px;
+  border:1px solid #6b48764d;border-radius:0 0 12px 12px;
+  padding:10px 5px 12px;background:linear-gradient(180deg,#140f20e8,#0a0910df);
+  box-shadow:inset -1px 0 #9d6baf25,0 0 18px #05040999;
+}
+.tcg-spider-side-nav {display:grid;gap:9px}
+.tcg-spider-side-tab {
+  display:grid;gap:6px;place-items:center;width:100%;min-height:70px;padding:10px 4px;
+  background:transparent;border:1px solid transparent;border-radius:5px;color:#9e87ad;
+  cursor:pointer;font-size:9px;font-weight:950;letter-spacing:.07em;text-transform:uppercase;
+  transition:background .18s,border-color .18s,box-shadow .18s,color .18s;
+}
+.tcg-spider-side-tab .tcg-spider-tab-symbol {font-family:Georgia,serif;font-size:23px;line-height:1}
+.tcg-spider-side-tab:hover {color:#ead7ff;background:#48315466}
+.tcg-spider-side-tab.active {color:#fff;border-color:#d2588b;background:linear-gradient(145deg,#5b254260,#26142dc2);box-shadow:inset 0 0 18px #c7506a28,0 0 15px #b53c7744}
+.tcg-spider-side-tab.active .tcg-spider-tab-symbol {color:#f7b0d4;text-shadow:0 0 15px #dd5295}
+.tcg-spider-side-sigil {margin:auto auto 0;text-align:center;color:#765c85;font-size:7px;letter-spacing:.12em}
+.tcg-spider-side-sigil img {display:block;width:47px;margin:0 auto 7px;opacity:.48}
+.tcg-spider-main {min-width:0;max-width:100%}
+.tcg-spider .tcg-nav.tcg-spider-nav {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 16px;
+}
+.tcg-spider .tcg-nav.tcg-spider-nav button {
+  position:relative;min-width:0;min-height:50px;padding:11px 8px;border-radius:3px;
+  border:1px solid #8d6889bb;background:linear-gradient(145deg,#191323f2,#080a12f4);
+  color:#c6afcc;letter-spacing:.075em;font-size:11px;text-transform:uppercase;
+  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
+  transition:color .18s,box-shadow .18s,background .18s;
+}
+.tcg-spider .tcg-nav.tcg-spider-nav button:hover {color:#fff;background:#2d1a3f}
+.tcg-spider .tcg-nav.tcg-spider-nav button.active {
+  color:#fff;border-color:#dca7ff;
+  background:linear-gradient(115deg,#5b2e7f,#2b173d 80%);
+  box-shadow:inset 0 0 16px #d984fe3b;
+  text-shadow:0 0 9px #d999ff;
+}
+.tcg-spider .tcg-nav.tcg-spider-nav button .tcg-spider-tab-symbol {display:inline-block;margin-right:7px;color:#d0a0ef;font-size:16px;vertical-align:-1px}
+.tcg-spider-sectionbar {
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin:0 0 14px;padding:0 0 13px;position:relative;border-bottom:1px solid #8d4660a8;
+}
+.tcg-spider-sectionbar:after {
+  content:"◆";position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+  color:#dd8ec2;background:#110c18;padding:0 10px;font-size:12px;
+}
+.tcg-spider-sectionbar h2 {
+  margin:0;color:#f3ddec;font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(20px,2.7vw,32px);font-style:italic;font-weight:700;line-height:1.2;
+  text-shadow:0 2px 15px #000,0 0 20px #9c376058;
+}
+.tcg-spider-sectionbar small {display:block;margin-top:4px;color:#987e9f;font-size:9px;letter-spacing:.14em;text-transform:uppercase}
+.tcg-spider-section-info {
+  flex:none;padding:8px 12px;border:1px solid #a65a80;border-radius:2px;
+  color:#decce4;background:#1a1020;font-size:10px;font-weight:900;letter-spacing:.06em;
+}
+.tcg-spider .tcg-hero {
+  margin-bottom:16px;border:1px solid #7a4c7c;border-radius:10px;
+  background:linear-gradient(110deg,#151021e8,#1a1527ba),url('/tcg/spider-arena.svg') center/cover;
+  box-shadow:inset 0 0 80px #000b,0 13px 34px #0007;
+}
+.tcg-spider .tcg-hero h2 {font-family:Georgia,serif;color:#f5e5ef;font-style:italic;letter-spacing:.01em}
+.tcg-spider .tcg-kicker {color:#cd8eb4}
+.tcg-spider .tcg-hero p {color:#bba9c4}
+.tcg-spider .tcg-hero-stat {border-color:#9673a64d;border-radius:6px;background:#0a0918b3}
+.tcg-spider .tcg-hero-stat span {color:#b8a5bf}
+.tcg-spider .tcg-hero-stat em {color:#e9a8de}
+.tcg-spider .tcg-panel {
+  position:relative;overflow:hidden;border-color:#6c4d7b9c;border-radius:10px;
+  background:linear-gradient(155deg,#141020e9,#0a0b16f0 70%);
+  box-shadow:0 14px 40px #0006,inset 0 0 38px #78348d0b;
+}
+.tcg-spider .tcg-panel-head {border-bottom-color:#a06e9873;background:#1b132a80;padding:15px 19px}
+.tcg-spider .tcg-panel-head h3 {color:#f2ddef;font-family:Georgia,serif;font-size:20px}
+.tcg-spider .tcg-panel-head p {color:#aa93ae}
+.tcg-spider .tcg-primary,
+.tcg-spider .tcg-open-btn,
+.tcg-spider .tcg-arena-attack {
+  border:1px solid #d2a3ed;border-radius:4px;
+  background:linear-gradient(125deg,#783ca3,#401c63 65%,#271d45);
+  box-shadow:inset 0 1px #e1b5ff6b,0 8px 22px #5f2c914d;
+  color:#fff;text-transform:uppercase;letter-spacing:.07em;
+}
+.tcg-spider .tcg-primary:hover,
+.tcg-spider .tcg-open-btn:hover,
+.tcg-spider .tcg-arena-attack:hover {filter:brightness(1.14)}
+.tcg-spider .tcg-secondary {border-radius:4px;border-color:#826588;background:#1c1524;color:#d7c6dd}
+.tcg-spider .tcg-booster {border-radius:6px;border-color:#8e608f;box-shadow:inset 0 0 24px #130b27}
+.tcg-spider .tcg-booster:before {
+  content:"";position:absolute;right:7px;top:8px;width:31px;height:31px;opacity:.25;
+  background:url('/tcg/spider-sigil.svg') center/contain no-repeat;
+}
+.tcg-spider .tcg-booster strong {font-family:Georgia,serif;font-size:19px}
+.tcg-spider .tcg-pack-big {border-radius:9px}
+.tcg-spider .tcg-collection-toolbar button {border-radius:3px;border-color:#70587c;color:#c6a3cd}
+.tcg-spider .tcg-collection-toolbar button.active {background:#582a65;border-color:#c891da;color:#fff}
+.tcg-spider .tcg-card {
+  border-radius:8px;border-color:color-mix(in srgb,var(--rarity),#a88cbd 40%);
+  box-shadow:0 0 0 1px #07060e,0 10px 28px #0009;
+  background:linear-gradient(160deg,#22182f,#080810 80%);
+}
+.tcg-spider .tcg-card-name {font-family:Georgia,serif;font-weight:700;letter-spacing:.01em}
+.tcg-spider .tcg-card-stats span {border:1px solid #7e5d7842;border-radius:4px;background:#151122ba}
+.tcg-spider .tcg-card-rarity {border-radius:2px;background:#0b071ad9;font-weight:950}
+.tcg-spider .tcg-card-type {letter-spacing:.06em}
+.tcg-spider .tcg-card-skill {color:#c0abc8}
+.tcg-spider .tcg-card-evolution {border-radius:3px}
+.tcg-spider .tcg-card[data-rarity="ultra"] {box-shadow:0 0 0 1px #dc84f189,0 0 24px #a13ed253,0 12px 26px #0008}
+.tcg-spider .tcg-card[data-rarity="secret"] {box-shadow:0 0 0 1px #f7d29bad,0 0 30px #aa54e05a,0 13px 25px #0009}
+.tcg-spider .tcg-arena-board {
+  border-color:#8d528e;border-radius:10px;
+  background:linear-gradient(155deg,#080713ec,#100b1ec9),url('/tcg/spider-arena.svg') center/cover;
+  box-shadow:inset 0 0 55px #0009;
+}
+.tcg-spider .tcg-arena-intro {
+  border-color:#96558c;border-radius:6px;
+  background:linear-gradient(110deg,#140e20ee,#130b22d0),url('/tcg/spider-arena.svg') center/cover;
+}
+.tcg-spider .tcg-arena-intro h3,
+.tcg-spider .tcg-arena-end h3 {font-family:Georgia,serif;font-style:italic;letter-spacing:.05em;color:#f1d2ea}
+.tcg-spider .tcg-arena-rules span {border-radius:3px;background:#2a1b32;color:#eacbec}
+.tcg-spider .tcg-arena-side {
+  border-color:#805c8f;border-radius:5px;background:#0a0819c2;
+  box-shadow:inset 0 0 17px #56245a38;
+}
+.tcg-spider .tcg-arena-track i {background:linear-gradient(90deg,#8345af,#ce7eda)}
+.tcg-spider .tcg-arena-side--ai .tcg-arena-track i {background:linear-gradient(90deg,#8d294b,#df6688)}
+.tcg-spider .tcg-arena-resource b {color:#d7a7eb}
+.tcg-spider .tcg-arena-round {color:#df90c6}
+.tcg-spider .tcg-arena-versus {background:#23152e;border-color:#9c508d;color:#f5c2ef}
+.tcg-spider .tcg-arena-log {border:1px solid #77558070;border-radius:3px;background:#100a1ac7}
+.tcg-spider .tcg-arena-controls {border-color:#834c83;border-radius:5px;background:linear-gradient(110deg,#25152c,#0e0b1a)}
+.tcg-spider .tcg-arena-counter button {border-color:#bb79c8;border-radius:3px;background:#372041;color:#f5d5fa}
+.tcg-spider .tcg-arena-counter b {color:#eabcf0}
+.tcg-spider .tcg-arena-fury {border-radius:3px}
+.tcg-spider .tcg-arena-fury[aria-pressed="true"] {background:linear-gradient(110deg,#922a51,#601f68);box-shadow:0 0 16px #c44f9e88}
+.tcg-spider .tcg-arena-hand-head {font-family:Georgia,serif;font-size:17px;color:#f1d3e7;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid #8f52748c;padding:8px 0}
+.tcg-spider .tcg-arena-hand-head small {font-family:Inter,system-ui,sans-serif;text-transform:none}
+.tcg-spider .tcg-arena-choice {
+  position:relative;overflow:visible;padding:10px;border-radius:4px;
+  border-color:#7a5d80;background:linear-gradient(170deg,#1a1227,#0d0b16);
+  box-shadow:inset 0 0 0 1px #31213b,0 12px 23px #0007;
+}
+.tcg-spider .tcg-arena-choice:before,
+.tcg-spider .tcg-arena-choice:after {
+  content:"";position:absolute;width:16px;height:16px;pointer-events:none;z-index:2;
+  border-color:#c5a0c9;
+}
+.tcg-spider .tcg-arena-choice:before {top:2px;left:2px;border-top:2px solid;border-left:2px solid}
+.tcg-spider .tcg-arena-choice:after {bottom:2px;right:2px;border-bottom:2px solid;border-right:2px solid}
+.tcg-spider .tcg-arena-choice[aria-pressed="true"] {
+  border-color:#e4a0f8;transform:translateY(-5px);
+  box-shadow:0 0 0 2px #9c65d1b8,0 0 25px #b944e6a1,0 10px 25px #000b;
+  animation:spiderSelectedPulse 2.4s ease-in-out infinite;
+}
+.tcg-spider .tcg-arena-choice[aria-pressed="true"]:before,
+.tcg-spider .tcg-arena-choice[aria-pressed="true"]:after {border-color:#f3b4ff}
+.tcg-spider .tcg-arena-card-meta {color:#e5cbe7;font-weight:900}
+.tcg-spider .tcg-arena-synergy {border-color:#9566a9;background:#301a3c7d;color:#e4a9eb;border-radius:3px}
+.tcg-spider .tcg-arena-fighter--win .tcg-card {box-shadow:0 0 0 2px #cd9bec,0 0 28px #b34dcebb}
+.tcg-spider .tcg-deck-row,.tcg-spider .tcg-deck-summary {border-radius:5px;border-color:#715277;background:#130e20}
+.tcg-spider .tcg-deck-row .mini {border-radius:3px;background:#3b2152}
+.tcg-spider .tcg-curve div {background:#291a36}
+.tcg-spider .tcg-arena-history span {border-radius:2px;background:#25172e}
+.tcg-spider .tcg-arena-end {border-color:#a479b0;background:#140e22;border-radius:7px}
+@keyframes spiderSelectedPulse {
+  0%,100%{box-shadow:0 0 0 2px #9c65d1b8,0 0 24px #b944e676,0 10px 25px #000b}
+  50%{box-shadow:0 0 0 2px #b57ce1e8,0 0 34px #dd4efac2,0 12px 30px #000b}
+}
+@media(max-width:1050px) {
+  .tcg-spider .tcg-spider-grid {grid-template-columns:76px minmax(0,1fr);gap:11px}
+  .tcg-spider-side-tab {min-height:64px}
+  .tcg-spider .tcg-top.tcg-spider-top {padding-top:17px;min-height:147px}
+  .tcg-spider-mark {width:62px;height:62px}
+  .tcg-spider .tcg-nav.tcg-spider-nav button {font-size:10px}
+}
+@media(max-width:700px) {
+  .tcg-app.tcg-spider {padding:0 9px 25px}
+  .tcg-spider .tcg-top.tcg-spider-top {margin:0 -9px 9px;min-height:154px;padding:13px 12px 18px;flex-wrap:wrap;gap:9px}
+  .tcg-spider .tcg-spider-brand {gap:9px;order:1;flex:1}
+  .tcg-spider-mark {width:50px;height:50px}
+  .tcg-spider .tcg-top h1.tcg-spider-title {font-size:26px}
+  .tcg-spider .tcg-spider-subtitle {font-size:8px;margin-top:5px}
+  .tcg-spider .tcg-back {order:0}
+  .tcg-spider .tcg-spider-status {order:2;width:100%;justify-content:flex-start}
+  .tcg-spider .tcg-spider-grid {grid-template-columns:1fr;gap:7px}
+  .tcg-spider-sidebar {padding:5px;border-radius:4px;gap:0}
+  .tcg-spider-side-nav {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .tcg-spider-side-tab {min-height:40px;display:flex;flex-direction:column;gap:2px;justify-content:center;font-size:8px}
+  .tcg-spider-side-tab .tcg-spider-tab-symbol {font-size:17px}
+  .tcg-spider-side-sigil {display:none}
+  .tcg-spider .tcg-nav.tcg-spider-nav {display:none}
+  .tcg-spider .tcg-spider-sectionbar {margin-top:4px}
+  .tcg-spider-sectionbar h2 {font-size:22px}
+  .tcg-spider-section-info {padding:6px;font-size:9px;max-width:45%}
+  .tcg-spider .tcg-arena-choice {padding:4px}
+  .tcg-spider .tcg-panel-head h3 {font-size:16px}
+}
+@media(max-width:430px) {
+  .tcg-spider .tcg-top h1.tcg-spider-title {font-size:22px}
+  .tcg-spider-mark {width:42px;height:42px}
+  .tcg-spider .tcg-top .tcg-chip {font-size:9px}
+  .tcg-spider .tcg-arena-hand-head {font-size:13px}
+  .tcg-spider .tcg-card-name {font-size:10px}
+  .tcg-spider .tcg-card-skill {display:none}
+}
+@media(prefers-reduced-motion:reduce) {
+  .tcg-spider .tcg-arena-choice[aria-pressed="true"]{animation:none}
+}
