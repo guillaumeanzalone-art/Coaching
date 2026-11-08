@@ -63,3 +63,7 @@
 @media(max-width:1000px){.tcg-app .tcg-alexandre-gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:650px){.tcg-app .tcg-alexandre-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));padding:8px;gap:7px}.tcg-app .tcg-card--alexandre .tcg-venom-level{padding:3px 5px;min-width:43px;font-size:11px}.tcg-app .tcg-card--alexandre .tcg-venom-stage{font-size:7px}}
 @media(prefers-reduced-motion:reduce){.tcg-app .tcg-card--alexandre .tcg-venom-backdrop:before,.tcg-app .tcg-card--alexandre .tcg-venom-backdrop i,.tcg-app .tcg-card--alexandre .tcg-venom-mist i,.tcg-app .tcg-card--alexandre .tcg-venom-mist:before,.tcg-app .tcg-card--alexandre .tcg-venom-crest,.tcg-app .tcg-card--alexandre .tcg-card-art:after{animation:none}}
+
+.tcg-app .tcg-venom-battle-status{display:inline-block;margin-left:7px;padding:4px 7px;border:1px solid #b6f25882;border-radius:4px;background:#293b17a8;color:#e8ff9f;font-size:9px;font-weight:900;letter-spacing:.03em;box-shadow:0 0 11px #b1ed4735;animation:venomDebuffPulse 2s ease-in-out infinite}
+@keyframes venomDebuffPulse{50%{filter:brightness(1.2);box-shadow:0 0 16px #b1ed4770}}
+@media(prefers-reduced-motion:reduce){.tcg-app .tcg-venom-battle-status{animation:none}}
