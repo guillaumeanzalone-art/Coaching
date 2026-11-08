@@ -2,7 +2,7 @@
    Existing athlete portrait remains the identity layer. LVL badges reflect rarity,
    not the athlete's training level. No dependencies or external images. */
 .tcg-app .tcg-card--alexandre{--venom:#a9f362;--venom-secondary:#53ab5d;--venom-bg:#1b3c32;--venom-glow:.17;position:relative;border-color:var(--venom);background:radial-gradient(circle at 52% 7%,color-mix(in srgb,var(--venom),transparent 79%),transparent 44%),linear-gradient(165deg,#1a1427,#070c14 74%);box-shadow:0 0 0 1px #081009,0 0 16px color-mix(in srgb,var(--venom),transparent 65%),0 15px 30px #0009}
-.tcg-app .tcg-card--alexandre .tcg-card-art{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(circle at 80% 75%,var(--venom-bg),transparent 62%),linear-gradient(155deg,#100f1e,#0f2826 70%,#020c0b);box-shadow:inset 0 0 50px #0009}
+.tcg-app .tcg-card--alexandre .tcg-card-art{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;isolation:isolate;overflow:hidden;background:radial-gradient(circle at 80% 75%,var(--venom-bg),transparent 62%),linear-gradient(155deg,#100f1e,#0f2826 70%,#020c0b);box-shadow:inset 0 0 50px #0009}
 .tcg-app .tcg-card--alexandre .tcg-card-art:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at 77% 38%,transparent 30%,color-mix(in srgb,var(--venom),transparent 88%) 70%),linear-gradient(180deg,#05091600 36%,#09271425 63%,#07160dd9);mix-blend-mode:screen}
 .tcg-app .tcg-card--alexandre .tcg-card-art:after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.6;background:radial-gradient(circle at 17% 17%,#d4ff9d52 0 1.5px,transparent 3px),radial-gradient(circle at 86% 72%,#bcff8050 0 1px,transparent 3px),radial-gradient(circle at 67% 23%,#c2ff7650 0 1.4px,transparent 3px);background-size:52px 78px,93px 66px,73px 84px;animation:venomStardust 9s linear infinite}
 .tcg-app .tcg-card--alexandre .tcg-card-art>img:not(.tcg-venom-crest){position:relative;z-index:1;object-fit:cover;object-position:center 18%;width:100%;height:100%;filter:saturate(.9) contrast(1.06) sepia(.04);-webkit-mask-image:linear-gradient(#000 0 63%,#000b 79%,transparent 100%);mask-image:linear-gradient(#000 0 63%,#000b 79%,transparent 100%)}
@@ -24,13 +24,13 @@
 .tcg-app .tcg-card--alexandre .tcg-venom-stage{position:absolute;bottom:8px;left:7px;z-index:11;max-width:80%;padding:5px 7px;border-left:2px solid var(--venom);background:linear-gradient(100deg,#070b08ed,#0c1417bb);color:#efffce;font-size:clamp(7px,.75vw,10px);line-height:1.1;font-weight:950;letter-spacing:.05em;text-transform:uppercase;text-shadow:0 1px 3px #000}
 .tcg-app .tcg-card--alexandre .tcg-card-rarity{top:41px;border-radius:3px;background:#090e0ccf;color:var(--venom)}
 .tcg-app .tcg-card--alexandre .tcg-card-evolution,.tcg-app .tcg-card--alexandre .tcg-card-cost{display:none!important}
-.tcg-app .tcg-card--alexandre .tcg-card-body{position:relative;z-index:6;border-top:1px solid color-mix(in srgb,var(--venom),transparent 58%);background:linear-gradient(155deg,#141225f4,#07130fec)}
+.tcg-app .tcg-card--alexandre .tcg-card-body{position:absolute;left:7px;right:7px;bottom:7px;z-index:8;margin:0;padding:5px;border:1px solid color-mix(in srgb,var(--venom),transparent 58%);border-radius:8px;background:rgba(7,8,18,.81);backdrop-filter:blur(6px)}
 .tcg-app .tcg-card--alexandre .tcg-card-name{color:#f9ffe7}
 .tcg-app .tcg-card--alexandre .tcg-card-type{color:var(--venom)}
 .tcg-app .tcg-card--alexandre .tcg-card-stats span{border-color:color-mix(in srgb,var(--venom),transparent 75%);color:#b3cba6}
 .tcg-app .tcg-card--alexandre .tcg-card-skill{color:#bcd3b2}
 .tcg-app .tcg-card--alexandre.tcg-card--full-art .tcg-card-art>img:not(.tcg-venom-crest){position:absolute;inset:0;object-fit:contain;object-position:center top;width:100%;height:74%;background:transparent;-webkit-mask-image:linear-gradient(#000 0 52%,#000c 68%,transparent 100%);mask-image:linear-gradient(#000 0 52%,#000c 68%,transparent 100%)}
-.tcg-app .tcg-card--alexandre.tcg-card--full-art .tcg-card-body{position:relative;z-index:6;background:linear-gradient(180deg,transparent,#07130fef 20%,#0a0d16 79%);border-top:0}
+.tcg-app .tcg-card--alexandre.tcg-card--full-art .tcg-card-body{position:absolute;left:7px;right:7px;bottom:7px;z-index:8;margin:0;padding:5px;background:rgba(7,8,18,.81);border:1px solid color-mix(in srgb,var(--venom),transparent 58%)}
 .tcg-app .tcg-card--alexandre.tcg-card--full-art .tcg-venom-stage{bottom:24%;font-size:9px}
 .tcg-app .tcg-card--alexandre.tcg-venom-lvl-1{--venom:#addc72;--venom-secondary:#62a759;--venom-bg:#20482e;--venom-glow:.12;--venom-crest:.16}
 .tcg-app .tcg-card--alexandre.tcg-venom-lvl-2{--venom:#b5f04c;--venom-secondary:#68b92e;--venom-bg:#306a27;--venom-glow:.27;--venom-crest:.25}
@@ -48,7 +48,7 @@
 .tcg-app .tcg-alexandre-gallery-slot{min-width:0;border:1px solid #517b4475;border-radius:8px;background:linear-gradient(180deg,#131c19,#0b1013);padding:7px}
 .tcg-app .tcg-alexandre-gallery-card{position:relative;min-width:0}
 .tcg-app .tcg-alexandre-gallery-card>.tcg-card{width:100%;box-sizing:border-box;min-height:0}
-.tcg-app .tcg-alexandre-gallery-card .tcg-card--full-art .tcg-card-body{margin-top:140px}
+.tcg-app .tcg-alexandre-gallery-card .tcg-card--full-art .tcg-card-body{margin-top:0}
 .tcg-app .tcg-alexandre-gallery-caption{display:grid;gap:4px;padding:8px 2px 3px;min-width:0}
 .tcg-app .tcg-alexandre-gallery-caption strong{font-size:10px;line-height:1.3;color:#d6f0b9}
 .tcg-app .tcg-alexandre-gallery-caption span{font-size:9px;font-weight:900;letter-spacing:.04em;color:#a7fb9a}
@@ -67,3 +67,8 @@
 .tcg-app .tcg-venom-battle-status{display:inline-block;margin-left:7px;padding:4px 7px;border:1px solid #b6f25882;border-radius:4px;background:#293b17a8;color:#e8ff9f;font-size:9px;font-weight:900;letter-spacing:.03em;box-shadow:0 0 11px #b1ed4735;animation:venomDebuffPulse 2s ease-in-out infinite}
 @keyframes venomDebuffPulse{50%{filter:brightness(1.2);box-shadow:0 0 16px #b1ed4770}}
 @media(prefers-reduced-motion:reduce){.tcg-app .tcg-venom-battle-status{animation:none}}
+
+/* Image sprite is the visible foreground, not a zero-height pseudo-background. */
+.tcg-app.tcg-spider .tcg-card--alexandre.tcg-card--illustrated .tcg-illustration-sprite{position:absolute;inset:0;display:block;width:100%;height:100%;z-index:1;background-repeat:no-repeat;background-size:500% 100%;background-position-y:center;opacity:1;visibility:visible;filter:none}
+.tcg-app.tcg-spider .tcg-card--alexandre.tcg-card--illustrated .tcg-card-art{position:absolute;inset:0;display:block;width:100%;height:100%;aspect-ratio:auto}
+.tcg-app.tcg-spider .tcg-card--alexandre.tcg-card--illustrated .tcg-card-body{position:absolute;left:7px;right:7px;bottom:7px;z-index:8;margin:0}
