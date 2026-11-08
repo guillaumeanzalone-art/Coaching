@@ -4771,14 +4771,12 @@ export function mountTraining(
       athleteTheme?.variant ===
       'camille-abyss-sanctuary'
     ) {
-      const athleteName = String(
-        program.athlete?.name || 'Camille'
-      ).trim()
-
+      // Only the athlete's first name appears on this decorative theme.
+      // Training controls and exercise instructions remain unchanged.
       return `
         <section
           class="athlete-theme-banner athlete-theme-banner--camille-abyss"
-          aria-label="Sanctuaire aquatique de ${escapeHtml(athleteName)}"
+          aria-label="Thème aquatique de Camille"
         >
           <div class="camille-abyss__art" aria-hidden="true"></div>
           <div class="camille-abyss__rays" aria-hidden="true"></div>
@@ -4786,21 +4784,7 @@ export function mountTraining(
             <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
           </div>
           <div class="camille-abyss__content">
-            <div class="camille-abyss__eyebrow">
-              <span class="camille-abyss__mark" aria-hidden="true">◈</span>
-              LES CHRONIQUES DU SANCTUAIRE
-            </div>
-            <h2>${escapeHtml(athleteName)}<span>Les Abysses</span></h2>
-            <p>Plonge au cœur de ta progression.</p>
-            <div class="camille-abyss__emblems" aria-label="Les trois mouvements de force athlétique">
-              <span>01 <b>SQUAT</b></span>
-              <span>02 <b>BENCH</b></span>
-              <span>03 <b>TERRE</b></span>
-            </div>
-          </div>
-          <div class="camille-abyss__depth" aria-hidden="true">
-            <span>DEEP WATER</span>
-            <strong>∞</strong>
+            <h2>Camille</h2>
           </div>
         </section>
       `
