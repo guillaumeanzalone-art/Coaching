@@ -3,6 +3,7 @@ import './tcg-arena.css'
 import './tcg-spider-theme.css'
 import './tcg-alexandre-poison.css'
 import './tcg-hugo-forge.css'
+import './tcg-benoit-earth.css'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
@@ -124,6 +125,19 @@ const PROCEDURAL_CHARACTER_THEMES = [
 ]
 
 const CHARACTER_DESIGNS = {
+  benoit: {
+    family: 'earth-templar',
+    sigil: '✧',
+    hue: 36,
+    stages: {
+      common: 'Éclat de pierre',
+      uncommon: 'Sceptre tellurique',
+      rare: 'Croix du bastion',
+      ultra: 'Colosse de roc',
+      secret: 'Ascension tellurique',
+    },
+  },
+
   louis: {
     family: 'psychic-lifter',
     sigil: 'Ψ',
@@ -188,6 +202,17 @@ const CHARACTER_DESIGNS = {
 }
 
 const CHARACTER_CARD_ART = {
+  benoit: {
+    // Five original artworks supplied by the player, ordered LVL 1 → LVL 5.
+    sprite: '/tcg/benoit-terre-evolutions.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
   alexandre: {
     // Each panel of this five-frame sprite is a distinct image generation.
     // Ordered from Common (LVL 1) to Secret (LVL 5).
@@ -986,15 +1011,16 @@ function renderCard(
 
   const isAlexandre = card.slug === 'alexandre'
   const isHugo = card.slug === 'hugo'
+  const isBenoit = card.slug === 'benoit'
   const poisonLevel = Number(card.rarityMeta?.rank || 1)
   const fireLevel = poisonLevel
 
   return `
     <article
-      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
+      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${isBenoit ? 'tcg-card--benoit tcg-earth-lvl-' + poisonLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
       data-rarity="${esc(card.rarity)}"
       data-character="${esc(card.slug)}"
-      data-level="${isAlexandre ? poisonLevel : isHugo ? fireLevel : '' }"
+      data-level="${isAlexandre || isHugo || isBenoit ? poisonLevel : '' }"
       data-design="${esc(design?.family || '')}"
       style="--character-hue:${Number(design?.hue || 270)}"
       ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}"` : ''}
@@ -1023,6 +1049,11 @@ function renderCard(
             `
         }
 
+        ${isBenoit ? `
+          <div class="tcg-earth-sheen" aria-hidden="true"></div>
+          <div class="tcg-earth-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <span class="tcg-earth-level">LVL ${poisonLevel}</span>
+        ` : ''}
         ${isHugo ? `
           <div class="tcg-forge-embers" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
           <span class="tcg-forge-lvl">LVL ${fireLevel}</span>
@@ -1054,7 +1085,7 @@ function renderCard(
           ${esc(card.rarityMeta.label)}
         </span>
 
-        ${stageLabel && !isAlexandre && !isHugo
+        ${stageLabel && !isAlexandre && !isHugo && !isBenoit
           ? `
             <span class="tcg-card-evolution">
               ${esc(stageLabel)}
@@ -2196,6 +2227,38 @@ export async function mountTcgGame(
     `
   }
 
+  function renderBenoitEvolutionGallery() {
+    const benoit = athletes.find(item => athleteSlug(item) === 'benoit')
+    if (!benoit) return ''
+    const rarities = ['common', 'uncommon', 'rare', 'ultra', 'secret']
+    const levelNames = ['Éclat de pierre', 'Sceptre tellurique', 'Croix du bastion', 'Colosse de roc', 'Ascension tellurique']
+    return `
+      <section class="tcg-panel tcg-benoit-gallery">
+        <header class="tcg-panel-head">
+          <div>
+            <h3>Benoît · Les cinq ascensions</h3>
+            <p>Full Art · cinq visuels originaux · reflets et énergie tellurique.</p>
+          </div>
+          <strong>LVL 1 → 5</strong>
+        </header>
+        <div class="tcg-benoit-gallery-grid">
+          ${rarities.map((rarity, level) => {
+            const card = catalog.get(cardId('benoit', rarity))
+            if (!card) return ''
+            const owned = ownedCopies(card.id) > 0
+            return `<div class="tcg-benoit-gallery-slot ${owned ? 'is-owned' : 'is-unowned'}" data-rarity="${esc(rarity)}">
+              <div class="tcg-benoit-gallery-card">${renderCard(card)}</div>
+              <div class="tcg-benoit-gallery-caption">
+                <strong>LVL ${level + 1} · ${esc(levelNames[level])}</strong>
+                <span>${owned ? 'DÉBLOQUÉE' : 'À DÉBLOQUER'}</span>
+              </div>
+            </div>`
+          }).join('')}
+        </div>
+      </section>
+    `
+  }
+
   function renderCollection() {
     const rows =
       ownedRows()
@@ -2219,6 +2282,7 @@ export async function mountTcgGame(
     return `
       ${renderAlexandreEvolutionGallery()}
       ${renderHugoEvolutionGallery()}
+      ${renderBenoitEvolutionGallery()}
       <section class="tcg-panel">
         <header class="tcg-panel-head">
           <div>
