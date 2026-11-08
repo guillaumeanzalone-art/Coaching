@@ -1,6 +1,7 @@
 import { supabase } from './supabase.js'
 import './tcg-arena.css'
 import './tcg-spider-theme.css'
+import './tcg-alexandre-poison.css'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
@@ -72,6 +73,12 @@ const ARCHETYPES = [
     icon: '✦',
     text: 'Variation de -1 à +2 ATK à chaque duel.',
   },
+  {
+    id: 'poison',
+    label: 'Poison',
+    icon: '☣',
+    text: 'Miasmes : l’odeur inflige un poison progressif après un round gagné.',
+  },
 ]
 
 const PROCEDURAL_CHARACTER_THEMES = [
@@ -129,6 +136,19 @@ const CHARACTER_DESIGNS = {
       rare: 'Télékinésie vectorielle',
       ultra: 'Cortex astral',
       secret: 'Singularité mentale',
+    },
+  },
+
+  alexandre: {
+    family: 'toxic-miasma',
+    sigil: '☣',
+    hue: 91,
+    stages: {
+      common: 'Petit nuage',
+      uncommon: 'Souffle fétide',
+      rare: 'Brume suffocante',
+      ultra: 'Ouragan toxique',
+      secret: 'Cataclysme olfactif',
     },
   },
 
@@ -300,6 +320,7 @@ function rarityMeta(rarity) {
 }
 
 function archetypeFor(slug) {
+  if (slug === 'alexandre') return ARCHETYPES.find(a => a.id === 'poison')
   return ARCHETYPES[
     hashString(slug) %
     ARCHETYPES.length
@@ -918,16 +939,21 @@ function renderCard(
       ? 'tcg-card--procedural'
       : ''
 
+  const isAlexandre = card.slug === 'alexandre'
+  const poisonLevel = Number(card.rarityMeta?.rank || 1)
+
   return `
     <article
-      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
+      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
       data-rarity="${esc(card.rarity)}"
       data-character="${esc(card.slug)}"
+      data-level="${isAlexandre ? poisonLevel : '' }"
       data-design="${esc(design?.family || '')}"
       style="--character-hue:${Number(design?.hue || 270)}"
       ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}"` : ''}
     >
       <div class="tcg-card-art">
+        ${isAlexandre ? `<div class="tcg-venom-backdrop" aria-hidden="true"><i></i><i></i><i></i></div>` : ''}
         ${dedicatedArt
           ? `
             <div
@@ -950,6 +976,12 @@ function renderCard(
             `
         }
 
+        ${isAlexandre ? `
+          <div class="tcg-venom-mist" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <img class="tcg-venom-crest" src="/tcg/alexandre-poison-crest.svg" alt="" aria-hidden="true" />
+          <span class="tcg-venom-level">LVL ${poisonLevel}</span>
+          <span class="tcg-venom-stage">${esc(stageLabel)}</span>
+        ` : ''}
         ${design && card.rarity !== 'common' && !dedicatedArt
           ? `
             <div class="tcg-power-vfx" aria-hidden="true">
@@ -971,7 +1003,7 @@ function renderCard(
           ${esc(card.rarityMeta.label)}
         </span>
 
-        ${stageLabel
+        ${stageLabel && !isAlexandre
           ? `
             <span class="tcg-card-evolution">
               ${esc(stageLabel)}
@@ -2050,6 +2082,37 @@ export async function mountTcgGame(
     `
   }
 
+
+  function renderAlexandreEvolutionGallery() {
+    const alexandre = athletes.find(item => athleteSlug(item) === 'alexandre')
+    if (!alexandre) return ''
+    const rarities = ['common', 'uncommon', 'rare', 'ultra', 'secret']
+    const levelTitles = ['Petit nuage', 'Souffle fétide', 'Brume suffocante', 'Ouragan toxique', 'Cataclysme olfactif']
+    return `
+      <section class="tcg-panel tcg-alexandre-gallery">
+        <header class="tcg-panel-head">
+          <div><h3>Alexandre · Les cinq miasmes</h3>
+            <p>Poison · le pouvoir des gaz fétides augmente à chaque évolution.</p></div>
+          <strong>LVL 1 → 5</strong>
+        </header>
+        <div class="tcg-alexandre-gallery-grid">
+          ${rarities.map((rarity,index) => {
+            const card = catalog.get(cardId('alexandre', rarity))
+            if (!card) return ''
+            const owned = ownedCopies(card.id) > 0
+            return `<div class="tcg-alexandre-gallery-slot ${owned ? 'is-owned' : 'is-unowned'}" data-rarity="${esc(rarity)}">
+              <div class="tcg-alexandre-gallery-card">${renderCard(card)}</div>
+              <div class="tcg-alexandre-gallery-caption">
+                <strong>LVL ${index+1} · ${esc(levelTitles[index])}</strong>
+                <span>${owned ? 'DÉBLOQUÉE' : 'À DÉBLOQUER'}</span>
+              </div>
+            </div>`
+          }).join('')}
+        </div>
+      </section>
+    `
+  }
+
   function renderCollection() {
     const rows =
       ownedRows()
@@ -2071,6 +2134,7 @@ export async function mountTcgGame(
         )
 
     return `
+      ${renderAlexandreEvolutionGallery()}
       <section class="tcg-panel">
         <header class="tcg-panel-head">
           <div>
