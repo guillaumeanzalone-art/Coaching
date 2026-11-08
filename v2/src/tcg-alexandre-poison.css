@@ -1,0 +1,65 @@
+/* GA TCG Alexandre — poison/foul-gas five-stage evolution artwork and decor.
+   Existing athlete portrait remains the identity layer. LVL badges reflect rarity,
+   not the athlete's training level. No dependencies or external images. */
+.tcg-app .tcg-card--alexandre{--venom:#a9f362;--venom-secondary:#53ab5d;--venom-bg:#1b3c32;--venom-glow:.17;position:relative;border-color:var(--venom);background:radial-gradient(circle at 52% 7%,color-mix(in srgb,var(--venom),transparent 79%),transparent 44%),linear-gradient(165deg,#1a1427,#070c14 74%);box-shadow:0 0 0 1px #081009,0 0 16px color-mix(in srgb,var(--venom),transparent 65%),0 15px 30px #0009}
+.tcg-app .tcg-card--alexandre .tcg-card-art{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(circle at 80% 75%,var(--venom-bg),transparent 62%),linear-gradient(155deg,#100f1e,#0f2826 70%,#020c0b);box-shadow:inset 0 0 50px #0009}
+.tcg-app .tcg-card--alexandre .tcg-card-art:before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(ellipse at 77% 38%,transparent 30%,color-mix(in srgb,var(--venom),transparent 88%) 70%),linear-gradient(180deg,#05091600 36%,#09271425 63%,#07160dd9);mix-blend-mode:screen}
+.tcg-app .tcg-card--alexandre .tcg-card-art:after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.6;background:radial-gradient(circle at 17% 17%,#d4ff9d52 0 1.5px,transparent 3px),radial-gradient(circle at 86% 72%,#bcff8050 0 1px,transparent 3px),radial-gradient(circle at 67% 23%,#c2ff7650 0 1.4px,transparent 3px);background-size:52px 78px,93px 66px,73px 84px;animation:venomStardust 9s linear infinite}
+.tcg-app .tcg-card--alexandre .tcg-card-art>img:not(.tcg-venom-crest){position:relative;z-index:1;object-fit:cover;object-position:center 18%;width:100%;height:100%;filter:saturate(.9) contrast(1.06) sepia(.04);-webkit-mask-image:linear-gradient(#000 0 63%,#000b 79%,transparent 100%);mask-image:linear-gradient(#000 0 63%,#000b 79%,transparent 100%)}
+.tcg-app .tcg-card--alexandre .tcg-venom-backdrop{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.tcg-app .tcg-card--alexandre .tcg-venom-backdrop:before{content:"";position:absolute;inset:-25%;background:conic-gradient(from 70deg at 56% 65%,transparent,#aaff4d16,#db94fa36,transparent,#b1fa784d,transparent);animation:venomSpin 22s linear infinite}
+.tcg-app .tcg-card--alexandre .tcg-venom-backdrop:after{content:"";position:absolute;inset:8%;border:1px dashed color-mix(in srgb,var(--venom),transparent 45%);border-radius:50%;box-shadow:inset 0 0 28px color-mix(in srgb,var(--venom),transparent 80%),0 0 20px color-mix(in srgb,var(--venom),transparent 80%);opacity:.26;transform:scale(.72)}
+.tcg-app .tcg-card--alexandre .tcg-venom-backdrop i{position:absolute;display:block;width:38%;aspect-ratio:1;left:3%;bottom:-12%;border-radius:43% 57% 64% 36%;background:var(--venom);filter:blur(22px);opacity:var(--venom-glow);animation:venomRise 4.6s ease-in-out infinite}
+.tcg-app .tcg-card--alexandre .tcg-venom-backdrop i:nth-child(2){left:46%;bottom:-24%;width:62%;animation-duration:5.7s;animation-delay:-1.4s}
+.tcg-app .tcg-card--alexandre .tcg-venom-backdrop i:nth-child(3){left:18%;bottom:22%;width:48%;animation-duration:6.2s;animation-delay:-2.2s;opacity:calc(var(--venom-glow)*.65)}
+.tcg-app .tcg-card--alexandre .tcg-venom-mist{position:absolute;z-index:5;inset:0;overflow:hidden;pointer-events:none}
+.tcg-app .tcg-card--alexandre .tcg-venom-mist i{position:absolute;display:block;bottom:-27%;width:62%;aspect-ratio:1/1.25;border-radius:60% 40% 70% 30%;background:radial-gradient(ellipse at 50% 75%,color-mix(in srgb,var(--venom),transparent 54%),transparent 61%);opacity:.45;filter:blur(8px);animation:venomFloat 5.3s ease-in-out infinite}
+.tcg-app .tcg-card--alexandre .tcg-venom-mist i:nth-child(1){left:-12%;animation-delay:-1.4s}
+.tcg-app .tcg-card--alexandre .tcg-venom-mist i:nth-child(2){left:56%;width:81%;animation-delay:-3.3s;animation-duration:6.2s}
+.tcg-app .tcg-card--alexandre .tcg-venom-mist i:nth-child(3){left:22%;width:45%;animation-delay:-4.2s}
+.tcg-app .tcg-card--alexandre .tcg-venom-mist i:nth-child(4){left:70%;width:52%;animation-delay:-.7s}
+.tcg-app .tcg-card--alexandre .tcg-venom-mist i:nth-child(5){left:35%;width:67%;animation-delay:-5s}
+.tcg-app .tcg-card--alexandre .tcg-venom-crest{position:absolute;z-index:5;bottom:10%;right:-6%;width:39%;height:auto!important;max-height:55%;pointer-events:none;opacity:var(--venom-crest,.29);filter:drop-shadow(0 0 12px color-mix(in srgb,var(--venom),transparent 25%));animation:venomCrestBreath 4s ease-in-out infinite}
+.tcg-app .tcg-card--alexandre .tcg-venom-level{position:absolute;top:9px;right:9px;z-index:10;display:inline-flex;align-items:center;justify-content:center;min-width:56px;padding:5px 8px;border:1px solid color-mix(in srgb,var(--venom),white 18%);border-radius:3px;background:linear-gradient(125deg,#09110df2,#211528ee);font-family:Georgia,serif;font-size:clamp(11px,1vw,14px);font-weight:900;letter-spacing:.07em;color:var(--venom);text-shadow:0 0 9px color-mix(in srgb,var(--venom),transparent 40%);box-shadow:0 0 12px color-mix(in srgb,var(--venom),transparent 76%)}
+.tcg-app .tcg-card--alexandre .tcg-venom-stage{position:absolute;bottom:8px;left:7px;z-index:11;max-width:80%;padding:5px 7px;border-left:2px solid var(--venom);background:linear-gradient(100deg,#070b08ed,#0c1417bb);color:#efffce;font-size:clamp(7px,.75vw,10px);line-height:1.1;font-weight:950;letter-spacing:.05em;text-transform:uppercase;text-shadow:0 1px 3px #000}
+.tcg-app .tcg-card--alexandre .tcg-card-rarity{top:41px;border-radius:3px;background:#090e0ccf;color:var(--venom)}
+.tcg-app .tcg-card--alexandre .tcg-card-evolution,.tcg-app .tcg-card--alexandre .tcg-card-cost{display:none!important}
+.tcg-app .tcg-card--alexandre .tcg-card-body{position:relative;z-index:6;border-top:1px solid color-mix(in srgb,var(--venom),transparent 58%);background:linear-gradient(155deg,#141225f4,#07130fec)}
+.tcg-app .tcg-card--alexandre .tcg-card-name{color:#f9ffe7}
+.tcg-app .tcg-card--alexandre .tcg-card-type{color:var(--venom)}
+.tcg-app .tcg-card--alexandre .tcg-card-stats span{border-color:color-mix(in srgb,var(--venom),transparent 75%);color:#b3cba6}
+.tcg-app .tcg-card--alexandre .tcg-card-skill{color:#bcd3b2}
+.tcg-app .tcg-card--alexandre.tcg-card--full-art .tcg-card-art>img:not(.tcg-venom-crest){position:absolute;inset:0;object-fit:contain;object-position:center top;width:100%;height:74%;background:transparent;-webkit-mask-image:linear-gradient(#000 0 52%,#000c 68%,transparent 100%);mask-image:linear-gradient(#000 0 52%,#000c 68%,transparent 100%)}
+.tcg-app .tcg-card--alexandre.tcg-card--full-art .tcg-card-body{position:relative;z-index:6;background:linear-gradient(180deg,transparent,#07130fef 20%,#0a0d16 79%);border-top:0}
+.tcg-app .tcg-card--alexandre.tcg-card--full-art .tcg-venom-stage{bottom:24%;font-size:9px}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-1{--venom:#addc72;--venom-secondary:#62a759;--venom-bg:#20482e;--venom-glow:.12;--venom-crest:.16}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-2{--venom:#b5f04c;--venom-secondary:#68b92e;--venom-bg:#306a27;--venom-glow:.27;--venom-crest:.25}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-3{--venom:#dcff58;--venom-secondary:#72bd24;--venom-bg:#427d25;--venom-glow:.39;--venom-crest:.38}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-4{--venom:#f2ea60;--venom-secondary:#9657dd;--venom-bg:#4d2e65;--venom-glow:.51;--venom-crest:.55;box-shadow:0 0 0 1px #eddd68,0 0 26px #9acc36a6,0 0 39px #a04fd059}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-5{--venom:#f7ffb1;--venom-secondary:#bb65ff;--venom-bg:#823ab5;--venom-glow:.7;--venom-crest:.72;box-shadow:0 0 0 1px #ffedc2,0 0 23px #d4ff4ca3,0 0 58px #c02de38f,0 20px 42px #000a}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-3 .tcg-venom-backdrop:after{opacity:.53;transform:scale(.89)}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-4 .tcg-venom-backdrop:after{opacity:.8;transform:scale(.93)}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-5 .tcg-venom-backdrop:after{opacity:1;transform:scale(1.01);border-width:2px}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-4 .tcg-venom-mist i,.tcg-app .tcg-card--alexandre.tcg-venom-lvl-5 .tcg-venom-mist i{filter:blur(4px);opacity:.7}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-5 .tcg-venom-mist:before{content:"";position:absolute;inset:-30%;pointer-events:none;background:conic-gradient(from 90deg,transparent 0 20%,#e9fc4d34 29%,transparent 34% 53%,#9e54dd50 63%,transparent 73%);animation:venomSpin 8s linear infinite}
+.tcg-app .tcg-card--alexandre.tcg-venom-lvl-5 .tcg-venom-level{background:#eaffbb;color:#172419;border-color:#f5dc8c;box-shadow:0 0 17px #d1f755aa}
+.tcg-app .tcg-alexandre-gallery{margin-bottom:16px}
+.tcg-app .tcg-alexandre-gallery-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;padding:16px}
+.tcg-app .tcg-alexandre-gallery-slot{min-width:0;border:1px solid #517b4475;border-radius:8px;background:linear-gradient(180deg,#131c19,#0b1013);padding:7px}
+.tcg-app .tcg-alexandre-gallery-card{position:relative;min-width:0}
+.tcg-app .tcg-alexandre-gallery-card>.tcg-card{width:100%;box-sizing:border-box;min-height:0}
+.tcg-app .tcg-alexandre-gallery-card .tcg-card--full-art .tcg-card-body{margin-top:140px}
+.tcg-app .tcg-alexandre-gallery-caption{display:grid;gap:4px;padding:8px 2px 3px;min-width:0}
+.tcg-app .tcg-alexandre-gallery-caption strong{font-size:10px;line-height:1.3;color:#d6f0b9}
+.tcg-app .tcg-alexandre-gallery-caption span{font-size:9px;font-weight:900;letter-spacing:.04em;color:#a7fb9a}
+.tcg-app .tcg-alexandre-gallery-slot.is-unowned .tcg-alexandre-gallery-card{filter:saturate(.66);opacity:.82}
+.tcg-app .tcg-alexandre-gallery-slot.is-unowned .tcg-alexandre-gallery-caption span{color:#a89fae}
+.tcg-app .tcg-alexandre-gallery-slot.is-owned{border-color:#8ed573}
+@keyframes venomSpin{to{transform:rotate(360deg)}}
+@keyframes venomFloat{0%{transform:translateY(25%) scale(.9);opacity:.18}45%{opacity:.5}85%,100%{transform:translateY(-95%) scale(1.2);opacity:0}}
+@keyframes venomRise{0%,100%{transform:translateY(10%) scale(1)}50%{transform:translateY(-20%) scale(1.3)}}
+@keyframes venomStardust{50%{transform:translateY(-9px)}}
+@keyframes venomCrestBreath{50%{transform:scale(1.085);opacity:calc(var(--venom-crest,.29)*.65)}}
+@media(max-width:1000px){.tcg-app .tcg-alexandre-gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.tcg-app .tcg-alexandre-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));padding:8px;gap:7px}.tcg-app .tcg-card--alexandre .tcg-venom-level{padding:3px 5px;min-width:43px;font-size:11px}.tcg-app .tcg-card--alexandre .tcg-venom-stage{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.tcg-app .tcg-card--alexandre .tcg-venom-backdrop:before,.tcg-app .tcg-card--alexandre .tcg-venom-backdrop i,.tcg-app .tcg-card--alexandre .tcg-venom-mist i,.tcg-app .tcg-card--alexandre .tcg-venom-mist:before,.tcg-app .tcg-card--alexandre .tcg-venom-crest,.tcg-app .tcg-card--alexandre .tcg-card-art:after{animation:none}}
