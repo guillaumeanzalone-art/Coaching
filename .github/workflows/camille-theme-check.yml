@@ -1,0 +1,34 @@
+name: Camille Aquatic Theme Checks
+
+on:
+  push:
+    branches: [v2-refactor]
+    paths:
+      - 'v2/src/athlete-themes.js'
+      - 'v2/src/training.js'
+      - 'v2/src/main.js'
+      - 'v2/src/theme-camille-abyss.css'
+      - 'v2/public/camille-sanctuaire-abysses.svg'
+      - 'v2/tests/camille-theme.test.js'
+      - '.github/workflows/camille-theme-check.yml'
+  workflow_dispatch:
+
+jobs:
+  camille-theme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+      - name: Install without optional native postinstall scripts
+        working-directory: v2
+        run: npm ci --ignore-scripts --no-audit
+      - name: Verify Camille training theme
+        working-directory: v2
+        run: node --test tests/camille-theme.test.js
+      - name: Build Vite application
+        working-directory: v2
+        run: npm run build
