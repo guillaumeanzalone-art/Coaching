@@ -2,6 +2,7 @@ import { supabase } from './supabase.js'
 import './tcg-arena.css'
 import './tcg-spider-theme.css'
 import './tcg-alexandre-poison.css'
+import './tcg-hugo-forge.css'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
@@ -74,6 +75,13 @@ const ARCHETYPES = [
     text: 'Variation de -1 à +2 ATK à chaque duel.',
   },
 ]
+
+const FIRE_ARCHETYPE = {
+  id: 'fire',
+  label: 'Feu',
+  icon: '🔥',
+  text: 'Frappe incandescente : la mise chauffe le marteau. Synergie Forge : bonus de puissance.',
+}
 
 const POISON_ARCHETYPE = {
   id: 'poison',
@@ -153,6 +161,19 @@ const CHARACTER_DESIGNS = {
     },
   },
 
+  hugo: {
+    family: 'dwarven-fire-forge',
+    sigil: '⚒',
+    hue: 22,
+    stages: {
+      common: 'Apprenti de la forge',
+      uncommon: 'Marteau incandescent',
+      rare: 'Maître des runes',
+      ultra: 'Seigneur de la forge',
+      secret: 'Roi du feu éternel',
+    },
+  },
+
   guillaume: {
     family: 'sovereign-lifter',
     sigil: '♛',
@@ -171,6 +192,16 @@ const CHARACTER_CARD_ART = {
     // Each panel of this five-frame sprite is a distinct image generation.
     // Ordered from Common (LVL 1) to Secret (LVL 5).
     sprite: '/tcg/alexandre-evolutions.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
+  hugo: {
+    sprite: '/tcg/hugo-forgeron-evolutions.webp',
     rarityIndex: {
       common: 0,
       uncommon: 1,
@@ -334,6 +365,7 @@ function rarityMeta(rarity) {
 
 function archetypeFor(slug) {
   if (slug === 'alexandre') return POISON_ARCHETYPE
+  if (slug === 'hugo') return FIRE_ARCHETYPE
   return ARCHETYPES[
     hashString(slug) %
     ARCHETYPES.length
@@ -953,14 +985,16 @@ function renderCard(
       : ''
 
   const isAlexandre = card.slug === 'alexandre'
+  const isHugo = card.slug === 'hugo'
   const poisonLevel = Number(card.rarityMeta?.rank || 1)
+  const fireLevel = poisonLevel
 
   return `
     <article
-      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
+      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
       data-rarity="${esc(card.rarity)}"
       data-character="${esc(card.slug)}"
-      data-level="${isAlexandre ? poisonLevel : '' }"
+      data-level="${isAlexandre ? poisonLevel : isHugo ? fireLevel : '' }"
       data-design="${esc(design?.family || '')}"
       style="--character-hue:${Number(design?.hue || 270)}"
       ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}"` : ''}
@@ -989,6 +1023,10 @@ function renderCard(
             `
         }
 
+        ${isHugo ? `
+          <div class="tcg-forge-embers" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <span class="tcg-forge-lvl">LVL ${fireLevel}</span>
+        ` : ''}
         ${isAlexandre ? `
           <div class="tcg-venom-mist" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
           <img class="tcg-venom-crest" src="/tcg/alexandre-poison-crest.svg" alt="" aria-hidden="true" />
@@ -1016,7 +1054,7 @@ function renderCard(
           ${esc(card.rarityMeta.label)}
         </span>
 
-        ${stageLabel && !isAlexandre
+        ${stageLabel && !isAlexandre && !isHugo
           ? `
             <span class="tcg-card-evolution">
               ${esc(stageLabel)}
@@ -2126,6 +2164,38 @@ export async function mountTcgGame(
     `
   }
 
+  function renderHugoEvolutionGallery() {
+    const hugo = athletes.find(item => athleteSlug(item) === 'hugo')
+    if (!hugo) return ''
+    const rarities = ['common', 'uncommon', 'rare', 'ultra', 'secret']
+    const levelNames = ['Apprenti de la forge', 'Marteau incandescent', 'Maître des runes', 'Seigneur de la forge', 'Roi du feu éternel']
+    return `
+      <section class="tcg-panel tcg-hugo-gallery">
+        <header class="tcg-panel-head">
+          <div>
+            <h3>Hugo · Les cinq forges</h3>
+            <p>Type Feu · le nain forgeron maîtrise progressivement le marteau incandescent.</p>
+          </div>
+          <strong>LVL 1 → 5</strong>
+        </header>
+        <div class="tcg-hugo-gallery-grid">
+          ${rarities.map((rarity, level) => {
+            const card = catalog.get(cardId('hugo', rarity))
+            if (!card) return ''
+            const owned = ownedCopies(card.id) > 0
+            return `<div class="tcg-hugo-gallery-slot ${owned ? 'is-owned' : 'is-unowned'}" data-rarity="${esc(rarity)}">
+              <div class="tcg-hugo-gallery-card">${renderCard(card)}</div>
+              <div class="tcg-hugo-gallery-caption">
+                <strong>LVL ${level + 1} · ${esc(levelNames[level])}</strong>
+                <span>${owned ? 'DÉBLOQUÉE' : 'À DÉBLOQUER'}</span>
+              </div>
+            </div>`
+          }).join('')}
+        </div>
+      </section>
+    `
+  }
+
   function renderCollection() {
     const rows =
       ownedRows()
@@ -2148,6 +2218,7 @@ export async function mountTcgGame(
 
     return `
       ${renderAlexandreEvolutionGallery()}
+      ${renderHugoEvolutionGallery()}
       <section class="tcg-panel">
         <header class="tcg-panel-head">
           <div>
