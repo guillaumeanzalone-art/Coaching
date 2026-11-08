@@ -12,7 +12,9 @@ const art = read('../public/camille-sanctuaire-abysses.svg')
 test('Camille has a unique active aquatic theme without changing other athlete themes', () => {
   const camille = getAthleteTheme('camille')
   assert.equal(camille.variant, 'camille-abyss-sanctuary')
-  assert.match(camille.headerKicker, /ABYSSALE/)
+  assert.equal(camille.headerKicker, '')
+  assert.equal(camille.hideHeaderKicker, true)
+  assert.equal(camille.noteTitle, '')
   assert.equal(camille.heroImage, '/camille-sanctuaire-abysses.svg')
   assert.equal(getAthleteTheme('allan').variant, 'allan-crimson-trinity')
   assert.notEqual(getAthleteTheme('rudy').variant, camille.variant)
@@ -21,11 +23,17 @@ test('Camille has a unique active aquatic theme without changing other athlete t
 test('The training renderer mounts the Camille-only accessible underwater banner', () => {
   assert.match(training, /athleteTheme\?\.variant ===\s*'camille-abyss-sanctuary'/)
   assert.match(training, /athlete-theme-banner--camille-abyss/)
-  assert.match(training, /Les Abysses/)
+  assert.match(training, /<h2>Camille<\/h2>/)
   assert.match(training, /camille-abyss__bubbles/)
-  assert.match(training, /camille-abyss__emblems/)
-  assert.match(training, /aria-label="Sanctuaire aquatique/)
+  assert.match(training, /aria-label="Thème aquatique de Camille"/)
   assert.match(training, /renderAthleteThemeBanner\(\)/)
+  const start = training.indexOf("'camille-abyss-sanctuary'")
+  const end = training.indexOf("'metaknight-moonlit-constellation'", start)
+  const banner = training.slice(start, end)
+  for (const unwanted of ['LES CHRONIQUES', 'Les Abysses', 'Plonge au cœur',
+    'DEEP WATER', '<b>SQUAT</b>', '<b>BENCH</b>', '<b>TERRE</b>']) {
+    assert.ok(!banner.includes(unwanted), 'Unexpected decoration: ' + unwanted)
+  }
 })
 
 test('The original underwater illustration exists and is not an external dependency', () => {
@@ -40,6 +48,7 @@ test('The styles load after base styles and only affect Camille training', () =>
   assert.ok(main.indexOf("import './theme-spider.css'") < main.indexOf("import './theme-camille-abyss.css'"))
   assert.match(css, /\.training-page\[data-athlete-theme="camille"\]/)
   assert.match(css, /athlete-theme-banner--camille-abyss/)
+  assert.match(css, /training-kicker\s*\{\s*display:\s*none/)
   assert.match(css, /z-index: 0;\s*inset: 0;\s*background:/)
   assert.match(css, /\.week-tab--active/)
   assert.match(css, /\.day-tab-v2--active/)
