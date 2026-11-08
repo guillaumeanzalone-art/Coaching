@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 540" role="img" aria-label="Sanctuaire sous-marin de Camille">
+<defs>
+ <linearGradient id="ocean" x1="0" y1="0" x2=".12" y2="1">
+  <stop offset="0%" stop-color="#1b87a6"/><stop offset="25%" stop-color="#075772"/><stop offset="65%" stop-color="#083450"/><stop offset="100%" stop-color="#04182f"/>
+ </linearGradient>
+ <linearGradient id="rays" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#9cf7f6" stop-opacity=".36"/><stop offset="1" stop-color="#75ceea" stop-opacity="0"/></linearGradient>
+ <linearGradient id="rock" x1="0" x2=".3" y1="0" y2="1"><stop stop-color="#255b71"/><stop offset="1" stop-color="#07192d"/></linearGradient>
+ <radialGradient id="glow" cx=".53" cy="0" r=".8"><stop stop-color="#b6faf2" stop-opacity=".42"/><stop offset="1" stop-color="#1695bb" stop-opacity="0"/></radialGradient>
+ <radialGradient id="bub"><stop stop-color="#dffef7" stop-opacity=".16"/><stop offset=".75" stop-color="#afe6ff" stop-opacity=".04"/><stop offset=".88" stop-color="#bcf8ff" stop-opacity=".55"/><stop offset="1" stop-color="#d7ffff" stop-opacity=".08"/></radialGradient>
+ <filter id="blur"><feGaussianBlur stdDeviation="8"/></filter>
+</defs>
+<rect width="1500" height="540" fill="url(#ocean)"/>
+<rect width="1500" height="540" fill="url(#glow)"/>
+<g fill="url(#rays)" opacity=".7">
+ <path d="M410 -20 490 -20 270 540 60 540Z"/>
+ <path d="M580 -20 620 -20 545 540 430 540Z"/>
+ <path d="M720 -20 765 -20 975 540 810 540Z"/>
+ <path d="M940 -20 966 -20 1360 540 1170 540Z"/>
+</g>
+<path d="M0 34Q150 -4 292 23T585 22 860 16 1160 23 1500 5V0H0Z" fill="#88e9e8" opacity=".21"/>
+<path d="M0 47Q200 6 390 37T740 31 1115 32 1500 16" fill="none" stroke="#b6ffff" stroke-width="3" opacity=".11"/>
+<g fill="#77bcd3" opacity=".12" filter="url(#blur)">
+ <ellipse cx="620" cy="172" rx="440" ry="56"/><ellipse cx="1020" cy="318" rx="610" ry="52"/>
+</g>
+<g fill="#7ce6dd" opacity=".2">
+ <path d="M0 260Q140 230 300 257T610 260 990 246 1500 252" fill="none" stroke="#9deee8" stroke-width="2"/>
+ <path d="M0 317Q200 276 425 298T825 300 1240 287 1500 302" fill="none" stroke="#a1f0e8" stroke-width="1"/>
+</g>
+<!-- far ruin -->
+<g fill="#0d354a" opacity=".43">
+ <path d="M820 349l60-15 3-119 12-5 6-27 22 4 7 28 14 1 7 121 54 14z"/>
+ <path d="M1093 363l23-116 45-19 19 139zM1200 370l17-86 38-19 38 102z"/>
+ <path d="M715 367l9-64 49-14 29 78z"/>
+</g>
+<!-- distant shoals -->
+<g fill="#95dcdf" opacity=".38">
+ <path d="M1100 120q26-19 53 0-24 1-33 12-10-10-20-12zm54 1 14-9-2 19z"/>
+ <path d="M1251 164q18-12 36 0-17 2-23 10-7-7-13-10zm37 0 10-6v12z"/>
+ <path d="M1320 98q15-10 32 1-17 2-24 8-4-6-8-9zm33 1 10-5v10z"/>
+ <path d="M973 161q15-9 30 1-15 1-21 7-4-6-9-8zm30 1 10-6v10z"/>
+ <path d="M1122 199q18-12 37 1-20 2-25 9-8-8-12-10zm37 1 11-6v12z"/>
+</g>
+<!-- manta silhouette -->
+<path d="M1025 231q49-42 86 0 34-18 60-10-25 5-30 24 18 11 37 23-52-4-68-24l-21 35-11-35q-42 25-81 23 32-20 28-36z" fill="#0c3448" opacity=".5"/>
+<!-- antique columns -->
+<g fill="url(#rock)" stroke="#34869b" stroke-width="3" opacity=".8">
+ <path d="M1010 440v-155l-10-12 66-10 9 15-4 165zM990 285h96l-6-19h-84z"/>
+ <path d="M1100 460v-178l-8-9 70-3-6 17v173zM1088 289h82v-18h-82z"/>
+ <path d="M1205 485V311l-10-12 64-9 6 23v172zM1191 318h84v-16h-84z"/>
+ <path d="M962 269q130-54 328 13l-17 22q-160-50-296-7Z"/>
+</g>
+<g fill="#0a2337">
+ <path d="M0 425q96-25 200 14t225-4q167-31 304 5t268 11q179-41 327-8t176-22v119H0z"/>
+ <path d="M0 495q190-37 344 0t315 3q132-26 274-7t304-8q112-13 263 7v50H0z"/>
+</g>
+<!-- seabed details -->
+<g fill="none" stroke="#186578" stroke-linecap="round" stroke-width="9" opacity=".7">
+ <path d="M29 530q45-48 10-142m0 83q-37-27-46-68m42 45q48-38 55-85"/>
+ <path d="M123 530q-35-93 8-158m-17 93q-30-30-29-68m40 27q43-19 46-65"/>
+ <path d="M1424 540q-40-88-6-153m-13 96q-31-17-34-50m37 16q47-31 50-68"/>
+ <path d="M1342 535q20-77 0-112m-5 65q-28-20-41-49m45 32q32-21 35-53"/>
+</g>
+<g fill="#159c9b" opacity=".28">
+ <path d="M0 535q20-37 52-30 17-41 32-27 18 21 24 57z"/>
+ <path d="M1304 540q12-44 42-47 15-36 31-28 25 24 31 75z"/>
+</g>
+<g fill="#45dfc9" opacity=".7">
+ <circle cx="194" cy="159" r="7" fill="url(#bub)"/><circle cx="213" cy="116" r="4" fill="url(#bub)"/>
+ <circle cx="136" cy="281" r="10" fill="url(#bub)"/><circle cx="148" cy="244" r="4" fill="url(#bub)"/>
+ <circle cx="795" cy="370" r="8" fill="url(#bub)"/><circle cx="808" cy="344" r="3" fill="url(#bub)"/>
+ <circle cx="1409" cy="91" r="8" fill="url(#bub)"/><circle cx="1393" cy="63" r="3" fill="url(#bub)"/>
+ <circle cx="1097" cy="393" r="4" fill="url(#bub)"/><circle cx="1138" cy="352" r="8" fill="url(#bub)"/>
+ <circle cx="322" cy="334" r="6" fill="url(#bub)"/><circle cx="334" cy="303" r="3" fill="url(#bub)"/>
+</g>
+<path d="M0 538h1500" stroke="#40bdc0" stroke-opacity=".23" stroke-width="3"/>
+</svg>
