@@ -129,9 +129,11 @@
 }
 .camille-abyss__art {
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   inset: 0;
-  background: url('/camille-sanctuaire-abysses.svg') center 49% / cover no-repeat;
+  background:
+    linear-gradient(90deg, rgba(3,20,40,.9), rgba(5,37,56,.47) 62%, rgba(3,27,45,.13)),
+    url('/camille-sanctuaire-abysses.svg') center 49% / cover no-repeat;
   filter: saturate(1.13);
   transform: scale(1.016);
 }
