@@ -2381,12 +2381,16 @@ export async function mountTcgGame(
             <div class="tcg-arena-side">
               <header><span>${esc(playerName)}</span><b>${battle.playerHp} / ${ARENA_START_HP} PV</b></header>
               <div class="tcg-arena-track"><i style="width:${100 * battle.playerHp / ARENA_START_HP}%"></i></div>
-              <div class="tcg-arena-resource">◆ <b>${battle.playerPillz}</b> Pillz</div>
+              <div class="tcg-arena-resource">◆ <b>${battle.playerPillz}</b> Pillz
+                ${battle.playerVenom?.turns > 0 ? `<span class="tcg-venom-battle-status">☣ -${battle.playerVenom.damage} PV / round · ${battle.playerVenom.turns} tour(s)</span>` : ''}
+              </div>
             </div>
             <div class="tcg-arena-side tcg-arena-side--ai">
               <header><span>GA RIVAL</span><b>${battle.aiHp} / ${ARENA_START_HP} PV</b></header>
               <div class="tcg-arena-track"><i style="width:${100 * battle.aiHp / ARENA_START_HP}%"></i></div>
-              <div class="tcg-arena-resource">◆ <b>${battle.aiPillz}</b> Pillz</div>
+              <div class="tcg-arena-resource">◆ <b>${battle.aiPillz}</b> Pillz
+                ${battle.aiVenom?.turns > 0 ? `<span class="tcg-venom-battle-status">☣ -${battle.aiVenom.damage} PV / round · ${battle.aiVenom.turns} tour(s)</span>` : ''}
+              </div>
             </div>
           </div>
           <div class="tcg-arena-clash" aria-live="polite">
