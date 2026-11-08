@@ -1,0 +1,225 @@
+/* Benoît · Terra / Lithic Ascension — five supplied full-art portraits.
+   The existing artwork stays visible; CSS adds rarity-sensitive foil / AR effects.
+   All rules are scoped to the game's Benoît cards (no changes to other athletes). */
+.tcg-app.tcg-spider .tcg-card--benoit{
+  --earth-metal:#bd956d;
+  --earth-glow:rgba(184,130,73,.17);
+  --earth-foil:.07;
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  aspect-ratio:2/3;
+  border:1.5px solid var(--earth-metal);
+  border-radius:9px;
+  background:#140f0c;
+  box-shadow:0 0 0 1px #20160f,0 0 17px var(--earth-glow),0 12px 27px #0009;
+  transition:border-color .2s,box-shadow .25s,transform .25s;
+}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-art{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  min-height:100%;
+  overflow:hidden;
+  aspect-ratio:auto;
+  background:linear-gradient(170deg,#4d3829,#150f12 75%);
+}
+.tcg-app.tcg-spider .tcg-card--benoit.tcg-card--illustrated .tcg-illustration-sprite{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  display:block;
+  width:100%;
+  height:100%;
+  opacity:1;
+  visibility:visible;
+  background-size:500% 100%;
+  background-position-y:center;
+  background-repeat:no-repeat;
+  filter:saturate(1.08) contrast(1.035);
+}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-art::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:linear-gradient(180deg,#0707110a 0%,transparent 51%,#130e0c20 66%,#0b0915b0 100%);
+}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-earth-sheen{
+  position:absolute;
+  inset:-110% -95%;
+  z-index:5;
+  pointer-events:none;
+  opacity:var(--earth-foil);
+  transform:translateX(-55%) rotate(21deg);
+  background:linear-gradient(90deg,transparent 40%,#fff5c300 44%,#fff5c3b3 48%,#f5f7ffdd 50%,#fff2bb99 52%,transparent 58%);
+  mix-blend-mode:screen;
+  animation:benoitFoilGlide 7.5s ease-in-out infinite;
+}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-earth-particles{
+  position:absolute;
+  z-index:4;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-earth-particles i{
+  position:absolute;
+  left:20%;
+  bottom:10%;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:#f7d39a;
+  box-shadow:0 0 5px #ffe9ac,0 0 13px #f2a43f;
+  animation:benoitEarthFloat 5.5s ease-in infinite;
+  opacity:var(--earth-foil);
+}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-earth-particles i:nth-child(2){left:66%;bottom:18%;animation-delay:-1.5s;animation-duration:4.7s}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-earth-particles i:nth-child(3){left:82%;bottom:29%;animation-delay:-2.9s;animation-duration:5.9s}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-earth-particles i:nth-child(4){left:35%;bottom:35%;animation-delay:-4s;animation-duration:6s}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-earth-particles i:nth-child(5){left:54%;bottom:4%;animation-delay:-.9s;animation-duration:6.6s}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-earth-level{
+  position:absolute;
+  top:8px;
+  right:8px;
+  z-index:10;
+  min-width:48px;
+  display:inline-flex;
+  justify-content:center;
+  padding:5px 8px;
+  border:1px solid var(--earth-metal);
+  border-radius:3px;
+  background:linear-gradient(130deg,#261b14ec,#130e14f2);
+  box-shadow:inset 0 1px #fff8e73b,0 0 16px var(--earth-glow);
+  color:#ffe7bd;
+  font-family:Georgia,'Times New Roman',serif;
+  font-weight:900;
+  font-size:clamp(10px,1vw,14px);
+  letter-spacing:.08em;
+  text-shadow:0 0 7px #a6652a;
+  white-space:nowrap;
+}
+.tcg-app.tcg-spider .tcg-card--benoit.tcg-card--full-art .tcg-card-body,
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-body{
+  position:absolute;
+  left:7px;
+  right:7px;
+  bottom:7px;
+  z-index:8;
+  padding:6px;
+  margin:0;
+  border:1px solid color-mix(in srgb,var(--earth-metal),transparent 47%);
+  border-radius:6px;
+  background:rgba(11,10,16,.78);
+  backdrop-filter:blur(5px);
+}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-name{color:#fff4db}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-type{color:#d6b58c}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-stats span{
+  border-color:#d7a97e44;
+  background:rgba(14,11,14,.6);
+}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-stats b{color:#fbe6c5}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-skill{color:#b9b0a6}
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-rarity,
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-evolution,
+.tcg-app.tcg-spider .tcg-card--benoit .tcg-card-cost{display:none!important}
+/* Every rarity has its own foil brightness and metal framing. */
+.tcg-app.tcg-spider .tcg-card--benoit.tcg-earth-lvl-1{
+  --earth-metal:#a88d75;--earth-glow:#a7907133;--earth-foil:.05;
+}
+.tcg-app.tcg-spider .tcg-card--benoit.tcg-earth-lvl-2{
+  --earth-metal:#be9e75;--earth-glow:#bd905c50;--earth-foil:.12;
+}
+.tcg-app.tcg-spider .tcg-card--benoit.tcg-earth-lvl-3{
+  --earth-metal:#e5b477;--earth-glow:#e4a15c70;--earth-foil:.25;
+}
+.tcg-app.tcg-spider .tcg-card--benoit.tcg-earth-lvl-4{
+  --earth-metal:#efca91;--earth-glow:#eab36da3;--earth-foil:.44;
+  box-shadow:0 0 0 1px #cc9c62,0 0 25px #dc925a83,0 0 36px #d39c4655;
+}
+.tcg-app.tcg-spider .tcg-card--benoit.tcg-earth-lvl-5{
+  --earth-metal:#ffedb3;--earth-glow:#ffe49bcc;--earth-foil:.67;
+  box-shadow:0 0 0 2px #ebd194,0 0 30px #f4c66fab,0 0 56px #f6d58c75,0 15px 35px #0008;
+}
+.tcg-app.tcg-spider .tcg-card--benoit.tcg-earth-lvl-5 .tcg-earth-level{
+  color:#402a0d;
+  text-shadow:none;
+  background:linear-gradient(110deg,#ffeeb8,#e0a354 70%,#fff6d7);
+}
+.tcg-app.tcg-spider .tcg-card--benoit.tcg-earth-lvl-5 .tcg-earth-sheen{
+  animation-duration:4.8s;
+}
+@media(hover:hover){
+  .tcg-app.tcg-spider .tcg-card--benoit:hover{
+    transform:translateY(-3px);
+    border-color:#ffe3a4;
+    box-shadow:0 0 0 1px #f9dba8,0 0 34px var(--earth-glow),0 17px 35px #0008;
+  }
+}
+.tcg-app.tcg-spider .tcg-benoit-gallery{
+  margin-bottom:16px;
+  border-color:#ac7f5d74;
+  background:linear-gradient(145deg,#1d1511,#0b0b15);
+}
+.tcg-app.tcg-spider .tcg-benoit-gallery .tcg-panel-head{
+  background:linear-gradient(120deg,#4b301957,#14101c);
+  border-bottom:1px solid #b58a646e;
+}
+.tcg-app.tcg-spider .tcg-benoit-gallery .tcg-panel-head h3{color:#f5dcb3}
+.tcg-app.tcg-spider .tcg-benoit-gallery .tcg-panel-head strong{color:#ebc790;white-space:nowrap;font-size:13px}
+.tcg-app.tcg-spider .tcg-benoit-gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  padding:16px;
+}
+.tcg-app.tcg-spider .tcg-benoit-gallery-slot{
+  min-width:0;
+  padding:7px;
+  border:1px solid #a87d5d88;
+  border-radius:8px;
+  background:linear-gradient(160deg,#20170f,#0b0c13);
+}
+.tcg-app.tcg-spider .tcg-benoit-gallery-slot.is-owned{border-color:#e5ba85}
+.tcg-app.tcg-spider .tcg-benoit-gallery-card,
+.tcg-app.tcg-spider .tcg-benoit-gallery-card .tcg-card{
+  min-width:0;
+  width:100%;
+  box-sizing:border-box;
+}
+.tcg-app.tcg-spider .tcg-benoit-gallery-slot.is-unowned .tcg-benoit-gallery-card{
+  filter:saturate(.8);
+}
+.tcg-app.tcg-spider .tcg-benoit-gallery-caption{
+  display:grid;
+  gap:4px;
+  padding:8px 2px 3px;
+}
+.tcg-app.tcg-spider .tcg-benoit-gallery-caption strong{color:#f2d1a4;font-size:10px;line-height:1.3;font-weight:950}
+.tcg-app.tcg-spider .tcg-benoit-gallery-caption span{color:#afa39c;font-size:9px;font-weight:900}
+.tcg-app.tcg-spider .tcg-benoit-gallery-slot.is-owned .tcg-benoit-gallery-caption span{color:#e8c08e}
+@keyframes benoitFoilGlide{
+  0%,25%{transform:translateX(-65%) rotate(21deg)}
+  60%,100%{transform:translateX(72%) rotate(21deg)}
+}
+@keyframes benoitEarthFloat{
+  0%{transform:translate3d(0,0,0) scale(.4);opacity:0}
+  20%{opacity:var(--earth-foil)}
+  100%{transform:translate3d(18px,-112px,0) scale(1.5);opacity:0}
+}
+@media(max-width:1050px){
+  .tcg-app.tcg-spider .tcg-benoit-gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .tcg-app.tcg-spider .tcg-benoit-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:8px}
+  .tcg-app.tcg-spider .tcg-card--benoit .tcg-earth-level{min-width:38px;padding:3px 5px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .tcg-app.tcg-spider .tcg-card--benoit,.tcg-app.tcg-spider .tcg-earth-sheen,
+  .tcg-app.tcg-spider .tcg-earth-particles i{animation:none;transition:none}
+}
