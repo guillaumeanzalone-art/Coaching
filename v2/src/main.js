@@ -6,6 +6,7 @@ import { mountCut } from './cut.js'
 import { getAthleteProgress, xpProgressFromTotal } from './xp.js'
 import './style.css'
 import './theme-spider.css'
+import './theme-camille-abyss.css'
 import { getRecentActivities, getCurrentActivityUserId, toggleActivityLike } from './activity.js'
 
 import {
