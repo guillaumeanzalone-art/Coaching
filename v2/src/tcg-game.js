@@ -2150,17 +2150,8 @@ export async function mountTcgGame(
       deckCards()
 
     const curve =
-      Array.from(
-        {
-          length: 5,
-        },
-        (_, index) =>
-          cards.filter(
-            card =>
-              card.cost ===
-              index + 1
-          ).length
-      )
+      ['common', 'uncommon', 'rare', 'ultra', 'secret']
+        .map(rarity => cards.filter(card => card.rarity === rarity).length)
 
     return `
       <section class="tcg-panel">
@@ -2239,7 +2230,7 @@ export async function mountTcgGame(
 
           <aside class="tcg-deck-summary">
             <h4>
-              Courbe d’énergie
+              Répartition des raretés
             </h4>
 
             <div class="tcg-curve">
@@ -2252,7 +2243,7 @@ export async function mountTcgGame(
                     <div>
                       <b>${value}</b>
                       <span>
-                        coût ${index + 1}
+                        ${['Com.', 'Peu com.', 'Rare', 'Ultra', 'Secret'][index]}
                       </span>
                     </div>
                   `
@@ -2261,7 +2252,7 @@ export async function mountTcgGame(
             </div>
 
             <p style="color:#79849c;font-size:9px;line-height:1.55">
-              Un deck régulier évite les mains injouables. Les Ultra et Secret ont plus de budget de stats mais demandent davantage d’énergie.
+              Dans l’arène, le coût imprimé n’est plus dépensé : la mise en Pillz détermine l’attaque. Un bon deck combine capacités et familles compatibles.
             </p>
           </aside>
         </div>
@@ -2472,7 +2463,7 @@ export async function mountTcgGame(
               </h2>
 
               <p>
-                Une séance terminée = un booster gagné. Chaque personne possède cinq versions, de Commune à Secret Rare. Les cartes rares gagnent du budget de stats, mais leur coût d’énergie augmente pour garder les duels équilibrés.
+                Une séance terminée = un booster gagné. Collectionne les cinq évolutions de chaque athlète, crée ton équipe et dispute des duels tactiques de quatre manches : Pillz, Fury, capacités et synergies.
               </p>
             </div>
 
