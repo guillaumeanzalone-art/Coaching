@@ -17,7 +17,8 @@
     "android:open": "cap open android",
     "android:bundle": "npm run android:sync && node scripts/android-bundle.mjs",
     "test:brute": "node --test tests/brute-*.test.js",
-    "test:rest": "node --test tests/rest-timer.test.js"
+    "test:rest": "node --test tests/rest-timer.test.js",
+    "test:tcg": "node --test tests/tcg-arena.test.js"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
