@@ -12,6 +12,8 @@ on:
       - 'v2/public/tcg/alexandre-poison-crest.svg'
       - 'v2/public/tcg/spider-*.svg'
       - 'v2/tests/tcg-arena.test.js'
+      - 'v2/tests/tcg-alexandre-art.test.js'
+      - 'v2/public/tcg/alexandre-evolutions.webp'
       - 'v2/package.json'
       - '.github/workflows/tcg-arena-check.yml'
   workflow_dispatch:
