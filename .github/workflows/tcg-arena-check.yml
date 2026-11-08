@@ -7,6 +7,8 @@ on:
       - 'v2/src/tcg-game.js'
       - 'v2/src/tcg-arena.js'
       - 'v2/src/tcg-arena.css'
+      - 'v2/src/tcg-spider-theme.css'
+      - 'v2/public/tcg/spider-*.svg'
       - 'v2/tests/tcg-arena.test.js'
       - 'v2/package.json'
       - '.github/workflows/tcg-arena-check.yml'
