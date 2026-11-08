@@ -3,6 +3,7 @@ import './tcg-arena.css'
 import './tcg-spider-theme.css'
 import './tcg-alexandre-poison.css'
 import './tcg-hugo-forge.css'
+import './tcg-allan-elastic.css'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
@@ -83,6 +84,13 @@ const FIRE_ARCHETYPE = {
   text: 'Frappe incandescente : la mise chauffe le marteau. Synergie Forge : bonus de puissance.',
 }
 
+const ELASTIC_ARCHETYPE = {
+  id: 'elastic',
+  label: 'Psy · Élastique',
+  icon: '◎',
+  text: 'Esquive psychique : une mise légère renforce l’attaque. Deux cartes élastiques activent la protection mentale.',
+}
+
 const POISON_ARCHETYPE = {
   id: 'poison',
   label: 'Poison',
@@ -148,6 +156,19 @@ const CHARACTER_DESIGNS = {
     },
   },
 
+  allan: {
+    family: 'psychic-elastic',
+    sigil: '◎',
+    hue: 278,
+    stages: {
+      common: 'Corps souple',
+      uncommon: 'Membres élastiques',
+      rare: 'Flexion totale',
+      ultra: 'Constriction mentale',
+      secret: 'Réalité élastique',
+    },
+  },
+
   alexandre: {
     family: 'toxic-miasma',
     sigil: '☣',
@@ -188,6 +209,16 @@ const CHARACTER_DESIGNS = {
 }
 
 const CHARACTER_CARD_ART = {
+  allan: {
+    sprite: '/tcg/allan-psy-elastique-evolutions.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
   alexandre: {
     // Each panel of this five-frame sprite is a distinct image generation.
     // Ordered from Common (LVL 1) to Secret (LVL 5).
@@ -366,6 +397,7 @@ function rarityMeta(rarity) {
 function archetypeFor(slug) {
   if (slug === 'alexandre') return POISON_ARCHETYPE
   if (slug === 'hugo') return FIRE_ARCHETYPE
+  if (slug === 'allan') return ELASTIC_ARCHETYPE
   return ARCHETYPES[
     hashString(slug) %
     ARCHETYPES.length
@@ -986,15 +1018,16 @@ function renderCard(
 
   const isAlexandre = card.slug === 'alexandre'
   const isHugo = card.slug === 'hugo'
+  const isAllan = card.slug === 'allan'
   const poisonLevel = Number(card.rarityMeta?.rank || 1)
   const fireLevel = poisonLevel
 
   return `
     <article
-      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
+      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${isAllan ? 'tcg-card--allan tcg-elastic-lvl-' + poisonLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
       data-rarity="${esc(card.rarity)}"
       data-character="${esc(card.slug)}"
-      data-level="${isAlexandre ? poisonLevel : isHugo ? fireLevel : '' }"
+      data-level="${isAlexandre || isHugo || isAllan ? poisonLevel : '' }"
       data-design="${esc(design?.family || '')}"
       style="--character-hue:${Number(design?.hue || 270)}"
       ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}"` : ''}
@@ -1023,6 +1056,10 @@ function renderCard(
             `
         }
 
+        ${isAllan ? `
+          <div class="tcg-elastic-aura" aria-hidden="true"><i></i><i></i><i></i></div>
+          <span class="tcg-elastic-lvl">LVL ${poisonLevel}</span>
+        ` : ''}
         ${isHugo ? `
           <div class="tcg-forge-embers" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
           <span class="tcg-forge-lvl">LVL ${fireLevel}</span>
@@ -1054,7 +1091,7 @@ function renderCard(
           ${esc(card.rarityMeta.label)}
         </span>
 
-        ${stageLabel && !isAlexandre && !isHugo
+        ${stageLabel && !isAlexandre && !isHugo && !isAllan
           ? `
             <span class="tcg-card-evolution">
               ${esc(stageLabel)}
@@ -2196,6 +2233,38 @@ export async function mountTcgGame(
     `
   }
 
+  function renderAllanEvolutionGallery() {
+    const allan = athletes.find(item => athleteSlug(item) === 'allan')
+    if (!allan) return ''
+    const rarities = ['common', 'uncommon', 'rare', 'ultra', 'secret']
+    const levels = ['Corps souple', 'Membres élastiques', 'Flexion totale', 'Constriction mentale', 'Réalité élastique']
+    return `
+      <section class="tcg-panel tcg-allan-gallery">
+        <header class="tcg-panel-head">
+          <div>
+            <h3>Allan · L’Homme Élastique</h3>
+            <p>Type Psy / Élastique · un corps extensible et une puissance mentale croissante.</p>
+          </div>
+          <strong>LVL 1 → 5</strong>
+        </header>
+        <div class="tcg-allan-gallery-grid">
+          ${rarities.map((rarity, i) => {
+            const card = catalog.get(cardId('allan', rarity))
+            if (!card) return ''
+            const owned = ownedCopies(card.id) > 0
+            return `<div class="tcg-allan-gallery-slot ${owned ? 'is-owned' : 'is-unowned'}" data-rarity="${esc(rarity)}">
+              <div class="tcg-allan-gallery-card">${renderCard(card)}</div>
+              <div class="tcg-allan-gallery-caption">
+                <strong>LVL ${i+1} · ${esc(levels[i])}</strong>
+                <span>${owned ? 'DÉBLOQUÉE' : 'À DÉBLOQUER'}</span>
+              </div>
+            </div>`
+          }).join('')}
+        </div>
+      </section>
+    `
+  }
+
   function renderCollection() {
     const rows =
       ownedRows()
@@ -2219,6 +2288,7 @@ export async function mountTcgGame(
     return `
       ${renderAlexandreEvolutionGallery()}
       ${renderHugoEvolutionGallery()}
+      ${renderAllanEvolutionGallery()}
       <section class="tcg-panel">
         <header class="tcg-panel-head">
           <div>
