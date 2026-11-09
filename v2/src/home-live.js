@@ -2,11 +2,16 @@ import { supabase } from './supabase.js'
 import {
   loadLatestGroupSbdPrs,
 } from './sbd-pr.js'
-import { SBD_PR_SEED } from './sbd-pr-seed.js'
+import { mergeLatestSbdRecords } from './home-pr-feed.js'
 
 let presenceTimer = null
 let visibilityHandler = null
 let currentPresence = null
+
+let homeLiveRefreshTimer = null
+let homeLiveVisibilityHandler = null
+let homeLiveAthletes = []
+let homeLiveRequestVersion = 0
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -176,120 +181,74 @@ function liftLabel(lift) {
   }[lift] || 'PR'
 }
 
-function activityLift(row) {
-  const code = String(
-    row?.exercise_code ||
-    row?.lift ||
-    ''
-  ).toLowerCase()
+// The old workout_activities PR events stopped updating in August 2026.
+// Current records are written to these SBD PR tables when a set is validated.
+async function loadLatestRecordedSbdPrs(limit = 6) {
+  const fetchLimit = Math.max(30, Number(limit) * 6)
 
-  return {
-    sq: 'squat',
-    squat: 'squat',
-    bn: 'bench',
-    bp: 'bench',
-    bench: 'bench',
-    dl: 'deadlift',
-    deadlift: 'deadlift',
-  }[code] || null
-}
+  const [repetitionResult, globalPrs] = await Promise.all([
+    supabase
+      .from('athlete_sbd_rep_prs_v249')
+      .select('athlete_slug,lift,reps,load_kg,exercise_name,achieved_at')
+      .not('achieved_at', 'is', null)
+      .order('achieved_at', { ascending: false })
+      .limit(fetchLimit),
+    loadLatestGroupSbdPrs(fetchLimit),
+  ])
 
-function activityReps(row) {
-  const reps = Number(
-    row?.actual_reps ??
-    row?.reps
+  if (repetitionResult.error) {
+    console.warn('Recent SBD repetition PRs unavailable:', repetitionResult.error)
+  }
+
+  return mergeLatestSbdRecords(
+    repetitionResult.error ? [] : repetitionResult.data,
+    globalPrs,
+    limit
   )
-
-  return Number.isFinite(reps) && reps > 0
-    ? Math.round(reps)
-    : null
 }
 
-function seededPreviousLoad(row) {
-  const lift = {
-    squat: 'sq',
-    bench: 'bn',
-    deadlift: 'dl',
-  }[row?.lift]
-
-  const reps = Number(row?.reps) || 1
-  const seed = SBD_PR_SEED[
-    String(row?.athlete_slug || '')
-      .trim()
-      .toLowerCase()
-  ]
-  const load = Number(seed?.[lift]?.[reps]?.load)
-  const current = Number(row?.load_kg)
-
-  return (
-    Number.isFinite(load) &&
-    load > 0 &&
-    load < current
-  )
-    ? load
-    : null
+export function stopHomeLiveRefresh() {
+  if (homeLiveRefreshTimer) {
+    clearInterval(homeLiveRefreshTimer)
+    homeLiveRefreshTimer = null
+  }
+  if (homeLiveVisibilityHandler) {
+    document.removeEventListener('visibilitychange', homeLiveVisibilityHandler)
+    homeLiveVisibilityHandler = null
+  }
+  homeLiveRequestVersion += 1
 }
 
-async function loadLatestPrProgress(limit = 6) {
-  try {
-    const { data, error } = await supabase
-      .from('workout_activities')
-      .select('*')
-      .or('new_pr_kg.not.is.null,activity_type.eq.pr,activity_type.eq.accessory_pr')
-      .order('created_at', { ascending: false })
-      .limit(300)
+function ensureHomeLiveRefresh(athletes) {
+  homeLiveAthletes = athletes
 
-    if (error) {
-      throw error
+  if (homeLiveRefreshTimer) {
+    return
+  }
+
+  const refresh = () => {
+    // The dashboard is not visible once another app screen is open.
+    // Stop polling rather than keeping obsolete requests alive.
+    if (!document.querySelector('[data-home-live]')) {
+      stopHomeLiveRefresh()
+      return
     }
 
-    const bestByKey = new Map()
-    const progress = []
+    if (document.visibilityState === 'hidden') {
+      return
+    }
 
-    ;(data || [])
-      .slice()
-      .sort((a, b) => (
-        Date.parse(a.created_at || 0) -
-        Date.parse(b.created_at || 0)
-      ))
-      .forEach(row => {
-        const lift = activityLift(row)
-        const reps = activityReps(row)
-        const load = Number(row.load_kg)
-
-        if (!lift || !reps || !Number.isFinite(load) || load <= 0) {
-          return
-        }
-
-        const key = `${row.athlete_slug}::${lift}::${reps}`
-        const previousLoad = bestByKey.get(key) ?? null
-
-        if (previousLoad !== null && load <= previousLoad) {
-          return
-        }
-
-        progress.push({
-          ...row,
-          lift,
-          reps,
-          load_kg: load,
-          previous_load_kg: previousLoad,
-          achieved_at: row.created_at,
-        })
-
-        bestByKey.set(key, load)
-      })
-
-    return progress
-      .sort((a, b) => (
-        Date.parse(b.achieved_at || 0) -
-        Date.parse(a.achieved_at || 0)
-      ))
-      .slice(0, limit)
-  } catch (error) {
-    console.warn('PR progress history unavailable:', error)
-    return []
+    void loadHomeLiveDashboard({ athletes: homeLiveAthletes })
   }
+
+  homeLiveRefreshTimer = setInterval(refresh, 60_000)
+  homeLiveVisibilityHandler = () => {
+    if (document.visibilityState === 'visible') {
+      refresh()
+    }
+  }
+
+  document.addEventListener('visibilitychange', homeLiveVisibilityHandler)
 }
 
 function formatPrDate(value) {
@@ -347,6 +306,12 @@ export async function loadHomeLiveDashboard({
     return
   }
 
+  ensureHomeLiveRefresh(athletes)
+  const requestVersion = ++homeLiveRequestVersion
+  const activeTab = container.querySelector('[data-action="home-live-tab"][aria-selected="true"]')?.dataset.tab === 'prs'
+    ? 'prs'
+    : 'training'
+
   const cutoff =
     new Date(
       Date.now() -
@@ -356,7 +321,6 @@ export async function loadHomeLiveDashboard({
   const [
     presenceResult,
     latestProgress,
-    latestLegacyPrs,
   ] =
     await Promise.all([
       supabase
@@ -372,12 +336,17 @@ export async function loadHomeLiveDashboard({
         )
         .order('last_seen_at', { ascending: false }),
 
-      loadLatestPrProgress(6),
-
-      loadLatestGroupSbdPrs(
-        6
-      ),
+      loadLatestRecordedSbdPrs(6),
     ])
+
+  // A slower previous request must not overwrite more recent PRs,
+  // and an unmounted home screen must not be redrawn.
+  if (
+    requestVersion !== homeLiveRequestVersion ||
+    document.querySelector('[data-home-live]') !== container
+  ) {
+    return
+  }
 
   const activeCount =
     presenceResult.error
@@ -411,9 +380,7 @@ export async function loadHomeLiveDashboard({
       activeCount
     )
 
-  const latestPrs = latestProgress.length
-    ? latestProgress
-    : latestLegacyPrs
+  const latestPrs = latestProgress
 
   const prRows =
     latestPrs
@@ -432,10 +399,7 @@ export async function loadHomeLiveDashboard({
             'Athlète'
 
           const reps = Number(row.reps) || 1
-          const previous = Number(
-            row.previous_load_kg ??
-            seededPreviousLoad(row)
-          )
+          const previous = Number(row.previous_load_kg)
           const hasPrevious = Number.isFinite(previous) && previous > 0
 
           return `
@@ -513,8 +477,8 @@ export async function loadHomeLiveDashboard({
       <button
         type="button"
         role="tab"
-        class="active"
-        aria-selected="true"
+        class="${activeTab === 'training' ? 'active' : ''}"
+        aria-selected="${activeTab === 'training'}"
         data-action="home-live-tab"
         data-tab="training"
       >
@@ -526,7 +490,8 @@ export async function loadHomeLiveDashboard({
       <button
         type="button"
         role="tab"
-        aria-selected="false"
+        class="${activeTab === 'prs' ? 'active' : ''}"
+        aria-selected="${activeTab === 'prs'}"
         data-action="home-live-tab"
         data-tab="prs"
       >
@@ -535,7 +500,7 @@ export async function loadHomeLiveDashboard({
       </button>
     </div>
 
-    <section class="home-live-card home-live-card--presence active" data-home-live-panel="training">
+    <section class="home-live-card home-live-card--presence ${activeTab === 'training' ? 'active' : ''}" data-home-live-panel="training" ${activeTab === 'training' ? '' : 'hidden'}>
       <span class="home-live-kicker">
         QUI S’ENTRAÎNE
       </span>
@@ -547,7 +512,7 @@ export async function loadHomeLiveDashboard({
       </small>
     </section>
 
-    <section class="home-live-card home-live-card--prs" data-home-live-panel="prs" hidden>
+    <section class="home-live-card home-live-card--prs ${activeTab === 'prs' ? 'active' : ''}" data-home-live-panel="prs" ${activeTab === 'prs' ? '' : 'hidden'}>
       <div class="home-live-head">
         <div>
           <span class="home-live-kicker">
