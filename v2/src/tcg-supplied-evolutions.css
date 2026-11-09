@@ -28,6 +28,13 @@
 .tcg-app.tcg-spider .tcg-card--evo.tcg-evo--magicarpe {
   --evo-primary:#e6a36a; --evo-secondary:#f9daa8; --evo-glow:rgba(236,145,78,.37);
 }
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--jolan {
+  --evo-primary:#ffd068; --evo-secondary:#ffb5df; --evo-glow:rgba(255,158,73,.45);
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--jolan.tcg-evo-lvl-5 {
+  box-shadow:0 0 0 2px rgba(255,219,111,.82),
+    0 0 30px rgba(255,182,93,.45), 0 0 58px rgba(255,120,194,.23), 0 12px 36px #0009;
+}
 /* Same 5-panel 500% sprite geometry as the Benoît implementation. */
 .tcg-app.tcg-spider .tcg-card--evo .tcg-card-art {
   position:absolute;
@@ -186,6 +193,7 @@
   border-color:color-mix(in srgb,var(--evo-gallery-color),transparent 55%);
   background:linear-gradient(145deg,rgba(9,21,41,.98),rgba(5,9,23,.98));
 }
+.tcg-app.tcg-spider .tcg-evo-gallery--jolan {--evo-gallery-color:#ffc87a;}
 .tcg-app.tcg-spider .tcg-evo-gallery--charles {--evo-gallery-color:#a39af7;}
 .tcg-app.tcg-spider .tcg-evo-gallery--celia {--evo-gallery-color:#8bcaff;}
 .tcg-app.tcg-spider .tcg-evo-gallery--camille {--evo-gallery-color:#8ee9d9;}

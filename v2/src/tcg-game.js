@@ -126,6 +126,18 @@ const PROCEDURAL_CHARACTER_THEMES = [
 ]
 
 const CHARACTER_DESIGNS = {
+  jolan: {
+    family: 'candy-titan',
+    sigil: '🍬',
+    hue: 35,
+    stages: {
+      common: 'Le premier bonbon',
+      uncommon: 'Réserve de gourmandises',
+      rare: 'Le colosse des sucreries',
+      ultra: 'Le titan des bonbons',
+      secret: 'Souverain des friandises',
+    },
+  },
   charles: {
     family: 'casino-tempest',
     sigil: 'ϟ',
@@ -250,9 +262,20 @@ const CHARACTER_DESIGNS = {
   },
 }
 
-const SUPPLIED_EVOLUTION_SLUGS = new Set(['charles', 'celia', 'camille', 'magicarpe'])
+const SUPPLIED_EVOLUTION_SLUGS = new Set(['charles', 'celia', 'camille', 'magicarpe', 'jolan'])
 
 const CHARACTER_CARD_ART = {
+  jolan: {
+    // Five images supplied by the player, one artwork for each LVL 1–5.
+    sprite: '/tcg/jolan-bonbons-evolutions.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
   charles: {
     // User-supplied image panels in LVL 1–5 order.
     sprite: '/tcg/charles-casino-evolutions.webp',
@@ -2368,6 +2391,11 @@ export async function mountTcgGame(
   function renderSuppliedEvolutionGalleries() {
     const rarities = ['common', 'uncommon', 'rare', 'ultra', 'secret']
     const galleries = [
+      {
+        slug: 'jolan',
+        heading: 'Jolan · Titan des friandises',
+        description: 'Full Art · cinq transformations gourmandes, du premier bonbon au souverain sucré.',
+      },
       {
         slug: 'charles',
         heading: 'Charles · Maître du jackpot',

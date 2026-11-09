@@ -10,10 +10,11 @@ const characters = [
   ['celia', 'celia-foudre'],
   ['camille', 'camille-abysses'],
   ['magicarpe', 'magicarpe-lego'],
+  ['jolan', 'jolan-bonbons'],
 ]
 const rarities = ['common', 'uncommon', 'rare', 'ultra', 'secret']
 
-test('Original player-supplied WebP art exists for each of the four characters', () => {
+test('Original player-supplied WebP art exists for each of the five characters', () => {
   for (const pair of characters) {
     const name = pair[1]
     const data = read('../public/tcg/' + name + '-evolutions.webp')
@@ -41,7 +42,7 @@ test('Five rarities map to five consecutive panels on each supplied sprite', () 
   assert.match(css, /background-size:500% 100%/)
 })
 
-test('All four heroes get individual LVL badges in the existing card engine', () => {
+test('All five heroes get individual LVL badges in the existing card engine', () => {
   for (const pair of characters) {
     const slug = pair[0]
     assert.ok(source.includes("slug: '" + slug + "'"), 'Missing gallery: ' + slug)
@@ -54,6 +55,8 @@ test('All four heroes get individual LVL badges in the existing card engine', ()
   assert.match(source, /function renderCard\(/)
   assert.match(source, /function renderDuel\(/)
   assert.match(source, /function renderSuppliedEvolutionGalleries\(/)
+  assert.match(css, /tcg-evo--jolan/)
+  assert.match(css, /tcg-evo-gallery--jolan/)
   assert.ok(source.includes('$' + '{renderSuppliedEvolutionGalleries()}'))
 })
 
