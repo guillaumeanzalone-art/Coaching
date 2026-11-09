@@ -4,6 +4,7 @@ import './tcg-spider-theme.css'
 import './tcg-alexandre-poison.css'
 import './tcg-hugo-forge.css'
 import './tcg-benoit-earth.css'
+import './tcg-supplied-evolutions.css'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
