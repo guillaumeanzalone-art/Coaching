@@ -125,6 +125,54 @@ const PROCEDURAL_CHARACTER_THEMES = [
 ]
 
 const CHARACTER_DESIGNS = {
+  charles: {
+    family: 'casino-tempest',
+    sigil: 'ϟ',
+    hue: 265,
+    stages: {
+      common: 'La première mise',
+      uncommon: 'Les jetons électriques',
+      rare: 'Le roi du jackpot',
+      ultra: 'Prince du tonnerre',
+      secret: 'Souverain du hasard',
+    },
+  },
+  celia: {
+    family: 'thunder-empress',
+    sigil: 'ϟ',
+    hue: 211,
+    stages: {
+      common: 'Étincelle naissante',
+      uncommon: 'Lance fulgurante',
+      rare: 'Tempête électrique',
+      ultra: 'Dame de la foudre',
+      secret: 'Transcendance orageuse',
+    },
+  },
+  camille: {
+    family: 'abyssal-queen',
+    sigil: '♒',
+    hue: 185,
+    stages: {
+      common: 'Source des marées',
+      uncommon: 'Gardienne du récif',
+      rare: 'Trident abyssal',
+      ultra: 'Impératrice des flots',
+      secret: 'Déesse des abysses',
+    },
+  },
+  magicarpe: {
+    family: 'lego-mechanist',
+    sigil: '⚙',
+    hue: 28,
+    stages: {
+      common: 'L\'atelier de Magicarpe',
+      uncommon: 'Écailles articulées',
+      rare: 'Mâchoires mécaniques',
+      ultra: 'Léviator de briques',
+      secret: 'Roi des océans mécaniques',
+    },
+  },
   benoit: {
     family: 'earth-templar',
     sigil: '✧',
@@ -201,7 +249,53 @@ const CHARACTER_DESIGNS = {
   },
 }
 
+const SUPPLIED_EVOLUTION_SLUGS = new Set(['charles', 'celia', 'camille', 'magicarpe'])
+
 const CHARACTER_CARD_ART = {
+  charles: {
+    // User-supplied image panels in LVL 1–5 order.
+    sprite: '/tcg/charles-casino-evolutions.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
+  celia: {
+    // User-supplied image panels in LVL 1–5 order.
+    sprite: '/tcg/celia-foudre-evolutions.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
+  camille: {
+    // User-supplied image panels in LVL 1–5 order.
+    sprite: '/tcg/camille-abysses-evolutions.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
+  magicarpe: {
+    // User-supplied image panels in LVL 1–5 order (final image reused for LVL 5).
+    sprite: '/tcg/magicarpe-lego-evolutions.webp',
+    rarityIndex: {
+      common: 0,
+      uncommon: 1,
+      rare: 2,
+      ultra: 3,
+      secret: 4,
+    },
+  },
   benoit: {
     // Five original artworks supplied by the player, ordered LVL 1 → LVL 5.
     sprite: '/tcg/benoit-terre-evolutions.webp',
@@ -1012,15 +1106,16 @@ function renderCard(
   const isAlexandre = card.slug === 'alexandre'
   const isHugo = card.slug === 'hugo'
   const isBenoit = card.slug === 'benoit'
+  const isSuppliedEvolution = SUPPLIED_EVOLUTION_SLUGS.has(card.slug) && Boolean(dedicatedArt)
   const poisonLevel = Number(card.rarityMeta?.rank || 1)
   const fireLevel = poisonLevel
 
   return `
     <article
-      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${isBenoit ? 'tcg-card--benoit tcg-earth-lvl-' + poisonLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
+      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${isBenoit ? 'tcg-card--benoit tcg-earth-lvl-' + poisonLevel : ''} ${isSuppliedEvolution ? 'tcg-card--evo tcg-evo--' + card.slug + ' tcg-evo-lvl-' + poisonLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
       data-rarity="${esc(card.rarity)}"
       data-character="${esc(card.slug)}"
-      data-level="${isAlexandre || isHugo || isBenoit ? poisonLevel : '' }"
+      data-level="${isAlexandre || isHugo || isBenoit || isSuppliedEvolution ? poisonLevel : '' }"
       data-design="${esc(design?.family || '')}"
       style="--character-hue:${Number(design?.hue || 270)}"
       ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}"` : ''}
@@ -1049,6 +1144,11 @@ function renderCard(
             `
         }
 
+        ${isSuppliedEvolution ? `
+          <div class="tcg-evo-foil" aria-hidden="true"></div>
+          <div class="tcg-evo-aura" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <span class="tcg-evo-lvl">LVL ${poisonLevel}</span>
+        ` : ''}
         ${isBenoit ? `
           <div class="tcg-earth-sheen" aria-hidden="true"></div>
           <div class="tcg-earth-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
@@ -1085,7 +1185,7 @@ function renderCard(
           ${esc(card.rarityMeta.label)}
         </span>
 
-        ${stageLabel && !isAlexandre && !isHugo && !isBenoit
+        ${stageLabel && !isAlexandre && !isHugo && !isBenoit && !isSuppliedEvolution
           ? `
             <span class="tcg-card-evolution">
               ${esc(stageLabel)}
@@ -2259,6 +2359,66 @@ export async function mountTcgGame(
     `
   }
 
+  function renderSuppliedEvolutionGalleries() {
+    const rarities = ['common', 'uncommon', 'rare', 'ultra', 'secret']
+    const galleries = [
+      {
+        slug: 'charles',
+        heading: 'Charles · Maître du jackpot',
+        description: 'Full Art · électromancien du casino · pièces, cartes et éclairs.',
+      },
+      {
+        slug: 'celia',
+        heading: 'Célia · Reine des éclairs',
+        description: 'Full Art · ascension d’une guerrière électrique.',
+      },
+      {
+        slug: 'camille',
+        heading: 'Camille · Souveraine des abysses',
+        description: 'Full Art · les cinq métamorphoses de la gardienne de l’océan.',
+      },
+      {
+        slug: 'magicarpe',
+        heading: 'Clara Magiclarpe · L’atelier de Magicarpe',
+        description: 'Full Art · quatre créations originales, du poisson en briques au dragon mécanique.',
+      },
+    ]
+
+    return galleries.map(({ slug, heading, description }) => {
+      const athlete = athletes.find(item => athleteSlug(item) === slug)
+      if (!athlete) return ''
+
+      return `
+        <section class="tcg-panel tcg-evo-gallery tcg-evo-gallery--${esc(slug)}">
+          <header class="tcg-panel-head">
+            <div>
+              <h3>${esc(heading)}</h3>
+              <p>${esc(description)}</p>
+            </div>
+            <strong>LVL 1 → 5</strong>
+          </header>
+          <div class="tcg-evo-gallery-grid">
+            ${rarities.map((rarity, idx) => {
+              const card = catalog.get(cardId(slug, rarity))
+              if (!card) return ''
+              const unlocked = ownedCopies(card.id) > 0
+              const stage = CHARACTER_DESIGNS[slug]?.stages?.[rarity] || rarity
+              return `
+                <div class="tcg-evo-gallery-slot ${unlocked ? 'is-owned' : 'is-unowned'}" data-rarity="${esc(rarity)}">
+                  <div class="tcg-evo-gallery-card">${renderCard(card)}</div>
+                  <div class="tcg-evo-gallery-caption">
+                    <strong>LVL ${idx + 1} · ${esc(stage)}</strong>
+                    <span>${unlocked ? 'DÉBLOQUÉE' : 'À DÉBLOQUER'}</span>
+                  </div>
+                </div>
+              `
+            }).join('')}
+          </div>
+        </section>
+      `
+    }).join('')
+  }
+
   function renderCollection() {
     const rows =
       ownedRows()
@@ -2283,6 +2443,7 @@ export async function mountTcgGame(
       ${renderAlexandreEvolutionGallery()}
       ${renderHugoEvolutionGallery()}
       ${renderBenoitEvolutionGallery()}
+      ${renderSuppliedEvolutionGalleries()}
       <section class="tcg-panel">
         <header class="tcg-panel-head">
           <div>
