@@ -21,6 +21,7 @@ on:
       - 'v2/public/tcg/celia-foudre-evolutions.webp'
       - 'v2/public/tcg/camille-abysses-evolutions.webp'
       - 'v2/public/tcg/magicarpe-lego-evolutions.webp'
+      - 'v2/public/tcg/clara-magicarpe-lvl5.webp'
       - 'v2/src/tcg-benoit-earth.css'
       - 'v2/public/tcg/benoit-terre-evolutions.webp'
       - 'v2/src/tcg-hugo-forge.css'
