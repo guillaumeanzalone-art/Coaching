@@ -21,7 +21,8 @@ test('Benoît: five rareties map to separate sprite panels, ordered LVL 1–5', 
   const levels = [...found[1].matchAll(/(common|uncommon|rare|ultra|secret):\s*([0-4])/g)];
   assert.deepEqual(levels.map(z => z[1]), ['common','uncommon','rare','ultra','secret']);
   assert.deepEqual(levels.map(z => Number(z[2])), [0,1,2,3,4]);
-  assert.match(src,/position:\s*index \* 25/);
+  assert.match(src,/position: artworkOverride \? 0 : index \* 25/);
+  assert.match(src,/sprite: artworkOverride \|\| art\.sprite/);
 });
 
 test('Benoît: gallery and shared card renderer support collection, packs, decks and battle', () => {
