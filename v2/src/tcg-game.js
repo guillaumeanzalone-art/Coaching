@@ -287,7 +287,8 @@ const CHARACTER_CARD_ART = {
     },
   },
   magicarpe: {
-    // User-supplied image panels in LVL 1–5 order (final image reused for LVL 5).
+    // LVL 1–4: the four original Magicarpe artworks.
+    // LVL 5: Clara's separate, final serpent artwork supplied later.
     sprite: '/tcg/magicarpe-lego-evolutions.webp',
     rarityIndex: {
       common: 0,
@@ -295,6 +296,9 @@ const CHARACTER_CARD_ART = {
       rare: 2,
       ultra: 3,
       secret: 4,
+    },
+    raritySprites: {
+      secret: '/tcg/clara-magicarpe-lvl5.webp',
     },
   },
   benoit: {
@@ -1022,11 +1026,12 @@ function dedicatedCardArt(
     return null
   }
 
+  const artworkOverride = art.raritySprites?.[card?.rarity]
+
   return {
-    sprite: art.sprite,
+    sprite: artworkOverride || art.sprite,
     index,
-    position:
-      index * 25,
+    position: artworkOverride ? 0 : index * 25,
   }
 }
 
@@ -2381,7 +2386,7 @@ export async function mountTcgGame(
       {
         slug: 'magicarpe',
         heading: 'Clara Magiclarpe · L’atelier de Magicarpe',
-        description: 'Full Art · quatre créations originales, du poisson en briques au dragon mécanique.',
+        description: 'Full Art · cinq évolutions originales, du poisson en briques au dragon mécanique.',
       },
     ]
 
