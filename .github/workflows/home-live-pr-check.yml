@@ -1,0 +1,32 @@
+name: Home recent PR live feed checks
+
+on:
+  push:
+    branches: [v2-refactor]
+    paths:
+      - 'v2/src/home-live.js'
+      - 'v2/src/home-pr-feed.js'
+      - 'v2/tests/home-pr-feed.test.js'
+      - 'v2/src/sbd-pr.js'
+      - '.github/workflows/home-live-pr-check.yml'
+  workflow_dispatch:
+
+jobs:
+  latest-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+      - name: Install dependencies
+        working-directory: v2
+        run: npm ci --ignore-scripts --no-audit
+      - name: Verify recent PR deduplication and live-refresh behavior
+        working-directory: v2
+        run: node --test tests/home-pr-feed.test.js
+      - name: Verify Vite production build
+        working-directory: v2
+        run: npm run build
