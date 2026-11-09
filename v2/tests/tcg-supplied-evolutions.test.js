@@ -29,7 +29,7 @@ test('Five rarities map to five consecutive panels on each supplied sprite', () 
     const slug = pair[0]
     const asset = pair[1]
     const match = source.match(new RegExp(
-      '\\b' + slug + ':\\s*\\{\\s*\\/\\/[^\\n]*\\n\\s*sprite:\\s*' +
+      '\\b' + slug + ':\\s*\\{(?:\\s*\\/\\/[^\\n]*\\n)+\\s*sprite:\\s*' +
       "'/tcg/" + asset + "-evolutions.webp',\\s*rarityIndex:\\s*\\{([^}]+)\\}"
     ))
     assert.ok(match, 'Missing rarity art: ' + slug)
@@ -37,7 +37,7 @@ test('Five rarities map to five consecutive panels on each supplied sprite', () 
     assert.deepEqual(seen.map(x=>x[1]), rarities)
     assert.deepEqual(seen.map(x=>Number(x[2])), [0,1,2,3,4])
   }
-  assert.match(source, /position:\s*index \* 25/)
+  assert.match(source, /position: artworkOverride \? 0 : index \* 25/)
   assert.match(css, /background-size:500% 100%/)
 })
 
@@ -81,4 +81,21 @@ test('Visible full art, five foil tiers, responsive layout and accessible motion
   assert.match(css, /max-width:650px/)
   assert.match(css, /prefers-reduced-motion:reduce/)
   assert.ok(source.indexOf("import './tcg-benoit-earth.css'") < source.indexOf("import './tcg-supplied-evolutions.css'"))
+})
+
+test('Clara secret LVL 5 uses the newly supplied full-art image while LVL 1–4 keep their original sprite', () => {
+  const newImage = read('../public/tcg/clara-magicarpe-lvl5.webp')
+  assert.ok(newImage.length > 120000, 'Clara supplied image is missing or replaced by a placeholder')
+  assert.equal(newImage.subarray(0, 4).toString('ascii'), 'RIFF')
+  assert.equal(newImage.subarray(8, 12).toString('ascii'), 'WEBP')
+  assert.equal(newImage.readUInt32LE(4) + 8, newImage.length)
+
+  const magicarpe = source.slice(source.indexOf('  magicarpe: {', source.indexOf('const CHARACTER_CARD_ART')))
+  assert.match(magicarpe, /sprite: '\/tcg\/magicarpe-lego-evolutions\.webp'/)
+  assert.match(magicarpe, /raritySprites: \{\s*secret: '\/tcg\/clara-magicarpe-lvl5\.webp'/)
+  assert.match(source, /const artworkOverride = art\.raritySprites\?\.\[card\?\.rarity\]/)
+  assert.match(source, /sprite: artworkOverride \|\| art\.sprite/)
+  assert.match(css, /\.tcg-evo--magicarpe\.tcg-evo-lvl-5 \.tcg-illustration-sprite \{/)
+  assert.match(css, /background-size: cover/)
+  assert.match(css, /background-position: center center !important/)
 })
