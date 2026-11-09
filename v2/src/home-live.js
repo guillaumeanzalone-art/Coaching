@@ -308,10 +308,6 @@ export async function loadHomeLiveDashboard({
 
   ensureHomeLiveRefresh(athletes)
   const requestVersion = ++homeLiveRequestVersion
-  const activeTab = container.querySelector('[data-action="home-live-tab"][aria-selected="true"]')?.dataset.tab === 'prs'
-    ? 'prs'
-    : 'training'
-
   const cutoff =
     new Date(
       Date.now() -
@@ -347,6 +343,12 @@ export async function loadHomeLiveDashboard({
   ) {
     return
   }
+
+  // Read the tab after the requests complete: the user may have switched
+  // tabs during the network call, and refresh must never reset that choice.
+  const activeTab = container.querySelector('[data-action="home-live-tab"][aria-selected="true"]')?.dataset.tab === 'prs'
+    ? 'prs'
+    : 'training'
 
   const activeCount =
     presenceResult.error
