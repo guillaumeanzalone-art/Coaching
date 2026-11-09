@@ -1,0 +1,260 @@
+/* Original player-supplied TCG evolutions: Charles, Celia, Camille and Clara Magiclarpe.
+   Separate five-panel sprites preserve the artwork and its LVL 1 → LVL 5 progression.
+   Scoped to the TCG cards: booster/collection/deck/duel share the same art renderer. */
+.tcg-app.tcg-spider .tcg-card--evo {
+  --evo-primary: #85d7ed;
+  --evo-secondary: #c4f6ff;
+  --evo-glow: rgba(84,197,246,.25);
+  --evo-foil-opacity: .08;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  aspect-ratio: 2 / 3;
+  border: 1.5px solid var(--evo-primary);
+  border-radius: 10px;
+  background: #071325;
+  box-shadow: inset 0 0 0 1px rgba(240,255,252,.1), 0 0 17px var(--evo-glow), 0 10px 30px rgba(0,0,0,.48);
+  transition: border-color .22s ease, box-shadow .22s ease, transform .22s ease;
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--charles {
+  --evo-primary:#8e90ff; --evo-secondary:#d0c8ff; --evo-glow:rgba(132,99,255,.45);
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--celia {
+  --evo-primary:#80cfff; --evo-secondary:#ffe0b0; --evo-glow:rgba(97,185,255,.43);
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--camille {
+  --evo-primary:#7fe3dc; --evo-secondary:#cafef6; --evo-glow:rgba(86,231,213,.43);
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--magicarpe {
+  --evo-primary:#e6a36a; --evo-secondary:#f9daa8; --evo-glow:rgba(236,145,78,.37);
+}
+/* Same 5-panel 500% sprite geometry as the Benoît implementation. */
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-art {
+  position:absolute;
+  inset:0;
+  height:100%;
+  min-height:100%;
+  width:100%;
+  display:block;
+  overflow:hidden;
+  aspect-ratio:auto;
+  background:#071426;
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-card--illustrated .tcg-illustration-sprite {
+  position:absolute;
+  inset:0;
+  z-index:1;
+  display:block;
+  width:100%;
+  height:100%;
+  opacity:1;
+  visibility:visible;
+  background-size:500% 100%;
+  background-position-y:center;
+  background-repeat:no-repeat;
+  filter:saturate(1.09) contrast(1.035);
+}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-art::after {
+  content:"";
+  position:absolute;
+  z-index:3;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(2,5,20,.12),transparent 31%,transparent 54%,rgba(3,9,22,.24) 65%,rgba(2,7,17,.91) 100%);
+}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-evo-foil {
+  position:absolute;
+  z-index:5;
+  inset:-90% -110%;
+  pointer-events:none;
+  opacity:var(--evo-foil-opacity);
+  mix-blend-mode:screen;
+  transform:translateX(-75%) rotate(22deg);
+  background:
+    linear-gradient(90deg,transparent 34%,rgba(255,255,255,0) 39%,rgba(255,255,255,.5) 43%,rgba(183,251,255,1) 46%,rgba(255,236,184,.8) 49%,rgba(238,179,255,.55) 51%,rgba(255,255,255,0) 59%,transparent 62%);
+  animation:tcgEvoHolograph 6.5s ease-in-out infinite;
+}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-evo-aura {
+  position:absolute;
+  z-index:4;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-evo-aura i {
+  position:absolute;
+  bottom:15%;
+  left:15%;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:var(--evo-secondary);
+  box-shadow:0 0 7px var(--evo-secondary),0 0 15px var(--evo-primary);
+  opacity:0;
+  animation:tcgEvoSpark 4.8s ease-in-out infinite;
+}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-evo-aura i:nth-child(2){bottom:23%;left:75%;animation-delay:-2.4s;animation-duration:6.2s}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-evo-aura i:nth-child(3){bottom:7%;left:49%;animation-delay:-1.3s;animation-duration:5.6s}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-evo-aura i:nth-child(4){bottom:32%;left:91%;animation-delay:-3.6s;animation-duration:5.1s}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-evo-aura i:nth-child(5){bottom:46%;left:29%;animation-delay:-4.5s;animation-duration:6.8s}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-evo-lvl {
+  position:absolute;
+  z-index:10;
+  top:7px;
+  right:7px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:48px;
+  padding:5px 8px;
+  border:1px solid var(--evo-primary);
+  border-radius:5px;
+  background:linear-gradient(125deg,rgba(7,20,36,.9),rgba(2,6,18,.94));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 0 13px var(--evo-glow);
+  color:#f4fffa;
+  font-size:clamp(10px,1vw,13px);
+  font-weight:950;
+  letter-spacing:.1em;
+  text-shadow:0 0 8px var(--evo-glow);
+  white-space:nowrap;
+}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-body {
+  position:absolute;
+  z-index:9;
+  left:7px;
+  right:7px;
+  bottom:7px;
+  padding:7px 7px 6px;
+  margin:0;
+  border:1px solid color-mix(in srgb,var(--evo-primary),transparent 55%);
+  border-radius:7px;
+  background:linear-gradient(145deg,rgba(5,13,29,.89),rgba(3,8,21,.82));
+  backdrop-filter:blur(5px);
+  box-shadow:inset 0 1px rgba(236,255,255,.07);
+}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-name {color:#f1faff;font-weight:950;}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-type {color:var(--evo-secondary);}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-stats span {
+  background:rgba(5,18,36,.72);
+  border:1px solid color-mix(in srgb,var(--evo-primary),transparent 70%);
+}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-stats b {color:#eaffff;}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-skill {color:#b5c8d2;}
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-rarity,
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-evolution,
+.tcg-app.tcg-spider .tcg-card--evo .tcg-card-cost {display:none!important;}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo-lvl-1 {--evo-foil-opacity:.045;}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo-lvl-2 {--evo-foil-opacity:.13;}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo-lvl-3 {--evo-foil-opacity:.27;}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo-lvl-4 {
+  --evo-foil-opacity:.47;
+  box-shadow:0 0 0 1px var(--evo-primary),0 0 24px var(--evo-glow),0 9px 28px #0008;
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo-lvl-5 {
+  --evo-foil-opacity:.78;
+  border-color:var(--evo-secondary);
+  box-shadow:0 0 0 2px var(--evo-primary),0 0 28px var(--evo-glow),0 0 52px var(--evo-glow),0 12px 36px #0009;
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo-lvl-5 .tcg-evo-foil {animation-duration:4.4s;}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo-lvl-5 .tcg-evo-lvl {
+  color:#061729;
+  background:linear-gradient(110deg,#f0ffff,var(--evo-primary),#f4f7ff);
+  text-shadow:none;
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo-lvl-5 .tcg-evo-aura i {
+  width:4px;
+  height:4px;
+}
+@media (hover:hover) {
+  .tcg-app.tcg-spider .tcg-card--evo:hover {
+    transform:translateY(-3px);
+    border-color:var(--evo-secondary);
+    box-shadow:0 0 0 2px var(--evo-primary),0 0 30px var(--evo-glow),0 15px 32px #0009;
+  }
+}
+/* Gallery: full-arts can always be inspected, ownership stays explicit. */
+.tcg-app.tcg-spider .tcg-evo-gallery {
+  --evo-gallery-color: #83b6fb;
+  margin-bottom:16px;
+  border-color:color-mix(in srgb,var(--evo-gallery-color),transparent 55%);
+  background:linear-gradient(145deg,rgba(9,21,41,.98),rgba(5,9,23,.98));
+}
+.tcg-app.tcg-spider .tcg-evo-gallery--charles {--evo-gallery-color:#a39af7;}
+.tcg-app.tcg-spider .tcg-evo-gallery--celia {--evo-gallery-color:#8bcaff;}
+.tcg-app.tcg-spider .tcg-evo-gallery--camille {--evo-gallery-color:#8ee9d9;}
+.tcg-app.tcg-spider .tcg-evo-gallery--magicarpe {--evo-gallery-color:#f2b67d;}
+.tcg-app.tcg-spider .tcg-evo-gallery .tcg-panel-head {
+  border-bottom:1px solid color-mix(in srgb,var(--evo-gallery-color),transparent 55%);
+  background:linear-gradient(110deg,color-mix(in srgb,var(--evo-gallery-color),transparent 87%),rgba(5,10,25,.95));
+}
+.tcg-app.tcg-spider .tcg-evo-gallery .tcg-panel-head h3 {color:#f2faff;}
+.tcg-app.tcg-spider .tcg-evo-gallery .tcg-panel-head strong {
+  color:var(--evo-gallery-color);
+  white-space:nowrap;
+  font-size:12px;
+}
+.tcg-app.tcg-spider .tcg-evo-gallery-grid {
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  padding:16px;
+}
+.tcg-app.tcg-spider .tcg-evo-gallery-slot {
+  min-width:0;
+  padding:7px;
+  border:1px solid color-mix(in srgb,var(--evo-gallery-color),transparent 60%);
+  border-radius:10px;
+  background:linear-gradient(150deg,rgba(22,37,55,.94),rgba(5,10,23,.94));
+}
+.tcg-app.tcg-spider .tcg-evo-gallery-slot.is-owned {
+  border-color:var(--evo-gallery-color);
+  box-shadow:0 0 13px color-mix(in srgb,var(--evo-gallery-color),transparent 80%);
+}
+.tcg-app.tcg-spider .tcg-evo-gallery-card,
+.tcg-app.tcg-spider .tcg-evo-gallery-card .tcg-card {
+  min-width:0;
+  width:100%;
+  box-sizing:border-box;
+}
+.tcg-app.tcg-spider .tcg-evo-gallery-caption {
+  display:grid;
+  gap:4px;
+  padding:9px 2px 3px;
+}
+.tcg-app.tcg-spider .tcg-evo-gallery-caption strong {
+  color:#ecf4fa;
+  font-size:10px;
+  font-weight:900;
+  line-height:1.3;
+}
+.tcg-app.tcg-spider .tcg-evo-gallery-caption span {
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.04em;
+  color:#929eae;
+}
+.tcg-app.tcg-spider .tcg-evo-gallery-slot.is-owned .tcg-evo-gallery-caption span {
+  color:var(--evo-gallery-color);
+}
+@keyframes tcgEvoHolograph {
+  0%,20%{transform:translateX(-75%) rotate(22deg);}
+  68%,100%{transform:translateX(80%) rotate(22deg);}
+}
+@keyframes tcgEvoSpark {
+  0%{transform:translate3d(0,0,0) scale(.4);opacity:0;}
+  21%{opacity:var(--evo-foil-opacity);}
+  100%{transform:translate3d(20px,-130px,0) scale(1.25);opacity:0;}
+}
+@media(max-width:1050px){
+  .tcg-app.tcg-spider .tcg-evo-gallery-grid {grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media(max-width:650px){
+  .tcg-app.tcg-spider .tcg-evo-gallery-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:8px;}
+  .tcg-app.tcg-spider .tcg-card--evo .tcg-evo-lvl {min-width:37px;padding:3px 5px;font-size:10px;}
+  .tcg-app.tcg-spider .tcg-evo-gallery-caption strong {font-size:9px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .tcg-app.tcg-spider .tcg-card--evo,
+  .tcg-app.tcg-spider .tcg-evo-foil,
+  .tcg-app.tcg-spider .tcg-evo-aura i {animation:none!important;transition:none!important;}
+}
