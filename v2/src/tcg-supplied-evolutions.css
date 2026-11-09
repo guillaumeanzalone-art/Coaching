@@ -172,6 +172,13 @@
     box-shadow:0 0 0 2px var(--evo-primary),0 0 30px var(--evo-glow),0 15px 32px #0009;
   }
 }
+/* Clara's supplied LVL 5 artwork is a standalone square portrait.
+   Preserve the original proportions and center the art instead of treating
+   it as another panel in the four-image sprite. */
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--magicarpe.tcg-evo-lvl-5 .tcg-illustration-sprite {
+  background-size: cover;
+  background-position: center center !important;
+}
 /* Gallery: full-arts can always be inspected, ownership stays explicit. */
 .tcg-app.tcg-spider .tcg-evo-gallery {
   --evo-gallery-color: #83b6fb;
