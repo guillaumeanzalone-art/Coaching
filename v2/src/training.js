@@ -4767,6 +4767,32 @@ export function mountTraining(
         ''
       ).trim()
 
+    if (athleteTheme?.variant === 'noe-wakfu-skybound') {
+      const heroImage = String(athleteTheme.heroImage || '').trim()
+      const heroMobileImage = String(athleteTheme.heroMobileImage || '').trim()
+      return `
+        <section class="athlete-theme-banner athlete-theme-banner--noe-skybound"
+          aria-label="Noé, le ciel des avions fantastiques et des chaussures volantes">
+          <picture class="noe-skybound__picture">
+            <source media="(max-width: 650px)" srcset="${escapeHtml(heroMobileImage)}">
+            <img class="noe-skybound__hero"
+              src="${escapeHtml(heroImage)}"
+              alt="Aventurier aérien, avions magiques et chaussures enchantées dans un ciel de fantasy"
+              width="1672" height="940" loading="eager" decoding="async">
+          </picture>
+          <div class="noe-skybound__light" aria-hidden="true"></div>
+          <div class="noe-skybound__clouds" aria-hidden="true"></div>
+          <div class="noe-skybound__flight-lines" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="noe-skybound__wind" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div class="noe-skybound__sparks" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div class="noe-skybound__frame" aria-hidden="true"></div>
+        </section>
+      `
+    }
     if (
       athleteTheme?.variant ===
       'camille-abyss-sanctuary'

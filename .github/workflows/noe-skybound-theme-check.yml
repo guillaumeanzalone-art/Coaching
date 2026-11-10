@@ -1,0 +1,35 @@
+name: Noe Wakfu Skybound Theme Checks
+
+on:
+  push:
+    branches: [v2-refactor]
+    paths:
+      - 'v2/src/athlete-themes.js'
+      - 'v2/src/training.js'
+      - 'v2/src/main.js'
+      - 'v2/src/theme-noe-skybound.css'
+      - 'v2/public/noe-wakfu-zapatos-wide.webp'
+      - 'v2/public/noe-wakfu-zapatos-square.webp'
+      - 'v2/tests/noe-skybound-theme.test.js'
+      - '.github/workflows/noe-skybound-theme-check.yml'
+  workflow_dispatch:
+
+jobs:
+  noe-skybound:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+      - name: Install dependencies
+        working-directory: v2
+        run: npm ci --ignore-scripts --no-audit
+      - name: Validate Noe artwork and program theme isolation
+        working-directory: v2
+        run: node --test tests/noe-skybound-theme.test.js
+      - name: Build production app
+        working-directory: v2
+        run: npm run build
