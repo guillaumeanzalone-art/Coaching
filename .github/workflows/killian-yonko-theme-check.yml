@@ -1,0 +1,35 @@
+name: Killian One Piece Yonko Theme Checks
+
+on:
+  push:
+    branches: [v2-refactor]
+    paths:
+      - 'v2/src/athlete-themes.js'
+      - 'v2/src/training.js'
+      - 'v2/src/main.js'
+      - 'v2/src/theme-killian-yonko.css'
+      - 'v2/public/killian-one-piece-yonko-wide.webp'
+      - 'v2/public/killian-one-piece-yonko-mobile.webp'
+      - 'v2/tests/killian-yonko-theme.test.js'
+      - '.github/workflows/killian-yonko-theme-check.yml'
+  workflow_dispatch:
+
+jobs:
+  killian-yonko:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+      - name: Install dependencies
+        working-directory: v2
+        run: npm ci --ignore-scripts --no-audit
+      - name: Check Killian, Camille and Noe themes
+        working-directory: v2
+        run: node --test tests/killian-yonko-theme.test.js tests/camille-theme.test.js tests/noe-skybound-theme.test.js
+      - name: Build production app
+        working-directory: v2
+        run: npm run build

@@ -4767,6 +4767,84 @@ export function mountTraining(
         ''
       ).trim()
 
+    if (athleteTheme?.variant === 'killian-yonko-grandline') {
+      const heroImage = String(athleteTheme.heroImage || '').trim()
+      const mobileHero = String(athleteTheme.heroMobileImage || '').trim()
+      return `
+        <section class="athlete-theme-banner athlete-theme-banner--killian-yonko"
+          aria-label="Killian et les mondes des sept Empereurs de One Piece">
+          <picture class="killian-yonko__picture">
+            <source media="(max-width: 650px)" srcset="${escapeHtml(mobileHero)}">
+            <img class="killian-yonko__art" src="${escapeHtml(heroImage)}"
+              alt="Sept empereurs pirates et leurs territoires, du Pays des Wa au Nouveau Monde"
+              width="1500" height="818" loading="eager" decoding="async">
+          </picture>
+          <div class="killian-yonko__haki" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="killian-yonko__ocean" aria-hidden="true"></div>
+          <div class="killian-yonko__embers" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div class="killian-yonko__outline" aria-hidden="true"></div>
+        </section>
+        <section class="killian-yonko__voyage" aria-label="Les sept empereurs et leurs mondes">
+          <header class="killian-yonko__voyage-heading">
+            <span>LES SEPT EMPEREURS</span>
+            <strong>GRAND LINE · NOUVEAU MONDE</strong>
+          </header>
+          <div class="killian-yonko__worlds">
+          <article class="killian-yonko__world killian-yonko__world--shanks">
+            <span class="killian-yonko__number" aria-hidden="true">I</span>
+            <span class="killian-yonko__crest" aria-hidden="true">♜</span>
+            <strong>Shanks le Roux</strong>
+            <span class="killian-yonko__territory">Elbaf · Flotte du Roux</span>
+            <small>Le Haki du conquérant</small>
+          </article>
+          <article class="killian-yonko__world killian-yonko__world--whitebeard">
+            <span class="killian-yonko__number" aria-hidden="true">II</span>
+            <span class="killian-yonko__crest" aria-hidden="true">♆</span>
+            <strong>Barbe Blanche</strong>
+            <span class="killian-yonko__territory">Sphinx · Moby Dick</span>
+            <small>La puissance des séismes</small>
+          </article>
+          <article class="killian-yonko__world killian-yonko__world--bigmom">
+            <span class="killian-yonko__number" aria-hidden="true">III</span>
+            <span class="killian-yonko__crest" aria-hidden="true">♛</span>
+            <strong>Big Mom</strong>
+            <span class="killian-yonko__territory">Totto Land · Whole Cake</span>
+            <small>L’empire des Homies</small>
+          </article>
+          <article class="killian-yonko__world killian-yonko__world--kaido">
+            <span class="killian-yonko__number" aria-hidden="true">IV</span>
+            <span class="killian-yonko__crest" aria-hidden="true">♢</span>
+            <strong>Kaido</strong>
+            <span class="killian-yonko__territory">Wano · Onigashima</span>
+            <small>Le dragon des cent bêtes</small>
+          </article>
+          <article class="killian-yonko__world killian-yonko__world--blackbeard">
+            <span class="killian-yonko__number" aria-hidden="true">V</span>
+            <span class="killian-yonko__crest" aria-hidden="true">☠</span>
+            <strong>Barbe Noire</strong>
+            <span class="killian-yonko__territory">Hachinosu · Île des pirates</span>
+            <small>Ténèbres et tremblements</small>
+          </article>
+          <article class="killian-yonko__world killian-yonko__world--luffy">
+            <span class="killian-yonko__number" aria-hidden="true">VI</span>
+            <span class="killian-yonko__crest" aria-hidden="true">☼</span>
+            <strong>Monkey D. Luffy</strong>
+            <span class="killian-yonko__territory">Thousand Sunny · Nouveau Monde</span>
+            <small>Le réveil de Nika</small>
+          </article>
+          <article class="killian-yonko__world killian-yonko__world--buggy">
+            <span class="killian-yonko__number" aria-hidden="true">VII</span>
+            <span class="killian-yonko__crest" aria-hidden="true">✦</span>
+            <strong>Baggy le Clown</strong>
+            <span class="killian-yonko__territory">Karai Bari · Cross Guild</span>
+            <small>La guilde des primes</small>
+          </article>
+          </div>
+        </section>
+      `
+    }
     if (athleteTheme?.variant === 'noe-wakfu-skybound') {
       const heroImage = String(athleteTheme.heroImage || '').trim()
       const heroMobileImage = String(athleteTheme.heroMobileImage || '').trim()

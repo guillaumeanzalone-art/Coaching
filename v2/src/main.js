@@ -8,6 +8,7 @@ import './style.css'
 import './theme-spider.css'
 import './theme-camille-abyss.css'
 import './theme-noe-skybound.css'
+import './theme-killian-yonko.css'
 import { getRecentActivities, getCurrentActivityUserId, toggleActivityLike } from './activity.js'
 
 import {

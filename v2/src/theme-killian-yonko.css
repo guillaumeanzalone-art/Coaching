@@ -1,0 +1,489 @@
+/* KILLIAN — LES SEPT EMPEREURS / GRAND LINE
+ * Original One Piece-inspired illustrated theme. Strictly scoped to the
+ * Killian training page; no program or workout changes. */
+.training-page[data-athlete-theme="killian"] {
+  --yonko-gold: #f1c17a;
+  --yonko-blue: #75d2fb;
+  --yonko-borde: rgba(239,189,111,.43);
+  position:relative;
+  isolation:isolate;
+  min-height:100vh;
+  overflow-x:clip;
+  background:
+    radial-gradient(ellipse at 18% 0%,rgba(104,41,64,.28),transparent 43rem),
+    radial-gradient(ellipse at 85% 15%,rgba(24,97,143,.18),transparent 38rem),
+    linear-gradient(180deg,rgba(5,15,34,.8) 0%,rgba(5,14,33,.98) 860px,#061122 1500px),
+    url('/killian-one-piece-yonko-mobile.webp') center top / min(100%,1250px) auto no-repeat,
+    #071223;
+  color:#f8f5ec;
+}
+.training-page[data-athlete-theme="killian"]::before {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  pointer-events:none;
+  opacity:.42;
+  background-image:
+    radial-gradient(circle,rgba(242,216,167,.68) 0 1px, transparent 2px),
+    radial-gradient(circle,rgba(120,191,236,.34) 0 1.5px,transparent 3px);
+  background-size:121px 171px,217px 253px;
+  background-position:21px 63px,124px 83px;
+  -webkit-mask-image:linear-gradient(#000 0%, rgba(0,0,0,.2) 1300px, transparent 1700px);
+  mask-image:linear-gradient(#000 0%, rgba(0,0,0,.2) 1300px, transparent 1700px);
+}
+.training-page[data-athlete-theme="killian"] .training-topbar {
+  position:relative;
+  padding:15px 19px;
+  border:1px solid rgba(248,198,117,.47);
+  margin-bottom:16px;
+  border-radius:18px;
+  background:linear-gradient(125deg,rgba(9,18,38,.95),rgba(41,30,45,.86),rgba(7,30,56,.95));
+  box-shadow:inset 0 1px rgba(255,245,209,.11),0 17px 38px rgba(0,5,19,.38);
+  backdrop-filter:blur(12px);
+}
+.training-page[data-athlete-theme="killian"] .training-topbar::after {
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:20px;
+  right:20px;
+  height:1px;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,#edac66,#fff0ba,#edac66,transparent);
+}
+.training-page[data-athlete-theme="killian"] .training-topbar h1 {
+  font-family:Georgia,'Times New Roman',serif;
+  font-weight:900;
+  font-size:clamp(25px,3.2vw,35px);
+  letter-spacing:.025em;
+  color:#fff6dd;
+  text-shadow:0 2px 17px rgba(243,180,95,.3);
+}
+.training-page[data-athlete-theme="killian"] .training-kicker {display:none}
+.training-page[data-athlete-theme="killian"] :is(.back-button,.reset-button) {
+  border:1px solid rgba(246,194,125,.36);
+  border-radius:10px;
+  min-height:42px;
+  background:rgba(4,15,31,.86);
+  color:#fcf4e5;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+.training-page[data-athlete-theme="killian"] :is(.back-button,.reset-button):hover {
+  background:rgba(82,49,50,.69);
+  border-color:#f4c17f;
+  transform:translateY(-1px);
+}
+.training-page[data-athlete-theme="killian"] .athlete-theme-banner--killian-yonko {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  height:clamp(270px,44vw,530px);
+  padding:0;
+  margin:0 0 15px;
+  border:2px solid rgba(244,207,128,.76);
+  border-radius:22px;
+  background:#09162b;
+  box-shadow:0 0 0 1px rgba(38,15,20,.92),0 0 28px rgba(231,167,100,.16),
+    0 25px 48px rgba(0,4,17,.45),inset 0 0 0 1px rgba(255,232,184,.17);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__picture {
+  position:absolute;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+  display:block;
+  width:100%;
+  height:100%;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__art {
+  width:100%;
+  height:100%;
+  max-width:none;
+  display:block;
+  object-fit:cover;
+  object-position:center 47%;
+  filter:saturate(1.07) contrast(1.07);
+  transform:scale(1.018);
+  animation:yonkoOceanParallax 17s ease-in-out infinite alternate;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__haki {
+  position:absolute;
+  z-index:3;
+  inset:0;
+  pointer-events:none;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__haki i {
+  position:absolute;
+  display:block;
+  border:1px solid transparent;
+  border-top:2px solid rgba(251,186,139,.78);
+  border-radius:50%;
+  filter:drop-shadow(0 0 7px rgba(243,85,91,.9));
+  opacity:.25;
+  animation:yonkoHakiPulse 7s ease-in-out infinite alternate;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__haki i:nth-child(1){
+  width:38%;height:38%;left:-8%;top:18%;transform:rotate(-20deg)
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__haki i:nth-child(2){
+  width:33%;height:26%;left:74%;top:8%;transform:rotate(20deg);
+  border-top-color:rgba(179,130,252,.75);animation-delay:-3s;
+  filter:drop-shadow(0 0 6px rgba(164,94,244,.75))
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__haki i:nth-child(3){
+  width:45%;height:21%;left:28%;top:71%;transform:rotate(-6deg);
+  border-top-color:rgba(242,226,175,.64);animation-delay:-4.7s;
+  filter:drop-shadow(0 0 5px rgba(255,217,143,.7))
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__ocean {
+  position:absolute;
+  z-index:2;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg,transparent 0%,transparent 64%,rgba(8,28,68,.19) 78%,rgba(7,17,40,.3) 100%);
+  animation:yonkoTide 9s ease-in-out infinite alternate;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers {
+  position:absolute;
+  z-index:4;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers i {
+  position:absolute;
+  bottom:3%;
+  left:18%;
+  width:3px;height:3px;
+  border-radius:50%;
+  opacity:0;
+  background:#ffe5a5;
+  box-shadow:0 0 8px 2px rgba(245,185,102,.75);
+  animation:yonkoSparks 6.8s ease-in-out infinite;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers i:nth-child(2){left:39%;animation-delay:-4.6s}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers i:nth-child(3){left:77%;animation-delay:-1.8s}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers i:nth-child(4){left:54%;animation-delay:-3.4s}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers i:nth-child(5){left:7%;animation-delay:-5.3s}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers i:nth-child(6){left:89%;animation-delay:-2.7s}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers i:nth-child(7){left:46%;animation-delay:-6.1s}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers i:nth-child(8){left:28%;animation-delay:-2.2s}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers i:nth-child(9){left:63%;animation-delay:-5.7s}
+.training-page[data-athlete-theme="killian"] .killian-yonko__embers i:nth-child(10){left:96%;animation-delay:-3.9s}
+.training-page[data-athlete-theme="killian"] .killian-yonko__outline {
+  position:absolute;
+  z-index:5;
+  inset:10px;
+  pointer-events:none;
+  border:1px solid rgba(253,231,171,.4);
+  border-radius:16px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
+}
+.training-page[data-athlete-theme="killian"] .athlete-theme-banner--killian-yonko::after {
+  content:'';
+  position:absolute;
+  z-index:6;
+  bottom:0;
+  left:5%;
+  right:5%;
+  height:3px;
+  background:linear-gradient(90deg,transparent,#edb077,#faf3c7,#8bc7f1,transparent);
+  box-shadow:0 0 17px rgba(248,212,149,.83);
+  pointer-events:none;
+}
+/* Seven emperor domains: their identities and territories are explicit rather
+   than lost in the panoramic illustration. Horizontal snap on small screens. */
+.training-page[data-athlete-theme="killian"] .killian-yonko__voyage {
+  position:relative;
+  margin:0 0 19px;
+  padding:13px 12px 12px;
+  border:1px solid rgba(244,196,119,.37);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(8,19,40,.95),rgba(17,26,50,.94));
+  box-shadow:inset 0 1px 0 rgba(255,233,196,.09),0 15px 32px rgba(0,6,22,.25);
+  backdrop-filter:blur(10px);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__voyage-heading {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:4px 7px 12px;
+  color:#f3d7a2;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__voyage-heading span {
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(15px,2vw,19px);
+  font-weight:900;
+  letter-spacing:.11em;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__voyage-heading strong {
+  color:rgba(212,226,250,.64);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.13em;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__worlds {
+  display:grid;
+  grid-template-columns:repeat(7,minmax(155px,1fr));
+  gap:9px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:4px 4px 9px;
+  scroll-snap-type:x proximity;
+  scrollbar-color:rgba(220,172,111,.45) transparent;
+  scrollbar-width:thin;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world {
+  --world-color:#d6b8a3;
+  --world-dark:rgba(92,62,55,.56);
+  position:relative;
+  isolation:isolate;
+  min-width:0;
+  min-height:151px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-end;
+  gap:4px;
+  padding:13px 11px 11px;
+  overflow:hidden;
+  border-radius:12px;
+  border:1px solid color-mix(in srgb,var(--world-color),transparent 41%);
+  background:
+    radial-gradient(ellipse at 78% 10%,color-mix(in srgb,var(--world-color),transparent 43%),transparent 67%),
+    radial-gradient(ellipse at 12% 95%,var(--world-dark),transparent 83%),
+    linear-gradient(160deg,rgba(17,30,55,.95),rgba(5,14,34,.98));
+  box-shadow:inset 0 1px rgba(255,255,255,.12),0 5px 14px rgba(0,7,21,.23);
+  scroll-snap-align:start;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world:hover {
+  transform:translateY(-3px);
+  border-color:var(--world-color);
+  box-shadow:0 0 17px color-mix(in srgb,var(--world-color),transparent 73%),0 11px 19px rgba(0,5,20,.26);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world::before {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  right:-38px;
+  top:-58px;
+  width:130px;height:130px;
+  border:1px solid color-mix(in srgb,var(--world-color),transparent 40%);
+  border-radius:50%;
+  box-shadow:0 0 0 9px color-mix(in srgb,var(--world-color),transparent 94%),
+    0 0 0 25px color-mix(in srgb,var(--world-color),transparent 96%);
+  opacity:.75;
+  transform:rotate(-15deg);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world::after {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  left:0;right:0;bottom:0;
+  height:4px;
+  background:linear-gradient(90deg,transparent,var(--world-color),transparent);
+  opacity:.76;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__number {
+  position:absolute;
+  top:8px;
+  left:10px;
+  color:var(--world-color);
+  font-family:Georgia,serif;
+  font-size:14px;
+  font-weight:900;
+  opacity:.92;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__crest {
+  position:absolute;
+  top:10px;
+  right:12px;
+  font-size:30px;
+  line-height:1;
+  font-family:Georgia,'Times New Roman',serif;
+  font-weight:900;
+  color:var(--world-color);
+  text-shadow:0 0 20px color-mix(in srgb,var(--world-color),transparent 30%);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world strong {
+  display:block;
+  color:#fff8ec;
+  font-size:12px;
+  font-weight:900;
+  line-height:1.14;
+  text-shadow:0 2px 9px rgba(0,2,20,.9);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__territory {
+  font-size:10px;
+  line-height:1.28;
+  font-weight:850;
+  color:var(--world-color);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world small {
+  color:rgba(238,242,253,.75);
+  font-size:9px;
+  line-height:1.3;
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world--shanks {
+  --world-color:#f4a67e;--world-dark:rgba(163,44,49,.56);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world--whitebeard {
+  --world-color:#b2e1ec;--world-dark:rgba(46,105,139,.55);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world--bigmom {
+  --world-color:#f5aee2;--world-dark:rgba(139,53,123,.54);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world--kaido {
+  --world-color:#bfa1ff;--world-dark:rgba(99,57,155,.58);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world--blackbeard {
+  --world-color:#eeb875;--world-dark:rgba(77,51,86,.67);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world--luffy {
+  --world-color:#f8d677;--world-dark:rgba(38,118,150,.5);
+}
+.training-page[data-athlete-theme="killian"] .killian-yonko__world--buggy {
+  --world-color:#9de2fa;--world-dark:rgba(129,45,79,.55);
+}
+/* Rest of programming stays readable and operational. */
+.training-page[data-athlete-theme="killian"] :is(.week-tab,.day-tab-v2) {
+  position:relative;
+  min-height:53px;
+  border:1px solid rgba(233,191,131,.31);
+  border-radius:11px;
+  color:#dde7f0;
+  background:linear-gradient(130deg,rgba(18,38,62,.95),rgba(9,21,44,.96));
+  box-shadow:inset 0 1px rgba(255,250,235,.065),0 6px 14px rgba(0,8,26,.21);
+  transition:background .18s,border-color .18s,transform .18s;
+}
+.training-page[data-athlete-theme="killian"] :is(.week-tab,.day-tab-v2):hover {
+  border-color:#eccc9a;
+  transform:translateY(-2px);
+}
+.training-page[data-athlete-theme="killian"] :is(.week-tab--active,.day-tab-v2--active) {
+  border-color:#edcb8e;
+  color:#fff5e3;
+  background:linear-gradient(115deg,rgba(116,58,63,.91),rgba(31,78,117,.92));
+  box-shadow:0 0 0 1px rgba(247,222,164,.15),inset 0 1px rgba(255,249,233,.21),0 0 18px rgba(241,164,92,.15);
+}
+.training-page[data-athlete-theme="killian"] :is(
+  .training-summary,.training-exercise,.training-session-v11,
+  .training-v3-history,.training-v3-overview,
+  .training-v3-overview-launcher,.training-block-report-v11,
+  .athlete-pr-panel,.athlete-insights-grid-v249 > *
+) {
+  border-color:rgba(236,194,124,.34)!important;
+  background:linear-gradient(145deg,rgba(13,29,53,.97),rgba(8,19,41,.98))!important;
+  box-shadow:inset 0 1px rgba(255,240,216,.06),0 12px 32px rgba(0,6,22,.2);
+}
+.training-page[data-athlete-theme="killian"] .training-exercise {overflow:hidden;border-radius:17px}
+.training-page[data-athlete-theme="killian"] .exercise-header {
+  border-bottom-color:rgba(236,197,137,.3);
+  background:linear-gradient(108deg,rgba(90,51,59,.86),rgba(28,58,96,.93));
+}
+.training-page[data-athlete-theme="killian"] .exercise-header h2 {
+  color:#fff4e1;
+  text-shadow:0 0 14px rgba(244,196,120,.18);
+}
+.training-page[data-athlete-theme="killian"] .exercise-type {
+  border-color:rgba(244,199,136,.49);
+  color:#ffe4ab;
+  background:rgba(222,151,73,.12);
+}
+.training-page[data-athlete-theme="killian"] .training-set {
+  border-color:rgba(155,178,216,.24);
+  background:linear-gradient(115deg,rgba(16,36,62,.91),rgba(8,25,49,.93));
+}
+.training-page[data-athlete-theme="killian"] .training-set--done {
+  border-color:rgba(112,223,169,.67);
+  background:rgba(14,104,88,.27);
+}
+.training-page[data-athlete-theme="killian"] .training-set--failed {
+  border-color:rgba(252,141,154,.69);
+  background:rgba(100,32,54,.27);
+}
+.training-page[data-athlete-theme="killian"] :is(input[type="text"],input[type="number"],textarea,select) {
+  border-color:rgba(206,185,154,.31);
+  color:#fff6ea;
+  background:rgba(7,23,43,.95);
+}
+.training-page[data-athlete-theme="killian"] :is(input,button,textarea,select):focus-visible {
+  outline:2px solid #ffdb9d;
+  outline-offset:3px;
+}
+.training-page[data-athlete-theme="killian"] ::placeholder {color:#a6b9cd}
+@keyframes yonkoOceanParallax {
+  from{transform:scale(1.018) translate3d(-.25%,0,0)}
+  to{transform:scale(1.048) translate3d(.25%,.3%,0)}
+}
+@keyframes yonkoTide {
+  from{opacity:.36;transform:translateY(3px)}
+  to{opacity:.8;transform:translateY(-4px)}
+}
+@keyframes yonkoHakiPulse {
+  from{opacity:.15;filter:drop-shadow(0 0 3px rgba(240,123,89,.48))}
+  to{opacity:.72;filter:drop-shadow(0 0 11px rgba(237,118,95,.85))}
+}
+@keyframes yonkoSparks {
+  0%{opacity:0;transform:translate3d(0,16px,0) scale(.55)}
+  25%{opacity:.82}
+  83%{opacity:.29}
+  100%{opacity:0;transform:translate3d(24px,-150px,0) scale(1.2)}
+}
+@media(max-width:1350px) {
+  .training-page[data-athlete-theme="killian"] .killian-yonko__worlds {
+    grid-template-columns:repeat(7,minmax(170px,1fr));
+  }
+}
+@media(max-width:650px) {
+  .training-page[data-athlete-theme="killian"] {
+    padding-left:max(10px,env(safe-area-inset-left));
+    padding-right:max(10px,env(safe-area-inset-right));
+    background:
+      radial-gradient(ellipse at 50% 0,rgba(70,71,120,.26),transparent 27rem),
+      linear-gradient(180deg,rgba(5,15,34,.78),#071223 1020px),
+      url('/killian-one-piece-yonko-mobile.webp') center top / 900px auto no-repeat,#071223;
+  }
+  .training-page[data-athlete-theme="killian"] .training-topbar {
+    padding:12px 10px;margin-bottom:11px;
+  }
+  .training-page[data-athlete-theme="killian"] .training-topbar h1 {font-size:23px}
+  .training-page[data-athlete-theme="killian"] .athlete-theme-banner--killian-yonko {
+    height:clamp(310px,94vw,475px);
+    border-radius:15px;
+    margin-bottom:11px;
+  }
+  .training-page[data-athlete-theme="killian"] .killian-yonko__art {
+    object-position:center 46%;
+  }
+  .training-page[data-athlete-theme="killian"] .killian-yonko__outline {inset:7px;border-radius:10px}
+  .training-page[data-athlete-theme="killian"] .killian-yonko__voyage {padding:10px 7px 7px;margin-bottom:14px}
+  .training-page[data-athlete-theme="killian"] .killian-yonko__voyage-heading {
+    padding:2px 8px 10px;gap:5px;
+  }
+  .training-page[data-athlete-theme="killian"] .killian-yonko__voyage-heading span {
+    font-size:14px;letter-spacing:.05em;
+  }
+  .training-page[data-athlete-theme="killian"] .killian-yonko__voyage-heading strong {
+    font-size:8px;letter-spacing:.04em;text-align:right;
+  }
+  .training-page[data-athlete-theme="killian"] .killian-yonko__worlds {
+    grid-template-columns:repeat(7,180px);
+    gap:8px;
+  }
+  .training-page[data-athlete-theme="killian"] .killian-yonko__world {min-height:143px}
+  .training-page[data-athlete-theme="killian"] :is(.week-tab,.day-tab-v2) {min-height:48px}
+}
+@media(prefers-reduced-motion:reduce) {
+  .training-page[data-athlete-theme="killian"] *,
+  .training-page[data-athlete-theme="killian"] *::before,
+  .training-page[data-athlete-theme="killian"] *::after {
+    animation:none!important;
+    transition:none!important;
+    scroll-behavior:auto!important;
+  }
+}
