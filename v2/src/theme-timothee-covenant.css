@@ -1,0 +1,390 @@
+/* TIMOTHÉE — EPIC BIBLICAL COVENANT
+   Cinematic biblical collage and a different Louis Segond 1910 verse on
+   every visit, in the same premium visual direction as Killian.
+   All selectors scoped to Timothée. Workout data is untouched. */
+.training-page[data-athlete-theme="timothee"] {
+  --covenant-gold:#f4d59a;
+  --covenant-azure:#8bc7ff;
+  --covenant-border:rgba(248,206,136,.44);
+  position:relative;
+  isolation:isolate;
+  min-height:100vh;
+  overflow-x:clip;
+  background:
+    radial-gradient(ellipse at 15% 0%,rgba(41,106,146,.29),transparent 43rem),
+    radial-gradient(ellipse at 90% 20%,rgba(208,156,80,.16),transparent 37rem),
+    linear-gradient(180deg,rgba(4,19,40,.80) 0%,rgba(4,17,35,.97) 820px,#071426 1450px),
+    url('/timothee-bible-epic-mobile.webp') 50% 0 / min(100%,1250px) auto no-repeat,
+    #071426;
+  color:#fbf8ec;
+}
+.training-page[data-athlete-theme="timothee"]::before {
+  content:'';
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  opacity:.25;
+  pointer-events:none;
+  background:
+    radial-gradient(circle,rgba(255,244,203,.85) 0 1px,transparent 2px) 18px 43px/173px 197px,
+    radial-gradient(circle,rgba(130,205,252,.55) 0 1px,transparent 2px) 88px 133px/263px 271px;
+  -webkit-mask-image:linear-gradient(#000,transparent 1600px);
+  mask-image:linear-gradient(#000,transparent 1600px);
+}
+.training-page[data-athlete-theme="timothee"] .training-topbar {
+  position:relative;
+  margin-bottom:16px;
+  padding:15px 19px;
+  border:1px solid rgba(238,201,138,.46);
+  border-radius:18px;
+  background:linear-gradient(125deg,rgba(6,24,49,.95),rgba(17,41,68,.94),rgba(46,30,49,.9));
+  box-shadow:inset 0 1px rgba(250,240,218,.1),0 17px 37px rgba(0,7,25,.4);
+  backdrop-filter:blur(12px);
+}
+.training-page[data-athlete-theme="timothee"] .training-topbar::after {
+  content:'';
+  position:absolute;
+  left:23px;right:23px;bottom:0;height:1px;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--covenant-gold),#fffae4,var(--covenant-gold),transparent);
+}
+.training-page[data-athlete-theme="timothee"] .training-topbar h1 {
+  color:#fff7e5;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(26px,3.5vw,35px);
+  font-weight:900;
+  letter-spacing:.01em;
+  text-shadow:0 0 23px rgba(251,202,112,.27);
+}
+.training-page[data-athlete-theme="timothee"] .training-kicker {display:none}
+.training-page[data-athlete-theme="timothee"] :is(.back-button,.reset-button) {
+  min-height:42px;
+  border:1px solid rgba(242,200,135,.38);
+  border-radius:11px;
+  background:rgba(5,24,49,.86);
+  color:#f8f5e9;
+  transition:transform .2s ease,background .2s ease,border-color .2s ease;
+}
+.training-page[data-athlete-theme="timothee"] :is(.back-button,.reset-button):hover {
+  transform:translateY(-1px);
+  border-color:#ffdc9a;
+  background:rgba(24,70,99,.92);
+}
+.training-page[data-athlete-theme="timothee"] .athlete-theme-banner--timothee-covenant {
+  position:relative;
+  isolation:isolate;
+  display:block;
+  overflow:hidden;
+  height:clamp(260px,44vw,520px);
+  padding:0;
+  margin:0 0 15px;
+  border:2px solid rgba(245,210,147,.8);
+  border-radius:22px;
+  background:#06152b;
+  box-shadow:0 0 0 1px rgba(9,23,43,.85),0 0 24px rgba(255,195,113,.16),
+    0 25px 48px rgba(0,4,16,.48),inset 0 0 0 1px rgba(255,247,209,.1);
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__picture {
+  position:absolute;
+  display:block;
+  inset:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__hero {
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:none;
+  object-fit:cover;
+  object-position:center 48%;
+  transform:scale(1.018);
+  filter:contrast(1.065) saturate(1.08);
+  animation:covenantHeavenParallax 17s ease-in-out infinite alternate;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__light {
+  position:absolute;
+  z-index:2;
+  inset:0;
+  pointer-events:none;
+  mix-blend-mode:screen;
+  background:
+    radial-gradient(ellipse at 48% 20%,rgba(255,239,183,.25),transparent 37%),
+    radial-gradient(ellipse at 65% 80%,rgba(255,207,126,.15),transparent 36%);
+  animation:covenantHeavenGlow 9s ease-in-out infinite alternate;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__rays {
+  position:absolute;z-index:3;inset:0;pointer-events:none;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__rays i {
+  position:absolute;
+  left:49%;top:-40%;
+  height:134%;
+  width:2px;
+  opacity:.25;
+  transform-origin:50% 34%;
+  background:linear-gradient(180deg,transparent,rgba(255,235,175,.9),transparent);
+  filter:blur(2px) drop-shadow(0 0 15px rgba(255,225,155,.9));
+  animation:covenantRayPulse 10s ease-in-out infinite alternate;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__rays i:nth-child(1){transform:rotate(-24deg)}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__rays i:nth-child(2){transform:rotate(0deg);animation-delay:-3.4s}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__rays i:nth-child(3){transform:rotate(24deg);animation-delay:-6.8s}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__stars {
+  position:absolute;z-index:4;inset:0;overflow:hidden;pointer-events:none;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__stars i {
+  position:absolute;
+  bottom:12%;left:20%;
+  width:3px;height:3px;
+  border-radius:50%;
+  background:#ffecd1;
+  box-shadow:0 0 8px 2px rgba(255,209,113,.84);
+  opacity:0;
+  animation:covenantStarRise 7.1s ease-in-out infinite;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__stars i:nth-child(2){bottom:25%;left:78%;animation-delay:-3s}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__stars i:nth-child(3){bottom:17%;left:47%;animation-delay:-5.1s}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__stars i:nth-child(4){bottom:55%;left:13%;animation-delay:-1.4s}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__stars i:nth-child(5){bottom:44%;left:90%;animation-delay:-6.1s}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__stars i:nth-child(6){bottom:8%;left:65%;animation-delay:-3.8s}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__stars i:nth-child(7){bottom:32%;left:31%;animation-delay:-5.8s}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__stars i:nth-child(8){bottom:61%;left:61%;animation-delay:-2.5s}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__frame {
+  position:absolute;
+  z-index:5;
+  inset:10px;
+  border:1px solid rgba(255,233,183,.4);
+  border-radius:16px;
+  box-shadow:inset 0 1px rgba(255,255,255,.08);
+  pointer-events:none;
+}
+.training-page[data-athlete-theme="timothee"] .athlete-theme-banner--timothee-covenant::after {
+  content:'';
+  position:absolute;bottom:0;left:5%;right:5%;height:3px;z-index:6;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,#d8b172,#fff3c8,#a7d7f7,transparent);
+  box-shadow:0 0 15px rgba(251,217,141,.79);
+}
+/* Featured Bible verse selected once on each page entry */
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture {
+  position:relative;
+  overflow:hidden;
+  max-width:none;
+  padding:24px clamp(17px,4vw,45px) 20px;
+  margin:0 0 21px;
+  border:1px solid rgba(252,214,149,.67);
+  border-radius:17px;
+  text-align:center;
+  color:#fff6e4;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(203,153,89,.18),transparent 70%),
+    linear-gradient(115deg,rgba(7,22,43,.98),rgba(23,38,62,.97),rgba(9,24,48,.98));
+  box-shadow:inset 0 1px rgba(255,251,231,.13),0 16px 32px rgba(0,8,26,.25);
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture::before,
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture::after {
+  content:'';
+  position:absolute;
+  pointer-events:none;
+  top:-86px;
+  width:250px;height:250px;
+  border:1px solid rgba(244,205,129,.23);
+  border-radius:50%;
+  box-shadow:0 0 0 20px rgba(245,200,111,.025),0 0 0 55px rgba(245,200,111,.025);
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture::before {left:-160px}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture::after {right:-160px}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture-ornament {
+  font-size:29px;
+  line-height:1;
+  color:#ffe09c;
+  text-shadow:0 0 19px rgba(251,202,111,.7);
+  margin-bottom:7px;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture-kicker {
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.25em;
+  color:#f1d199;
+  margin:0 0 14px;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture-text {
+  position:relative;
+  z-index:1;
+  max-width:890px;
+  margin:0 auto 16px;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(18px,2.25vw,28px);
+  font-style:italic;
+  font-weight:500;
+  letter-spacing:.005em;
+  line-height:1.47;
+  color:#fffaf0;
+  text-wrap:balance;
+  text-shadow:0 2px 16px rgba(4,7,25,.55);
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture-footer {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  gap:8px 20px;
+  font-weight:900;
+  line-height:1.45;
+  color:#f3d29b;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture-footer strong {
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:16px;
+  color:#f8dba8;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture-footer span {
+  color:#a8c7e3;
+  font-size:10px;
+  letter-spacing:.1em;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__coming-soon {
+  border:1px solid var(--covenant-border);
+  padding:22px;
+  border-radius:17px;
+  margin-top:16px;
+  background:linear-gradient(120deg,rgba(8,26,50,.94),rgba(17,41,64,.95));
+  text-align:center;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__coming-soon h2 {
+  font-family:Georgia,serif;
+  color:#fff7e6;
+  margin:0 0 8px;
+  font-size:24px;
+}
+.training-page[data-athlete-theme="timothee"] .timothee-covenant__coming-soon p {
+  margin:0;
+  color:#c8d5e7;
+  font-size:14px;
+}
+/* Training UI: book-like gold filigree and cool dusk blues, readable throughout. */
+.training-page[data-athlete-theme="timothee"] :is(.week-tab,.day-tab-v2) {
+  min-height:51px;
+  position:relative;
+  border:1px solid rgba(238,205,151,.33);
+  border-radius:12px;
+  background:linear-gradient(120deg,rgba(15,44,72,.95),rgba(7,24,48,.96));
+  color:#d9e9f1;
+  box-shadow:inset 0 1px rgba(255,244,220,.08),0 6px 14px rgba(0,8,25,.26);
+  transition:background .2s,transform .2s,border-color .2s;
+}
+.training-page[data-athlete-theme="timothee"] :is(.week-tab,.day-tab-v2):hover {
+  transform:translateY(-2px);
+  border-color:#e5c89b;
+}
+.training-page[data-athlete-theme="timothee"] :is(.week-tab--active,.day-tab-v2--active) {
+  border-color:#f9d795;
+  color:#fff6e2;
+  background:linear-gradient(120deg,rgba(131,92,57,.9),rgba(29,91,133,.91));
+  box-shadow:inset 0 1px rgba(255,255,255,.2),0 0 17px rgba(255,214,148,.16);
+}
+.training-page[data-athlete-theme="timothee"] :is(
+  .training-summary,.training-exercise,.training-session-v11,
+  .training-v3-history,.training-v3-overview,
+  .training-v3-overview-launcher,.training-block-report-v11,
+  .athlete-pr-panel,.athlete-insights-grid-v249 > *
+) {
+  border-color:rgba(241,207,153,.34)!important;
+  background:linear-gradient(145deg,rgba(15,37,63,.96),rgba(6,23,47,.99))!important;
+  box-shadow:inset 0 1px rgba(253,240,216,.065),0 12px 29px rgba(0,7,25,.25);
+}
+.training-page[data-athlete-theme="timothee"] .training-exercise {
+  border-radius:16px;
+  overflow:hidden;
+}
+.training-page[data-athlete-theme="timothee"] .exercise-header {
+  border-bottom-color:rgba(240,206,152,.31);
+  background:linear-gradient(115deg,rgba(105,75,60,.85),rgba(33,69,101,.94));
+}
+.training-page[data-athlete-theme="timothee"] .exercise-header h2 {color:#fff3e2}
+.training-page[data-athlete-theme="timothee"] .exercise-type {
+  border-color:rgba(245,211,152,.44);
+  color:#ffe1a9;
+  background:rgba(223,177,100,.1);
+}
+.training-page[data-athlete-theme="timothee"] .training-set {
+  background:linear-gradient(115deg,rgba(16,48,78,.92),rgba(7,27,55,.94));
+  border-color:rgba(172,204,235,.27);
+}
+.training-page[data-athlete-theme="timothee"] .training-set--done {
+  border-color:rgba(115,230,175,.62);
+  background:rgba(16,97,80,.28);
+}
+.training-page[data-athlete-theme="timothee"] .training-set--failed {
+  border-color:rgba(251,137,150,.62);
+  background:rgba(95,31,48,.27);
+}
+.training-page[data-athlete-theme="timothee"] :is(input[type="number"],input[type="text"],textarea,select) {
+  border-color:rgba(172,208,233,.35);
+  background:rgba(6,26,51,.95);
+  color:#fff9ed;
+}
+.training-page[data-athlete-theme="timothee"] :is(input,button,textarea,select):focus-visible {
+  outline:2px solid #fbdba3;
+  outline-offset:3px;
+}
+.training-page[data-athlete-theme="timothee"] ::placeholder {color:#a9c1d0}
+@keyframes covenantHeavenParallax {
+  from {transform:scale(1.018) translate3d(-.28%,0,0)}
+  to {transform:scale(1.065) translate3d(.28%,.4%,0)}
+}
+@keyframes covenantHeavenGlow {
+  from{opacity:.38}
+  to{opacity:.82}
+}
+@keyframes covenantRayPulse {
+  from{opacity:.08}
+  to{opacity:.36}
+}
+@keyframes covenantStarRise {
+  0%{opacity:0;transform:translate3d(0,11px,0) scale(.5)}
+  29%{opacity:.72}
+  82%{opacity:.27}
+  100%{opacity:0;transform:translate3d(15px,-130px,0) scale(1.2)}
+}
+@media(max-width:650px) {
+  .training-page[data-athlete-theme="timothee"] {
+    padding-left:max(10px,env(safe-area-inset-left));
+    padding-right:max(10px,env(safe-area-inset-right));
+    background:
+      radial-gradient(ellipse at 50% 0%,rgba(61,122,167,.21),transparent 25rem),
+      linear-gradient(180deg,rgba(5,16,32,.76),#061324 1100px),
+      url('/timothee-bible-epic-mobile.webp') center top/900px auto no-repeat,#061324;
+  }
+  .training-page[data-athlete-theme="timothee"] .training-topbar {padding:11px 10px;margin-bottom:10px}
+  .training-page[data-athlete-theme="timothee"] .training-topbar h1 {font-size:23px}
+  .training-page[data-athlete-theme="timothee"] .athlete-theme-banner--timothee-covenant {
+    height:clamp(315px,98vw,490px);
+    margin-bottom:11px;
+    border-radius:17px;
+  }
+  .training-page[data-athlete-theme="timothee"] .timothee-covenant__hero {object-position:center 46%}
+  .training-page[data-athlete-theme="timothee"] .timothee-covenant__frame {inset:7px;border-radius:10px}
+  .training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture {
+    padding:17px 13px 15px;
+    margin-bottom:15px;
+  }
+  .training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture-text {
+    font-size:clamp(16px,4.6vw,21px);
+  }
+  .training-page[data-athlete-theme="timothee"] .timothee-covenant__scripture-kicker {
+    letter-spacing:.16em;
+  }
+  .training-page[data-athlete-theme="timothee"] :is(.week-tab,.day-tab-v2) {min-height:48px}
+}
+@media(prefers-reduced-motion:reduce) {
+  .training-page[data-athlete-theme="timothee"] *,
+  .training-page[data-athlete-theme="timothee"] *::before,
+  .training-page[data-athlete-theme="timothee"] *::after {
+    animation:none!important;
+    transition:none!important;
+    scroll-behavior:auto!important;
+  }
+}

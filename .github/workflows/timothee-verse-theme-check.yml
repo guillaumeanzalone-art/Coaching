@@ -1,0 +1,38 @@
+name: Timothee Scripture Theme and Killian Cleanup
+
+on:
+  push:
+    branches: [v2-refactor]
+    paths:
+      - 'v2/src/athlete-themes.js'
+      - 'v2/src/training.js'
+      - 'v2/src/main.js'
+      - 'v2/src/timothee-verses.js'
+      - 'v2/src/theme-timothee-covenant.css'
+      - 'v2/src/theme-killian-yonko.css'
+      - 'v2/public/timothee-bible-epic-wide.webp'
+      - 'v2/public/timothee-bible-epic-mobile.webp'
+      - 'v2/tests/killian-yonko-theme.test.js'
+      - 'v2/tests/timothee-verse-theme.test.js'
+      - '.github/workflows/timothee-verse-theme-check.yml'
+  workflow_dispatch:
+
+jobs:
+  scripture-theme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: v2/package-lock.json
+      - name: Install dependencies
+        working-directory: v2
+        run: npm ci --ignore-scripts --no-audit
+      - name: Check scripture selection and athlete theme isolation
+        working-directory: v2
+        run: node --test tests/timothee-verse-theme.test.js tests/killian-yonko-theme.test.js tests/noe-skybound-theme.test.js tests/camille-theme.test.js
+      - name: Build production app
+        working-directory: v2
+        run: npm run build

@@ -9,6 +9,7 @@ import './theme-spider.css'
 import './theme-camille-abyss.css'
 import './theme-noe-skybound.css'
 import './theme-killian-yonko.css'
+import './theme-timothee-covenant.css'
 import { getRecentActivities, getCurrentActivityUserId, toggleActivityLike } from './activity.js'
 
 import {
@@ -49,6 +50,13 @@ import {
 import {
   athletes,
 } from './athletes.js'
+
+import {
+  getTimotheeVisitVerse,
+  renderTimotheeThemeHero,
+  renderTimotheeVersePanel,
+} from './timothee-verses.js'
+
 
 import {
   getCachedProgramForAthlete,
@@ -2557,6 +2565,23 @@ function renderNoProgramAthlete(
     athlete.id
   )
 
+  if (athlete.id === 'timothee') {
+    const visitVerse = getTimotheeVisitVerse()
+    app.innerHTML = `
+      <main class="training-page" data-athlete-theme="timothee">
+        <header class="training-topbar">
+          <button class="back-button" data-action="athletes" type="button">← Athlètes</button>
+          <h1>Timothée</h1>
+        </header>
+        ${renderTimotheeThemeHero()}
+        ${renderTimotheeVersePanel(visitVerse)}
+        <section class="timothee-covenant__coming-soon">
+          <h2>Programmation à venir</h2>
+          <p>Le profil est actif. Aucune programmation n’a encore été publiée.</p>
+        </section>
+      </main>
+    `
+  } else {
   app.innerHTML = `
     <main class="app-shell">
       <header class="topbar">
@@ -2590,6 +2615,7 @@ function renderNoProgramAthlete(
       </section>
     </main>
   `
+  }
 
   app.onclick = (event) => {
     const action =

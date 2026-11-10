@@ -33,41 +33,25 @@ test('Desktop and mobile Yonko themed images are original valid local WebP files
   }
 })
 
-test('Killian banner presents the seven named emperors and their worlds', () => {
+test('Killian keeps his panoramic Yonko design without the Grand Line scroller', () => {
   assert.ok(training.includes("athleteTheme?.variant === 'killian-yonko-grandline'"))
   assert.match(training,/athlete-theme-banner--killian-yonko/)
   assert.match(training,/killian-yonko__picture/)
   assert.match(training,/killian-yonko__haki/)
   assert.match(training,/killian-yonko__ocean/)
   assert.match(training,/killian-yonko__embers/)
-  const entries = [
-    ['shanks','Shanks le Roux','Elbaf'],
-    ['whitebeard','Barbe Blanche','Moby Dick'],
-    ['bigmom','Big Mom','Whole Cake'],
-    ['kaido','Kaido','Onigashima'],
-    ['blackbeard','Barbe Noire','Hachinosu'],
-    ['luffy','Monkey D. Luffy','Thousand Sunny'],
-    ['buggy','Baggy le Clown','Cross Guild'],
-  ]
-  for (const [slug,name,place] of entries) {
-    assert.ok(training.includes('killian-yonko__world--'+slug))
-    assert.ok(training.includes(name))
-    assert.ok(training.includes(place))
-  }
   const start=training.indexOf("athleteTheme?.variant === 'killian-yonko-grandline'")
   const end=training.indexOf("athleteTheme?.variant === 'noe-wakfu-skybound'",start)
   const banner=training.slice(start,end)
   assert.ok(end>start)
-  assert.equal((banner.match(/class="killian-yonko__world killian-yonko__world--/g)||[]).length,7)
   assert.match(banner,/loading="eager"/)
   assert.match(banner,/aria-hidden="true"/)
-  assert.doesNotMatch(banner,/<button|data-action=|onClick=/)
+  assert.doesNotMatch(banner,/killian-yonko__voyage|killian-yonko__worlds|GRAND LINE/)
+  assert.doesNotMatch(css,/killian-yonko__voyage|killian-yonko__worlds/)
 })
 
 test('All visual styles are scoped and the artwork remains legible at mobile sizes', () => {
   assert.match(css,/\.training-page\[data-athlete-theme="killian"\]/)
-  assert.match(css,/\.killian-yonko__worlds/)
-  assert.match(css,/scroll-snap-type:x proximity/)
   assert.match(css,/\.training-set--done/)
   assert.match(css,/\.training-set--failed/)
   assert.match(css,/\.week-tab--active/)
@@ -87,5 +71,5 @@ test('The theme does not rewrite exercise prescriptions or touch training data',
   const fragment=training.slice(start,end)
   assert.doesNotMatch(fragment,/setProgram|updateProgram|loadKg|exercise\.sets|session\.sets/)
   assert.match(fragment,/<picture/)
-  assert.match(fragment,/Les sept empereurs et leurs mondes/)
+  assert.doesNotMatch(fragment,/killian-yonko__voyage|GRAND LINE/)
 })
