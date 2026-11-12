@@ -5,6 +5,11 @@ on:
     branches: [v2-refactor]
     paths:
       - 'v2/src/tcg-game.js'
+      - 'v2/src/tcg-catalog.js'
+      - 'v2/data/tcg-catalog-snapshot.json'
+      - 'v2/tests/tcg-collection-dynamic.test.js'
+      - 'v2/scripts/tcg-validate.mjs'
+      - 'v2/scripts/tcg-simulate.mjs'
       - 'v2/src/tcg-pack-rules.js'
       - 'v2/src/tcg-art-quality.css'
       - 'v2/public/tcg/pack-icons.svg'
@@ -61,6 +66,12 @@ jobs:
       - name: Test tactical arena
         working-directory: v2
         run: npm run test:tcg
+      - name: Validate published catalog
+        working-directory: v2
+        run: npm run tcg:validate
+      - name: Reproducible balance simulation
+        working-directory: v2
+        run: npm run tcg:simulate > /dev/null
       - name: Verify production build
         working-directory: v2
         run: npm run build

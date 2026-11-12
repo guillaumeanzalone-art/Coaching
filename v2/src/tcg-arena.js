@@ -11,6 +11,9 @@ function arenaClamp(value, min, max) {
 }
 
 function arenaBaseStats(card) {
+  if (Number.isInteger(Number(card?.power)) && Number.isInteger(Number(card?.damage))) {
+    return { power: arenaClamp(card.power, 3, 9), damage: arenaClamp(card.damage, 1, 7) };
+  }
   const rarityRank = arenaClamp(card?.rarityMeta?.rank ?? 1, 1, 5);
   const power = arenaClamp(3 + Math.floor((Number(card?.attack) || 3) / 4) + Math.floor(rarityRank / 3), 3, 9);
   const damage = arenaClamp(1 + Math.ceil((Number(card?.guard) || 2) / 4) + (rarityRank === 5 ? 1 : 0), 1, 7);
@@ -20,20 +23,20 @@ function arenaBaseStats(card) {
 function arenaTeamBonuses(cards) {
   const counts = {};
   for (const card of cards) {
-    const family = String(card?.archetype?.id || "neutral");
+    const family = String(card?.faction || card?.archetype?.id || "neutral");
     counts[family] = (counts[family] || 0) + 1;
   }
   return Object.fromEntries(Object.entries(counts).map(([key, count]) => [key, count >= 2]));
 }
 
 function arenaTeamActive(state, side, card) {
-  return Boolean(state?.[side === "player" ? "playerTeams" : "aiTeams"]?.[card?.archetype?.id]);
+  return Boolean(state?.[side === "player" ? "playerTeams" : "aiTeams"]?.[(card?.faction || card?.archetype?.id)]);
 }
 
 function arenaCombatStats(card, opposingCard, bid, opposingBid, fury, teamActive) {
   const base = arenaBaseStats(card);
   const enemyBase = arenaBaseStats(opposingCard);
-  const family = String(card?.archetype?.id || "");
+  const family = String(card?.ability_type || card?.archetype?.id || "");
   let power = base.power;
   let damage = base.damage;
   let shield = 0;
@@ -70,7 +73,7 @@ function arenaCombatStats(card, opposingCard, bid, opposingBid, fury, teamActive
 // No instant tick on the application round; subsequent rounds drain HP.
 // Stronger evolutions extend the duration and intensity, capped to avoid stacking abuse.
 function arenaVenomForCard(card) {
-  if (card?.archetype?.id !== "poison") return { damage: 0, turns: 0 };
+  if ((card?.ability_type || card?.archetype?.id) !== "poison") return { damage: 0, turns: 0 };
   const level = arenaClamp(card?.rarityMeta?.rank ?? 1, 1, 5);
   return { damage: level >= 4 ? 2 : 1, turns: level >= 5 ? 3 : level >= 3 ? 2 : 1 };
 }

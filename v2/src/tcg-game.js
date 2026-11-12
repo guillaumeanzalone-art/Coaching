@@ -9,6 +9,7 @@ import './tcg-pack-opening.css'
 import './tcg-interface-clean.css'
 import { resolvePackIdentity, drawThemedBooster, SLOT_ODDS } from './tcg-pack-rules.js'
 import './tcg-art-quality.css'
+import { DECK_SIZE, powerScore, deckPower, validateDeck } from './tcg-catalog.js'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
@@ -17,35 +18,35 @@ const RARITIES = {
     short: 'C',
     rank: 1,
     costBias: 0,
-    budget: 8,
+    statBudget: 8,
   },
   uncommon: {
     label: 'Peu commune',
     short: 'U',
     rank: 2,
     costBias: 0,
-    budget: 10,
+    statBudget: 10,
   },
   rare: {
     label: 'Rare',
     short: 'R',
     rank: 3,
     costBias: 1,
-    budget: 12,
+    statBudget: 12,
   },
   ultra: {
     label: 'Ultra Rare',
     short: 'UR',
     rank: 4,
     costBias: 1,
-    budget: 14,
+    statBudget: 14,
   },
   secret: {
     label: 'Secret Rare',
     short: 'SR',
     rank: 5,
     costBias: 2,
-    budget: 16,
+    statBudget: 16,
   },
 }
 
@@ -435,8 +436,7 @@ const BOOSTER_TEMPLATES = [
   ['secret-lab', 'Secret Lab', '⌁', 126],
 ]
 
-const DECK_SIZE = 12
-const MAX_COPY_IN_DECK = 2
+const MAX_COPY_IN_DECK = 1
 
 function esc(value) {
   return String(value ?? '')
@@ -589,7 +589,7 @@ function buildCard(
     )
 
   const usableBudget =
-    meta.budget +
+    meta.statBudget +
     Math.max(
       0,
       cost - 2
@@ -976,17 +976,8 @@ function renderCard(
     locked = false,
   } = {}
 ) {
-  const dedicatedArt =
-    dedicatedCardArt(
-      card
-    )
-
-  const image =
-    dedicatedArt
-      ? ''
-      : imageSrc(
-          card.athlete
-        )
+  const dedicatedArt = card.art_url ? null : dedicatedCardArt(card)
+  const image = card.art_url || (dedicatedArt ? '' : imageSrc(card.athlete))
 
   const design =
     characterDesignFor(
@@ -1275,177 +1266,72 @@ function appliedStats(
   }
 }
 
-function autoDeck(
-  collection,
-  catalog
-) {
-  const pool = []
-
-  for (
-    const row
-    of collection
-  ) {
-    const card =
-      catalog.get(
-        row.card_id
-      )
-
-    if (!card) {
-      continue
-    }
-
-    const count =
-      Math.min(
-        MAX_COPY_IN_DECK,
-        Number(
-          row.copies
-        ) || 0
-      )
-
-    for (
-      let i = 0;
-      i < count;
-      i += 1
-    ) {
-      pool.push(
-        card
-      )
-    }
-  }
-
-  pool.sort(
-    (a, b) =>
-      b.score -
-      a.score
-  )
-
-  const chosen = []
-  const costCount =
-    new Map()
-
-  for (
-    const card
-    of pool
-  ) {
-    if (
-      chosen.length >=
-      DECK_SIZE
-    ) {
-      break
-    }
-
-    const sameCost =
-      costCount.get(
-        card.cost
-      ) || 0
-
-    if (
-      card.cost >= 4 &&
-      sameCost >= 4
-    ) {
-      continue
-    }
-
-    chosen.push(
-      card.id
-    )
-
-    costCount.set(
-      card.cost,
-      sameCost + 1
-    )
-  }
-
-  if (
-    chosen.length <
-      DECK_SIZE
-  ) {
-    for (
-      const card
-      of pool
-    ) {
-      if (
-        chosen.length >=
-        DECK_SIZE
-      ) {
-        break
-      }
-
-      const inDeck =
-        chosen.filter(
-          id =>
-            id ===
-            card.id
-        ).length
-
-      if (
-        inDeck <
-          MAX_COPY_IN_DECK
-      ) {
-        chosen.push(
-          card.id
-        )
-      }
-    }
-  }
-
-  return chosen
+function autoDeck(collection, catalog) {
+  // Huit identifiants uniques, sans contraintes de cout ni de rarete.
+  const seen = new Set();
+  return collection.filter(row=>Number(row.copies)>0)
+    .map(row=>catalog.get(row.card_id))
+    .filter(card=>card && card.publication_status==='published')
+    .sort((a,b)=>b.score-a.score)
+    .filter(card=>{if(seen.has(card.id))return false;seen.add(card.id);return true;})
+    .slice(0,DECK_SIZE).map(card=>card.id);
 }
 
-function buildAiDeck(
-  athletes,
-  playerCards
-) {
-  const avgRank =
-    playerCards.length
-      ? playerCards.reduce(
-          (
-            sum,
-            card
-          ) =>
-            sum +
-            card.rarityMeta.rank,
-          0
-        ) /
-        playerCards.length
-      : 1.6
+async function loadPublishedCatalog(athletes) {
+  const bySlug=new Map(athletes.map(x=>[athleteSlug(x),x]));
+  const records=[];
+  try{
+    const size=1000;
+    for(let offset=0;;offset+=size){
+      const {data,error}=await supabase.from('tcg_cards_v2').select('*')
+        .eq('publication_status','published').order('id').range(offset,offset+size-1);
+      if(error) throw error;
+      records.push(...(data||[]));
+      if(!data || data.length<size)break;
+    }
+  }catch(error){
+    console.warn('Catalogue distant indisponible, mode compatible',error);
+    const legacy=catalogForAthletes(athletes);
+    for(const card of legacy.values()){
+      const {power,damage}=arenaBaseStats(card);
+      Object.assign(card,{power,damage,ability_type:card.archetype.id,faction:card.archetype.id,
+        faction_bonus:2,publication_status:'published'});
+      card.score=powerScore(card);
+    }
+    return legacy;
+  }
+  const result=new Map();
+  for(const row of records){
+    const athlete=bySlug.get(row.character_slug) || {name:row.name,slug:row.character_slug,
+      cloudSlug:row.character_slug,profile_image_url:row.art_url};
+    const archetype=ARCHETYPES.find(x=>x.id===row.ability_type)
+      || [FIRE_ARCHETYPE,POISON_ARCHETYPE].find(x=>x.id===row.ability_type)
+      || {id:row.ability_type,label:row.ability_type,text:row.ability_type};
+    const card={id:row.id,slug:row.character_slug,athlete,name:row.name,
+      rarity:row.rarity,rarityMeta:rarityMeta(row.rarity),archetype,
+      ability_type:row.ability_type,ability_params:row.ability_params,
+      faction:row.faction,faction_bonus:Number(row.faction_bonus),
+      attack:Number(row.attack),guard:Number(row.guard),
+      power:Number(row.power),damage:Number(row.damage),
+      cost:Number(row.legacy_duel_cost),art_url:row.art_url,
+      booster_ids:row.booster_ids,role:row.role,publication_status:row.publication_status};
+    card.score=powerScore(card);
+    result.set(card.id,card);
+  }
+  return result;
+}
 
-  const rarityPool =
-    avgRank >= 3.5
-      ? [
-          'uncommon',
-          'rare',
-          'rare',
-          'ultra',
-        ]
-      : avgRank >= 2.4
-        ? [
-            'common',
-            'uncommon',
-            'uncommon',
-            'rare',
-          ]
-        : [
-            'common',
-            'common',
-            'uncommon',
-            'rare',
-          ]
-
-  return Array.from(
-    {
-      length: DECK_SIZE,
-    },
-    () =>
-      buildCard(
-        randomItem(
-          athletes
-        ),
-        randomItem(
-          rarityPool
-        )
-      )
-  )
+function buildAiDeck(catalog, playerCards) {
+  const pool=[...catalog.values()].filter(c=>c.publication_status==='published');
+  if(pool.length<DECK_SIZE)return playerCards;
+  const target=deckPower(playerCards);
+  let best=null, distance=Infinity;
+  for(let attempt=0;attempt<48;attempt++){
+    const cards=shuffled(pool).slice(0,DECK_SIZE);
+    const gap=Math.abs(deckPower(cards)-target);
+    if(gap<distance){best=cards;distance=gap;}
+  }
+  return best || playerCards;
 }
 
 export async function mountTcgGame(
@@ -1461,10 +1347,7 @@ export async function mountTcgGame(
       ? options.athletes
       : []
 
-  const catalog =
-    catalogForAthletes(
-      athletes
-    )
+  const catalog = await loadPublishedCatalog(athletes)
 
   const boosters =
     boosterCatalog(
@@ -1501,6 +1384,7 @@ export async function mountTcgGame(
   let openingToken = 0
   let rarityFilter = 'all'
   let battle = null
+  let duelStrength = {player:0,opponent:0}
 
   function currentAthlete() {
     return (
@@ -1786,16 +1670,13 @@ export async function mountTcgGame(
     error = ''
     const requestToken = openingToken
     const booster = selectedBooster
-    const nextOpening = Number(profile.opened_packs || 0) + 1
-    const cards = drawBooster({ booster, athletes, openingNumber: nextOpening })
     render()
 
     let result
     try {
-      const { data, error: openError } = await supabase.rpc('open_tcg_pack_v1', {
+      const { data, error: openError } = await supabase.rpc('open_tcg_pack_v2', {
         p_athlete_slug: activeSlug,
         p_booster_id: booster.id,
-        p_cards: cards.map(card => ({ card_id: card.id, rarity: card.rarity })),
       })
       if (requestToken !== openingToken) return
       if (openError) throw openError
@@ -1809,10 +1690,19 @@ export async function mountTcgGame(
       return
     }
 
+    // Le serveur choisit et sauvegarde les cartes AVANT le debut de l'animation.
+    const cards=(Array.isArray(result?.cards)?result.cards:[])
+      .map(entry=>catalog.get(entry.card_id)).filter(Boolean);
+    if(cards.length!==5){
+      error='Booster sauvegarde, certaines cartes ne sont plus publiees. Recharge la collection.';
+      openingBusy=false;openingStage='idle';
+      await refreshProfileAndCollection().catch(()=>{});
+      render();return;
+    }
     // Never reroll or debit again after a successful RPC, even if refresh fails.
     profile.unopened_packs = Number(result?.remaining_packs ??
       Math.max(0, Number(profile.unopened_packs) - 1))
-    profile.opened_packs = nextOpening
+    profile.opened_packs = Number(result?.opening_number ?? profile.opened_packs + 1)
     try {
       await refreshProfileAndCollection()
     } catch (refreshError) {
@@ -1835,17 +1725,9 @@ export async function mountTcgGame(
   }
 
   async function saveDeck() {
-    error = ''
-
-    if (
-      deck.length !==
-        DECK_SIZE
-    ) {
-      error =
-        `Le deck doit contenir exactement ${DECK_SIZE} cartes.`
-      render()
-      return
-    }
+    error = '';
+    const validation=validateDeck(deck,catalog,new Set(collection.filter(row=>Number(row.copies)>0).map(row=>row.card_id)));
+    if(!validation.valid){error=validation.problems.join(' ');render();return;}
 
     const {
       error:
@@ -1966,12 +1848,13 @@ export async function mountTcgGame(
   let ids = deck.slice();
   if (ids.length !== DECK_SIZE) ids = autoDeck(collection, catalog);
   if (ids.length < DECK_SIZE) {
-    error = 'Il faut au moins 12 cartes disponibles pour lancer un duel.';
+    error = 'Il faut 8 cartes differentes pour lancer un duel.';
     render();
     return;
   }
   const playerCards = shuffled(ids.map(id => catalog.get(id)).filter(Boolean));
-  const aiCards = shuffled(buildAiDeck(athletes, playerCards));
+  const aiCards = shuffled(buildAiDeck(catalog, playerCards));
+  duelStrength={player:deckPower(playerCards),opponent:deckPower(aiCards)};
   try {
     battle = createTcgArena(playerCards, aiCards);
     error = '';
@@ -2501,7 +2384,7 @@ export async function mountTcgGame(
               Deck · ${deck.length}/${DECK_SIZE}
             </h3>
             <p>
-              Maximum ${MAX_COPY_IN_DECK} copies d’une même carte.
+              8 cartes différentes, sans budget de deck et sans limite de rareté.
             </p>
           </div>
 
@@ -2527,6 +2410,7 @@ export async function mountTcgGame(
 
         <div class="tcg-panel-pad tcg-deck-layout">
           <div class="tcg-deck-list">
+            ${deck.length && !validateDeck(deck,catalog).valid ? `<div class="tcg-error">Deck à corriger : ${esc(validateDeck(deck,catalog).problems.join(' · '))}</div>` : ''}
             ${cards.length
               ? cards
                   .map(
@@ -2592,7 +2476,7 @@ export async function mountTcgGame(
             </div>
 
             <p style="color:#79849c;font-size:9px;line-height:1.55">
-              Dans l’arène, le coût imprimé n’est plus dépensé : la mise en Pillz détermine l’attaque. Un bon deck combine capacités et familles compatibles.
+              Puissance totale du deck : ${Math.round(deckPower(cards))}. Aucune limite de construction ; les Pillz, contres et bluffs restent décisifs.
             </p>
           </aside>
         </div>
@@ -2623,7 +2507,7 @@ export async function mountTcgGame(
         <div class="tcg-panel-pad tcg-duel">
           <div class="tcg-arena-intro">
             <h3>ARÈNE · 4 ROUNDS</h3>
-            <p>Compose ton deck de 12 cartes puis tire quatre combattants. Chaque duel repose sur une mise secrète de Pillz : la puissance multipliée par ta mise décide du vainqueur. Les cinq familles apportent leurs propres capacités et bonus d'équipe.</p>
+            <p>Compose ton deck de 8 cartes différentes puis tire quatre combattants. Chaque duel repose sur une mise secrète de Pillz : la puissance multipliée par ta mise décide du vainqueur. Les cinq familles apportent leurs propres capacités et bonus d'équipe.</p>
             <div class="tcg-arena-rules">
               <span>4 manches</span><span>12 PV</span><span>12 Pillz</span><span>Fury +2 dégâts / 3 Pillz</span><span>Synergies ×2</span>
             </div>
@@ -2650,7 +2534,7 @@ export async function mountTcgGame(
       <div class="tcg-panel-pad tcg-duel">
         <div class="tcg-arena-board">
           <div class="tcg-arena-head">
-            <span class="tcg-arena-round">ROUND ${battle.round} / 4</span>
+            <span class="tcg-arena-round">ROUND ${battle.round} / 4 · DECK ${Math.round(duelStrength.player)} VS ${Math.round(duelStrength.opponent)}</span>
             <span>${battle.finished ? 'DUEL TERMINÉ' : 'Mises cachées · résolution simultanée'}</span>
           </div>
           <div class="tcg-arena-sides">
@@ -2747,7 +2631,7 @@ export async function mountTcgGame(
     const pageDetails = {
       duel: 'Quatre manches · Pillz · Fury · capacités',
       collection: 'Cinq évolutions de chaque athlète',
-      deck: 'Douze cartes · quatre combattants',
+      deck: '8 cartes · sans budget · quatre combattants',
       boosters: 'Une séance terminée = un booster',
     }
     const pageInfo = tab === 'duel'

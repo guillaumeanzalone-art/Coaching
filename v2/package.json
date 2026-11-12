@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "tcg:validate": "node scripts/tcg-validate.mjs",
+    "tcg:simulate": "node scripts/tcg-simulate.mjs",
     "test:importer": "node --test tests/program-importer.test.js",
     "test:mobility": "node --test tests/mobility-routines.test.js",
     "test:cloud": "node --test tests/program-cloud-cache.test.js",
@@ -18,7 +20,7 @@
     "android:bundle": "npm run android:sync && node scripts/android-bundle.mjs",
     "test:brute": "node --test tests/brute-*.test.js",
     "test:rest": "node --test tests/rest-timer.test.js",
-    "test:tcg": "node --test tests/tcg-arena.test.js tests/tcg-alexandre-art.test.js tests/tcg-hugo-forge.test.js tests/tcg-benoit-earth.test.js tests/tcg-supplied-evolutions.test.js tests/tcg-pack-opening.test.js tests/tcg-interface-clean.test.js tests/tcg-pack-loot-quality.test.js tests/tcg-new-four-art.test.js"
+    "test:tcg": "node --test tests/tcg-arena.test.js tests/tcg-alexandre-art.test.js tests/tcg-hugo-forge.test.js tests/tcg-benoit-earth.test.js tests/tcg-supplied-evolutions.test.js tests/tcg-pack-opening.test.js tests/tcg-interface-clean.test.js tests/tcg-pack-loot-quality.test.js tests/tcg-new-four-art.test.js tests/tcg-collection-dynamic.test.js"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",

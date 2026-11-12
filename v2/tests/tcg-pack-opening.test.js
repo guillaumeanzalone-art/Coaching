@@ -18,10 +18,10 @@ test('Premium pack design is imported, sealed and shared by grid and main openin
   assert.match(game, /spider-sigil\.svg/)
 })
 
-test('Server-side pack debit is guarded and happens exactly once before card reveal', () => {
+test('Server-side random draw and pack debit are guarded before card reveal', () => {
   assert.match(game, /if \(openingBusy \|\| lastOpened\.length \|\| !selectedBooster/)
   assert.match(game, /openingBusy = true/)
-  assert.match(game, /supabase\.rpc\('open_tcg_pack_v1'/)
+  assert.match(game, /supabase\\.rpc\\('open_tcg_pack_v2'/)
   assert.match(game, /if \(openError\) throw openError/)
   assert.match(game, /Never reroll or debit again after a successful RPC/)
   assert.match(game, /await refreshProfileAndCollection\(\)/)

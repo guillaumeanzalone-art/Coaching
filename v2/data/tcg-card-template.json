@@ -1,0 +1,19 @@
+{
+  "id": "",
+  "character_slug": "",
+  "name": "",
+  "rarity": "common",
+  "faction": "",
+  "attack": 0,
+  "guard": 0,
+  "power": 1,
+  "damage": 1,
+  "ability_type": "",
+  "ability_params": {},
+  "faction_bonus": 2,
+  "legacy_duel_cost": 1,
+  "art_url": null,
+  "publication_status": "draft",
+  "booster_ids": [],
+  "role": "versatile"
+}
