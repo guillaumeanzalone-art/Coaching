@@ -1918,7 +1918,8 @@ export async function mountTcgGame(
 
     openingStage = 'tearing'
     render()
-    await new Promise(resolve => setTimeout(resolve, 1120))
+    await new Promise(resolve => setTimeout(resolve,
+      window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ? 0 : 1390))
     if (requestToken !== openingToken) return
 
     lastOpened = cards
@@ -2953,6 +2954,9 @@ export async function mountTcgGame(
           revealTimer = null
           error = ''
           render()
+          if (tab === 'boosters' && lastOpened.length && revealCount < lastOpened.length) {
+            scheduleNextReveal()
+          }
           return
 
         case 'tcg-select-booster':
