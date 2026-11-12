@@ -384,6 +384,10 @@ const CHARACTER_CARD_ART = {
   },
 }
 
+// Source geometry verified from original WebP dimensions: square strips must not be stretched.
+const SQUARE_SPRITE_PANELS = new Set(['charles', 'celia', 'hugo', 'magicarpe'])
+const PORTRAIT_SPRITE_PANEL_HEIGHT = 1.5
+
 const BOOSTER_TEMPLATES = [
   ['forge', 'Forge', '🔥', 18],
   ['titan', 'Titan', '🗿', 38],
@@ -903,37 +907,28 @@ function characterDesignFor(
   }
 }
 
-function dedicatedCardArt(
-  card
-) {
-  const art =
-    CHARACTER_CARD_ART[
-      card?.slug
-    ]
-
-  if (!art) {
-    return null
+function dedicatedCardArt(card) {
+  // Use the existing high-resolution portrait for Serena's exclusive divine chase.
+  if (card?.slug === 'serena' && card.rarity === 'secret') {
+    return { portraitImage: '/serena-turquoise-sovereign-mobile.webp' }
   }
 
-  const index =
-    art.rarityIndex?.[
-      card?.rarity
-    ]
+  // This old inline sprite is only 45 × 93 px per frame: the original avatar is sharper.
+  if (card?.slug === 'guillaume') return null
 
-  if (
-    !Number.isInteger(
-      index
-    )
-  ) {
-    return null
-  }
+  const art = CHARACTER_CARD_ART[card?.slug]
+  if (!art) return null
+  const index = art.rarityIndex?.[card?.rarity]
+  if (!Number.isInteger(index)) return null
 
   const artworkOverride = art.raritySprites?.[card?.rarity]
-
   return {
     sprite: artworkOverride || art.sprite,
     index,
     position: artworkOverride ? 0 : index * 25,
+    frameCount: artworkOverride ? 1 : 5,
+    panelHeight: artworkOverride || SQUARE_SPRITE_PANELS.has(card.slug)
+      ? 1 : PORTRAIT_SPRITE_PANEL_HEIGHT,
   }
 }
 
@@ -1014,14 +1009,16 @@ function renderCard(
   const isAlexandre = card.slug === 'alexandre'
   const isHugo = card.slug === 'hugo'
   const isBenoit = card.slug === 'benoit'
+  const isSerenaDivine = card.slug === 'serena' && card.rarity === 'secret'
   const isSuppliedEvolution = SUPPLIED_EVOLUTION_SLUGS.has(card.slug) && Boolean(dedicatedArt)
   const poisonLevel = Number(card.rarityMeta?.rank || 1)
   const fireLevel = poisonLevel
 
   return `
     <article
-      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${isBenoit ? 'tcg-card--benoit tcg-earth-lvl-' + poisonLevel : ''} ${isSuppliedEvolution ? 'tcg-card--evo tcg-evo--' + card.slug + ' tcg-evo-lvl-' + poisonLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
+      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${isBenoit ? 'tcg-card--benoit tcg-earth-lvl-' + poisonLevel : ''} ${isSerenaDivine ? 'tcg-card--serena-divine' : ''} ${isSuppliedEvolution ? 'tcg-card--evo tcg-evo--' + card.slug + ' tcg-evo-lvl-' + poisonLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
       data-rarity="${esc(card.rarity)}"
+      aria-label="${esc(isSerenaDivine ? 'Serena Divine, Secret Rare' : card.athlete?.name || card.slug)}"
       data-character="${esc(card.slug)}"
       data-level="${isAlexandre || isHugo || isBenoit || isSuppliedEvolution ? poisonLevel : '' }"
       data-design="${esc(design?.family || '')}"
@@ -1030,28 +1027,32 @@ function renderCard(
     >
       <div class="tcg-card-art">
         ${isAlexandre ? `<div class="tcg-venom-backdrop" aria-hidden="true"><i></i><i></i><i></i></div>` : ''}
-        ${dedicatedArt
+        ${dedicatedArt?.portraitImage
           ? `
-            <div
-              class="tcg-illustration-sprite"
-              aria-hidden="true"
-              style="background-image:url('${esc(dedicatedArt.sprite)}');background-position:${dedicatedArt.position}% center"
-            ></div>
+            <img class="tcg-hero-image" src="${esc(dedicatedArt.portraitImage)}"
+                 loading="lazy" decoding="async" alt="" />
           `
-          : image
+          : dedicatedArt?.sprite
             ? `
-              <img
-                src="${esc(image)}"
-                alt=""
-              >
+              <svg class="tcg-illustration-sprite tcg-illustration-svg"
+                   viewBox="${dedicatedArt.index} 0 1 ${dedicatedArt.panelHeight}"
+                   preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+                <image href="${esc(dedicatedArt.sprite)}" x="0" y="0"
+                       width="${dedicatedArt.frameCount}"
+                       height="${dedicatedArt.panelHeight}"
+                       preserveAspectRatio="none"></image>
+              </svg>
             `
-            : `
-              <div class="fallback">
-                ${esc(card.athlete?.emoji || '🏋️')}
-              </div>
-            `
+            : image
+              ? `
+                <img src="${esc(image)}" alt="" loading="lazy" decoding="async" />
+              `
+              : `
+                <div class="fallback">${esc(card.athlete?.emoji || '🏋️')}</div>
+              `
         }
 
+        ${isSerenaDivine ? '<span class="tcg-divine-title">SERENA DIVINE</span>' : ''}
         ${isSuppliedEvolution ? `
           <div class="tcg-evo-foil" aria-hidden="true"></div>
           <div class="tcg-evo-aura" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
