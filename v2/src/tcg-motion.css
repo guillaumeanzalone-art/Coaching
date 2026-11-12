@@ -54,7 +54,7 @@
 .tcg-app.tcg-spider .tcg-motion-options button,
 .tcg-app.tcg-spider .tcg-motion-options label,
 .tcg-app.tcg-spider .tcg-motion-options input{
- min-height:40px;border-radius:9px;font:800 10px/1.25 Inter,system-ui,sans-serif;
+ min-height:44px;border-radius:9px;font:800 10px/1.25 Inter,system-ui,sans-serif;
 }
 .tcg-app.tcg-spider .tcg-motion-options button{
  padding:8px 11px;border:1px solid #caa8ec55;color:#f0dafd;background:#271b39;
@@ -255,4 +255,53 @@
  .tcg-app.tcg-spider .tcg-arena-fighter.is-concealed .tcg-card{transform:none;opacity:.08}
  .tcg-app.tcg-spider .tcg-arena-board[data-tcg-stage="clash"] .tcg-arena-fighter{transform:none!important}
  .tcg-app.tcg-spider .tcg-damage-float{display:none}
+}
+
+/* Impacts légers sans image, quatre particules max et uniquement sur vrai dégât. */
+.tcg-app.tcg-spider .tcg-impact-sparks{
+  position:absolute;z-index:28;top:35%;left:50%;pointer-events:none;
+}
+.tcg-app.tcg-spider .tcg-impact-sparks i{
+  --tx:20px;--ty:-22px;position:absolute;width:5px;height:5px;border-radius:2px;
+  background:#f9ce9b;box-shadow:0 0 6px #fa9b8c;opacity:0;
+}
+.tcg-app.tcg-spider .tcg-impact-sparks i:nth-child(2){--tx:-21px;--ty:-17px;background:#cdaaff}
+.tcg-app.tcg-spider .tcg-impact-sparks i:nth-child(3){--tx:14px;--ty:26px;background:#fff4dc}
+.tcg-app.tcg-spider .tcg-impact-sparks i:nth-child(4){--tx:-17px;--ty:20px;background:#f796ac}
+.tcg-app.tcg-spider .tcg-arena-board[data-tcg-stage="damage"] .tcg-arena-fighter[data-tcg-outcome="lose"] .tcg-impact-sparks i{
+  animation:tcgImpactParticle .42s ease-out both;
+}
+@keyframes tcgImpactParticle{
+  0%{opacity:.85;transform:translate(0,0) scale(1)}
+  100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.3)}
+}
+.tcg-app.tcg-spider .tcg-arena-board[data-tcg-stage="energy"] .tcg-arena-resource b{
+  animation:tcgResourcePulse .28s ease-out both;
+}
+@keyframes tcgResourcePulse{
+  0%{opacity:.6;transform:translateY(3px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+.tcg-app.tcg-spider .tcg-arena-board[data-tcg-stage="modifier"][data-tcg-effect-source="faction"] .tcg-arena-live{
+  border-color:#8bd8b5;background:#0d241eec;
+}
+.tcg-app.tcg-spider .tcg-arena-board[data-tcg-stage="priority"] .tcg-arena-live{
+  box-shadow:inset 0 0 0 1px #ffe09a52,0 0 16px #efbe7b22;
+}
+.tcg-app.tcg-spider .tcg-arena-board[data-tcg-stage="end"] .tcg-arena-live{
+  border-color:#e8c58b;background:#2a1e31;
+}
+.tcg-app.tcg-spider .tcg-pull.is-new.is-flipped .tcg-pull-face--front{
+  animation:tcgFirstFind .72s ease-out;
+}
+@keyframes tcgFirstFind{
+  0%,100%{filter:brightness(1)}
+  30%{filter:brightness(1.3) saturate(1.12)}
+}
+.tcg-app.tcg-spider.tcg-low-effects .tcg-impact-sparks,
+.tcg-app.tcg-spider.tcg-reduced-effects .tcg-impact-sparks{display:none!important}
+@media(prefers-reduced-motion:reduce){
+ .tcg-app.tcg-spider .tcg-impact-sparks,
+ .tcg-app.tcg-spider .tcg-arena-board[data-tcg-stage="energy"] .tcg-arena-resource b,
+ .tcg-app.tcg-spider .tcg-pull.is-new.is-flipped .tcg-pull-face--front{animation:none!important}
 }

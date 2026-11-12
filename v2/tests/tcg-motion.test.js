@@ -89,3 +89,12 @@ test('le booster affiché repose exclusivement sur les cartes renvoyées par le 
   assert.match(game,/cleanupTcgView\(\)/);
   assert.match(game,/onTcgVisibility/);
 });
+
+test('quitter un écran annule ou neutralise les callbacks différés',()=>{
+  const game=src('../src/tcg-game.js'),css=src('../src/tcg-motion.css');
+  assert.match(game,/const viewMounted = \(\) =>/);
+  assert.match(game,/if\(!viewMounted\(\)\)/);
+  assert.match(game,/document\.removeEventListener\('visibilitychange',onTcgVisibility\)/);
+  assert.match(css,/prefers-reduced-motion:reduce/);
+  assert.match(css,/tcg-impact-sparks/);
+});

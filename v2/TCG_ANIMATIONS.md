@@ -41,3 +41,6 @@ La présentation consomme les événements dans l'ordre, sans recalculer les dé
 - Aucun effet de soin ou d'annulation ne doit s'afficher tant que le moteur ne les produit pas.
 - Les animations graphiques exactes sur Safari iOS et la cadence 60 FPS doivent être mesurées sur un appareil réel. Les tests Node/build ne prouvent pas la fluidité de tout smartphone.
 - Les sons sont des tonalités créées par WebAudio et peuvent rester muets lorsque le navigateur bloque l'audio (comportement normal). La vibration n'est disponible que si le navigateur la prend en charge.
+
+## Dernières optimisations
+Les combattants utilisent quatre fragments CSS maximum sur l'impact ; tous sont désactivés en mode économique ou réduit. Les commandes possèdent une zone tactile minimale de 44 px. Les callbacks vérifient que l'écran existe encore avant de réécrire l'interface ; l'écouteur de visibilité est nettoyé à la sortie.

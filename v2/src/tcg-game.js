@@ -1420,17 +1420,18 @@ export async function mountTcgGame(
   let packSkipRequested = false
   let combatPlayback = null
   let combatGeneration = 0
+  const viewMounted = () => Boolean(root.isConnected && root.querySelector('.tcg-app.tcg-spider'))
   const combatTimeline = createTcgTimeline({
     speed, reduced:motionDevice.reduced,
     clockDuration:(event,settings)=>eventDuration(event.type,settings),
-    onStep:event=>paintCombatEvent(event),
-    onComplete:()=>{combatPlayback=null;render()}
+    onStep:event=>{if(!viewMounted()){combatTimeline.cancel();return}paintCombatEvent(event)},
+    onComplete:()=>{combatPlayback=null;if(viewMounted())render()}
   })
   const packTimeline = createTcgTimeline({
     speed, reduced:motionDevice.reduced,
     clockDuration:(event,settings)=>eventDuration(event.type,settings),
-    onStep:event=>{openingStage=event.type==='packTension'?'charging':'tearing';render()},
-    onComplete:()=>finishPackSequence()
+    onStep:event=>{if(!viewMounted()){packTimeline.cancel();return}openingStage=event.type==='packTension'?'charging':'tearing';render()},
+    onComplete:()=>{if(viewMounted())finishPackSequence()}
   })
 
   function renderMotionOptions({pack=false,combat=false}={}) {
@@ -1720,7 +1721,7 @@ export async function mountTcgGame(
     const next = lastOpened[revealCount]
     const delay = motionDevice.reduced ? 45 : Math.max(260, Math.round(rarityFx(next?.rarity).reveal/speed))
     revealTimer = setTimeout(() => {
-      if (tab !== 'boosters' || !lastOpened.length) return
+      if (tab !== 'boosters' || !lastOpened.length || !viewMounted()) return
       flipNextCard()
     }, delay)
   }
@@ -1782,7 +1783,7 @@ export async function mountTcgGame(
         p_athlete_slug: activeSlug,
         p_booster_id: booster.id,
       })
-      if(requestToken!==openingToken)return
+      if(requestToken!==openingToken || !viewMounted())return
       if(openError)throw openError
       result=Array.isArray(data)?data[0]:data
     } catch(openError) {
@@ -2033,6 +2034,7 @@ export async function mountTcgGame(
     const board=root.querySelector('[data-tcg-stage]')
     if(!board)return
     board.dataset.tcgStage=event.type
+    board.dataset.tcgEffectSource=event.source||''
     board.dataset.tcgIntensity=Number(event.amount||event.damage||0)>=5?'heavy':Number(event.amount||event.damage||0)>=3?'medium':'light'
     const title=board.querySelector('[data-tcg-narration]')
     if(title)title.textContent=event.message||'Résolution de la manche'
@@ -2737,6 +2739,7 @@ export async function mountTcgGame(
       </div>
       ${synergy ? `<div class="tcg-arena-synergy">BONUS D'ÉQUIPE · ${esc(card.archetype.label)}</div>` : ''}
       <span class="tcg-damage-float" data-tcg-damage aria-hidden="true"></span>
+      <span class="tcg-impact-sparks" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
     </div>
   `;
 }
@@ -3059,6 +3062,10 @@ export async function mountTcgGame(
     root.onclick=null;root.onchange=null;root.oninput=null;root.onkeydown=null
   }
   function onTcgVisibility() {
+    if(!viewMounted()){
+      document.removeEventListener('visibilitychange',onTcgVisibility)
+      return
+    }
     if(document.hidden){
       if(combatTimeline.active)combatTimeline.skip()
       if(packTimeline.active){packSkipRequested=true;packTimeline.skip()}
