@@ -2949,11 +2949,14 @@ export async function mountTcgGame(
           tab =
             action.dataset.tab ||
             'boosters'
+          clearTimeout(revealTimer)
+          revealTimer = null
           error = ''
           render()
           return
 
         case 'tcg-select-booster':
+          if (openingBusy) return
           selectedBooster =
             boosters.find(
               booster =>
@@ -2969,7 +2972,17 @@ export async function mountTcgGame(
           return
 
         case 'tcg-close-reveal':
+          clearTimeout(revealTimer)
+          revealTimer = null
           lastOpened = []
+          revealCount = 0
+          render()
+          return
+
+        case 'tcg-reveal-all':
+          clearTimeout(revealTimer)
+          revealTimer = null
+          revealCount = lastOpened.length
           render()
           return
 
