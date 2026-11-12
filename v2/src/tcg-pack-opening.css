@@ -1,0 +1,146 @@
+/* GA TCG — sealed foil packs, staged opening and 3D collector reveals.
+   Scoped to .tcg-app.tcg-spider; does not affect the training app. */
+.tcg-app.tcg-spider .tcg-booster-grid{gap:16px;align-items:start}
+.tcg-app.tcg-spider .tcg-booster{
+  --h:265;appearance:none;display:grid;gap:9px;min-width:0;min-height:0;
+  width:100%;padding:4px;border:0;border-radius:12px;background:transparent;
+  color:#f7efff;cursor:pointer;text-align:center;box-shadow:none;
+  perspective:850px;transition:transform .22s ease,filter .22s ease
+}
+.tcg-app.tcg-spider .tcg-booster:before{display:none}
+.tcg-app.tcg-spider .tcg-booster:hover{transform:translateY(-6px) rotate(-.5deg);filter:brightness(1.09)}
+.tcg-app.tcg-spider .tcg-booster:focus-visible,.tcg-app.tcg-spider .tcg-open-btn:focus-visible,.tcg-app.tcg-spider .tcg-reveal-actions button:focus-visible{outline:3px solid #f5c67e;outline-offset:4px}
+.tcg-app.tcg-spider .tcg-booster.is-selected .tcg-pack-shell{filter:drop-shadow(0 0 13px hsla(var(--h),95%,76%,.52))}
+.tcg-app.tcg-spider .tcg-booster-caption{display:block;min-height:23px;font-size:9px;line-height:1.35;color:#aaa0b6}
+.tcg-app.tcg-spider .tcg-booster-caption strong{display:block;font:700 9px/1.25 Inter,system-ui,sans-serif;color:#dec8ec}
+.tcg-app.tcg-spider .tcg-pack-shell{
+  position:relative;isolation:isolate;display:block;width:100%;aspect-ratio: .695;
+  overflow:hidden;background:#0d0c19;border-radius:5px;
+  border:1px solid hsla(var(--h),84%,75%,.65);
+  clip-path:polygon(0 0,3% .7%,6% 0,9% .7%,12% 0,15% .7%,18% 0,21% .7%,24% 0,27% .7%,30% 0,33% .7%,36% 0,39% .7%,42% 0,45% .7%,48% 0,51% .7%,54% 0,57% .7%,60% 0,63% .7%,66% 0,69% .7%,72% 0,75% .7%,78% 0,81% .7%,84% 0,87% .7%,90% 0,93% .7%,96% 0,100% 0,100% 100%,97% 99.3%,94% 100%,91% 99.3%,88% 100%,85% 99.3%,82% 100%,79% 99.3%,76% 100%,73% 99.3%,70% 100%,67% 99.3%,64% 100%,61% 99.3%,58% 100%,55% 99.3%,52% 100%,49% 99.3%,46% 100%,43% 99.3%,40% 100%,37% 99.3%,34% 100%,31% 99.3%,28% 100%,25% 99.3%,22% 100%,19% 99.3%,16% 100%,13% 99.3%,10% 100%,7% 99.3%,4% 100%,1% 99.3%,0 100%);
+  box-shadow:inset 0 0 0 2px #ffffff25;
+}
+.tcg-app.tcg-spider .tcg-booster .tcg-pack-shell{box-shadow:inset 0 0 0 2px #ffffff25,0 18px 29px #000a}
+.tcg-app.tcg-spider .tcg-pack-skin{
+  position:absolute;inset:5% 0 5%;overflow:hidden;
+  background:
+    radial-gradient(ellipse at 48% 38%,hsla(var(--h),100%,68%,.50),transparent 27%),
+    radial-gradient(ellipse at 80% 84%,hsla(calc(var(--h) + 40),84%,50%,.34),transparent 48%),
+    conic-gradient(from -15deg at 50% 42%,#0b0a16,hsla(var(--h),58%,34%,1),#090a15,hsla(var(--h),60%,26%,1),#10101e);
+  border-inline:3px solid #ffffff13
+}
+.tcg-app.tcg-spider .tcg-pack-skin:before{
+  content:"";position:absolute;inset:6% 8%;border:1px solid hsla(var(--h),83%,84%,.44);
+  background:repeating-linear-gradient(135deg,#ffffff06 0 1px,transparent 1px 11px);
+  clip-path:polygon(50% 0,100% 19%,100% 81%,50% 100%,0 81%,0 19%);
+}
+.tcg-app.tcg-spider .tcg-pack-skin:after{
+  content:"";position:absolute;inset:-45% -80%;pointer-events:none;
+  background:linear-gradient(110deg,transparent 44%,#ffffff02 46%,#ffffff70 49%,#fff8d325 50%,transparent 54%);
+  transform:translateX(-55%) rotate(9deg);mix-blend-mode:screen;animation:tcgPackShine 6.8s ease-in-out infinite
+}
+.tcg-app.tcg-spider .tcg-pack-seal{
+  position:absolute;left:-1px;right:-1px;height:6%;z-index:6;
+  background:repeating-linear-gradient(90deg,#ffffff12 0 3px,#00000022 3px 6px),linear-gradient(180deg,#d1cfdf,hsla(var(--h),45%,42%,1) 44%,#15111e 53%,#b8aabd);
+  box-shadow:0 2px 5px #0008,inset 0 1px #ffffff90
+}
+.tcg-app.tcg-spider .tcg-pack-seal--top{top:0}
+.tcg-app.tcg-spider .tcg-pack-seal--bottom{bottom:0;transform:rotate(180deg)}
+.tcg-app.tcg-spider .tcg-pack-crease{position:absolute;inset:4% 0;z-index:3;pointer-events:none;background:linear-gradient(90deg,#0505109c 0%,#ffffff35 6%,transparent 13%,transparent 83%,#ffffff36 94%,#06050d9e 100%);mix-blend-mode:screen}
+.tcg-app.tcg-spider .tcg-pack-brand{position:absolute;left:0;right:0;top:11%;z-index:4;font:800 clamp(8px,1vw,11px)/1 Inter,system-ui,sans-serif;letter-spacing:.21em;text-shadow:0 2px 6px #000;color:#f5e3ff}
+.tcg-app.tcg-spider .tcg-pack-emblem{
+  position:absolute;left:50%;top:40%;z-index:3;width:68%;aspect-ratio:1;
+  transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle,hsla(var(--h),88%,72%,.32),#0000 68%);
+  box-shadow:0 0 38px hsla(var(--h),89%,70%,.26)
+}
+.tcg-app.tcg-spider .tcg-pack-emblem:before,.tcg-app.tcg-spider .tcg-pack-emblem:after{
+  content:"";position:absolute;border-radius:50%;border:1px solid hsla(var(--h),95%,85%,.68)
+}
+.tcg-app.tcg-spider .tcg-pack-emblem:before{inset:3%;box-shadow:0 0 13px hsla(var(--h),95%,82%,.44)}
+.tcg-app.tcg-spider .tcg-pack-emblem:after{inset:13%;border-style:dashed;opacity:.64}
+.tcg-app.tcg-spider .tcg-pack-emblem img{position:relative;width:77%;height:77%;object-fit:contain;filter:drop-shadow(0 0 9px hsla(var(--h),95%,76%,.85)) saturate(1.1)}
+.tcg-app.tcg-spider .tcg-pack-title{
+  position:absolute;z-index:4;top:66%;left:4%;right:4%;font:700 clamp(14px,1.75vw,24px)/1.03 Georgia,serif;
+  color:#fff6e8;text-shadow:0 2px 10px #000,0 0 16px hsla(var(--h),90%,70%,.45);
+  letter-spacing:.045em;text-transform:uppercase
+}
+.tcg-app.tcg-spider .tcg-pack-edition{position:absolute;z-index:4;top:79%;left:10%;right:10%;font:800 clamp(7px,.7vw,10px)/1.2 Inter,system-ui,sans-serif;color:#e9d5ee;letter-spacing:.13em}
+.tcg-app.tcg-spider .tcg-pack-serial{position:absolute;z-index:4;top:89%;left:0;right:0;color:#fff6d2;font:700 8px/1 Inter,system-ui,sans-serif;letter-spacing:.17em}
+.tcg-app.tcg-spider .tcg-pack-tear{position:absolute;z-index:10;top:0;left:0;right:0;height:10%;pointer-events:none;transform-origin:100% 100%}
+.tcg-app.tcg-spider .tcg-pack-splinter{position:absolute;inset:0;z-index:11;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 18%,#fffbeeb8,transparent 22%)}
+.tcg-app.tcg-spider .tcg-pack-big{display:block;width:min(270px,71vw);aspect-ratio:auto;margin:0 auto;min-height:0;padding:0;background:none;border:0;border-radius:4px;overflow:visible;box-shadow:0 27px 57px #0008;filter:drop-shadow(0 12px 16px #0008)}
+.tcg-app.tcg-spider .tcg-pack-big .tcg-pack-shell{width:100%}
+.tcg-app.tcg-spider .tcg-pack-big .tcg-pack-brand{font-size:11px}
+.tcg-app.tcg-spider .tcg-pack-big .tcg-pack-title{font-size:25px}
+.tcg-app.tcg-spider .tcg-pack-big .tcg-pack-edition{font-size:10px}
+.tcg-app.tcg-spider .tcg-pack-big .tcg-pack-serial{font-size:9px}
+.tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-shell{animation:tcgPackTension .65s ease-in-out,tcgPackExit .64s .66s ease-in both}
+.tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-tear{background:repeating-linear-gradient(90deg,#c9bdca 0 5px,#655a71 5px 10px);clip-path:polygon(0 10%,100% 0,97% 100%,0 95%);animation:tcgPackRip .65s .22s ease-out both}
+.tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-splinter{animation:tcgPackFlash .8s .47s ease-out both}
+.tcg-app.tcg-spider .tcg-open-stage{position:relative;min-height:390px;gap:13px;padding:28px 18px;overflow:hidden;background:radial-gradient(ellipse at 50% 32%,#a26cc52e,transparent 46%),repeating-radial-gradient(circle at 50% 40%,#fff0 0 55px,#b487d40a 57px 58px),#0b0813}
+.tcg-app.tcg-spider .tcg-open-stage:before{content:"";position:absolute;top:5%;left:50%;width:min(430px,90%);aspect-ratio:1;transform:translateX(-50%);background:conic-gradient(from 10deg,transparent,#c29af826,transparent 24%,#a780d326,transparent 49%,#f6c48122,transparent 71%,#d195d723,transparent);border-radius:50%;filter:blur(8px);animation:tcgPackOrbit 17s linear infinite;pointer-events:none}
+.tcg-app.tcg-spider .tcg-open-stage > *{position:relative;z-index:1}
+.tcg-app.tcg-spider .tcg-open-stage .tcg-open-btn{justify-self:center;min-width:min(320px,100%);border:1px solid #e9d8b78a;border-radius:6px;color:#1a0d18;background:linear-gradient(115deg,#fae8bf,#bb8bee 52%,#f5c88f);box-shadow:0 5px 24px #9e67d057;font-size:12px;letter-spacing:.12em}
+.tcg-app.tcg-spider .tcg-open-stage .tcg-open-btn:disabled{filter:saturate(.6);cursor:not-allowed}
+.tcg-app.tcg-spider .tcg-open-note{text-align:center;font-size:10px;letter-spacing:.05em;color:#baa7c6}
+.tcg-app.tcg-spider .tcg-reveal-scene{--reveal:#9ca4b4;position:relative;padding:24px;overflow:hidden;border:1px solid color-mix(in srgb,var(--reveal),transparent 55%);border-radius:12px;background:radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--reveal),transparent 84%),transparent 55%),linear-gradient(155deg,#1a1228,#090812 70%);box-shadow:inset 0 0 70px #0009}
+.tcg-app.tcg-spider .tcg-reveal-scene:before{content:"";position:absolute;inset:-55%;pointer-events:none;background:conic-gradient(from 0deg,#ffffff00,color-mix(in srgb,var(--reveal),transparent 85%) 32%,#ffffff00 49%,color-mix(in srgb,var(--reveal),transparent 87%) 74%,#ffffff00);animation:tcgPackOrbit 18s linear infinite}
+.tcg-app.tcg-spider .tcg-reveal-announcement{display:grid;gap:5px;margin-bottom:22px}
+.tcg-app.tcg-spider .tcg-reveal-announcement span{font-size:10px;letter-spacing:.22em;color:#b9a5c8}
+.tcg-app.tcg-spider .tcg-reveal-announcement strong{font:700 clamp(21px,3vw,34px)/1.1 Georgia,serif;color:#fff3db;text-shadow:0 0 20px color-mix(in srgb,var(--reveal),transparent 55%);letter-spacing:.035em}
+.tcg-app.tcg-spider .tcg-reveal{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;perspective:1000px}
+.tcg-app.tcg-spider .tcg-pull{--pull-glow:#a778dd;position:relative;min-width:0;aspect-ratio:2/3;perspective:900px}
+.tcg-app.tcg-spider .tcg-pull[data-rarity="rare"]{--pull-glow:#6ea7ff}
+.tcg-app.tcg-spider .tcg-pull[data-rarity="ultra"]{--pull-glow:#c96dff}
+.tcg-app.tcg-spider .tcg-pull[data-rarity="secret"]{--pull-glow:#f6ce6a}
+.tcg-app.tcg-spider .tcg-pull-rotator{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.18,.86,.24,1),filter .55s ease;transform:rotateY(0deg)}
+.tcg-app.tcg-spider .tcg-pull.is-flipped .tcg-pull-rotator{transform:rotateY(180deg)}
+.tcg-app.tcg-spider .tcg-pull-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;border-radius:9px}
+.tcg-app.tcg-spider .tcg-pull-face--front{transform:rotateY(180deg)}
+.tcg-app.tcg-spider .tcg-pull-face--front .tcg-card{height:100%;width:100%;min-height:0;margin:0}
+.tcg-app.tcg-spider .tcg-pull-face--back{border:2px solid #c9a7db;background:radial-gradient(circle at center,#673b82,#181128 59%,#070910);box-shadow:inset 0 0 0 5px #ffffff0a,inset 0 0 0 6px #d1a5e955,0 10px 24px #0007;display:grid;place-items:center}
+.tcg-app.tcg-spider .tcg-pull-face--back:before{content:"";position:absolute;inset:11%;border:1px solid #cf9eec6f;transform:rotate(45deg)}
+.tcg-app.tcg-spider .tcg-pull-face--back img{width:65%;height:65%;object-fit:contain;filter:drop-shadow(0 0 13px #b985f3)}
+.tcg-app.tcg-spider .tcg-pull-face--back small{position:absolute;bottom:11%;font-size:8px;letter-spacing:.15em;color:#f7daff}
+.tcg-app.tcg-spider .tcg-pull.is-flipped[data-rarity="ultra"] .tcg-pull-rotator,.tcg-app.tcg-spider .tcg-pull.is-flipped[data-rarity="secret"] .tcg-pull-rotator{filter:drop-shadow(0 0 14px var(--pull-glow))}
+.tcg-app.tcg-spider .tcg-pull.is-flipped[data-rarity="secret"] .tcg-pull-face--front:after{content:"";position:absolute;inset:-25%;pointer-events:none;background:linear-gradient(110deg,transparent 35%,#fff6ba00 42%,#fff4beb3 48%,#deb1f376 51%,transparent 60%);animation:tcgPullFoil 3.6s ease-in-out infinite;mix-blend-mode:screen}
+.tcg-app.tcg-spider .tcg-reveal-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:22px;position:relative;z-index:2}
+.tcg-app.tcg-spider .tcg-reveal-actions button{border-radius:7px;border:1px solid #d6b8ea75;min-height:42px;padding:10px 16px;background:#2c1d3b;color:#f9e7ff;font-size:11px;font-weight:900;letter-spacing:.05em;cursor:pointer}
+.tcg-app.tcg-spider .tcg-reveal-actions button.tcg-primary{background:linear-gradient(115deg,#f2d9a8,#bc84e7);color:#190f23}
+.tcg-app.tcg-spider .tcg-reveal-progress{font:800 11px/1.2 Inter,system-ui,sans-serif;color:#e9d2ed;letter-spacing:.1em}
+.tcg-app.tcg-spider .tcg-reveal-count{height:4px;border-radius:4px;overflow:hidden;background:#4d3e60;margin:0 0 12px}
+.tcg-app.tcg-spider .tcg-reveal-count i{display:block;height:100%;background:linear-gradient(90deg,#945ddd,#e8c07d);transition:width .45s ease}
+.tcg-app.tcg-spider .tcg-card[data-rarity="ultra"]:hover{filter:drop-shadow(0 0 9px #c387f7)}
+.tcg-app.tcg-spider .tcg-card[data-rarity="secret"]:hover{filter:drop-shadow(0 0 13px #f5c879)}
+@keyframes tcgPackShine{0%,26%{transform:translateX(-65%) rotate(9deg)}70%,100%{transform:translateX(65%) rotate(9deg)}}
+@keyframes tcgPackTension{0%,100%{transform:rotate(0) scale(1)}20%{transform:rotate(-2deg) scale(1.015)}45%{transform:rotate(2deg) scale(1.025)}65%{transform:rotate(-1.3deg) scale(1.04)}80%{transform:rotate(.7deg) scale(1.045)}}
+@keyframes tcgPackRip{0%{opacity:0;transform:translateX(-70%) rotate(0deg)}30%{opacity:1}100%{opacity:0;transform:translate(25%,-110%) rotate(18deg)}}
+@keyframes tcgPackExit{0%{filter:brightness(1);transform:scale(1)}42%{filter:brightness(1.9);transform:scale(1.1)}100%{filter:brightness(2.3);transform:scale(1.15);opacity:.08}}
+@keyframes tcgPackFlash{0%,100%{opacity:0}45%{opacity:1}}
+@keyframes tcgPackOrbit{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes tcgPullFoil{0%,20%{transform:translateX(-80%) rotate(8deg)}60%,100%{transform:translateX(80%) rotate(8deg)}}
+@media(max-width:900px){
+  .tcg-app.tcg-spider .tcg-reveal{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .tcg-app.tcg-spider .tcg-booster-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .tcg-app.tcg-spider .tcg-booster{min-height:0}
+  .tcg-app.tcg-spider .tcg-pack-brand{font-size:9px}
+  .tcg-app.tcg-spider .tcg-pack-title{font-size:clamp(14px,4vw,20px)}
+  .tcg-app.tcg-spider .tcg-pack-edition{font-size:8px}
+  .tcg-app.tcg-spider .tcg-reveal{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tcg-app.tcg-spider .tcg-pull:last-child{grid-column:1/-1;width:50%;justify-self:center}
+  .tcg-app.tcg-spider .tcg-reveal-scene{padding:13px}
+  .tcg-app.tcg-spider .tcg-reveal-announcement{margin-bottom:16px}
+  .tcg-app.tcg-spider .tcg-pack-big .tcg-pack-title{font-size:25px}
+}
+@media(prefers-reduced-motion:reduce){
+  .tcg-app.tcg-spider .tcg-booster,.tcg-app.tcg-spider .tcg-pack-skin:after,
+  .tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-shell,
+  .tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-tear,
+  .tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-splinter,
+  .tcg-app.tcg-spider .tcg-open-stage:before,.tcg-app.tcg-spider .tcg-reveal-scene:before,
+  .tcg-app.tcg-spider .tcg-pull-face--front:after{animation:none!important;transition:none!important}
+  .tcg-app.tcg-spider .tcg-pull-rotator{transition:none}
+}
