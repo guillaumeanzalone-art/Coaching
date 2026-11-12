@@ -2265,6 +2265,7 @@ export async function mountTcgGame(
                       style="--h:${booster.hue}" data-action="tcg-select-booster"
                       data-booster-id="${esc(booster.id)}" type="button"
                       aria-label="Sélectionner le booster ${esc(booster.name)}"
+                      aria-pressed="${booster.id === selectedBooster?.id ? 'true' : 'false'}"
                       ${openingBusy ? 'disabled' : ''}>
                 ${renderPackShell(booster, index + 1)}
                 <span class="tcg-booster-caption">
