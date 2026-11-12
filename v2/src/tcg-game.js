@@ -266,9 +266,26 @@ const CHARACTER_DESIGNS = {
   },
 }
 
-const SUPPLIED_EVOLUTION_SLUGS = new Set(['charles', 'celia', 'camille', 'magicarpe', 'jolan'])
+const SUPPLIED_EVOLUTION_SLUGS = new Set(['charles', 'celia', 'camille', 'magicarpe', 'jolan', 'lou', 'flop', 'duane', 'serena'])
 
 const CHARACTER_CARD_ART = {
+  // Twenty player-supplied original paintings, five consecutive artworks per athlete.
+  lou: {
+    sprite: '/tcg/lou-evolutions.webp',
+    rarityIndex: { common: 0, uncommon: 1, rare: 2, ultra: 3, secret: 4 },
+  },
+  flop: {
+    sprite: '/tcg/flop-evolutions.webp',
+    rarityIndex: { common: 0, uncommon: 1, rare: 2, ultra: 3, secret: 4 },
+  },
+  duane: {
+    sprite: '/tcg/duane-evolutions.webp',
+    rarityIndex: { common: 0, uncommon: 1, rare: 2, ultra: 3, secret: 4 },
+  },
+  serena: {
+    sprite: '/tcg/serena-evolutions.webp',
+    rarityIndex: { common: 0, uncommon: 1, rare: 2, ultra: 3, secret: 4 },
+  },
   jolan: {
     // Five images supplied by the player, one artwork for each LVL 1–5.
     sprite: '/tcg/jolan-bonbons-evolutions.webp',
@@ -385,8 +402,15 @@ const CHARACTER_CARD_ART = {
 }
 
 // Source geometry verified from original WebP dimensions: square strips must not be stretched.
-const SQUARE_SPRITE_PANELS = new Set(['charles', 'celia', 'hugo', 'magicarpe'])
+const SQUARE_SPRITE_PANELS = new Set(['charles', 'celia', 'hugo', 'magicarpe', 'duane'])
 const PORTRAIT_SPRITE_PANEL_HEIGHT = 1.5
+// Measured directly from the user-supplied originals; avoids stretching any frame.
+const HD_SPRITE_PANEL_HEIGHTS = {
+  lou: 1256 / 832,
+  flop: 1264 / 848,
+  duane: 1024 / 1024,
+  serena: 1059 / 992,
+}
 
 const BOOSTER_TEMPLATES = [
   ['forge', 'Forge', '🔥', 18],
@@ -908,11 +932,6 @@ function characterDesignFor(
 }
 
 function dedicatedCardArt(card) {
-  // Use the existing high-resolution portrait for Serena's exclusive divine chase.
-  if (card?.slug === 'serena' && card.rarity === 'secret') {
-    return { portraitImage: '/serena-turquoise-sovereign-mobile.webp' }
-  }
-
   // This old inline sprite is only 45 × 93 px per frame: the original avatar is sharper.
   if (card?.slug === 'guillaume') return null
 
@@ -927,8 +946,9 @@ function dedicatedCardArt(card) {
     index,
     position: artworkOverride ? 0 : index * 25,
     frameCount: artworkOverride ? 1 : 5,
-    panelHeight: artworkOverride || SQUARE_SPRITE_PANELS.has(card.slug)
-      ? 1 : PORTRAIT_SPRITE_PANEL_HEIGHT,
+    panelHeight: artworkOverride
+      ? 1 : (HD_SPRITE_PANEL_HEIGHTS[card.slug] ??
+        (SQUARE_SPRITE_PANELS.has(card.slug) ? 1 : PORTRAIT_SPRITE_PANEL_HEIGHT)),
   }
 }
 
@@ -1034,7 +1054,7 @@ function renderCard(
           `
           : dedicatedArt?.sprite
             ? `
-              ${dedicatedArt.panelHeight === 1 ? `
+              ${dedicatedArt.panelHeight < 1.4 ? `
                 <svg class="tcg-illustration-sprite tcg-illustration-svg tcg-illustration-backdrop"
                      viewBox="${dedicatedArt.index} 0 1 ${dedicatedArt.panelHeight}"
                      preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
@@ -1045,7 +1065,7 @@ function renderCard(
               ` : ''}
               <svg class="tcg-illustration-sprite tcg-illustration-svg tcg-illustration-primary"
                    viewBox="${dedicatedArt.index} 0 1 ${dedicatedArt.panelHeight}"
-                   preserveAspectRatio="xMidYMid ${dedicatedArt.panelHeight === 1 ? 'meet' : 'slice'}"
+                   preserveAspectRatio="xMidYMid ${dedicatedArt.panelHeight < 1.4 ? 'meet' : 'slice'}"
                    aria-hidden="true" focusable="false">
                 <image href="${esc(dedicatedArt.sprite)}" x="0" y="0"
                        width="${dedicatedArt.frameCount}"
@@ -2280,6 +2300,26 @@ export async function mountTcgGame(
     const rarities = ['common', 'uncommon', 'rare', 'ultra', 'secret']
     const galleries = [
       {
+        slug: 'lou',
+        heading: 'Lou · Dragonne impériale',
+        description: 'Full Art · cinq formes d’une impératrice du dragon de jade.',
+      },
+      {
+        slug: 'flop',
+        heading: 'Flop · Maître du casino',
+        description: 'Full Art · cinq évolutions néon, jackpot et pouvoir du hasard.',
+      },
+      {
+        slug: 'duane',
+        heading: 'Duane · Prédateur cybernétique',
+        description: 'Full Art · de chasseur urbain à loup mécanique légendaire.',
+      },
+      {
+        slug: 'serena',
+        heading: 'Serena · Divine des glaces',
+        description: 'Full Art · cinq évolutions, jusqu’à la reine boréale divine, exclusive au pack Serena.',
+      },
+      {
         slug: 'jolan',
         heading: 'Jolan · Titan des friandises',
         description: 'Full Art · cinq transformations gourmandes, du premier bonbon au souverain sucré.',
@@ -2324,7 +2364,13 @@ export async function mountTcgGame(
               const card = catalog.get(cardId(slug, rarity))
               if (!card) return ''
               const unlocked = ownedCopies(card.id) > 0
-              const stage = CHARACTER_DESIGNS[slug]?.stages?.[rarity] || rarity
+              const specialStages = {
+        lou: ['Éveil du dragon', 'Armure impériale', 'Souffle du jade', 'Dragon de guerre', 'Dragon céleste'],
+        flop: ['Chanceux', 'Flambeur', 'Joueur d’élite', 'Roi du casino', 'Avatar du jackpot'],
+        duane: ['Chasseur urbain', 'Lames cybernétiques', 'Instinct lupin', 'Prédateur alpha', 'Rage électrique'],
+        serena: ['Princesse des glaces', 'Couronne boréale', 'Maîtrise du givre', 'Reine du royaume', 'Serena Divine'],
+      }
+      const stage = specialStages[slug]?.[idx] || CHARACTER_DESIGNS[slug]?.stages?.[rarity] || rarity
               return `
                 <div class="tcg-evo-gallery-slot ${unlocked ? 'is-owned' : 'is-unowned'}" data-rarity="${esc(rarity)}">
                   <div class="tcg-evo-gallery-card">${renderCard(card)}</div>
