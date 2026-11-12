@@ -2786,10 +2786,10 @@ export async function mountTcgGame(
   function render() {
     const athlete = currentAthlete()
     const menuItems = [
-      { id: 'duel', label: 'Arène', glyph: '⚔' },
+      { id: 'boosters', label: 'Boosters', glyph: '✦' },
       { id: 'collection', label: 'Collection', glyph: '◇' },
       { id: 'deck', label: 'Équipe', glyph: '♜' },
-      { id: 'boosters', label: 'Boosters', glyph: '✦' },
+      { id: 'duel', label: 'Arène', glyph: '⚔' },
     ]
     const pageLabels = {
       duel: battle && !battle.finished ? 'Choisis ton combattant' : 'Arène des Ombres',
