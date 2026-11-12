@@ -1034,9 +1034,19 @@ function renderCard(
           `
           : dedicatedArt?.sprite
             ? `
-              <svg class="tcg-illustration-sprite tcg-illustration-svg"
+              ${dedicatedArt.panelHeight === 1 ? `
+                <svg class="tcg-illustration-sprite tcg-illustration-svg tcg-illustration-backdrop"
+                     viewBox="${dedicatedArt.index} 0 1 ${dedicatedArt.panelHeight}"
+                     preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+                  <image href="${esc(dedicatedArt.sprite)}" x="0" y="0"
+                         width="${dedicatedArt.frameCount}" height="${dedicatedArt.panelHeight}"
+                         preserveAspectRatio="none"></image>
+                </svg>
+              ` : ''}
+              <svg class="tcg-illustration-sprite tcg-illustration-svg tcg-illustration-primary"
                    viewBox="${dedicatedArt.index} 0 1 ${dedicatedArt.panelHeight}"
-                   preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+                   preserveAspectRatio="xMidYMid ${dedicatedArt.panelHeight === 1 ? 'meet' : 'slice'}"
+                   aria-hidden="true" focusable="false">
                 <image href="${esc(dedicatedArt.sprite)}" x="0" y="0"
                        width="${dedicatedArt.frameCount}"
                        height="${dedicatedArt.panelHeight}"
