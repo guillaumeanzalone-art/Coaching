@@ -1,0 +1,407 @@
+/* La Toile des Ombres / interface refinement
+   A single navigation, quiet surfaces and consistent spacing across the TCG.
+   Kept separate from character artwork and rarity VFX. */
+
+.tcg-app.tcg-spider {
+  --ui-bg:#090c12;
+  --ui-panel:#121720;
+  --ui-panel-raised:#191e29;
+  --ui-line:rgba(189,199,220,.15);
+  --ui-line-strong:rgba(203,211,233,.23);
+  --ui-text:#f0f2f7;
+  --ui-muted:#a1a9b9;
+  --ui-accent:#c49aea;
+  --ui-accent-soft:rgba(178,132,223,.14);
+  --ui-gold:#d7c5a5;
+  padding:0 24px 56px;
+  min-height:100vh;
+  color:var(--ui-text);
+  background:
+    radial-gradient(ellipse 48% 34% at 88% -3%,rgba(110,74,145,.17),transparent 85%),
+    radial-gradient(ellipse 46% 48% at -15% 80%,rgba(73,79,135,.09),transparent 85%),
+    linear-gradient(160deg,#0c1018 0%,#090c12 50%,#080b11 100%);
+  font-family:Inter,ui-sans-serif,system-ui,sans-serif;
+  font-size:14px;
+}
+.tcg-app.tcg-spider:before,
+.tcg-app.tcg-spider:after{display:none}
+.tcg-app.tcg-spider .tcg-shell{width:min(1440px,100%);max-width:1440px;margin:0 auto}
+.tcg-app.tcg-spider button,
+.tcg-app.tcg-spider select{font-family:inherit}
+.tcg-app.tcg-spider button:focus-visible,
+.tcg-app.tcg-spider select:focus-visible{
+  outline:2px solid var(--ui-accent);outline-offset:3px
+}
+
+/* A compact header replaces the oversized artwork banner. */
+.tcg-app.tcg-spider .tcg-top.tcg-spider-top{
+  display:flex;align-items:center;min-height:100px;gap:18px;
+  margin:0 0 25px;padding:18px 0 20px;
+  border:0;border-bottom:1px solid var(--ui-line);
+  background:none;box-shadow:none;
+}
+.tcg-app.tcg-spider .tcg-top.tcg-spider-top:after{display:none}
+.tcg-app.tcg-spider .tcg-back{
+  display:inline-flex;align-items:center;justify-content:center;flex:none;
+  min-height:39px;padding:9px 13px;color:#b6becd;
+  background:rgba(255,255,255,.035);border:1px solid var(--ui-line);
+  border-radius:9px;font-size:11px;letter-spacing:.01em;font-weight:700;
+  transition:background .18s,border-color .18s,color .18s
+}
+.tcg-app.tcg-spider .tcg-back:hover{
+  color:#fff;background:rgba(255,255,255,.07);border-color:var(--ui-line-strong)
+}
+.tcg-app.tcg-spider .tcg-spider-brand{display:flex;align-items:center;gap:13px;min-width:0}
+.tcg-app.tcg-spider .tcg-spider-mark{
+  width:57px;height:57px;object-fit:contain;
+  filter:drop-shadow(0 0 11px rgba(177,131,213,.23))
+}
+.tcg-app.tcg-spider .tcg-spider-eyebrow{
+  display:block;color:#b8a0c8;font-size:9px;font-weight:800;
+  letter-spacing:.19em;line-height:1.3
+}
+.tcg-app.tcg-spider .tcg-top h1.tcg-spider-title{
+  margin:4px 0 0;font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(23px,2.25vw,32px);font-weight:600;font-style:normal;
+  line-height:1;letter-spacing:-.015em;color:#f4eff7;text-shadow:none
+}
+.tcg-app.tcg-spider .tcg-top h1.tcg-spider-title span{
+  display:inline;font-style:normal;color:#d0addd
+}
+.tcg-app.tcg-spider .tcg-top h1.tcg-spider-title span:before{content:" "}
+.tcg-app.tcg-spider .tcg-spider-subtitle{
+  color:#8891a4;font-size:9px;margin-top:6px;letter-spacing:.08em;text-transform:none
+}
+.tcg-app.tcg-spider .tcg-spider-status{gap:9px;align-self:center;align-items:center}
+.tcg-app.tcg-spider .tcg-spider-status .tcg-chip,
+.tcg-app.tcg-spider .tcg-spider-status .tcg-athlete-select{
+  display:flex;align-items:center;min-height:39px;border-radius:9px;
+  border:1px solid var(--ui-line);background:#131820;color:#c1c5d2;
+  padding:8px 12px;font-size:11px;font-weight:650
+}
+.tcg-app.tcg-spider .tcg-spider-status .tcg-chip b{color:#ebd6a8;font-size:14px}
+.tcg-app.tcg-spider .tcg-spider-status .tcg-athlete-select{max-width:240px}
+
+/* Single desktop navigation with clear, human-readable labels. */
+.tcg-app.tcg-spider .tcg-spider-grid{
+  display:grid;grid-template-columns:190px minmax(0,1fr);
+  gap:28px;align-items:start;min-width:0
+}
+.tcg-app.tcg-spider .tcg-spider-sidebar{
+  position:sticky;top:18px;display:flex;flex-direction:column;gap:0;
+  min-width:0;padding:18px 10px 13px;
+  border:1px solid var(--ui-line);border-radius:15px;
+  background:linear-gradient(160deg,#161923,#10131b);
+  box-shadow:0 10px 36px #0002
+}
+.tcg-app.tcg-spider .tcg-sidebar-label{
+  display:block;margin:1px 11px 13px;color:#858ea2;
+  font-size:9px;font-weight:850;letter-spacing:.16em
+}
+.tcg-app.tcg-spider .tcg-spider-side-nav{display:flex;flex-direction:column;gap:5px}
+.tcg-app.tcg-spider .tcg-spider-side-tab{
+  display:flex;justify-content:flex-start;align-items:center;gap:13px;
+  min-height:46px;width:100%;padding:10px 12px;
+  border:1px solid transparent;border-radius:10px;
+  background:transparent;color:#adb4c4;
+  font-size:12px;font-weight:700;letter-spacing:0;text-transform:none;text-align:left;
+  transition:background .18s,color .18s,border-color .18s,transform .18s;
+}
+.tcg-app.tcg-spider .tcg-spider-side-tab .tcg-spider-tab-symbol{
+  display:grid;place-items:center;flex:0 0 23px;
+  font:400 21px/1 Georgia,serif;color:#9b91b4
+}
+.tcg-app.tcg-spider .tcg-spider-side-tab:hover{background:#ffffff0c;color:#f7f3fd;transform:none}
+.tcg-app.tcg-spider .tcg-spider-side-tab.active{
+  border-color:rgba(194,153,223,.22);background:#be8fe71c;
+  color:#f5eafe;box-shadow:inset 3px 0 0 #c8a0e5
+}
+.tcg-app.tcg-spider .tcg-spider-side-tab.active .tcg-spider-tab-symbol{
+  color:#d4b0f0;text-shadow:none
+}
+.tcg-app.tcg-spider .tcg-sidebar-progress{
+  display:grid;gap:10px;margin:27px 7px 0;padding:17px 4px 3px;
+  border-top:1px solid var(--ui-line)
+}
+.tcg-app.tcg-spider .tcg-sidebar-progress-title{
+  display:flex;justify-content:space-between;align-items:baseline;
+  color:#c5cad5;font-size:11px;font-weight:700
+}
+.tcg-app.tcg-spider .tcg-sidebar-progress-title b{color:#ddc6eb;font-size:12px}
+.tcg-app.tcg-spider .tcg-sidebar-progress-track{
+  width:100%;height:5px;overflow:hidden;border-radius:99px;background:#2c2a39
+}
+.tcg-app.tcg-spider .tcg-sidebar-progress-track span{
+  display:block;height:100%;border-radius:inherit;
+  background:linear-gradient(90deg,#8f76b6,#e2c6eb)
+}
+.tcg-app.tcg-spider .tcg-sidebar-progress small{font-size:10px;color:#8991a2}
+.tcg-app.tcg-spider .tcg-nav.tcg-spider-nav{display:none}
+.tcg-app.tcg-spider .tcg-spider-main{min-width:0;padding-bottom:30px}
+
+/* Calm section headings and consistent surface hierarchy. */
+.tcg-app.tcg-spider .tcg-spider-sectionbar{
+  display:flex;align-items:end;justify-content:space-between;gap:20px;
+  padding:0 1px 18px;margin:0 0 20px;border-bottom:1px solid var(--ui-line)
+}
+.tcg-app.tcg-spider .tcg-spider-sectionbar:after{display:none}
+.tcg-app.tcg-spider .tcg-section-eyebrow{
+  display:block;margin:0 0 8px;color:#c6a6d8;
+  font-size:10px;font-weight:800;letter-spacing:.15em
+}
+.tcg-app.tcg-spider .tcg-section-eyebrow span{color:#686878;padding:0 5px}
+.tcg-app.tcg-spider .tcg-spider-sectionbar h2{
+  font-family:Georgia,'Times New Roman',serif;font-size:clamp(23px,2.8vw,36px);
+  line-height:1.16;letter-spacing:-.02em;font-weight:600;font-style:normal;
+  margin:0;color:var(--ui-text);text-shadow:none
+}
+.tcg-app.tcg-spider .tcg-spider-sectionbar small{
+  margin-top:8px;color:var(--ui-muted);
+  font-size:11px;font-weight:500;letter-spacing:0;text-transform:none
+}
+.tcg-app.tcg-spider .tcg-spider-section-info{
+  flex:none;padding:8px 11px;border:1px solid var(--ui-line);
+  border-radius:99px;background:#ffffff09;color:#bfc4d3;
+  font-size:10px;font-weight:700;letter-spacing:.05em
+}
+
+/* Editorial hero: readable story, paired with actual account stats. */
+.tcg-app.tcg-spider .tcg-hero{
+  display:grid;grid-template-columns:minmax(0,1.35fr) minmax(240px,.65fr);
+  gap:27px;align-items:center;min-height:260px;margin:0 0 20px;
+  padding:31px;overflow:hidden;border:1px solid #735e856a;border-radius:16px;
+  background:
+    radial-gradient(ellipse at 92% 12%,#aa8fbd22,transparent 40%),
+    linear-gradient(120deg,#22202e 0%,#141621 52%,#11131d 100%);
+  box-shadow:0 15px 40px #0003,inset 0 1px #ffffff0b
+}
+.tcg-app.tcg-spider .tcg-kicker{
+  color:#d4bfa2;font-size:10px;font-weight:850;letter-spacing:.14em
+}
+.tcg-app.tcg-spider .tcg-hero h2{
+  max-width:620px;font:600 clamp(28px,3.1vw,45px)/1.09 Georgia,serif;
+  letter-spacing:-.023em;font-style:normal;margin:12px 0 13px;color:#f3f1f5
+}
+.tcg-app.tcg-spider .tcg-hero h2 span{color:#cbaedb}
+.tcg-app.tcg-spider .tcg-hero p{
+  max-width:570px;color:#adb4c4;font-size:12px;line-height:1.65;margin:0
+}
+.tcg-app.tcg-spider .tcg-hero-actions{
+  display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:23px
+}
+.tcg-app.tcg-spider .tcg-hero-link{
+  display:inline-flex;align-items:center;justify-content:center;gap:16px;
+  min-height:40px;padding:10px 15px;border:1px solid #d6bde484;
+  border-radius:8px;background:#d0b3e0;color:#15121e;
+  font-size:11px;font-weight:800;cursor:pointer;transition:filter .2s,transform .2s
+}
+.tcg-app.tcg-spider .tcg-hero-link--secondary{
+  background:#ffffff09;border-color:#ffffff27;color:#e3dce7
+}
+.tcg-app.tcg-spider .tcg-hero-link:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.tcg-app.tcg-spider .tcg-hero-stats{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px
+}
+.tcg-app.tcg-spider .tcg-hero-stat{
+  padding:19px 14px;min-height:96px;
+  border:1px solid var(--ui-line);border-radius:11px;background:#080b13a6;
+  box-shadow:inset 0 1px #ffffff0b
+}
+.tcg-app.tcg-spider .tcg-hero-stat span{
+  font-size:10px;font-weight:600;text-transform:none;color:#a5aebc
+}
+.tcg-app.tcg-spider .tcg-hero-stat b{
+  margin-top:10px;color:#f1f1f6;font-size:27px;font-weight:750;line-height:1
+}
+.tcg-app.tcg-spider .tcg-hero-stat em{color:#d5b7e8}
+
+/* Panels, toolbar controls and buttons speak the same visual language. */
+.tcg-app.tcg-spider .tcg-panel{
+  overflow:hidden;border:1px solid var(--ui-line);border-radius:15px;
+  background:linear-gradient(155deg,#151922,#10141d 80%);
+  box-shadow:0 12px 30px #0002,inset 0 1px #ffffff08
+}
+.tcg-app.tcg-spider .tcg-panel-head{
+  align-items:center;gap:16px;padding:20px 22px;
+  border-bottom:1px solid var(--ui-line);background:#ffffff04
+}
+.tcg-app.tcg-spider .tcg-panel-head h3{
+  margin:0;font-family:Inter,system-ui,sans-serif;
+  font-size:16px;font-weight:770;letter-spacing:-.018em;color:#eceef6
+}
+.tcg-app.tcg-spider .tcg-panel-head p{
+  margin-top:6px;color:#939cad;font-size:11px;line-height:1.5
+}
+.tcg-app.tcg-spider .tcg-panel-head strong{font-size:12px;color:#e1c7ed}
+.tcg-app.tcg-spider .tcg-panel-pad{padding:21px}
+.tcg-app.tcg-spider .tcg-primary,
+.tcg-app.tcg-spider .tcg-secondary,
+.tcg-app.tcg-spider .tcg-open-btn,
+.tcg-app.tcg-spider .tcg-arena-attack{
+  min-height:38px;border-radius:9px;padding:10px 15px;
+  font-size:11px;font-weight:800;letter-spacing:.02em;text-transform:none;
+  transition:filter .18s,transform .18s,border-color .18s
+}
+.tcg-app.tcg-spider .tcg-primary,
+.tcg-app.tcg-spider .tcg-open-btn{
+  color:#14101a;background:linear-gradient(115deg,#e0c1ef,#c9a8df);
+  border:1px solid #e0c0ef;box-shadow:0 5px 18px #6c488a34
+}
+.tcg-app.tcg-spider .tcg-secondary{
+  color:#cbd1de;border:1px solid var(--ui-line-strong);
+  background:rgba(255,255,255,.035)
+}
+.tcg-app.tcg-spider .tcg-primary:not(:disabled):hover,
+.tcg-app.tcg-spider .tcg-open-btn:not(:disabled):hover,
+.tcg-app.tcg-spider .tcg-secondary:hover{transform:translateY(-1px);filter:brightness(1.09)}
+.tcg-app.tcg-spider .tcg-collection-toolbar{
+  display:flex;align-items:center;gap:8px;overflow-x:auto;padding:3px 0 8px;
+  scrollbar-width:thin
+}
+.tcg-app.tcg-spider .tcg-collection-toolbar button{
+  flex:none;min-height:35px;padding:8px 14px;border:1px solid var(--ui-line);
+  border-radius:99px;background:#ffffff04;color:#aeb6c6;
+  font-size:11px;font-weight:650;transition:background .18s,border-color .18s,color .18s
+}
+.tcg-app.tcg-spider .tcg-collection-toolbar button:hover{border-color:#a58bbab3;color:#f4eafc}
+.tcg-app.tcg-spider .tcg-collection-toolbar button.active{
+  background:#b98bdb24;border-color:#b98bdb7c;color:#f3dfff
+}
+.tcg-app.tcg-spider .tcg-card-grid{gap:15px}
+.tcg-app.tcg-spider .tcg-card-grid .tcg-card{
+  border-radius:10px;box-shadow:0 9px 22px #0006;transition:transform .2s,box-shadow .2s
+}
+.tcg-app.tcg-spider .tcg-card-grid .tcg-card:hover{transform:translateY(-4px) scale(1.012)}
+.tcg-app.tcg-spider .tcg-deck-row{
+  min-height:66px;border-radius:10px;padding:11px 13px;
+  border:1px solid var(--ui-line);background:#161b26
+}
+.tcg-app.tcg-spider .tcg-deck-row .mini{background:#392a4d;border-radius:8px}
+.tcg-app.tcg-spider .tcg-deck-summary{
+  border-radius:12px;border:1px solid var(--ui-line);background:#151924
+}
+.tcg-app.tcg-spider .tcg-deck-summary h4{color:#ebe1f4;font-size:14px}
+.tcg-app.tcg-spider .tcg-curve div{border-radius:8px;background:#252335}
+.tcg-app.tcg-spider .tcg-empty{padding:35px;color:#939dab;font-size:12px;line-height:1.6}
+.tcg-app.tcg-spider .tcg-empty b{color:#e4dfec}
+.tcg-app.tcg-spider .tcg-booster-grid{gap:17px}
+.tcg-app.tcg-spider .tcg-booster{border-radius:12px;transition:filter .18s,transform .18s}
+.tcg-app.tcg-spider .tcg-booster:hover{transform:translateY(-3px);filter:brightness(1.06)}
+.tcg-app.tcg-spider .tcg-booster-caption{padding:2px 0;color:#a8b0c0;font-size:10px}
+.tcg-app.tcg-spider .tcg-booster-caption strong{font:750 11px/1.4 Inter,system-ui,sans-serif;color:#e6e2eb}
+.tcg-app.tcg-spider .tcg-open-stage{border-radius:13px}
+.tcg-app.tcg-spider .tcg-reveal-scene{border-radius:13px}
+
+/* Arena polish without drowning out the actual card illustrations. */
+.tcg-app.tcg-spider .tcg-arena-intro{
+  border:1px solid var(--ui-line);border-radius:13px;
+  background:radial-gradient(circle at 92% 8%,#c59de01b,transparent 40%),#171923
+}
+.tcg-app.tcg-spider .tcg-arena-intro h3,
+.tcg-app.tcg-spider .tcg-arena-end h3{
+  font-family:Georgia,serif;font-style:normal;letter-spacing:-.01em;color:#f0e8f3
+}
+.tcg-app.tcg-spider .tcg-arena-rules span{
+  border:1px solid var(--ui-line);border-radius:6px;background:#272333;
+  color:#d4c9e0;font-size:10px
+}
+.tcg-app.tcg-spider .tcg-arena-board{
+  border-radius:13px;border-color:#78668866;
+  box-shadow:inset 0 0 65px #0007,0 15px 36px #0003
+}
+.tcg-app.tcg-spider .tcg-arena-side{
+  border-radius:10px;border:1px solid var(--ui-line);
+  background:#0c0e17c9;box-shadow:inset 0 1px #ffffff07
+}
+.tcg-app.tcg-spider .tcg-arena-controls{
+  border-radius:11px;border-color:var(--ui-line);
+  background:linear-gradient(110deg,#1c1b29,#131720)
+}
+.tcg-app.tcg-spider .tcg-arena-counter button{
+  border-radius:9px;background:#2f2a3a;border-color:#937caa87
+}
+.tcg-app.tcg-spider .tcg-arena-choice{
+  border-radius:10px;border-color:#74658580;background:#151421;
+  box-shadow:0 7px 17px #0004
+}
+.tcg-app.tcg-spider .tcg-arena-choice:before,
+.tcg-app.tcg-spider .tcg-arena-choice:after{display:none}
+.tcg-app.tcg-spider .tcg-arena-choice[aria-pressed="true"]{
+  border-color:#d5b7e9;box-shadow:0 0 0 1px #d4adeb5e,0 0 21px #aa75d443;
+  animation:none
+}
+.tcg-app.tcg-spider .tcg-arena-versus{border-color:#b49bc2;color:#efdaf1}
+.tcg-app.tcg-spider .tcg-arena-log{
+  border-radius:9px;border:1px solid var(--ui-line);background:#141320dc
+}
+
+/* Phone and tablet: one horizontally scrolling menu, zero duplicate tabs. */
+@media(max-width:1080px){
+  .tcg-app.tcg-spider .tcg-spider-grid{grid-template-columns:168px minmax(0,1fr);gap:17px}
+  .tcg-app.tcg-spider .tcg-hero{grid-template-columns:minmax(0,1fr);gap:19px;padding:25px}
+  .tcg-app.tcg-spider .tcg-hero-stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .tcg-app.tcg-spider .tcg-hero-stat{min-height:84px;padding:12px}
+}
+@media(max-width:760px){
+  .tcg-app.tcg-spider{padding:0 13px 30px}
+  .tcg-app.tcg-spider .tcg-top.tcg-spider-top{
+    min-height:0;padding:15px 0 17px;margin:0 0 12px;gap:10px;flex-wrap:wrap
+  }
+  .tcg-app.tcg-spider .tcg-back{order:0;min-height:34px;padding:7px 9px;font-size:10px}
+  .tcg-app.tcg-spider .tcg-spider-brand{order:1;flex:1;gap:9px}
+  .tcg-app.tcg-spider .tcg-spider-mark{width:40px;height:40px}
+  .tcg-app.tcg-spider .tcg-top h1.tcg-spider-title{font-size:clamp(19px,4.9vw,27px)}
+  .tcg-app.tcg-spider .tcg-spider-eyebrow{font-size:8px}
+  .tcg-app.tcg-spider .tcg-spider-subtitle{display:none}
+  .tcg-app.tcg-spider .tcg-spider-status{order:2;width:100%;justify-content:flex-start;gap:7px}
+  .tcg-app.tcg-spider .tcg-spider-status .tcg-chip,
+  .tcg-app.tcg-spider .tcg-spider-status .tcg-athlete-select{
+    min-height:35px;padding:6px 10px;font-size:10px
+  }
+  .tcg-app.tcg-spider .tcg-spider-grid{display:block}
+  .tcg-app.tcg-spider .tcg-spider-sidebar{
+    position:sticky;top:0;z-index:30;
+    padding:6px;margin:0 -3px 18px;
+    border-radius:12px;background:#12151df2;
+    -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    box-shadow:0 8px 25px #0007
+  }
+  .tcg-app.tcg-spider .tcg-sidebar-label,
+  .tcg-app.tcg-spider .tcg-sidebar-progress{display:none}
+  .tcg-app.tcg-spider .tcg-spider-side-nav{
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px
+  }
+  .tcg-app.tcg-spider .tcg-spider-side-tab{
+    min-width:0;min-height:47px;display:flex;flex-direction:column;justify-content:center;
+    padding:6px 3px;gap:4px;border-radius:8px;font-size:10px;line-height:1.1
+  }
+  .tcg-app.tcg-spider .tcg-spider-side-tab .tcg-spider-tab-symbol{
+    flex:none;font-size:18px;line-height:1
+  }
+  .tcg-app.tcg-spider .tcg-spider-side-tab.active{
+    box-shadow:inset 0 -2px 0 #c8a0e5
+  }
+  .tcg-app.tcg-spider .tcg-spider-sectionbar{align-items:flex-start;margin-bottom:15px;padding-bottom:14px}
+  .tcg-app.tcg-spider .tcg-spider-sectionbar h2{font-size:clamp(23px,6vw,31px)}
+  .tcg-app.tcg-spider .tcg-spider-section-info{margin-top:25px;max-width:42%;text-align:center;font-size:9px}
+  .tcg-app.tcg-spider .tcg-hero{padding:21px;min-height:0}
+  .tcg-app.tcg-spider .tcg-hero h2{font-size:clamp(27px,7vw,36px)}
+  .tcg-app.tcg-spider .tcg-hero-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tcg-app.tcg-spider .tcg-panel-head{padding:16px;gap:9px}
+  .tcg-app.tcg-spider .tcg-panel-pad{padding:13px}
+  .tcg-app.tcg-spider .tcg-card-grid{gap:10px}
+  .tcg-app.tcg-spider .tcg-arena-choice{padding:4px}
+}
+@media(max-width:390px){
+  .tcg-app.tcg-spider{padding:0 9px 24px}
+  .tcg-app.tcg-spider .tcg-top h1.tcg-spider-title{font-size:19px}
+  .tcg-app.tcg-spider .tcg-spider-mark{width:33px;height:33px}
+  .tcg-app.tcg-spider .tcg-spider-side-tab{font-size:9px}
+  .tcg-app.tcg-spider .tcg-hero-link{width:100%}
+  .tcg-app.tcg-spider .tcg-spider-section-info{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  .tcg-app.tcg-spider .tcg-hero-link,
+  .tcg-app.tcg-spider .tcg-booster,
+  .tcg-app.tcg-spider .tcg-spider-side-tab{transition:none}
+}
