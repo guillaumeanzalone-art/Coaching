@@ -7,7 +7,7 @@ import './tcg-benoit-earth.css'
 import './tcg-supplied-evolutions.css'
 import './tcg-pack-opening.css'
 import './tcg-interface-clean.css'
-import { resolvePackIdentity, drawThemedBooster } from './tcg-pack-rules.js'
+import { resolvePackIdentity, drawThemedBooster, SLOT_ODDS } from './tcg-pack-rules.js'
 import './tcg-art-quality.css'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
@@ -2135,6 +2135,17 @@ export async function mountTcgGame(
                   Number(profile.unopened_packs) > 0 ? 'Ouvrir ce booster' : 'Termine une séance pour gagner un booster'}
               </button>
               <p class="tcg-open-note">Dernier slot : 88 % Rare · 10 % Ultra · 2 % Secret. Ultra garantie chaque 10e ouverture, Secret chaque 50e.</p>
+              <details class="tcg-odds-details">
+                <summary>Voir toutes les probabilités</summary>
+                <ol>
+                  ${SLOT_ODDS.map((weights, index) => `
+                    <li><b>Carte ${index + 1}</b><span>${Object.entries(weights)
+                      .map(([rarity, percent]) => esc(rarityMeta(rarity).label) + ' ' + percent + ' %')
+                      .join(' · ')}</span></li>
+                  `).join('')}
+                </ol>
+                <p>Taux par emplacement avant les garanties. Le 10e booster assure une Ultra, le 50e une Secret sur la dernière carte.</p>
+              </details>
             </div>
           </div>
         </section>
