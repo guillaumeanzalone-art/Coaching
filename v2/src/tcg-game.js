@@ -2224,11 +2224,37 @@ export async function mountTcgGame(
     }
 
     return `
+      ${selectedBooster ? `
+        <section class="tcg-panel tcg-featured-panel">
+          <div class="tcg-open-stage">
+            <div class="tcg-pack-big ${openingStage === 'charging' ? 'is-charging' : ''} ${openingStage === 'tearing' ? 'is-opening' : ''}"
+                 style="--h:${selectedBooster.hue}"
+                 role="img" aria-label="Booster scellé ${esc(selectedBooster.name)}">
+              ${renderPackShell(selectedBooster, boosters.findIndex(item => item.id === selectedBooster.id) + 1)}
+            </div>
+            <div class="tcg-open-details">
+              <span class="tcg-open-eyebrow">PACK SÉLECTIONNÉ · SÉRIE ${String(boosters.findIndex(item => item.id === selectedBooster.id) + 1).padStart(2, '0')}</span>
+              <h3>${esc(selectedBooster.name)}</h3>
+              <p>Un paquet scellé, cinq cartes à découvrir et une dernière pioche premium. Chaque ouverture enrichit ta collection.</p>
+              <div class="tcg-open-facts">
+                <span><b>05</b> cartes</span>
+                <span><b>${Number(profile.unopened_packs) || 0}</b> en réserve</span>
+              </div>
+              <button class="tcg-open-btn" data-action="tcg-open-pack" type="button"
+                      ${openingBusy || Number(profile.unopened_packs) <= 0 ? 'disabled' : ''}>
+                ${openingBusy ? 'Ouverture en cours…' :
+                  Number(profile.unopened_packs) > 0 ? 'Ouvrir ce booster' : 'Termine une séance pour gagner un booster'}
+              </button>
+              <p class="tcg-open-note">Ultra Rare garantie au 10e booster · Secret Rare au 50e</p>
+            </div>
+          </div>
+        </section>
+      ` : ''}
       <section class="tcg-panel">
         <header class="tcg-panel-head">
           <div>
-            <h3>20 éditions de boosters · La Toile</h3>
-            <p>Une véritable collection de packs scellés. Chaque série possède ses athlètes vedettes.</p>
+            <h3>Les éditions à collectionner</h3>
+            <p>Choisis parmi les 20 séries, chacune mettant en avant ses propres athlètes.</p>
           </div>
           <strong>✦ ${Number(profile.unopened_packs) || 0}</strong>
         </header>
@@ -2250,23 +2276,7 @@ export async function mountTcgGame(
           </div>
         </div>
       </section>
-      ${selectedBooster ? `
-        <section class="tcg-panel" style="margin-top:14px">
-          <div class="tcg-open-stage">
-            <div class="tcg-pack-big ${openingStage === 'charging' ? 'is-charging' : ''} ${openingStage === 'tearing' ? 'is-opening' : ''}"
-                 style="--h:${selectedBooster.hue}"
-                 role="img" aria-label="Booster scellé ${esc(selectedBooster.name)}">
-              ${renderPackShell(selectedBooster, boosters.findIndex(item => item.id === selectedBooster.id) + 1)}
-            </div>
-            <button class="tcg-open-btn" data-action="tcg-open-pack" type="button"
-                    ${openingBusy || Number(profile.unopened_packs) <= 0 ? 'disabled' : ''}>
-              ${openingBusy ? 'OUVERTURE EN COURS…' :
-                Number(profile.unopened_packs) > 0 ? 'DÉCHIRER LE BOOSTER' : 'TERMINE UNE SÉANCE POUR OBTENIR UN BOOSTER'}
-            </button>
-            <p class="tcg-open-note">5 cartes · slot final premium · ultra garantie tous les 10 boosters · secret au 50e</p>
-          </div>
-        </section>
-      ` : ''}
+
     `
   }
 
@@ -2984,6 +2994,10 @@ export async function mountTcgGame(
             ) ||
             selectedBooster
           render()
+          root.querySelector('.tcg-featured-panel')?.scrollIntoView({
+            behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ? 'auto' : 'smooth',
+            block: 'start',
+          })
           return
 
         case 'tcg-open-pack':
