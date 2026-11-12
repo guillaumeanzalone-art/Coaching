@@ -5,6 +5,7 @@ import './tcg-alexandre-poison.css'
 import './tcg-hugo-forge.css'
 import './tcg-benoit-earth.css'
 import './tcg-supplied-evolutions.css'
+import './tcg-pack-opening.css'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
@@ -1589,6 +1590,11 @@ export async function mountTcgGame(
   let loading = true
   let error = ''
   let lastOpened = []
+  let revealCount = 0
+  let revealTimer = null
+  let openingBusy = false
+  let openingStage = 'idle'
+  let openingToken = 0
   let rarityFilter = 'all'
   let battle = null
 
@@ -1655,6 +1661,12 @@ export async function mountTcgGame(
   }
 
   async function loadState() {
+    openingToken += 1
+    clearTimeout(revealTimer)
+    revealTimer = null
+    openingBusy = false
+    openingStage = 'idle'
+    revealCount = 0
     if (!activeSlug) {
       loading = false
       render()
@@ -1833,88 +1845,88 @@ export async function mountTcgGame(
       []
   }
 
+  function scheduleNextReveal() {
+    clearTimeout(revealTimer)
+    if (tab !== 'boosters' || !lastOpened.length || revealCount >= lastOpened.length) return
+    revealTimer = setTimeout(() => {
+      if (tab !== 'boosters' || !lastOpened.length) return
+      revealCount += 1
+      const tile = root.querySelector('[data-pull-index="' + (revealCount - 1) + '"]')
+      if (tile) {
+        tile.classList.add('is-flipped')
+        tile.querySelector('.tcg-pull-face--back')?.setAttribute('aria-hidden', 'true')
+        tile.querySelector('.tcg-pull-face--front')?.setAttribute('aria-hidden', 'false')
+      }
+      const status = root.querySelector('.tcg-reveal-progress')
+      if (status) status.textContent = revealCount + ' / ' + lastOpened.length + ' CARTES'
+      const bar = root.querySelector('.tcg-reveal-count i')
+      if (bar) bar.style.width = (revealCount / lastOpened.length * 100) + '%'
+      const scene = root.querySelector('.tcg-reveal-scene')
+      if (scene) scene.dataset.revealRarity = highestRarity(lastOpened.slice(0, revealCount))
+      if (revealCount === lastOpened.length) {
+        revealTimer = setTimeout(() => {
+          if (tab === 'boosters' && lastOpened.length) render()
+        }, 870)
+      } else {
+        scheduleNextReveal()
+      }
+    }, 830)
+  }
+
   async function openPack() {
-    if (
-      !selectedBooster ||
-      Number(
-        profile.unopened_packs
-      ) <= 0
-    ) {
-      return
-    }
+    if (openingBusy || lastOpened.length || !selectedBooster ||
+      Number(profile.unopened_packs) <= 0) return
 
+    openingBusy = true
+    openingStage = 'charging'
     error = ''
+    const requestToken = openingToken
+    const booster = selectedBooster
+    const nextOpening = Number(profile.opened_packs || 0) + 1
+    const cards = drawBooster({ booster, athletes, openingNumber: nextOpening })
+    render()
 
-    const nextOpening =
-      Number(
-        profile.opened_packs ||
-        0
-      ) + 1
-
-    const cards =
-      drawBooster({
-        booster:
-          selectedBooster,
-        athletes,
-        openingNumber:
-          nextOpening,
+    let result
+    try {
+      const { data, error: openError } = await supabase.rpc('open_tcg_pack_v1', {
+        p_athlete_slug: activeSlug,
+        p_booster_id: booster.id,
+        p_cards: cards.map(card => ({ card_id: card.id, rarity: card.rarity })),
       })
-
-    const {
-      data,
-      error:
-        openError,
-    } =
-      await supabase.rpc(
-        'open_tcg_pack_v1',
-        {
-          p_athlete_slug:
-            activeSlug,
-          p_booster_id:
-            selectedBooster.id,
-          p_cards:
-            cards.map(
-              card => ({
-                card_id:
-                  card.id,
-                rarity:
-                  card.rarity,
-              })
-            ),
-        }
-      )
-
-    if (openError) {
-      error =
-        openError.message
+      if (requestToken !== openingToken) return
+      if (openError) throw openError
+      result = Array.isArray(data) ? data[0] : data
+    } catch (openError) {
+      if (requestToken !== openingToken) return
+      openingBusy = false
+      openingStage = 'idle'
+      error = openError?.message || "L'ouverture du booster a échoué."
       render()
       return
     }
 
-    lastOpened =
-      cards
+    // Never reroll or debit again after a successful RPC, even if refresh fails.
+    profile.unopened_packs = Number(result?.remaining_packs ??
+      Math.max(0, Number(profile.unopened_packs) - 1))
+    profile.opened_packs = nextOpening
+    try {
+      await refreshProfileAndCollection()
+    } catch (refreshError) {
+      console.warn('TCG collection refresh after pack opening:', refreshError)
+    }
+    if (requestToken !== openingToken) return
 
-    const result =
-      Array.isArray(data)
-        ? data[0]
-        : data
-
-    profile.unopened_packs =
-      Number(
-        result?.remaining_packs ??
-        Math.max(
-          0,
-          Number(
-            profile.unopened_packs
-          ) - 1
-        )
-      )
-
-    profile.opened_packs =
-      nextOpening
-
-    await refreshProfileAndCollection()
+    openingStage = 'tearing'
     render()
+    await new Promise(resolve => setTimeout(resolve, 1120))
+    if (requestToken !== openingToken) return
+
+    lastOpened = cards
+    revealCount = 0
+    openingBusy = false
+    openingStage = 'idle'
+    render()
+    scheduleNextReveal()
   }
 
   async function saveDeck() {
