@@ -82,3 +82,24 @@ test('the shared card renderer preserves native sprite geometry instead of stret
   assert.match(game,/SERENA DIVINE/)
   assert.match(game,/if \(card\?\.slug === 'guillaume'\) return null/)
 })
+
+
+test('source WebP frames match their declared aspect groups', () => {
+  const groups = {
+    charles: ['charles-casino-evolutions.webp', 1],
+    celia: ['celia-foudre-evolutions.webp', 1],
+    hugo: ['hugo-forgeron-evolutions.webp', 1],
+    magicarpe: ['magicarpe-lego-evolutions.webp', 1],
+    benoit: ['benoit-terre-evolutions.webp', 2/3],
+    alexandre: ['alexandre-evolutions.webp', 2/3],
+    jolan: ['jolan-bonbons-evolutions.webp', 2/3],
+  }
+  for (const [slug,[file,ratio]] of Object.entries(groups)) {
+    const bytes = readFileSync(new URL('../public/tcg/' + file, import.meta.url))
+    assert.equal(bytes.toString('ascii',12,16),'VP8 ',slug)
+    const width = bytes.readUInt16LE(26) & 16383
+    const height = bytes.readUInt16LE(28) & 16383
+    assert.ok(width >= 1000 && height >= 300,slug + ' source too small')
+    assert.ok(Math.abs((width / 5) / height - ratio) < .02,slug + ' frame shape changed')
+  }
+})
