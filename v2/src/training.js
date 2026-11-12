@@ -63,6 +63,7 @@ import {
 import {
   claimTcgWorkoutPack,
   flushTcgWorkoutPackOutbox,
+  explainTcgAward,
 } from './tcg-rewards.js'
 
 import {
@@ -788,6 +789,8 @@ export function mountTraining(
   let sessionTimerInterval = null
   let sessionNoteFlushTimer = null
   let showBlockReport = false
+
+  let tcgPackNotice = ''
 
   let syncStatus = {
     kind: 'local',
@@ -7652,9 +7655,15 @@ export function mountTraining(
         : 'Synchronisation…'
     )
 
-    void flushTrainingSessionOutbox(
-      setSyncStatus
-    )
+    void flushTrainingSessionOutbox(setSyncStatus)
+      .then(() => flushTcgWorkoutPackOutbox())
+      .then(result => {
+        if (result?.awarded > 0) {
+          tcgPackNotice='🎁 Booster gagné ! Disponible dans le TCG.';
+          render();
+        }
+      })
+      .catch(error => console.error('TCG sync reward error',error))
   }
 
   function scheduleSessionFlush(
@@ -9022,6 +9031,8 @@ export function mountTraining(
           found.dayIndex,
       })
         .then(result => {
+          tcgPackNotice=explainTcgAward(result);
+          render();
           if (
             result?.awarded
           ) {
@@ -10336,6 +10347,7 @@ export function mountTraining(
         >
           ${escapeHtml(syncStatus.label)}
         </div>
+        ${tcgPackNotice ? `<div class="training-sync training-sync--synced" role="status">${escapeHtml(tcgPackNotice)}</div>` : ''}
 
         ${renderV3BlockHistory()}
 

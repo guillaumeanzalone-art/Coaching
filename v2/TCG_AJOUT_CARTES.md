@@ -35,3 +35,23 @@ Les ouvertures de boosters doivent passer par `open_tcg_pack_v2`, qui tire et en
 
 ## Limites de simulation
 La simulation fournie est un **proxy statistique déterministe**, utile pour dépister des écarts. Elle ne prétend pas reproduire 100 % des interactions du moteur de combat ; valider les écarts importants avec des tests de combat dédiés.
+
+## Attribution de boosters après entraînement
+
+Les règles de validation sont stockées dans la table centrale `public.tcg_reward_policy_v2` et peuvent être modifiées sans nouveau déploiement :
+- `min_completion_ratio = 0.80` (80 % des séries validées)
+- `min_duration_seconds = 900` (15 minutes minimum)
+- `min_completed_sets = 3`
+- `min_set_span_seconds = 300` (au moins cinq minutes entre première et dernière validation, pour limiter la triche)
+- `max_packs_per_day = 2`
+
+Seules les séances clôturées et synchronisées **après l'activation de la règle** sont éligibles. Attribution transactionnelle via `claim_tcg_workout_pack_v2`, identifiant de séance unique et blocage des doublons. Toute séance hors ligne attend la synchronisation des séries et de la session. Les ouvertures et cartes sont liées à leur séance récompensée via `tcg_session_pack_awards_v2` et `tcg_openings`.
+
+Pour ajuster : dans l'éditeur SQL du projet Supabase, par exemple :
+```sql
+update public.tcg_reward_policy_v2
+set min_completion_ratio=0.80,min_duration_seconds=900,
+    min_completed_sets=3,min_set_span_seconds=300,max_packs_per_day=2
+where id=1;
+```
+Ne pas réactiver les RPC historiques `claim_tcg_workout_pack_v1` et `open_tcg_pack_v1`, car ils ne vérifient pas toutes les conditions côté serveur.

@@ -5,6 +5,10 @@ on:
     branches: [v2-refactor]
     paths:
       - 'v2/src/tcg-game.js'
+      - 'v2/src/tcg-rewards.js'
+      - 'v2/src/training.js'
+      - 'v2/tests/tcg-rewards-v2.test.js'
+      - 'v2/supabase/migrations/20261112093000_tcg_successful_training_rewards_v2.sql'
       - 'v2/src/tcg-catalog.js'
       - 'v2/data/tcg-catalog-snapshot.json'
       - 'v2/tests/tcg-collection-dynamic.test.js'

@@ -1373,6 +1373,8 @@ export async function mountTcgGame(
     dust: 0,
   }
   let collection = []
+  let tcgAwardHistory = []
+  let tcgOpenHistory = []
   let deck = []
   let loading = true
   let error = ''
@@ -1465,6 +1467,8 @@ export async function mountTcgGame(
     error = ''
     battle = null
     lastOpened = []
+    tcgAwardHistory = []
+    tcgOpenHistory = []
     render()
 
     try {
@@ -1571,6 +1575,19 @@ export async function mountTcgGame(
             catalog
           )
       }
+      // Historique serveur : recompenses gagnees, pack et contenu exact.
+      const [awardsResult, openingsResult] = await Promise.all([
+        supabase.from('tcg_session_pack_awards_v2')
+          .select('session_id,awarded_at,opening_id,booster_id')
+          .eq('athlete_slug',activeSlug).order('awarded_at',{ascending:false}).limit(50),
+        supabase.from('tcg_openings')
+          .select('id,booster_id,cards,opened_at')
+          .eq('athlete_slug',activeSlug).order('opened_at',{ascending:false}).limit(30),
+      ]);
+      if(awardsResult.error)console.warn('Historique des recompenses',awardsResult.error);
+      if(openingsResult.error)console.warn('Historique des ouvertures',openingsResult.error);
+      tcgAwardHistory=awardsResult.data || [];
+      tcgOpenHistory=openingsResult.data || [];
     } catch (loadError) {
       console.error(
         'TCG LOAD ERROR',
@@ -1955,6 +1972,39 @@ export async function mountTcgGame(
     `
   }
 
+  function renderPackHistory() {
+    if(!tcgAwardHistory.length && !tcgOpenHistory.length) return '';
+    const openings=new Map(tcgOpenHistory.map(row=>[String(row.id),row]));
+    return `
+      <section class="tcg-panel">
+        <header class="tcg-panel-head">
+          <div><h3>Historique des boosters</h3>
+          <p>Séances récompensées et cartes obtenues, sauvegardées côté serveur.</p></div>
+          <strong>${tcgAwardHistory.length} séance(s)</strong>
+        </header>
+        <div class="tcg-panel-pad" style="display:grid;gap:10px">
+          ${tcgAwardHistory.map(award=>{
+            const opening=openings.get(String(award.opening_id));
+            const booster=boosters.find(item=>item.id===award.booster_id);
+            return `<div style="padding:12px;border:1px solid #ffffff20;border-radius:12px">
+              <strong>${esc(booster?.name || (award.opening_id ? award.booster_id : 'Pack non ouvert'))}</strong>
+              <small style="display:block;color:#a4afc9">
+                Séance du ${esc(new Date(award.awarded_at).toLocaleDateString('fr-FR'))}
+                · ${award.opening_id ? 'Ouvert' : 'À ouvrir'}
+              </small>
+              ${opening?.cards?.length ? `<small style="display:block;margin-top:5px">${opening.cards.map(row=>esc(row.card_id)).join(' · ')}</small>` : ''}
+            </div>`;
+          }).join('')}
+          ${tcgOpenHistory.filter(opening=>!tcgAwardHistory.some(award=>String(award.opening_id)===String(opening.id))).slice(0,10).map(opening=>`
+            <div style="padding:10px;border:1px solid #ffffff20;border-radius:12px">
+              <strong>${esc(boosters.find(item=>item.id===opening.booster_id)?.name || opening.booster_id)}</strong>
+              <small style="display:block;color:#a4afc9">${esc(new Date(opening.opened_at).toLocaleDateString('fr-FR'))} · Ancien booster</small>
+              <small>${(opening.cards||[]).map(row=>esc(row.card_id)).join(' · ')}</small>
+            </div>`).join('')}
+        </div>
+      </section>`;
+  }
+
   function renderBoosters() {
     if (lastOpened.length) {
       const finished = revealCount >= lastOpened.length
@@ -2081,6 +2131,7 @@ export async function mountTcgGame(
           </div>
         </div>
       </section>
+      ${renderPackHistory()}
 
     `
   }

@@ -71,7 +71,7 @@ async function performClaim({
     error,
   } =
     await supabase.rpc(
-      'claim_tcg_workout_pack_v1',
+      'claim_tcg_workout_pack_v2',
       {
         p_athlete_slug:
           athleteSlug,
@@ -99,10 +99,11 @@ async function performClaim({
         row?.awarded
       ),
     unopenedPacks:
-      Number(
-        row?.unopened_packs ||
-        0
-      ),
+      Number(row?.unopened_packs || 0),
+    reason: String(row?.reason || ''),
+    sessionId: row?.session_id || null,
+    validatedSets: Number(row?.validated_sets || 0),
+    totalSets: Number(row?.total_sets || 0),
   }
 }
 
@@ -135,9 +136,12 @@ export async function claimTcgWorkoutPack(
   }
 
   try {
-    return await performClaim(
-      payload
-    )
+    const result = await performClaim(payload)
+    if (['session_not_synced','sets_not_synced','session_not_completed'].includes(result.reason)) {
+      queueClaim(payload)
+      return {...result, queued: true}
+    }
+    return result
   } catch (error) {
     queueClaim(
       payload
@@ -165,17 +169,20 @@ export async function flushTcgWorkoutPackOutbox() {
 
   const remaining = []
   let flushed = 0
+  let awarded = 0
 
   for (
     const item
     of pending
   ) {
     try {
-      await performClaim(
-        item
-      )
-
-      flushed += 1
+      const result = await performClaim(item)
+      if(result.awarded) awarded += 1
+      if (['session_not_synced','sets_not_synced','session_not_completed'].includes(result.reason)) {
+        remaining.push(item)
+      } else {
+        flushed += 1
+      }
     } catch (error) {
       console.error(
         'TCG PACK CLAIM ERROR',
@@ -194,7 +201,23 @@ export async function flushTcgWorkoutPackOutbox() {
 
   return {
     flushed,
+    awarded,
     remaining:
       remaining.length,
   }
+}
+
+export function explainTcgAward(result) {
+  if (result?.awarded) return '🎁 Booster gagné ! Retrouve-le dans le TCG.';
+  if (result?.queued) return 'Booster en attente : la séance et les séries seront vérifiées après synchronisation.';
+  const reasons = {
+    already_awarded:'Le booster de cette séance a déjà été attribué.',
+    already_awarded_legacy:'Un booster a déjà été attribué pour cette séance.',
+    daily_limit:'Limite quotidienne de boosters atteinte.',
+    duration_too_short:'Aucun booster : durée minimale de 15 minutes non atteinte.',
+    sets_too_fast:'Aucun booster : séries validées trop rapidement.',
+    insufficient_sets:'Aucun booster : pas assez de séries validées.',
+    before_activation:'Cette séance est antérieure à l’activation des nouvelles récompenses.',
+  };
+  return reasons[result?.reason] || 'Séance enregistrée sans nouveau booster.';
 }
