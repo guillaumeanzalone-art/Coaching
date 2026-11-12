@@ -33,7 +33,7 @@ test('Four character sprites preserve user order from common to secret', () => {
     const found = [...match[1].matchAll(/(common|uncommon|rare|ultra|secret):\s*([0-4])/g)]
     assert.deepEqual(found.map(m => m[1]), rarities)
     assert.deepEqual(found.map(m => Number(m[2])), [0, 1, 2, 3, 4])
-    assert.match(game, /'tcg-evo--' \+ card\.slug/)
+    assert.match(game, /tcg-card--evo tcg-evo--/)
     assert.match(css, new RegExp('tcg-evo--' + slug))
     assert.match(game, new RegExp('tcg-evo-gallery--\\$\\{esc\\(slug\\)\\}'))
   }
