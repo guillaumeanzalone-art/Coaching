@@ -6,6 +6,7 @@ import './tcg-hugo-forge.css'
 import './tcg-benoit-earth.css'
 import './tcg-supplied-evolutions.css'
 import './tcg-pack-opening.css'
+import './tcg-interface-clean.css'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
@@ -2800,6 +2801,8 @@ export async function mountTcgGame(
         : tab === 'deck'
           ? `${deck.length} / ${DECK_SIZE} CARTES`
           : `${boosters.length} BOOSTERS`
+    const sectionIndex = String(menuItems.findIndex(item => item.id === tab) + 1).padStart(2, '0')
+    const collectionPercent = catalog.size > 0 ? Math.round(uniqueOwned() / catalog.size * 100) : 0
     const navHtml = (side = false) => menuItems.map(item => `
       <button
         type="button"
@@ -2807,6 +2810,7 @@ export async function mountTcgGame(
         data-action="tcg-tab"
         data-tab="${esc(item.id)}"
         aria-pressed="${tab === item.id ? 'true' : 'false'}"
+        aria-current="${tab === item.id ? 'page' : 'false'}"
       >
         <span class="tcg-spider-tab-symbol" aria-hidden="true">${esc(item.glyph)}</span>
         <span>${esc(item.label)}</span>
@@ -2862,21 +2866,24 @@ export async function mountTcgGame(
 
           <div class="tcg-spider-grid">
             <aside class="tcg-spider-sidebar" aria-label="Navigation TCG">
+              <div class="tcg-sidebar-label">EXPLORER</div>
               <nav class="tcg-spider-side-nav" aria-label="Sections du jeu">
                 ${navHtml(true)}
               </nav>
-              <div class="tcg-spider-side-sigil" aria-hidden="true">
-                <img src="/tcg/spider-sigil.svg" alt="" />
-                LA TOILE
+              <div class="tcg-sidebar-progress">
+                <span class="tcg-sidebar-progress-title">Collection <b>${collectionPercent}%</b></span>
+                <div class="tcg-sidebar-progress-track" role="progressbar" aria-label="Progression de la collection"
+                  aria-valuemin="0" aria-valuemax="100" aria-valuenow="${collectionPercent}">
+                  <span style="width:${collectionPercent}%"></span>
+                </div>
+                <small>${uniqueOwned()} / ${catalog.size} cartes débloquées</small>
               </div>
             </aside>
 
             <div class="tcg-spider-main">
-              <nav class="tcg-nav tcg-spider-nav" aria-label="Navigation principale du jeu">
-                ${navHtml(false)}
-              </nav>
               <div class="tcg-spider-sectionbar">
-                <div>
+                <div class="tcg-section-heading">
+                  <span class="tcg-section-eyebrow">CHAPITRE ${sectionIndex} <span aria-hidden="true">/</span> 04</span>
                   <h2>${esc(pageLabels[tab] || pageLabels.boosters)}</h2>
                   <small>${esc(pageDetails[tab] || '')}</small>
                 </div>
@@ -2887,9 +2894,17 @@ export async function mountTcgGame(
                 ? `
                   <section class="tcg-hero">
                     <div>
-                      <span class="tcg-kicker">ENTRAÎNE-TOI · OUVRE · COLLECTIONNE · JOUE</span>
-                      <h2>Chaque carte appartient à la Toile.</h2>
-                      <p>Termine tes séances pour gagner des boosters. Collectionne les cinq évolutions des athlètes, compose ta troupe et affronte le rival dans une arène à quatre manches.</p>
+                      <span class="tcg-kicker">LA TOILE DES OMBRES · ÉDITION GA</span>
+                      <h2>Construis ta légende, <span>une carte à la fois.</span></h2>
+                      <p>Gagne un booster à chaque séance, découvre les évolutions de tes athlètes et compose ton équipe pour l’arène.</p>
+                      <div class="tcg-hero-actions">
+                        <button type="button" class="tcg-hero-link" data-action="tcg-tab" data-tab="collection">
+                          Voir ma collection <span aria-hidden="true">↗</span>
+                        </button>
+                        <button type="button" class="tcg-hero-link tcg-hero-link--secondary" data-action="tcg-tab" data-tab="deck">
+                          Composer mon équipe <span aria-hidden="true">↗</span>
+                        </button>
+                      </div>
                     </div>
                     <div class="tcg-hero-stats">
                       <div class="tcg-hero-stat"><span>Boosters</span><b><em>${Number(profile.unopened_packs) || 0}</em></b></div>
