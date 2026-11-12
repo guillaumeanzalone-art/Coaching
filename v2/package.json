@@ -18,7 +18,7 @@
     "android:bundle": "npm run android:sync && node scripts/android-bundle.mjs",
     "test:brute": "node --test tests/brute-*.test.js",
     "test:rest": "node --test tests/rest-timer.test.js",
-    "test:tcg": "node --test tests/tcg-arena.test.js tests/tcg-alexandre-art.test.js tests/tcg-hugo-forge.test.js tests/tcg-benoit-earth.test.js tests/tcg-supplied-evolutions.test.js"
+    "test:tcg": "node --test tests/tcg-arena.test.js tests/tcg-alexandre-art.test.js tests/tcg-hugo-forge.test.js tests/tcg-benoit-earth.test.js tests/tcg-supplied-evolutions.test.js tests/tcg-pack-opening.test.js"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
