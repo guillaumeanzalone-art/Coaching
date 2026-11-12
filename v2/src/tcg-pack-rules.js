@@ -7,7 +7,7 @@ export const PACK_IDENTITY = Object.freeze({
   titan:      { name:'Titan',       sigil:'mountain',lead:'benoit',    pool:['benoit','marvin','noe','dorian'] },
   voltage:    { name:'Voltage',     sigil:'bolt',    lead:'celia',     pool:['celia','allan','malo','saya'] },
   lunar:      { name:'Lunaire',     sigil:'moon',    lead:'camille',   pool:['camille','lucine','sarah','janel'] },
-  solar:      { name:'Solaire',     sigil:'sun',     lead:'clara',     pool:['magicarpe','clemence','lou','noe'] },
+  solar:      { name:'Solaire',     sigil:'sun',     lead:'magicarpe',     pool:['magicarpe','clemence','lou','noe'] },
   dragon:     { name:'Dragon',      sigil:'dragon',  lead:'killian',   pool:['killian','malo','metaknight','yann'] },
   crown:      { name:'Serena',      sigil:'crown',   lead:'serena',    pool:['serena','lucine','janel','kaoutar'], secretOnly:'serena' },
   abyss:      { name:'Abysses',     sigil:'trident', lead:'camille',   pool:['camille','alexandre','rudy','sarah'] },
