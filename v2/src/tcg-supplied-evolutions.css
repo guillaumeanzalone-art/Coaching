@@ -28,6 +28,22 @@
 .tcg-app.tcg-spider .tcg-card--evo.tcg-evo--magicarpe {
   --evo-primary:#e6a36a; --evo-secondary:#f9daa8; --evo-glow:rgba(236,145,78,.37);
 }
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--lou {
+  --evo-primary:#a5e7bb; --evo-secondary:#f8d18b; --evo-glow:rgba(129,216,158,.42);
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--flop {
+  --evo-primary:#dfb5ff; --evo-secondary:#ffe0a2; --evo-glow:rgba(205,135,248,.42);
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--duane {
+  --evo-primary:#7be5f2; --evo-secondary:#ffc18c; --evo-glow:rgba(88,217,239,.42);
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--serena {
+  --evo-primary:#a5eaff; --evo-secondary:#f4dc95; --evo-glow:rgba(130,211,244,.45);
+}
+.tcg-app.tcg-spider .tcg-card--evo.tcg-evo--serena.tcg-evo-lvl-5 {
+  --evo-primary:#f6d58c; --evo-secondary:#d2edff; --evo-glow:rgba(240,203,112,.57);
+  box-shadow:0 0 0 1px #f6d58cbc,0 0 30px rgba(245,211,130,.47),0 14px 30px #0009;
+}
 .tcg-app.tcg-spider .tcg-card--evo.tcg-evo--jolan {
   --evo-primary:#ffd068; --evo-secondary:#ffb5df; --evo-glow:rgba(255,158,73,.45);
 }
@@ -193,6 +209,10 @@
   border-color:color-mix(in srgb,var(--evo-gallery-color),transparent 55%);
   background:linear-gradient(145deg,rgba(9,21,41,.98),rgba(5,9,23,.98));
 }
+.tcg-app.tcg-spider .tcg-evo-gallery--lou {--evo-gallery-color:#a7e4b9;}
+.tcg-app.tcg-spider .tcg-evo-gallery--flop {--evo-gallery-color:#d7b7fc;}
+.tcg-app.tcg-spider .tcg-evo-gallery--duane {--evo-gallery-color:#8cdfee;}
+.tcg-app.tcg-spider .tcg-evo-gallery--serena {--evo-gallery-color:#c3eaff;}
 .tcg-app.tcg-spider .tcg-evo-gallery--jolan {--evo-gallery-color:#ffc87a;}
 .tcg-app.tcg-spider .tcg-evo-gallery--charles {--evo-gallery-color:#a39af7;}
 .tcg-app.tcg-spider .tcg-evo-gallery--celia {--evo-gallery-color:#8bcaff;}
