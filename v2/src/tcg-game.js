@@ -7,7 +7,7 @@ import './tcg-benoit-earth.css'
 import './tcg-supplied-evolutions.css'
 import './tcg-pack-opening.css'
 import './tcg-interface-clean.css'
-import { resolvePackIdentity, drawThemedBooster, SLOT_ODDS } from './tcg-pack-rules.js'
+import { resolvePackIdentity } from './tcg-pack-rules.js'
 import './tcg-art-quality.css'
 import './tcg-motion.css'
 import { TCG_MOTION, rarityFx, rarityCss, deviceMotionSettings, eventDuration } from './tcg-motion-config.js'
@@ -761,16 +761,6 @@ function randomPercent() {
     bytes[0] /
     4294967295
   ) * 100
-}
-
-function drawBooster({booster,athletes,openingNumber}) {
-  return drawThemedBooster({
-    booster,
-    athletes,
-    openingNumber,
-    slugOf: athleteSlug,
-    buildCard,
-  })
 }
 
 function ensureStyles() {
