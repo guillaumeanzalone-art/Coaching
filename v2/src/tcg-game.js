@@ -2145,58 +2145,75 @@ export async function mountTcgGame(
   render();
 }
 
+  function renderPackShell(booster, seriesNumber = 1) {
+    return `
+      <div class="tcg-pack-shell" aria-hidden="true">
+        <div class="tcg-pack-skin"></div>
+        <span class="tcg-pack-seal tcg-pack-seal--top"></span>
+        <span class="tcg-pack-seal tcg-pack-seal--bottom"></span>
+        <span class="tcg-pack-crease"></span>
+        <span class="tcg-pack-brand">LA TOILE DES OMBRES</span>
+        <span class="tcg-pack-emblem">
+          <img src="/tcg/spider-sigil.svg" alt="" />
+        </span>
+        <span class="tcg-pack-title">${esc(booster.name)}</span>
+        <span class="tcg-pack-edition">ÉDITION ${String(seriesNumber).padStart(2, '0')}</span>
+        <span class="tcg-pack-serial">GA TCG · 5 CARTES</span>
+        <span class="tcg-pack-tear"></span>
+        <span class="tcg-pack-splinter"></span>
+      </div>
+    `
+  }
+
   function renderBoosters() {
     if (lastOpened.length) {
-      const revealRarity =
-        highestRarity(
-          lastOpened
-        )
+      const finished = revealCount >= lastOpened.length
+      const revealedCards = lastOpened.slice(0, revealCount)
+      const revealRarity = revealedCards.length
+        ? highestRarity(revealedCards)
+        : 'common'
 
       return `
         <section class="tcg-panel">
           <header class="tcg-panel-head">
             <div>
-              <h3>
-                Booster ouvert · ${esc(selectedBooster?.name || '')}
-              </h3>
-              <p>
-                5 cartes ajoutées à ta collection.
-              </p>
+              <h3>Ouverture · ${esc(selectedBooster?.name || '')}</h3>
+              <p>${finished ? 'Les cinq cartes ont rejoint ta collection.' : 'Le sceau est brisé. Découvre tes cinq cartes.'}</p>
             </div>
-
-            <button
-              class="tcg-secondary"
-              data-action="tcg-close-reveal"
-              type="button"
-            >
-              Fermer
-            </button>
+            <button class="tcg-secondary" data-action="tcg-close-reveal" type="button">Fermer</button>
           </header>
-
           <div class="tcg-panel-pad">
-            <div
-              class="tcg-reveal-scene"
-              data-reveal-rarity="${esc(revealRarity)}"
-            >
-              <div class="tcg-reveal-announcement">
-                <span>MEILLEURE PIOCHE</span>
-                <strong>
-                  ${esc(rarityMeta(revealRarity).label)}
-                </strong>
+            <div class="tcg-reveal-scene" data-reveal-rarity="${esc(revealRarity)}">
+              <div class="tcg-reveal-announcement" aria-live="polite">
+                <span>${finished ? 'MEILLEURE PIOCHE' : 'L’OUVERTURE DES ARCHIVES'}</span>
+                <strong>${finished ? esc(rarityMeta(revealRarity).label) : 'La Toile révèle ses secrets'}</strong>
               </div>
-
-              <div class="tcg-reveal">
-              ${lastOpened
-                .map(
-                  card =>
-                    renderCard(
-                      card,
-                      {
-                        reveal: true,
-                      }
-                    )
-                )
-                .join('')}
+              <div class="tcg-reveal-count" aria-hidden="true">
+                <i style="width:${revealCount / lastOpened.length * 100}%"></i>
+              </div>
+              <div class="tcg-reveal" aria-label="Cinq cartes du booster">
+                ${lastOpened.map((card, index) => `
+                  <div class="tcg-pull ${index < revealCount ? 'is-flipped' : ''}"
+                       data-pull-index="${index}" data-rarity="${esc(card.rarity)}">
+                    <div class="tcg-pull-rotator">
+                      <div class="tcg-pull-face tcg-pull-face--back"
+                           aria-hidden="${index < revealCount ? 'true' : 'false'}">
+                        <img src="/tcg/spider-sigil.svg" alt="" />
+                        <small>LA TOILE DES OMBRES</small>
+                      </div>
+                      <div class="tcg-pull-face tcg-pull-face--front"
+                           aria-hidden="${index < revealCount ? 'false' : 'true'}">
+                        ${renderCard(card)}
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+              <div class="tcg-reveal-actions">
+                <span class="tcg-reveal-progress" role="status">${revealCount} / ${lastOpened.length} CARTES</span>
+                ${finished
+                  ? `<button class="tcg-primary" data-action="tcg-close-reveal" type="button">Choisir un autre booster</button>`
+                  : `<button data-action="tcg-reveal-all" type="button">Tout révéler</button>`}
               </div>
             </div>
           </div>
@@ -2208,108 +2225,48 @@ export async function mountTcgGame(
       <section class="tcg-panel">
         <header class="tcg-panel-head">
           <div>
-            <h3>
-              20 boosters GA
-            </h3>
-            <p>
-              Même taux de rareté · pool vedette différent pour chaque série.
-            </p>
+            <h3>20 éditions de boosters · La Toile</h3>
+            <p>Une véritable collection de packs scellés. Chaque série possède ses athlètes vedettes.</p>
           </div>
-
-          <strong>
-            🎴 ${Number(profile.unopened_packs) || 0}
-          </strong>
+          <strong>✦ ${Number(profile.unopened_packs) || 0}</strong>
         </header>
-
         <div class="tcg-panel-pad">
           <div class="tcg-booster-grid">
-            ${boosters
-              .map(
-                booster => `
-                  <button
-                    class="tcg-booster"
-                    style="--h:${booster.hue}"
-                    data-action="tcg-select-booster"
-                    data-booster-id="${esc(booster.id)}"
-                    type="button"
-                  >
-                    <span class="tcg-booster-icon">
-                      ${esc(booster.icon)}
-                    </span>
-
-                    <strong>
-                      ${esc(booster.name)}
-                    </strong>
-
-                    <small>
-                      ${booster.featured
-                        .slice(0, 3)
-                        .map(
-                          athlete =>
-                            esc(
-                              athlete.name
-                            )
-                        )
-                        .join(' · ') ||
-                        'Pool mixte'
-                      }
-                    </small>
-
-                    <span>
-                      OUVRIR
-                    </span>
-                  </button>
-                `
-              )
-              .join('')}
+            ${boosters.map((booster, index) => `
+              <button class="tcg-booster ${booster.id === selectedBooster?.id ? 'is-selected' : ''}"
+                      style="--h:${booster.hue}" data-action="tcg-select-booster"
+                      data-booster-id="${esc(booster.id)}" type="button"
+                      aria-label="Sélectionner le booster ${esc(booster.name)}"
+                      ${openingBusy ? 'disabled' : ''}>
+                ${renderPackShell(booster, index + 1)}
+                <span class="tcg-booster-caption">
+                  <strong>${esc(booster.name)}</strong>
+                  ${booster.featured.slice(0, 3).map(athlete => esc(athlete.name)).join(' · ') || 'Pool mixte'}
+                </span>
+              </button>
+            `).join('')}
           </div>
         </div>
       </section>
-
-      ${selectedBooster
-        ? `
-          <section class="tcg-panel" style="margin-top:12px">
-            <div class="tcg-open-stage">
-              <div
-                class="tcg-pack-big"
-                style="--h:${selectedBooster.hue}"
-              >
-                <i>
-                  ${esc(selectedBooster.icon)}
-                </i>
-
-                <strong>
-                  ${esc(selectedBooster.name)}
-                </strong>
-
-                <small>
-                  5 cartes · slot final premium
-                </small>
-              </div>
-
-              <button
-                class="tcg-open-btn"
-                data-action="tcg-open-pack"
-                type="button"
-                ${Number(profile.unopened_packs) > 0 ? '' : 'disabled'}
-              >
-                ${Number(profile.unopened_packs) > 0
-                  ? 'OUVRIR LE BOOSTER'
-                  : 'TERMINE UNE SÉANCE POUR GAGNER UN BOOSTER'
-                }
-              </button>
-
-              <p style="margin:0;text-align:center;color:#737d96;font-size:9px">
-                Pity : Ultra Rare garantie tous les 10 boosters · Secret Rare au 50e.
-              </p>
+      ${selectedBooster ? `
+        <section class="tcg-panel" style="margin-top:14px">
+          <div class="tcg-open-stage">
+            <div class="tcg-pack-big ${openingStage === 'charging' ? 'is-charging' : ''} ${openingStage === 'tearing' ? 'is-opening' : ''}"
+                 style="--h:${selectedBooster.hue}"
+                 role="img" aria-label="Booster scellé ${esc(selectedBooster.name)}">
+              ${renderPackShell(selectedBooster, boosters.findIndex(item => item.id === selectedBooster.id) + 1)}
             </div>
-          </section>
-        `
-        : ''
-      }
+            <button class="tcg-open-btn" data-action="tcg-open-pack" type="button"
+                    ${openingBusy || Number(profile.unopened_packs) <= 0 ? 'disabled' : ''}>
+              ${openingBusy ? 'OUVERTURE EN COURS…' :
+                Number(profile.unopened_packs) > 0 ? 'DÉCHIRER LE BOOSTER' : 'TERMINE UNE SÉANCE POUR OBTENIR UN BOOSTER'}
+            </button>
+            <p class="tcg-open-note">5 cartes · slot final premium · ultra garantie tous les 10 boosters · secret au 50e</p>
+          </div>
+        </section>
+      ` : ''}
     `
   }
-
 
   function renderAlexandreEvolutionGallery() {
     const alexandre = athletes.find(item => athleteSlug(item) === 'alexandre')
