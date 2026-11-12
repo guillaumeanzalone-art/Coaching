@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs><style>.line{fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}</style></defs>
+  <symbol id="crown" viewBox="0 0 64 64"><g class="line"><path d="M9 45 6 19 20 31 32 12 44 31 58 19 55 45Z"/><path d="M9 49h46v7H9z"/><path d="M17 41h30"/><path d="m32 7 3 5-3 5-3-5z"/><path d="m6 17 4 4-4 4-4-4zM58 17l4 4-4 4-4-4z"/></g></symbol>
+  <symbol id="anvil" viewBox="0 0 64 64"><g class="line"><path d="M8 25h48l-9 10H17zM24 35v9h16v-9M16 44h32l5 9H11zM12 25 6 14h52l-7 11M15 17h34"/></g></symbol>
+  <symbol id="mountain" viewBox="0 0 64 64"><g class="line"><path d="M5 52 23 19l11 16 9-15 17 32Z"/><path d="m16 32 7 6 6-6m8 4 6 6 6-7M11 56h45"/></g></symbol>
+  <symbol id="bolt" viewBox="0 0 64 64"><g class="line"><path d="M36 6 12 36h18l-3 22 26-32H34z"/><path d="M5 20h10M48 47h11"/></g></symbol>
+  <symbol id="moon" viewBox="0 0 64 64"><g class="line"><path d="M48 10a24 24 0 1 0 7 37 23 23 0 0 1-7-37Z"/><path d="m47 17 2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/></g></symbol>
+  <symbol id="sun" viewBox="0 0 64 64"><g class="line"><circle cx="32" cy="32" r="13"/><path d="M32 4v10m0 36v10M4 32h10m36 0h10M12 12l7 7m26 26 7 7m0-40-7 7M19 45l-7 7"/></g></symbol>
+  <symbol id="dragon" viewBox="0 0 64 64"><g class="line"><path d="M10 52q1-18 18-22l-4-12 10 5 7-15 5 16 11 9-10 5q-1 18-22 18l6-10-10-7-11 13Z"/><path d="m38 29 5 2M8 18l10 8"/></g></symbol>
+  <symbol id="trident" viewBox="0 0 64 64"><g class="line"><path d="M32 9v46M18 11v14q0 15 14 15t14-15V11"/><path d="m11 17 7-8 7 8m14 0 7-8 7 8M25 54h14"/></g></symbol>
+  <symbol id="flower" viewBox="0 0 64 64"><g class="line"><circle cx="32" cy="32" r="6"/><path d="M32 25C19 10 15 29 26 29c-17-9-16 11-4 9-9 13 8 22 10 8 4 15 21 4 11-8 15 1 13-20-4-10C54 21 43 9 32 25Z"/></g></symbol>
+  <symbol id="compass" viewBox="0 0 64 64"><g class="line"><circle cx="32" cy="32" r="25"/><circle cx="32" cy="32" r="5"/><path d="m39 25 11-11-11 25-25 11 11-25z"/></g></symbol>
+  <symbol id="eye" viewBox="0 0 64 64"><g class="line"><path d="M5 32q27-31 54 0-27 31-54 0Z"/><circle cx="32" cy="32" r="10"/><circle cx="32" cy="32" r="4"/></g></symbol>
+  <symbol id="snow" viewBox="0 0 64 64"><g class="line"><path d="M32 7v50M11 19l42 26M11 45l42-26M24 15l8 8 8-8m-16 34 8-8 8 8M12 27l11 3-2-11m31 18-11-3 2 11M43 19l-2 11 11-3m-31 18 2-11-11 3"/></g></symbol>
+  <symbol id="swords" viewBox="0 0 64 64"><g class="line"><path d="m11 11 14 2 26 28-10 10-28-26zM53 11l-14 2-26 28 10 10 28-26z"/><path d="m13 49-6 6m44-6 6 6M7 41l16 16m34-16L41 57"/></g></symbol>
+  <symbol id="target" viewBox="0 0 64 64"><g class="line"><circle cx="32" cy="32" r="23"/><circle cx="32" cy="32" r="14"/><circle cx="32" cy="32" r="4"/><path d="M32 3v10m0 38v10M3 32h10m38 0h10"/></g></symbol>
+  <symbol id="claw" viewBox="0 0 64 64"><g class="line"><path d="M11 13q-10 23 11 38M27 8q-10 28 6 45M43 9q-8 25 1 43M57 17q-5 17-4 34"/></g></symbol>
+  <symbol id="laurel" viewBox="0 0 64 64"><g class="line"><path d="M23 52C8 46 4 31 12 16m29 36c15-6 19-21 11-36M16 21l-10-7m9 16-11-3m15 13-11 2m9-27 1-10m30 16 10-7m-9 16 11-3M45 40l11 2m-9-27-1-10"/><path d="m32 15 4 10 11 1-9 7 3 11-9-6-9 6 3-11-9-7 11-1z"/></g></symbol>
+  <symbol id="eclipse" viewBox="0 0 64 64"><g class="line"><circle cx="32" cy="32" r="22"/><path d="M46 13A21 21 0 0 0 47 51 22 22 0 0 1 46 13Z"/></g></symbol>
+  <symbol id="diamond" viewBox="0 0 64 64"><g class="line"><path d="m17 12 30 0 12 17-27 28L5 29zM5 29h54m-42-17 15 17 15-17M17 29l15 28 15-28"/></g></symbol>
+  <symbol id="storm" viewBox="0 0 64 64"><g class="line"><path d="M13 42Q1 34 12 23q-1-15 15-17Q40 2 46 16q19 2 13 20-2 5-9 6"/><path d="m30 30-8 16h12l-4 15 19-25H35l5-6z"/></g></symbol>
+  <symbol id="flask" viewBox="0 0 64 64"><g class="line"><path d="M25 7h14m-11 0v21L11 52q-3 5 4 5h34q7 0 4-5L36 28V7M18 43h28M22 49h20"/><circle cx="30" cy="36" r="2"/><circle cx="38" cy="40" r="2"/></g></symbol>
+</svg>
