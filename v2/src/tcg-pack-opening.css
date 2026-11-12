@@ -75,11 +75,12 @@
 .tcg-app.tcg-spider .tcg-pack-big .tcg-pack-title{font-size:25px}
 .tcg-app.tcg-spider .tcg-pack-big .tcg-pack-edition{font-size:10px}
 .tcg-app.tcg-spider .tcg-pack-big .tcg-pack-serial{font-size:9px}
+.tcg-app.tcg-spider .tcg-pack-big.is-charging .tcg-pack-shell{animation:tcgPackCharge 1.4s ease-in-out infinite}
 .tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-shell{animation:tcgPackTension .65s ease-in-out,tcgPackExit .64s .66s ease-in both}
 .tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-tear{background:repeating-linear-gradient(90deg,#c9bdca 0 5px,#655a71 5px 10px);clip-path:polygon(0 10%,100% 0,97% 100%,0 95%);animation:tcgPackRip .65s .22s ease-out both}
 .tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-splinter{animation:tcgPackFlash .8s .47s ease-out both}
 .tcg-app.tcg-spider .tcg-open-stage{position:relative;min-height:390px;gap:13px;padding:28px 18px;overflow:hidden;background:radial-gradient(ellipse at 50% 32%,#a26cc52e,transparent 46%),repeating-radial-gradient(circle at 50% 40%,#fff0 0 55px,#b487d40a 57px 58px),#0b0813}
-.tcg-app.tcg-spider .tcg-open-stage:before{content:"";position:absolute;top:5%;left:50%;width:min(430px,90%);aspect-ratio:1;transform:translateX(-50%);background:conic-gradient(from 10deg,transparent,#c29af826,transparent 24%,#a780d326,transparent 49%,#f6c48122,transparent 71%,#d195d723,transparent);border-radius:50%;filter:blur(8px);animation:tcgPackOrbit 17s linear infinite;pointer-events:none}
+.tcg-app.tcg-spider .tcg-open-stage:before{content:"";position:absolute;top:5%;left:50%;width:min(430px,90%);aspect-ratio:1;transform:translateX(-50%);background:conic-gradient(from 10deg,transparent,#c29af826,transparent 24%,#a780d326,transparent 49%,#f6c48122,transparent 71%,#d195d723,transparent);border-radius:50%;filter:blur(8px);animation:tcgPackOrbitCentered 17s linear infinite;pointer-events:none}
 .tcg-app.tcg-spider .tcg-open-stage > *{position:relative;z-index:1}
 .tcg-app.tcg-spider .tcg-open-stage .tcg-open-btn{justify-self:center;min-width:min(320px,100%);border:1px solid #e9d8b78a;border-radius:6px;color:#1a0d18;background:linear-gradient(115deg,#fae8bf,#bb8bee 52%,#f5c88f);box-shadow:0 5px 24px #9e67d057;font-size:12px;letter-spacing:.12em}
 .tcg-app.tcg-spider .tcg-open-stage .tcg-open-btn:disabled{filter:saturate(.6);cursor:not-allowed}
@@ -113,6 +114,8 @@
 .tcg-app.tcg-spider .tcg-reveal-count i{display:block;height:100%;background:linear-gradient(90deg,#945ddd,#e8c07d);transition:width .45s ease}
 .tcg-app.tcg-spider .tcg-card[data-rarity="ultra"]:hover{filter:drop-shadow(0 0 9px #c387f7)}
 .tcg-app.tcg-spider .tcg-card[data-rarity="secret"]:hover{filter:drop-shadow(0 0 13px #f5c879)}
+@keyframes tcgPackCharge{0%,100%{transform:translateY(0);filter:brightness(1)}50%{transform:translateY(-6px);filter:brightness(1.12)}}
+@keyframes tcgPackOrbitCentered{from{transform:translateX(-50%) rotate(0)}to{transform:translateX(-50%) rotate(360deg)}}
 @keyframes tcgPackShine{0%,26%{transform:translateX(-65%) rotate(9deg)}70%,100%{transform:translateX(65%) rotate(9deg)}}
 @keyframes tcgPackTension{0%,100%{transform:rotate(0) scale(1)}20%{transform:rotate(-2deg) scale(1.015)}45%{transform:rotate(2deg) scale(1.025)}65%{transform:rotate(-1.3deg) scale(1.04)}80%{transform:rotate(.7deg) scale(1.045)}}
 @keyframes tcgPackRip{0%{opacity:0;transform:translateX(-70%) rotate(0deg)}30%{opacity:1}100%{opacity:0;transform:translate(25%,-110%) rotate(18deg)}}
@@ -138,6 +141,7 @@
 @media(prefers-reduced-motion:reduce){
   .tcg-app.tcg-spider .tcg-booster,.tcg-app.tcg-spider .tcg-pack-skin:after,
   .tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-shell,
+  .tcg-app.tcg-spider .tcg-pack-big.is-charging .tcg-pack-shell,
   .tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-tear,
   .tcg-app.tcg-spider .tcg-pack-big.is-opening .tcg-pack-splinter,
   .tcg-app.tcg-spider .tcg-open-stage:before,.tcg-app.tcg-spider .tcg-reveal-scene:before,
