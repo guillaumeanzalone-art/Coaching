@@ -7,6 +7,14 @@
   background-image:none!important;filter:none;
   overflow:hidden;pointer-events:none
 }
+.tcg-app.tcg-spider .tcg-card--illustrated .tcg-illustration-svg.tcg-illustration-backdrop{
+  z-index:1;opacity:.48;filter:blur(13px) saturate(.72) brightness(.63);
+  transform:scale(1.06);pointer-events:none
+}
+.tcg-app.tcg-spider .tcg-card--illustrated .tcg-illustration-svg.tcg-illustration-primary{
+  z-index:2;opacity:1;filter:drop-shadow(0 1px 5px #0009);
+  pointer-events:none
+}
 .tcg-app.tcg-spider .tcg-card--illustrated .tcg-illustration-svg image{
   image-rendering:auto
 }
