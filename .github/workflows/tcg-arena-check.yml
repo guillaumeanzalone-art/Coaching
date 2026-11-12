@@ -5,6 +5,10 @@ on:
     branches: [v2-refactor]
     paths:
       - 'v2/src/tcg-game.js'
+      - 'v2/src/tcg-pack-rules.js'
+      - 'v2/src/tcg-art-quality.css'
+      - 'v2/public/tcg/pack-icons.svg'
+      - 'v2/tests/tcg-pack-loot-quality.test.js'
       - 'v2/src/tcg-arena.js'
       - 'v2/src/tcg-arena.css'
       - 'v2/src/tcg-spider-theme.css'
