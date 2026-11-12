@@ -7,6 +7,8 @@ import './tcg-benoit-earth.css'
 import './tcg-supplied-evolutions.css'
 import './tcg-pack-opening.css'
 import './tcg-interface-clean.css'
+import { resolvePackIdentity, drawThemedBooster } from './tcg-pack-rules.js'
+import './tcg-art-quality.css'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
 const RARITIES = {
@@ -675,63 +677,25 @@ function catalogForAthletes(
   return map
 }
 
-function boosterCatalog(
-  athletes
-) {
-  const clean =
-    athletes.filter(
-      athlete =>
-        athleteSlug(
-          athlete
-        )
-    )
-
-  return BOOSTER_TEMPLATES
-    .map(
-      (
-        [
-          id,
-          name,
-          icon,
-          hue,
-        ],
-        index
-      ) => {
-        const featured =
-          clean.filter(
-            (
-              _,
-              athleteIndex
-            ) =>
-              athleteIndex %
-                BOOSTER_TEMPLATES.length ===
-              index
-          )
-
-        const fallback =
-          clean.filter(
-            (
-              _,
-              athleteIndex
-            ) =>
-              athleteIndex %
-                10 ===
-              index %
-                10
-          )
-
-        return {
-          id,
-          name,
-          icon,
-          hue,
-          featured:
-            featured.length
-              ? featured
-              : fallback,
-        }
-      }
-    )
+function boosterCatalog(athletes) {
+  const clean = athletes.filter(athlete => athleteSlug(athlete))
+  return BOOSTER_TEMPLATES.map(([id, defaultName, icon, hue]) => {
+    const identity = resolvePackIdentity(id)
+    const poolSlugs = identity?.pool || []
+    const featured = clean.filter(athlete => poolSlugs.includes(athleteSlug(athlete)))
+    return {
+      id,
+      name: identity?.name || defaultName,
+      icon,
+      hue,
+      sigil: identity?.sigil || 'diamond',
+      leadSlug: identity?.lead || athleteSlug(featured[0]),
+      poolSlugs,
+      secretOnly: identity?.secretOnly || null,
+      chaseName: id === 'crown' ? 'Serena Divine' : null,
+      featured,
+    }
+  })
 }
 
 function randomItem(items) {
@@ -766,106 +730,14 @@ function randomPercent() {
   ) * 100
 }
 
-function chooseRarity({
-  premium = false,
-  openingNumber = 1,
-}) {
-  if (
-    premium &&
-    openingNumber %
-      50 ===
-      0
-  ) {
-    return 'secret'
-  }
-
-  if (
-    premium &&
-    openingNumber %
-      10 ===
-      0
-  ) {
-    return 'ultra'
-  }
-
-  const roll =
-    randomPercent()
-
-  if (premium) {
-    if (roll < 3) {
-      return 'secret'
-    }
-
-    if (roll < 15) {
-      return 'ultra'
-    }
-
-    if (roll < 50) {
-      return 'rare'
-    }
-
-    return 'uncommon'
-  }
-
-  if (roll < .2) {
-    return 'secret'
-  }
-
-  if (roll < 1.5) {
-    return 'ultra'
-  }
-
-  if (roll < 9) {
-    return 'rare'
-  }
-
-  if (roll < 36) {
-    return 'uncommon'
-  }
-
-  return 'common'
-}
-
-function drawBooster({
-  booster,
-  athletes,
-  openingNumber,
-}) {
-  const featured =
-    booster?.featured ||
-    []
-
-  return Array.from(
-    {
-      length: 5,
-    },
-    (_, index) => {
-      const rarity =
-        chooseRarity({
-          premium:
-            index === 4,
-          openingNumber,
-        })
-
-      const useFeatured =
-        featured.length >
-          0 &&
-        randomPercent() <
-          58
-
-      const athlete =
-        randomItem(
-          useFeatured
-            ? featured
-            : athletes
-        )
-
-      return buildCard(
-        athlete,
-        rarity
-      )
-    }
-  )
+function drawBooster({booster,athletes,openingNumber}) {
+  return drawThemedBooster({
+    booster,
+    athletes,
+    openingNumber,
+    slugOf: athleteSlug,
+    buildCard,
+  })
 }
 
 function ensureStyles() {
@@ -2156,7 +2028,9 @@ export async function mountTcgGame(
         <span class="tcg-pack-crease"></span>
         <span class="tcg-pack-brand">LA TOILE DES OMBRES</span>
         <span class="tcg-pack-emblem">
-          <img src="/tcg/spider-sigil.svg" alt="" />
+          <svg class="tcg-pack-icon" viewBox="0 0 64 64" aria-hidden="true">
+            <use href="/tcg/pack-icons.svg#${esc(booster.sigil || 'diamond')}"></use>
+          </svg>
         </span>
         <span class="tcg-pack-title">${esc(booster.name)}</span>
         <span class="tcg-pack-edition">ÉDITION ${String(seriesNumber).padStart(2, '0')}</span>
@@ -2235,7 +2109,11 @@ export async function mountTcgGame(
             <div class="tcg-open-details">
               <span class="tcg-open-eyebrow">PACK SÉLECTIONNÉ · SÉRIE ${String(boosters.findIndex(item => item.id === selectedBooster.id) + 1).padStart(2, '0')}</span>
               <h3>${esc(selectedBooster.name)}</h3>
-              <p>Un paquet scellé, cinq cartes à découvrir et une dernière pioche premium. Chaque ouverture enrichit ta collection.</p>
+              <p>5 cartes issues de cette édition, avec une dernière pioche premium. ${selectedBooster.secretOnly ? 'Divine exclusive : ' + esc(selectedBooster.chaseName || selectedBooster.name) + '.' : 'Des personnages et formes rares propres à cette série.'}</p>
+              <div class="tcg-pack-pool">
+                <span>Cartes disponibles</span>
+                <strong>${selectedBooster.featured.map(person => esc(person.name)).join(' · ') || 'Sélection de la Toile'}</strong>
+              </div>
               <div class="tcg-open-facts">
                 <span><b>05</b> cartes</span>
                 <span><b>${Number(profile.unopened_packs) || 0}</b> en réserve</span>
@@ -2245,7 +2123,7 @@ export async function mountTcgGame(
                 ${openingBusy ? 'Ouverture en cours…' :
                   Number(profile.unopened_packs) > 0 ? 'Ouvrir ce booster' : 'Termine une séance pour gagner un booster'}
               </button>
-              <p class="tcg-open-note">Ultra Rare garantie au 10e booster · Secret Rare au 50e</p>
+              <p class="tcg-open-note">Dernier slot : 88 % Rare · 10 % Ultra · 2 % Secret. Ultra garantie chaque 10e ouverture, Secret chaque 50e.</p>
             </div>
           </div>
         </section>
@@ -2271,6 +2149,7 @@ export async function mountTcgGame(
                 <span class="tcg-booster-caption">
                   <strong>${esc(booster.name)}</strong>
                   ${booster.featured.slice(0, 3).map(athlete => esc(athlete.name)).join(' · ') || 'Pool mixte'}
+                  ${booster.chaseName ? '<span class="tcg-chase-label">EXCLUSIF · ' + esc(booster.chaseName) + '</span>' : ''}
                 </span>
               </button>
             `).join('')}
