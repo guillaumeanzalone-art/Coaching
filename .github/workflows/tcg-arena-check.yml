@@ -5,6 +5,12 @@ on:
     branches: [v2-refactor]
     paths:
       - 'v2/src/tcg-game.js'
+      - 'v2/src/tcg-motion-config.js'
+      - 'v2/src/tcg-timeline.js'
+      - 'v2/src/tcg-combat-events.js'
+      - 'v2/src/tcg-feedback.js'
+      - 'v2/src/tcg-motion.css'
+      - 'v2/tests/tcg-motion.test.js'
       - 'v2/src/tcg-rewards.js'
       - 'v2/src/training.js'
       - 'v2/tests/tcg-rewards-v2.test.js'

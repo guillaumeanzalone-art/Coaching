@@ -9,6 +9,11 @@ import './tcg-pack-opening.css'
 import './tcg-interface-clean.css'
 import { resolvePackIdentity, drawThemedBooster, SLOT_ODDS } from './tcg-pack-rules.js'
 import './tcg-art-quality.css'
+import './tcg-motion.css'
+import { TCG_MOTION, rarityFx, rarityCss, deviceMotionSettings, eventDuration } from './tcg-motion-config.js'
+import { createTcgTimeline } from './tcg-timeline.js'
+import { buildTcgRoundEvents } from './tcg-combat-events.js'
+import { createTcgFeedback } from './tcg-feedback.js'
 import { DECK_SIZE, powerScore, deckPower, validateDeck } from './tcg-catalog.js'
 import { ARENA_START_HP, ARENA_FURY_COST, arenaBaseStats, arenaTeamActive, createTcgArena, resolveTcgArenaRound } from './tcg-arena.js'
 
@@ -1033,9 +1038,10 @@ function renderCard(
       data-character="${esc(card.slug)}"
       data-level="${isAlexandre || isHugo || isBenoit || isSuppliedEvolution ? poisonLevel : '' }"
       data-design="${esc(design?.family || '')}"
-      style="--character-hue:${Number(design?.hue || 270)}"
+      style="--character-hue:${Number(design?.hue || 270)};${rarityCss(card.rarity)}"
       ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}"` : ''}
     >
+      <span class="tcg-rarity-trim" aria-hidden="true"></span>
       <div class="tcg-card-art">
         ${isAlexandre ? `<div class="tcg-venom-backdrop" aria-hidden="true"><i></i><i></i><i></i></div>` : ''}
         ${dedicatedArt?.portraitImage
@@ -1124,7 +1130,7 @@ function renderCard(
           : ''
         }
 
-        <span class="tcg-card-cost">
+        <span class="tcg-card-cost" title="Valeur tactique historique, pas un coût de construction de deck">
           ${card.cost}
         </span>
       </div>
@@ -1135,20 +1141,15 @@ function renderCard(
         </strong>
 
         <div class="tcg-card-type">
-          ${esc(card.archetype.icon)}
-          ${esc(card.archetype.label)}
+          ${esc(card.archetype.icon || '✦')}
+          ${esc(card.archetype.label || card.faction || 'Faction')}
         </div>
 
         <div class="tcg-card-stats">
-          <span>
-            ATK
-            <b>${card.attack}</b>
-          </span>
-
-          <span>
-            DEF
-            <b>${card.guard}</b>
-          </span>
+          <span>ATK <b>${card.attack}</b></span>
+          <span>DEF <b>${card.guard}</b></span>
+          <span class="tcg-stat-true">PUI <b>${arenaBaseStats(card).power}</b></span>
+          <span class="tcg-stat-true">DÉG <b>${arenaBaseStats(card).damage}</b></span>
         </div>
 
         <div class="tcg-card-skill">
@@ -1334,6 +1335,30 @@ function buildAiDeck(catalog, playerCards) {
   return best || playerCards;
 }
 
+async function loadBoosterTypes(athletes,catalog) {
+  const fallback=()=>boosterCatalog(athletes)
+  const {data,error}=await supabase.from('tcg_booster_types_v2').select('*').eq('published',true).order('name')
+  if(error || !data?.length){if(error)console.warn('Booster catalogue',error);return fallback()}
+  const bySlug=new Map(athletes.map(x=>[athleteSlug(x),x]))
+  for(const card of catalog.values())if(!bySlug.has(card.slug))bySlug.set(card.slug,card.athlete)
+  return data.map(row=>{
+    const old=BOOSTER_TEMPLATES.find(x=>x[0]===row.id)
+    const cards=[...catalog.values()].filter(card=>(card.booster_ids||[]).includes(row.id)||(card.booster_ids||[]).includes('*'))
+    const slugs=[...new Set([...(row.pool_slugs||[]),...cards.map(card=>card.slug)])]
+    return {id:row.id,name:row.name,icon:old?.[2]||'✦',hue:old?.[3]??hashString(row.id)%360,
+      sigil:row.sigil||'diamond',leadSlug:row.lead_slug,secretOnly:row.secret_only_slug,
+      poolSlugs:slugs,featured:slugs.map(slug=>bySlug.get(slug)).filter(Boolean),
+      chaseName:row.secret_only_slug ? (bySlug.get(row.secret_only_slug)?.name||row.secret_only_slug)+' Divine':null}
+  })
+}
+async function loadPackOdds() {
+  const {data,error}=await supabase.from('tcg_slot_odds_v2').select('slot,odds').order('slot')
+  if(error || !data?.length){if(error)console.warn('Pack odds',error);return null}
+  const odds=data.map(row=>row.odds)
+  if(odds.length!==5 || odds.some(x=>!x||Math.abs(Object.values(x).reduce((sum,n)=>sum+Number(n),0)-100)>.0001))return null
+  return odds
+}
+
 export async function mountTcgGame(
   root,
   options = {}
@@ -1349,10 +1374,8 @@ export async function mountTcgGame(
 
   const catalog = await loadPublishedCatalog(athletes)
 
-  const boosters =
-    boosterCatalog(
-      athletes
-    )
+  const boosters = await loadBoosterTypes(athletes,catalog)
+  const liveSlotOdds = await loadPackOdds()
 
   let activeSlug =
     String(
@@ -1387,6 +1410,52 @@ export async function mountTcgGame(
   let rarityFilter = 'all'
   let battle = null
   let duelStrength = {player:0,opponent:0}
+  const motionDevice = deviceMotionSettings(window)
+  const preferences = (key, fallback) => {
+    try { const raw = localStorage.getItem('ga-tcg-motion-' + key); return raw === null ? fallback : JSON.parse(raw) }
+    catch {return fallback}
+  }
+  const savePreference = (key,value) => {try{localStorage.setItem('ga-tcg-motion-' + key,JSON.stringify(value))}catch{}}
+  let fastMode = Boolean(preferences('quick',false))
+  let speed = preferences('speed',1) === 2 ? 2 : 1
+  let soundEnabled = Boolean(preferences('sound',false))
+  let vibrationEnabled = Boolean(preferences('vibrate',false))
+  let soundVolume = Math.max(0,Math.min(1,Number(preferences('volume',TCG_MOTION.defaultVolume))))
+  const feedback = createTcgFeedback(window)
+  feedback.setMuted(!soundEnabled)
+  feedback.setVolume(soundVolume)
+  feedback.setVibration(vibrationEnabled)
+  let packPullMeta = []
+  let pendingPackCards = []
+  let packSkipRequested = false
+  let combatPlayback = null
+  let combatGeneration = 0
+  const combatTimeline = createTcgTimeline({
+    speed, reduced:motionDevice.reduced,
+    clockDuration:(event,settings)=>eventDuration(event.type,settings),
+    onStep:event=>paintCombatEvent(event),
+    onComplete:()=>{combatPlayback=null;render()}
+  })
+  const packTimeline = createTcgTimeline({
+    speed, reduced:motionDevice.reduced,
+    clockDuration:(event,settings)=>eventDuration(event.type,settings),
+    onStep:event=>{openingStage=event.type==='packTension'?'charging':'tearing';render()},
+    onComplete:()=>finishPackSequence()
+  })
+
+  function renderMotionOptions({pack=false,combat=false}={}) {
+    return `<div class="tcg-motion-options" role="group" aria-label="Options d'animation">
+      ${pack ? `<button type="button" data-action="tcg-fast-mode" aria-pressed="${fastMode}">${fastMode?'✓ Ouverture rapide':'Ouverture rapide'}</button>` : ''}
+      <button type="button" data-action="tcg-speed" aria-pressed="${speed===2}">${speed===2?'×2 ACTIVÉ':'Vitesse ×2'}</button>
+      <button type="button" data-action="tcg-sound" aria-pressed="${soundEnabled}">${soundEnabled?'Son activé':'Son coupé'}</button>
+      ${soundEnabled ? `<label class="tcg-sound-label">Volume
+        <input type="range" data-action="tcg-volume" min="0" max="1" step="0.05"
+          value="${soundVolume}" aria-label="Volume des effets sonores" /></label>` : ''}
+      <button type="button" data-action="tcg-vibration" aria-pressed="${vibrationEnabled}">${vibrationEnabled?'Vibrations ON':'Vibrations OFF'}</button>
+      ${combat && combatPlayback ? `<button type="button" data-action="tcg-skip-combat">Passer l'animation</button>` : ''}
+      ${pack && openingBusy ? `<button type="button" data-action="tcg-skip-pack">Passer l'animation</button>` : ''}
+    </div>`
+  }
 
   function currentAthlete() {
     return (
@@ -1452,6 +1521,11 @@ export async function mountTcgGame(
 
   async function loadState() {
     openingToken += 1
+    combatTimeline.cancel()
+    packTimeline.cancel()
+    combatPlayback=null
+    pendingPackCards=[]
+    packSkipRequested=false
     clearTimeout(revealTimer)
     revealTimer = null
     openingBusy = false
@@ -1653,40 +1727,63 @@ export async function mountTcgGame(
   function scheduleNextReveal() {
     clearTimeout(revealTimer)
     if (tab !== 'boosters' || !lastOpened.length || revealCount >= lastOpened.length) return
+    const next = lastOpened[revealCount]
+    const delay = motionDevice.reduced ? 45 : Math.max(260, Math.round(rarityFx(next?.rarity).reveal/speed))
     revealTimer = setTimeout(() => {
       if (tab !== 'boosters' || !lastOpened.length) return
-      revealCount += 1
-      const tile = root.querySelector('[data-pull-index="' + (revealCount - 1) + '"]')
-      if (tile) {
-        tile.classList.add('is-flipped')
-        tile.querySelector('.tcg-pull-face--back')?.setAttribute('aria-hidden', 'true')
-        tile.querySelector('.tcg-pull-face--front')?.setAttribute('aria-hidden', 'false')
-      }
-      const status = root.querySelector('.tcg-reveal-progress')
-      if (status) status.textContent = revealCount + ' / ' + lastOpened.length + ' CARTES'
-      const bar = root.querySelector('.tcg-reveal-count i')
-      if (bar) bar.style.width = (revealCount / lastOpened.length * 100) + '%'
-      const scene = root.querySelector('.tcg-reveal-scene')
-      if (scene) scene.dataset.revealRarity = highestRarity(lastOpened.slice(0, revealCount))
-      if (revealCount === lastOpened.length) {
-        revealTimer = setTimeout(() => {
-          if (tab === 'boosters' && lastOpened.length) render()
-        }, 870)
-      } else {
-        scheduleNextReveal()
-      }
-    }, 830)
+      flipNextCard()
+    }, delay)
+  }
+
+  function flipNextCard(index = revealCount) {
+    if(tab !== 'boosters' || !lastOpened.length || index !== revealCount || revealCount >= lastOpened.length)return
+    clearTimeout(revealTimer)
+    revealCount += 1
+    const tile = root.querySelector('[data-pull-index="' + (revealCount - 1) + '"]')
+    if (tile) {
+      tile.classList.add('is-flipped')
+      tile.querySelector('.tcg-pull-face--back')?.setAttribute('aria-hidden', 'true')
+      tile.querySelector('.tcg-pull-face--front')?.setAttribute('aria-hidden', 'false')
+    }
+    const rarity = lastOpened[revealCount-1]?.rarity
+    feedback.play(rarity === 'secret' ? 'secret' : rarity === 'ultra' || rarity === 'rare' ? 'rare' : 'flip')
+    if(rarity==='secret')feedback.pulse()
+    const status=root.querySelector('.tcg-reveal-progress')
+    if(status)status.textContent=revealCount+' / '+lastOpened.length+' CARTES'
+    const bar=root.querySelector('.tcg-reveal-count i')
+    if(bar)bar.style.width=(revealCount/lastOpened.length*100)+'%'
+    const scene=root.querySelector('.tcg-reveal-scene')
+    if(scene)scene.dataset.revealRarity=highestRarity(lastOpened.slice(0,revealCount))
+    if(revealCount === lastOpened.length){
+      revealTimer=setTimeout(()=>{
+        if(tab==='boosters' && lastOpened.length)render()
+      }, motionDevice.reduced ? 0 : (speed===2?250:550))
+    }else scheduleNextReveal()
+  }
+
+  function finishPackSequence() {
+    if(!pendingPackCards.length)return
+    const cards = pendingPackCards
+    lastOpened = cards
+    pendingPackCards=[]
+    revealCount = (fastMode || motionDevice.reduced || packSkipRequested) ? cards.length : 0
+    openingBusy = false
+    openingStage = 'idle'
+    packSkipRequested=false
+    render()
+    if(revealCount<cards.length)scheduleNextReveal()
   }
 
   async function openPack() {
-    if (openingBusy || lastOpened.length || !selectedBooster ||
-      Number(profile.unopened_packs) <= 0) return
-
+    if (openingBusy || lastOpened.length || !selectedBooster || Number(profile.unopened_packs) <= 0) return
     openingBusy = true
     openingStage = 'charging'
+    packSkipRequested = false
     error = ''
     const requestToken = openingToken
     const booster = selectedBooster
+    const copiesBefore = new Map(collection.map(row=>[row.card_id,Number(row.copies)||0]))
+    feedback.play('start')
     render()
 
     let result
@@ -1695,50 +1792,54 @@ export async function mountTcgGame(
         p_athlete_slug: activeSlug,
         p_booster_id: booster.id,
       })
-      if (requestToken !== openingToken) return
-      if (openError) throw openError
-      result = Array.isArray(data) ? data[0] : data
-    } catch (openError) {
-      if (requestToken !== openingToken) return
-      openingBusy = false
-      openingStage = 'idle'
-      error = openError?.message || "L'ouverture du booster a échoué."
+      if(requestToken!==openingToken)return
+      if(openError)throw openError
+      result=Array.isArray(data)?data[0]:data
+    } catch(openError) {
+      if(requestToken!==openingToken)return
+      openingBusy=false
+      openingStage='idle'
+      error=openError?.message || 'Le serveur n’a pas confirmé le booster. Vérifie ton historique.'
       render()
       return
     }
-
     // Le serveur choisit et sauvegarde les cartes AVANT le debut de l'animation.
     const cards=(Array.isArray(result?.cards)?result.cards:[])
-      .map(entry=>catalog.get(entry.card_id)).filter(Boolean);
+      .map(entry=>catalog.get(entry.card_id)).filter(Boolean)
     if(cards.length!==5){
-      error='Booster sauvegarde, certaines cartes ne sont plus publiees. Recharge la collection.';
-      openingBusy=false;openingStage='idle';
-      await refreshProfileAndCollection().catch(()=>{});
-      render();return;
+      openingBusy=false
+      openingStage='idle'
+      error='Le booster a peut-être été enregistré, mais son contenu ne peut pas être affiché. Consulte ton historique après rechargement.'
+      await refreshProfileAndCollection().catch(()=>{})
+      render();return
     }
+
+    // Jamais de nouveau tirage : le recapitulatif repose sur les copies AVANT ce resultat.
+    packPullMeta=cards.map(card=>{
+      const previousCopies=copiesBefore.get(card.id)||0
+      copiesBefore.set(card.id,previousCopies+1)
+      return {id:card.id,isNew:previousCopies===0,previousCopies}
+    })
     // Never reroll or debit again after a successful RPC, even if refresh fails.
-    profile.unopened_packs = Number(result?.remaining_packs ??
-      Math.max(0, Number(profile.unopened_packs) - 1))
-    profile.opened_packs = Number(result?.opening_number ?? profile.opened_packs + 1)
-    try {
-      await refreshProfileAndCollection()
-    } catch (refreshError) {
-      console.warn('TCG collection refresh after pack opening:', refreshError)
+    profile.unopened_packs=Number(result?.remaining_packs ?? Math.max(0,Number(profile.unopened_packs)-1))
+    profile.opened_packs=Number(result?.opening_number ?? profile.opened_packs+1)
+    try{await refreshProfileAndCollection()}
+    catch(refreshError){console.warn('TCG collection refresh after pack opening:',refreshError)}
+    if(requestToken!==openingToken)return
+
+    pendingPackCards=cards
+    if(fastMode || motionDevice.reduced || packSkipRequested){
+      finishPackSequence()
+      return
     }
-    if (requestToken !== openingToken) return
-
     openingStage = 'tearing'
-    render()
-    await new Promise(resolve => setTimeout(resolve,
-      window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ? 0 : 1390))
-    if (requestToken !== openingToken) return
-
-    lastOpened = cards
-    revealCount = 0
-    openingBusy = false
-    openingStage = 'idle'
-    render()
-    scheduleNextReveal()
+    feedback.play('tear')
+    packTimeline.setSpeed(speed)
+    packTimeline.play([
+      {type:'packTension',duration:TCG_MOTION.timings.packTension},
+      {type:'packTear',duration:TCG_MOTION.timings.packTear},
+      {type:'cardsEnter',duration:TCG_MOTION.timings.cardsEnter},
+    ])
   }
 
   async function saveDeck() {
@@ -1862,6 +1963,9 @@ export async function mountTcgGame(
   }
 
   function beginBattle() {
+  combatTimeline.cancel()
+  combatPlayback=null
+  combatGeneration++
   let ids = deck.slice();
   if (ids.length !== DECK_SIZE) ids = autoDeck(collection, catalog);
   if (ids.length < DECK_SIZE) {
@@ -1882,21 +1986,21 @@ export async function mountTcgGame(
 }
 
   function selectArenaCard(index) {
-  if (!battle || battle.finished) return;
+  if (!battle || battle.finished || combatPlayback) return;
   if (!Number.isInteger(index) || index < 0 || index >= battle.playerHand.length) return;
   battle.selectedIndex = index;
   render();
 }
 
   function changeArenaBid(delta) {
-  if (!battle || battle.finished) return;
+  if (!battle || battle.finished || combatPlayback) return;
   const maxBid = Math.max(0, battle.playerPillz - (battle.playerFury ? ARENA_FURY_COST : 0));
   battle.playerBid = Math.min(maxBid, Math.max(0, battle.playerBid + delta));
   render();
 }
 
   function toggleArenaFury() {
-  if (!battle || battle.finished) return;
+  if (!battle || battle.finished || combatPlayback) return;
   if (!battle.playerFury && battle.playerBid + ARENA_FURY_COST > battle.playerPillz) return;
   battle.playerFury = !battle.playerFury;
   render();
@@ -1934,21 +2038,99 @@ export async function mountTcgGame(
     }
   }
 
-  function playBattleCard() {
-  if (!battle || battle.finished) return;
-  try {
-    battle = resolveTcgArenaRound(battle, {
-      index: battle.selectedIndex,
-      pillz: battle.playerBid,
-      fury: battle.playerFury,
-    });
-    error = '';
-    if (battle.finished) void persistBattle(battle.result);
-  } catch (err) {
-    error = err?.message || "L'attaque n'a pas pu être validée.";
+  function paintCombatEvent(event) {
+    if(!combatPlayback || tab!=='duel')return
+    const board=root.querySelector('[data-tcg-stage]')
+    if(!board)return
+    board.dataset.tcgStage=event.type
+    board.dataset.tcgIntensity=Number(event.amount||event.damage||0)>=5?'heavy':Number(event.amount||event.damage||0)>=3?'medium':'light'
+    const title=board.querySelector('[data-tcg-narration]')
+    if(title)title.textContent=event.message||'Résolution de la manche'
+    const step=board.querySelector('[data-tcg-step]')
+    if(step)step.textContent={
+      locked:'VERROUILLAGE',reveal:'RÉVÉLATION',energy:'MISES',modifier:'CAPACITÉ',
+      attack:'CALCUL D’ATTAQUE',priority:'PRIORITÉ',shield:'BOUCLIER',
+      clash:'CHOC',damage:'IMPACT',poison:'POISON',poison_apply:'EFFET',
+      ko:'K.O.',end:'FIN DU MATCH'
+    }[event.type]||event.type.toUpperCase()
+
+    const setHp=(side,value)=>{
+      const safe=Math.max(0,Math.min(ARENA_START_HP,Number(value)))
+      const hp=board.querySelector('[data-tcg-hp="'+side+'"]')
+      const bar=board.querySelector('[data-tcg-hpbar="'+side+'"]')
+      if(hp)hp.textContent=safe+' / '+ARENA_START_HP+' PV'
+      if(bar)bar.style.width=(safe/ARENA_START_HP*100)+'%'
+      combatPlayback[side==='player'?'playerHp':'aiHp']=safe
+    }
+    if(event.type==='reveal'){
+      for(const side of ['player','ai']){
+        board.querySelector('[data-tcg-side="'+side+'"]')?.classList.remove('is-concealed')
+      }
+    }
+    if(event.type==='energy'){
+      const energy=board.querySelector('[data-tcg-energy-bids]')
+      if(energy)energy.textContent='Mises révélées : '+combatPlayback.playerBid+' / '+combatPlayback.aiBid+' Pillz'
+      for(const [side,value] of [['player',event.playerPillz],['ai',event.aiPillz]]){
+        const node=board.querySelector('[data-tcg-pillz="'+side+'"]')
+        if(node)node.textContent=value
+      }
+    }
+    if(event.type==='attack'){
+      const attackA=board.querySelector('[data-tcg-attack-player]')
+      const attackB=board.querySelector('[data-tcg-attack-ai]')
+      if(attackA)attackA.textContent=event.playerAttack
+      if(attackB)attackB.textContent=event.aiAttack
+    }
+    if(event.type==='clash'){
+      for(const side of ['player','ai']){
+        const fighter=board.querySelector('[data-tcg-side="'+side+'"]')
+        if(fighter)fighter.dataset.tcgOutcome=side===event.winner?'win':'lose'
+      }
+      feedback.play('attack')
+    }
+    if(event.type==='shield')feedback.play('shield')
+    if(event.type==='damage' || event.type==='poison'){
+      const fighter=board.querySelector('[data-tcg-side="'+event.side+'"]')
+      if(fighter){
+        const floating=fighter.querySelector('[data-tcg-damage]')
+        if(floating)floating.textContent='−'+event.amount
+        fighter.dataset.tcgDot=event.type==='poison'?'true':'false'
+      }
+      setHp(event.side,event.toHp)
+      feedback.play(event.type==='poison'?'poison':'impact')
+      if(event.type==='damage' && event.amount>=4)feedback.pulse()
+    }
+    if(event.type==='ko')feedback.play('ko')
+    if(event.type==='end' && event.result==='win')feedback.play('victory')
   }
-  render();
-}
+
+  function playBattleCard() {
+    if(!battle || battle.finished || combatPlayback)return
+    try {
+      const before=battle
+      const resolved=resolveTcgArenaRound(before,{
+        index:before.selectedIndex,pillz:before.playerBid,fury:before.playerFury,
+      })
+      const events=buildTcgRoundEvents(before,resolved)
+      battle=resolved
+      const latest=resolved.history.at(-1)
+      combatPlayback={
+        playerHp:before.playerHp,aiHp:before.aiHp,
+        playerPillz:before.playerPillz,aiPillz:before.aiPillz,
+        playerBid:latest.playerBid,aiBid:latest.aiBid,
+      }
+      error=''
+      if(battle.finished)void persistBattle(battle.result)
+      render()
+      combatTimeline.setSpeed(speed)
+      combatTimeline.setReduced(motionDevice.reduced)
+      combatTimeline.play(events)
+    }catch(err){
+      combatPlayback=null
+      error=err?.message || "L'attaque n'a pas pu être validée."
+      render()
+    }
+  }
 
   function renderPackShell(booster, seriesNumber = 1) {
     return `
@@ -2014,6 +2196,7 @@ export async function mountTcgGame(
         : 'common'
 
       return `
+        ${renderMotionOptions({pack:true})}
         <section class="tcg-panel">
           <header class="tcg-panel-head">
             <div>
@@ -2033,8 +2216,11 @@ export async function mountTcgGame(
               </div>
               <div class="tcg-reveal" aria-label="Cinq cartes du booster">
                 ${lastOpened.map((card, index) => `
-                  <div class="tcg-pull ${index < revealCount ? 'is-flipped' : ''}"
-                       data-pull-index="${index}" data-rarity="${esc(card.rarity)}">
+                  <div class="tcg-pull ${index < revealCount ? 'is-flipped' : ''} ${packPullMeta[index]?.isNew ? 'is-new' : ''}"
+                       data-pull-index="${index}" data-rarity="${esc(card.rarity)}"
+                       data-action="tcg-flip-card" data-index="${index}" role="button" tabindex="0"
+                       aria-label="${index < revealCount ? esc(card.name || card.athlete?.name) : 'Retourner la carte '+(index+1)}"
+                       style="--tcg-pull-index:${index};--tcg-flip-duration:${Math.min(1900,rarityFx(card.rarity).reveal)}ms;${rarityCss(card.rarity)}">
                     <div class="tcg-pull-rotator">
                       <div class="tcg-pull-face tcg-pull-face--back"
                            aria-hidden="${index < revealCount ? 'true' : 'false'}">
@@ -2046,6 +2232,9 @@ export async function mountTcgGame(
                         ${renderCard(card)}
                       </div>
                     </div>
+                    ${index < revealCount ? `<span class="tcg-pull-badge ${packPullMeta[index]?.isNew?'':'tcg-pull-badge--duplicate'}">${packPullMeta[index]?.isNew?'NOUVELLE':'DOUBLON'}</span>`
+                      : `<span class="tcg-flip-hint">${index===revealCount?'TOUCHER POUR RÉVÉLER':'FACE CACHÉE'}</span>`}
+                    <span class="tcg-pull-flare" aria-hidden="true"></span>
                   </div>
                 `).join('')}
               </div>
@@ -2054,23 +2243,35 @@ export async function mountTcgGame(
                 ${finished
                   ? `<button class="tcg-primary" data-action="tcg-close-reveal" type="button">Choisir un autre booster</button>`
                   : `<button data-action="tcg-reveal-all" type="button">Tout révéler</button>`}
+                <button data-action="tcg-skip-pack" type="button">Passer / récapitulatif</button>
               </div>
             </div>
+            ${finished ? `<div class="tcg-collector-summary">
+              <h4>Collection mise à jour · ${packPullMeta.filter(x=>x.isNew).length} nouvelle(s) · ${packPullMeta.filter(x=>!x.isNew).length} doublon(s)</h4>
+              <ul>${lastOpened.map((card,index)=>`<li>
+                <span>${esc(card.name || card.athlete?.name || card.slug)} · ${esc(card.rarityMeta.label)}</span>
+                <strong class="${packPullMeta[index]?.isNew?'is-new':'is-duplicate'}">${packPullMeta[index]?.isNew?'NOUVELLE':'DOUBLON'} ${packPullMeta[index]?.previousCopies ? '· déjà ×'+packPullMeta[index].previousCopies : ''}</strong>
+              </li>`).join('')}</ul>
+            </div>` : ''}
           </div>
         </section>
       `
     }
 
     return `
+      ${renderMotionOptions({pack:true})}
       ${selectedBooster ? `
         <section class="tcg-panel tcg-featured-panel">
           <div class="tcg-open-stage">
-            <div class="tcg-pack-big ${openingStage === 'charging' ? 'is-charging' : ''} ${openingStage === 'tearing' ? 'is-opening' : ''}"
-                 style="--h:${selectedBooster.hue}"
-                 role="img" aria-label="Booster scellé ${esc(selectedBooster.name)}">
+            <button type="button" data-action="tcg-open-pack"
+                 class="tcg-pack-big ${openingStage === 'charging' ? 'is-charging' : ''} ${openingStage === 'tearing' ? 'is-opening' : ''}"
+                 style="--h:${selectedBooster.hue};cursor:pointer"
+                 aria-label="Toucher pour ouvrir le booster ${esc(selectedBooster.name)}"
+                 ${openingBusy || Number(profile.unopened_packs)<=0 ? 'disabled' : ''}>
               ${renderPackShell(selectedBooster, boosters.findIndex(item => item.id === selectedBooster.id) + 1)}
-            </div>
+            </button>
             <div class="tcg-open-details">
+              ${openingBusy ? `<p class="tcg-pack-queue" role="status">En attente de confirmation du serveur · aucune carte n'est révélée avant enregistrement</p>` : ''}
               <span class="tcg-open-eyebrow">PACK SÉLECTIONNÉ · SÉRIE ${String(boosters.findIndex(item => item.id === selectedBooster.id) + 1).padStart(2, '0')}</span>
               <h3>${esc(selectedBooster.name)}</h3>
               <p>5 cartes issues de cette édition, avec une dernière pioche premium. ${selectedBooster.secretOnly ? 'Divine exclusive : ' + esc(selectedBooster.chaseName || selectedBooster.name) + '.' : 'Des personnages et formes rares propres à cette série.'}</p>
@@ -2087,18 +2288,15 @@ export async function mountTcgGame(
                 ${openingBusy ? 'Ouverture en cours…' :
                   Number(profile.unopened_packs) > 0 ? 'Ouvrir ce booster' : 'Termine une séance pour gagner un booster'}
               </button>
-              <p class="tcg-open-note">Dernier slot : 88 % Rare · 10 % Ultra · 2 % Secret. Ultra garantie chaque 10e ouverture, Secret chaque 50e.</p>
+              ${liveSlotOdds ? `<p class="tcg-open-note">Dernière carte : ${Object.entries(liveSlotOdds.at(-1)).map(([rarity,percent])=>esc(rarityMeta(rarity).label)+' '+Number(percent)+' %').join(' · ')}.
+                Ultra garantie tous les 10 boosters et Secrète tous les 50 (avant repli si rareté indisponible).</p>
               <details class="tcg-odds-details">
-                <summary>Voir toutes les probabilités</summary>
-                <ol>
-                  ${SLOT_ODDS.map((weights, index) => `
-                    <li><b>Carte ${index + 1}</b><span>${Object.entries(weights)
-                      .map(([rarity, percent]) => esc(rarityMeta(rarity).label) + ' ' + percent + ' %')
-                      .join(' · ')}</span></li>
-                  `).join('')}
-                </ol>
-                <p>Taux par emplacement avant les garanties. Le 10e booster assure une Ultra, le 50e une Secret sur la dernière carte.</p>
-              </details>
+                <summary>Probabilités du serveur</summary>
+                <ol>${liveSlotOdds.map((weights,index)=>`
+                  <li><b>Carte ${index+1}</b><span>${Object.entries(weights).map(([rarity,percent])=>esc(rarityMeta(rarity).label)+' '+Number(percent)+' %').join(' · ')}</span></li>
+                `).join('')}</ol>
+                <p>Probabilités initiales par emplacement, avant garanties et repli éventuel vers les cartes réellement éligibles.</p>
+              </details>` : `<p class="tcg-open-note">Probabilités indisponibles : taux serveur en cours de chargement.</p>`}
             </div>
           </div>
         </section>
@@ -2107,7 +2305,7 @@ export async function mountTcgGame(
         <header class="tcg-panel-head">
           <div>
             <h3>Les éditions à collectionner</h3>
-            <p>Choisis parmi les 20 séries, chacune mettant en avant ses propres athlètes.</p>
+            <p>Choisis parmi les éditions publiées et les cartes réellement éligibles à chacune.</p>
           </div>
           <strong>✦ ${Number(profile.unopened_packs) || 0}</strong>
         </header>
@@ -2540,13 +2738,15 @@ export async function mountTcgGame(
   const stats = arenaBaseStats(card);
   const synergy = battle && arenaTeamActive(battle, side, card);
   return `
-    <div class="tcg-arena-fighter ${className}">
+    <div class="tcg-arena-fighter ${className}" data-tcg-side="${side}"
+      style="--tcg-impact-direction:${side==='player'?'12px':'-12px'};--tcg-recoil-direction:${side==='player'?'-10px':'10px'}">
       ${renderCard(card)}
       <div class="tcg-arena-power">
         <span>⚔ PUI ${stats.power}</span>
         <span>✦ DÉG ${stats.damage}</span>
       </div>
       ${synergy ? `<div class="tcg-arena-synergy">BONUS D'ÉQUIPE · ${esc(card.archetype.label)}</div>` : ''}
+      <span class="tcg-damage-float" data-tcg-damage aria-hidden="true"></span>
     </div>
   `;
 }
@@ -2575,6 +2775,11 @@ export async function mountTcgGame(
     `;
   }
   const last = battle.history[battle.history.length - 1] || null;
+  const animating = Boolean(combatPlayback)
+  const shownPlayerHp = animating ? combatPlayback.playerHp : battle.playerHp
+  const shownAiHp = animating ? combatPlayback.aiHp : battle.aiHp
+  const shownPlayerPillz = animating ? combatPlayback.playerPillz : battle.playerPillz
+  const shownAiPillz = animating ? combatPlayback.aiPillz : battle.aiPillz
   const playerName = currentAthlete()?.name || 'Toi';
   const remainingBid = Math.max(0, battle.playerPillz - (battle.playerFury ? ARENA_FURY_COST : 0));
   const spent = battle.playerBid + (battle.playerFury ? ARENA_FURY_COST : 0);
@@ -2583,46 +2788,61 @@ export async function mountTcgGame(
   return `
     <section class="tcg-panel">
       <div class="tcg-panel-pad tcg-duel">
-        <div class="tcg-arena-board">
+        ${renderMotionOptions({combat:true})}
+        <div class="tcg-arena-board" data-tcg-stage="${animating?'locked':'idle'}" data-tcg-intensity="light">
           <div class="tcg-arena-head">
-            <span class="tcg-arena-round">ROUND ${battle.round} / 4 · DECK ${Math.round(duelStrength.player)} VS ${Math.round(duelStrength.opponent)}</span>
-            <span>${battle.finished ? 'DUEL TERMINÉ' : 'Mises cachées · résolution simultanée'}</span>
+            <span class="tcg-arena-round">ROUND ${animating?battle.turn:battle.round} / 4 · DECK ${Math.round(duelStrength.player)} VS ${Math.round(duelStrength.opponent)}</span>
+            <span>${animating?'Résolution en cours':battle.finished?'DUEL TERMINÉ':'Mises cachées · résolution simultanée'}</span>
           </div>
           <div class="tcg-arena-sides">
             <div class="tcg-arena-side">
-              <header><span>${esc(playerName)}</span><b>${battle.playerHp} / ${ARENA_START_HP} PV</b></header>
-              <div class="tcg-arena-track"><i style="width:${100 * battle.playerHp / ARENA_START_HP}%"></i></div>
-              <div class="tcg-arena-resource">◆ <b>${battle.playerPillz}</b> Pillz
-                ${battle.playerVenom?.turns > 0 ? `<span class="tcg-venom-battle-status">☣ -${battle.playerVenom.damage} PV / round · ${battle.playerVenom.turns} tour(s)</span>` : ''}
+              <header><span>${esc(playerName)}</span><b data-tcg-hp="player">${shownPlayerHp} / ${ARENA_START_HP} PV</b></header>
+              <div class="tcg-arena-track"><i data-tcg-hpbar="player" style="width:${100 * shownPlayerHp / ARENA_START_HP}%"></i></div>
+              <div class="tcg-arena-resource">◆ <b data-tcg-pillz="player">${shownPlayerPillz}</b> Pillz
+                ${!animating && battle.playerVenom?.turns > 0 ? `<span class="tcg-venom-battle-status">☣ -${battle.playerVenom.damage} PV / round · ${battle.playerVenom.turns} tour(s)</span>` : ''}
               </div>
             </div>
             <div class="tcg-arena-side tcg-arena-side--ai">
-              <header><span>GA RIVAL</span><b>${battle.aiHp} / ${ARENA_START_HP} PV</b></header>
-              <div class="tcg-arena-track"><i style="width:${100 * battle.aiHp / ARENA_START_HP}%"></i></div>
-              <div class="tcg-arena-resource">◆ <b>${battle.aiPillz}</b> Pillz
-                ${battle.aiVenom?.turns > 0 ? `<span class="tcg-venom-battle-status">☣ -${battle.aiVenom.damage} PV / round · ${battle.aiVenom.turns} tour(s)</span>` : ''}
+              <header><span>GA RIVAL</span><b data-tcg-hp="ai">${shownAiHp} / ${ARENA_START_HP} PV</b></header>
+              <div class="tcg-arena-track"><i data-tcg-hpbar="ai" style="width:${100 * shownAiHp / ARENA_START_HP}%"></i></div>
+              <div class="tcg-arena-resource">◆ <b data-tcg-pillz="ai">${shownAiPillz}</b> Pillz
+                ${!animating && battle.aiVenom?.turns > 0 ? `<span class="tcg-venom-battle-status">☣ -${battle.aiVenom.damage} PV / round · ${battle.aiVenom.turns} tour(s)</span>` : ''}
               </div>
             </div>
           </div>
+          <div class="tcg-arena-live" role="status" aria-live="polite">
+            <strong data-tcg-step>${animating?'VERROUILLAGE':last?'RÉSULTAT DE MANCHE':'PRÊT À COMBATTRE'}</strong>
+            <small data-tcg-narration>${animating?'Les choix sont verrouillés. Les mises restent cachées.':esc(battle.log)}</small>
+            <div class="tcg-arena-attack-row">
+              <b>ATQ <span data-tcg-attack-player>${animating?'—':last?.playerAttack??'—'}</span></b>
+              <span>contre</span>
+              <b>ATQ <span data-tcg-attack-ai>${animating?'—':last?.aiAttack??'—'}</span></b>
+            </div>
+            <small data-tcg-energy-bids>${animating?'Mises masquées':last?'Mises : '+last.playerBid+' / '+last.aiBid+' Pillz':'Choisis ta mise en Pillz'}</small>
+          </div>
           <div class="tcg-arena-clash" aria-live="polite">
             ${battle.playerCard
-              ? renderArenaCard(battle.playerCard, 'player', playerVictory ? 'tcg-arena-fighter--win' : 'tcg-arena-fighter--lose')
+              ? renderArenaCard(battle.playerCard, 'player', animating?'is-concealed':playerVictory?'tcg-arena-fighter--win':'tcg-arena-fighter--lose')
               : `<div class="tcg-arena-placeholder">TON COMBATTANT</div>`}
             <div class="tcg-arena-versus">VS</div>
             ${battle.aiCard
-              ? renderArenaCard(battle.aiCard, 'ai', aiVictory ? 'tcg-arena-fighter--win tcg-arena-fighter--ai' : 'tcg-arena-fighter--lose tcg-arena-fighter--ai')
+              ? renderArenaCard(battle.aiCard, 'ai', animating?'is-concealed tcg-arena-fighter--ai':aiVictory?'tcg-arena-fighter--win tcg-arena-fighter--ai':'tcg-arena-fighter--lose tcg-arena-fighter--ai')
               : `<div class="tcg-arena-placeholder">RIVAL MASQUÉ</div>`}
           </div>
           <div class="tcg-arena-log ${last ? (playerVictory ? 'tcg-arena-log--win' : 'tcg-arena-log--lose') : ''}">
-            ${esc(battle.log)}
+            ${animating?'Résolution en cours…':esc(battle.log)}
           </div>
-          ${last ? `<div class="tcg-arena-history">
+          ${last && !animating ? `<div class="tcg-arena-history">
             ${battle.history.map(entry => `<span class="${entry.winner === 'player' ? 'won' : 'lost'}">
               R${entry.round} · ${entry.playerAttack} — ${entry.aiAttack} ATQ · ${entry.playerBid}/${entry.aiBid} Pillz
             </span>`).join('')}
           </div>` : ''}
         </div>
-        ${battle.finished ? `
+        ${animating ? `
+          <div class="tcg-visual-controls">
+            <button type="button" data-action="tcg-skip-combat">Passer l'animation · Afficher le résultat</button>
+          </div>
+        ` : battle.finished ? `
           <div class="tcg-arena-end">
             <h3>${battle.result === 'win' ? 'VICTOIRE' : battle.result === 'loss' ? 'DÉFAITE' : 'ÉGALITÉ'}</h3>
             <p>Score final ${battle.playerHp} — ${battle.aiHp} PV · ${battle.history.filter(entry => entry.winner === 'player').length} manche(s) gagnée(s) sur ${battle.history.length}.</p>
@@ -2711,7 +2931,7 @@ export async function mountTcgGame(
     `).join('')
 
     root.innerHTML = `
-      <main class="tcg-app tcg-spider">
+      <main class="tcg-app tcg-spider ${motionDevice.low?'tcg-low-effects':''} ${motionDevice.reduced?'tcg-reduced-effects':''}">
         <div class="tcg-shell">
           <header class="tcg-top tcg-spider-top">
             <button
@@ -2836,6 +3056,29 @@ export async function mountTcgGame(
     `
   }
 
+  function cleanupTcgView() {
+    openingToken += 1
+    combatTimeline.cancel()
+    packTimeline.cancel()
+    combatPlayback=null
+    pendingPackCards=[]
+    clearTimeout(revealTimer)
+    revealTimer=null
+    document.removeEventListener('visibilitychange',onTcgVisibility)
+    feedback.dispose()
+    root.onclick=null;root.onchange=null;root.oninput=null;root.onkeydown=null
+  }
+  function onTcgVisibility() {
+    if(document.hidden){
+      if(combatTimeline.active)combatTimeline.skip()
+      if(packTimeline.active){packSkipRequested=true;packTimeline.skip()}
+      clearTimeout(revealTimer);revealTimer=null
+    }else if(tab==='boosters' && lastOpened.length && revealCount<lastOpened.length){
+      scheduleNextReveal()
+    }
+  }
+  document.addEventListener('visibilitychange',onTcgVisibility)
+
   root.onclick =
     async event => {
       const action =
@@ -2851,10 +3094,14 @@ export async function mountTcgGame(
         action.dataset.action
       ) {
         case 'tcg-back':
+          cleanupTcgView()
           options.onBack?.()
           return
 
         case 'tcg-tab':
+          if(combatTimeline.active)combatTimeline.skip()
+          if(packTimeline.active){packSkipRequested=true;packTimeline.skip()}
+          if(openingBusy)packSkipRequested=true
           tab =
             action.dataset.tab ||
             'boosters'
@@ -2888,6 +3135,7 @@ export async function mountTcgGame(
           return
 
         case 'tcg-close-reveal':
+          if(openingBusy)return
           clearTimeout(revealTimer)
           revealTimer = null
           lastOpened = []
@@ -2896,10 +3144,69 @@ export async function mountTcgGame(
           return
 
         case 'tcg-reveal-all':
+          if(!lastOpened.length)return
           clearTimeout(revealTimer)
           revealTimer = null
           revealCount = lastOpened.length
           render()
+          return
+
+        case 'tcg-flip-card':
+          flipNextCard(Number(action.dataset.index))
+          return
+
+        case 'tcg-skip-pack':
+          if(lastOpened.length){
+            clearTimeout(revealTimer);revealTimer=null
+            revealCount=lastOpened.length
+            render()
+          }else if(openingBusy){
+            packSkipRequested=true
+            if(packTimeline.active)packTimeline.skip()
+          }
+          return
+
+        case 'tcg-skip-combat':
+          combatTimeline.skip()
+          return
+
+        case 'tcg-fast-mode':
+          fastMode=!fastMode
+          savePreference('quick',fastMode)
+          if(!openingBusy)render()
+          return
+
+        case 'tcg-speed':
+          speed=speed===2?1:2
+          savePreference('speed',speed)
+          combatTimeline.setSpeed(speed)
+          packTimeline.setSpeed(speed)
+          if(combatPlayback || openingBusy){
+            for(const control of root.querySelectorAll('[data-action="tcg-speed"]')){
+              control.textContent=speed===2?'×2 ACTIVÉ':'Vitesse ×2'
+              control.setAttribute('aria-pressed',String(speed===2))
+            }
+          }else render()
+          return
+
+        case 'tcg-sound':
+          soundEnabled=!soundEnabled
+          savePreference('sound',soundEnabled)
+          feedback.setMuted(!soundEnabled)
+          if(!combatPlayback && !openingBusy)render()
+          else {
+            for(const control of root.querySelectorAll('[data-action="tcg-sound"]')){
+              control.textContent=soundEnabled?'Son activé':'Son coupé'
+              control.setAttribute('aria-pressed',String(soundEnabled))
+            }
+          }
+          return
+
+        case 'tcg-vibration':
+          vibrationEnabled=!vibrationEnabled
+          savePreference('vibrate',vibrationEnabled)
+          feedback.setVibration(vibrationEnabled)
+          if(!combatPlayback && !openingBusy)render()
           return
 
         case 'tcg-rarity-filter':
@@ -2956,6 +3263,22 @@ export async function mountTcgGame(
       }
     }
 
+  root.oninput = event => {
+    const field=event.target
+    if(field?.dataset?.action==='tcg-volume'){
+      soundVolume=Math.max(0,Math.min(1,Number(field.value)||0))
+      feedback.setVolume(soundVolume)
+      savePreference('volume',soundVolume)
+    }
+  }
+  root.onkeydown = event => {
+    const tile=event.target.closest?.('[data-action="tcg-flip-card"]')
+    if(tile && (event.key==='Enter'||event.key===' ')){
+      event.preventDefault()
+      tile.click()
+    }
+  }
+
   root.onchange =
     event => {
       const input =
@@ -2977,4 +3300,5 @@ export async function mountTcgGame(
 
   render()
   await loadState()
+  return cleanupTcgView
 }
