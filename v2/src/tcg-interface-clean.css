@@ -405,3 +405,80 @@
   .tcg-app.tcg-spider .tcg-booster,
   .tcg-app.tcg-spider .tcg-spider-side-tab{transition:none}
 }
+
+
+/* The selected pack now leads the page, with its artwork and opening action side by side. */
+.tcg-app.tcg-spider .tcg-featured-panel{margin-bottom:19px}
+.tcg-app.tcg-spider .tcg-featured-panel .tcg-open-stage{
+  display:grid;grid-template-columns:minmax(230px,.92fr) minmax(0,1.08fr);
+  gap:36px;align-items:center;min-height:365px;padding:28px 34px;
+  border:0;border-radius:15px;
+  background:
+    radial-gradient(ellipse at 28% 48%,rgba(178,131,211,.22),transparent 48%),
+    radial-gradient(ellipse at 86% 22%,rgba(120,111,152,.09),transparent 43%),
+    linear-gradient(115deg,#171522,#10141d)
+}
+.tcg-app.tcg-spider .tcg-featured-panel .tcg-open-stage:before{
+  top:50%;left:28%;width:320px;opacity:.47;filter:blur(18px)
+}
+.tcg-app.tcg-spider .tcg-featured-panel .tcg-pack-big{
+  grid-column:1;grid-row:1;justify-self:center;
+  width:min(246px,100%);filter:drop-shadow(0 20px 27px #000a)
+}
+.tcg-app.tcg-spider .tcg-open-details{
+  grid-column:2;grid-row:1;min-width:0;display:flex;align-items:flex-start;
+  flex-direction:column;gap:0
+}
+.tcg-app.tcg-spider .tcg-open-eyebrow{
+  display:block;color:#c9aeda;font-size:10px;font-weight:800;letter-spacing:.16em
+}
+.tcg-app.tcg-spider .tcg-open-details h3{
+  margin:11px 0 12px;font:600 clamp(28px,3.1vw,42px)/1.1 Georgia,serif;
+  letter-spacing:-.018em;color:#f5f2f7
+}
+.tcg-app.tcg-spider .tcg-open-details > p:not(.tcg-open-note){
+  max-width:435px;margin:0;color:#afb4c3;font-size:12px;line-height:1.7
+}
+.tcg-app.tcg-spider .tcg-open-facts{
+  display:flex;gap:18px;flex-wrap:wrap;margin:22px 0 20px;padding:15px 0;
+  width:100%;border-top:1px solid #ffffff1a;border-bottom:1px solid #ffffff1a
+}
+.tcg-app.tcg-spider .tcg-open-facts span{
+  display:flex;align-items:baseline;gap:6px;font-size:11px;color:#aab2c3
+}
+.tcg-app.tcg-spider .tcg-open-facts b{
+  color:#edd8f0;font-size:21px;font-weight:800;font-variant-numeric:tabular-nums
+}
+.tcg-app.tcg-spider .tcg-open-details .tcg-open-btn{
+  width:min(330px,100%);min-width:0;justify-self:auto;
+  min-height:43px;border-radius:9px;
+  background:linear-gradient(115deg,#e2c8ed,#c7a7df);color:#181221;
+  border:1px solid #e2c5ee;font-size:12px;font-weight:850;letter-spacing:.02em;
+  text-transform:none
+}
+.tcg-app.tcg-spider .tcg-open-details .tcg-open-note{
+  max-width:430px;margin:11px 0 0;text-align:left;font-size:10px;
+  color:#949cab;line-height:1.45;letter-spacing:0
+}
+@media(max-width:970px){
+  .tcg-app.tcg-spider .tcg-featured-panel .tcg-open-stage{
+    grid-template-columns:minmax(180px,.8fr) minmax(0,1.2fr);gap:18px;padding:24px
+  }
+  .tcg-app.tcg-spider .tcg-featured-panel .tcg-pack-big{width:min(208px,100%)}
+}
+@media(max-width:590px){
+  .tcg-app.tcg-spider .tcg-featured-panel .tcg-open-stage{
+    grid-template-columns:1fr;justify-items:center;gap:20px;
+    min-height:0;padding:24px 18px
+  }
+  .tcg-app.tcg-spider .tcg-featured-panel .tcg-pack-big{
+    grid-column:1;grid-row:1;width:min(190px,62vw)
+  }
+  .tcg-app.tcg-spider .tcg-open-details{
+    grid-column:1;grid-row:2;align-items:stretch;width:100%;text-align:left
+  }
+  .tcg-app.tcg-spider .tcg-open-details h3{font-size:30px}
+  .tcg-app.tcg-spider .tcg-open-facts{margin:16px 0;padding:11px 0}
+  .tcg-app.tcg-spider .tcg-open-details .tcg-open-btn{width:100%}
+  .tcg-app.tcg-spider .tcg-open-details .tcg-open-note{font-size:9px}
+}
