@@ -2857,10 +2857,10 @@ export async function mountTcgGame(
   function render() {
     const athlete = currentAthlete()
     const menuItems = [
+      { id: 'duel', label: 'Combattre', glyph: '⚔' },
       { id: 'boosters', label: 'Boosters', glyph: '✦' },
       { id: 'collection', label: 'Collection', glyph: '◇' },
-      { id: 'deck', label: 'Équipe', glyph: '♜' },
-      { id: 'duel', label: 'Arène', glyph: '⚔' },
+      { id: 'deck', label: 'Équipes', glyph: '♜' },
     ]
     const pageLabels = {
       duel: battle && !battle.finished ? 'Choisis ton combattant' : 'Arène des Ombres',
@@ -2895,7 +2895,7 @@ export async function mountTcgGame(
         aria-current="${tab === item.id ? 'page' : 'false'}"
       >
         <span class="tcg-spider-tab-symbol" aria-hidden="true">${esc(item.glyph)}</span>
-        <span>${esc(item.label)}</span>
+        <span>${esc(item.label)}</span>${item.id==='boosters'&&Number(profile.unopened_packs)>0?`<i class="tcg-nav-pack-count">${Number(profile.unopened_packs)}</i>`:''}
       </button>
     `).join('')
 
@@ -2979,7 +2979,7 @@ export async function mountTcgGame(
                       <span class="tcg-kicker">LA TOILE DES OMBRES · ÉDITION GA</span>
                       <h2>Construis ta légende, <span>une carte à la fois.</span></h2>
                       <p>Gagne un booster à chaque séance, découvre les évolutions de tes athlètes et compose ton équipe pour l’arène.</p>
-                      <div class="tcg-hero-actions">
+                      <div class="tcg-hero-actions"><button type="button" class="tcg-hero-link tcg-hero-link--fight" data-action="tcg-tab" data-tab="duel">⚔ Combattre maintenant</button>
                         <button type="button" class="tcg-hero-link" data-action="tcg-tab" data-tab="collection">
                           Voir ma collection <span aria-hidden="true">↗</span>
                         </button>
@@ -3018,6 +3018,7 @@ export async function mountTcgGame(
                       ? renderDeck()
                       : renderDuel()
               }
+              ${renderCardDetail()}
             </div>
           </div>
         </div>
@@ -3072,6 +3073,7 @@ export async function mountTcgGame(
           return
 
         case 'tcg-tab':
+          inspectedCardId=null
           if(combatTimeline.active)combatTimeline.skip()
           if(packTimeline.active){packSkipRequested=true;packTimeline.skip()}
           if(openingBusy)packSkipRequested=true
@@ -3182,6 +3184,33 @@ export async function mountTcgGame(
           if(!combatPlayback && !openingBusy)render()
           return
 
+        case 'tcg-card-detail':
+          inspectedCardId=action.dataset.cardId||null;render()
+          root.querySelector('.tcg-detail-panel button')?.focus();return
+        case 'tcg-close-detail':
+          inspectedCardId=null;render();return
+        case 'tcg-toggle-all-cards':
+          showAllCards=!showAllCards;collectionLimit=36;render();return
+        case 'tcg-more-cards':
+          collectionLimit+=36;render();return
+        case 'tcg-save-preset':{
+          const valid=validateDeck(deck,catalog,new Set(ownedRows().filter(x=>Number(x.copies)>0).map(x=>x.card_id)))
+          if(!valid.valid){error=valid.problems.join(' · ');render();return}
+          const name=deckPresetName.trim().slice(0,32)||'Équipe '+(getNamedDecks().length+1)
+          storeNamedDecks([{name,deck:[...deck]},...getNamedDecks().filter(x=>x.name!==name)])
+          deckPresetName='';render();return
+        }
+        case 'tcg-load-preset':{
+          const selected=getNamedDecks()[Number(action.dataset.index)]
+          if(!selected)return
+          const valid=validateDeck(selected.deck,catalog,new Set(ownedRows().filter(x=>Number(x.copies)>0).map(x=>x.card_id)))
+          if(!valid.valid){error='Équipe indisponible : '+valid.problems.join(' · ');render();return}
+          deck=[...selected.deck];deckPresetName=selected.name;render();return
+        }
+        case 'tcg-remove-preset':{
+          const rows=getNamedDecks();rows.splice(Number(action.dataset.index),1)
+          storeNamedDecks(rows);render();return
+        }
         case 'tcg-rarity-filter':
           rarityFilter =
             action.dataset.rarity ||
@@ -3190,12 +3219,14 @@ export async function mountTcgGame(
           return
 
         case 'tcg-add-card':
+          inspectedCardId=null
           addToDeck(
             action.dataset.cardId
           )
           return
 
         case 'tcg-remove-card':
+          inspectedCardId=null
           removeFromDeck(
             action.dataset.cardId
           )
@@ -3238,6 +3269,14 @@ export async function mountTcgGame(
 
   root.oninput = event => {
     const field=event.target
+    if(field?.dataset?.action==='tcg-preset-name'){deckPresetName=field.value;return}
+    if(field?.dataset?.action==='tcg-card-search'){
+      const pos=field.selectionStart
+      collectionSearch=field.value;collectionLimit=36;render()
+      const next=root.querySelector('[data-action="tcg-card-search"]')
+      next?.focus();if(pos!==null)next?.setSelectionRange(pos,pos)
+      return
+    }
     if(field?.dataset?.action==='tcg-volume'){
       soundVolume=Math.max(0,Math.min(1,Number(field.value)||0))
       feedback.setVolume(soundVolume)
@@ -3246,6 +3285,7 @@ export async function mountTcgGame(
   }
   root.onkeydown = event => {
     const tile=event.target.closest?.('[data-action="tcg-flip-card"]')
+    if(event.key==='Escape'&&inspectedCardId){inspectedCardId=null;render();return}
     if(tile && (event.key==='Enter'||event.key===' ')){
       event.preventDefault()
       tile.click()
@@ -3256,7 +3296,8 @@ export async function mountTcgGame(
     event => {
       const input =
         event.target
-
+      if(input.dataset.action==='tcg-faction-filter'){factionFilter=input.value;collectionLimit=36;render();return}
+      if(input.dataset.action==='tcg-collection-sort'){collectionSort=input.value;render();return}
       if (
         input.dataset.action ===
           'tcg-athlete'
