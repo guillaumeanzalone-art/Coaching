@@ -10,6 +10,7 @@ import './tcg-interface-clean.css'
 import { resolvePackIdentity } from './tcg-pack-rules.js'
 import './tcg-art-quality.css'
 import './tcg-motion.css'
+import './tcg-premium-ui.css'
 import { TCG_MOTION, rarityFx, rarityCss, deviceMotionSettings, eventDuration } from './tcg-motion-config.js'
 import { createTcgTimeline } from './tcg-timeline.js'
 import { buildTcgRoundEvents } from './tcg-combat-events.js'
@@ -969,6 +970,7 @@ function renderCard(
     reveal = false,
     action = '',
     locked = false,
+    size = 'hand',
   } = {}
 ) {
   const dedicatedArt = card.art_url ? null : dedicatedCardArt(card)
@@ -1022,8 +1024,8 @@ function renderCard(
 
   return `
     <article
-      class="tcg-card ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${isBenoit ? 'tcg-card--benoit tcg-earth-lvl-' + poisonLevel : ''} ${isSerenaDivine ? 'tcg-card--serena-divine' : ''} ${isSuppliedEvolution ? 'tcg-card--evo tcg-evo--' + card.slug + ' tcg-evo-lvl-' + poisonLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
-      data-rarity="${esc(card.rarity)}"
+      class="tcg-card tcg-card--${esc(size)} ${signatureClass} ${fullArtClass} ${illustratedClass} ${proceduralClass} ${isAlexandre ? 'tcg-card--alexandre tcg-venom-lvl-' + poisonLevel : ''} ${isHugo ? 'tcg-card--hugo tcg-forge-lvl-' + fireLevel : ''} ${isBenoit ? 'tcg-card--benoit tcg-earth-lvl-' + poisonLevel : ''} ${isSerenaDivine ? 'tcg-card--serena-divine' : ''} ${isSuppliedEvolution ? 'tcg-card--evo tcg-evo--' + card.slug + ' tcg-evo-lvl-' + poisonLevel : ''} ${reveal ? 'is-reveal' : ''} ${locked ? 'is-locked' : ''}"
+      data-rarity="${esc(card.rarity)}" data-faction="${esc(card.archetype?.id || card.faction || 'other')}"
       aria-label="${esc(isSerenaDivine ? 'Serena Divine, Secret Rare' : card.athlete?.name || card.slug)}"
       data-character="${esc(card.slug)}"
       data-level="${isAlexandre || isHugo || isBenoit || isSuppliedEvolution ? poisonLevel : '' }"
