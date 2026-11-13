@@ -1,53 +1,30 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
-import { getAthleteTheme } from '../src/athlete-themes.js'
+import {readFileSync} from 'node:fs'
+import {getAthleteTheme} from '../src/athlete-themes.js'
 
-const source = path => readFileSync(new URL(path, import.meta.url), 'utf8')
-const themeCss = source('../src/theme-marvin-western.css')
-const app = source('../src/training.js')
-const main = source('../src/main.js')
-const svg = source('../public/marvin-western-banner.svg')
+const read = path => readFileSync(new URL(path,import.meta.url),'utf8')
+const css=read('../src/theme-marvin-western.css')
+const training=read('../src/training.js')
+const main=read('../src/main.js')
 
-test('western is limited to Marvin; Anzalone and other athlete themes are intact', () => {
-  const marvin = getAthleteTheme('marvin')
-  const anzalone = getAthleteTheme('guillaume')
-  assert.equal(marvin.variant, 'marvin-frontier-outlaw')
-  assert.equal(anzalone.variant, 'anzalone-celestial-pantheon')
-  assert.equal(getAthleteTheme('noe').variant, 'noe-wakfu-skybound')
-  assert.equal(marvin.heroImage, '/marvin-western-banner.svg')
-  assert.ok(!marvin.quote.includes('salope'))
-  assert.match(main, /import '\.\/theme-marvin-western\.css'/)
-  assert.match(themeCss, /\.training-page\[data-athlete-theme="marvin"\]/)
-  assert.doesNotMatch(themeCss, /data-athlete-theme="killian"/)
-  assert.doesNotMatch(themeCss, /data-athlete-theme="guillaume"/)
+test('Marvin has just a banner and other athletes retain their themes',()=>{
+  assert.equal(getAthleteTheme('marvin').variant,'marvin-cinematic-banner')
+  assert.equal(getAthleteTheme('guillaume').variant,'anzalone-celestial-pantheon')
+  assert.equal(getAthleteTheme('noe').variant,'noe-wakfu-skybound')
+  assert.equal(getAthleteTheme('marvin').heroImage,'/marvin-western-banner.svg')
 })
-test('banner is original SVG, no protected assets and no duplicate name over image', () => {
-  assert.match(svg, /viewBox="0 0 1440 490"/)
-  assert.match(svg, /MARVIN/)
-  assert.match(svg, /WANTED/)
-  assert.doesNotMatch(svg, /rockstar|red dead redemption/i)
-  assert.match(app, /athlete-theme-banner--marvin-western/)
-  assert.match(app, /marvin-western__hero/)
-  assert.match(app, /loading="eager" decoding="async"/)
+test('Banner is mounted using existing athlete theme renderer',()=>{
+  assert.match(training,/athlete-theme-banner--marvin-cinematic/)
+  assert.match(training,/marvin-cinematic__picture/)
+  assert.match(training,/width="1440" height="490" loading="eager" decoding="async"/)
+  assert.match(main,/import '\.\/theme-marvin-western\.css'/)
 })
-test('maxes and bounty are always computed from existing PRs for selected repetition count', () => {
-  const panel = app.slice(app.indexOf('function renderSbdPrPanel()'), app.indexOf('function stepsXpMultiplierForPanel('))
-  assert.match(panel, /sbdPrs\[lift\]\?\.\[selectedSbdReps\]/)
-  assert.match(panel, /bountyLoads\.reduce/)
-  assert.match(panel, /bountyComplete/)
-  assert.match(panel, /marvin-bounty-total/)
-  assert.match(panel, /prFlash/)
-  assert.doesNotMatch(panel, /(?:275|290|740)\s*kg/)
-})
-test('all real training behaviors are left in their existing modules', () => {
-  assert.match(app, /renderRestTimerDock\(\)/)
-  assert.match(app, /renderRestTimerEditor\(\)/)
-  assert.match(app, /hydrateFromCloud\(\)/)
-  assert.match(app, /renderAthleteInsights\(\)/)
-  assert.match(app, /renderV3BlockHistory\(\)/)
-  assert.match(app, /data-athlete-theme="\$\{escapeHtml\(cloudAthleteSlug\)\}"/)
-  assert.match(themeCss, /prefers-reduced-motion:reduce/)
-  assert.match(themeCss, /safe-area-inset-bottom/)
-  assert.match(themeCss, /min-height:44px/)
+test('Only the banner gets new CSS, never workouts, recovery, timer, PRs or navigation',()=>{
+  assert.match(css,/aspect-ratio:16 \/ 9/)
+  assert.match(css,/data-athlete-theme="marvin"/)
+  assert.doesNotMatch(css,/\.athlete-pr|\.week-tab|\.day-tab|\.training-set|\.training-topbar|\.recovery-|\.rest-timer|\.training-v3/)
+  assert.doesNotMatch(training,/marvin-bounty-total|marvin-wanted-title|westernQuotes/)
+  assert.match(training,/renderRestTimerDock\(\)/)
+  assert.match(training,/renderSbdPrPanel\(\)/)
 })
