@@ -485,3 +485,18 @@
   .tcg-app.tcg-spider .tcg-profile-avatar{width:60px;height:60px;font-size:32px}
   .tcg-app.tcg-spider .tcg-profile-shortcuts button{flex:1}
 }
+
+/* Combat portrait: opponent above duel, player status immediately below. */
+@media(max-width:650px){
+  .tcg-app.tcg-spider .tcg-arena-board{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+  .tcg-app.tcg-spider .tcg-arena-sides{display:contents}
+  .tcg-app.tcg-spider .tcg-arena-head{grid-row:1}
+  .tcg-app.tcg-spider .tcg-arena-side--ai{grid-row:2}
+  .tcg-app.tcg-spider .tcg-arena-live{grid-row:3}
+  .tcg-app.tcg-spider .tcg-arena-clash{grid-row:4}
+  .tcg-app.tcg-spider .tcg-arena-side:not(.tcg-arena-side--ai){grid-row:5}
+  .tcg-app.tcg-spider .tcg-arena-log{grid-row:6}
+  .tcg-app.tcg-spider .tcg-arena-history{grid-row:7}
+  .tcg-app.tcg-spider .tcg-arena-clash{min-height:0}
+  .tcg-app.tcg-spider .tcg-arena-fighter{max-width:180px}
+}

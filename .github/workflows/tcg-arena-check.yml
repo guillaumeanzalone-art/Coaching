@@ -10,6 +10,8 @@ on:
       - 'v2/src/tcg-combat-events.js'
       - 'v2/src/tcg-feedback.js'
       - 'v2/src/tcg-motion.css'
+      - 'v2/src/tcg-premium-ui.css'
+      - 'v2/tests/tcg-premium-ui.test.js'
       - 'v2/tests/tcg-motion.test.js'
       - 'v2/src/tcg-rewards.js'
       - 'v2/src/training.js'

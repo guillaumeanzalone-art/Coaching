@@ -1936,6 +1936,8 @@ export async function mountTcgGame(
       deck.length >=
         DECK_SIZE
     ) {
+      error='Équipe complète : retire une carte avant d’en ajouter une autre.'
+      render()
       return
     }
 
@@ -1954,6 +1956,8 @@ export async function mountTcgGame(
         MAX_COPY_IN_DECK ||
       already >= owned
     ) {
+      error=already>0?'Cette carte est déjà dans ton équipe.':'Carte non possédée.'
+      render()
       return
     }
 
@@ -1961,6 +1965,7 @@ export async function mountTcgGame(
       ...deck,
       cardIdValue,
     ]
+    error=''
 
     render()
   }
