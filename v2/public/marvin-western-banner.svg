@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 490" width="1440" height="490" role="img" aria-labelledby="title desc">
+<title id="title">MARVIN — La frontière rouge</title><desc id="desc">Illustration originale : affiche de prime sur vieux papier, hors-la-loi en manteau de cuir face au soleil rouge, village du Far West et cheval dans la poussière.</desc>
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2=".15" y2="1"><stop stop-color="#390a0a"/><stop offset=".38" stop-color="#971f19"/><stop offset=".7" stop-color="#e24a20"/><stop offset="1" stop-color="#f3a544"/></linearGradient>
+ <radialGradient id="sun"><stop stop-color="#ffe1a2"/><stop offset=".6" stop-color="#ffbb65"/><stop offset="1" stop-color="#ec6932" stop-opacity=".45"/></radialGradient>
+ <linearGradient id="desert" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a23620"/><stop offset="1" stop-color="#27120f"/></linearGradient>
+ <linearGradient id="coat" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#452016"/><stop offset=".5" stop-color="#170d0b"/><stop offset="1" stop-color="#65402a"/></linearGradient>
+ <linearGradient id="paper"><stop stop-color="#f0c990"/><stop offset=".36" stop-color="#d8a36d"/><stop offset=".75" stop-color="#bf824e"/><stop offset="1" stop-color="#b67641"/></linearGradient>
+ <linearGradient id="dark" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#160c0a"/><stop offset="1" stop-color="#351c16"/></linearGradient>
+ <linearGradient id="horizon" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ea6d32" stop-opacity=".45"/><stop offset="1" stop-color="#090807" stop-opacity=".9"/></linearGradient>
+ <pattern id="dust" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="11" cy="26" r="1.4" fill="#ffc987" opacity=".24"/><circle cx="55" cy="8" r="1" fill="#ffb967" opacity=".27"/><circle cx="83" cy="75" r=".9" fill="#ffdf92" opacity=".2"/><path d="M4 80l5-3M91 31l3 2" stroke="#ecc28f" opacity=".12"/></pattern>
+ <filter id="shadow" x="-25%" y="-25%" width="150%" height="170%"><feGaussianBlur stdDeviation="7"/></filter>
+ <clipPath id="viewport"><rect width="1440" height="490" rx="25"/></clipPath>
+</defs>
+<g clip-path="url(#viewport)">
+ <rect width="1440" height="490" fill="url(#sky)"/>
+ <ellipse cx="895" cy="192" rx="205" ry="195" fill="#ef5631" opacity=".21" filter="url(#shadow)"/>
+ <circle cx="895" cy="205" r="154" fill="url(#sun)" opacity=".95"/>
+ <path d="M0 78Q125 39 215 79T461 66Q585 25 745 70T1059 46Q1280 9 1440 52V0H0Z" fill="#340e12" opacity=".6"/>
+ <path d="M380 130Q470 108 510 127T650 138L673 146Q480 148 390 150Z M890 83Q1104 54 1208 102L1260 111Q1060 104 888 102Z M1110 172Q1257 149 1440 169V195Q1316 184 1110 193Z" fill="#471319" opacity=".43"/>
+ <path d="M0 284L93 226L111 226L125 180L151 180L164 229L196 230L238 261L251 219L269 212L280 253L307 271L353 271L361 314L429 273L461 270L467 229L486 228L493 279L538 285L551 308L664 298L714 328L774 305L791 343L920 301L963 335L1012 314L1046 327L1077 307L1144 330L1179 310L1252 323L1291 281L1310 282L1320 315L1440 292V490H0Z" fill="#451d19"/>
+ <path d="M0 315L79 266L101 273L111 241L141 241L153 294L218 318L229 302L269 302L295 326L338 308L361 318L370 350L450 348L462 323L506 327L535 358L635 349L692 353L779 337L829 355L910 346L985 362L1046 330L1076 348L1138 350L1225 334L1278 350L1356 338L1440 329V490H0Z" fill="url(#desert)" opacity=".85"/>
+ <path d="M0 386Q171 340 321 387Q420 407 550 373Q753 344 880 382Q1048 341 1190 372Q1320 348 1440 376V490H0Z" fill="url(#horizon)"/>
+ <!-- Frontier town left -->
+ <g stroke="#4a2114" stroke-width="3">
+ <path d="M0 290L29 290L29 224L118 222L121 291L154 293L154 232L230 229L230 304L289 297L289 337L0 350Z" fill="#200f0d"/>
+ <path d="M0 247H140M14 238V304M39 232V312M70 230V318M109 231V309M155 244H235M168 249V309M198 244V305" stroke="#9b4c25" opacity=".55"/>
+ <rect x="59" y="255" width="26" height="35" fill="#d97531" opacity=".7"/><rect x="187" y="262" width="26" height="33" fill="#ed9337" opacity=".64"/>
+ <path d="M257 333L258 279L281 279L284 253L303 249L308 277L342 277L345 337" fill="#1f120f"/>
+ </g>
+ <!-- Saloon and right-hand buildings -->
+ <g stroke="#120a09" stroke-width="4" fill="#1d100d">
+ <path d="M1059 291L1059 169L1195 155L1254 163L1254 290Z"/>
+ <path d="M1002 162L1039 160L1043 143L1231 135L1240 160L1275 160L1277 181L1002 181Z" fill="#31160f"/>
+ <rect x="1099" y="197" width="75" height="36" fill="#a15f32" stroke="#9b4d24"/>
+ <path d="M1099 197H1174M1116 197V233M1141 197V233" stroke="#3e1b11" stroke-width="3"/>
+ <path d="M1111 234H1164" stroke="#e2aa67" opacity=".7"/>
+ <rect x="1082" y="254" width="22" height="41" fill="#ee8c35" opacity=".56"/><rect x="1209" y="224" width="18" height="55" fill="#e58d3c" opacity=".65"/>
+ <path d="M1039 302V192M1239 311V192M1051 193H1269M1011 316H1289M1047 334H1261" stroke="#8e4326" stroke-width="9"/>
+ <path d="M1262 301L1262 215L1362 209L1392 236L1392 328Z" fill="#26100e"/>
+ <path d="M1260 211H1385L1410 226L1420 245H1244Z" fill="#120c0b"/>
+ <path d="M1296 265V328M1348 266V328" stroke="#713920" stroke-width="7"/>
+ </g>
+ <text x="1136" y="219" fill="#f9ba72" font-family="Georgia,serif" font-size="24" font-weight="bold" letter-spacing="3" text-anchor="middle" transform="rotate(-3 1136 219)">SALOON</text>
+ <!-- Ranch horse -->
+ <g fill="#21110e" stroke="#0f0809" stroke-width="3">
+ <ellipse cx="970" cy="370" rx="58" ry="24" transform="rotate(-6 970 370)"/>
+ <path d="M927 370L904 441L918 450L942 379M950 382L948 453L962 453L977 384M986 379L993 444L1006 444L1010 377M1017 370L1030 426L1043 432L1038 361" />
+ <path d="M1005 351L1037 302L1050 298L1070 309L1074 338L1059 341L1053 325L1036 355"/>
+ <path d="M1052 298l3-26 13 27 14-20-2 29" />
+ <path d="M917 367Q895 357 887 330Q903 351 923 352Z"/>
+ </g>
+ <!-- Center outlaw, layered to emulate worn painted leather -->
+ <g>
+  <ellipse cx="728" cy="495" rx="190" ry="32" fill="#100908" opacity=".62"/>
+  <path d="M711 302L677 351L629 484L837 490L805 359L772 308Z" fill="#110b0b" stroke="#a65c30" stroke-width="4"/>
+  <path d="M695 319L630 480L673 475L727 377L733 489L817 490L783 338Z" fill="url(#coat)" stroke="#4c2819" stroke-width="5"/>
+  <path d="M667 349Q610 388 594 442L645 477L691 385Z" fill="#24120e" stroke="#8f4b2b" stroke-width="4"/>
+  <path d="M772 348Q811 371 855 457L818 484L764 385Z" fill="#281510" stroke="#7b3e22" stroke-width="4"/>
+  <path d="M702 318L691 361L730 399L766 358L756 308Z" fill="#401b14"/>
+  <path d="M687 367L798 468M676 398L768 484M732 347L651 470" stroke="#a5683f" stroke-width="9" opacity=".38"/>
+  <path d="M725 310Q682 273 695 220L704 206L741 204L772 222Q783 274 759 313Z" fill="#170d0b" stroke="#66351e" stroke-width="3"/>
+  <path d="M696 260L746 274L762 281L765 308L744 328L715 306Z" fill="#2d140f"/>
+  <path d="M612 220Q716 176 819 208L795 223L679 232Z" fill="#130b0a" stroke="#995129" stroke-width="4"/>
+  <path d="M682 210L694 154Q740 128 776 156L794 210Z" fill="#1e100d" stroke="#aa6335" stroke-width="5"/>
+  <path d="M694 189Q742 206 784 185L795 214Q753 230 678 217Z" fill="#6a3020" stroke="#a66b3e" stroke-width="3"/>
+  <path d="M758 146L781 167" stroke="#bd7a43" stroke-width="2" opacity=".7"/>
+  <!-- Rifle on the back -->
+  <path d="M633 143L815 467" stroke="#0e0c0a" stroke-width="19" stroke-linecap="round"/>
+  <path d="M631 141L809 467" stroke="#8a5231" stroke-width="8" stroke-linecap="round"/>
+  <path d="M627 120L656 169M772 399L837 472" stroke="#d0a369" stroke-width="5" stroke-linecap="round"/>
+  <path d="M619 106L638 154" stroke="#261512" stroke-width="12"/>
+  <path d="M621 109L630 137" stroke="#d8a970" stroke-width="3"/>
+  <path d="M722 322Q742 328 767 309L775 323L729 357Z" fill="#76281d"/>
+ </g>
+ <!-- Wanted paper, kept as part of the image so name is not repeated as overlay -->
+ <g transform="translate(44 45) rotate(-4 145 191)">
+   <path d="M2 7Q18 12 31 4L288 7L306 2L303 347L275 345L252 355L13 350L-3 345Z" fill="#1b0d0a" opacity=".7" transform="translate(10 10)"/>
+   <path d="M2 7L31 4L288 7L306 2L303 347L275 345L252 355L13 350L-3 345Z" fill="url(#paper)" stroke="#341710" stroke-width="6"/>
+   <path d="M18 22H283M18 329H287" stroke="#633419" stroke-width="3" opacity=".75"/>
+   <rect x="18" y="25" width="270" height="312" rx="4" fill="none" stroke="#4e2b1b" stroke-width="2"/>
+   <text x="151" y="88" text-anchor="middle" fill="#371c11" font-size="57" font-family="Georgia,serif" font-weight="900" letter-spacing="-4">WANTED</text>
+   <text x="152" y="117" text-anchor="middle" fill="#62341b" font-size="16" font-family="Georgia,serif" letter-spacing="4">DEAD OR ALIVE</text>
+   <path d="M61 141H245V253H61Z" fill="#b67c4f" stroke="#633b26" stroke-width="3"/>
+   <circle cx="153" cy="195" r="37" fill="#3c2116"/><path d="M97 252Q104 210 152 216Q205 210 214 252Z" fill="#3c2116"/>
+   <path d="M104 182Q150 152 196 178L204 184Q149 196 96 187Z" fill="#27190f"/><path d="M129 181L133 150Q154 140 174 154L179 180Z" fill="#27190f"/>
+   <text x="152" y="295" text-anchor="middle" fill="#351c12" font-size="47" font-family="Georgia,serif" font-weight="900" letter-spacing="-2">MARVIN</text>
+   <text x="152" y="320" text-anchor="middle" fill="#432519" font-size="20" font-weight="bold" letter-spacing="9">★ ★ ★</text>
+   <circle cx="14" cy="18" r="6" fill="#7f492a" stroke="#e6b77a"/><circle cx="295" cy="338" r="6" fill="#7f492a" stroke="#e6b77a"/>
+ </g>
+ <rect width="1440" height="490" fill="url(#dust)" opacity=".7"/>
+ <path d="M0 480L149 450L339 470L489 442L705 475L967 446L1152 459L1440 434V490H0Z" fill="#100b09" opacity=".64"/>
+ <rect x="4" y="4" width="1432" height="482" rx="23" fill="none" stroke="#deb16d" stroke-width="6" opacity=".78"/>
+ <rect x="13" y="13" width="1414" height="464" rx="17" fill="none" stroke="#2c160e" stroke-width="4"/>
+</g></svg>

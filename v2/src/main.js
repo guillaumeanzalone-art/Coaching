@@ -10,6 +10,7 @@ import './theme-camille-abyss.css'
 import './theme-noe-skybound.css'
 import './theme-killian-yonko.css'
 import './theme-timothee-covenant.css'
+import './theme-marvin-western.css'
 import { getRecentActivities, getCurrentActivityUserId, toggleActivityLike } from './activity.js'
 
 import {

@@ -4782,6 +4782,27 @@ export function mountTraining(
         ''
       ).trim()
 
+    if (athleteTheme?.variant === 'marvin-frontier-outlaw') {
+      const westernQuotes = [
+        'Il y a une prime sur ta tête, cow-boy.',
+        'Ce soir, on dévalise la banque du squat.',
+        'Un vrai hors-la-loi ne rate pas sa dernière rep.',
+        'Selle-toi, la barre ne va pas se soulever toute seule.',
+        'Le désert ne pardonne pas les reps bâclées.',
+      ]
+      const message = westernQuotes[new Date().getDay() % westernQuotes.length]
+      return `
+        <section class="athlete-theme-banner athlete-theme-banner--marvin-western"
+          aria-label="Marvin, hors-la-loi de la frontière américaine">
+          <img class="marvin-western__hero" src="${escapeHtml(athleteTheme.heroImage || '/marvin-western-banner.svg')}"
+            alt="Affiche Wanted Marvin, shérif et hors-la-loi sous un coucher de soleil rouge dans une ville western"
+            width="1440" height="490" loading="eager" decoding="async">
+          <span class="marvin-western__frame" aria-hidden="true"></span>
+        </section>
+        <p class="marvin-western__motto" aria-label="Message de motivation">✶ <span>${escapeHtml(message)}</span> ✶</p>
+      `
+    }
+
     if (athleteTheme?.variant === 'timothee-bible-covenant') {
       return `${renderTimotheeThemeHero()}
         ${renderTimotheeVersePanel(timotheeVisitVerse)}`
@@ -6960,14 +6981,23 @@ export function mountTraining(
       ['bench', 'BN'],
       ['deadlift', 'DL'],
     ]
+    const isMarvinWestern = athleteTheme?.variant === 'marvin-frontier-outlaw'
+    const bountyLoads = rows.map(([lift]) => Number(sbdPrs[lift]?.[selectedSbdReps]?.load_kg))
+    const bountyComplete = rows.every(([lift], index) =>
+      Boolean(sbdPrs[lift]?.[selectedSbdReps]) &&
+      Number.isFinite(bountyLoads[index]) &&
+      bountyLoads[index] > 0
+    )
+    const bountyKg = bountyComplete
+      ? Math.round(bountyLoads.reduce((sum, load) => sum + load, 0) * 10) / 10
+      : null
 
     return `
       <section class="athlete-pr-panel athlete-pr-panel--v249">
         <div class="athlete-pr-panel__head">
           <div>
-            <span>
-              RECORDS SBD
-            </span>
+            <span>RECORDS SBD</span>
+            ${isMarvinWestern ? '<span class="marvin-wanted-title" aria-hidden="true">WANTED</span>' : ''}
 
             <strong>
               PR de ${escapeHtml(
@@ -7015,7 +7045,7 @@ export function mountTraining(
         ${prFlash
           ? `
             <div class="athlete-pr-flash">
-              🏆 Nouveau PR
+              ${isMarvinWestern ? '★ Prime augmentée !' : '🏆 Nouveau PR'}
               ${escapeHtml(
                 liftLabel(
                   prFlash.lift
@@ -7086,6 +7116,14 @@ export function mountTraining(
             }
           ).join('')}
         </div>
+
+        ${isMarvinWestern ? `
+          <div class="marvin-bounty-total" aria-live="polite">
+            <span>★ PRIME TOTALE</span>
+            <strong>${bountyKg === null ? '—' : escapeHtml(bountyKg.toLocaleString('fr-FR', { maximumFractionDigits: 1 }))}<small>${bountyKg === null ? '' : ' kg'}</small></strong>
+            <small>${bountyComplete ? 'Total des trois records affichés' : 'Complète les trois records pour calculer la prime'} · ×${selectedSbdReps} rep${selectedSbdReps > 1 ? 's' : ''}</small>
+          </div>
+        ` : ''}
 
         ${editingSbdPrs ? `
           <div class="athlete-pr-edit-actions">

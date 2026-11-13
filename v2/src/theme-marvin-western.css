@@ -1,0 +1,401 @@
+/* MARVIN — THE RED FRONTIER / 1899
+   Original western art, one-athlete visual scope. No program, Supabase or timer logic.
+   Rye (OFL) is used only on large decorative titles. All metrics remain system-ui. */
+@import url('https://fonts.googleapis.com/css2?family=Rye&display=swap');
+
+.training-page[data-athlete-theme="marvin"]{
+  --mw-night:#100a09;
+  --mw-leather:#26150f;
+  --mw-leather-2:#3a2016;
+  --mw-rust:#b63224;
+  --mw-blood:#d24431;
+  --mw-brass:#d7a85c;
+  --mw-brass-light:#f5d18c;
+  --mw-paper:#f2dfbb;
+  --mw-dim:#d3bca0;
+  --mw-line:rgba(213,167,91,.5);
+  --mw-shadow:0 14px 32px rgba(9,4,3,.4),inset 0 1px 0 rgba(255,223,159,.065);
+  --mw-round:15px;
+  --mw-wood:'Rye',Georgia,serif;
+  --mw-body:system-ui,-apple-system,'Segoe UI',sans-serif;
+  position:relative;
+  isolation:isolate;
+  min-height:100vh;
+  overflow-x:clip;
+  padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));
+  color:var(--mw-paper);
+  font-family:var(--mw-body);
+  background:
+    radial-gradient(ellipse at 66% 8%,rgba(170,42,23,.16),transparent 47rem),
+    radial-gradient(ellipse at 15% 47%,rgba(176,111,37,.09),transparent 31rem),
+    repeating-linear-gradient(117deg,transparent 0 83px,rgba(240,187,109,.012) 84px 85px),
+    linear-gradient(175deg,#1a0e0b 0%,#100a09 47%,#170d0a 100%);
+}
+.training-page[data-athlete-theme="marvin"]::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(circle at 16% 24%,rgba(230,178,100,.16) 0 1px,transparent 2px) 0 0/79px 113px,
+    radial-gradient(circle at 75% 31%,rgba(213,140,78,.09) 0 1px,transparent 2px) 0 0/141px 153px;
+  opacity:.43;
+}
+.training-page[data-athlete-theme="marvin"] :is(button,input,textarea,select){
+  font-family:var(--mw-body);
+}
+.training-page[data-athlete-theme="marvin"] :is(button,input,select,textarea):focus-visible{
+  outline:3px solid var(--mw-brass-light);outline-offset:3px;
+}
+.training-page[data-athlete-theme="marvin"] button{touch-action:manipulation;min-height:44px}
+.training-page[data-athlete-theme="marvin"] .training-topbar{
+  position:relative;z-index:2;
+  background:linear-gradient(100deg,rgba(25,13,12,.98),rgba(36,18,16,.91));
+  border:1px solid rgba(214,165,84,.35);border-radius:16px;
+  box-shadow:var(--mw-shadow);
+  margin-bottom:14px;padding:14px 16px;
+}
+.training-page[data-athlete-theme="marvin"] .training-topbar h1{
+  font-family:var(--mw-wood);font-size:clamp(22px,2.4vw,32px);
+  color:#fff0ce;letter-spacing:.01em;text-shadow:0 2px 12px #050101;
+}
+.training-page[data-athlete-theme="marvin"] .training-kicker{
+  color:#f2b287;font-family:var(--mw-body);font-size:11px;font-weight:900;letter-spacing:.13em
+}
+.training-page[data-athlete-theme="marvin"] :is(.back-button,.reset-button){
+  min-height:44px;border:1px solid rgba(225,165,84,.45);
+  background:rgba(31,16,13,.97);color:#f5d48e;border-radius:11px;
+  font-size:13px;font-weight:800;box-shadow:inset 0 1px 0 rgba(245,199,111,.1);
+}
+.training-page[data-athlete-theme="marvin"] .reset-button{
+  color:#f5aa9d;border-color:rgba(207,94,72,.45);
+}
+.training-page[data-athlete-theme="marvin"] :is(.back-button,.reset-button):hover{
+  border-color:var(--mw-brass-light);background:#42231a
+}
+.training-page[data-athlete-theme="marvin"] .athlete-theme-banner--marvin-western{
+  position:relative;isolation:isolate;display:block;overflow:hidden;
+  width:100%;min-height:0;aspect-ratio:1440/490;margin:0 0 14px;padding:0;
+  border-radius:23px;border:2px solid var(--mw-brass);
+  background:linear-gradient(125deg,#6d1f18,#21100d);
+  box-shadow:0 0 0 2px rgba(32,13,9,.9),0 22px 42px #0008,
+    0 0 26px rgba(216,113,59,.12),inset 0 0 0 1px #ffe0a162;
+}
+.training-page[data-athlete-theme="marvin"] .marvin-western__hero{
+  display:block;position:absolute;inset:0;width:100%;height:100%;max-width:none;
+  object-fit:cover;object-position:50% 50%;filter:saturate(1.08) contrast(1.055);
+}
+.training-page[data-athlete-theme="marvin"] .marvin-western__frame{
+  position:absolute;inset:9px;pointer-events:none;border:1px solid rgba(247,204,126,.63);
+  border-radius:16px;box-shadow:inset 0 0 18px #190c08ad;
+}
+.training-page[data-athlete-theme="marvin"] .athlete-theme-banner--marvin-western::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(18,8,5,.04),transparent 47%,rgba(16,8,6,.21));
+}
+.training-page[data-athlete-theme="marvin"] .marvin-western__motto{
+  display:flex;align-items:center;justify-content:center;gap:13px;min-height:56px;
+  margin:0 0 18px;padding:12px 18px;border:1px solid var(--mw-brass);
+  border-radius:13px;background:
+    repeating-linear-gradient(95deg,transparent 0 20px,rgba(244,191,110,.024) 21px 22px),
+    linear-gradient(115deg,#32180f,#1b110d 68%,#381a12);
+  box-shadow:inset 0 0 0 2px rgba(20,7,4,.75),0 6px 18px #0006;
+  font:400 clamp(14px,2vw,21px)/1.4 var(--mw-wood);
+  letter-spacing:.015em;color:#f9d494;text-align:center;text-shadow:0 2px 6px #120606;
+}
+.training-page[data-athlete-theme="marvin"] .marvin-western__motto span{max-width:55ch;overflow-wrap:anywhere}
+.training-page[data-athlete-theme="marvin"] :is(
+  .recovery-hp-v1,.athlete-insights-tabs__nav,.training-v3-history,
+  .training-v3-overview,.training-v3-overview-launcher,.training-session-v11,
+  .training-block-report-v11,.training-summary,.training-exercise,.rest-timer-dock,
+  .rest-timer-modal__card
+){
+  border:1px solid var(--mw-line);
+  border-radius:var(--mw-round);
+  background:
+    repeating-linear-gradient(100deg,transparent 0 28px,rgba(216,151,75,.021) 29px 30px),
+    linear-gradient(145deg,rgba(56,27,19,.97),rgba(26,15,12,.97));
+  color:var(--mw-paper);
+  box-shadow:var(--mw-shadow);
+}
+.training-page[data-athlete-theme="marvin"] :is(
+  .training-v3-history,.training-v3-overview,.training-v3-overview-launcher,.training-session-v11,.training-block-report-v11
+) :is(h2,h3){
+  color:#f1cf8b;font:400 clamp(17px,2vw,24px)/1.35 var(--mw-wood);
+  text-shadow:0 2px 9px #150808;
+}
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1{
+  margin:14px 0;padding:20px;
+}
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1__head span{
+  color:var(--mw-dim);font-size:12px;letter-spacing:.08em
+}
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1__head strong{
+  color:#fff3db;font-size:clamp(24px,4vw,34px);font-variant-numeric:tabular-nums;
+}
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1__status b{
+  color:var(--mw-paper);font-size:15px
+}
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1__status small{
+  color:var(--mw-dim);font-size:12px
+}
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1__track{
+  height:16px;border:1px solid rgba(235,185,109,.36);background:#100b0b;
+  box-shadow:inset 0 2px 8px #000a
+}
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1__fill,
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1--excellent .recovery-hp-v1__fill,
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1--good .recovery-hp-v1__fill{
+  background:linear-gradient(90deg,#962218,#d24c29 42%,#e9a539 74%,#f7cd65)!important
+}
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1__meta,
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1__meta *{
+  color:var(--mw-dim);font-size:12px
+}
+.training-page[data-athlete-theme="marvin"] .athlete-insights-tabs__nav{
+  padding:7px;gap:7px;max-width:650px;margin:10px auto 14px
+}
+.training-page[data-athlete-theme="marvin"] .athlete-insights-tabs__nav button{
+  border:1px solid transparent;color:var(--mw-dim);
+  background:linear-gradient(160deg,rgba(55,31,24,.4),rgba(20,11,10,.6));
+  border-radius:10px;font-size:13px;font-weight:850;min-height:48px;
+}
+.training-page[data-athlete-theme="marvin"] .athlete-insights-tabs__nav button.active{
+  border-color:var(--mw-brass);background:linear-gradient(145deg,#9e2a20,#4d1e17);
+  color:#ffe4af;box-shadow:inset 0 0 0 1px #f4c57a55,0 0 18px #a5362840
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-panel{
+  position:relative;overflow:hidden;margin:10px 0 16px;
+  border:2px solid #b98b54;border-radius:16px;padding:21px;
+  color:#321b13;
+  background:
+    radial-gradient(ellipse at 15% 5%,rgba(255,240,186,.25),transparent 38%),
+    repeating-linear-gradient(97deg,transparent 0 30px,rgba(105,56,26,.025) 32px 33px),
+    linear-gradient(130deg,#e8c89b,#c89b69 65%,#af794a);
+  box-shadow:inset 0 0 28px rgba(85,42,21,.24),0 18px 36px #09050396;
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-panel::before{
+  content:"✶";position:absolute;top:10px;right:13px;font-size:18px;color:#643a20;
+  pointer-events:none;opacity:.62
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-panel__head{
+  gap:12px;align-items:flex-start;flex-wrap:wrap
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-panel__head>div:first-child{
+  display:grid;gap:3px
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-panel__head div>span{
+  color:#6d271d;font-size:11px;letter-spacing:.12em;font-family:var(--mw-body)
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-panel__head .marvin-wanted-title{
+  display:block;color:#442315;font:400 clamp(32px,5vw,53px)/1.04 var(--mw-wood);
+  letter-spacing:.025em;text-shadow:0 2px 0 rgba(255,232,174,.38)
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-panel__head strong{
+  font:400 16px/1.35 var(--mw-wood);color:#4e2818
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-panel__actions small{
+  font-size:12px;color:#66452d
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-panel :is(
+  .athlete-pr-panel__actions button,.athlete-pr-reps-v249 button,.athlete-pr-edit-actions button
+){
+  min-height:44px;background:#332019;color:#ffddb0;
+  border:1px solid #79512f;border-radius:9px;font-weight:850;font-size:13px
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-reps-v249 button.active{
+  color:#ffedc6;background:linear-gradient(140deg,#9f221b,#59201a);
+  border-color:#ebaf57;box-shadow:inset 0 0 0 1px #f9cd7c8c,0 0 10px #bb4d2655
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr));gap:10px
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-card{
+  position:relative;overflow:hidden;padding:13px;min-height:98px;
+  background:linear-gradient(125deg,rgba(255,238,193,.3),rgba(194,139,80,.16));
+  border:1px solid #764a2d;border-radius:10px;
+  box-shadow:inset 0 0 0 2px #f3d8a360
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-card::before{
+  content:"✦";position:absolute;top:9px;right:10px;color:#7b4429;opacity:.5
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-card>span{
+  font:400 15px/1.4 var(--mw-wood);color:#542514
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-card>strong{
+  color:#321710;font:850 clamp(23px,3vw,35px)/1.2 var(--mw-body);font-variant-numeric:tabular-nums
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-card>strong small{
+  color:#6b432b;font-size:13px
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-card>small{
+  font-size:12px;color:#573b27
+}
+.training-page[data-athlete-theme="marvin"] .marvin-bounty-total{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  margin-top:12px;padding:12px 15px;border:1px solid #b97b41;border-radius:10px;
+  background:linear-gradient(120deg,#511915,#8f2d20,#41170f);
+  box-shadow:inset 0 0 0 1px #ffbd7068,0 7px 15px #53200945;color:#fff0c8
+}
+.training-page[data-athlete-theme="marvin"] .marvin-bounty-total>span{
+  font:400 16px var(--mw-wood);color:#f4c977;
+}
+.training-page[data-athlete-theme="marvin"] .marvin-bounty-total>strong{
+  font:850 clamp(25px,4vw,39px) var(--mw-body);font-variant-numeric:tabular-nums
+}
+.training-page[data-athlete-theme="marvin"] .marvin-bounty-total>strong small{
+  font-size:15px;font-weight:750
+}
+.training-page[data-athlete-theme="marvin"] .marvin-bounty-total>small{
+  color:#eec9a4;font-size:12px
+}
+.training-page[data-athlete-theme="marvin"] .athlete-pr-flash{
+  position:relative;color:#fff2c8;background:linear-gradient(100deg,#922218,#571b17);
+  border:1px solid #f5c16b;box-shadow:0 0 20px #fbb85235;
+  animation:marvinBounty 2.2s ease-out 1 both
+}
+@keyframes marvinBounty{
+  0%{transform:scale(.94);filter:brightness(1.75);opacity:.5}
+  20%{transform:scale(1.02);filter:brightness(1.18);opacity:1}
+  100%{transform:scale(1);filter:brightness(1);opacity:1}
+}
+.training-page[data-athlete-theme="marvin"] .training-sync{
+  color:#bfe9bd;border:1px solid rgba(151,207,122,.44);
+  background:rgba(42,61,24,.68);border-radius:100px;
+  font-size:12px;font-weight:800
+}
+.training-page[data-athlete-theme="marvin"] :is(.week-tab,.day-tab-v2){
+  border:1px solid rgba(203,153,89,.36);
+  border-radius:12px;background:linear-gradient(155deg,#2e1b14,#19110e 90%);
+  box-shadow:inset 0 1px 0 #ebbf774d;
+  color:var(--mw-paper);transition:border-color .16s ease,transform .16s ease;
+  min-height:48px
+}
+.training-page[data-athlete-theme="marvin"] :is(.week-tab,.day-tab-v2):hover{
+  border-color:var(--mw-brass);transform:translateY(-1px)
+}
+.training-page[data-athlete-theme="marvin"] :is(.week-tab--active,.day-tab-v2--active){
+  border-color:#ffd083;background:linear-gradient(135deg,#812019,#481a13);
+  box-shadow:0 0 0 1px #ba7a3c,inset 0 1px 0 #e5ae65,0 0 19px #ca4c2745
+}
+.training-page[data-athlete-theme="marvin"] :is(.week-tab,.day-tab-v2) strong{
+  color:#f4e0bb;font-size:clamp(12px,1.22vw,15px);line-height:1.35
+}
+.training-page[data-athlete-theme="marvin"] :is(.week-tab,.day-tab-v2) span,
+.training-page[data-athlete-theme="marvin"] :is(.week-tab,.day-tab-v2) small{
+  color:#d9bc92;font-size:12px;line-height:1.35
+}
+.training-page[data-athlete-theme="marvin"] :is(.week-tab--active,.day-tab-v2--active) :is(strong,span,small){
+  color:#ffe0a4
+}
+.training-page[data-athlete-theme="marvin"] .training-exercise{
+  overflow:hidden;border-color:rgba(211,163,91,.4);border-radius:16px
+}
+.training-page[data-athlete-theme="marvin"] .exercise-header{
+  background:linear-gradient(120deg,#4b2519,#2a1611);border-bottom:1px solid rgba(227,166,93,.25)
+}
+.training-page[data-athlete-theme="marvin"] .exercise-header h2{
+  color:#f9e1b1;font:400 clamp(17px,1.9vw,22px)/1.3 var(--mw-wood)
+}
+.training-page[data-athlete-theme="marvin"] .exercise-type{
+  border:1px solid rgba(240,183,96,.55);
+  border-radius:7px;background:#6a2a1b;color:#ffd19c;font-size:12px;font-weight:900
+}
+.training-page[data-athlete-theme="marvin"] .exercise-type::before{
+  content:"✦";margin-right:4px;color:var(--mw-brass-light)
+}
+.training-page[data-athlete-theme="marvin"] .training-set{
+  border-color:rgba(201,158,107,.22);background:rgba(24,14,11,.7);color:var(--mw-paper)
+}
+.training-page[data-athlete-theme="marvin"] .training-set--done{
+  border-color:rgba(175,204,115,.55);background:rgba(54,47,24,.62)
+}
+.training-page[data-athlete-theme="marvin"] .training-set--failed{
+  border-color:rgba(230,108,78,.72);background:rgba(91,28,20,.56)
+}
+.training-page[data-athlete-theme="marvin"] :is(
+  input[type="number"],input[type="text"],textarea,select
+){
+  min-height:44px;border:1px solid rgba(229,167,84,.48);
+  background:#1e120f;color:#fff1d3;border-radius:10px;font-size:16px
+}
+.training-page[data-athlete-theme="marvin"] ::placeholder{color:#c49d78}
+.training-page[data-athlete-theme="marvin"] :is(
+  .exercise-rest-control,.rest-timer-dock__actions button,
+  .rest-timer-dock__top>button,.rest-timer-presets button
+){
+  min-height:44px;border:1px solid rgba(237,175,93,.48);
+  background:linear-gradient(130deg,#5c2419,#2b1813);color:#ffdb9b;
+  font-size:13px;font-weight:850;border-radius:9px
+}
+.training-page[data-athlete-theme="marvin"] .rest-timer-dock{
+  border-color:var(--mw-brass)!important;
+  background:linear-gradient(145deg,#3e2118,#170e0c)!important
+}
+.training-page[data-athlete-theme="marvin"] .rest-timer-dock__top strong{
+  position:relative;display:grid;place-items:center;
+  width:86px;height:86px;border-radius:50%;
+  border:9px double var(--mw-brass);
+  box-shadow:inset 0 0 0 3px #52291a,0 0 0 2px #170b07;
+  background:radial-gradient(circle,#2e1912 0 56%,#1c0f0e 70%);
+  font:850 24px/1 var(--mw-body);font-variant-numeric:tabular-nums;
+  color:#ffe8bd
+}
+.training-page[data-athlete-theme="marvin"] .rest-timer-dock__top strong::before{
+  content:"";position:absolute;inset:-6px;border:2px dashed rgba(245,192,111,.62);
+  border-radius:50%;pointer-events:none
+}
+.training-page[data-athlete-theme="marvin"] .rest-timer-dock__progress{
+  height:9px;margin-top:10px;border:1px solid #997047;background:#160c08
+}
+.training-page[data-athlete-theme="marvin"] .rest-timer-dock__progress>i,
+.training-page[data-athlete-theme="marvin"] .recovery-hp-v1__fill{
+  background:linear-gradient(90deg,#aa251e,#d85d2d,#efb953)!important
+}
+.training-page[data-athlete-theme="marvin"] :is(.exercise-progress,.training-summary__progress,.session-progress-fill){
+  color:var(--mw-brass-light)
+}
+.training-page[data-athlete-theme="marvin"] :is(
+  .progress-fill,.progress-bar-fill,.session-progress-fill,.training-summary__progress-fill
+){
+  background:linear-gradient(90deg,#9f241b,#cc492b,#efbf64)!important
+}
+.training-page[data-athlete-theme="marvin"] :is(.set-load,.set-rpe,.set-number,.set-prescription){
+  font-family:var(--mw-body);font-variant-numeric:tabular-nums
+}
+.training-page[data-athlete-theme="marvin"] :is(
+  .athlete-insights-tabs__nav button,.athlete-pr-panel button,.week-tab,.day-tab-v2,.rest-timer-dock button
+):focus-visible{
+  outline:3px solid #ffdd9c;outline-offset:2px
+}
+@media(max-width:680px){
+  .training-page[data-athlete-theme="marvin"]{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+  .training-page[data-athlete-theme="marvin"] .training-topbar{gap:8px;padding:12px}
+  .training-page[data-athlete-theme="marvin"] .training-topbar h1{font-size:22px}
+  .training-page[data-athlete-theme="marvin"] .athlete-theme-banner--marvin-western{
+    aspect-ratio:1.85/1;min-height:195px;border-radius:18px
+  }
+  .training-page[data-athlete-theme="marvin"] .marvin-western__hero{object-position:9% 50%}
+  .training-page[data-athlete-theme="marvin"] .marvin-western__frame{inset:7px;border-radius:12px}
+  .training-page[data-athlete-theme="marvin"] .marvin-western__motto{
+    font-size:14px;gap:7px;line-height:1.45;min-height:54px
+  }
+  .training-page[data-athlete-theme="marvin"] .recovery-hp-v1{padding:13px}
+  .training-page[data-athlete-theme="marvin"] .athlete-pr-panel{padding:14px 10px}
+  .training-page[data-athlete-theme="marvin"] .athlete-pr-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  .training-page[data-athlete-theme="marvin"] .athlete-pr-card{padding:8px 6px;min-height:88px}
+  .training-page[data-athlete-theme="marvin"] .athlete-pr-card>span{font-size:12px}
+  .training-page[data-athlete-theme="marvin"] .athlete-pr-card>strong{font-size:clamp(17px,5vw,25px)}
+  .training-page[data-athlete-theme="marvin"] .athlete-pr-card>strong small{font-size:12px}
+  .training-page[data-athlete-theme="marvin"] .athlete-pr-card>small{font-size:11px}
+  .training-page[data-athlete-theme="marvin"] .marvin-bounty-total>small{width:100%}
+  .training-page[data-athlete-theme="marvin"] :is(.week-tab,.day-tab-v2){min-height:54px}
+  .training-page[data-athlete-theme="marvin"] .rest-timer-dock__top strong{width:72px;height:72px;font-size:21px;border-width:7px}
+}
+@media(max-width:380px){
+  .training-page[data-athlete-theme="marvin"] .athlete-pr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .training-page[data-athlete-theme="marvin"] .athlete-pr-card:last-child{grid-column:1/-1}
+  .training-page[data-athlete-theme="marvin"] .training-topbar :is(.back-button,.reset-button){font-size:12px;padding-inline:7px}
+  .training-page[data-athlete-theme="marvin"] .marvin-western__motto{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){
+  .training-page[data-athlete-theme="marvin"] .athlete-pr-flash,
+  .training-page[data-athlete-theme="marvin"] :is(.week-tab,.day-tab-v2){animation:none;transition:none}
+}
