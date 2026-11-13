@@ -1400,6 +1400,13 @@ export async function mountTcgGame(
   let openingStage = 'idle'
   let openingToken = 0
   let rarityFilter = 'all'
+  let factionFilter = 'all'
+  let collectionSearch = ''
+  let collectionSort = 'rarity'
+  let collectionLimit = 36
+  let showAllCards = false
+  let inspectedCardId = null
+  let deckPresetName = ''
   let battle = null
   let duelStrength = {player:0,opponent:0}
   const motionDevice = deviceMotionSettings(window)
@@ -1501,6 +1508,34 @@ export async function mountTcgGame(
           ),
         0
       )
+  }
+
+
+  function getNamedDecks(){
+    try{const rows=JSON.parse(localStorage.getItem('ga-tcg-decks-'+activeSlug)||'[]');return Array.isArray(rows)?rows.filter(x=>typeof x.name==='string'&&Array.isArray(x.deck)).slice(0,12):[]}
+    catch{return []}
+  }
+  function storeNamedDecks(rows){
+    try{localStorage.setItem('ga-tcg-decks-'+activeSlug,JSON.stringify(rows.slice(0,12)))}
+    catch{error='Stockage local indisponible pour les compositions.'}
+  }
+  function renderCardDetail(){
+    if(!inspectedCardId)return ''
+    const card=catalog.get(inspectedCardId)
+    if(!card)return ''
+    const stats=arenaBaseStats(card)
+    return `<div class="tcg-detail-backdrop" data-action="tcg-close-detail">
+      <section class="tcg-detail-panel" role="dialog" aria-modal="true" aria-label="Fiche de ${esc(card.athlete?.name||card.slug)}" onclick="event.stopPropagation()">
+        <header><div><small>ARCHIVES · ${esc(card.rarityMeta.label)}</small><h3>${esc(card.athlete?.name||card.slug)}</h3></div><button type="button" data-action="tcg-close-detail" aria-label="Fermer">✕</button></header>
+        <div class="tcg-detail-layout"><div class="tcg-detail-card">${renderCard(card,{size:'detail'})}</div>
+        <div class="tcg-detail-details">
+          <div class="tcg-detail-stats"><span>⚔ PUISSANCE <b>${stats.power}</b></span><span>✦ DÉGÂTS <b>${stats.damage}</b></span><span>◇ POSSÉDÉES <b>${ownedCopies(card.id)}</b></span></div>
+          <h4>${esc(card.archetype.icon||'✦')} ${esc(card.archetype.label||card.faction||'Faction')}</h4>
+          <h4>POUVOIR</h4><p>${esc(card.archetype.text||'Aucun pouvoir décrit.')}</p>
+          <h4>SYNERGIE</h4><p>Bonus de faction selon les règles existantes de l'arène.</p>
+          <button type="button" class="tcg-primary" data-action="${copiesInDeck(card.id)?'tcg-remove-card':'tcg-add-card'}" data-card-id="${esc(card.id)}" ${!copiesInDeck(card.id)&&(ownedCopies(card.id)===0||deck.length>=DECK_SIZE)?'disabled':''}>${copiesInDeck(card.id)?'Retirer de l’équipe':'Ajouter à l’équipe'}</button>
+        </div></div>
+      </section></div>`
   }
 
   function deckCards() {
@@ -2513,102 +2548,41 @@ export async function mountTcgGame(
     }).join('')
   }
 
+
   function renderCollection() {
-    const rows =
-      ownedRows()
-        .filter(
-          row =>
-            rarityFilter ===
-              'all' ||
-            row.card.rarity ===
-              rarityFilter
-        )
-        .sort(
-          (a, b) =>
-            b.card.rarityMeta.rank -
-              a.card.rarityMeta.rank ||
-            a.card.athlete.name.localeCompare(
-              b.card.athlete.name,
-              'fr'
-            )
-        )
-
-    return `
-      ${renderAlexandreEvolutionGallery()}
-      ${renderHugoEvolutionGallery()}
-      ${renderBenoitEvolutionGallery()}
-      ${renderSuppliedEvolutionGalleries()}
-      <section class="tcg-panel">
-        <header class="tcg-panel-head">
-          <div>
-            <h3>
-              Collection
-            </h3>
-            <p>
-              Chaque athlète existe en 5 raretés, avec des statistiques et des pouvoirs évolutifs.
-            </p>
-          </div>
-
-          <strong>
-            ${uniqueOwned()} / ${catalog.size}
-          </strong>
-        </header>
-
-        <div class="tcg-panel-pad">
-          <div class="tcg-collection-toolbar">
-            ${[
-              ['all', 'Toutes'],
-              ['common', 'Communes'],
-              ['uncommon', 'Peu communes'],
-              ['rare', 'Rares'],
-              ['ultra', 'Ultra'],
-              ['secret', 'Secret'],
-            ]
-              .map(
-                ([id, label]) => `
-                  <button
-                    class="${rarityFilter === id ? 'active' : ''}"
-                    data-action="tcg-rarity-filter"
-                    data-rarity="${id}"
-                    type="button"
-                  >
-                    ${label}
-                  </button>
-                `
-              )
-              .join('')}
-          </div>
-
-          <div
-            class="tcg-card-grid"
-            style="margin-top:12px"
-          >
-            ${rows.length
-              ? rows
-                  .map(
-                    row =>
-                      renderCard(
-                        row.card,
-                        {
-                          copies:
-                            row.copies,
-                          action:
-                            'tcg-add-card',
-                        }
-                      )
-                  )
-                  .join('')
-              : `
-                <div class="tcg-empty" style="grid-column:1/-1">
-                  <b>Aucune carte ici.</b>
-                  Ouvre des boosters pour compléter ta collection.
-                </div>
-              `
-            }
-          </div>
+    const all=showAllCards?[...catalog.values()].map(card=>({card,copies:ownedCopies(card.id)})):ownedRows()
+    const term=collectionSearch.trim().toLocaleLowerCase('fr')
+    const rows=all.filter(row=>
+      (rarityFilter==='all'||row.card.rarity===rarityFilter)&&
+      (factionFilter==='all'||String(row.card.archetype?.id||row.card.faction)===factionFilter)&&
+      (!term||String(row.card.athlete?.name||row.card.slug).toLocaleLowerCase('fr').includes(term))
+    ).sort((a,b)=>collectionSort==='power'?arenaBaseStats(b.card).power-arenaBaseStats(a.card).power:
+      collectionSort==='damage'?arenaBaseStats(b.card).damage-arenaBaseStats(a.card).damage:
+      collectionSort==='name'?String(a.card.athlete?.name).localeCompare(String(b.card.athlete?.name),'fr'):
+      b.card.rarityMeta.rank-a.card.rarityMeta.rank||String(a.card.athlete?.name).localeCompare(String(b.card.athlete?.name),'fr'))
+    const factions=[...new Map([...catalog.values()].map(card=>[String(card.archetype?.id||card.faction),String(card.archetype?.label||card.faction)])).entries()]
+    return `<section class="tcg-panel tcg-collection-panel">
+      <header class="tcg-panel-head"><div><h3>Archives de la Toile</h3><p>Découvre les pouvoirs de tes cartes et complète ton équipe.</p></div><strong>${uniqueOwned()} / ${catalog.size}</strong></header>
+      <div class="tcg-panel-pad">
+        <div class="tcg-collection-controls" role="search" aria-label="Filtrer les cartes">
+          <label><span>RECHERCHER</span><input type="search" data-action="tcg-card-search" value="${esc(collectionSearch)}" placeholder="Nom de la carte…" autocomplete="off"></label>
+          <label><span>FACTION</span><select data-action="tcg-faction-filter"><option value="all">Toutes les factions</option>${factions.map(([id,name])=>`<option value="${esc(id)}" ${factionFilter===id?'selected':''}>${esc(name)}</option>`).join('')}</select></label>
+          <label><span>TRIER PAR</span><select data-action="tcg-collection-sort">${[['rarity','Rareté'],['power','Puissance'],['damage','Dégâts'],['name','Nom A → Z']].map(([id,label])=>`<option value="${id}" ${collectionSort===id?'selected':''}>${label}</option>`).join('')}</select></label>
         </div>
-      </section>
-    `
+        <div class="tcg-collection-toolbar">
+          ${[['all','Toutes'],['common','Communes'],['uncommon','Peu communes'],['rare','Rares'],['ultra','Ultra'],['secret','Secret']].map(([id,label])=>`<button type="button" class="${rarityFilter===id?'active':''}" aria-pressed="${rarityFilter===id}" data-action="tcg-rarity-filter" data-rarity="${id}">${label}</button>`).join('')}
+          <button type="button" class="${showAllCards?'active':''}" aria-pressed="${showAllCards}" data-action="tcg-toggle-all-cards">${showAllCards?'✓ Toutes les cartes':'Voir les manquantes'}</button>
+        </div>
+        <p class="tcg-filter-count">${rows.length} carte(s) · Touche une carte pour l'ajouter à ton équipe ou « Fiche » pour la détailler.</p>
+        <div class="tcg-card-grid tcg-premium-collection-grid">
+          ${rows.length?rows.slice(0,collectionLimit).map(row=>`<div class="tcg-collection-tile ${copiesInDeck(row.card.id)?'is-in-deck':''} ${Number(row.copies)===0?'is-unowned':''}">
+            ${renderCard(row.card,{copies:row.copies,action:Number(row.copies)>0?'tcg-add-card':'',locked:Number(row.copies)===0,size:'mini'})}
+            <div class="tcg-collection-tile-bar"><span>${copiesInDeck(row.card.id)?'✓ Équipe':Number(row.copies)>0?'＋ Ajouter':'Verrouillée'}</span><button type="button" data-action="tcg-card-detail" data-card-id="${esc(row.card.id)}" aria-label="Fiche de ${esc(row.card.athlete?.name||row.card.slug)}">Fiche ↗</button></div>
+          </div>`).join(''):`<div class="tcg-empty"><b>Aucun résultat.</b>Essaie d'autres filtres ou ouvre des boosters.</div>`}
+        </div>
+        ${rows.length>collectionLimit?`<button type="button" class="tcg-secondary tcg-load-more" data-action="tcg-more-cards">Afficher davantage · ${Math.min(rows.length,collectionLimit)}/${rows.length}</button>`:''}
+      </div>
+    </section>`
   }
 
   function renderDeck() {
