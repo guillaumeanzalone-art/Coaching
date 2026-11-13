@@ -1031,7 +1031,7 @@ function renderCard(
       data-level="${isAlexandre || isHugo || isBenoit || isSuppliedEvolution ? poisonLevel : '' }"
       data-design="${esc(design?.family || '')}"
       style="--character-hue:${Number(design?.hue || 270)};${rarityCss(card.rarity)}"
-      ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}"` : ''}
+      ${action ? `data-action="${esc(action)}" data-card-id="${esc(card.id)}" role="button" tabindex="0"` : ''}
     >
       <span class="tcg-rarity-trim" aria-hidden="true"></span>
       <div class="tcg-card-art">
@@ -1525,7 +1525,7 @@ export async function mountTcgGame(
     if(!card)return ''
     const stats=arenaBaseStats(card)
     return `<div class="tcg-detail-backdrop" data-action="tcg-close-detail">
-      <section class="tcg-detail-panel" role="dialog" aria-modal="true" aria-label="Fiche de ${esc(card.athlete?.name||card.slug)}" onclick="event.stopPropagation()">
+      <section class="tcg-detail-panel" role="dialog" aria-modal="true" aria-label="Fiche de ${esc(card.athlete?.name||card.slug)}">
         <header><div><small>ARCHIVES · ${esc(card.rarityMeta.label)}</small><h3>${esc(card.athlete?.name||card.slug)}</h3></div><button type="button" data-action="tcg-close-detail" aria-label="Fermer">✕</button></header>
         <div class="tcg-detail-layout"><div class="tcg-detail-card">${renderCard(card,{size:'detail'})}</div>
         <div class="tcg-detail-details">
@@ -2633,7 +2633,7 @@ export async function mountTcgGame(
   return `
     <div class="tcg-arena-fighter ${className}" data-tcg-side="${side}"
       style="--tcg-impact-direction:${side==='player'?'12px':'-12px'};--tcg-recoil-direction:${side==='player'?'-10px':'10px'}">
-      ${renderCard(card)}
+      ${renderCard(card,{size:'combat'})}
       <div class="tcg-arena-power">
         <span>⚔ PUI ${stats.power}</span>
         <span>✦ DÉG ${stats.damage}</span>
@@ -2727,11 +2727,11 @@ export async function mountTcgGame(
           <div class="tcg-arena-log ${last ? (playerVictory ? 'tcg-arena-log--win' : 'tcg-arena-log--lose') : ''}">
             ${animating?'Résolution en cours…':esc(battle.log)}
           </div>
-          ${last && !animating ? `<div class="tcg-arena-history">
+          ${last && !animating ? `<details class="tcg-arena-history"><summary>Historique · ${battle.history.length} manches</summary><div class="tcg-history-entries">
             ${battle.history.map(entry => `<span class="${entry.winner === 'player' ? 'won' : 'lost'}">
               R${entry.round} · ${entry.playerAttack} — ${entry.aiAttack} ATQ · ${entry.playerBid}/${entry.aiBid} Pillz
             </span>`).join('')}
-          </div>` : ''}
+          </div></details>` : ''}
         </div>
         ${animating ? `
           <div class="tcg-visual-controls">
@@ -2990,6 +2990,7 @@ export async function mountTcgGame(
         return
       }
 
+      if(action.classList.contains('tcg-detail-backdrop') && event.target!==action)return
       switch (
         action.dataset.action
       ) {
@@ -3212,6 +3213,8 @@ export async function mountTcgGame(
   root.onkeydown = event => {
     const tile=event.target.closest?.('[data-action="tcg-flip-card"]')
     if(event.key==='Escape'&&inspectedCardId){inspectedCardId=null;render();return}
+    const actionable=event.target.closest?.('.tcg-card[role="button"]')
+    if(actionable && (event.key==='Enter'||event.key===' ')){event.preventDefault();actionable.click();return}
     if(tile && (event.key==='Enter'||event.key===' ')){
       event.preventDefault()
       tile.click()
