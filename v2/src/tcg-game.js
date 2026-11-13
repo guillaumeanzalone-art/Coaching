@@ -2780,6 +2780,20 @@ export async function mountTcgGame(
   `;
 }
 
+  function renderProfile(){
+    const athlete=currentAthlete()
+    const percent=catalog.size?Math.round(uniqueOwned()/catalog.size*100):0
+    return `<section class="tcg-panel tcg-profile-panel">
+      <header class="tcg-panel-head"><div><h3>Profil d'explorateur</h3><p>Tes progrès dans la Toile, tes réserves et tes préférences.</p></div></header>
+      <div class="tcg-panel-pad">
+        <div class="tcg-profile-head"><div class="tcg-profile-avatar">${esc(athlete?.emoji||'✦')}</div><div><small>ATHLÈTE</small><h4>${esc(athlete?.name||'Joueur')}</h4><p>Édition GA · La Toile des Ombres</p></div></div>
+        <div class="tcg-profile-stats"><div><small>BOOSTERS EN RÉSERVE</small><b>${Number(profile.unopened_packs)||0}</b></div><div><small>BOOSTERS OUVERTS</small><b>${Number(profile.opened_packs)||0}</b></div><div><small>CARTES UNIQUES</small><b>${uniqueOwned()}</b></div><div><small>COMPOSITIONS LOCALES</small><b>${getNamedDecks().length}</b></div></div>
+        <div class="tcg-profile-progress"><span>Collection découverte <b>${percent}%</b></span><div role="progressbar" aria-label="Collection découverte" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}"><i style="width:${percent}%"></i></div><small>${uniqueOwned()} cartes sur ${catalog.size}</small></div>
+        <div class="tcg-profile-settings"><h4>Accessibilité & effets</h4><p>Le son est coupé par défaut. Les préférences sont enregistrées sur cet appareil.</p>${renderMotionOptions({pack:true,combat:true})}</div>
+        <div class="tcg-profile-shortcuts"><button type="button" class="tcg-primary" data-action="tcg-tab" data-tab="duel">⚔ Combattre</button><button type="button" class="tcg-secondary" data-action="tcg-tab" data-tab="boosters">✦ Ouvrir des boosters</button></div>
+      </div>
+    </section>`
+  }
   function render() {
     const athlete = currentAthlete()
     const menuItems = [
@@ -2787,18 +2801,21 @@ export async function mountTcgGame(
       { id: 'boosters', label: 'Boosters', glyph: '✦' },
       { id: 'collection', label: 'Collection', glyph: '◇' },
       { id: 'deck', label: 'Équipes', glyph: '♜' },
+      { id: 'profile', label: 'Profil', glyph: '◎' },
     ]
     const pageLabels = {
       duel: battle && !battle.finished ? 'Choisis ton combattant' : 'Arène des Ombres',
       collection: 'Les cartes de la Toile',
       deck: 'Compose ta troupe',
       boosters: 'Les sceaux de la Toile',
+      profile: 'Ton quartier général',
     }
     const pageDetails = {
       duel: 'Quatre manches · Pillz · Fury · capacités',
       collection: 'Cinq évolutions de chaque athlète',
       deck: '8 cartes · sans budget · quatre combattants',
       boosters: 'Une séance terminée = un booster',
+      profile: 'Progrès · options · collection',
     }
     const pageInfo = tab === 'duel'
       ? battle && !battle.finished
@@ -2808,7 +2825,7 @@ export async function mountTcgGame(
         ? `${uniqueOwned()} / ${catalog.size} CARTES`
         : tab === 'deck'
           ? `${deck.length} / ${DECK_SIZE} CARTES`
-          : `${boosters.length} BOOSTERS`
+          : tab === 'profile' ? 'PROFIL DU JOUEUR' : `${boosters.length} BOOSTERS`
     const sectionIndex = String(menuItems.findIndex(item => item.id === tab) + 1).padStart(2, '0')
     const collectionPercent = catalog.size > 0 ? Math.round(uniqueOwned() / catalog.size * 100) : 0
     const navHtml = (side = false) => menuItems.map(item => `
@@ -2891,7 +2908,7 @@ export async function mountTcgGame(
             <div class="tcg-spider-main">
               <div class="tcg-spider-sectionbar">
                 <div class="tcg-section-heading">
-                  <span class="tcg-section-eyebrow">CHAPITRE ${sectionIndex} <span aria-hidden="true">/</span> 04</span>
+                  <span class="tcg-section-eyebrow">CHAPITRE ${sectionIndex} <span aria-hidden="true">/</span> 05</span>
                   <h2>${esc(pageLabels[tab] || pageLabels.boosters)}</h2>
                   <small>${esc(pageDetails[tab] || '')}</small>
                 </div>
@@ -2942,7 +2959,7 @@ export async function mountTcgGame(
                     ? renderCollection()
                     : tab === 'deck'
                       ? renderDeck()
-                      : renderDuel()
+                      : tab === 'profile' ? renderProfile() : renderDuel()
               }
               ${renderCardDetail()}
             </div>
