@@ -15,7 +15,7 @@
   border-radius:29px;
   background:
     radial-gradient(ellipse at 68% 40%,rgba(226,91,43,.25),transparent 58%),
-    #190e0b url('/marvin-western-banner.svg') center center/cover no-repeat;
+    linear-gradient(145deg,#42160f,#150b09 65%,#25110c);
   box-shadow:
     0 32px 88px rgba(0,0,8,.72),
     0 0 54px rgba(231,117,59,.13),
@@ -34,8 +34,8 @@
   height:100%;
   max-width:none;
   display:block;
-  object-fit:contain;
-  object-position:center;
+  object-fit:cover;
+  object-position:12% center;
   filter:saturate(1.07) contrast(1.05) brightness(.88);
   transform:scale(1.012);
 }
