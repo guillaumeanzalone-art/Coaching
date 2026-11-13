@@ -35,8 +35,8 @@
   max-width:none;
   display:block;
   object-fit:cover;
-  object-position:12% center;
-  filter:saturate(1.07) contrast(1.05) brightness(.88);
+  object-position:center center;
+  filter:saturate(1.08) contrast(1.055) brightness(.99);
   transform:scale(1.012);
 }
 .training-page[data-athlete-theme="marvin"] .marvin-cinematic__shade{

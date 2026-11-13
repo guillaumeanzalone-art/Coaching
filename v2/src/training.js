@@ -4791,7 +4791,7 @@ export function mountTraining(
             <img class="marvin-cinematic__hero"
               src="${escapeHtml(heroImage)}"
               alt="Marvin dans un paysage western, affiche Wanted, cowboy et coucher de soleil rouge"
-              width="1440" height="490" loading="eager" decoding="async">
+              width="1024" height="576" loading="eager" decoding="async">
           </picture>
           <span class="marvin-cinematic__shade" aria-hidden="true"></span>
           <span class="marvin-cinematic__frame" aria-hidden="true"></span>

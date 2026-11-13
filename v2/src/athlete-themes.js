@@ -629,7 +629,7 @@ export const athleteThemes =
     "dead": "#b78cff",
     "border": "rgba(231,79,63,0.22)",
     "variant": "marvin-cinematic-banner",
-    "heroImage": "/marvin-western-banner.svg",
+    "heroImage": "/marvin-cinematic-1899.webp?v=20261113a",
     "quote": "« T’avais dit que t’étais pas une salope. Alors termine ce que t’as commencé. »",
     "cite": "Engagement · S1 J1",
     "noteTitle": "Profil et maxes",
