@@ -50,6 +50,16 @@ const athleteList = [
     "cloudSlug": "guillaume"
   },
   {
+    "id": "benjamin",
+    "name": "Benjamin",
+    "emoji": "🏋️",
+    "bodyWeight": null,
+    "profileImage": "avatar-benjamin.webp",
+    "programKey": "benjamin",
+    "blockCount": 0,
+    "cloudSlug": "benjamin"
+  },
+  {
     "id": "benoit",
     "name": "Benoît",
     "emoji": "🏋️",

@@ -15,6 +15,10 @@ on:
       - 'v2/tests/tcg-motion.test.js'
       - 'v2/src/tcg-rewards.js'
       - 'v2/src/training.js'
+      - 'v2/src/athletes.js'
+      - 'v2/src/theme-benjamin.css'
+      - 'v2/public/avatar-benjamin.webp'
+      - 'v2/tests/benjamin-profile.test.js'
       - 'v2/src/athlete-themes.js'
       - 'v2/src/theme-marvin-western.css'
       - 'v2/public/marvin-western-banner.svg'
@@ -79,6 +83,9 @@ jobs:
       - name: Install dependencies
         working-directory: v2
         run: npm ci --ignore-scripts --no-audit
+      - name: Verify Benjamin profile and avatar
+        working-directory: v2
+        run: npm run test:benjamin
       - name: Verify Marvin athlete theme
         working-directory: v2
         run: npm run test:marvin

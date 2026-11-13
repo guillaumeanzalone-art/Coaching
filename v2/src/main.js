@@ -10,6 +10,7 @@ import './theme-camille-abyss.css'
 import './theme-noe-skybound.css'
 import './theme-killian-yonko.css'
 import './theme-timothee-covenant.css'
+import './theme-benjamin.css'
 import './theme-marvin-western.css'
 import { getRecentActivities, getCurrentActivityUserId, toggleActivityLike } from './activity.js'
 
@@ -2159,6 +2160,7 @@ const ATHLETE_CHOICE_AVATARS = {
   allan: '/avatar-allan.webp?v=20260921',
   camille: '/avatar-camille.webp?v=20260921',
   alexandre: '/avatar-alexandre.png',
+  benjamin: '/avatar-benjamin.webp',
   benoit: '/avatar-benoit.png',
   celia: '/avatar-celia.png',
   charles: '/avatar-charles.png',
@@ -2470,7 +2472,7 @@ async function renderAthletes() {
                     athleteCardMeta.get(
                       athlete.id
                     )?.primary ||
-                    'Programme'
+                    (athlete.id === 'benjamin' ? 'Programmation à venir' : 'Programme')
                   }
                 </span>
 
@@ -2566,7 +2568,24 @@ function renderNoProgramAthlete(
     athlete.id
   )
 
-  if (athlete.id === 'timothee') {
+  if (athlete.id === 'benjamin') {
+    app.innerHTML = `
+      <main class="app-shell benjamin-profile" data-athlete-theme="benjamin">
+        <header class="topbar">
+          <button class="back-button" data-action="athletes" type="button">← Athlètes</button>
+          <div><span class="version">LA BRIGADE DE L’ARAIGNÉE</span><h1>Benjamin</h1></div>
+        </header>
+        <section class="auth-card benjamin-profile__card">
+          <img class="benjamin-profile__portrait" src="/avatar-benjamin.webp"
+            alt="Portrait illustré de Benjamin" width="256" height="256"
+            loading="eager" decoding="async">
+          <span class="eyebrow">ATHLÈTE · PROFIL ACTIF</span>
+          <h2>Benjamin</h2>
+          <p class="auth-copy">Programmation à venir. Le profil est créé, aucune séance n’a encore été publiée.</p>
+        </section>
+      </main>
+    `
+  } else if (athlete.id === 'timothee') {
     const visitVerse = getTimotheeVisitVerse()
     app.innerHTML = `
       <main class="training-page" data-athlete-theme="timothee">
