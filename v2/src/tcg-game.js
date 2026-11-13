@@ -2561,7 +2561,12 @@ export async function mountTcgGame(
       collectionSort==='name'?String(a.card.athlete?.name).localeCompare(String(b.card.athlete?.name),'fr'):
       b.card.rarityMeta.rank-a.card.rarityMeta.rank||String(a.card.athlete?.name).localeCompare(String(b.card.athlete?.name),'fr'))
     const factions=[...new Map([...catalog.values()].map(card=>[String(card.archetype?.id||card.faction),String(card.archetype?.label||card.faction)])).entries()]
-    return `<section class="tcg-panel tcg-collection-panel">
+    return `
+      ${renderAlexandreEvolutionGallery()}
+      ${renderHugoEvolutionGallery()}
+      ${renderBenoitEvolutionGallery()}
+      ${renderSuppliedEvolutionGalleries()}
+      <section class="tcg-panel tcg-collection-panel">
       <header class="tcg-panel-head"><div><h3>Archives de la Toile</h3><p>Découvre les pouvoirs de tes cartes et complète ton équipe.</p></div><strong>${uniqueOwned()} / ${catalog.size}</strong></header>
       <div class="tcg-panel-pad">
         <div class="tcg-collection-controls" role="search" aria-label="Filtrer les cartes">
