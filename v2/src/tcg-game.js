@@ -2585,120 +2585,40 @@ export async function mountTcgGame(
     </section>`
   }
 
-  function renderDeck() {
-    const cards =
-      deckCards()
 
-    const curve =
-      ['common', 'uncommon', 'rare', 'ultra', 'secret']
-        .map(rarity => cards.filter(card => card.rarity === rarity).length)
-
-    return `
-      <section class="tcg-panel">
-        <header class="tcg-panel-head">
-          <div>
-            <h3>
-              Deck · ${deck.length}/${DECK_SIZE}
-            </h3>
-            <p>
-              8 cartes différentes, sans budget de deck et sans limite de rareté.
-            </p>
+  function renderDeck(){
+    const cards=deckCards()
+    const valid=validateDeck(deck,catalog,new Set(ownedRows().filter(x=>Number(x.copies)>0).map(x=>x.card_id)))
+    const rarityNames=['common','uncommon','rare','ultra','secret']
+    const factionCount=new Map()
+    cards.forEach(c=>{const faction=c.archetype?.id||c.faction||'autre';factionCount.set(faction,(factionCount.get(faction)||0)+1)})
+    return `<section class="tcg-panel tcg-premium-deck">
+      <header class="tcg-panel-head"><div><h3>Atelier des équipes</h3><p>Huit cartes uniques, aucune limite de rareté. Prépare ta stratégie.</p></div>
+        <div class="tcg-deck-actions"><button type="button" class="tcg-secondary" data-action="tcg-auto-deck">Auto</button><button type="button" class="tcg-primary" data-action="tcg-save-deck" ${valid.valid?'':'disabled'}>Sauver</button></div>
+      </header>
+      <div class="tcg-panel-pad tcg-deck-layout">
+        <div class="tcg-deck-workspace">
+          <div class="tcg-deck-slots" aria-label="Huit emplacements pour ton équipe">
+            ${Array.from({length:DECK_SIZE},(_,index)=>{const card=cards[index];return `<div class="tcg-deck-slot ${card?'is-filled':'is-empty'}">
+              <span class="tcg-deck-position">${String(index+1).padStart(2,'0')} / 08</span>
+              ${card?`${renderCard(card,{size:'mini'})}<button class="tcg-deck-remove" type="button" data-action="tcg-remove-card" data-card-id="${esc(card.id)}" aria-label="Retirer ${esc(card.athlete?.name||card.slug)}">✕</button>`:'<span class="tcg-deck-vacant">✦<small>LIBRE</small></span>'}
+            </div>`}).join('')}
           </div>
-
-          <div>
-            <button
-              class="tcg-secondary"
-              data-action="tcg-auto-deck"
-              type="button"
-            >
-              Auto
-            </button>
-
-            <button
-              class="tcg-primary"
-              data-action="tcg-save-deck"
-              type="button"
-              ${deck.length === DECK_SIZE ? '' : 'disabled'}
-            >
-              Sauver
-            </button>
+          <p class="tcg-deck-validation" role="status">${valid.valid?'✓ Équipe valide · Prête pour l’arène':esc(valid.problems.join(' · ')||'Complète les huit emplacements pour jouer.')}</p>
+          <div class="tcg-preset-panel"><h4>Mes compositions <small>Sauvegardées sur cet appareil</small></h4>
+            <div class="tcg-preset-create"><input type="text" maxlength="32" data-action="tcg-preset-name" aria-label="Nom de la composition" placeholder="Nom de l’équipe…" value="${esc(deckPresetName)}"><button type="button" data-action="tcg-save-preset" ${valid.valid?'':'disabled'}>Sauvegarder cette composition</button></div>
+            <div class="tcg-preset-list">${getNamedDecks().map((entry,index)=>`<div class="tcg-preset-row"><button type="button" data-action="tcg-load-preset" data-index="${index}"><span class="tcg-preset-cover" aria-hidden="true">${esc(catalog.get(entry.deck[0])?.archetype?.icon||'✦')}</span><span><b>${esc(entry.name)}</b><small>${entry.deck.length} cartes</small></span></button><button type="button" data-action="tcg-remove-preset" data-index="${index}" aria-label="Supprimer ${esc(entry.name)}">✕</button></div>`).join('')||'<p>Aucune composition enregistrée.</p>'}</div>
           </div>
-        </header>
-
-        <div class="tcg-panel-pad tcg-deck-layout">
-          <div class="tcg-deck-list">
-            ${deck.length && !validateDeck(deck,catalog).valid ? `<div class="tcg-error">Deck à corriger : ${esc(validateDeck(deck,catalog).problems.join(' · '))}</div>` : ''}
-            ${cards.length
-              ? cards
-                  .map(
-                    card => `
-                      <article class="tcg-deck-row">
-                        <div class="mini">
-                          ${esc(card.rarityMeta.short)}
-                        </div>
-
-                        <div>
-                          <strong>
-                            ${esc(card.athlete.name)}
-                          </strong>
-
-                          <small>
-                            ${esc(card.archetype.label)}
-                            · PUI ${arenaBaseStats(card).power}
-                            · DÉG ${arenaBaseStats(card).damage}
-                          </small>
-                        </div>
-
-                        <button
-                          data-action="tcg-remove-card"
-                          data-card-id="${esc(card.id)}"
-                          type="button"
-                        >
-                          −
-                        </button>
-                      </article>
-                    `
-                  )
-                  .join('')
-              : `
-                <div class="tcg-empty">
-                  <b>Deck vide.</b>
-                  Clique sur des cartes dans Collection ou utilise Auto.
-                </div>
-              `
-            }
-          </div>
-
-          <aside class="tcg-deck-summary">
-            <h4>
-              Répartition des raretés
-            </h4>
-
-            <div class="tcg-curve">
-              ${curve
-                .map(
-                  (
-                    value,
-                    index
-                  ) => `
-                    <div>
-                      <b>${value}</b>
-                      <span>
-                        ${['Com.', 'Peu com.', 'Rare', 'Ultra', 'Secret'][index]}
-                      </span>
-                    </div>
-                  `
-                )
-                .join('')}
-            </div>
-
-            <p style="color:#79849c;font-size:9px;line-height:1.55">
-              Puissance totale du deck : ${Math.round(deckPower(cards))}. Aucune limite de construction ; les Pillz, contres et bluffs restent décisifs.
-            </p>
-          </aside>
+          <button type="button" class="tcg-secondary tcg-open-library" data-action="tcg-tab" data-tab="collection">◇ Explorer les cartes pour compléter l’équipe</button>
         </div>
-      </section>
-    `
+        <aside class="tcg-deck-summary"><h4>Signature de l’équipe</h4>
+          <div class="tcg-deck-score"><small>PUISSANCE COLLECTIVE</small><b>${Math.round(deckPower(cards))}</b></div>
+          <h5>Répartition des raretés</h5><div class="tcg-curve">${rarityNames.map(r=>`<div><b>${cards.filter(c=>c.rarity===r).length}</b><span>${r}</span></div>`).join('')}</div>
+          <h5>Factions / synergies</h5><div class="tcg-deck-factions">${[...factionCount].map(([faction,count])=>`<span data-faction="${esc(faction)}">${esc(faction)} ×${count}${count>=2?' · Synergie possible':''}</span>`).join('')||'<span>Aucune faction</span>'}</div>
+          <p>Le moteur de l’arène décide des bonus actifs. Ce résumé n’altère pas les règles.</p>
+        </aside>
+      </div>
+    </section>`
   }
 
   function renderArenaCard(card, side = 'player', className = '') {
@@ -2757,6 +2677,7 @@ export async function mountTcgGame(
   return `
     <section class="tcg-panel">
       <div class="tcg-panel-pad tcg-duel">
+        <div class="tcg-battle-meta"><span>◈ MANCHE ${animating?battle.turn:battle.round} / 4</span><span>⚑ PRIORITÉ · ${battle.priority==='player'?'JOUEUR':battle.priority==='ai'?'RIVAL':'ALTERNÉE'}</span><span>${animating?'MISE VERROUILLÉE':battle.finished?'DUEL TERMINÉ':'CHOIX EN COURS'}</span></div>
         ${renderMotionOptions({combat:true})}
         <div class="tcg-arena-board" data-tcg-stage="${animating?'locked':'idle'}" data-tcg-intensity="light">
           <div class="tcg-arena-head">
@@ -2835,7 +2756,7 @@ export async function mountTcgGame(
               </div>
               <div class="tcg-arena-spend">${spent} Pillz engagés sur ${battle.playerPillz} disponibles. Fury coûte 3 Pillz supplémentaires. L'IA mise sans voir ton choix.</div>
             </div>
-            <button class="tcg-arena-attack" type="button" data-action="tcg-play-card">LANCER L'ATTAQUE</button>
+            <button class="tcg-arena-attack" type="button" data-action="tcg-play-card">CONFIRMER LA MISE</button>
           </div>
           <div class="tcg-arena-hand-head">
             <strong>CHOISIS TON COMBATTANT</strong><small>${battle.playerHand.length} cartes restantes</small>
