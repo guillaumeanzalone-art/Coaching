@@ -168,7 +168,7 @@ jobs:
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         run: |
           set -euo pipefail
-          xcrun altool             --upload-app             --type ios             --file "$IPA_PATH"             --apiKey "$APP_STORE_CONNECT_KEY_ID"             --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID"
+          xcrun altool             --use-old-altool             --upload-app             --type ios             --file "$IPA_PATH"             --apiKey "$APP_STORE_CONNECT_KEY_ID"             --apiIssuer "$APP_STORE_CONNECT_ISSUER_ID"
 
       - name: Record release status
         if: always()
