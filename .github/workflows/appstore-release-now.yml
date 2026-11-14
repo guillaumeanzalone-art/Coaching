@@ -1,5 +1,5 @@
-# GA Coaching 1.12.1 release
-name: App Store 1.12.1 Release
+# GA Coaching 1.13.0 release
+name: App Store 1.13.0 Release
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 env:
-  RELEASE_VERSION: "1.12.1"
+  RELEASE_VERSION: "1.13.0"
 
 jobs:
   ios:
@@ -64,6 +64,9 @@ jobs:
           npm run test:mobility
           npm run test:brute
           npm run test:rest
+          npm run test:tcg
+          npm run test:marvin
+          npm run test:benjamin
           node --test tests/ipf-match.test.js
 
       - name: Prepare store version
@@ -153,7 +156,7 @@ jobs:
       - name: Keep IPA artifact
         uses: actions/upload-artifact@v7
         with:
-          name: ga-coaching-ios-1.12.1-${{ env.IOS_BUILD_NUMBER }}
+          name: ga-coaching-ios-1.13.0-${{ env.IOS_BUILD_NUMBER }}
           path: ${{ runner.temp }}/ios-export/*.ipa
           if-no-files-found: error
           retention-days: 30
@@ -174,7 +177,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p .github
-          cat > .github/appstore-release-status-1.12.1.json <<EOF
+          cat > .github/appstore-release-status-1.13.0.json <<EOF
           {
             "run_id": "${GITHUB_RUN_ID}",
             "run_number": "${GITHUB_RUN_NUMBER}",
@@ -188,6 +191,6 @@ jobs:
           EOF
           git config user.name "ga-coaching-release-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add .github/appstore-release-status-1.12.1.json
-          git commit -m "Record App Store 1.12.1 release status [skip ci]" || exit 0
+          git add .github/appstore-release-status-1.13.0.json
+          git commit -m "Record App Store 1.13.0 release status [skip ci]" || exit 0
           git push origin HEAD:v2-refactor
