@@ -15,6 +15,11 @@ on:
       - 'v2/tests/tcg-motion.test.js'
       - 'v2/src/tcg-rewards.js'
       - 'v2/src/training.js'
+      - 'v2/src/pr-stats.js'
+      - 'v2/src/pr-stats-model.js'
+      - 'v2/src/sbd-pr.js'
+      - 'v2/tests/pr-stats.test.js'
+      - 'v2/supabase/migrations/20261115084840_repair_sbd_statistics.sql'
       - 'v2/src/athletes.js'
       - 'v2/src/theme-benjamin.css'
       - 'v2/public/avatar-benjamin.webp'
@@ -83,6 +88,9 @@ jobs:
       - name: Install dependencies
         working-directory: v2
         run: npm ci --ignore-scripts --no-audit
+      - name: Verify athlete statistics
+        working-directory: v2
+        run: npm run test:stats
       - name: Verify Benjamin profile and avatar
         working-directory: v2
         run: npm run test:benjamin

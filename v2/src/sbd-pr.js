@@ -67,13 +67,16 @@ function parseReps(value) {
 export function normalizeSbdLift(
   exercise
 ) {
+  const explicit = normalizeText(exercise?.type || exercise?.code)
+  if (['sq','squat'].includes(explicit)) return 'squat'
+  if (['bn','bp','bench'].includes(explicit)) return 'bench'
+  if (['dl','deadlift'].includes(explicit)) return 'deadlift'
+  // Accessory names/notes may contain "squat" or "bench": never treat these as SBD.
+  if (explicit) return null
   const text =
     normalizeText(
       [
-        exercise?.type,
-        exercise?.code,
         exercise?.name,
-        exercise?.variant,
       ]
         .filter(Boolean)
         .join(' ')
@@ -259,10 +262,9 @@ async function sendCandidate(
       }
     )
 
-  if (repError && legacy.error) {
-    return {
-      error: repError,
-    }
+  // Do not discard a failed exact-repetition write just because legacy succeeded.
+  if (repError || (legacy.error && !repRow)) {
+    return { error: repError || legacy.error }
   }
 
   const legacyRow =

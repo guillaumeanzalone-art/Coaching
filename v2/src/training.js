@@ -57,6 +57,7 @@ import {
 
 import {
   loadAthletePrHistory,
+  loadAthleteObservedStats,
   renderPrStatsPanel,
 } from './pr-stats.js'
 
@@ -626,6 +627,9 @@ export function mountTraining(
   }
 
   let prStatsRows = []
+  let prObservedRows = []
+  let prObservedError = ''
+  let prStatsRefreshPending = false
   let prStatsLoaded = false
   let prStatsLoading = false
   let prStatsError = ''
@@ -7275,6 +7279,9 @@ export function mountTraining(
                     cloudAthleteSlug,
                   rows:
                     prStatsRows,
+                  observedRows: prObservedRows,
+                  observedError: prObservedError,
+                  references: sbdPrs,
                   reps:
                     selectedSbdReps,
                   loading:
@@ -7408,48 +7415,34 @@ export function mountTraining(
     }
   }
 
-  async function hydratePrStats(
-    rerender = true,
-    force = false
-  ) {
-    if (
-      prStatsLoading ||
-      (
-        prStatsLoaded &&
-        !force
-      )
-    ) {
+  async function hydratePrStats(rerender = true, force = false) {
+    if (prStatsLoading) {
+      if (force) prStatsRefreshPending = true
       return
     }
-
+    if (prStatsLoaded && !force) return
     prStatsLoading = true
     prStatsError = ''
-
-    if (rerender) {
-      render()
-    }
-
+    prObservedError = ''
+    if (rerender && !prStatsLoaded) render()
     try {
-      prStatsRows =
-        await loadAthletePrHistory(
-          cloudAthleteSlug
-        )
-
+      const [history, observed, prs] = await Promise.allSettled([
+        loadAthletePrHistory(cloudAthleteSlug),
+        loadAthleteObservedStats(cloudAthleteSlug),
+        loadAthleteSbdRepPrs(cloudAthleteSlug),
+      ])
+      if (history.status === 'fulfilled') prStatsRows = history.value
+      else prStatsError = history.reason?.message || 'Historique indisponible.'
+      if (observed.status === 'fulfilled') prObservedRows = observed.value
+      else prObservedError = observed.reason?.message || 'Performances indisponibles.'
+      if (prs.status === 'fulfilled') sbdPrs = prs.value
       prStatsLoaded = true
-    } catch (error) {
-      console.error(
-        'PR STATS LOAD ERROR',
-        error
-      )
-
-      prStatsError =
-        error?.message ||
-        'Impossible de charger l’historique des PR.'
     } finally {
       prStatsLoading = false
-
-      if (rerender) {
-        render()
+      if (rerender || activeAthleteInsight === 'stats') render()
+      if (prStatsRefreshPending) {
+        prStatsRefreshPending = false
+        void hydratePrStats(true, true)
       }
     }
   }
@@ -8911,9 +8904,13 @@ export function mountTraining(
         : 'Synchronisation…'
     )
 
-    void flushWorkoutOutbox(
-      setSyncStatus
-    )
+    void flushWorkoutOutbox(setSyncStatus)
+      .then(result => {
+        if (result?.ok && activeAthleteInsight === 'stats') {
+          void hydratePrStats(true, true)
+        }
+      })
+      .catch(error => console.warn('STATS SET SYNC ERROR', error))
   }
 
   function normalizeSelection() {
@@ -9553,9 +9550,10 @@ export function mountTraining(
     persist()
     render()
 
-    await flushWorkoutOutbox(
-      setSyncStatus
-    )
+    const statsSyncResult = await flushWorkoutOutbox(setSyncStatus)
+    if (statsSyncResult?.ok && activeAthleteInsight === 'stats') {
+      void hydratePrStats(true, true)
+    }
 
     if (
       !pendingWorkoutSetCount()
@@ -10570,13 +10568,8 @@ export function mountTraining(
 
         render()
 
-        if (
-          next === 'stats' &&
-          !prStatsLoaded
-        ) {
-          void hydratePrStats(
-            true
-          )
+        if (next === 'stats') {
+          void hydratePrStats(true, true)
         }
       }
 
@@ -11633,9 +11626,9 @@ if (
   window.addEventListener(
     'online',
     () => {
-      void flushWorkoutOutbox(
-        setSyncStatus
-      )
+      void flushWorkoutOutbox(setSyncStatus).then(result => {
+        if (result?.ok && activeAthleteInsight === 'stats') void hydratePrStats(true, true)
+      }).catch(error => console.warn('STATS RECONNECT ERROR', error))
 
       void flushXpOutbox()
         .then((result) => {
@@ -11773,5 +11766,10 @@ if (
   }
 
   void flushTcgWorkoutPackOutbox()
-  void flushSbdPrOutbox()
+  void flushSbdPrOutbox().then(result => {
+    if (result?.flushed > 0) {
+      void hydrateSbdPrs()
+      if (activeAthleteInsight === 'stats') void hydratePrStats(true, true)
+    }
+  })
 }

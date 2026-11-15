@@ -18102,3 +18102,20 @@ body .training-page[data-athlete-theme="kaoutar"] .day-tab-v2--active {
     animation:none;
   }
 }
+
+/* Statistics repair: shared chart styles, responsive filters, visible refresh. */
+.pr-stats-panel .pr-stats-section{display:grid;gap:10px;min-width:0}
+.pr-stats-panel .pr-stats-section>header h3{font-size:1rem;margin:0 0 4px;color:#f4f7ff}
+.pr-stats-panel .pr-stats-section>header p{font-size:.82rem;color:#b1bfd4;line-height:1.45;margin:0;overflow-wrap:anywhere}
+.pr-stats-panel .pr-stats-refresh{min-height:44px;padding:9px 12px;flex:0 0 auto;border:1px solid #5779b2;border-radius:10px;background:#172840;color:#e8efff;font-size:.82rem;font-weight:750}
+.pr-stats-panel .pr-stats-refresh:disabled{opacity:.65}
+.pr-stats-panel .pr-stats-reps button{min-height:44px;font-size:.85rem}
+.pr-stats-panel .pr-stats-reference{font-size:.78rem;color:#b9c7dd;padding:0 13px;margin:5px 0 8px;line-height:1.4;overflow-wrap:anywhere}
+.pr-stats-panel .pr-stats-reference b{color:#f5f7ff}
+.pr-stats-panel .pr-stats-summary small{font-size:.68rem;line-height:1.25}
+.pr-stats-panel .pr-stats-summary strong{font-size:clamp(1rem,2vw,1.4rem);overflow-wrap:anywhere}
+.pr-stats-panel .pr-stats-axis-label{font-size:11px;fill:#aabbd4}
+.pr-stats-panel .pr-stats-chart header strong{font-size:.85rem}
+.pr-stats-panel .pr-stats-chart footer{gap:4px;flex-wrap:wrap;font-size:.7rem}
+.pr-stats-panel .pr-stats-history__list small{overflow-wrap:anywhere}
+@media(max-width:660px){.pr-stats-panel .pr-stats-hero{flex-wrap:wrap}.pr-stats-panel .pr-stats-charts{grid-template-columns:1fr}.pr-stats-panel .pr-stats-reps{grid-template-columns:repeat(5,minmax(0,1fr))}.pr-stats-panel .pr-stats-summary article{padding:10px 8px}.pr-stats-panel .pr-stats-svg-wrap{height:180px}}
