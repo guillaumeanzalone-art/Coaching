@@ -874,7 +874,7 @@ function renderHome() {
         </div>
         <span class="eyebrow">ÉDITION DE NOËL</span>
         <h2>Joyeuses fêtes, la brigade !</h2>
-        <p>Ensemble, plus forts jusqu'à la fin de l'année.</p>
+        <p>Sauf Maxence.</p>
       </section>
 
       <section class="cards">
