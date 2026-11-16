@@ -821,7 +821,8 @@ function renderHome() {
     'Coach'
 
   app.innerHTML = `
-    <main class="app-shell">
+    <main class="app-shell home-christmas">
+      <div class="ga-menu-snowfall" aria-hidden="true"></div>
       <header class="topbar">
         <div>
           <span class="version">
@@ -842,6 +843,39 @@ function renderHome() {
           ${displayName}
         </button>
       </header>
+
+      <section class="hero athletes-hero">
+        <div class="xmas-scene" aria-hidden="true">
+          <svg viewBox="0 0 210 210" fill="none" focusable="false">
+            <defs>
+              <linearGradient id="ga-xmas-tree" x1="104" y1="20" x2="150" y2="185" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#467963"/>
+                <stop offset="1" stop-color="#123b2b"/>
+              </linearGradient>
+            </defs>
+            <circle cx="158" cy="43" r="28" fill="#d4e4d4" opacity=".08"/>
+            <path d="M4 166 39 103 72 166Z M14 182 39 122 66 182Z" fill="#275244" opacity=".55"/>
+            <path d="M154 163 184 95 210 163Z M145 182 184 116 221 182Z" fill="#275244" opacity=".64"/>
+            <path d="M-9 187Q39 174 79 187T219 184V217H-9Z" fill="#b7d2c8" opacity=".25"/>
+            <path d="M103 164H118V193H103Z" fill="#70523a"/>
+            <path d="M110 27 77 81H91L58 130H79L41 179H181L143 130H163L130 81H144Z" fill="url(#ga-xmas-tree)" stroke="#80ad88" stroke-opacity=".46" stroke-linejoin="round"/>
+            <path d="M110 28 77 81H91L110 73 130 81H144Z M58 130H79L109 116 143 130H163L151 112 110 107 70 112Z M41 179H181L170 165 109 172 55 164Z" fill="#e0f0e4" opacity=".72"/>
+            <path d="M88 83Q116 114 148 114M68 132Q115 161 159 146" stroke="#f4d18a" stroke-width="2.1" stroke-linecap="round" stroke-dasharray="1 5"/>
+            <g fill="#e3a95e"><circle cx="109" cy="87" r="4"/><circle cx="132" cy="135" r="4.3"/><circle cx="73" cy="157" r="3.8"/></g>
+            <g fill="#c84a4f"><circle cx="125" cy="104" r="4.8"/><circle cx="93" cy="131" r="5"/><circle cx="148" cy="159" r="4.7"/></g>
+            <path class="xmas-star" d="m110 7 3.8 11.1 11.7.2-9.3 7 3.4 11.2-9.6-6.8-9.6 6.8 3.4-11.2-9.3-7 11.7-.2Z" fill="#ffdc83"/>
+            <rect x="66" y="177" width="29" height="24" rx="3" fill="#b13d46"/>
+            <path d="M80.5 177v24M66 184h29" stroke="#f0c97a" stroke-width="3"/>
+            <path d="M80 177q-12-15-16-7t16 7m1 0q12-15 16-7t-16 7" stroke="#f0c97a" stroke-width="2" stroke-linecap="round"/>
+            <rect x="124" y="184" width="35" height="20" rx="3" fill="#d3a95f"/>
+            <path d="M141 184v20M124 191h35" stroke="#8d3540" stroke-width="3"/>
+            <path d="M141 184q-12-13-15-7t15 7m1 0q12-13 15-7t-15 7" stroke="#b4484c" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="eyebrow">ÉDITION DE NOËL</span>
+        <h2>Joyeuses fêtes, la brigade !</h2>
+        <p>Ensemble, plus forts jusqu'à la fin de l'année.</p>
+      </section>
 
       <section class="cards">
         <button
@@ -2403,6 +2437,7 @@ async function renderAthletes() {
 
   app.innerHTML = `
     <main class="app-shell athletes-christmas">
+      <div class="ga-menu-snowfall" aria-hidden="true"></div>
       <header class="topbar">
         <div>
           <span class="version">
