@@ -1,18 +1,18 @@
 /* GA Coaching • Noël — exclusivement dans le menu Athlètes. */
-.athletes-christmas {
+:is(.athletes-christmas, .home-christmas) {
   --xmas-gold: #f5d18a;
   --xmas-ice: #d8ecec;
   --xmas-red: #d85a5f;
   --xmas-green: #143c32;
 }
-.athletes-christmas .topbar h1 { color: #f8f0df; }
-.athletes-christmas .topbar .version { color: var(--xmas-gold); }
-.athletes-christmas .topbar .back-button {
+:is(.athletes-christmas, .home-christmas) .topbar h1 { color: #f8f0df; }
+:is(.athletes-christmas, .home-christmas) .topbar .version { color: var(--xmas-gold); }
+:is(.athletes-christmas, .home-christmas) .topbar .back-button {
   color: var(--xmas-gold);
   background: rgba(31, 56, 43, .76);
   border-color: rgba(245, 209, 138, .36);
 }
-.athletes-christmas .athletes-hero {
+:is(.athletes-christmas, .home-christmas) .athletes-hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -31,19 +31,19 @@
     linear-gradient(132deg, #251921 0%, #142925 42%, #0b231f 80%, #07191b 100%);
   box-shadow: 0 16px 38px rgba(0,0,0,.32), inset 0 0 22px rgba(245,209,138,.05);
 }
-.athletes-christmas .athletes-hero > :not(.xmas-scene) {
+:is(.athletes-christmas, .home-christmas) .athletes-hero > :not(.xmas-scene) {
   position: relative;
   z-index: 2;
   max-width: 62%;
   margin-right: 0;
 }
-.athletes-christmas .athletes-hero .eyebrow {
+:is(.athletes-christmas, .home-christmas) .athletes-hero .eyebrow {
   color: var(--xmas-gold);
   font-size: 10px;
   font-weight: 800;
   letter-spacing: .16em;
 }
-.athletes-christmas .athletes-hero h2 {
+:is(.athletes-christmas, .home-christmas) .athletes-hero h2 {
   color: #fff6e6;
   font-size: clamp(24px, 6vw, 32px);
   line-height: 1.12;
@@ -51,20 +51,20 @@
   margin: 9px 0;
   text-shadow: 0 2px 14px #071a16;
 }
-.athletes-christmas .athletes-hero p {
+:is(.athletes-christmas, .home-christmas) .athletes-hero p {
   color: #dcece3;
   font-size: 13px;
   line-height: 1.45;
   text-shadow: 0 2px 8px #071a16;
 }
-.athletes-christmas .xmas-scene {
+:is(.athletes-christmas, .home-christmas) .xmas-scene {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }
-.athletes-christmas .xmas-scene svg {
+:is(.athletes-christmas, .home-christmas) .xmas-scene svg {
   position: absolute;
   width: 49%;
   height: 100%;
@@ -72,13 +72,13 @@
   bottom: -7px;
   overflow: visible;
 }
-.athletes-christmas .xmas-scene::before,
-.athletes-christmas .xmas-scene::after {
+:is(.athletes-christmas, .home-christmas) .xmas-scene::before,
+:is(.athletes-christmas, .home-christmas) .xmas-scene::after {
   content: "";
   position: absolute;
   pointer-events: none;
 }
-.athletes-christmas .xmas-scene::before {
+:is(.athletes-christmas, .home-christmas) .xmas-scene::before {
   inset: 0 0 auto;
   height: 11px;
   background:
@@ -87,7 +87,7 @@
     linear-gradient(180deg,rgba(245,209,138,.20),transparent);
   filter: drop-shadow(0 0 5px #e8b56a);
 }
-.athletes-christmas .xmas-scene::after {
+:is(.athletes-christmas, .home-christmas) .xmas-scene::after {
   inset: -80px 0 0;
   opacity: .57;
   background-image: radial-gradient(circle,#f7fff5 0 1px,transparent 1.8px),
@@ -102,7 +102,7 @@
   from { background-position: 11px 0,34px 19px,3px 42px; }
   to { background-position: 11px 80px,34px 131px,3px 103px; }
 }
-.athletes-christmas .xmas-star {
+:is(.athletes-christmas, .home-christmas) .xmas-star {
   transform-box: fill-box;
   transform-origin: center;
   animation: ga-xmas-twinkle 3.2s ease-in-out infinite alternate;
@@ -111,42 +111,107 @@
   from { opacity: .72; }
   to { opacity: 1; filter: drop-shadow(0 0 6px #ffd680); }
 }
-.athletes-christmas .athlete-list .athlete-card {
+:is(.athletes-christmas, .home-christmas) .athlete-list .athlete-card {
   position: relative;
   border: 1px solid rgba(188, 213, 185, .23);
   background: linear-gradient(135deg,#122e27,#101c1b 65%,#152422);
   box-shadow: inset 0 1px 0 rgba(238,248,231,.06),0 10px 24px rgba(0,0,0,.22);
   transition: border-color .2s, box-shadow .2s, background .2s;
 }
-.athletes-christmas .athlete-list .athlete-card:nth-child(even) {
+:is(.athletes-christmas, .home-christmas) .athlete-list .athlete-card:nth-child(even) {
   border-color: rgba(222,124,122,.28);
   background: linear-gradient(135deg,#351d25,#211b22 60%,#172022);
 }
-.athletes-christmas .athlete-list .athlete-card .athlete-choice-avatar {
+:is(.athletes-christmas, .home-christmas) .athlete-list .athlete-card .athlete-choice-avatar {
   border: 1px solid rgba(245,209,138,.45);
   box-shadow: 0 0 0 2px rgba(245,209,138,.07);
 }
-.athletes-christmas .athlete-list .athlete-card .arrow { color: var(--xmas-gold); }
-.athletes-christmas .athlete-card-copy > strong { color: #fff5e7; }
-.athletes-christmas .athlete-card-program { color: #e1e9e0; }
-.athletes-christmas .athlete-card-total { color: #b5c6c1; }
-.athletes-christmas .athlete-list .athlete-card:hover,
-.athletes-christmas .athlete-list .athlete-card:focus-visible {
+:is(.athletes-christmas, .home-christmas) .athlete-list .athlete-card .arrow { color: var(--xmas-gold); }
+:is(.athletes-christmas, .home-christmas) .athlete-card-copy > strong { color: #fff5e7; }
+:is(.athletes-christmas, .home-christmas) .athlete-card-program { color: #e1e9e0; }
+:is(.athletes-christmas, .home-christmas) .athlete-card-total { color: #b5c6c1; }
+:is(.athletes-christmas, .home-christmas) .athlete-list .athlete-card:hover,
+:is(.athletes-christmas, .home-christmas) .athlete-list .athlete-card:focus-visible {
   border-color: var(--xmas-gold);
   box-shadow: 0 0 0 2px rgba(245,209,138,.20),0 10px 24px rgba(0,0,0,.3);
 }
-.athletes-christmas .athlete-list .athlete-card.athlete-card--self {
+:is(.athletes-christmas, .home-christmas) .athlete-list .athlete-card.athlete-card--self {
   border-color: rgba(245,209,138,.75);
   background: linear-gradient(135deg,#473324,#202d23 72%,#1b231e);
   box-shadow: inset 0 0 0 1px rgba(245,209,138,.1),0 10px 24px rgba(0,0,0,.25);
 }
 @media (max-width: 370px) {
-  .athletes-christmas .athletes-hero { padding-inline: 15px; }
-  .athletes-christmas .athletes-hero > :not(.xmas-scene) { max-width: 65%; }
-  .athletes-christmas .xmas-scene svg { width: 44%; right: -4%; }
+  :is(.athletes-christmas, .home-christmas) .athletes-hero { padding-inline: 15px; }
+  :is(.athletes-christmas, .home-christmas) .athletes-hero > :not(.xmas-scene) { max-width: 65%; }
+  :is(.athletes-christmas, .home-christmas) .xmas-scene svg { width: 44%; right: -4%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .athletes-christmas .xmas-scene::after,
-  .athletes-christmas .xmas-star { animation: none; }
-  .athletes-christmas .athlete-list .athlete-card { transition: none; }
+  :is(.athletes-christmas, .home-christmas) .xmas-scene::after,
+  :is(.athletes-christmas, .home-christmas) .xmas-star { animation: none; }
+  :is(.athletes-christmas, .home-christmas) .athlete-list .athlete-card { transition: none; }
+}
+
+/* Noël — accueil et neige discrète sur les deux menus. */
+.home-christmas > .athletes-hero {
+  margin-block: 4px 18px;
+  min-height: 156px;
+}
+.home-christmas > .cards > .card {
+  border-color: rgba(188,213,185,.26);
+  background: linear-gradient(135deg,#15372d,#121e1e 70%,#172521);
+  box-shadow: inset 0 1px 0 rgba(238,248,231,.06),0 10px 24px rgba(0,0,0,.22);
+}
+.home-christmas > .cards > .card:nth-child(even) {
+  border-color: rgba(222,124,122,.32);
+  background: linear-gradient(135deg,#3b2028,#211b22 65%,#172022);
+}
+.home-christmas > .cards > .card .card-icon {
+  border-color: rgba(245,209,138,.24);
+}
+.home-christmas > .cards > .card .arrow { color: var(--xmas-gold); }
+.home-christmas > .cards > .card:hover,
+.home-christmas > .cards > .card:focus-visible {
+  border-color: var(--xmas-gold);
+  box-shadow: 0 0 0 2px rgba(245,209,138,.17),0 10px 24px rgba(0,0,0,.25);
+}
+.home-christmas .status-button {
+  border-color: rgba(245,209,138,.32);
+}
+:is(.home-christmas,.athletes-christmas) > .ga-menu-snowfall {
+  position: fixed;
+  inset: 0;
+  z-index: 12;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+.ga-menu-snowfall::before,
+.ga-menu-snowfall::after {
+  content: "";
+  position: absolute;
+  inset: -144px 0 0;
+  pointer-events: none;
+  background-repeat: repeat;
+  background-size: 144px 144px;
+  will-change: transform;
+}
+.ga-menu-snowfall::before {
+  background-image: radial-gradient(circle at 21px 25px,#fff 0 1px,transparent 1.9px),
+    radial-gradient(circle at 101px 103px,#eaf7f5 0 .8px,transparent 1.5px);
+  opacity: .25;
+  animation: ga-menu-snow-drift 24s linear infinite;
+}
+.ga-menu-snowfall::after {
+  background-image: radial-gradient(circle at 76px 49px,#fff 0 1.45px,transparent 2.5px);
+  opacity: .32;
+  animation: ga-menu-snow-drift 15s linear infinite;
+}
+@keyframes ga-menu-snow-drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(144px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ga-menu-snowfall { display: none; }
+  .ga-menu-snowfall::before,
+  .ga-menu-snowfall::after { animation: none; }
 }
