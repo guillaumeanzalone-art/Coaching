@@ -1,0 +1,310 @@
+/* GA TCG — foil booster marketplace, inspired by the supplied visual reference.
+   Presentation only. The catalogue, Supabase odds, rewards and drawing logic stay server-driven. */
+.tcg-app.tcg-spider.tcg-showcase-mode{
+  --tcg-bg:#0c0b10;--tcg-surface:#17151d;--tcg-surface-raised:#211d28;
+  --tcg-text:#f7f4f2;--tcg-muted:#b3adb9;--tcg-line:#ffffff20;
+  --tcg-accent:#ffcc17;--tcg-energy:#ffcc17;
+  --tcg-font-heading:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:radial-gradient(ellipse at 12% 66%,#6c48182b,transparent 43%),
+    radial-gradient(ellipse at 89% 5%,#6333331a,transparent 35%),#0c0b10;
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-spider-sectionbar h2,
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-hero h2,
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-showcase-heading{
+  font-family:var(--tcg-font-heading);font-weight:900;letter-spacing:-.045em
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-spider-sectionbar{border-color:#ffffff19}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-spider-side-tab.active{
+  color:#ffcf29;border-color:#e8b81050;background:#b78a081b;box-shadow:inset 3px 0 0 #ffcf29
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-hero{
+  border:1px solid #eece662b;background:radial-gradient(ellipse at 88% 17%,#d398222b,transparent 38%),
+    linear-gradient(125deg,#242016,#121015 70%);
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-hero h2 span{color:#ffcf29}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-hero-stat em{color:#ffcf29}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-kicker,
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-open-eyebrow{color:#f0bf4e}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-motion-options{margin-bottom:12px}
+.tcg-app.tcg-spider .tcg-showcase-guide{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:34px;padding:31px 0 29px;margin-bottom:27px;
+  border-top:1px solid #ffffff12;border-bottom:1px solid #ffffff17;
+}
+.tcg-app.tcg-spider .tcg-showcase-step{min-width:0}
+.tcg-app.tcg-spider .tcg-showcase-step-number{
+  display:block;color:#ff563c;font-weight:950;font-size:32px;line-height:1;
+  letter-spacing:-.055em;margin-bottom:10px
+}
+.tcg-app.tcg-spider .tcg-showcase-step h3{
+  margin:0 0 8px;color:#f7f3f2;font:900 17px/1.2 Inter,system-ui,sans-serif;
+  letter-spacing:-.035em
+}
+.tcg-app.tcg-spider .tcg-showcase-step p{
+  color:#a9a4b1;font-size:13px;line-height:1.65;max-width:33ch;margin:0
+}
+.tcg-app.tcg-spider .tcg-showcase-market{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(292px,350px);
+  align-items:start;gap:32px;margin-bottom:28px
+}
+.tcg-app.tcg-spider .tcg-showcase-catalog{min-width:0}
+.tcg-app.tcg-spider .tcg-showcase-catalog-head{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;margin-bottom:24px
+}
+.tcg-app.tcg-spider .tcg-showcase-heading{
+  color:#f8f5f5;font-size:clamp(26px,2.8vw,36px);
+  line-height:1.1;margin:0
+}
+.tcg-app.tcg-spider .tcg-showcase-counter{
+  color:#aaa4b4;font-size:12px;margin:7px 0 0;line-height:1.4
+}
+.tcg-app.tcg-spider .tcg-showcase-filter{
+  display:flex;align-items:center;gap:2px;padding:4px;
+  border:1px solid #39333f;border-radius:999px;background:#18151e;
+  max-width:100%;overflow-x:auto;scrollbar-width:none
+}
+.tcg-app.tcg-spider .tcg-showcase-filter button{
+  appearance:none;min-height:38px;border:0;border-radius:999px;
+  white-space:nowrap;padding:8px 13px;font-size:12px;font-weight:800;
+  color:#b9b4c1;background:transparent;box-shadow:none;
+  transition:background .18s,color .18s
+}
+.tcg-app.tcg-spider .tcg-showcase-filter button:hover{color:#fff}
+.tcg-app.tcg-spider .tcg-showcase-filter button[aria-pressed="true"]{
+  background:#facc12;color:#17110a;box-shadow:0 3px 14px #facc1233
+}
+.tcg-app.tcg-spider .tcg-showcase-market .tcg-booster-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  column-gap:16px;row-gap:25px;align-items:start
+}
+.tcg-app.tcg-spider .tcg-showcase-market .tcg-booster{
+  width:100%;display:grid;justify-items:center;align-content:start;gap:10px;
+  padding:8px 7px 10px;min-height:0;border:1px solid transparent;border-radius:15px;
+  background:transparent;box-shadow:none;text-align:center;transform:none;
+  transition:transform .2s ease,background .2s ease,border-color .2s ease
+}
+.tcg-app.tcg-spider .tcg-showcase-market .tcg-booster:hover{
+  transform:translateY(-6px);background:#ffffff08;border-color:#ffffff19
+}
+.tcg-app.tcg-spider .tcg-showcase-market .tcg-booster.is-selected{
+  border-color:#eac5489c;background:linear-gradient(160deg,#f6c7110b,#ffffff03)
+}
+.tcg-app.tcg-spider .tcg-showcase-market .tcg-booster.is-selected .tcg-pack-shell{
+  filter:drop-shadow(0 0 11px #ffd44c38)
+}
+.tcg-app.tcg-spider .tcg-showcase-market .tcg-booster .tcg-pack-shell{
+  width:min(100%,180px);margin:0 auto;
+  box-shadow:inset 0 0 0 2px #ffffff2a,7px 14px 18px #0009;
+  transform:perspective(650px) rotateY(-8deg) rotateZ(-1deg);
+  transition:transform .24s ease,filter .24s ease;
+  border:1px solid hsla(var(--h),87%,71%,.68)
+}
+.tcg-app.tcg-spider .tcg-showcase-market .tcg-booster:hover .tcg-pack-shell{
+  transform:perspective(650px) rotateY(0) rotateZ(0) scale(1.045)
+}
+.tcg-app.tcg-spider .tcg-pack-shell{
+  background:linear-gradient(165deg,hsla(var(--h),58%,53%,1),#191419 52%,hsla(var(--h),55%,30%,1))
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-pack-skin{
+  background:radial-gradient(circle at 50% 42%,hsla(var(--h),88%,88%,.42),transparent 33%),
+    repeating-linear-gradient(0deg,#ffffff13 0 2px,transparent 2px 6px),
+    radial-gradient(ellipse at 15% 87%,hsla(var(--h),86%,44%,.5),transparent 47%),
+    linear-gradient(124deg,hsla(var(--h),63%,67%,1),hsla(var(--h),40%,24%,1) 54%,hsla(var(--h),62%,54%,1));
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-pack-skin:before{
+  clip-path:none;inset:9% 6%;border:1px solid #ffffff7a;
+  background:repeating-linear-gradient(130deg,#ffffff0b 0 2px,transparent 2px 11px)
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-pack-emblem{
+  width:71%;top:42%;border:4px double #f6d58f;
+  background:radial-gradient(circle at 38% 30%,#403b3d,#16151a 65%);
+  box-shadow:0 0 0 2px #1a1513,0 0 0 4px #f6de9b99,0 18px 26px #0009;
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-pack-emblem:after{border-style:solid;opacity:.4}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-pack-icon{
+  width:63%;height:63%;color:hsla(var(--h),95%,73%,1);
+  filter:drop-shadow(0 2px 4px #0008)
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-pack-brand{
+  top:11%;color:#171313;text-shadow:0 1px 2px #ffffff9e;
+  font-size:clamp(7px,.9vw,11px);letter-spacing:.19em
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-pack-title{
+  top:66%;font:900 clamp(14px,1.5vw,22px)/1.05 Inter,system-ui,sans-serif;
+  text-transform:none;letter-spacing:-.045em;color:#171016;
+  text-shadow:0 1px 1px #fff7,0 0 8px #ffdd8066
+}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-pack-edition{color:#24161a;letter-spacing:.06em}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-pack-serial{
+  display:block;left:22%;right:22%;top:88%;padding:4px 0;
+  color:#fff7de;background:#111016be;border-radius:100px;
+  font:bold 9px/1.1 Inter,system-ui,sans-serif;letter-spacing:.03em
+}
+.tcg-app.tcg-spider .tcg-showcase-market .tcg-booster-caption{
+  display:block;color:#aaa3ae;font-size:11px;line-height:1.4;min-height:0;
+  max-width:100%;overflow-wrap:anywhere
+}
+.tcg-app.tcg-spider .tcg-showcase-market .tcg-booster-caption strong{
+  display:block;color:#faf5f1;font:850 13px/1.25 Inter,system-ui,sans-serif;
+  margin-bottom:6px;letter-spacing:-.02em
+}
+.tcg-app.tcg-spider .tcg-showcase-pack-cost{
+  display:block;color:#ffcd20;font:bold 12px/1.35 Inter,system-ui,sans-serif;margin-bottom:4px
+}
+.tcg-app.tcg-spider .tcg-showcase-pack-exclusive{
+  display:inline-block;margin-top:5px;color:#e9c77a;font-weight:750;font-size:10px
+}
+.tcg-app.tcg-spider .tcg-showcase-panel.tcg-panel{
+  position:sticky;top:20px;margin:0;padding:0;min-width:0;
+  border:1px solid #38313e;border-radius:17px;
+  background:linear-gradient(159deg,#1b1820,#121016 72%);box-shadow:0 22px 44px #0009
+}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-open-stage{
+  display:block;min-height:0;padding:20px;background:transparent;border:0;border-radius:16px;
+}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-open-stage:before{display:none}
+.tcg-app.tcg-spider .tcg-showcase-selected-head{
+  display:flex;align-items:center;gap:15px;margin-bottom:15px
+}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-pack-big.tcg-showcase-mini-pack{
+  flex:0 0 76px;grid-row:auto;grid-column:auto;
+  width:76px!important;margin:0;border:0;box-shadow:none;filter:drop-shadow(0 8px 9px #0009)
+}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-pack-big .tcg-pack-brand{font-size:6px}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-pack-big .tcg-pack-title{font-size:12px}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-pack-big .tcg-pack-edition{font-size:6px}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-pack-big .tcg-pack-serial{font-size:6px}
+.tcg-app.tcg-spider .tcg-showcase-selected-name{min-width:0;flex:1}
+.tcg-app.tcg-spider .tcg-showcase-selected-name h3{
+  margin:5px 0 7px;color:#f8f5f3;
+  font:900 clamp(21px,2vw,27px)/1.07 Inter,system-ui,sans-serif;
+  letter-spacing:-.045em;overflow-wrap:anywhere
+}
+.tcg-app.tcg-spider .tcg-showcase-selected-name p{
+  margin:0;color:#aaa5b4;font-size:12px;line-height:1.5
+}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-open-details{
+  display:block;grid-column:auto;grid-row:auto;min-width:0;width:100%;
+  text-align:left;align-items:stretch
+}
+.tcg-app.tcg-spider .tcg-showcase-metrics{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:13px 0 14px
+}
+.tcg-app.tcg-spider .tcg-showcase-metric{
+  display:flex;flex-direction:column;justify-content:center;
+  min-height:67px;padding:10px 12px;background:#19161f;
+  border:1px solid #332d3a;border-radius:13px
+}
+.tcg-app.tcg-spider .tcg-showcase-metric b{
+  color:#f4f1f4;font:900 19px/1.1 Inter,system-ui,sans-serif
+}
+.tcg-app.tcg-spider .tcg-showcase-metric b.is-yellow{color:#ffd218}
+.tcg-app.tcg-spider .tcg-showcase-metric b.is-red{color:#ff5e49}
+.tcg-app.tcg-spider .tcg-showcase-metric span{
+  color:#aaa3b2;font-size:10px;line-height:1.35;margin-top:5px
+}
+.tcg-app.tcg-spider .tcg-showcase-pool{
+  margin:0 0 14px;padding:0;border:1px solid #9b791f5d;
+  border-radius:13px;background:#3a301c9c;color:#ede6df
+}
+.tcg-app.tcg-spider .tcg-showcase-pool summary{
+  cursor:pointer;list-style:none;padding:12px;font-size:12px;font-weight:800;
+  display:flex;align-items:center;justify-content:space-between;gap:7px
+}
+.tcg-app.tcg-spider .tcg-showcase-pool summary::after{content:"＋";font-size:16px;color:#ffd218}
+.tcg-app.tcg-spider .tcg-showcase-pool[open] summary::after{content:"−"}
+.tcg-app.tcg-spider .tcg-showcase-pool summary::-webkit-details-marker{display:none}
+.tcg-app.tcg-spider .tcg-showcase-pool div{
+  padding:0 12px 13px;font-size:11px;line-height:1.6;color:#cdc2bb
+}
+.tcg-app.tcg-spider .tcg-showcase-odds-title{
+  display:block;font-size:10px;color:#8f889b;text-transform:uppercase;
+  letter-spacing:.1em;margin:12px 0 11px
+}
+.tcg-app.tcg-spider .tcg-showcase-odds{
+  display:grid;gap:12px;margin:0 0 18px
+}
+.tcg-app.tcg-spider .tcg-showcase-odd{
+  display:grid;grid-template-columns:minmax(72px,1fr) minmax(30px,1.4fr) auto;
+  align-items:center;gap:8px;font-size:11px
+}
+.tcg-app.tcg-spider .tcg-showcase-odd-name{
+  font-size:11px;font-weight:800;color:var(--odd-color,#eee)
+}
+.tcg-app.tcg-spider .tcg-showcase-odd-track{
+  display:block;height:6px;background:#ffffff12;border-radius:20px;overflow:hidden
+}
+.tcg-app.tcg-spider .tcg-showcase-odd-track span{
+  display:block;width:var(--odd-width,0%);height:100%;background:var(--odd-color,#aaa);
+  border-radius:20px;box-shadow:0 0 7px var(--odd-color,#aaa)
+}
+.tcg-app.tcg-spider .tcg-showcase-odd-value{
+  color:#c9c2cd;min-width:48px;text-align:right;font-variant-numeric:tabular-nums;font-weight:800
+}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-open-details .tcg-open-btn{
+  width:100%;min-height:50px;margin:4px 0 0;
+  color:#221a0d;background:linear-gradient(120deg,#ffe043,#f9c608 65%,#efad06);
+  border:1px solid #ffe26d;border-radius:999px;font:900 15px/1.3 Inter,system-ui,sans-serif;
+  box-shadow:0 10px 22px #efb70032;letter-spacing:-.015em
+}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-open-details .tcg-open-btn:not(:disabled):hover{
+  filter:brightness(1.09);transform:translateY(-1px)
+}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-open-details .tcg-open-note{
+  margin:12px 0 0;max-width:none;text-align:left;font-size:11px;line-height:1.5;
+  color:#9d97a3
+}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-odds-details{
+  margin-top:12px;border-color:#ffffff29
+}
+.tcg-app.tcg-spider .tcg-showcase-panel .tcg-odds-details summary{font-size:11px}
+.tcg-app.tcg-spider.tcg-showcase-mode .tcg-panel{
+  border-color:#ffffff27;background:#15121a
+}
+@media(max-width:1180px){
+  .tcg-app.tcg-spider .tcg-showcase-market{
+    grid-template-columns:minmax(0,1fr) minmax(265px,310px);gap:18px
+  }
+  .tcg-app.tcg-spider .tcg-showcase-market .tcg-booster-grid{gap:13px}
+}
+@media(max-width:1000px){
+  .tcg-app.tcg-spider .tcg-showcase-market{
+    grid-template-columns:minmax(0,1fr) minmax(255px,300px);gap:14px
+  }
+  .tcg-app.tcg-spider .tcg-showcase-market .tcg-booster-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+  .tcg-app.tcg-spider .tcg-showcase-guide{gap:18px}
+}
+@media(max-width:790px){
+  .tcg-app.tcg-spider .tcg-showcase-market{grid-template-columns:minmax(0,1fr)}
+  .tcg-app.tcg-spider .tcg-showcase-panel{position:static;order:-1}
+  .tcg-app.tcg-spider .tcg-showcase-market .tcg-booster-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr))
+  }
+  .tcg-app.tcg-spider .tcg-showcase-guide{gap:12px}
+  .tcg-app.tcg-spider .tcg-showcase-step h3{font-size:14px}
+}
+@media(max-width:530px){
+  .tcg-app.tcg-spider .tcg-showcase-guide{
+    grid-template-columns:1fr;gap:14px;padding:19px 0
+  }
+  .tcg-app.tcg-spider .tcg-showcase-step{display:grid;grid-template-columns:39px 1fr;column-gap:10px}
+  .tcg-app.tcg-spider .tcg-showcase-step-number{grid-row:span 2;font-size:27px;margin:0}
+  .tcg-app.tcg-spider .tcg-showcase-step h3{font-size:14px;margin-bottom:3px}
+  .tcg-app.tcg-spider .tcg-showcase-step p{font-size:11px;max-width:none}
+  .tcg-app.tcg-spider .tcg-showcase-market .tcg-booster-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 8px
+  }
+  .tcg-app.tcg-spider .tcg-showcase-market .tcg-booster .tcg-pack-shell{width:min(100%,146px)}
+  .tcg-app.tcg-spider .tcg-showcase-heading{font-size:25px}
+  .tcg-app.tcg-spider .tcg-showcase-filter button{font-size:11px;padding:8px 11px}
+  .tcg-app.tcg-spider .tcg-showcase-panel .tcg-open-stage{padding:16px}
+  .tcg-app.tcg-spider .tcg-showcase-odd{grid-template-columns:65px minmax(0,1fr) 47px}
+}
+@media(prefers-reduced-motion:reduce){
+  .tcg-app.tcg-spider .tcg-showcase-market .tcg-booster,
+  .tcg-app.tcg-spider .tcg-showcase-market .tcg-booster .tcg-pack-shell,
+  .tcg-app.tcg-spider .tcg-showcase-panel .tcg-open-details .tcg-open-btn{transition:none}
+}
