@@ -32,18 +32,24 @@ test('The menu has a real collection progress indicator', () => {
   assert.match(css, /tcg-sidebar-progress-track/)
 })
 
-test('Booster spotlight precedes catalog and opens via the existing RPC action', () => {
-  const spotlight = src.indexOf('class="tcg-panel tcg-featured-panel"')
-  const catalog = src.indexOf('Les éditions à collectionner')
-  assert.ok(spotlight >= 0 && catalog > spotlight)
-  assert.match(src, /class="tcg-open-details"/)
+test('Booster catalogue and selected pack details follow the reference marketplace layout', () => {
+  const catalog = src.indexOf('class="tcg-showcase-catalog"')
+  const selected = src.indexOf('class="tcg-panel tcg-featured-panel tcg-showcase-panel"')
+  assert.ok(catalog >= 0 && selected > catalog)
+  assert.match(src, /class="tcg-showcase-guide"/)
+  assert.match(src, /class="tcg-booster-grid"/)
   assert.match(src, /data-action="tcg-open-pack"/)
   assert.match(src, /case 'tcg-open-pack':/)
   assert.match(src, /data-action="tcg-select-booster"/)
+  assert.match(src, /data-action="tcg-booster-filter"/)
+  assert.match(src, /case 'tcg-booster-filter':/)
+  assert.match(src, /selectedPool\.length/)
+  assert.match(src, /liveSlotOdds\?\.at\(-1\)/)
   assert.match(src, /scrollIntoView/)
   assert.match(css, /grid-template-columns:minmax\(230px,\.92fr\)/)
   assert.match(css, /@media\(max-width:590px\)/)
 })
+
 
 test('Hero quick actions target valid sections and UI remains motion-accessible', () => {
   assert.match(src, /class="tcg-hero-actions"/)
