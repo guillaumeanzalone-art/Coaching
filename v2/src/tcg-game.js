@@ -11,6 +11,7 @@ import { resolvePackIdentity } from './tcg-pack-rules.js'
 import './tcg-art-quality.css'
 import './tcg-motion.css'
 import './tcg-premium-ui.css'
+import './tcg-booster-showcase.css'
 import { TCG_MOTION, rarityFx, rarityCss, deviceMotionSettings, eventDuration } from './tcg-motion-config.js'
 import { createTcgTimeline } from './tcg-timeline.js'
 import { buildTcgRoundEvents } from './tcg-combat-events.js'
@@ -1382,6 +1383,7 @@ export async function mountTcgGame(
   let tab = 'boosters'
   let selectedBooster =
     boosters[0] || null
+  let boosterViewFilter = 'all'
   let profile = {
     unopened_packs: 0,
     opened_packs: 0,
@@ -2292,79 +2294,144 @@ export async function mountTcgGame(
       `
     }
 
+
+    const visibleBoosters = boosters.filter(booster =>
+      boosterViewFilter === 'all' ||
+      (boosterViewFilter === 'exclusive' ? Boolean(booster.secretOnly) : !booster.secretOnly)
+    )
+    const selectedPool = selectedBooster
+      ? [...catalog.values()].filter(card => {
+          const ids = card.booster_ids || []
+          return ids.includes(selectedBooster.id) || ids.includes('*')
+        })
+      : []
+    const previewOdds = liveSlotOdds?.at(-1) || null
+    const oddColors = {
+      common: '#aab0c0', uncommon: '#58cda8', rare: '#4e9cff',
+      ultra: '#b17dff', secret: '#ffbc22'
+    }
+    const oddsRows = previewOdds
+      ? Object.entries(previewOdds).map(([rarity, chance]) => {
+          const percent = Number(chance)
+          if (!Number.isFinite(percent) || percent < 0) return ''
+          const shown = percent.toLocaleString('fr-FR', { maximumFractionDigits: 2 })
+          const width = Math.max(0, Math.min(100, percent))
+          const color = oddColors[rarity] || '#d3cadc'
+          return `<div class="tcg-showcase-odd" style="--odd-color:${color};--odd-width:${width}%">
+            <span class="tcg-showcase-odd-name">${esc(rarityMeta(rarity).label)}</span>
+            <span class="tcg-showcase-odd-track" aria-hidden="true"><span></span></span>
+            <span class="tcg-showcase-odd-value">${shown} %</span>
+          </div>`
+        }).join('')
+      : ''
     return `
       ${renderMotionOptions({pack:true})}
-      ${selectedBooster ? `
-        <section class="tcg-panel tcg-featured-panel">
-          <div class="tcg-open-stage">
-            <button type="button" data-action="tcg-open-pack"
-                 class="tcg-pack-big ${openingStage === 'charging' ? 'is-charging' : ''} ${openingStage === 'tearing' ? 'is-opening' : ''}"
-                 style="--h:${selectedBooster.hue};cursor:pointer"
-                 aria-label="Toucher pour ouvrir le booster ${esc(selectedBooster.name)}"
-                 ${openingBusy || Number(profile.unopened_packs)<=0 ? 'disabled' : ''}>
-              ${renderPackShell(selectedBooster, boosters.findIndex(item => item.id === selectedBooster.id) + 1)}
-            </button>
-            <div class="tcg-open-details">
-              ${openingBusy ? `<p class="tcg-pack-queue" role="status">En attente de confirmation du serveur · aucune carte n'est révélée avant enregistrement</p>` : ''}
-              <span class="tcg-open-eyebrow">PACK SÉLECTIONNÉ · SÉRIE ${String(boosters.findIndex(item => item.id === selectedBooster.id) + 1).padStart(2, '0')}</span>
-              <h3>${esc(selectedBooster.name)}</h3>
-              <p>5 cartes issues de cette édition, avec une dernière pioche premium. ${selectedBooster.secretOnly ? 'Divine exclusive : ' + esc(selectedBooster.chaseName || selectedBooster.name) + '.' : 'Des personnages et formes rares propres à cette série.'}</p>
-              <div class="tcg-pack-pool">
-                <span>Cartes disponibles</span>
-                <strong>${selectedBooster.featured.map(person => esc(person.name)).join(' · ') || 'Sélection de la Toile'}</strong>
-              </div>
-              <div class="tcg-open-facts">
-                <span><b>05</b> cartes</span>
-                <span><b>${Number(profile.unopened_packs) || 0}</b> en réserve</span>
-              </div>
-              <button class="tcg-open-btn" data-action="tcg-open-pack" type="button"
-                      ${openingBusy || Number(profile.unopened_packs) <= 0 ? 'disabled' : ''}>
-                ${openingBusy ? 'Ouverture en cours…' :
-                  Number(profile.unopened_packs) > 0 ? 'Ouvrir ce booster' : 'Termine une séance pour gagner un booster'}
-              </button>
-              ${liveSlotOdds ? `<p class="tcg-open-note">Dernière carte : ${Object.entries(liveSlotOdds.at(-1)).map(([rarity,percent])=>esc(rarityMeta(rarity).label)+' '+Number(percent)+' %').join(' · ')}.
-                Ultra garantie tous les 10 boosters et Secrète tous les 50 (avant repli si rareté indisponible).</p>
-              <details class="tcg-odds-details">
-                <summary>Probabilités du serveur</summary>
-                <ol>${liveSlotOdds.map((weights,index)=>`
-                  <li><b>Carte ${index+1}</b><span>${Object.entries(weights).map(([rarity,percent])=>esc(rarityMeta(rarity).label)+' '+Number(percent)+' %').join(' · ')}</span></li>
-                `).join('')}</ol>
-                <p>Probabilités initiales par emplacement, avant garanties et repli éventuel vers les cartes réellement éligibles.</p>
-              </details>` : `<p class="tcg-open-note">Probabilités indisponibles : taux serveur en cours de chargement.</p>`}
+      <section class="tcg-showcase-guide" aria-label="Comment collectionner les cartes">
+        <div class="tcg-showcase-step"><span class="tcg-showcase-step-number">01</span>
+          <h3>Ouvre tes boosters</h3>
+          <p>Termine tes entraînements pour gagner des boosters et découvrir de nouvelles cartes.</p>
+        </div>
+        <div class="tcg-showcase-step"><span class="tcg-showcase-step-number">02</span>
+          <h3>Complète tes séries</h3>
+          <p>Chaque édition réunit des personnages et leurs évolutions, à collectionner au fil du jeu.</p>
+        </div>
+        <div class="tcg-showcase-step"><span class="tcg-showcase-step-number">03</span>
+          <h3>Construis ton équipe</h3>
+          <p>Réunis tes huit cartes, compare leurs capacités et entre dans l'arène.</p>
+        </div>
+      </section>
+
+      <section class="tcg-showcase-market" aria-label="Choisir un booster">
+        <div class="tcg-showcase-catalog">
+          <header class="tcg-showcase-catalog-head">
+            <div>
+              <h3 class="tcg-showcase-heading">Choisis ton booster</h3>
+              <p class="tcg-showcase-counter">${boosters.length} éditions disponibles · ${Number(profile.unopened_packs) || 0} booster(s) à ouvrir</p>
             </div>
-          </div>
-        </section>
-      ` : ''}
-      <section class="tcg-panel">
-        <header class="tcg-panel-head">
-          <div>
-            <h3>Les éditions à collectionner</h3>
-            <p>Choisis parmi les éditions publiées et les cartes réellement éligibles à chacune.</p>
-          </div>
-          <strong>✦ ${Number(profile.unopened_packs) || 0}</strong>
-        </header>
-        <div class="tcg-panel-pad">
+            <div class="tcg-showcase-filter" role="group" aria-label="Filtrer les éditions">
+              <button type="button" data-action="tcg-booster-filter" data-booster-filter="all"
+                aria-pressed="${boosterViewFilter === 'all'}">Tous</button>
+              <button type="button" data-action="tcg-booster-filter" data-booster-filter="exclusive"
+                aria-pressed="${boosterViewFilter === 'exclusive'}">Exclusifs</button>
+              <button type="button" data-action="tcg-booster-filter" data-booster-filter="classic"
+                aria-pressed="${boosterViewFilter === 'classic'}">Classiques</button>
+            </div>
+          </header>
           <div class="tcg-booster-grid">
-            ${boosters.map((booster, index) => `
-              <button class="tcg-booster ${booster.id === selectedBooster?.id ? 'is-selected' : ''}"
+            ${visibleBoosters.map(booster => {
+              const index = boosters.findIndex(item => item.id === booster.id)
+              return `<button class="tcg-booster ${booster.id === selectedBooster?.id ? 'is-selected' : ''}"
                       style="--h:${booster.hue}" data-action="tcg-select-booster"
                       data-booster-id="${esc(booster.id)}" type="button"
                       aria-label="Sélectionner le booster ${esc(booster.name)}"
-                      aria-pressed="${booster.id === selectedBooster?.id ? 'true' : 'false'}"
+                      aria-pressed="${booster.id === selectedBooster?.id}"
                       ${openingBusy ? 'disabled' : ''}>
-                ${renderPackShell(booster, index + 1)}
+                ${renderPackShell(booster,index + 1)}
                 <span class="tcg-booster-caption">
+                  <span class="tcg-showcase-pack-cost">1 booster en réserve</span>
                   <strong>${esc(booster.name)}</strong>
-                  ${booster.featured.slice(0, 3).map(athlete => esc(athlete.name)).join(' · ') || 'Pool mixte'}
-                  ${booster.chaseName ? '<span class="tcg-chase-label">EXCLUSIF · ' + esc(booster.chaseName) + '</span>' : ''}
+                  ${booster.featured.slice(0,2).map(item => esc(item.name)).join(' · ') || 'Édition collective'}
+                  ${booster.chaseName ? `<span class="tcg-showcase-pack-exclusive">✦ ${esc(booster.chaseName)}</span>` : ''}
                 </span>
-              </button>
-            `).join('')}
+              </button>`
+            }).join('')}
           </div>
+          ${visibleBoosters.length ? '' : '<p class="tcg-empty">Aucune édition dans cette catégorie.</p>'}
         </div>
+
+        ${selectedBooster ? `<aside class="tcg-panel tcg-featured-panel tcg-showcase-panel" aria-label="Détails du booster sélectionné">
+          <div class="tcg-open-stage">
+            <div class="tcg-showcase-selected-head">
+              <button type="button" data-action="tcg-open-pack"
+                class="tcg-pack-big tcg-showcase-mini-pack ${openingStage === 'charging' ? 'is-charging' : ''} ${openingStage === 'tearing' ? 'is-opening' : ''}"
+                style="--h:${selectedBooster.hue}"
+                aria-label="Ouvrir le booster ${esc(selectedBooster.name)}"
+                ${openingBusy || Number(profile.unopened_packs) <= 0 ? 'disabled' : ''}>
+                ${renderPackShell(selectedBooster,boosters.findIndex(item=>item.id===selectedBooster.id)+1)}
+              </button>
+              <div class="tcg-showcase-selected-name">
+                <span class="tcg-open-eyebrow">ÉDITION SÉLECTIONNÉE</span>
+                <h3>${esc(selectedBooster.name)}</h3>
+                <p>${selectedBooster.secretOnly ? 'Une forme divine exclusive à découvrir' : 'Cinq cartes et leurs évolutions'}</p>
+              </div>
+            </div>
+            <div class="tcg-open-details">
+              ${openingBusy ? '<p class="tcg-pack-queue" role="status">Validation du tirage sur le serveur…</p>' : ''}
+              <div class="tcg-showcase-metrics">
+                <div class="tcg-showcase-metric"><b>5</b><span>cartes par booster</span></div>
+                <div class="tcg-showcase-metric"><b class="is-yellow">${selectedPool.length}</b><span>cartes éligibles au catalogue</span></div>
+                <div class="tcg-showcase-metric"><b class="is-red">${Number(profile.unopened_packs)||0}</b><span>boosters disponibles</span></div>
+                <div class="tcg-showcase-metric"><b>${selectedBooster.secretOnly ? '1' : '—'}</b><span>${selectedBooster.secretOnly ? 'cible exclusive' : 'édition classique'}</span></div>
+              </div>
+              <details class="tcg-showcase-pool">
+                <summary>Voir les personnages de cette édition</summary>
+                <div>${selectedBooster.featured.map(person=>esc(person.name)).join(' · ') || 'Liste indisponible'}${selectedBooster.chaseName ? `<br>À poursuivre : ${esc(selectedBooster.chaseName)}` : ''}</div>
+              </details>
+              ${previewOdds ? `
+                <span class="tcg-showcase-odds-title">Probabilités · emplacement n° 5</span>
+                <div class="tcg-showcase-odds" aria-label="Probabilités de rareté de la cinquième carte">
+                  ${oddsRows}
+                </div>
+              ` : '<p class="tcg-open-note">Les taux du serveur sont momentanément indisponibles.</p>'}
+              <button class="tcg-open-btn" type="button" data-action="tcg-open-pack"
+                ${openingBusy || Number(profile.unopened_packs)<=0 ? 'disabled' : ''}>
+                ${openingBusy ? 'Ouverture en cours…'
+                  : Number(profile.unopened_packs)>0 ? '✦ Ouvrir · 1 booster' : 'Termine une séance pour ouvrir'}
+              </button>
+              <p class="tcg-open-note">
+                Tirage confirmé par Supabase avant révélation. Les probabilités sont initiales :
+                garanties et disponibilité des cartes peuvent les modifier.
+              </p>
+              ${liveSlotOdds ? `<details class="tcg-odds-details">
+                <summary>Consulter les taux des 5 cartes</summary>
+                <ol>${liveSlotOdds.map((weights,index)=>`<li><b>Carte ${index+1}</b><span>${Object.entries(weights).map(([rarity,percent])=>esc(rarityMeta(rarity).label)+' '+Number(percent).toLocaleString('fr-FR',{maximumFractionDigits:2})+' %').join(' · ')}</span></li>`).join('')}</ol>
+                <p>Probabilités initiales par emplacement, avant garanties et repli sur les cartes éligibles.</p>
+              </details>` : ''}
+            </div>
+          </div>
+        </aside>` : ''}
       </section>
       ${renderPackHistory()}
-
     `
   }
 
@@ -2848,7 +2915,7 @@ export async function mountTcgGame(
     `).join('')
 
     root.innerHTML = `
-      <main class="tcg-app tcg-spider ${motionDevice.low?'tcg-low-effects':''} ${motionDevice.reduced?'tcg-reduced-effects':''}">
+      <main class="tcg-app tcg-spider ${tab === 'boosters' ? 'tcg-showcase-mode' : ''} ${motionDevice.low?'tcg-low-effects':''} ${motionDevice.reduced?'tcg-reduced-effects':''}">
         <div class="tcg-shell">
           <header class="tcg-top tcg-spider-top">
             <button
@@ -3037,6 +3104,22 @@ export async function mountTcgGame(
             scheduleNextReveal()
           }
           return
+
+        case 'tcg-booster-filter': {
+          if (openingBusy) return
+          const requested = action.dataset.boosterFilter || 'all'
+          if (!['all', 'exclusive', 'classic'].includes(requested)) return
+          boosterViewFilter = requested
+          const visible = boosters.filter(booster =>
+            requested === 'all' ||
+            (requested === 'exclusive' ? Boolean(booster.secretOnly) : !booster.secretOnly)
+          )
+          if (visible.length && !visible.some(booster => booster.id === selectedBooster?.id)) {
+            selectedBooster = visible[0]
+          }
+          render()
+          return
+        }
 
         case 'tcg-select-booster':
           if (openingBusy) return
