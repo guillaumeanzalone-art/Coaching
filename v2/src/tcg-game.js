@@ -2366,9 +2366,9 @@ export async function mountTcgGame(
                       aria-label="Sélectionner le booster ${esc(booster.name)}"
                       aria-pressed="${booster.id === selectedBooster?.id}"
                       ${openingBusy ? 'disabled' : ''}>
-                ${renderPackShell(booster,index + 1)}
+                ${renderPackShell(booster, index + 1)}
                 <span class="tcg-booster-caption">
-                  <span class="tcg-showcase-pack-cost">1 booster en réserve</span>
+                  <span class="tcg-showcase-pack-cost">1 booster pour ouvrir</span>
                   <strong>${esc(booster.name)}</strong>
                   ${booster.featured.slice(0,2).map(item => esc(item.name)).join(' · ') || 'Édition collective'}
                   ${booster.chaseName ? `<span class="tcg-showcase-pack-exclusive">✦ ${esc(booster.chaseName)}</span>` : ''}
