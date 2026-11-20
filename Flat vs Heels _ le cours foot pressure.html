@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0162)https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open -->
+<!-- saved from url=(0162)https://t9012237801.p.clickup-attachments.com/t9012237801/4ae8c114-8132-5d8a-bec3-5f0b8268e56f/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open -->
 <html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,7 +22,7 @@
   --r:18px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+
 body{background:var(--bg);color:var(--chalk);font-family:"Archivo",system-ui,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;background-image:radial-gradient(oklch(0.9 0 0) .7px,transparent .8px);background-size:5px 5px;z-index:0}
 .wrap{max-width:1180px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
@@ -31,8 +31,8 @@ nav{position:sticky;top:0;z-index:20;background:oklch(0.17 0.012 255 / .86);back
 nav .wrap{display:flex;gap:6px;align-items:center;height:56px;overflow-x:auto;scrollbar-width:none}
 nav .brand{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;margin-right:auto;white-space:nowrap}
 nav .brand span{color:var(--hot)}
-nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:99px;white-space:nowrap}
-nav a:hover{color:var(--chalk);background:var(--panel2)}
+nav .navb{font:inherit;cursor:pointer;border:0;background:transparent;color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:99px;white-space:nowrap}
+nav .navb:hover{color:var(--chalk);background:var(--panel2)}
 
 /* HERO */
 .hero{padding:56px 0 24px}
@@ -183,7 +183,7 @@ footer a{color:var(--chalk)}
 <body>
 <nav><div class="wrap">
   <div class="brand">FLAT <span>vs</span> HEELS</div>
-  <a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#sim">Simulateur</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#notions">Pression</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#versus">Ressenti</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#diag">Corrections</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#test">Le test</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#quiz">Quiz</a>
+  <button type="button" class="navb" data-go="sim">Simulateur</button><button type="button" class="navb" data-go="notions">Pression</button><button type="button" class="navb" data-go="versus">Ressenti</button><button type="button" class="navb" data-go="diag">Corrections</button><button type="button" class="navb" data-go="test">Le test</button><button type="button" class="navb" data-go="quiz">Quiz</button>
 </div></nav>
 
 <header class="hero"><div class="wrap">
@@ -544,6 +544,8 @@ function renderQ(){
 }
 renderQ();
 
+/* ---------- MENU (sans lien, marche partout) ---------- */
+document.querySelectorAll('.navb').forEach(b=>b.onclick=()=>{const t=document.getElementById(b.dataset.go);if(!t)return;const y=t.getBoundingClientRect().top+window.scrollY-64;window.scrollTo({top:y,behavior:'smooth'});});
 /* ---------- REVEAL ---------- */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
