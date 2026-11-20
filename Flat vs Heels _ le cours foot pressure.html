@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<!-- saved from url=(0129)https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flat vs Heels : le cours foot pressure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./Flat vs Heels _ le cours foot pressure_files/css2" rel="stylesheet">
+<style>
+:root{
+  --bg:oklch(0.17 0.012 255);
+  --panel:oklch(0.215 0.014 255);
+  --panel2:oklch(0.255 0.016 255);
+  --line:oklch(0.33 0.016 255);
+  --chalk:oklch(0.95 0.012 95);
+  --muted:oklch(0.74 0.02 255);
+  --hot:oklch(0.72 0.19 45);
+  --warm:oklch(0.83 0.16 85);
+  --cool:oklch(0.68 0.12 235);
+  --good:oklch(0.78 0.16 150);
+  --bad:oklch(0.68 0.2 25);
+  --r:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--chalk);font-family:"Archivo",system-ui,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;background-image:radial-gradient(oklch(0.9 0 0) .7px,transparent .8px);background-size:5px 5px;z-index:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+h1,h2,h3{font-family:"Bricolage Grotesque","Archivo",system-ui,sans-serif;line-height:1.02;letter-spacing:-.02em}
+nav{position:sticky;top:0;z-index:20;background:oklch(0.17 0.012 255 / .86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:6px;align-items:center;height:56px;overflow-x:auto;scrollbar-width:none}
+nav .brand{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;margin-right:auto;white-space:nowrap}
+nav .brand span{color:var(--hot)}
+nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:99px;white-space:nowrap}
+nav a:hover{color:var(--chalk);background:var(--panel2)}
+
+/* HERO */
+.hero{padding:56px 0 24px}
+.kicker{display:inline-flex;gap:8px;align-items:center;font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--warm)}
+.kicker i{width:9px;height:9px;border-radius:50%;background:var(--hot);box-shadow:0 0 0 0 var(--hot);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 oklch(0.72 0.19 45 / .7)}70%{box-shadow:0 0 0 12px oklch(0.72 0.19 45 / 0)}100%{box-shadow:0 0 0 0 transparent}}
+.hero h1{font-size:clamp(44px,8vw,104px);font-weight:800;margin:14px 0 18px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--cool),var(--warm),var(--hot));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:clamp(18px,2.2vw,24px);max-width:760px;color:var(--muted)}
+.hero p.lead b{color:var(--chalk)}
+
+/* SIM */
+section{padding:56px 0}
+.sec-h{display:flex;align-items:end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px}
+.sec-h h2{font-size:clamp(32px,5vw,56px);font-weight:800}
+.sec-h p{color:var(--muted);max-width:460px}
+.sim{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;align-items:start}
+@media (max-width:900px){.sim{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.stage{position:relative;padding:0;overflow:hidden}
+.stage svg{display:block;width:100%;height:auto}
+.stage .tag{position:absolute;top:14px;left:16px;font-size:14px;font-weight:700;color:var(--muted)}
+.readouts{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.ro{padding:14px 16px;border-right:1px solid var(--line)}
+.ro:last-child{border-right:0}
+.ro small{display:block;font-size:14px;color:var(--muted)}
+.ro b{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.ro b sup{font-size:16px}
+.side{display:flex;flex-direction:column;gap:18px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px;gap:4px}
+.seg button,.chips button{font:inherit;font-weight:700;cursor:pointer;border:0;color:var(--muted);background:transparent;border-radius:99px;padding:10px 12px;transition:.2s}
+.seg button.on{background:var(--chalk);color:var(--bg)}
+.ctl label{display:flex;justify-content:space-between;font-size:14px;font-weight:600;color:var(--muted);margin-bottom:8px}
+.ctl label output{color:var(--chalk);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:99px;background:var(--panel2);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--hot);border:4px solid var(--chalk);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--hot);border:4px solid var(--chalk);cursor:pointer}
+input[type=range]:disabled{opacity:.35}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{background:var(--bg);border:1px solid var(--line);font-size:14px}
+.chips button.on{border-color:var(--hot);color:var(--chalk);background:oklch(0.72 0.19 45 / .16)}
+.footmap{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center}
+.footmap svg{width:150px;height:auto}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar{font-size:14px}
+.bar div{display:flex;justify-content:space-between;color:var(--muted);margin-bottom:4px}
+.bar span.t{height:8px;border-radius:99px;background:var(--panel2);display:block;overflow:hidden}
+.bar span.t i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cool),var(--warm),var(--hot));transition:width .35s}
+.verdict{border-radius:var(--r);padding:18px 20px;border:1px solid var(--line);background:var(--panel2);transition:.3s}
+.verdict.ok{border-color:oklch(0.78 0.16 150 / .6);background:oklch(0.78 0.16 150 / .1)}
+.verdict.ko{border-color:oklch(0.68 0.2 25 / .6);background:oklch(0.68 0.2 25 / .1)}
+.verdict h3{font-size:22px;margin-bottom:6px}
+.verdict .cue{margin-top:10px;font-weight:700;color:var(--warm)}
+.note{font-size:14px;color:var(--muted)}
+
+/* NOTIONS */
+.notions{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:stretch}
+@media (max-width:800px){.notions{grid-template-columns:1fr}}
+.tabs{display:flex;flex-direction:column;gap:10px}
+.tab{text-align:left;font:inherit;cursor:pointer;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;color:var(--chalk);transition:.2s}
+.tab h3{font-size:24px}
+.tab p{color:var(--muted);font-size:15px;margin-top:4px}
+.tab.on{border-color:var(--hot);background:oklch(0.72 0.19 45 / .12)}
+.notion-view{display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:center}
+@media (max-width:640px){.notion-view{grid-template-columns:1fr}}
+.notion-view svg{width:100%;max-width:220px;margin:auto;display:block}
+.notion-view h3{font-size:34px;margin-bottom:10px}
+.notion-view .big{font-size:20px}
+.notion-view .warn{margin-top:14px;padding:12px 14px;border-left:4px solid var(--warm);background:var(--panel2);border-radius:8px}
+
+/* VERSUS */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:800px){.vs{grid-template-columns:1fr}}
+.vs .card h3{font-size:42px;font-weight:800}
+.vs .card .sub{color:var(--muted);margin-bottom:16px}
+.vs .row{padding:14px 0;border-top:1px solid var(--line)}
+.vs .row small{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.vs .row p{margin-top:4px}
+.vs .trap{color:oklch(0.82 0.13 25)}
+.vs .cue{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:24px;font-weight:700;color:var(--warm);line-height:1.15}
+.same{margin-top:18px;text-align:center;padding:28px;border:2px dashed var(--line);border-radius:var(--r)}
+.same h3{font-size:clamp(26px,4vw,40px)}
+.same p{color:var(--muted);margin-top:6px}
+
+/* DIAG */
+.diag{display:grid;grid-template-columns:1fr 1.2fr;gap:18px}
+@media (max-width:800px){.diag{grid-template-columns:1fr}}
+.sym{display:flex;flex-direction:column;gap:10px}
+.sym button{font:inherit;text-align:left;cursor:pointer;color:var(--chalk);background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-weight:600;display:flex;justify-content:space-between;gap:10px;transition:.2s}
+.sym button:hover{background:var(--panel2)}
+.sym button.on{border-color:var(--hot);background:oklch(0.72 0.19 45 / .12)}
+.diag-out h3{font-size:30px;margin-bottom:12px}
+.diag-out .say{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:clamp(26px,3.4vw,38px);font-weight:800;color:var(--warm);margin:16px 0;line-height:1.1}
+.diag-out .avoid{color:oklch(0.82 0.13 25)}
+.diag-out ul{padding-left:20px;color:var(--muted);margin-top:8px}
+
+/* PROTOCOLE */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.steps{grid-template-columns:1fr}}
+.step{cursor:pointer;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;transition:.25s;position:relative;user-select:none}
+.step .n{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:44px;font-weight:800;color:var(--line);line-height:1}
+.step p{margin-top:8px;font-weight:600}
+.step.done{border-color:var(--good);background:oklch(0.78 0.16 150 / .1)}
+.step.done .n{color:var(--good)}
+.step.done::after{content:"✓";position:absolute;top:14px;right:16px;font-weight:800;color:var(--good);font-size:22px}
+.look{margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.look div{padding:16px;border-radius:14px;background:var(--panel2)}
+.ask{margin-top:18px;font-size:20px}
+.ask s{color:var(--muted)}
+.ask b{color:var(--warm)}
+
+/* QUIZ */
+.quiz{max-width:820px;margin:auto}
+.qhead{display:flex;justify-content:space-between;color:var(--muted);font-weight:700;margin-bottom:14px}
+.progress{height:6px;border-radius:99px;background:var(--panel2);margin-bottom:20px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--hot);transition:width .4s}
+.q h3{font-size:clamp(24px,3.4vw,34px);margin-bottom:18px}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opts button{font:inherit;text-align:left;cursor:pointer;color:var(--chalk);background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-weight:600;transition:.2s}
+.opts button:hover:not(:disabled){border-color:var(--muted)}
+.opts button.right{border-color:var(--good);background:oklch(0.78 0.16 150 / .14)}
+.opts button.wrong{border-color:var(--bad);background:oklch(0.68 0.2 25 / .14)}
+.expl{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--panel2);display:none}
+.expl.show{display:block;animation:up .35s}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.btn{font:inherit;font-weight:800;cursor:pointer;border:0;border-radius:99px;padding:14px 22px;background:var(--hot);color:oklch(0.16 0.02 45);margin-top:18px}
+.btn:disabled{opacity:.35;cursor:default}
+.final{text-align:center;padding:20px}
+.final .score{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:96px;font-weight:800;color:var(--hot);line-height:1}
+
+/* RULE */
+.rule{padding:72px 0;text-align:center}
+.rule h2{font-size:clamp(34px,6vw,76px);font-weight:800;max-width:980px;margin:auto}
+.rule h2 span{color:var(--hot)}
+.rule p{color:var(--muted);margin-top:16px;font-size:18px}
+footer{border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted);font-size:14px}
+footer a{color:var(--chalk)}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s}
+.reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <div class="brand">FLAT <span>vs</span> HEELS</div>
+  <a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#sim">Simulateur</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#notions">Pression</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#versus">Ressenti</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#diag">Corrections</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#test">Le test</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#quiz">Quiz</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="kicker"><i></i>Cours squat · Foot pressure</div>
+  <h1>Change la chaussure.<br><em>Pas la règle du pied.</em></h1>
+  <p class="lead">Flat ou talons surélevés : tu cherches <b>un pied entier chargé et stable</b>. La chaussure modifie la géométrie, pas cet objectif.</p>
+</div></header>
+
+<section id="sim"><div class="wrap">
+  <div class="sec-h reveal">
+    <h2>Joue avec le squat</h2>
+    <p>Change la chaussure, la profondeur et la mobilité. Puis provoque une bascule pour voir ce qui se passe sous le pied.</p>
+  </div>
+  <div class="sim">
+    <div class="card stage reveal">
+      <div class="tag">Vue de profil · barre au-dessus du milieu du pied</div>
+      <svg id="lifter" viewBox="70 90 440 450" aria-label="Squatteur de profil">
+        <defs>
+          <lineargradient id="floorG" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="oklch(0.27 0.015 255)"></stop><stop offset="1" stop-color="oklch(0.17 0.012 255)"></stop></lineargradient>
+          <radialgradient id="cop" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="oklch(0.72 0.19 45)" stop-opacity=".9"></stop><stop offset="1" stop-color="oklch(0.72 0.19 45)" stop-opacity="0"></stop></radialgradient>
+        </defs>
+        <rect x="0" y="500" width="560" height="60" fill="url(#floorG)"></rect>
+        <line x1="0" y1="500" x2="560" y2="500" stroke="oklch(0.4 0.02 255)" stroke-width="2"></line>
+        <line id="plumb" x1="0" y1="110" x2="0" y2="500" stroke="oklch(0.83 0.16 85)" stroke-width="2" stroke-dasharray="6 7" opacity=".7"></line>
+        <text id="plumbT" x="0" y="530" fill="oklch(0.83 0.16 85)" font-size="14" font-weight="700" text-anchor="middle">milieu du pied</text>
+        <ellipse id="copGlow" cx="0" cy="500" rx="46" ry="10" fill="url(#cop)"></ellipse>
+        <g id="body" stroke-linecap="round" stroke-linejoin="round"></g>
+      </svg>
+      <div class="readouts">
+        <div class="ro"><small>Inclinaison du tibia</small><b id="roShin">0<sup>°</sup></b></div>
+        <div class="ro"><small>Dorsiflexion demandée</small><b id="roDF">0<sup>°</sup></b></div>
+        <div class="ro"><small>Buste vs verticale</small><b id="roTrunk">0<sup>°</sup></b></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="card reveal">
+        <div class="seg" role="group" aria-label="Chaussure">
+          <button type="button" id="bFlat" class="on">Flat</button>
+          <button type="button" id="bHeel">Heels</button>
+        </div>
+        <div class="ctl" style="margin-top:18px">
+          <label for="hHeel">Hauteur du talon <output id="oHeel">0 mm</output></label>
+          <input id="hHeel" type="range" min="10" max="30" step="1" value="20" disabled="">
+        </div>
+        <div class="ctl" style="margin-top:16px">
+          <label for="depth">Profondeur <output id="oDepth"></output></label>
+          <input id="depth" type="range" min="55" max="100" value="92">
+        </div>
+        <div class="ctl" style="margin-top:16px">
+          <label for="mob">Mobilité de cheville de l’athlète <output id="oMob"></output></label>
+          <input id="mob" type="range" min="22" max="45" value="32">
+        </div>
+      </div>
+      <div class="card reveal">
+        <label class="note" style="display:block;margin-bottom:10px;font-weight:600">Ce que fait le pied</label>
+        <div class="chips" id="faults">
+          <button type="button" data-f="ok" class="on">Équilibré</button>
+          <button type="button" data-f="fwd">Bascule avant</button>
+          <button type="button" data-f="back">Bascule arrière</button>
+          <button type="button" data-f="out">Bord externe</button>
+        </div>
+        <div class="footmap" style="margin-top:16px">
+          <svg id="foot" viewBox="0 0 120 240" aria-label="Carte de pression plantaire">
+            <defs>
+              <radialgradient id="heat"><stop offset="0" stop-color="oklch(0.72 0.19 45)"></stop><stop offset=".45" stop-color="oklch(0.83 0.16 85)" stop-opacity=".85"></stop><stop offset="1" stop-color="oklch(0.68 0.12 235)" stop-opacity="0"></stop></radialgradient>
+              <clippath id="footClip"><path id="footPath" d="M60 8c22 0 38 14 42 40 4 26-4 50-6 76-2 28 6 52 4 76-2 22-18 34-40 34S22 222 22 200c0-26 4-46 2-74-2-26-12-50-8-76C20 22 38 8 60 8z"></path></clippath>
+            </defs>
+            <path d="M60 8c22 0 38 14 42 40 4 26-4 50-6 76-2 28 6 52 4 76-2 22-18 34-40 34S22 222 22 200c0-26 4-46 2-74-2-26-12-50-8-76C20 22 38 8 60 8z" fill="oklch(0.255 0.016 255)" stroke="oklch(0.45 0.02 255)" stroke-width="2"></path>
+            <g clip-path="url(#footClip)">
+              <circle id="hHeelZ" cx="60" cy="200" r="42" fill="url(#heat)"></circle>
+              <circle id="hBig" cx="38" cy="62" r="34" fill="url(#heat)"></circle>
+              <circle id="hSmall" cx="88" cy="78" r="30" fill="url(#heat)"></circle>
+            </g>
+            <circle id="copDot" cx="60" cy="130" r="7" fill="oklch(0.95 0.012 95)" stroke="oklch(0.17 0.012 255)" stroke-width="3"></circle>
+            <text x="60" y="236" font-size="11" fill="oklch(0.74 0.02 255)" text-anchor="middle" font-weight="700">TALON</text>
+            
+          </svg>
+          <div class="bars">
+            <div class="bar"><div><span>Base du gros orteil</span><span id="pBigT"></span></div><span class="t"><i id="pBig"></i></span></div>
+            <div class="bar"><div><span>Base du petit orteil</span><span id="pSmallT"></span></div><span class="t"><i id="pSmall"></i></span></div>
+            <div class="bar"><div><span>Talon</span><span id="pHeelT"></span></div><span class="t"><i id="pHeel"></i></span></div>
+            <p class="note">Point blanc : centre de pression. Il bouge pendant la rep, c’est normal.</p>
+          </div>
+        </div>
+      </div>
+      <div class="verdict ok" id="verdict" aria-live="polite"><h3></h3><p></p><div class="cue"></div></div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:14px">Modèle simplifié pour comprendre les tendances. Les angles sont des ordres de grandeur, pas une analyse de ton athlète.</p>
+</div></section>
+
+<section id="notions"><div class="wrap">
+  <div class="sec-h reveal"><h2>3 mots, 3 choses différentes</h2><p>La plupart des cues ratent parce qu’on mélange contact, pression et centre de pression.</p></div>
+  <div class="notions">
+    <div class="tabs" id="ntabs">
+      <button type="button" class="tab on" data-n="0"><h3>Contact</h3><p>Ce qui touche le sol</p></button>
+      <button type="button" class="tab" data-n="1"><h3>Pression</h3><p>Ce qui porte la charge</p></button>
+      <button type="button" class="tab" data-n="2"><h3>Centre de pression</h3><p>Le point résultant</p></button>
+    </div>
+    <div class="card notion-view reveal">
+      <svg viewBox="0 0 120 240" id="nfoot">
+        <path d="M60 8c22 0 38 14 42 40 4 26-4 50-6 76-2 28 6 52 4 76-2 22-18 34-40 34S22 222 22 200c0-26 4-46 2-74-2-26-12-50-8-76C20 22 38 8 60 8z" fill="oklch(0.255 0.016 255)" stroke="oklch(0.45 0.02 255)" stroke-width="2"></path>
+        <g id="nlayer"></g>
+      </svg>
+      <div id="ntext"></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="versus"><div class="wrap">
+  <div class="sec-h reveal"><h2>Ressenti et appuis</h2><p>Flat = semelle plate et rigide. Heels = chaussure de squat à talon surélevé. Pas un squat en décollant les talons.</p></div>
+  <div class="vs">
+    <div class="card reveal">
+      <h3>Flat</h3><p class="sub">Contact direct, cheville plus sollicitée.</p>
+      <div class="row"><small>Ce que tu peux sentir</small><p>Plus de contrainte devant la cheville en profondeur, besoin de reculer davantage les hanches, buste souvent plus incliné. <b>Possibilités, pas une définition</b> : un athlète mobile peut avancer beaucoup les genoux en flat.</p></div>
+      <div class="row"><small>Pression recherchée</small><p>Les genoux avancent autant que nécessaire <b>sans perdre le talon</b>. Les hanches reculent autant que nécessaire <b>sans vider l’avant-pied</b>.</p></div>
+      <div class="row"><small>Le piège</small><p class="trap">« Je suis en flat, donc je pousse dans les talons. » Résultat : orteils qui lèvent, hanches trop en arrière, bascule arrière.</p></div>
+      <div class="row"><small>Cue de départ</small><p class="cue">« Garde le sol sous tout le pied, puis descends entre tes appuis. »</p></div>
+    </div>
+    <div class="card reveal">
+      <h3>Heels</h3><p class="sub">Plus de place pour les genoux.</p>
+      <div class="row"><small>Ce que tu peux sentir</small><p>Moins bloqué par la cheville, descente plus facile, bassin plus sous le buste. Parfois plus de quadriceps si la stratégie demande plus de flexion de genou. <b>La chaussure ne le garantit pas seule.</b></p></div>
+      <div class="row"><small>Pression recherchée</small><p>Le talon reste chargé <b>à travers le talon rigide</b>. Surélevé ne veut pas dire inutile.</p></div>
+      <div class="row"><small>Le piège</small><p class="trap">« Mes genoux avancent, donc je pars sur l’avant-pied. » Résultat : talon qui se décharge, bascule avant.</p></div>
+      <div class="row"><small>Cue de départ</small><p class="cue">« Laisse avancer les genoux, garde le talon lourd et l’avant-pied présent. »</p></div>
+    </div>
+  </div>
+  <div class="same reveal">
+    <h3>Ce qui change : comment les articulations se plient.</h3>
+    <p>Ce qui ne change pas : tout le pied reste disponible. Il n’existe pas de règle « flat = arrière, heels = avant ».</p>
+  </div>
+</div></section>
+
+<section id="diag"><div class="wrap">
+  <div class="sec-h reveal"><h2>Tu vois ça, tu dis ça</h2><p>Des hypothèses de correction à tester, pas des diagnostics sur un seul signe.</p></div>
+  <div class="diag">
+    <div class="sym" id="syms"></div>
+    <div class="card diag-out" id="dout" aria-live="polite"></div>
+  </div>
+  <p class="ask reveal">Demande plutôt <b>« Où sens-tu la pression, et à quel moment elle change ? »</b> que <s>« tu sens tes talons ? »</s>, qui souffle déjà la réponse.</p>
+</div></section>
+
+<section id="test"><div class="wrap">
+  <div class="sec-h reveal"><h2>Le test pour choisir</h2><p>Léger, chaussure rigide ou cale stable. Clique chaque étape quand c’est fait.</p></div>
+  <div class="steps" id="steps">
+    <div class="step"><div class="n">1</div><p>Même stance, même ouverture de pieds, même placement de barre.</p></div>
+    <div class="step"><div class="n">2</div><p>Quelques reps flat, puis avec talon.</p></div>
+    <div class="step"><div class="n">3</div><p>Descente contrôlée, courte pause en bas.</p></div>
+    <div class="step"><div class="n">4</div><p>Comparer d’abord à profondeur identique.</p></div>
+    <div class="step"><div class="n">5</div><p>Refaire sur plusieurs séances avant de trancher.</p></div>
+  </div>
+  <div class="look reveal">
+    <div><b>Profondeur</b><br><span class="note">sans compensation gênante</span></div>
+    <div><b>Appuis</b><br><span class="note">stables du début à la fin</span></div>
+    <div><b>Bascules</b><br><span class="note">avant ou arrière</span></div>
+    <div><b>Remontée</b><br><span class="note">bassin et buste coordonnés</span></div>
+    <div><b>Effort</b><br><span class="note">confort à charge identique</span></div>
+  </div>
+</div></section>
+
+<section id="quiz"><div class="wrap">
+  <div class="sec-h reveal"><h2>Check rapide</h2><p>6 questions. Si tu fais 6/6, tu peux l’expliquer à n’importe quel athlète.</p></div>
+  <div class="card quiz" id="quizBox"></div>
+</div></section>
+
+<div class="rule"><div class="wrap reveal">
+  <h2>Choisis la chaussure qui rend le squat <span>reproductible</span>, pas celle qui donne le buste le plus vertical.</h2>
+  <p>Un buste incliné n’est pas une faute. Un talon n’est ni une triche ni une correction magique.</p>
+</div></div>
+
+<footer><div class="wrap">
+  Sources : <a href="https://www.mdpi.com/2076-3417/15/5/2471" target="_blank" rel="noopener">Duan et al. 2025, talon et stabilité au squat</a> · <a href="https://doi.org/10.1080/14763141.2026.2619893" target="_blank" rel="noopener">Ghasemi et al. 2026, talon et amplitude</a> · <a href="https://doi.org/10.1115/1.4050820" target="_blank" rel="noopener">Pangan &amp; Leineweber 2021, chaussures et back squat</a>
+</div></footer>
+
+<script>
+/* ---------- SIMULATEUR ---------- */
+const S={shoe:'flat',heel:20,depth:92,mob:32,fault:'ok'};
+const $=id=>document.getElementById(id);
+const SC=300, FLOOR=500, AX=300; // px per m, sol, cheville x
+const L1=.44,L2=.44,L3=.5;
+const rad=d=>d*Math.PI/180, deg=r=>r*180/Math.PI;
+function X(m){return AX+m*SC} function Y(m){return FLOOR-m*SC}
+
+function compute(){
+  const h=S.shoe==='heel'?S.heel/1000:0;
+  const incline=deg(Math.atan(h/0.2));           // inclinaison du pied
+  const d=S.depth/100;
+  const phi=10+d*90;                               // cuisse vs verticale
+  const avail=S.mob+incline;                       // tibia max possible
+  const shin=avail*Math.pow(d,0.85)+2;             // tibia utilisé
+  const df=Math.max(0,shin-incline);               // dorsiflexion anatomique demandée
+  const ankleH=0.075+h*0.8;
+  const ank={x:0,y:ankleH};
+  const knee={x:Math.sin(rad(shin))*L1,y:ankleH+Math.cos(rad(shin))*L1};
+  const hip={x:knee.x-Math.sin(rad(phi))*L2,y:knee.y+Math.cos(rad(phi))*L2};
+  const mid=0.045;
+  let off=0; if(S.fault==='fwd')off=0.075; if(S.fault==='back')off=-0.065;
+  const barX=mid+off;
+  let s=(barX-hip.x)/L3; s=Math.max(-.95,Math.min(.95,s));
+  const tau=deg(Math.asin(s));
+  const bar={x:hip.x+Math.sin(rad(tau))*L3,y:hip.y+Math.cos(rad(tau))*L3};
+  return {h,incline,shin,df,tau,ank,knee,hip,bar,barX,mid};
+}
+function seg(a,b,w,c){return `<line x1="${X(a.x)}" y1="${Y(a.y)}" x2="${X(b.x)}" y2="${Y(b.y)}" stroke="${c}" stroke-width="${w}"/>`}
+function draw(){
+  const r=compute();
+  const chalk='oklch(0.95 0.012 95)', limb='oklch(0.86 0.02 255)';
+  // chaussure
+  const hx=X(-0.075), bx=X(0.15), tx=X(0.215);
+  const heelTop=Y(r.h+0.028);
+  const shoe= S.shoe==='heel'
+   ? `<path d="M${hx} ${FLOOR} L${hx} ${Y(r.h)} L${bx} ${FLOOR-2} L${tx} ${FLOOR-2} L${tx} ${FLOOR} Z" fill="oklch(0.45 0.08 60)"/>
+      <path d="M${hx} ${Y(r.h)} L${hx} ${heelTop} Q ${X(0)} ${Y(r.h+0.07)} ${X(0.08)} ${Y(0.045)} L${tx} ${FLOOR-14} L${tx} ${FLOOR-2} L${bx} ${FLOOR-2} Z" fill="oklch(0.36 0.02 255)" stroke="oklch(0.55 0.02 255)" stroke-width="2"/>`
+   : `<rect x="${hx}" y="${FLOOR-6}" width="${tx-hx}" height="6" rx="2" fill="oklch(0.45 0.02 255)"/>
+      <path d="M${hx} ${FLOOR-6} L${hx} ${Y(0.035)} Q ${X(0)} ${Y(0.08)} ${X(0.08)} ${Y(0.042)} L${tx} ${FLOOR-16} L${tx} ${FLOOR-6} Z" fill="oklch(0.36 0.02 255)" stroke="oklch(0.55 0.02 255)" stroke-width="2"/>`;
+  const head={x:r.bar.x+Math.sin(rad(r.tau))*0.13+0.06,y:r.bar.y+Math.cos(rad(r.tau))*0.13};
+  const hand={x:r.bar.x-0.02,y:r.bar.y-0.02};
+  const elbow={x:r.bar.x-0.14,y:r.bar.y-0.11};
+  const hipLow = r.hip.y < r.knee.y;
+  let g=shoe+`<circle cx="${X(r.bar.x)}" cy="${Y(r.bar.y)}" r="44" fill="oklch(0.62 0.2 25 / .55)" stroke="oklch(0.62 0.2 25)" stroke-width="4"/>`;
+  g+=seg(r.hip,r.bar,15,limb);
+  g+=seg(r.knee,r.hip,14,limb);
+  g+=seg(r.ank,r.knee,11,limb);
+  g+=seg(r.bar,elbow,9,'oklch(0.74 0.02 255)')+seg(elbow,hand,9,'oklch(0.74 0.02 255)');
+  g+=`<circle cx="${X(head.x)}" cy="${Y(head.y)}" r="16" fill="${limb}"/>`;
+  g+=`<circle cx="${X(r.bar.x)}" cy="${Y(r.bar.y)}" r="8" fill="oklch(0.95 0.012 95)" stroke="oklch(0.17 0.012 255)" stroke-width="3"/>`;
+  [r.ank,r.knee,r.hip].forEach(j=>g+=`<circle cx="${X(j.x)}" cy="${Y(j.y)}" r="6" fill="oklch(0.17 0.012 255)" stroke="${chalk}" stroke-width="2"/>`);
+  // barre + disque
+  // angle tibia
+  g+=`<line x1="${X(0)}" y1="${Y(r.ank.y)}" x2="${X(0)}" y2="${Y(r.ank.y+0.2)}" stroke="oklch(0.68 0.12 235)" stroke-width="2" stroke-dasharray="4 5"/>`;
+  $('body').innerHTML=g;
+  // plomb
+  const px=X(r.barX);
+  $('plumb').setAttribute('x1',px);$('plumb').setAttribute('x2',px);$('plumbT').setAttribute('x',X(r.mid));
+  $('plumbT').textContent = S.fault==='ok'||S.fault==='out' ? 'barre au-dessus du milieu du pied' : (S.fault==='fwd'?'barre devant le milieu du pied':'barre derrière le milieu du pied');
+  $('copGlow').setAttribute('cx',px);
+  $('roShin').innerHTML=Math.round(r.shin)+'<sup>°</sup>';
+  $('roDF').innerHTML=Math.round(r.df)+'<sup>°</sup>';
+  $('roTrunk').innerHTML=Math.round(Math.abs(r.tau))+'<sup>°</sup>';
+  $('oHeel').textContent = S.shoe==='heel'? S.heel+' mm' : '0 mm';
+  $('oDepth').textContent = S.depth<35?'haut':S.depth<75?'mi-course':S.depth<88?'parallèle':'sous parallèle';
+  $('oMob').textContent = S.mob<28?'limitée':S.mob<37?'moyenne':'bonne';
+  foot(); verdict(r);
+}
+function foot(){
+  const P={ok:[.36,.3,.34],fwd:[.62,.5,.08],back:[.12,.08,.8],out:[.12,.52,.36]}[S.fault];
+  const [big,small,heel]=P;
+  const sc=v=>(.55+v*1.3);
+  $('hBig').setAttribute('r',20+big*44); $('hSmall').setAttribute('r',18+small*42); $('hHeelZ').setAttribute('r',22+heel*44);
+  $('hBig').style.opacity=sc(big); $('hSmall').style.opacity=sc(small); $('hHeelZ').style.opacity=sc(heel);
+  const cop={ok:[60,132],fwd:[58,74],back:[60,196],out:[86,120]}[S.fault];
+  $('copDot').setAttribute('cx',cop[0]);$('copDot').setAttribute('cy',cop[1]);
+  const lab=v=>v<.15?'quasi vide':v<.3?'léger':v<.5?'présent':'dominant';
+  [['pBig',big],['pSmall',small],['pHeel',heel]].forEach(([k,v])=>{$(k).style.width=Math.round(v*100)+'%';$(k+'T').textContent=lab(v)});
+}
+const V={
+ ok:{flat:['Pied entier disponible','Tibia moins incliné, hanches plus en arrière, buste plus penché : c’est la géométrie du flat, pas une faute.','« Garde le sol sous tout le pied. »'],
+     heel:['Pied entier disponible','Le talon donne de la marge : plus de tibia avec la même cheville, buste plus vertical. Et le talon reste chargé.','« Garde le talon lourd et l’avant-pied présent. »']},
+ fwd:{flat:['Bascule avant','Le talon se vide, l’athlète se rattrape sur l’avant-pied. Regarde aussi la trajectoire et le contrôle de descente.','« Garde le talon lourd. »'],
+      heel:['Le piège des heels','« Mes genoux avancent donc je pars devant. » Le talon surélevé se décharge et la barre passe devant.','« Laisse avancer les genoux, garde le talon lourd. »']},
+ back:{flat:['Le piège du flat','« Pousse dans les talons » mal compris : orteils qui lèvent, hanches trop loin, bascule arrière.','« Garde la base du gros orteil au sol. »'],
+       heel:['Recul en heels','L’athlète n’utilise pas la marge donnée par le talon et vide l’avant-pied.','« Garde la base du gros orteil au sol. »']},
+ out:{flat:['Roulé sur le bord externe','Le gros orteil décroche. Ne surenchéris pas avec « ouvre les genoux ».','« Garde l’appui sous le gros orteil. »'],
+      heel:['Roulé sur le bord externe','Même problème qu’en flat : la chaussure ne change rien ici.','« Garde l’appui sous le gros orteil. »']}
+};
+function verdict(r){
+  const v=V[S.fault][S.shoe];const el=$('verdict');
+  el.className='verdict '+(S.fault==='ok'?'ok':'ko');
+  el.querySelector('h3').textContent=v[0];el.querySelector('p').textContent=v[1];el.querySelector('.cue').textContent=v[2];
+}
+$('bFlat').onclick=()=>{S.shoe='flat';$('bFlat').classList.add('on');$('bHeel').classList.remove('on');$('hHeel').disabled=true;draw()};
+$('bHeel').onclick=()=>{S.shoe='heel';$('bHeel').classList.add('on');$('bFlat').classList.remove('on');$('hHeel').disabled=false;draw()};
+$('hHeel').oninput=e=>{S.heel=+e.target.value;draw()};
+$('depth').oninput=e=>{S.depth=+e.target.value;draw()};
+$('mob').oninput=e=>{S.mob=+e.target.value;draw()};
+document.querySelectorAll('#faults button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#faults button').forEach(x=>x.classList.remove('on'));b.classList.add('on');S.fault=b.dataset.f;draw()});
+draw();
+
+/* ---------- NOTIONS ---------- */
+const N=[
+ {layer:`<circle cx="60" cy="200" r="13" fill="oklch(0.95 0.012 95)"/><circle cx="38" cy="62" r="13" fill="oklch(0.95 0.012 95)"/><circle cx="88" cy="78" r="13" fill="oklch(0.95 0.012 95)"/><path d="M60 200 L38 62 L88 78 Z" fill="none" stroke="oklch(0.83 0.16 85)" stroke-width="3" stroke-dasharray="5 5"/>`,
+  t:`<h3>Contact</h3><p class="big">Talon, base du gros orteil, base du petit orteil : est-ce que les trois touchent le support ?</p><p class="note" style="margin-top:10px">C’est le <b>trépied</b>. Pas besoin de crisper les orteils ni de fabriquer une voûte exagérée.</p>`},
+ {layer:`<circle cx="60" cy="200" r="30" fill="oklch(0.72 0.19 45 / .8)"/><circle cx="38" cy="62" r="18" fill="oklch(0.83 0.16 85 / .7)"/><circle cx="88" cy="78" r="12" fill="oklch(0.68 0.12 235 / .7)"/>`,
+  t:`<h3>Pression</h3><p class="big">Les trois zones touchent, mais elles ne portent pas forcément la même charge.</p><div class="warn"><b>Trépied ≠ 33 % partout.</b> Tout le pied peut rester au contact avec plus de pression devant ou derrière.</div>`},
+ {layer:`<path id="copPath" d="M60 150 C 50 120, 72 112, 60 96 S 52 130, 60 150" fill="none" stroke="oklch(0.83 0.16 85)" stroke-width="2.5" stroke-dasharray="4 4"/><circle r="8" fill="oklch(0.72 0.19 45)"><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#copPath"/></animateMotion></circle>`,
+  t:`<h3>Centre de pression</h3><p class="big">Le point résultant de toutes les forces sous le pied. Il se déplace pendant la rep.</p><p class="note" style="margin-top:10px">Pas besoin de le figer au milieu. Tu évites la <b>bascule incontrôlée</b> qui oblige à se rattraper.</p><div class="warn">Une vidéo montre une bascule ou un décollement. Elle ne mesure pas la pression plantaire.</div>`}
+];
+function showN(i){document.querySelectorAll('#ntabs .tab').forEach((t,j)=>t.classList.toggle('on',i===j));$('nlayer').innerHTML=N[i].layer;$('ntext').innerHTML=N[i].t}
+document.querySelectorAll('#ntabs .tab').forEach(t=>t.onclick=()=>showN(+t.dataset.n));showN(0);
+
+/* ---------- DIAGNOSTIC ---------- */
+const D=[
+ {s:'Il bascule vers l’avant, le talon se décharge',say:'« Garde le talon lourd. »',why:'Le centre de pression part vers l’avant-pied.',check:['Trajectoire de barre','Contrôle de la descente','Placement de barre'],avoid:null},
+ {s:'Il recule et ses orteils lèvent',say:'« Garde la base du gros orteil au sol. »',why:'L’avant-pied se vide, la bascule part vers l’arrière.',check:['Consigne « talons » prise trop au pied de la lettre','Hanches qui reculent trop tôt'],avoid:'Ne pas ajouter « assieds-toi derrière ».'},
+ {s:'Il roule sur le bord externe',say:'« Garde l’appui sous le gros orteil. »',why:'Le gros orteil décroche, le pied part en dehors.',check:['Ouverture des pieds','Trajectoire des genoux'],avoid:'Ne pas surenchérir avec « ouvre les genoux ».'},
+ {s:'Ses hanches remontent avant le buste',say:'Pas de cue pied par défaut.',why:'Ce n’est pas forcément un problème de foot pressure.',check:['Charge trop lourde','Coordination à la remontée','Capacité à produire de la force au genou'],avoid:'Ne pas conclure tout de suite à un mauvais appui.'}
+];
+function showD(i){
+  document.querySelectorAll('#syms button').forEach((b,j)=>b.classList.toggle('on',i===j));
+  const d=D[i];
+  $('dout').innerHTML=`<small class="note">Hypothèse</small><h3>${d.why}</h3><div class="say">${d.say}</div><b>À vérifier aussi</b><ul>${d.check.map(c=>`<li>${c}</li>`).join('')}</ul>${d.avoid?`<p class="avoid" style="margin-top:14px"><b>${d.avoid}</b></p>`:''}`;
+}
+$('syms').innerHTML=D.map((d,i)=>`<button type="button" data-i="${i}"><span>${d.s}</span><span>→</span></button>`).join('');
+document.querySelectorAll('#syms button').forEach(b=>b.onclick=()=>showD(+b.dataset.i));showD(0);
+
+/* ---------- PROTOCOLE ---------- */
+document.querySelectorAll('.step').forEach(s=>s.onclick=()=>s.classList.toggle('done'));
+
+/* ---------- QUIZ ---------- */
+const Q=[
+ {q:'En heels, l’objectif d’appui est de…',o:['Charger surtout l’avant-pied','Garder tout le pied disponible','Pousser uniquement dans les talons'],a:1,e:'Flat ou heels, même règle. Le talon surélevé reste chargé à travers la chaussure.'},
+ {q:'À tibia aussi incliné, le talon surélevé…',o:['Demande moins de dorsiflexion de cheville','Demande plus de dorsiflexion','Ne change rien à la cheville'],a:0,e:'Le pied est déjà incliné. Mais l’athlète peut utiliser la marge pour descendre plus ou avancer plus le genou.'},
+ {q:'« Trépied » veut dire 33 % de pression sur chaque point.',o:['Vrai','Faux'],a:1,e:'Trépied = contact. La répartition de pression peut varier sans perdre le contact.'},
+ {q:'En flat, ton athlète recule et lève les orteils. Tu dis…',o:['« Assieds-toi plus derrière »','« Pousse fort dans les talons »','« Garde la base du gros orteil au sol »'],a:2,e:'Les deux autres cues aggravent la bascule arrière.'},
+ {q:'Une vidéo de profil permet de mesurer la pression plantaire.',o:['Oui','Non'],a:1,e:'Elle montre des bascules ou décollements. La mesure demande une plateforme ou des semelles de pression.'},
+ {q:'Quelle chaussure choisir ?',o:['Celle qui donne le buste le plus vertical','Celle qui rend le squat le plus reproductible','Toujours heels pour les débutants'],a:1,e:'Un buste incliné n’est pas une faute. On cherche la régularité et la stabilité.'}
+];
+let qi=0,score=0,answered=false;
+function renderQ(){
+  const box=$('quizBox');
+  if(qi>=Q.length){
+    const msg=score===6?'Parfait, tu peux l’enseigner.':score>=4?'Solide. Relis la section pression.':'Repasse par le simulateur, puis réessaie.';
+    box.innerHTML=`<div class="final"><div class="score">${score}/6</div><p style="font-size:20px;margin-top:10px">${msg}</p><button type="button" class="btn" id="again">Recommencer</button></div>`;
+    $('again').onclick=()=>{qi=0;score=0;renderQ()};return;
+  }
+  const q=Q[qi];answered=false;
+  box.innerHTML=`<div class="qhead"><span>Question ${qi+1}/6</span><span>Score ${score}</span></div><div class="progress"><i style="width:${qi/Q.length*100}%"></i></div><div class="q"><h3>${q.q}</h3><div class="opts">${q.o.map((o,i)=>`<button type="button" data-i="${i}">${o}</button>`).join('')}</div><div class="expl" id="expl"></div><button type="button" class="btn" id="next" disabled>${qi===Q.length-1?'Voir le score':'Suivante'}</button></div>`;
+  box.querySelectorAll('.opts button').forEach(b=>b.onclick=()=>{
+    if(answered)return;answered=true;const i=+b.dataset.i;
+    box.querySelectorAll('.opts button').forEach((x,j)=>{x.disabled=true;if(j===q.a)x.classList.add('right')});
+    if(i===q.a)score++;else b.classList.add('wrong');
+    const ex=$('expl');ex.innerHTML=(i===q.a?'<b>Exact.</b> ':'<b>Pas tout à fait.</b> ')+q.e;ex.classList.add('show');$('next').disabled=false;
+  });
+  $('next').onclick=()=>{qi++;renderQ()};
+}
+renderQ();
+
+/* ---------- REVEAL ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+
+
+</body></html>
