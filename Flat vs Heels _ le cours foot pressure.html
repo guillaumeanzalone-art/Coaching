@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0162)https://t9012237801.p.clickup-attachments.com/t9012237801/4ae8c114-8132-5d8a-bec3-5f0b8268e56f/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open -->
+<!-- saved from url=(0162)https://t9012237801.p.clickup-attachments.com/t9012237801/7b89467f-d17c-5e76-bfc9-2441d4d35acb/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open -->
 <html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -27,12 +27,6 @@ body{background:var(--bg);color:var(--chalk);font-family:"Archivo",system-ui,san
 body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.07;background-image:radial-gradient(oklch(0.9 0 0) .7px,transparent .8px);background-size:5px 5px;z-index:0}
 .wrap{max-width:1180px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
 h1,h2,h3{font-family:"Bricolage Grotesque","Archivo",system-ui,sans-serif;line-height:1.02;letter-spacing:-.02em}
-nav{position:sticky;top:0;z-index:20;background:oklch(0.17 0.012 255 / .86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;gap:6px;align-items:center;height:56px;overflow-x:auto;scrollbar-width:none}
-nav .brand{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;margin-right:auto;white-space:nowrap}
-nav .brand span{color:var(--hot)}
-nav .navb{font:inherit;cursor:pointer;border:0;background:transparent;color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;padding:8px 12px;border-radius:99px;white-space:nowrap}
-nav .navb:hover{color:var(--chalk);background:var(--panel2)}
 
 /* HERO */
 .hero{padding:56px 0 24px}
@@ -181,10 +175,6 @@ footer a{color:var(--chalk)}
 </style>
 </head>
 <body>
-<nav><div class="wrap">
-  <div class="brand">FLAT <span>vs</span> HEELS</div>
-  <button type="button" class="navb" data-go="sim">Simulateur</button><button type="button" class="navb" data-go="notions">Pression</button><button type="button" class="navb" data-go="versus">Ressenti</button><button type="button" class="navb" data-go="diag">Corrections</button><button type="button" class="navb" data-go="test">Le test</button><button type="button" class="navb" data-go="quiz">Quiz</button>
-</div></nav>
 
 <header class="hero"><div class="wrap">
   <div class="kicker"><i></i>Cours squat · Foot pressure</div>
@@ -544,8 +534,6 @@ function renderQ(){
 }
 renderQ();
 
-/* ---------- MENU (sans lien, marche partout) ---------- */
-document.querySelectorAll('.navb').forEach(b=>b.onclick=()=>{const t=document.getElementById(b.dataset.go);if(!t)return;const y=t.getBoundingClientRect().top+window.scrollY-64;window.scrollTo({top:y,behavior:'smooth'});});
 /* ---------- REVEAL ---------- */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
