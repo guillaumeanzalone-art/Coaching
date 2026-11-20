@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0129)https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open -->
+<!-- saved from url=(0162)https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open -->
 <html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -65,6 +65,7 @@ section{padding:56px 0}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px;gap:4px}
 .seg button,.chips button{font:inherit;font-weight:700;cursor:pointer;border:0;color:var(--muted);background:transparent;border-radius:99px;padding:10px 12px;transition:.2s}
 .seg button.on{background:var(--chalk);color:var(--bg)}
+.seg3{grid-template-columns:1fr 1fr 1fr}
 .ctl label{display:flex;justify-content:space-between;font-size:14px;font-weight:600;color:var(--muted);margin-bottom:8px}
 .ctl label output{color:var(--chalk);font-variant-numeric:tabular-nums}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:99px;background:var(--panel2);outline:none}
@@ -114,6 +115,10 @@ input[type=range]:disabled{opacity:.35}
 .vs .trap{color:oklch(0.82 0.13 25)}
 .vs .cue{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:24px;font-weight:700;color:var(--warm);line-height:1.15}
 .same{margin-top:18px;text-align:center;padding:28px;border:2px dashed var(--line);border-radius:var(--r)}
+.barvs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+@media (max-width:800px){.barvs{grid-template-columns:1fr}}
+.barvs h3{font-size:28px;margin-bottom:6px;color:var(--warm)}
+.barvs p{color:var(--muted)}
 .same h3{font-size:clamp(26px,4vw,40px)}
 .same p{color:var(--muted);margin-top:6px}
 
@@ -178,7 +183,7 @@ footer a{color:var(--chalk)}
 <body>
 <nav><div class="wrap">
   <div class="brand">FLAT <span>vs</span> HEELS</div>
-  <a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#sim">Simulateur</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#notions">Pression</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#versus">Ressenti</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#diag">Corrections</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#test">Le test</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/c7fb48c1-b95e-51f9-ab5a-d7fb1829df5b/cours-flat-vs-heels.html?view=open#quiz">Quiz</a>
+  <a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#sim">Simulateur</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#notions">Pression</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#versus">Ressenti</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#diag">Corrections</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#test">Le test</a><a href="https://t9012237801.p.clickup-attachments.com/t9012237801/6e7abc45-869b-56e0-a02a-978cd9bc5c83/Flat%20vs%20Heels%20_%20le%20cours%20foot%20pressure.html?view=open#quiz">Quiz</a>
 </div></nav>
 
 <header class="hero"><div class="wrap">
@@ -194,7 +199,7 @@ footer a{color:var(--chalk)}
   </div>
   <div class="sim">
     <div class="card stage reveal">
-      <div class="tag">Vue de profil · barre au-dessus du milieu du pied</div>
+      <div class="tag" id="stageTag">Vue de profil</div>
       <svg id="lifter" viewBox="70 90 440 450" aria-label="Squatteur de profil">
         <defs>
           <lineargradient id="floorG" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="oklch(0.27 0.015 255)"></stop><stop offset="1" stop-color="oklch(0.17 0.012 255)"></stop></lineargradient>
@@ -232,6 +237,15 @@ footer a{color:var(--chalk)}
           <label for="mob">Mobilité de cheville de l’athlète <output id="oMob"></output></label>
           <input id="mob" type="range" min="22" max="45" value="32">
         </div>
+      </div>
+      <div class="card reveal">
+        <label class="note" style="display:block;margin-bottom:10px;font-weight:600">Placement de barre</label>
+        <div class="seg seg3" role="group" aria-label="Placement de barre" id="barSel">
+          <button type="button" data-b="high">High bar</button>
+          <button type="button" data-b="mid" class="on">Mid bar</button>
+          <button type="button" data-b="low">Low bar</button>
+        </div>
+        <p class="note" id="barNote" style="margin-top:12px"></p>
       </div>
       <div class="card reveal">
         <label class="note" style="display:block;margin-bottom:10px;font-weight:600">Ce que fait le pied</label>
@@ -311,6 +325,12 @@ footer a{color:var(--chalk)}
     <h3>Ce qui change : comment les articulations se plient.</h3>
     <p>Ce qui ne change pas : tout le pied reste disponible. Il n’existe pas de règle « flat = arrière, heels = avant ».</p>
   </div>
+  <div class="barvs reveal">
+    <div class="card"><h3>High bar</h3><p>Buste plus vertical, genoux souvent plus avancés. Le talon surélevé est souvent apprécié ici.</p></div>
+    <div class="card"><h3>Mid bar</h3><p>Le compromis. Teste les deux chaussures, aucun choix n’est imposé.</p></div>
+    <div class="card"><h3>Low bar</h3><p>Buste plus incliné, hanches plus en arrière. Flat ou heels, les deux se voient chez des athlètes performants.</p></div>
+  </div>
+  <p class="note reveal" style="margin-top:12px;text-align:center">Quel que soit le placement : <b>la barre reste au-dessus du milieu du pied</b> et tout le pied reste disponible. Ce sont des tendances, pas des règles.</p>
 </div></section>
 
 <section id="diag"><div class="wrap">
@@ -341,7 +361,7 @@ footer a{color:var(--chalk)}
 </div></section>
 
 <section id="quiz"><div class="wrap">
-  <div class="sec-h reveal"><h2>Check rapide</h2><p>6 questions. Si tu fais 6/6, tu peux l’expliquer à n’importe quel athlète.</p></div>
+  <div class="sec-h reveal"><h2>Check rapide</h2><p>7 questions. Si tu fais 7/7, tu peux l’expliquer à n’importe quel athlète.</p></div>
   <div class="card quiz" id="quizBox"></div>
 </div></section>
 
@@ -356,10 +376,11 @@ footer a{color:var(--chalk)}
 
 <script>
 /* ---------- SIMULATEUR ---------- */
-const S={shoe:'flat',heel:20,depth:92,mob:32,fault:'ok'};
+const S={shoe:'flat',heel:20,depth:92,mob:32,fault:'ok',bar:'mid'};
+const BAR={high:{L3:.53,knee:1,head:.12,name:'High bar',note:'Barre haute sur les trapèzes. Bras de levier plus long : buste plus vertical, genoux souvent plus avancés.'},mid:{L3:.49,knee:.93,head:.15,name:'Mid bar',note:'Entre les deux. Un compromis fréquent en powerlifting.'},low:{L3:.45,knee:.85,head:.18,name:'Low bar',note:'Barre plus basse, sur les deltoïdes postérieurs. Buste plus incliné et hanches plus en arrière : c’est la géométrie, pas une faute.'}};
 const $=id=>document.getElementById(id);
 const SC=300, FLOOR=500, AX=300; // px per m, sol, cheville x
-const L1=.44,L2=.44,L3=.5;
+const L1=.44,L2=.44;
 const rad=d=>d*Math.PI/180, deg=r=>r*180/Math.PI;
 function X(m){return AX+m*SC} function Y(m){return FLOOR-m*SC}
 
@@ -369,7 +390,8 @@ function compute(){
   const d=S.depth/100;
   const phi=10+d*90;                               // cuisse vs verticale
   const avail=S.mob+incline;                       // tibia max possible
-  const shin=avail*Math.pow(d,0.85)+2;             // tibia utilisé
+  const B=BAR[S.bar], L3=B.L3;
+  const shin=(avail*Math.pow(d,0.85)+2)*B.knee;    // tibia utilisé (tendance selon la barre)
   const df=Math.max(0,shin-incline);               // dorsiflexion anatomique demandée
   const ankleH=0.075+h*0.8;
   const ank={x:0,y:ankleH};
@@ -381,7 +403,7 @@ function compute(){
   let s=(barX-hip.x)/L3; s=Math.max(-.95,Math.min(.95,s));
   const tau=deg(Math.asin(s));
   const bar={x:hip.x+Math.sin(rad(tau))*L3,y:hip.y+Math.cos(rad(tau))*L3};
-  return {h,incline,shin,df,tau,ank,knee,hip,bar,barX,mid};
+  return {h,incline,shin,df,tau,ank,knee,hip,bar,barX,mid,B};
 }
 function seg(a,b,w,c){return `<line x1="${X(a.x)}" y1="${Y(a.y)}" x2="${X(b.x)}" y2="${Y(b.y)}" stroke="${c}" stroke-width="${w}"/>`}
 function draw(){
@@ -395,12 +417,13 @@ function draw(){
       <path d="M${hx} ${Y(r.h)} L${hx} ${heelTop} Q ${X(0)} ${Y(r.h+0.07)} ${X(0.08)} ${Y(0.045)} L${tx} ${FLOOR-14} L${tx} ${FLOOR-2} L${bx} ${FLOOR-2} Z" fill="oklch(0.36 0.02 255)" stroke="oklch(0.55 0.02 255)" stroke-width="2"/>`
    : `<rect x="${hx}" y="${FLOOR-6}" width="${tx-hx}" height="6" rx="2" fill="oklch(0.45 0.02 255)"/>
       <path d="M${hx} ${FLOOR-6} L${hx} ${Y(0.035)} Q ${X(0)} ${Y(0.08)} ${X(0.08)} ${Y(0.042)} L${tx} ${FLOOR-16} L${tx} ${FLOOR-6} Z" fill="oklch(0.36 0.02 255)" stroke="oklch(0.55 0.02 255)" stroke-width="2"/>`;
-  const head={x:r.bar.x+Math.sin(rad(r.tau))*0.13+0.06,y:r.bar.y+Math.cos(rad(r.tau))*0.13};
+  const head={x:r.bar.x+Math.sin(rad(r.tau))*r.B.head+0.06,y:r.bar.y+Math.cos(rad(r.tau))*r.B.head};
+  const neck={x:r.bar.x+Math.sin(rad(r.tau))*(r.B.head-0.05),y:r.bar.y+Math.cos(rad(r.tau))*(r.B.head-0.05)};
   const hand={x:r.bar.x-0.02,y:r.bar.y-0.02};
   const elbow={x:r.bar.x-0.14,y:r.bar.y-0.11};
   const hipLow = r.hip.y < r.knee.y;
   let g=shoe+`<circle cx="${X(r.bar.x)}" cy="${Y(r.bar.y)}" r="44" fill="oklch(0.62 0.2 25 / .55)" stroke="oklch(0.62 0.2 25)" stroke-width="4"/>`;
-  g+=seg(r.hip,r.bar,15,limb);
+  g+=seg(r.hip,neck,15,limb);
   g+=seg(r.knee,r.hip,14,limb);
   g+=seg(r.ank,r.knee,11,limb);
   g+=seg(r.bar,elbow,9,'oklch(0.74 0.02 255)')+seg(elbow,hand,9,'oklch(0.74 0.02 255)');
@@ -421,6 +444,7 @@ function draw(){
   $('roTrunk').innerHTML=Math.round(Math.abs(r.tau))+'<sup>°</sup>';
   $('oHeel').textContent = S.shoe==='heel'? S.heel+' mm' : '0 mm';
   $('oDepth').textContent = S.depth<35?'haut':S.depth<75?'mi-course':S.depth<88?'parallèle':'sous parallèle';
+  $('barNote').textContent=r.B.note; $('stageTag').textContent='Vue de profil · '+r.B.name+' · '+(S.shoe==='heel'?'heels '+S.heel+' mm':'flat');
   $('oMob').textContent = S.mob<28?'limitée':S.mob<37?'moyenne':'bonne';
   foot(); verdict(r);
 }
@@ -436,7 +460,7 @@ function foot(){
   [['pBig',big],['pSmall',small],['pHeel',heel]].forEach(([k,v])=>{$(k).style.width=Math.round(v*100)+'%';$(k+'T').textContent=lab(v)});
 }
 const V={
- ok:{flat:['Pied entier disponible','Tibia moins incliné, hanches plus en arrière, buste plus penché : c’est la géométrie du flat, pas une faute.','« Garde le sol sous tout le pied. »'],
+ ok:{flat:['Pied entier disponible','Comparé aux heels : tibia moins incliné, hanches plus en arrière, buste plus penché. C’est la géométrie du flat, pas une faute.','« Garde le sol sous tout le pied. »'],
      heel:['Pied entier disponible','Le talon donne de la marge : plus de tibia avec la même cheville, buste plus vertical. Et le talon reste chargé.','« Garde le talon lourd et l’avant-pied présent. »']},
  fwd:{flat:['Bascule avant','Le talon se vide, l’athlète se rattrape sur l’avant-pied. Regarde aussi la trajectoire et le contrôle de descente.','« Garde le talon lourd. »'],
       heel:['Le piège des heels','« Mes genoux avancent donc je pars devant. » Le talon surélevé se décharge et la barre passe devant.','« Laisse avancer les genoux, garde le talon lourd. »']},
@@ -455,7 +479,9 @@ $('bHeel').onclick=()=>{S.shoe='heel';$('bHeel').classList.add('on');$('bFlat').
 $('hHeel').oninput=e=>{S.heel=+e.target.value;draw()};
 $('depth').oninput=e=>{S.depth=+e.target.value;draw()};
 $('mob').oninput=e=>{S.mob=+e.target.value;draw()};
-document.querySelectorAll('#faults button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#faults button').forEach(x=>x.classList.remove('on'));b.classList.add('on');S.fault=b.dataset.f;draw()});
+document.querySelectorAll('#barSel button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#barSel button').forEach(x=>x.classList.remove('on'));b.classList.add('on');S.bar=b.dataset.b;draw()});
+document.querySelectorAll('#faults button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#barSel button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#barSel button').forEach(x=>x.classList.remove('on'));b.classList.add('on');S.bar=b.dataset.b;draw()});
+document.querySelectorAll('#faults button').forEach(x=>x.classList.remove('on'));b.classList.add('on');S.fault=b.dataset.f;draw()});
 draw();
 
 /* ---------- NOTIONS ---------- */
@@ -495,18 +521,19 @@ const Q=[
  {q:'« Trépied » veut dire 33 % de pression sur chaque point.',o:['Vrai','Faux'],a:1,e:'Trépied = contact. La répartition de pression peut varier sans perdre le contact.'},
  {q:'En flat, ton athlète recule et lève les orteils. Tu dis…',o:['« Assieds-toi plus derrière »','« Pousse fort dans les talons »','« Garde la base du gros orteil au sol »'],a:2,e:'Les deux autres cues aggravent la bascule arrière.'},
  {q:'Une vidéo de profil permet de mesurer la pression plantaire.',o:['Oui','Non'],a:1,e:'Elle montre des bascules ou décollements. La mesure demande une plateforme ou des semelles de pression.'},
+ {q:'En low bar, ton athlète a le buste plus incliné qu’en high bar. C’est…',o:['Une faute à corriger','Normal : la barre est plus basse sur le dos','Le signe qu’il faut forcément des heels'],a:1,e:'Pour garder la barre au-dessus du milieu du pied, une barre plus basse demande plus d’inclinaison du buste.'},
  {q:'Quelle chaussure choisir ?',o:['Celle qui donne le buste le plus vertical','Celle qui rend le squat le plus reproductible','Toujours heels pour les débutants'],a:1,e:'Un buste incliné n’est pas une faute. On cherche la régularité et la stabilité.'}
 ];
 let qi=0,score=0,answered=false;
 function renderQ(){
   const box=$('quizBox');
   if(qi>=Q.length){
-    const msg=score===6?'Parfait, tu peux l’enseigner.':score>=4?'Solide. Relis la section pression.':'Repasse par le simulateur, puis réessaie.';
-    box.innerHTML=`<div class="final"><div class="score">${score}/6</div><p style="font-size:20px;margin-top:10px">${msg}</p><button type="button" class="btn" id="again">Recommencer</button></div>`;
+    const msg=score===Q.length?'Parfait, tu peux l’enseigner.':score>=Q.length-2?'Solide. Relis la section pression.':'Repasse par le simulateur, puis réessaie.';
+    box.innerHTML=`<div class="final"><div class="score">${score}/${Q.length}</div><p style="font-size:20px;margin-top:10px">${msg}</p><button type="button" class="btn" id="again">Recommencer</button></div>`;
     $('again').onclick=()=>{qi=0;score=0;renderQ()};return;
   }
   const q=Q[qi];answered=false;
-  box.innerHTML=`<div class="qhead"><span>Question ${qi+1}/6</span><span>Score ${score}</span></div><div class="progress"><i style="width:${qi/Q.length*100}%"></i></div><div class="q"><h3>${q.q}</h3><div class="opts">${q.o.map((o,i)=>`<button type="button" data-i="${i}">${o}</button>`).join('')}</div><div class="expl" id="expl"></div><button type="button" class="btn" id="next" disabled>${qi===Q.length-1?'Voir le score':'Suivante'}</button></div>`;
+  box.innerHTML=`<div class="qhead"><span>Question ${qi+1}/${Q.length}</span><span>Score ${score}</span></div><div class="progress"><i style="width:${qi/Q.length*100}%"></i></div><div class="q"><h3>${q.q}</h3><div class="opts">${q.o.map((o,i)=>`<button type="button" data-i="${i}">${o}</button>`).join('')}</div><div class="expl" id="expl"></div><button type="button" class="btn" id="next" disabled>${qi===Q.length-1?'Voir le score':'Suivante'}</button></div>`;
   box.querySelectorAll('.opts button').forEach(b=>b.onclick=()=>{
     if(answered)return;answered=true;const i=+b.dataset.i;
     box.querySelectorAll('.opts button').forEach((x,j)=>{x.disabled=true;if(j===q.a)x.classList.add('right')});
