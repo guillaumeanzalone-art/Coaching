@@ -2794,7 +2794,7 @@ async function openAthlete(
     console.error(error)
 
     window.alert(
-      `Impossible de charger le programme de ${athlete.name}.`
+      `Impossible de charger le programme de ${athlete.name}.\n\n${error?.message || 'Réessaie une fois la connexion rétablie.'}`
     )
 
     routeAuthenticatedUser()
