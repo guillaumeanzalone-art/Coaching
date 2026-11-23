@@ -439,42 +439,7 @@ export async function getProgramWithCloudFallback({
       )
     }
 
-    if (
-      cached?.program
-    ) {
-      const program =
-        normalizeProgram(
-          {
-            program_key:
-              cached.programKey ||
-              programKey,
-            version:
-              cached.version ||
-              0,
-            published_at:
-              cached.publishedAt ||
-              null,
-          },
-          cached.program
-        )
 
-      markSource(
-        athleteId,
-        {
-          source:
-            'cache',
-          athleteSlug,
-          programKey:
-            program?.programKey ||
-            programKey,
-          version:
-            cached.version ||
-            0,
-        }
-      )
-
-      return program
-    }
   }
 
   // A silent fallback to the old bundled program can display an archived
