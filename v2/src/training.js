@@ -10061,7 +10061,19 @@ export function mountTraining(
         )}
 
         ${isSbd
-          ? ''
+          ? `
+            <div class="set-actions" aria-label="Validation de la série ${index + 1}">
+              <button
+                class="set-validate ${isDone ? 'set-validate--active' : ''}"
+                ${canEdit ? '' : 'disabled'}
+                data-action="toggle"
+                data-set-id="${escapeHtml(sourceSet.id)}"
+                type="button"
+              >
+                ${isDone ? '✓ VALIDÉ' : 'VALIDER LE RPE'}
+              </button>
+            </div>
+          `
           : `
             <div
               class="set-actions"
@@ -11166,6 +11178,31 @@ if (
           exercise
         )
       ) {
+        // Mobile Safari can drop a select's change event if the training
+        // view is refreshed while the native RPE picker is open. Keep an
+        // explicit validation button as a reliable fallback.
+        if (set.status === 'done') {
+          updateSet(sourceSet, {
+            rpe: '',
+            status: 'pending',
+          })
+          return
+        }
+
+        const rpeControl = [...root.querySelectorAll('[data-action="rpe"]')]
+          .find(control => control.dataset.setId === sourceSet.id)
+        const selectedRpe = String(rpeControl?.value || set.rpe || '').trim()
+
+        if (!selectedRpe || selectedRpe === 'failed') {
+          setSyncStatus(
+            'local',
+            'Choisis un RPE avant de valider cette série.'
+          )
+          rpeControl?.focus()
+          return
+        }
+
+        completeFoundSet(found, { rpe: selectedRpe })
         return
       }
 
@@ -11350,12 +11387,24 @@ if (
     }
 
     /*
-     * IMPORTANT iOS / Capacitor : on ne rerend plus la page sur
-     * l'evenement input du select RPE. Le rerender pouvait detacher
-     * le <select> avant que l'evenement change soit emis, ce qui
-     * faisait perdre la validation sur certains iPhone.
-     * Le RPE est donc valide uniquement dans root.onchange ci-dessous.
+     * Mobile Safari / Capacitor: remember the selected RPE without
+     * re-rendering or awarding XP. If the native picker loses its
+     * change event, the explicit button can still validate it.
      */
+    if (actionName === 'rpe') {
+      const found = findSourceSet(block, setId)
+      if (found && isSbdExercise(found.exercise)) {
+        const current = getSetState(state, found.sourceSet)
+        if (current.status !== 'done') {
+          state.sets[found.sourceSet.id] = {
+            ...current,
+            rpe: input.value === 'failed' ? '' : input.value,
+          }
+          persist()
+        }
+      }
+      return
+    }
 
   }
 
