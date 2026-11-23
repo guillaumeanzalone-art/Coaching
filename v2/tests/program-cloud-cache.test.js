@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {
   getCachedProgramForAthlete,
+  getProgramWithCloudFallback,
 } from '../src/program-cloud.js'
 
 function installLocalStorage(values = {}) {
@@ -57,4 +58,39 @@ test('renvoie null quand aucun cache local n’existe', () => {
     ),
     null
   )
+})
+
+
+test('hors ligne sans programme cloud déjà synchronisé, ne revient jamais sur un ancien bloc embarqué', async () => {
+  installLocalStorage()
+  const originalNavigator = globalThis.navigator
+  let localLoaderInvoked = false
+
+  try {
+    Object.defineProperty(globalThis, 'navigator', {
+      value: { onLine: false },
+      configurable: true,
+    })
+
+    await assert.rejects(
+      getProgramWithCloudFallback({
+        athleteId: 'kaoutar',
+        localLoader: async () => {
+          localLoaderInvoked = true
+          return { id: 'ga-kaoutar-v2', defaultBlockId: 'kaoutar-block-2' }
+        },
+      }),
+      /hors connexion/
+    )
+    assert.equal(localLoaderInvoked, false)
+  } finally {
+    if (originalNavigator === undefined) {
+      delete globalThis.navigator
+    } else {
+      Object.defineProperty(globalThis, 'navigator', {
+        value: originalNavigator,
+        configurable: true,
+      })
+    }
+  }
 })
