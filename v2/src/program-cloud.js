@@ -321,23 +321,22 @@ export async function getProgramWithCloudFallback({
       return program
     }
 
-    const local =
-      await localLoader()
-
+    // Bundled programs may contain archived blocks (for example Kaoutar
+    // Bloc 2). Without a previously synchronized cloud snapshot, never
+    // show one of these old programs as if it were the active workout.
     markSource(
       athleteId,
       {
-        source:
-          'local-offline',
+        source: 'offline-no-cache',
         athleteSlug,
-        programKey:
-          local?.programKey ||
-          programKey,
+        programKey,
         version: 0,
       }
     )
 
-    return local
+    throw new Error(
+      'Programme actuel non disponible hors connexion. Ouvre le profil une fois en ligne pour le synchroniser.'
+    )
   }
 
   try {
@@ -478,23 +477,22 @@ export async function getProgramWithCloudFallback({
     }
   }
 
-  const local =
-    await localLoader()
-
+  // A silent fallback to the old bundled program can display an archived
+  // block while Supabase has a newer active one. Surface the sync failure
+  // instead, so athletes cannot mistake historical loads for prescriptions.
   markSource(
     athleteId,
     {
-      source:
-        'local',
+      source: 'cloud-unavailable',
       athleteSlug,
-      programKey:
-        local?.programKey ||
-        programKey,
+      programKey,
       version: 0,
     }
   )
 
-  return local
+  throw new Error(
+    'Impossible de vérifier le programme actif. Vérifie la connexion et réessaie ; aucun ancien bloc ne sera affiché à sa place.'
+  )
 }
 
 
