@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!-- saved from url=(0127)https://t9012237801.p.clickup-attachments.com/t9012237801/75be2278-8d25-5dd4-8dce-005727f17ef4/rehab-genou-cours.html?view=open -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Réhab genou · Reprise progressive</title>
+<style>
+:root{--bg:oklch(0.2 0.013 126);--card:oklch(0.245 0.016 126);--card2:oklch(0.285 0.02 126);--tx:oklch(0.93 0.01 126);--mu:oklch(0.74 0.025 126);--ac:oklch(0.8 0.17 126);--acd:oklch(0.45 0.12 126);--or:oklch(0.78 0.15 60);--rd:oklch(0.68 0.2 18);--bl:oklch(0.72 0.09 250);--r:14px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:980px;margin:0 auto;padding:24px 18px 120px}
+.stripes{display:flex;height:8px;border-radius:99px;overflow:hidden;margin-bottom:22px}.stripes i{flex:1}
+h1{font-size:clamp(34px,7vw,64px);line-height:.98;letter-spacing:-.03em;margin:0 0 10px;font-weight:850}
+h1 em{font-style:normal;color:var(--ac)}h2{font-size:28px;letter-spacing:-.02em;margin:0 0 12px}h3{margin:0 0 6px;font-size:19px}
+.lead{color:var(--mu);font-size:18px;max-width:640px;margin:0}
+.warn{margin:20px 0 0;padding:14px 16px;border-left:4px solid var(--or);background:oklch(0.78 0.15 60/.1);border-radius:8px;font-size:15px}
+section{margin-top:44px}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:var(--card);border-radius:var(--r);padding:16px}
+.big{font-size:30px;font-weight:850;color:var(--ac);line-height:1.1}
+.mu{color:var(--mu);font-size:15px}
+.gauge{display:grid;grid-template-columns:repeat(11,1fr);gap:4px;margin:14px 0 6px}
+.gauge button{border:0;border-radius:8px;padding:12px 0;font-weight:800;font-size:15px;cursor:pointer;color:oklch(0.18 0.02 126)}
+.gauge button.sel{outline:3px solid var(--tx);outline-offset:2px}
+#gmsg{min-height:52px;padding:12px 14px;border-radius:10px;background:var(--card2);font-weight:600}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.tab{border:0;background:var(--card);color:var(--tx);padding:12px 16px;border-radius:99px;font-weight:750;cursor:pointer;font-size:15px}
+.tab.on{background:var(--ac);color:oklch(0.2 0.03 126)}
+.phase-head{display:flex;justify-content:space-between;gap:14px;align-items:end;flex-wrap:wrap;margin-bottom:12px}
+.prog{flex:1;min-width:180px;max-width:300px}.bar{height:10px;background:var(--card2);border-radius:99px;overflow:hidden}.bar b{display:block;height:100%;width:0;background:var(--ac);transition:width .4s}
+.ex{display:grid;grid-template-columns:92px 1fr auto;gap:14px;align-items:center;background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:10px;transition:.2s}
+.ex.done{background:oklch(0.8 0.17 126/.12);box-shadow:inset 0 0 0 2px oklch(0.8 0.17 126/.5)}
+.ex svg{width:92px;height:72px;background:var(--card2);border-radius:10px}
+.tag{display:inline-block;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:99px;margin-bottom:4px}
+.dose{font-weight:800;color:var(--ac);font-size:15px}.cue{color:var(--mu);font-size:15px;margin-top:3px}
+.chk{width:44px;height:44px;border-radius:12px;border:2px solid var(--mu);background:none;color:var(--bg);font-size:24px;font-weight:900;cursor:pointer}
+.ex.done .chk{background:var(--ac);border-color:var(--ac)}
+.gate{background:var(--card2);border-radius:var(--r);padding:16px;margin-top:16px}.gate label{display:flex;gap:10px;align-items:flex-start;padding:6px 0;cursor:pointer}
+.gate input{width:20px;height:20px;accent-color:var(--ac);margin-top:2px;flex:none}
+#gateok{margin-top:10px;font-weight:800}
+.flow{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}.flow .card{flex:1;min-width:150px;position:relative}
+.flow .n{font-size:13px;font-weight:850;color:var(--ac);text-transform:uppercase;letter-spacing:.06em}
+.stop{background:oklch(0.68 0.2 18/.12);box-shadow:inset 0 0 0 2px oklch(0.68 0.2 18/.5)}
+.stop li{margin:6px 0}
+.map li{margin:7px 0}.map b{color:var(--ac)}
+.reset{border:0;background:var(--card2);color:var(--mu);padding:10px 14px;border-radius:10px;cursor:pointer;font-size:14px}
+.knee{display:grid;grid-template-columns:1fr 1fr;gap:12px}.knee svg{width:100%;height:auto;background:var(--card2);border-radius:12px}
+@media(max-width:560px){.ex{grid-template-columns:64px 1fr 44px;gap:10px}.ex svg{width:64px;height:54px}.gauge button{padding:10px 0;font-size:13px}.knee{grid-template-columns:1fr}}
+.ord{background:oklch(0.97 0.01 90);color:oklch(0.25 0.02 260);border-radius:6px;padding:22px 24px;font-family:"Courier New",ui-monospace,monospace;font-size:15px;line-height:1.6;box-shadow:0 10px 30px oklch(0 0 0/.35);transform:rotate(-.4deg)}
+.ord p{margin:0 0 10px}.ord .h{font-weight:800}.ord mark{background:oklch(0.9 0.15 126);padding:0 3px;border-radius:3px}
+.tl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.tl .card{border-top:4px solid var(--ac)}
+</style></head><body><div class="wrap">
+<div class="stripes"><i style="background:var(--rd)"></i><i style="background:var(--or)"></i><i style="background:var(--ac)"></i><i style="background:var(--bl)"></i><i style="background:oklch(0.55 0.1 300)"></i></div>
+<h1>Réhab genou<br><em>on recharge, sans brusquer.</em></h1>
+<p class="lead">Programme de reprise construit à partir de l'ordonnance kiné : quadriceps, hanche, pied, contrôle du genou.</p>
+<div class="warn"><b>Base à valider avec ton kiné ou ton chirurgien.</b> Amplitudes, charges et délais dépendent de la lésion et d'une éventuelle opération. Leurs consignes passent avant ce document.</div>
+
+<section><h2>L'ordonnance du kiné</h2>
+<div class="ord">
+<p>- Étirements doux des plans sous-pelviens : ischio-jambiers, quadriceps, psoas, moyen fessier et TFL</p>
+<p class="h">- Renforcement du quadriceps :</p>
+<p>Insister sur le <mark>vaste interne</mark><br>Initialement en <mark>isométrique</mark> puis en <mark>concentrique</mark> et enfin en <mark>excentrique</mark><br>Débuter par du travail en <mark>chaîne cinétique ouverte</mark> à faible résistance et vitesse élevée<br>Puis augmenter la résistance<br>Enfin ajouter du travail en <mark>chaîne cinétique fermée</mark> (presse, squats...)</p>
+<p class="h">- Lutte contre le genu valgum dynamique et l'affaissement des médio-pieds :</p>
+<p>Renforcement des m. transverse abdominal en hypopressif, m. moyen fessier et m. intrinsèques du pied +++<br>- Cyclage articulaire sur vélo : selle haute, vitesse de pédalage élevée, faible résistance<br>- Renforcement des abducteurs et des rotateurs externes de hanche<br>- Assouplissement des hanches<br>- Travail postural et proprioceptif<br>- <mark>Vélo à J10-J14, elliptique à J14-J21</mark><br>- Apprentissage auto-exercices et auto-étirements à domicile +++</p>
+</div>
+<h3 style="margin-top:22px">Repères de reprise cardio (ordonnance)</h3>
+<div class="tl">
+<div class="card"><div class="n" style="color:var(--mu);font-size:13px;font-weight:800">AVANT J10</div><b>Vélo léger sur feu vert kiné</b><div class="mu">Cyclage articulaire : selle haute, faible résistance.</div></div>
+<div class="card"><div style="color:var(--ac);font-size:13px;font-weight:800">J10 → J14</div><b>Vélo</b><div class="mu">Cadence élevée, résistance faible.</div></div>
+<div class="card"><div style="color:var(--ac);font-size:13px;font-weight:800">J14 → J21</div><b>Elliptique</b><div class="mu">En plus du vélo, si le genou ne réagit pas.</div></div>
+</div></section>
+
+<section><h2>Le cadre</h2>
+<div class="grid">
+<div class="card"><div class="big">3×/sem</div><div class="mu">48 h minimum entre deux séances. 25 à 35 min.</div></div>
+<div class="card"><div class="big">RPE 4–6</div><div class="mu">Effort facile à modéré. Jamais à l'échec.</div></div>
+<div class="card"><div class="big">≤ 3/10</div><div class="mu">Douleur tolérée, stable au fil des séries.</div></div>
+<div class="card"><div class="big">J+1</div><div class="mu">Pas de nouveau gonflement ni raideur en plus. C'est lui qui décide de la progression.</div></div>
+</div></section>
+
+<section><h2>Le thermomètre douleur</h2>
+<p class="mu">Clique ta douleur pendant l'exercice.</p>
+<div class="gauge" id="gauge"></div><div id="gmsg">Choisis un chiffre.</div>
+</section>
+
+<section><h2>Les paliers</h2>
+<p class="mu">On change de palier quand le genou le valide, pas quand le calendrier le dit. Coche tes exercices pendant la séance.</p>
+<div class="tabs" id="tabs"></div>
+<div id="phase"></div>
+</section>
+
+<section><h2>Le genou suit le pied</h2>
+<div class="knee">
+<div class="card"><svg viewBox="0 0 200 170"><g stroke-linecap="round" fill="none" stroke-width="7"><path d="M70 20 L82 85 L74 150" stroke="var(--rd)"></path><path d="M130 20 L118 85 L126 150" stroke="var(--rd)"></path></g><circle cx="82" cy="85" r="9" fill="var(--rd)"></circle><circle cx="118" cy="85" r="9" fill="var(--rd)"></circle><path d="M60 155h30M110 155h30" stroke="var(--mu)" stroke-width="6" stroke-linecap="round"></path><text x="100" y="118" fill="var(--rd)" font-size="14" font-weight="800" text-anchor="middle">→ ←</text></svg><h3 style="margin-top:10px;color:var(--rd)">Genou qui rentre + voûte qui s'écrase</h3><div class="mu">Ce que l'ordonnance veut corriger : valgus dynamique, affaissement du médio-pied.</div></div>
+<div class="card"><svg viewBox="0 0 200 170"><g stroke-linecap="round" fill="none" stroke-width="7"><path d="M70 20 L66 85 L70 150" stroke="var(--ac)"></path><path d="M130 20 L134 85 L130 150" stroke="var(--ac)"></path></g><circle cx="66" cy="85" r="9" fill="var(--ac)"></circle><circle cx="134" cy="85" r="9" fill="var(--ac)"></circle><path d="M55 155h30M115 155h30" stroke="var(--mu)" stroke-width="6" stroke-linecap="round"></path><path d="M58 150q12-10 24 0M118 150q12-10 24 0" stroke="var(--bl)" stroke-width="3" fill="none"></path></svg><h3 style="margin-top:10px;color:var(--ac)">Trépied du pied stable, genou aligné</h3><div class="mu">Talon, base du gros orteil, base du petit orteil au sol. Le genou suit la direction du pied, sans le pousser à fond vers l'extérieur.</div></div>
+</div></section>
+
+<section><h2>Mobilité maison · 5 à 8 min</h2>
+<div class="grid">
+<div class="card"><h3>Ischios</h3><div class="mu">Jambe tendue sur un support bas, buste long.</div></div>
+<div class="card"><h3>Quadriceps</h3><div class="mu">Debout ou couché sur le côté, talon vers fesse sans forcer.</div></div>
+<div class="card"><h3>Psoas</h3><div class="mu">Fente genou au sol, rentrer le bassin, sans cambrer.</div></div>
+<div class="card"><h3>Hanches (assouplissement)</h3><div class="mu">Rotations de hanche assis (90/90), cercles de genou à 4 pattes. Lent, sans douleur.</div></div>
+<div class="card"><h3>Moyen fessier / TFL</h3><div class="mu">Figure 4 couché, ou jambe croisée derrière en appui mur. Doux.</div></div>
+</div>
+<p class="mu" style="margin-top:12px"><b style="color:var(--ac)">2 × 20 à 30 s par zone.</b> Ça tire dans le muscle, jamais dans le genou.</p>
+<div class="card" style="margin-top:10px"><h3>Transverse / hypopressif</h3><div class="mu">Technique à faire valider par le kiné. En attendant : respiration calme, légère mise en tension du ventre, sans apnée forcée.</div></div>
+</section>
+
+<section><h2>Stop, on appelle le kiné</h2>
+<div class="card stop"><ul>
+<li><b>Blocage</b> du genou ou dérobement nouveau.</li>
+<li><b>Gonflement important</b> ou douleur qui augmente nettement d'une séance à l'autre.</li>
+<li>Douleur <b>&gt; 5/10</b> pendant ou après l'exercice.</li>
+<li>Mollet soudainement gonflé, chaud ou douloureux, surtout après chirurgie : <b>avis médical rapide</b>.</li>
+</ul></div></section>
+
+<section><h2>Ce que dit l'ordonnance → où c'est dans la prog</h2>
+<div class="card map"><ul>
+<li><b>Étirements doux</b> ischios, quadri, psoas, moyen fessier, TFL + <b>assouplissement des hanches</b> → Mobilité maison</li>
+<li><b>Quadriceps</b> : isométrique → concentrique → excentrique → Paliers 1 à 3</li>
+<li><b>Chaîne ouverte</b> faible résistance, puis <b>chaîne fermée</b> presse/squat → Extension rapide légère (P1), résistance augmentée (P2), presse/squat (P2/P3)</li>
+<li><b>Moyen fessier, abducteurs, rotateurs externes</b> → Abduction, clamshell, pas latéraux, pont latéral</li>
+<li><b>Muscles intrinsèques du pied</b> → Pied court, équilibre</li>
+<li><b>Vélo</b> selle haute, cadence élevée, faible résistance → Échauffement de chaque séance</li>
+<li><b>Proprioception, posture</b> → Équilibre, montée de marche</li>
+<li><b>Autonomie à domicile</b> → Tout le palier 1 + mobilité sont faisables chez soi</li>
+</ul></div></section>
+
+<p class="mu" style="margin-top:36px;text-align:center"><button class="reset" onclick="resetAll()">Réinitialiser les coches</button></p>
+</div>
+<script>
+const C={quad:["var(--ac)","Quadriceps"],hip:["var(--bl)","Hanche"],foot:["var(--or)","Pied"],bal:["oklch(0.72 0.12 300)","Proprio"],cardio:["oklch(0.75 0.1 180)","Vélo"]};
+const ico={
+bike:`<circle cx="26" cy="52" r="13"/><circle cx="68" cy="52" r="13"/><path d="M26 52 42 30h22l4 22M42 30l8 22M38 22h10M62 24v6"/><circle cx="52" cy="14" r="5"/><path d="M52 19 46 34 54 44"/>`,
+towel:`<rect x="34" y="46" width="22" height="9" rx="4"/><path d="M8 56h76"/><path d="M14 50 L82 50"/><circle cx="12" cy="40" r="5"/><path d="M16 44 26 50"/><path d="M44 36v8M40 40l4 4 4-4"/>`,
+ext:`<path d="M20 60V36h22v24M20 36l-4-20"/><circle cx="16" cy="11" r="5"/><path d="M42 36 L74 30"/><path d="M68 22a14 14 0 0 1 8 10" stroke-dasharray="3 3"/>`,
+abd:`<path d="M10 56h74"/><circle cx="14" cy="44" r="5"/><path d="M19 46h40l22-2M44 47 L78 26"/><path d="M70 40a20 20 0 0 1 4-12" stroke-dasharray="3 3"/>`,
+add:`<path d="M8 58h76"/><circle cx="14" cy="44" r="5"/><path d="M19 50h18l14-18 14 26M51 32l14 26"/><ellipse cx="57" cy="44" rx="6" ry="4"/>`,
+foot:`<path d="M14 54q4-20 30-22q28-2 36 14q3 8-8 8H18q-5 0-4 0z"/><path d="M30 54q14-14 30 0" stroke-dasharray="3 3"/><path d="M40 22v8M36 26l4 4 4-4"/>`,
+bal:`<circle cx="46" cy="10" r="5"/><path d="M46 15v24l-2 22M46 39l14 4 0 12M30 26h32"/><path d="M28 62h36"/>`,
+sit:`<path d="M18 30v32M18 40h22v22"/><circle cx="52" cy="12" r="5"/><path d="M52 17v20l-10 6 8 18M52 24 66 30"/><path d="M70 18v10M66 22l4-4 4 4"/>`,
+band:`<circle cx="46" cy="10" r="5"/><path d="M46 15v24M46 39 32 62M46 39l14 23"/><path d="M38 52h16" stroke="var(--or)"/><path d="M66 50h14M76 46l4 4-4 4"/>`,
+calf:`<circle cx="40" cy="10" r="5"/><path d="M40 15v26l-2 16M40 41l4 16M40 22 60 26v-8"/><path d="M34 60h16M60 16v44"/><path d="M70 40v-12M66 32l4-4 4 4"/>`,
+press:`<path d="M12 22 30 56h-14"/><circle cx="22" cy="26" r="5"/><path d="M26 32l12 14 18-8M56 38l10-22M60 12l18 8"/>`,
+step:`<path d="M50 62V48h30v14M8 62h42"/><circle cx="56" cy="10" r="5"/><path d="M56 15v22l8 11M56 37 42 50v12"/>`,
+clam:`<path d="M8 60h76"/><circle cx="14" cy="40" r="5"/><path d="M19 44h22l20 12M41 44l14-20"/><path d="M52 34a14 14 0 0 1 8 8" stroke-dasharray="3 3"/>`,
+bridge:`<path d="M8 60h76"/><circle cx="14" cy="38" r="5"/><path d="M18 42 34 56M20 40 70 30l8 26"/>`
+};
+const P=[
+{t:"Palier 1",s:"Réveiller le quadri, remettre du mouvement",why:"À garder tant que marche, escaliers ou exercices restent sensibles. Tout est faisable à la maison.",ex:[
+["cardio","bike","Vélo","5 à 10 min","Selle haute, genou encore un peu fléchi en bas. Résistance faible, cadence vive mais fluide."],
+["quad","towel","Quadri isométrique, serviette sous le genou","5 × 20 à 30 s · repos 30 s","Écrase la serviette progressivement, rotule qui remonte. Pense intérieur de cuisse."],
+["quad","ext","Extension de genou assis (chaîne ouverte)","2 à 3 × 15 · rythme vif","Faible résistance, vitesse élevée comme demandé : sans charge puis élastique léger. Amplitude confortable, seulement si autorisée."],
+["hip","abd","Abduction couché sur le côté","3 × 12 à 15 / côté","Bassin empilé, talon légèrement en arrière, le buste ne tourne pas."],
+["hip","add","Serrage coussin entre les genoux","3 × 20 s","Serrage modéré, aucune douleur."],
+["hip","clam","Clamshell (rotateurs externes)","3 × 12 à 15 / côté","Couché sur le côté, genoux fléchis, pieds collés. Ouvre le genou sans rouler le bassin en arrière."],
+["foot","foot","Pied court","3 × 8 · tenue 5 s","Rapproche l'avant-pied du talon, voûte qui monte. Orteils détendus, pas en griffe."],
+["bal","bal","Équilibre près d'un support","3 × 20 à 30 s / côté","Deux pieds si besoin, puis un pied. Trépied du pied au sol."]],
+gate:["Marche normale sans boiterie","Isométrique et extension sans douleur > 3/10","Aucune réaction le lendemain sur 3 séances d'affilée","Feu vert du kiné pour la chaîne fermée"]},
+{t:"Palier 2",s:"Charger : concentrique puis excentrique",why:"On introduit la chaîne fermée et la descente contrôlée.",ex:[
+["cardio","bike","Vélo","8 à 12 min","Toujours faible résistance, cadence élevée."],
+["quad","ext","Extension de genou, résistance augmentée","3 × 12 à 15","On augmente la résistance. Monte normal, redescends en 3 s : c'est l'excentrique demandé."],
+["quad","sit","Assis-debout chaise haute ou mini-squat avec appui","3 × 8 à 12","Petite amplitude, puis tu descends la chaise au fil des séances."],
+["hip","band","Pas latéraux élastique","2 à 3 × 8 à 12 pas / sens","Élastique au-dessus des genoux, bassin stable, pieds qui restent bien posés."],
+["hip","bridge","Pont latéral genoux fléchis","3 × 20 à 30 s / côté","Pour moyen fessier et rotateurs externes. Hanches hautes, corps aligné."],
+["foot","calf","Mollets debout avec appui","3 × 12 à 15","Monte sur la base du gros orteil, descente lente, pas de rebond."],
+["bal","bal","Équilibre un pied","3 × 30 s / côté","Si facile : pied libre qui dessine devant, côté, derrière."]],
+gate:["Assis-debout complet sans douleur > 3/10","Genou aligné avec le pied sur toutes les répétitions","Escaliers indolores","Rien le lendemain sur 3 séances"]},
+{t:"Palier 3",s:"Retour aux mouvements de muscu",why:"Le genou encaisse. On revient vers des patterns de salle, toujours en RPE 5 à 6.",ex:[
+["cardio","bike","Vélo (ou elliptique si autorisé)","10 min","Elliptique possible à partir de J14-J21 selon l'ordonnance et le kiné."],
+["quad","press","Presse légère ou squat sur box","3 × 10 à 12 · RPE 5–6","Amplitude d'abord, charge ensuite. Le genou suit le pied."],
+["quad","step","Montée sur marche basse","2 à 3 × 8 / côté","Appui si besoin. Pied entier sur la marche, pas de genou qui rentre."],
+["quad","ext","Extension de genou","3 × 10 à 15","Descente contrôlée en 3 s."],
+["hip","band","Pas latéraux ou pont latéral","2 séries","Garder la hanche dans chaque séance."],
+["foot","foot","Pied court + équilibre","2 séries","Le pied reste un exercice, pas un bonus."]],
+gate:["Presse/box squat RPE 6 sans douleur ni réaction J+1","Pas de gonflement depuis 2 semaines","Validation kiné avant charges lourdes, sauts ou course"]}
+];
+let st=JSON.parse(localStorage.getItem("rehabgenou")||"{}");let cur=st.cur||0;
+const save=()=>localStorage.setItem("rehabgenou",JSON.stringify(st));
+function tabs(){document.getElementById("tabs").innerHTML=P.map((p,i)=>`<button class="tab ${i==cur?"on":""}" onclick="go(${i})">${p.t}</button>`).join("")}
+function go(i){cur=i;st.cur=i;save();tabs();render()}
+function render(){const p=P[cur],d=st["d"+cur]||{},g=st["g"+cur]||{};
+const n=p.ex.filter((_,i)=>d[i]).length;
+document.getElementById("phase").innerHTML=`<div class="phase-head"><div><h3 style="font-size:24px">${p.s}</h3><div class="mu">${p.why}</div></div><div class="prog"><div class="mu" style="text-align:right">${n}/${p.ex.length} faits aujourd'hui</div><div class="bar"><b style="width:${n/p.ex.length*100}%"></b></div></div></div>`+
+p.ex.map((e,i)=>`<div class="ex ${d[i]?"done":""}"><svg viewBox="0 0 92 72" fill="none" stroke="${C[e[0]][0]}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${ico[e[1]]}</svg><div><span class="tag" style="background:color-mix(in oklch,${C[e[0]][0]} 22%,transparent);color:${C[e[0]][0]}">${C[e[0]][1]}</span><h3>${e[2]}</h3><div class="dose">${e[3]}</div><div class="cue">${e[4]}</div></div><button class="chk" aria-label="Fait" onclick="tog(${i})">${d[i]?"✓":""}</button></div>`).join("")+
+`<div class="gate"><h3>Pour passer au palier suivant</h3>${p.gate.map((x,i)=>`<label><input type="checkbox" ${g[i]?"checked":""} onchange="gt(${i},this.checked)">${x}</label>`).join("")}<div id="gateok"></div></div>`;
+gateMsg();}
+function tog(i){const k="d"+cur;st[k]=st[k]||{};st[k][i]=!st[k][i];save();render()}
+function gt(i,v){const k="g"+cur;st[k]=st[k]||{};st[k][i]=v;save();gateMsg()}
+function gateMsg(){const p=P[cur],g=st["g"+cur]||{},ok=p.gate.every((_,i)=>g[i]);const el=document.getElementById("gateok");
+el.style.color=ok?"var(--ac)":"var(--mu)";el.textContent=ok?(cur<2?"✓ Feu vert : tu peux attaquer le "+P[cur+1].t+".":"✓ Prêt pour la reprise de la prog normale, avec le kiné."):"Pas encore : on reste sur ce palier.";}
+function resetAll(){if(confirm("Effacer toutes les coches ?")){st={cur};save();render()}}
+const gb=document.getElementById("gauge");
+for(let i=0;i<=10;i++){const b=document.createElement("button");b.textContent=i;const col=i<=3?"var(--ac)":i<=5?"var(--or)":"var(--rd)";b.style.background=col;b.onclick=()=>{[...gb.children].forEach(x=>x.classList.remove("sel"));b.classList.add("sel");const m=document.getElementById("gmsg");
+m.style.color=col;m.textContent=i<=3?"Vert : on continue, tant que ça reste stable au fil des séries.":i<=5?"Orange : réduis amplitude, résistance ou nombre de séries. Surveille le lendemain.":"Rouge : stop l'exercice. Si ça persiste ou revient, avis du kiné.";};gb.appendChild(b)}
+tabs();render();
+</script>
+</body></html>
