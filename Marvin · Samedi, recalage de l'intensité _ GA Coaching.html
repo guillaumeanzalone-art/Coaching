@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!-- saved from url=(0132)https://t9012237801.p.clickup-attachments.com/t9012237801/76b76125-c41d-54ef-b0c9-058a7d95d599/marvin-samedi-recalage.html?view=open -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marvin · Samedi, recalage de l'intensité | GA Coaching</title>
+<style>
+:root{--ink:oklch(0.25 .035 255);--paper:oklch(.985 .006 92);--surface:oklch(1 0 0);--blue:oklch(.39 .12 265);--soft:oklch(.95 .021 265);--signal:oklch(.54 .18 30);--warn:oklch(.965 .025 60);--muted:oklch(.47 .028 255);--line:oklch(.87 .018 255);
+--blood:var(--signal);--sq:oklch(.39 .12 265);--bn:oklch(.52 .12 160);--dl:oklch(.56 .14 55);--font-display:Georgia,serif;--font-sans:Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.6 var(--font-sans)}
+.wrap{max-width:1000px;margin:auto;padding:0 24px 70px}
+.hero{padding:56px 0 28px}
+.kicker{text-transform:uppercase;letter-spacing:.13em;font-size:14px;font-weight:bold;color:var(--blue);margin-bottom:8px}
+h1{font-family:var(--font-display);font-weight:400;font-size:clamp(38px,6vw,64px);letter-spacing:-.035em;line-height:1.1;margin:14px 0 18px}
+.sub{font-size:20px;max-width:720px;margin:0 0 22px}
+.maxes{display:flex;gap:12px;flex-wrap:wrap}
+.maxes div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:14px;color:var(--muted)}
+.maxes b{display:block;font-size:22px;color:var(--ink)}
+h2{font-family:var(--font-display);font-weight:400;font-size:34px;line-height:1.15;margin:46px 0 8px}
+.lede{color:var(--muted);margin:0 0 18px}
+.legend{display:flex;flex-wrap:wrap;gap:18px;font-size:15px;margin:0 0 14px}
+.legend i{display:inline-block;width:14px;height:14px;vertical-align:-2px;margin-right:6px;border-radius:3px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 20px 12px;margin-bottom:22px}
+.card h3{margin:0 0 4px;font-size:24px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.card h3 small{font-size:15px;font-weight:normal;color:var(--muted)}
+.scroll{overflow-x:auto}
+svg{display:block}
+svg text{font-family:Arial,sans-serif}
+.toggle{display:inline-flex;gap:8px;margin:6px 0 16px;flex-wrap:wrap}
+.toggle button{font:15px var(--font-sans);background:var(--surface);color:var(--blue);border:1px solid var(--blue);border-radius:6px;padding:10px 16px;cursor:pointer;min-height:44px}
+.toggle button.on{background:var(--blue);color:var(--surface)}
+.warn{background:var(--warn);border-left:4px solid var(--signal);padding:16px 20px;border-radius:0 8px 8px 0;margin:0 0 22px}
+.warn b{color:var(--signal)}
+table{width:100%;border-collapse:collapse;font-size:16px}
+th,td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--line)}
+th{font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+td.l{text-align:left;font-weight:bold}
+td b{font-size:18px}
+td span{display:block;color:var(--muted);font-size:14px}
+.hot,.hot b{color:var(--signal)}
+.foot{margin-top:26px;font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">Marvin · Séance du samedi · Bloc du 27/11</div>
+  <h1>Samedi : on recale l'intensité</h1>
+  <p class="sub">Le terre est parti trop lourd en S2. On coupe la semaine 4 et on repart sur 3 semaines de doublés lourds, pour pouvoir envoyer des singles ensuite.</p>
+  <div class="maxes">
+    <div>Squat<b>300</b></div><div>Bench<b>187,5</b></div><div>Terre<b>285</b></div><div>Total<b>772,5</b></div>
+  </div>
+</header>
+
+<h2>Le samedi, semaine par semaine</h2>
+<p class="lede">Barre = du premier palier (baseline) au top set. Après la coupure : le doublé et le single du nouveau bloc.</p>
+<div class="legend">
+  <span><i style="background:var(--muted)"></i>baseline → top set (bloc actuel)</span>
+  <span>■ doublé</span><span>◆ single</span>
+  <span><i style="background:repeating-linear-gradient(45deg,var(--muted) 0 3px,transparent 3px 6px);border:1px solid var(--muted)"></i>S4 coupée</span>
+</div>
+
+<div id="toggleBox">
+  <div class="toggle" role="group" aria-label="Lecture squat et bench">
+    <button type="button" data-mode="lit" class="on">SQ/BN : baseline + 3 %</button>
+    <button type="button" data-mode="alt">SQ/BN : + 3 % par semaine</button>
+  </div>
+</div>
+<div class="warn" id="warn"></div>
+
+<div id="charts"></div>
+
+<h2>Les charges du nouveau bloc</h2>
+<p class="lede">Charge = % × max, arrondie à 2,5 kg. Fourchette ±7,5 kg (±5 au bench), comme dans la feuille.</p>
+<div class="card"><div class="scroll"><table id="tbl"></table></div></div>
+
+<p class="foot">Les charges réellement tirées en S2 ne sont pas dans la feuille : le surrégime est signalé, pas chiffré.</p>
+</div>
+
+<script>
+const fmt=n=>(Math.round(n*10)/10).toString().replace('.',',');
+const r25=x=>Math.round(x/2.5)*2.5;
+const LIFTS=[
+ {k:'sq',name:'Squat',max:300,col:'var(--sq)',spread:7.5,old:[
+   {b:65,bk:'190–200',t:84,tk:'245–260',reps:'5·5·5·2'},
+   {b:69,bk:'200–210',t:88,tk:'255–270',reps:'4 × 5'},
+   {b:72,bk:'207,5–222,5',t:91,tk:'265–280',reps:'4 × 5'},
+   {b:76,bk:'220–235',t:95,tk:'275–290',reps:'4 × 5'}]},
+ {k:'bn',name:'Bench',max:187.5,col:'var(--bn)',spread:5,old:[
+   {b:65,bk:'120–125',t:83,tk:'150–160',reps:'5·5·5·2'},
+   {b:69,bk:'122,5–132,5',t:87,tk:'157,5–167,5',reps:'4 × 5'},
+   {b:72,bk:'130–140',t:90,tk:'165–175',reps:'4 × 5'},
+   {b:76,bk:'137,5–147,5',t:94,tk:'170–180',reps:'4 × 5'}]},
+ {k:'dl',name:'Terre',max:285,col:'var(--dl)',spread:7.5,hot:1,old:[
+   {b:71,bk:'197,5–207,5',t:83,tk:'227,5–242,5',reps:'4 × 2'},
+   {b:75,bk:'205–220',t:86,tk:'237,5–252,5',reps:'4 × 5'},
+   {b:78,bk:'215–230',t:90,tk:'247,5–262,5',reps:'4 × 5'},
+   {b:82,bk:'225–240',t:93,tk:'257,5–272,5',reps:'4 × 5'}]}
+];
+const PLAN={
+  dl:{d:[84,89,94],s:[88,93,98]},
+  lit:{d:[87,92,97],s:[91,96,101]},
+  alt:{d:[84,87,90],s:[88,91,94]}
+};
+let mode='lit';
+const planFor=l=>l.k==='dl'?PLAN.dl:PLAN[mode];
+const kg=(p,l)=>r25(p/100*l.max);
+const rng=(p,l)=>{const c=kg(p,l);return fmt(c-l.spread)+'–'+fmt(c+l.spread)};
+
+function chart(l){
+  const W=760,H=390,L=46,R=14,T=40,B=58,lo=60,hi=109;
+  const y=p=>T+(hi-p)/(hi-lo)*(H-T-B);
+  const cols=['S1','S2','S3','S4','N1','N2','N3'];
+  const cw=(W-L-R)/7.4;
+  const x=i=>L+cw*(i+.5)+(i>=4?cw*.4:0);
+  const P=planFor(l);
+  let s=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${l.name} samedi">`;
+  s+=`<defs><pattern id="h${l.k}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="6" fill="oklch(0.47 0.04 55 / .55)"/></pattern></defs>`;
+  for(let p=60;p<=100;p+=10){s+=`<line x1="${L}" x2="${W-R}" y1="${y(p)}" y2="${y(p)}" stroke="oklch(0.24 0.025 45 / .15)" stroke-dasharray="${p===100?'0':'2 4'}"/><text x="${L-8}" y="${y(p)+4}" font-size="13" text-anchor="end" fill="var(--muted)">${p}%</text>`}
+  s+=`<line x1="${L}" x2="${W-R}" y1="${y(100)}" y2="${y(100)}" stroke="var(--ink)" stroke-width="1.5"/><text x="${L+6}" y="${y(100)-6}" font-size="13" fill="var(--ink)" font-weight="700">MAX ${fmt(l.max)}</text>`;
+  // separator
+  const sx=(x(3)+x(4))/2;
+  s+=`<line x1="${sx}" x2="${sx}" y1="${T-20}" y2="${H-B+6}" stroke="var(--blood)" stroke-width="2" stroke-dasharray="6 5"/>`;
+  s+=`<text x="${sx+8}" y="${T-12}" font-size="13" fill="var(--blood)" font-weight="700">NOUVEAU BLOC</text>`;
+  cols.forEach((c,i)=>{s+=`<text x="${x(i)}" y="${H-B+24}" font-size="15" text-anchor="middle" font-weight="700" fill="${i===3?'var(--muted)':'var(--ink)'}">${c}</text>`});
+  l.old.forEach((w,i)=>{
+    const cut=i===3, hot=l.hot&&i===1, bw=22, cx=x(i);
+    const fill=cut?`url(#h${l.k})`:l.col;
+    s+=`<rect x="${cx-bw/2}" y="${y(w.t)}" width="${bw}" height="${y(w.b)-y(w.t)}" fill="${fill}" stroke="${hot?'var(--blood)':'none'}" stroke-width="${hot?3:0}" rx="3" opacity="${cut?.75:1}"/>`;
+    const op=cut?.55:1;
+    s+=`<g opacity="${op}"><text x="${cx}" y="${y(w.t)-20}" font-size="15" text-anchor="middle" font-weight="700" fill="var(--ink)">${w.t}%</text>`;
+    s+=`<text x="${cx}" y="${y(w.t)-6}" font-size="12" text-anchor="middle" fill="var(--muted)">${w.tk}</text>`;
+    s+=`<text x="${cx}" y="${y(w.b)+17}" font-size="14" text-anchor="middle" font-weight="700" fill="var(--ink)">${w.b}%</text>`;
+    s+=`<text x="${cx}" y="${y(w.b)+31}" font-size="12" text-anchor="middle" fill="var(--muted)">${w.bk}</text></g>`;
+    s+=`<text x="${cx}" y="${H-B+42}" font-size="12" text-anchor="middle" fill="var(--muted)">${w.reps}</text>`;
+    if(hot){s+=`<text x="${cx}" y="${y(w.t)-38}" font-size="13" text-anchor="middle" fill="var(--blood)" font-weight="700">TROP LOURD</text>`}
+    if(cut){s+=`<line x1="${cx-30}" x2="${cx+30}" y1="${y(w.t)-30}" y2="${y(w.b)+36}" stroke="var(--blood)" stroke-width="3"/>`}
+  });
+  // new weeks: lines then markers
+  const pts=a=>a.map((p,j)=>`${x(4+j)},${y(p)}`).join(' ');
+  s+=`<polyline points="${pts(P.d)}" fill="none" stroke="${l.col}" stroke-width="2" stroke-dasharray="5 4"/>`;
+  s+=`<polyline points="${pts(P.s)}" fill="none" stroke="${l.col}" stroke-width="3"/>`;
+  [0,1,2].forEach(j=>{
+    const cx=x(4+j), d=P.d[j], sp=P.s[j];
+    const over=sp>100;
+    s+=`<rect x="${cx-7}" y="${y(d)-7}" width="14" height="14" fill="var(--surface)" stroke="${l.col}" stroke-width="3"/>`;
+    s+=`<rect x="${cx-8}" y="${y(sp)-8}" width="16" height="16" transform="rotate(45 ${cx} ${y(sp)})" fill="${over?'var(--blood)':l.col}" stroke="var(--surface)" stroke-width="1.5"/>`;
+    s+=`<text x="${cx}" y="${y(sp)-30}" font-size="14" text-anchor="middle" font-weight="700" fill="${over?'var(--blood)':'var(--ink)'}">◆ ${sp}%</text><text x="${cx}" y="${y(sp)-16}" font-size="12" text-anchor="middle" fill="var(--muted)">${fmt(kg(sp,l))} kg</text>`;
+    s+=`<text x="${cx}" y="${y(d)+26}" font-size="14" text-anchor="middle" font-weight="700" fill="var(--ink)">■ ${d}%</text><text x="${cx}" y="${y(d)+40}" font-size="12" text-anchor="middle" fill="var(--muted)">${fmt(kg(d,l))} kg</text>`;
+    s+=`<text x="${cx}" y="${H-B+42}" font-size="12" text-anchor="middle" fill="var(--muted)">■ + ◆</text>`;
+  });
+  return s+'</svg>';
+}
+function render(){
+  document.getElementById('charts').innerHTML=LIFTS.map(l=>{
+    const P=planFor(l);
+    const sub=l.k==='dl'?'doublés 84 → 94 % · singles 88 → 98 %':`doublés ${P.d[0]} → ${P.d[2]} % · singles ${P.s[0]} → ${P.s[2]} %`;
+    return `<div class="card"><h3>${l.name}<small>${sub}</small></h3><div class="scroll">${chart(l)}</div></div>`}).join('');
+  let t=`<tr><th></th><th>Type</th><th>N1</th><th>N2</th><th>N3</th></tr>`;
+  LIFTS.forEach(l=>{const P=planFor(l);
+    [['Doublé',P.d],['Single',P.s]].forEach(([n,a],k)=>{
+      t+=`<tr>${k===0?`<td class="l" rowspan="2" style="color:${l.col}">${l.name}</td>`:''}<td>${n}</td>`+a.map(p=>`<td class="${p>100?'hot':''}"><b>${fmt(kg(p,l))}</b><span>${p}% · ${rng(p,l)}</span></td>`).join('')+'</tr>'})});
+  document.getElementById('tbl').innerHTML=t;
+  document.getElementById('warn').innerHTML=mode==='lit'
+   ?'<b>Lecture littérale :</b> baseline SQ/BN à 87 % (84 + 3), +5 %/sem comme le terre. Les singles N3 montent à 101 %, soit <b>302,5 au squat</b> et <b>190 au bench</b> : des tentatives de PR.'
+   :'<b>Autre lecture :</b> SQ/BN partent de 84 % / 88 % comme le terre, mais montent de 3 %/sem au lieu de 5. Singles N3 à 94 %.';
+}
+document.querySelectorAll('.toggle button').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('.toggle button').forEach(x=>x.classList.toggle('on',x===b));render()});
+render();
+</script>
+
+
+</body></html>
