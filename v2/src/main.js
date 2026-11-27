@@ -5,6 +5,8 @@ import { mountTcgGame } from './tcg-game.js'
 import { mountCut } from './cut.js'
 import { COURSES, mountCourses } from './courses.js'
 import './courses.css'
+import { mountAdventDay19 } from './advent-day19.js'
+import './advent-day19.css'
 import { getAthleteProgress, xpProgressFromTotal } from './xp.js'
 import './style.css'
 import './theme-spider.css'
@@ -906,6 +908,19 @@ function renderHome() {
 
         <button
           class="card"
+          data-action="advent-day19"
+          type="button"
+        >
+          <span class="card-icon" aria-hidden="true">🎁</span>
+          <div>
+            <strong>Calendrier de l'Avent</strong>
+            <span>Jour 19 · Ta prochaine carte TCG · ${currentMember?.role === 'coach' ? 'Réponses de l’équipe' : 'Ton message au coach'}</span>
+          </div>
+          <span class="arrow" aria-hidden="true">›</span>
+        </button>
+
+        <button
+          class="card"
           data-action="courses"
           type="button"
         >
@@ -1110,6 +1125,16 @@ function renderHome() {
     if (action.dataset.action === 'courses') {
       clearAppHandlers()
       mountCourses(app, renderHome)
+      return
+    }
+
+    if (action.dataset.action === 'advent-day19') {
+      clearAppHandlers()
+      mountAdventDay19(app, {
+        member: currentMember,
+        user: currentUser,
+        onBack: renderHome,
+      })
       return
     }
 
