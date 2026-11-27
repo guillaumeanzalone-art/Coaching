@@ -11292,6 +11292,7 @@ export function mountTraining(
       actionName ===
         'skip-set'
     ) {
+      rememberSetViewport(sourceSet.id)
       if (
         set.status ===
           'failed'
@@ -11322,6 +11323,7 @@ if (
       actionName ===
         'toggle'
     ) {
+      rememberSetViewport(sourceSet.id)
       if (
         isSbdExercise(
           exercise
