@@ -5,6 +5,8 @@ import { mountTcgGame } from './tcg-game.js'
 import { mountCut } from './cut.js'
 import { COURSES, mountCourses } from './courses.js'
 import './courses.css'
+import { mountCoachHQ } from './coach-hq.js'
+import './coach-hq.css'
 import { mountAdventDay19 } from './advent-day19.js'
 import './advent-day19.css'
 import { getAthleteProgress, xpProgressFromTotal } from './xp.js'
@@ -924,6 +926,17 @@ function renderHome() {
         </button>
         ` : ''}
 
+        ${currentMember?.role === 'coach' ? `
+        <button class="card" data-action="coach-hq" type="button">
+          <span class="card-icon" aria-hidden="true">📊</span>
+          <div>
+            <strong>Coach HQ</strong>
+            <span>Alertes RPE · Suivi des blocs · Priorités athlètes</span>
+          </div>
+          <span class="arrow" aria-hidden="true">›</span>
+        </button>
+        ` : ''}
+
         <button
           class="card"
           data-action="courses"
@@ -1126,6 +1139,23 @@ function renderHome() {
       return
     }
 
+
+    if (action.dataset.action === 'coach-hq' && currentMember?.role === 'coach') {
+      clearAppHandlers()
+      mountCoachHQ(app, {
+        member: currentMember,
+        onBack: renderHome,
+        onOpenAthlete: slug => {
+          const selected = visibleAthletes().find(athlete =>
+            [athlete.id, athlete.slug, athlete.cloudSlug]
+              .some(value => String(value || '').toLowerCase() === slug)
+          )
+          if (selected) void openAthlete(selected.id)
+          else renderAthletes()
+        },
+      })
+      return
+    }
 
     if (action.dataset.action === 'courses') {
       clearAppHandlers()
