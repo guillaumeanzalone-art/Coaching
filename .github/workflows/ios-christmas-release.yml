@@ -63,6 +63,9 @@ jobs:
       - name: Installer les dépendances
         run: npm ci
 
+      - name: Verify Coach HQ dashboard and RPE security
+        run: npm run test:coach-hq
+
       - name: Verify Advent calendar remains hidden before release
         run: |
           npm run test:advent
