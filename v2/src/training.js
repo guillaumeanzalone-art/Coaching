@@ -10551,6 +10551,24 @@ export function mountTraining(
     const actionName =
       action.dataset.action
 
+    if (actionName === 'training-focus-toggle') {
+      focusMode = !focusMode
+      localStorage.setItem(TRAINING_FOCUS_KEY, focusMode ? '1' : '0')
+      showBlockDifficulty = false
+      showV3Overview = false
+      showIpfMatch = false
+      render()
+      root.querySelector('.training-ux-mode-switch')?.scrollIntoView({
+        block: 'start', behavior: 'instant',
+      })
+      return
+    }
+
+    if (actionName === 'training-next-set') {
+      scrollToNextSet()
+      return
+    }
+
     if (
       actionName ===
         'rest-timer-card'
@@ -10834,7 +10852,9 @@ export function mountTraining(
         actionName === 'reset' ||
         actionName === 'session-timer-reset' ||
         actionName === 'toggle' ||
-        actionName === 'skip-set'
+        actionName === 'skip-set' ||
+        actionName === 'training-quick-rpe' ||
+        actionName === 'training-use-load'
       )
     ) {
       return
@@ -11244,6 +11264,29 @@ export function mountTraining(
         state,
         sourceSet
       )
+
+    if (actionName === 'training-use-load') {
+      if (!canEdit || String(set.load || '').trim()) return
+      const plannedKg = plannedLoadSuggestion(sourceSet.loadRange)
+      if (plannedKg === null) return
+      saveLoadWithoutRender(sourceSet, formatPlannedLoad(plannedKg), true)
+      const row = [...root.querySelectorAll('.training-set[data-set-id]')]
+        .find(node => node.dataset.setId === sourceSet.id)
+      const input = row?.querySelector('[data-action="load"]')
+      if (input) input.value = formatPlannedLoad(plannedKg)
+      row?.querySelector('[data-action="training-use-load"]')?.remove()
+      setSyncStatus('local', 'Charge enregistrée localement')
+      return
+    }
+
+    if (actionName === 'training-quick-rpe') {
+      if (!canEdit || !isSbdExercise(exercise)) return
+      const picked = Number(action.dataset.rpe)
+      if (!QUICK_RPE_VALUES.includes(picked)) return
+      rememberSetViewport(sourceSet.id)
+      completeFoundSet(found, { rpe: String(picked) })
+      return
+    }
 
         if (
       actionName ===
