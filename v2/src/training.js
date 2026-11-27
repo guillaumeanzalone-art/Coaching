@@ -8124,26 +8124,15 @@ export function mountTraining(
   }
 
   function updateDisplayedTimer() {
-    const node =
-      root.querySelector(
-        '#trainingSessionTimer'
-      )
-
-    if (!node) {
-      return
-    }
-
-    const context =
-      currentSessionContext()
-
-    node.textContent =
-      context
-        ? formatDuration(
-            elapsedSeconds(
-              context.session
-            )
-          )
-        : '00:00:00'
+    const node = root.querySelector('#trainingSessionTimer')
+    const dockClock = root.querySelector('#trainingUxElapsed')
+    if (!node && !dockClock) return
+    const context = currentSessionContext()
+    const elapsed = context
+      ? formatDuration(elapsedSeconds(context.session))
+      : '00:00:00'
+    if (node) node.textContent = elapsed
+    if (dockClock) dockClock.textContent = elapsed
   }
 
   function resetCurrentSessionTimer() {
@@ -9901,7 +9890,7 @@ export function mountTraining(
       '<div class="training-ux-dock__progress"><i style="width:' + percent + '%"></i></div>',
       '<div class="training-ux-dock__inner">',
       '<div class="training-ux-dock__info">',
-      '<strong>' + progress.completed + ' / ' + progress.total + ' séries</strong>',
+      '<strong>' + progress.completed + ' / ' + progress.total + ' séries · ⏱ <span id="trainingUxElapsed">00:00:00</span></strong>',
       '<span>' + escapeHtml(label) + '</span>',
       '<small data-training-ux-sync data-sync-kind="' + escapeHtml(syncStatus.kind) + '">' + escapeHtml(syncStatus.label) + '</small>',
       '</div>',
