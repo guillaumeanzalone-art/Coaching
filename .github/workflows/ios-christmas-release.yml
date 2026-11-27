@@ -63,6 +63,11 @@ jobs:
       - name: Installer les dépendances
         run: npm ci
 
+      - name: Verify Advent calendar remains hidden before release
+        run: |
+          npm run test:advent
+          node --input-type=module -e "import fs from 'node:fs'; import assert from 'node:assert/strict'; const source = fs.readFileSync('src/main.js', 'utf8'); assert.match(source, /const ADVENT_CALENDAR_VISIBLE = false/); console.log('Calendrier masqué : OK')"
+
       - name: Build web + sync iOS
         run: |
           npm run build
