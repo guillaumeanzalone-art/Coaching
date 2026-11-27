@@ -26,7 +26,8 @@
     "test:stats": "node --test tests/pr-stats.test.js",
     "test:courses": "node --test tests/courses.test.js",
     "test:advent": "node --test tests/advent-day19.test.js",
-    "test:coach-hq": "node --test tests/coach-hq.test.js"
+    "test:coach-hq": "node --test tests/coach-hq.test.js",
+    "test:training-ux": "node --test tests/training-ux.test.js"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
