@@ -829,6 +829,9 @@ function renderHome() {
     currentMember?.display_name ||
     currentMember?.email ||
     'Coach'
+  const ownSessionAthlete = currentMember?.role === 'athlete'
+    ? visibleAthletes().find(athlete => isOwnAthlete(athlete))
+    : null
 
   app.innerHTML = `
     <main class="app-shell home-christmas">
@@ -888,6 +891,16 @@ function renderHome() {
       </section>
 
       <section class="cards">
+        ${ownSessionAthlete ? `
+          <button class="card home-quick-session" data-action="my-session" type="button">
+            <span class="card-icon" aria-hidden="true">⚡</span>
+            <div>
+              <strong>Reprendre ma séance</strong>
+              <span>${ownSessionAthlete.name} · Accès direct à ma programmation</span>
+            </div>
+            <span class="arrow" aria-hidden="true">›</span>
+          </button>
+        ` : ''}
         <button
           class="card"
           data-action="athletes"
@@ -1091,6 +1104,11 @@ function renderHome() {
         'Tu es déconnecté.'
       )
 
+      return
+    }
+
+    if (action.dataset.action === 'my-session' && ownSessionAthlete) {
+      await openAthlete(ownSessionAthlete.id)
       return
     }
 
