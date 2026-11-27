@@ -63,7 +63,7 @@ jobs:
       - name: Installer les dépendances
         run: npm ci
 
-      - name: Verify mobile session ergonomics
+      - name: Verify PR-based workout loads and mobile ergonomics
         run: npm run test:training-ux
 
       - name: Verify Coach HQ dashboard and RPE security
