@@ -15,6 +15,9 @@ on:
       - 'v2/tests/tcg-motion.test.js'
       - 'v2/src/tcg-rewards.js'
       - 'v2/src/training.js'
+      - 'v2/src/training-ux.js'
+      - 'v2/src/training-ux.css'
+      - 'v2/tests/training-ux.test.js'
       - 'v2/src/program-cloud.js'
       - 'v2/src/main.js'
       - 'v2/src/coach-hq.js'
@@ -106,6 +109,9 @@ jobs:
       - name: Verify cloud program fallback
         working-directory: v2
         run: npm run test:cloud
+      - name: Verify mobile training UX
+        working-directory: v2
+        run: npm run test:training-ux
       - name: Verify Coach HQ
         working-directory: v2
         run: npm run test:coach-hq
