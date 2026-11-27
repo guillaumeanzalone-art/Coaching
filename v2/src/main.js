@@ -3,6 +3,8 @@ import { mountRpg } from './rpg.js'
 import { mountIdleGame } from './idle-game.js'
 import { mountTcgGame } from './tcg-game.js'
 import { mountCut } from './cut.js'
+import { COURSES, mountCourses } from './courses.js'
+import './courses.css'
 import { getAthleteProgress, xpProgressFromTotal } from './xp.js'
 import './style.css'
 import './theme-spider.css'
@@ -904,6 +906,19 @@ function renderHome() {
 
         <button
           class="card"
+          data-action="courses"
+          type="button"
+        >
+          <span class="card-icon" aria-hidden="true">📚</span>
+          <div>
+            <strong>Cours</strong>
+            <span>${COURSES.length} fiches · technique · mobilité · yoga</span>
+          </div>
+          <span class="arrow" aria-hidden="true">›</span>
+        </button>
+
+        <button
+          class="card"
           data-action="cut"
           type="button"
         >
@@ -1091,6 +1106,12 @@ function renderHome() {
       return
     }
 
+
+    if (action.dataset.action === 'courses') {
+      clearAppHandlers()
+      mountCourses(app, renderHome)
+      return
+    }
 
     if (
       action.dataset.action ===
