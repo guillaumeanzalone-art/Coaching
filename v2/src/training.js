@@ -9913,7 +9913,7 @@ export function mountTraining(
     if (next) target.classList.add('training-set--targeted')
     target.scrollIntoView({
       behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-        ? 'instant' : 'smooth',
+        ? 'auto' : 'smooth',
       block: 'center',
     })
   }
@@ -10548,7 +10548,7 @@ export function mountTraining(
       showIpfMatch = false
       render()
       root.querySelector('.training-ux-mode-switch')?.scrollIntoView({
-        block: 'start', behavior: 'instant',
+        block: 'start', behavior: 'auto',
       })
       return
     }
