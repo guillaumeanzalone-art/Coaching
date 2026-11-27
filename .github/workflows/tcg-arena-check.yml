@@ -17,6 +17,10 @@ on:
       - 'v2/src/training.js'
       - 'v2/src/program-cloud.js'
       - 'v2/src/main.js'
+      - 'v2/src/coach-hq.js'
+      - 'v2/src/coach-hq.css'
+      - 'v2/tests/coach-hq.test.js'
+      - 'v2/supabase/migrations/20261127214000_coach_hq_snapshot_v1.sql'
       - 'v2/src/advent-day19.js'
       - 'v2/src/advent-day19.css'
       - 'v2/tests/advent-day19.test.js'
@@ -102,6 +106,9 @@ jobs:
       - name: Verify cloud program fallback
         working-directory: v2
         run: npm run test:cloud
+      - name: Verify Coach HQ
+        working-directory: v2
+        run: npm run test:coach-hq
       - name: Verify Advent day 19 inbox
         working-directory: v2
         run: npm run test:advent
