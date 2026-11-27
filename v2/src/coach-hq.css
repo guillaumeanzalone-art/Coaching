@@ -99,3 +99,63 @@
   .coach-hq-open { width:100%; }
 }
 @media (prefers-reduced-motion:reduce) { .coach-hq-athlete { transition:none; } }
+
+
+/* Coach HQ — lecture rapide, détails uniquement sur demande. */
+.coach-hq .coach-hq-hero { padding: clamp(18px, 3vw, 28px); }
+.coach-hq .coach-hq-hero h2 { font-size: clamp(1.45rem, 4vw, 2.15rem); }
+.coach-hq .coach-hq-stats { gap: 9px; }
+.coach-hq .coach-hq-stat { padding: 14px; }
+.coach-hq .coach-hq-stat > strong { font-size: clamp(1.7rem, 3.5vw, 2.25rem); }
+.coach-hq .coach-hq-list { gap: 9px; }
+.coach-hq .coach-hq-athlete { padding: 13px 15px; box-shadow: none; }
+.coach-hq .coach-hq-athlete__head { gap: 10px; }
+.coach-hq .coach-hq-name h3 { font-size: 1rem; }
+.coach-hq .coach-hq-counts { margin-top: 10px; gap: 8px; }
+.coach-hq .coach-hq-count { padding: 10px 12px; gap: 4px; }
+.coach-hq .coach-hq-count > strong { font-size: 1.42rem; }
+.coach-hq .coach-hq-count > span { font-size: .73rem; }
+.coach-hq .coach-hq-footer { margin-top: 12px; gap: 9px; }
+.coach-hq .coach-hq-exercise-details {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(172, 190, 220, .15);
+}
+.coach-hq .coach-hq-exercise-details > summary {
+  cursor: pointer;
+  color: #e8ca9d;
+  font-size: .78rem;
+  font-weight: 850;
+  padding: 7px 4px;
+  border-radius: 7px;
+}
+.coach-hq .coach-hq-exercise-details > summary:focus-visible {
+  outline: 3px solid #f2d4a3;
+  outline-offset: 3px;
+}
+.coach-hq .coach-hq-exercises { border-top: 0; margin-top: 3px; padding-top: 9px; }
+.coach-hq .coach-hq-more {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 13px;
+  border: 1px solid rgba(232, 192, 133, .47);
+  color: #e7ceab;
+  background: #1c2c44;
+  font: 850 .9rem/1.2 system-ui, sans-serif;
+  cursor: pointer;
+}
+.coach-hq .coach-hq-more:hover { background: #263b59; color: #fff; }
+.coach-hq .coach-hq-more:focus-visible { outline: 3px solid #f2d4a3; outline-offset: 3px; }
+@media(max-width: 600px) {
+  .coach-hq .coach-hq-stat { padding: 12px; }
+  .coach-hq .coach-hq-stat > small { display: none; }
+  .coach-hq .coach-hq-stat > span { font-size: .75rem; line-height: 1.3; }
+  .coach-hq .coach-hq-athlete { padding: 12px; }
+  .coach-hq .coach-hq-avatar { flex-basis: 41px; width: 41px; height: 41px; font-size: 1.34rem; }
+  .coach-hq .coach-hq-tag { margin-left: 50px; font-size: .66rem; padding: 6px 9px; }
+  .coach-hq .coach-hq-count { padding: 10px 5px; }
+  .coach-hq .coach-hq-count > strong { font-size: 1.3rem; }
+  .coach-hq .coach-hq-count > span { font-size: .64rem; }
+  .coach-hq .coach-hq-session { font-size: .76rem; }
+  .coach-hq .coach-hq-heading h2 { font-size: 1.25rem; }
+}
