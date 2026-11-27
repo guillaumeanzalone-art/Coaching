@@ -40,6 +40,7 @@
   border-color: #e6b77b;
 }
 .training-page--focus .training-topbar { margin-bottom: 10px; }
+.training-page--focus .reset-button { display: none; }
 .training-page--focus .training-ux-mode-switch { margin-bottom: 12px; }
 .training-page--focus .training-summary { padding: 14px; }
 .training-page--focus .training-exercise { box-shadow: none; }
