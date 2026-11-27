@@ -84,6 +84,9 @@ import {
   signOut,
 } from './auth.js'
 
+// Activation volontairement différée : le calendrier reste masqué jusqu'au lancement.
+const ADVENT_CALENDAR_VISIBLE = false
+
 const app =
   document.querySelector('#app')
 
@@ -906,6 +909,7 @@ function renderHome() {
           </span>
         </button>
 
+        ${ADVENT_CALENDAR_VISIBLE ? `
         <button
           class="card"
           data-action="advent-day19"
@@ -918,6 +922,7 @@ function renderHome() {
           </div>
           <span class="arrow" aria-hidden="true">›</span>
         </button>
+        ` : ''}
 
         <button
           class="card"
@@ -1128,7 +1133,7 @@ function renderHome() {
       return
     }
 
-    if (action.dataset.action === 'advent-day19') {
+    if (ADVENT_CALENDAR_VISIBLE && action.dataset.action === 'advent-day19') {
       clearAppHandlers()
       mountAdventDay19(app, {
         member: currentMember,
