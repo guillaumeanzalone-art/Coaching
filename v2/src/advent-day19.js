@@ -323,9 +323,9 @@ function mountCoachInbox(main) {
     }
   }
 
-  main.parentElement.addEventListener('click', event => {
+  section.addEventListener('click', event => {
     if (event.target.closest('[data-advent-action="refresh"]')) void refresh()
-  }, { signal: undefined })
+  })
   void refresh()
 }
 
