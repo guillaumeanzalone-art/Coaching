@@ -119,7 +119,6 @@ test('sans PR, sans % ou sur exercice accessoire : garder la valeur programmée'
   })
   assert.equal(plannedLoadForAthlete({ type: 'SQ' }, { loadRange: '100 - 105' }, prs).loadKg, 100)
   assert.equal(plannedLoadForAthlete({ type: 'ACCESSORY', name: 'Squat machine' }, sourceSet, prs).loadKg, 130)
-  assert.equal(plannedLoadForAthlete({ type: 'SQ' }, { percent: 75 }, {}).value, undefined)
   assert.equal(plannedLoadForAthlete({ type: 'SQ' }, { percent: 75 }, {}), null)
   assert.equal(plannedLoadForAthlete({ type: 'SQ' }, { percent: 200, loadRange: '125 - 135' }, prs).loadKg, 125)
   assert.equal(athletePrReference({ type: 'SQ' }, { squat: { 1: { load_kg: 0 } } }), null)
@@ -128,7 +127,7 @@ test('sans PR, sans % ou sur exercice accessoire : garder la valeur programmée'
 test('interface recalculée au clic depuis les records, sans données PR inscrites dans le DOM', async () => {
   const code = await readFile(new URL('../src/training.js', import.meta.url), 'utf8')
   assert.match(code, /const planned = plannedLoadForAthlete\(exercise, sourceSet, sbdPrs\)/)
-  assert.match(code, /source: 'pr'/m.test(code) ? /./ : /const isPrBased = planned\?\.source/)
+  assert.match(code, /const isPrBased = planned\?\.source/)
   assert.match(code, /const plannedKg = planned\.loadKg/)
   assert.match(code, /formatPlannedLoad\(plannedKg\)/)
   assert.match(code, /const prBasisLabel =/)
