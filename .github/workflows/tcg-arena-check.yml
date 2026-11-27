@@ -17,6 +17,10 @@ on:
       - 'v2/src/training.js'
       - 'v2/src/program-cloud.js'
       - 'v2/src/main.js'
+      - 'v2/src/courses.js'
+      - 'v2/src/courses.css'
+      - 'v2/public/cours/**'
+      - 'v2/tests/courses.test.js'
       - 'v2/tests/program-cloud-cache.test.js'
       - 'v2/src/pr-stats.js'
       - 'v2/src/pr-stats-model.js'
@@ -94,6 +98,9 @@ jobs:
       - name: Verify cloud program fallback
         working-directory: v2
         run: npm run test:cloud
+      - name: Verify course library
+        working-directory: v2
+        run: npm run test:courses
       - name: Verify athlete statistics
         working-directory: v2
         run: npm run test:stats
