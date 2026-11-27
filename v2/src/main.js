@@ -18,6 +18,7 @@ import './theme-timothee-covenant.css'
 import './theme-benjamin.css'
 import './theme-marvin-western.css'
 import './theme-athletes-christmas.css'
+import './training-ux.css'
 import './coach-hq.css'
 import { getRecentActivities, getCurrentActivityUserId, toggleActivityLike } from './activity.js'
 
