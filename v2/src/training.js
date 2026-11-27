@@ -10359,7 +10359,7 @@ export function mountTraining(
         : showV3Overview
         ? renderV3Overview()
         : `
-          ${renderBlocks()}
+          ${focusMode ? '' : renderBlocks()}
 
           ${renderWeeks(
             week
@@ -10389,13 +10389,16 @@ export function mountTraining(
             </strong>
           </section>
 
-          ${renderSessionTracking(
-            week,
-            day
-          )}
+          ${focusMode ? `
+            <details class="training-ux-session-details">
+              <summary>Chrono, notes et mesures de la séance</summary>
+              ${renderSessionTracking(week, day)}
+            </details>
+          ` : renderSessionTracking(week, day)}
 
           <div
             class="training-exercises"
+            id="trainingExercises"
           >
             ${day.exercises.map(
               (exercise) =>
@@ -10405,12 +10408,12 @@ export function mountTraining(
             ).join('')}
           </div>
 
-          ${renderBlockSummary()}
+          ${focusMode ? '' : renderBlockSummary()}
         `
 
     root.innerHTML = `
       <main
-        class="training-page"
+        class="training-page ${focusMode ? 'training-page--focus' : ''} ${activeRestTimer ? 'training-page--rest-active' : ''}"
         data-athlete-theme="${escapeHtml(cloudAthleteSlug)}"
         style="${escapeHtml(
           athleteThemeStyle(
@@ -10456,11 +10459,18 @@ export function mountTraining(
           </button>
         </header>
 
-        ${renderAthleteThemeBanner()}
-        ${renderRecoverySnapshot({
-          state: recoveryState,
-        })}
-        ${renderAthleteInsights()}
+        <div class="training-ux-mode-switch">
+          <div><strong>Entraînement</strong><span>${focusMode ? 'Mode concentré · sans distractions' : 'Profil complet · tous les outils'}</span></div>
+          <button type="button" class="training-ux-focus-toggle"
+            data-action="training-focus-toggle"
+            aria-pressed="${focusMode}">
+            ${focusMode ? '☰ Vue complète' : '⚡ Mode séance'}
+          </button>
+        </div>
+
+        ${focusMode ? '' : renderAthleteThemeBanner()}
+        ${focusMode ? '' : renderRecoverySnapshot({ state: recoveryState })}
+        ${focusMode ? '' : renderAthleteInsights()}
 
         <div
           id="trainingSyncStatus"
@@ -10470,9 +10480,9 @@ export function mountTraining(
         </div>
         ${tcgPackNotice ? `<div class="training-sync training-sync--synced" role="status">${escapeHtml(tcgPackNotice)}</div>` : ''}
 
-        ${renderV3BlockHistory()}
+        ${focusMode ? '' : renderV3BlockHistory()}
 
-        ${renderV3OverviewLauncher()}
+        ${focusMode ? '' : renderV3OverviewLauncher()}
 
         ${trainingBody}
 
@@ -10480,6 +10490,7 @@ export function mountTraining(
           ? renderSessionStory()
           : ''}
 
+        ${!showIpfMatch && !showBlockDifficulty && !showV3Overview ? renderTrainingQuickDock(day, progress) : ''}
         ${renderRestTimerDock()}
         ${renderRestTimerEditor()}
 
@@ -10487,6 +10498,7 @@ export function mountTraining(
     `
 
     updateDisplayedTimer()
+    restoreSetViewport()
 
   }
 
