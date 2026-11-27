@@ -10059,6 +10059,8 @@ export function mountTraining(
 
     const placeholder =
       loadRange || 'kg'
+    const plannedKg = plannedLoadSuggestion(sourceSet.loadRange)
+    const usePlanned = canEdit && plannedKg !== null && !String(set.load || '').trim()
 
     return `
       <div
@@ -10119,12 +10121,38 @@ export function mountTraining(
           aria-label="Charge série ${index + 1}"
         >
 
+        ${usePlanned ? `
+          <button class="training-ux-planned" type="button"
+            data-action="training-use-load"
+            data-planned-kg="${plannedKg}"
+            data-set-id="${escapeHtml(sourceSet.id)}"
+            aria-label="Renseigner la charge prévue de ${formatPlannedLoad(plannedKg)} kilogrammes">
+            ↳ ${formatPlannedLoad(plannedKg)} kg
+          </button>
+        ` : ''}
+
         ${renderRpe(
           exercise,
           sourceSet,
           set,
           index
         )}
+
+        ${isSbd && canEdit ? `
+          <div class="training-ux-rpe-chips" aria-label="Choisir et valider le RPE en un toucher">
+            ${QUICK_RPE_VALUES.map(value => `
+              <button type="button"
+                class="training-ux-rpe-chip ${String(set.rpe) === String(value) && isDone ? 'is-active' : ''}"
+                data-action="training-quick-rpe"
+                data-rpe="${value}"
+                data-set-id="${escapeHtml(sourceSet.id)}"
+                aria-label="Valider série ${index + 1} à RPE ${value}"
+                aria-pressed="${String(set.rpe) === String(value) && isDone}">
+                ${String(value).replace('.', ',')}
+              </button>
+            `).join('')}
+          </div>
+        ` : ''}
 
         ${isSbd
           ? `
