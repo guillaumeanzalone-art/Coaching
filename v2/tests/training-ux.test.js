@@ -19,7 +19,7 @@ test('raccourci charge utilise la borne basse sans enregistrer une valeur invent
   }
 })
 
-test('RPE rapides couvrent les choix habituels sans enlever le sélecteur complet', () => {
+test('RPE rapides couvrent les choix habituels sans enlever le sélecteur complet', async () => {
   assert.deepEqual(QUICK_RPE_VALUES, [7, 8, 8.5, 9, 9.5])
   const code = await readFile(new URL('../src/training.js', import.meta.url), 'utf8')
   assert.match(code, /data-action="training-quick-rpe"/)
