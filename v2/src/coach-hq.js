@@ -99,10 +99,11 @@ function cardHtml(row, maximum) {
     : 'Aucune séance terminée sur le bloc actif'
   const percent = Math.min(100, Math.round(row.over8 / Math.max(1, maximum) * 100))
   const exercises = row.exercises.length
-    ? '<div class="coach-hq-exercises"><span>Principaux dépassements</span>'
+    ? '<details class="coach-hq-exercise-details"><summary>Voir les exercices concernés</summary>'
+      + '<div class="coach-hq-exercises">'
       + row.exercises.map(ex => '<span>' + esc(ex.name) + ' · <b>'
         + ex.over8 + ' &gt; 8</b>' + (ex.over85 ? ' · ' + ex.over85 + ' &gt; 8,5' : '') + '</span>').join('')
-      + '</div>'
+      + '</div></details>'
     : ''
   return [
     '<article class="coach-hq-athlete coach-hq-athlete--' + p + '">',
@@ -148,6 +149,8 @@ export function mountCoachHQ(root, { member, onBack, onOpenAthlete }) {
   let search = ''
   let sort = 'over8'
   let filter = 'all'
+  let showAll = false
+  const FIRST_PAGE_SIZE = 8
 
   root.innerHTML = [
     '<main class="app-shell coach-hq" data-coach-hq>',
@@ -191,8 +194,14 @@ export function mountCoachHQ(root, { member, onBack, onOpenAthlete }) {
     if (!data || !mounted()) return
     const rows = coachHqRows(data.athletes, { search, sort, filter })
     const maximum = Math.max(1, ...data.athletes.map(a => a.over8))
+    const visible = showAll ? rows : rows.slice(0, FIRST_PAGE_SIZE)
+    const pagination = rows.length > FIRST_PAGE_SIZE
+      ? '<button type="button" class="coach-hq-more" data-hq-action="show-all">'
+        + (showAll ? 'Réduire la liste ↑' : 'Afficher les ' + (rows.length - FIRST_PAGE_SIZE) + ' autres athlètes ↓')
+        + '</button>'
+      : ''
     find('[data-hq-list]').innerHTML = rows.length
-      ? rows.map(a => cardHtml(a, maximum)).join('')
+      ? visible.map(a => cardHtml(a, maximum)).join('') + pagination
       : '<p class="coach-hq-empty">Aucun athlète ne correspond aux filtres.</p>'
     find('[data-hq-count]').textContent = rows.length + ' profil' + (rows.length > 1 ? 's' : '')
     root.querySelectorAll('[data-hq-filter]').forEach(button => {
@@ -234,6 +243,11 @@ export function mountCoachHQ(root, { member, onBack, onOpenAthlete }) {
     if (action) {
       const kind = action.dataset.hqAction
       if (kind === 'refresh') { void refresh(); return }
+      if (kind === 'show-all') {
+        showAll = !showAll
+        draw()
+        return
+      }
       if (kind === 'home' || kind === 'open') {
         disposed = true
         root.onclick = null
@@ -245,13 +259,13 @@ export function mountCoachHQ(root, { member, onBack, onOpenAthlete }) {
       }
     }
     const button = event.target.closest('[data-hq-filter]')
-    if (button) { filter = button.dataset.hqFilter; draw() }
+    if (button) { filter = button.dataset.hqFilter; showAll = false; draw() }
   }
   root.oninput = event => {
-    if (event.target.matches('[data-hq-search]')) { search = event.target.value; draw() }
+    if (event.target.matches('[data-hq-search]')) { search = event.target.value; showAll = false; draw() }
   }
   root.onchange = event => {
-    if (event.target.matches('[data-hq-sort]')) { sort = event.target.value; draw() }
+    if (event.target.matches('[data-hq-sort]')) { sort = event.target.value; showAll = false; draw() }
   }
   void refresh()
 }
