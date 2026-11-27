@@ -1,0 +1,74 @@
+/* Team GA — calendrier de l'Avent / jour 19 */
+.advent-day19 {
+  --advent19-text: #edf2ff;
+  --advent19-muted: #b3bfd5;
+  --advent19-gold: #e9c48a;
+  color: var(--advent19-text);
+  padding-bottom: 52px;
+}
+.advent19-topbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 24px; }
+.advent19-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid rgba(234, 197, 145, .36);
+  background: radial-gradient(ellipse at 80% 0%, rgba(182, 77, 68, .29), transparent 51%), linear-gradient(125deg, #192a48, #0b1730);
+  padding: clamp(25px, 5vw, 43px);
+  box-shadow: 0 20px 40px rgba(0,0,0,.18);
+}
+.advent19-hero::after { content: "19"; pointer-events: none; position: absolute; right: 10px; bottom: -82px; color: rgba(241, 207, 160, .045); font-size: clamp(180px, 38vw, 330px); font-weight: 950; line-height: 1; }
+.advent19-eyebrow { color: #f5ce93; font-size: .75rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 850; }
+.advent19-hero h2 { position: relative; max-width: 700px; color: #fff; font-size: clamp(1.6rem, 4.8vw, 2.8rem); line-height: 1.15; margin: 15px 0 12px; }
+.advent19-hero p { position: relative; max-width: 690px; line-height: 1.65; color: #d0d9eb; margin: 0; }
+.advent19-chat, .advent19-inbox { border-radius: 23px; border: 1px solid rgba(182,198,227,.20); background: linear-gradient(140deg, #101d37, #09152b); padding: clamp(18px, 4vw, 28px); margin-top: 20px; }
+.advent19-chat h3, .advent19-inbox h3 { color: #f9faff; font-size: 1.25rem; margin: 0 0 20px; }
+.advent19-conversation { display: flex; flex-direction: column; gap: 14px; border: 1px solid rgba(212,225,245,.15); background: rgba(3,12,27,.36); min-height: 175px; border-radius: 19px; padding: 20px; }
+.advent19-bubble { width: fit-content; max-width: min(80%, 590px); padding: 14px 17px; border-radius: 17px; line-height: 1.52; border: 1px solid rgba(255,255,255,.12); overflow-wrap: anywhere; }
+.advent19-bubble--coach { background: #1e3152; color: #f4f6ff; border-bottom-left-radius: 5px; }
+.advent19-bubble--athlete { margin-left: auto; background: linear-gradient(135deg, #b78c55, #e7c994); border-color: rgba(255,240,216,.5); color: #1b2539; border-bottom-right-radius: 5px; }
+.advent19-bubble__who { display: block; font-size: .69rem; font-weight: 850; letter-spacing: .12em; opacity: .78; }
+.advent19-bubble p { margin: 6px 0 0; }
+.advent19-bubble__date { display: block; margin-top: 8px; opacity: .68; font-size: .72rem; text-align: right; }
+.advent19-my-messages { display: contents; }
+.advent19-form { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+.advent19-label { font-size: .92rem; font-weight: 800; }
+.advent19-textarea { display: block; width: 100%; box-sizing: border-box; resize: vertical; font: inherit; padding: 14px 16px; min-height: 87px; border-radius: 15px; border: 1px solid #526280; background: #0a1730; color: #fff; }
+.advent19-textarea:focus { outline: 3px solid rgba(235,197,142,.23); border-color: #e9c48a; }
+.advent19-textarea:disabled { opacity: .55; }
+.advent19-send, .advent19-refresh { cursor: pointer; font: inherit; font-weight: 850; border: 1px solid #d9af70; background: linear-gradient(125deg, #f0d5a4, #d3a16a); color: #192337; border-radius: 13px; padding: 12px 18px; min-height: 45px; align-self: flex-start; }
+.advent19-send:disabled { cursor: not-allowed; opacity: .45; }
+.advent19-status { min-height: 17px; color: #c8d4e7; font-size: .82rem; margin: 0; line-height: 1.5; }
+.advent19-status--success { color: #a5e1bb; }
+.advent19-status--error { color: #ffb1ab; }
+.advent19-help { line-height: 1.6; font-size: .86rem; color: #b8c4d8; }
+.advent19-inbox__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.advent19-inbox__head h3 { margin: 8px 0 0; }
+.advent19-refresh { background: #182b4b; border-color: #617595; color: #f3f5fc; }
+.advent19-stats { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; margin: 20px 0; }
+.advent19-stat { display: grid; gap: 5px; border: 1px solid #354766; background: #0d1b35; border-radius: 15px; padding: 17px; }
+.advent19-stat strong { font-weight: 900; font-size: 2rem; color: #e9c48a; line-height: 1.1; }
+.advent19-stat span { font-size: .78rem; color: #b7c5dd; }
+.advent19-inbox h4 { margin: 26px 0 12px; color: #f5f6fd; font-size: 1.02rem; }
+.advent19-tally, .advent19-feed { display: grid; gap: 10px; }
+.advent19-tally__item { display: grid; grid-template-columns: 30px minmax(0,1fr) auto; align-items: center; gap: 12px; padding: 13px 15px; background: #132642; border: 1px solid #354766; border-radius: 13px; }
+.advent19-tally__rank { display: grid; place-items: center; border-radius: 50%; width: 27px; height: 27px; background: rgba(223,180,117,.20); color: #f0d0a2; font-size: .78rem; font-weight: 800; }
+.advent19-tally__item strong { overflow-wrap: anywhere; }
+.advent19-tally__count { color: #e9c48a; white-space: nowrap; font-weight: 750; font-size: .85rem; }
+.advent19-message { border: 1px solid #33435f; background: #11213c; border-radius: 15px; padding: 15px 17px; overflow-wrap: anywhere; }
+.advent19-message__top { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.advent19-message__top strong { color: #f3d4a1; }
+.advent19-message__top time { color: #9badc6; font-size: .72rem; }
+.advent19-message p { color: #f2f5fd; margin: 9px 0 0; line-height: 1.48; }
+.advent19-empty { border: 1px dashed #51607a; color: #b8c7db; border-radius: 13px; padding: 20px; margin: 0; font-size: .88rem; }
+@media (max-width: 600px) {
+  .advent19-topbar { align-items: flex-start; }
+  .advent19-hero { padding: 24px; border-radius: 19px; }
+  .advent19-chat, .advent19-inbox { padding: 17px; }
+  .advent19-conversation { padding: 12px; }
+  .advent19-bubble { max-width: 92%; }
+  .advent19-inbox__head { align-items: stretch; }
+  .advent19-refresh { width: 100%; }
+  .advent19-stats { gap: 9px; }
+  .advent19-tally__item { grid-template-columns: 26px minmax(0,1fr); gap: 9px; }
+  .advent19-tally__count { grid-column: 2; }
+}
