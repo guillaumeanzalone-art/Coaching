@@ -1,5 +1,5 @@
 import { supabase } from './supabase.js'
-import { QUICK_RPE_VALUES, plannedLoadSuggestion, formatPlannedLoad, nextPendingSet, progressPercent } from './training-ux.js'
+import { QUICK_RPE_VALUES, plannedLoadForAthlete, formatPlannedLoad, nextPendingSet, progressPercent } from './training-ux.js'
 
 import {
   getTimotheeVisitVerse,
@@ -10011,6 +10011,15 @@ export function mountTraining(
         exercise
       )
 
+    const planned = plannedLoadForAthlete(exercise, sourceSet, sbdPrs)
+    const plannedKg = planned?.loadKg ?? null
+    const isPrBased = planned?.source === 'pr' || planned?.source === 'pr-estime'
+    const prReference = planned?.reference || null
+    const prBasisLabel = prReference
+      ? (prReference.estimated ? 'PR estimé' : 'PR ×1') + ' '
+        + formatPlannedLoad(prReference.oneRmKg) + ' kg'
+      : ''
+
     const meta = []
 
     if (
@@ -10030,7 +10039,11 @@ export function mountTraining(
         sourceSet.loadRange
       )
 
-    if (loadRange) {
+    if (isPrBased) {
+      meta.push(
+        `${formatPlannedLoad(plannedKg)} kg · ${prBasisLabel}`
+      )
+    } else if (loadRange) {
       meta.push(
         `${loadRange} kg`
       )
@@ -10047,9 +10060,15 @@ export function mountTraining(
     }
 
     const placeholder =
-      loadRange || 'kg'
-    const plannedKg = plannedLoadSuggestion(sourceSet.loadRange)
+      plannedKg !== null ? formatPlannedLoad(plannedKg) + ' kg' : loadRange || 'kg'
     const usePlanned = canEdit && plannedKg !== null && !String(set.load || '').trim()
+    const plannedButtonLabel = isPrBased
+      ? formatPlannedLoad(plannedKg) + ' kg · ' + (prReference.estimated ? 'e1RM' : 'PR ×1')
+      : formatPlannedLoad(plannedKg) + ' kg · programme'
+    const plannedExplanation = isPrBased
+      ? 'Charge calculée : ' + planned.percent + ' % de ' + prBasisLabel
+        + ' (arrondi à 2,5 kg)'
+      : 'Charge indicative issue du programme'
 
     return `
       <div
@@ -10115,8 +10134,9 @@ export function mountTraining(
             data-action="training-use-load"
             data-planned-kg="${plannedKg}"
             data-set-id="${escapeHtml(sourceSet.id)}"
-            aria-label="Renseigner la charge prévue de ${formatPlannedLoad(plannedKg)} kilogrammes">
-            ↳ ${formatPlannedLoad(plannedKg)} kg
+            title="${escapeHtml(plannedExplanation)}"
+            aria-label="${escapeHtml(plannedExplanation)} : saisir ${formatPlannedLoad(plannedKg)} kilogrammes">
+            ↳ ${escapeHtml(plannedButtonLabel)}
           </button>
         ` : ''}
 
@@ -11256,8 +11276,10 @@ export function mountTraining(
 
     if (actionName === 'training-use-load') {
       if (!canEdit || String(set.load || '').trim()) return
-      const plannedKg = plannedLoadSuggestion(sourceSet.loadRange)
-      if (plannedKg === null) return
+      // Recalculer depuis les PR actuellement chargés, jamais depuis le DOM.
+      const planned = plannedLoadForAthlete(exercise, sourceSet, sbdPrs)
+      if (!planned) return
+      const plannedKg = planned.loadKg
       saveLoadWithoutRender(sourceSet, formatPlannedLoad(plannedKg), true)
       const row = [...root.querySelectorAll('.training-set[data-set-id]')]
         .find(node => node.dataset.setId === sourceSet.id)
