@@ -24,7 +24,8 @@
     "test:marvin": "node --test tests/theme-marvin-western.test.js",
     "test:benjamin": "node --test tests/benjamin-profile.test.js",
     "test:stats": "node --test tests/pr-stats.test.js",
-    "test:courses": "node --test tests/courses.test.js"
+    "test:courses": "node --test tests/courses.test.js",
+    "test:advent": "node --test tests/advent-day19.test.js"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
