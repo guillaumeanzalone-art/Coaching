@@ -11765,6 +11765,7 @@ if (
       actionName ===
         'rpe'
     ) {
+      rememberSetViewport(sourceSet.id)
       if (
         !isSbdExercise(
           exercise
