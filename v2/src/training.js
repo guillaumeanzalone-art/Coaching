@@ -1,4 +1,5 @@
 import { supabase } from './supabase.js'
+import { QUICK_RPE_VALUES, plannedLoadSuggestion, formatPlannedLoad, nextPendingSet, progressPercent } from './training-ux.js'
 
 import {
   getTimotheeVisitVerse,
@@ -604,6 +605,28 @@ export function mountTraining(
     ? getTimotheeVisitVerse()
     : null
 
+  // Préférence ergonomique propre à l'athlète : la programmation reste inchangée.
+  const TRAINING_FOCUS_KEY = 'ga-v2-training-focus:' + cloudAthleteSlug
+  let focusMode = localStorage.getItem(TRAINING_FOCUS_KEY) === '1'
+  let preservedSetAnchor = null
+
+  function rememberSetViewport(setId) {
+    const row = [...root.querySelectorAll('.training-set[data-set-id]')]
+      .find(element => element.dataset.setId === setId)
+    preservedSetAnchor = row ? { id: setId, top: row.getBoundingClientRect().top } : null
+  }
+
+  function restoreSetViewport() {
+    if (!preservedSetAnchor) return
+    const anchor = preservedSetAnchor
+    preservedSetAnchor = null
+    const row = [...root.querySelectorAll('.training-set[data-set-id]')]
+      .find(element => element.dataset.setId === anchor.id)
+    if (!row) return
+    const change = row.getBoundingClientRect().top - anchor.top
+    if (Math.abs(change) > 1) window.scrollBy(0, change)
+  }
+
   const SBD_REP_SELECTION_KEY =
     `ga-v2-sbd-rep-selection:${cloudAthleteSlug}`
 
@@ -822,6 +845,11 @@ export function mountTraining(
 
       element.textContent =
         label
+    }
+    const dockStatus = root.querySelector('[data-training-ux-sync]')
+    if (dockStatus) {
+      dockStatus.textContent = label
+      dockStatus.dataset.syncKind = kind
     }
   }
 
@@ -9861,6 +9889,44 @@ export function mountTraining(
       'bn',
       'dl',
     ].includes(code)
+  }
+
+  function renderTrainingQuickDock(day, progress) {
+    if (activeRestTimer) return ''
+    const next = nextPendingSet(day, sourceSet => getSetState(state, sourceSet).status)
+    const percent = progressPercent(progress.completed, progress.total)
+    const label = next ? next.exercise + ' · série ' + next.number : 'Séance enregistrée'
+    return [
+      '<aside class="training-ux-dock" aria-label="Progression de la séance">',
+      '<div class="training-ux-dock__progress"><i style="width:' + percent + '%"></i></div>',
+      '<div class="training-ux-dock__inner">',
+      '<div class="training-ux-dock__info">',
+      '<strong>' + progress.completed + ' / ' + progress.total + ' séries</strong>',
+      '<span>' + escapeHtml(label) + '</span>',
+      '<small data-training-ux-sync data-sync-kind="' + escapeHtml(syncStatus.kind) + '">' + escapeHtml(syncStatus.label) + '</small>',
+      '</div>',
+      '<button type="button" data-action="training-next-set" class="training-ux-dock__next">',
+      next ? 'Série suivante ↗' : 'Voir la séance ✓',
+      '</button></div></aside>',
+    ].join('')
+  }
+
+  function scrollToNextSet() {
+    const { day } = normalizeSelection()
+    const next = nextPendingSet(day, sourceSet => getSetState(state, sourceSet).status)
+    const target = next
+      ? [...root.querySelectorAll('.training-set[data-set-id]')]
+        .find(node => node.dataset.setId === next.setId)
+      : root.querySelector('.training-summary')
+    if (!target) return
+    root.querySelectorAll('.training-set--targeted')
+      .forEach(node => node.classList.remove('training-set--targeted'))
+    if (next) target.classList.add('training-set--targeted')
+    target.scrollIntoView({
+      behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+        ? 'instant' : 'smooth',
+      block: 'center',
+    })
   }
 
   function renderRpe(
