@@ -297,3 +297,26 @@
 @media (prefers-reduced-motion: reduce) {
   .training-page .training-exercises .training-set { scroll-behavior: auto; }
 }
+
+
+/* GA home — direct athlete session, first action above the full menu. */
+.home-christmas > .cards > .card.home-quick-session {
+  border-color: rgba(242, 205, 146, .72);
+  background: linear-gradient(117deg, #493523, #2c2e26 58%, #172e25);
+  box-shadow: inset 0 1px rgba(255, 235, 193, .12), 0 12px 27px rgba(0, 0, 0, .24);
+}
+.home-christmas > .cards > .card.home-quick-session .card-icon {
+  background: rgba(246, 208, 147, .16);
+  border: 1px solid rgba(237, 190, 125, .38);
+  color: #ffe5b7;
+}
+.home-christmas > .cards > .card.home-quick-session strong { color: #fff4df; font-size: 1.03rem; }
+.home-christmas > .cards > .card.home-quick-session div > span { color: #e1caa7; }
+.home-christmas > .cards > .card.home-quick-session:hover,
+.home-christmas > .cards > .card.home-quick-session:focus-visible {
+  border-color: #f6daae;
+  background: linear-gradient(117deg, #614328, #323426 58%, #19392d);
+}
+@media(max-width: 650px) {
+  .home-christmas > .cards > .card.home-quick-session { min-height: 78px; }
+}
